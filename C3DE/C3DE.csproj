@@ -45,7 +45,7 @@
     <Compile Include="Light.cs" />
     <Compile Include="Materials\Material.cs" />
     <Compile Include="Scene.cs" />
-    <Compile Include="ShadowMapGame.cs" />
+    <Compile Include="C3DEGame.cs" />
     <Compile Include="SceneObject.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Renderer.cs" />

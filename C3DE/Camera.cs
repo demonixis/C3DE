@@ -45,15 +45,29 @@ namespace C3DE
                 view = Matrix.CreateLookAt(position, target, Vector3.Up);
         }
 
-        public virtual void Translate(float x, float y, float z)
+        public virtual void Translate(ref Vector3 move)
         {
-            Vector3 move = new Vector3(x, y, z);
             Matrix forwardMovement = Matrix.CreateFromYawPitchRoll(rotation.Y, rotation.X, rotation.Z);
             Vector3 v = Vector3.Transform(move, forwardMovement);
 
             position.X += v.X;
             position.Y += v.Y;
             position.Z += v.Z;
+
+            UpdateTarget();
+        }
+
+        public virtual void Translate(float x, float y, float z)
+        {
+            var move = new Vector3(x, y, z);
+            Translate(ref move);
+        }
+
+        public virtual void Rotate(ref Vector3 rot)
+        {
+            rotation.X += rot.X;
+            rotation.Y += rot.Y;
+            rotation.Z += rot.Z;
 
             UpdateTarget();
         }
