@@ -1,0 +1,17 @@
+Thumbs.db
+*.suo
+*.cachefile
+*.user
+*.v11
+*.v12
+*.pidb
+*.userprefs
+*.DS_Store
+*.directory
+ipch/
+obj/
+[Bb]in
+[Dd]ebug*/
+[Rr]elease*/
+C3DE/Content/*
+Libs/*.dll
