@@ -39,6 +39,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Camera.cs" />
+    <Compile Include="Components\BoxCollider.cs" />
     <Compile Include="Components\Component.cs" />
     <Compile Include="Components\ModelRenderer.cs" />
     <Compile Include="Components\Transform.cs" />

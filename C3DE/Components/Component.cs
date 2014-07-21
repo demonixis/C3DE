@@ -71,5 +71,10 @@ namespace C3DE.Components
             else
                 return -1;
         }
+
+        public T GetComponent<T>() where T : Component
+        {
+            return sceneObject.GetComponent<T>();
+        }
     }
 }

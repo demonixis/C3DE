@@ -111,7 +111,7 @@ namespace C3DE
             _objectFx.Parameters["shadowTexture"].SetValue(_shadowRT);
             _objectFx.Parameters["lightView"].SetValue(_light.viewMatrix);
             _objectFx.Parameters["lightProjection"].SetValue(_light.projectionMatrix);
-            _objectFx.Parameters["lightPosition"].SetValue(_light.position);
+            _objectFx.Parameters["lightPosition"].SetValue(_light.Transform.Position);
             _objectFx.Parameters["lightRadius"].SetValue(new Vector3(500.0f));
             //objectFx.Parameters["shadowMapSize"].SetValue(shadowMapSize);
 

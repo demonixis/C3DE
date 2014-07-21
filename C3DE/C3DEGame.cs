@@ -101,17 +101,17 @@ namespace C3DE
                 Exit();
 
             // Move the light (oh it's so great \:D/)
-            if (pad.IsButtonDown(Buttons.DPadLeft))
-                renderer.Light.Translate(0.1f, 0, 0);
+            if (pad.IsButtonDown(Buttons.DPadLeft) || state.IsKeyDown(Keys.NumPad4))
+                renderer.Light.Transform.Translate(0.1f, 0, 0);
 
-            else if (pad.IsButtonDown(Buttons.DPadRight))
-                renderer.Light.Translate(-0.1f, 0, 0);
+            else if (pad.IsButtonDown(Buttons.DPadRight) || state.IsKeyDown(Keys.NumPad6))
+                renderer.Light.Transform.Translate(-0.1f, 0, 0);
 
-            if (pad.IsButtonDown(Buttons.DPadUp))
-                renderer.Light.Translate(0, 0, 0.1f);
+            if (pad.IsButtonDown(Buttons.DPadUp) || state.IsKeyDown(Keys.NumPad8))
+                renderer.Light.Transform.Translate(0, 0, 0.1f);
 
-            else if (pad.IsButtonDown(Buttons.DPadDown))
-                renderer.Light.Translate(0, 0, -0.1f);
+            else if (pad.IsButtonDown(Buttons.DPadDown) || state.IsKeyDown(Keys.NumPad5))
+                renderer.Light.Transform.Translate(0, 0, -0.1f);
 
             // Camera
             if (state.IsKeyDown(Keys.W) || state.IsKeyDown(Keys.Up))
@@ -151,8 +151,11 @@ namespace C3DE
             camRotation.Y -= pad.ThumbSticks.Right.X * 0.0015f * gameTime.ElapsedGameTime.Milliseconds;
 
             // Dead zone for fucked sticks.
-            camRotation.X = Math.Abs(pad.ThumbSticks.Right.Y) < 0.4f ? 0.0f : camRotation.X;
-            camRotation.Y = Math.Abs(pad.ThumbSticks.Right.X) < 0.4f ? 0.0f : camRotation.Y;
+            if (pad.IsConnected)
+            {
+                camRotation.X = Math.Abs(pad.ThumbSticks.Right.Y) < 0.4f ? 0.0f : camRotation.X;
+                camRotation.Y = Math.Abs(pad.ThumbSticks.Right.X) < 0.4f ? 0.0f : camRotation.Y;
+            }
 
             // Apply translation and rotation.
             camera.Translate(ref camPosition);

@@ -34,7 +34,7 @@ namespace C3DE.Materials
             effect.Parameters["shadowTexture"].SetValue(shadowRT);
             effect.Parameters["lightView"].SetValue(light.viewMatrix);
             effect.Parameters["lightProjection"].SetValue(light.projectionMatrix);
-            effect.Parameters["lightPosition"].SetValue(light.position);
+            effect.Parameters["lightPosition"].SetValue(light.Transform.Position);
             effect.Parameters["lightRadius"].SetValue(light.radius);
             effect.Parameters["shadowMapSize"].SetValue(shadowMapSize);
         }
