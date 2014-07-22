@@ -82,12 +82,9 @@ namespace C3DE.Components
 
         public void Translate(float x, float y, float z)
         {
-            Vector3 move = new Vector3(x, y, z);
-            Matrix forwardMovement = Matrix.CreateRotationY(_rotation.Y);
-            Vector3 tVector = Vector3.Transform(move, forwardMovement);
-            _position.X += tVector.X;
-            _position.Y += tVector.Y;
-            _position.Z += tVector.Z;
+            _position.X += x;
+            _position.Y += y;
+            _position.Z += z;
         }
 
         public void Rotate(float rx, float ry, float rz)
@@ -99,21 +96,19 @@ namespace C3DE.Components
 
         public override void Update()
         {
-            world = Matrix.Identity * Matrix.CreateScale(_scale);
+            world = Matrix.Identity;
 
-            // If a parent exists
+
+            world *= Matrix.CreateScale(_scale);
+            world *= Matrix.CreateFromYawPitchRoll(_rotation.Y, _rotation.X, _rotation.Z);
+            world *= Matrix.CreateTranslation(_position);
+
             if (_parent != null)
             {
-                world *= _parent.world;
-                world *= Matrix.CreateFromAxisAngle(_parent.world.Right, _rotation.X);
-                world *= Matrix.CreateFromAxisAngle(_parent.world.Up, _rotation.Y);
-                world *= Matrix.CreateFromAxisAngle(_parent.world.Forward, _rotation.Z);
+                world *= Matrix.CreateScale(_parent._scale);
+                world *= Matrix.CreateFromYawPitchRoll(_parent._rotation.Y, _parent._rotation.X, _parent._rotation.Z);
+                world *= Matrix.CreateTranslation(_parent._position);
             }
-            // Local transforms
-            else
-                world *= Matrix.CreateFromYawPitchRoll(_rotation.Y, _rotation.X, _rotation.Z);
-
-            world *= Matrix.CreateTranslation(_position);
         }
     }
 }

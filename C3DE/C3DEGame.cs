@@ -38,6 +38,7 @@ namespace C3DE
 
             //ship
             spaceShip = new SceneObject();
+            spaceShip.Transform.Translate(0, 1, 0);
             spaceShip.Transform.Scale = new Vector3(0.25f);
             scene.Add(spaceShip);
 
@@ -50,8 +51,8 @@ namespace C3DE
 
             // Ship 2
             SceneObject sceneObject = new SceneObject();
-            sceneObject.Transform.Translate(6, 0.0f, 0);
-            sceneObject.Transform.Scale = new Vector3(16);
+            sceneObject.Transform.Translate(12, -4f, 0);
+            sceneObject.Transform.Scale = new Vector3(4);
             sceneObject.Transform.Rotate(-MathHelper.PiOver2, 0, 0);
             spaceShip.Add(sceneObject);
 
@@ -62,8 +63,8 @@ namespace C3DE
 
             // Ship 3
             sceneObject = new SceneObject();
-            sceneObject.Transform.Translate(-6, 0, 0);
-            sceneObject.Transform.Scale = new Vector3(16);
+            sceneObject.Transform.Translate(-12, -4f, 0);
+            sceneObject.Transform.Scale = new Vector3(4);
             sceneObject.Transform.Rotate(-MathHelper.PiOver2, 0, 0);
             spaceShip.Add(sceneObject);
 
@@ -75,7 +76,7 @@ namespace C3DE
             // Floor
             sceneObject = new SceneObject();
             sceneObject.Transform.Rotate(0, MathHelper.PiOver2, 0);
-            sceneObject.Transform.Translate(10, -1.5f, -5);
+            sceneObject.Transform.Translate(-2, -1.5f, -15);
             scene.Add(sceneObject);
 
             modelRenderer = sceneObject.AddComponent<ModelRenderer>();
@@ -94,6 +95,11 @@ namespace C3DE
             scene.Update();
 
             spaceShip.Transform.Rotate(0, 0.05f, 0);
+
+            foreach (Transform tr in spaceShip.Transform.Transforms)
+            {
+                tr.Rotate(0, 0, -0.05f);
+            }
 
             camPosition = Vector3.Zero;
             camRotation = Vector3.Zero;
@@ -164,6 +170,18 @@ namespace C3DE
             // Apply translation and rotation.
             camera.Translate(ref camPosition);
             camera.Rotate(ref camRotation);
+
+            if (state.IsKeyDown(Keys.J))
+                spaceShip.Transform.Translate(0.1f, 0, 0);
+
+            else if (state.IsKeyDown(Keys.L))
+                spaceShip.Transform.Translate(-0.1f, 0, 0);
+
+            if (state.IsKeyDown(Keys.I))
+                spaceShip.Transform.Translate(0, 0, 0.1f);
+
+            else if (state.IsKeyDown(Keys.K))
+                spaceShip.Transform.Translate(0, 0, -0.1f);
 
             base.Update(gameTime);
         }
