@@ -7,6 +7,7 @@ namespace C3DE
         internal Matrix viewMatrix;
         internal Matrix projectionMatrix;
         internal Vector3 radius;
+        internal Vector3 direction;
 
         public Matrix ViewMatrix
         {
@@ -23,12 +24,19 @@ namespace C3DE
             get { return Matrix.Identity * viewMatrix * projectionMatrix; }
         }
 
+        public Vector3 Direction
+        {
+            get { return direction; }
+            set { direction = value; }
+        }
+
         public Light()
             : base()
         {
             projectionMatrix = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45), 1, 1, 500);
             Transform.Translate(2, 10, 2);
             radius = new Vector3(250.0f);
+            direction = new Vector3(50.0f, 330.0f, 0.0f);
         }
 
         public void Update(ref BoundingSphere sphere)

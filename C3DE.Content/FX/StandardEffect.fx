@@ -7,6 +7,7 @@ float3 lightPosition;
 float3 lightRadius = float3(100.0, 100.0, 100.0);
 float shadowMapSize = 512;
 float bias = 7.0 / 1000.0;
+float4 ambientColor = float4(1.0, 1.0, 1.0, 1.0);
 
 float random(float3 seed, int i)
 {
@@ -39,7 +40,7 @@ sampler shadowSampler = sampler_state
 
 struct VertexShaderInput
 {
-    float4 Position : POSITION0;
+    float4 Position:POSITION0;
 	float2 tex_coord:TEXCOORD0;
 	float3 normal:NORMAL0;
 };
@@ -63,8 +64,8 @@ VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
     output.Position = mul(viewPosition, Projection);
 	output.tex_coord = input.tex_coord;
 	output.worldPosition = worldPosition;
-	output.screenPosition =  output.Position.xy/output.Position.w;
-	output.normal = mul(input.normal,World);
+	output.screenPosition =  output.Position.xy / output.Position.w;
+	output.normal = mul(input.normal, World);
 
     return output;
 }
@@ -88,7 +89,7 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 {
 	float4 color = tex2D(textureSampler, input.tex_coord);
 	float4 worldPosition = input.worldPosition;
-	float3 lightDirection = lightPosition - worldPosition;
+	float3 lightDir = lightPosition - worldPosition;
 	float inverseLightRadiusSquared = 1.0 / (lightRadius * lightRadius);
 	float lightFactor = 0;
 	float attenuation = 0;
@@ -98,22 +99,20 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 	float4 lightSpacePosition = mul(mul(worldPosition, lightView), lightProjection);
 	lightSpacePosition -= bias;
 	lightSpacePosition /= lightSpacePosition.w;
-
 	float2 screenPosition = 0.5 + float2(lightSpacePosition.x, -lightSpacePosition.y) * 0.5;
-
 	float lightSpaceDepth = lightSpacePosition.z;
 
 	//light influence
-	attenuation = 1 - saturate(dot(lightDirection, lightDirection) * inverseLightRadiusSquared);
-	ndl = saturate(dot(input.normal, lightDirection));
-
-	lightFactor = attenuation*ndl;
+	attenuation = 1 - saturate(dot(lightDir, lightDir) * inverseLightRadiusSquared);
+	ndl = saturate(dot(input.normal, lightDir));
+	
+	lightFactor = attenuation * ndl;
 	float shadowTerm = 1;
 
 	if((saturate(screenPosition).x == screenPosition.x) && (saturate(screenPosition).y == screenPosition.y))
 		shadowTerm = calcShadowPCF(lightSpaceDepth, screenPosition);
 
-    return color * lightFactor * shadowTerm;
+    return color * ambientColor * lightFactor * shadowTerm;
 }
 
 technique Technique1

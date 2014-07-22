@@ -43,6 +43,7 @@
     <Compile Include="Components\Component.cs" />
     <Compile Include="Components\ModelRenderer.cs" />
     <Compile Include="Components\Transform.cs" />
+    <Compile Include="Debug.cs" />
     <Compile Include="Light.cs" />
     <Compile Include="Materials\Material.cs" />
     <Compile Include="Scene.cs" />

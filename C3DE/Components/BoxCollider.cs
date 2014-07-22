@@ -9,6 +9,7 @@ namespace C3DE.Components
     {
         private BoundingBox _box;
         private Vector3 _center;
+        private bool _dirty;
 
         public BoundingBox Box
         {
@@ -35,27 +36,26 @@ namespace C3DE.Components
         {
             _box = new BoundingBox();
             _center = Vector3.Zero;
+            _dirty = true;
         }
 
         /// <summary>
         /// Compute the bounding box.
         /// </summary>
-        public void Compute()
+        public override void Update()
         {
-            var modelRenderer = GetComponent<ModelRenderer>();
-
-            if (modelRenderer != null)
+            if (_dirty)
             {
-                var sphere = modelRenderer.GetBoundingSphere();
-                var radius = sphere.Radius;
-                var center = sphere.Center;
+                _dirty = false;
 
-                _box.Min = center - new Vector3(radius);
-                _box.Max = center + new Vector3(radius);
+                var modelRenderer = GetComponent<ModelRenderer>();
 
-                _center = sphere.Center;
-                
-                //_box = BoundingBox.CreateFromSphere(sphere);
+                if (modelRenderer != null)
+                {
+                    var sphere = modelRenderer.GetBoundingSphere();
+                    _box = BoundingBox.CreateFromSphere(sphere);
+                    _center = sphere.Center;
+                }
             }
         }
     }

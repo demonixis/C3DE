@@ -20,6 +20,13 @@ namespace C3DE
         private Effect _objectFx;
         private Effect _shadowFx;
         private SpriteBatch _spriteBatch;
+        private Color _ambientColor;
+
+        public Color AmbientColor
+        {
+            get { return _ambientColor; }
+            set { _ambientColor = value; }
+        }
 
         public Light Light
         {
@@ -32,7 +39,7 @@ namespace C3DE
             _spriteBatch = new SpriteBatch(device);
             _sceneRT = new RenderTarget2D(device, device.Viewport.Width, device.Viewport.Height, false, SurfaceFormat.Color, DepthFormat.Depth24, 0, RenderTargetUsage.DiscardContents);
             _light = new Light();
-
+            _ambientColor = Color.White;
             SetShadowMapSize(512);
         }
 
@@ -112,15 +119,15 @@ namespace C3DE
             _objectFx.Parameters["lightView"].SetValue(_light.viewMatrix);
             _objectFx.Parameters["lightProjection"].SetValue(_light.projectionMatrix);
             _objectFx.Parameters["lightPosition"].SetValue(_light.Transform.Position);
-            _objectFx.Parameters["lightRadius"].SetValue(new Vector3(500.0f));
+            _objectFx.Parameters["lightRadius"].SetValue(Light.radius);
+            _objectFx.Parameters["ambientColor"].SetValue(_ambientColor.ToVector4());
             //objectFx.Parameters["shadowMapSize"].SetValue(shadowMapSize);
 
             for (int i = 0; i < _renderList.Count; i++)
             {
-                _objectFx.Parameters["mainTexture"].SetValue(_renderList[i].Texture);
                 _objectFx.Parameters["World"].SetValue(_renderList[i].SceneObject.Transform.world);
+                _objectFx.Parameters["mainTexture"].SetValue(_renderList[i].MainTexture);
                 _objectFx.CurrentTechnique.Passes[0].Apply();
-
                 _renderList[i].DrawMesh(_device);
             }
 

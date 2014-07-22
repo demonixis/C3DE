@@ -43,40 +43,44 @@ namespace C3DE
 
             modelRenderer = spaceShip.AddComponent<ModelRenderer>();
             modelRenderer.Model = Content.Load<Model>("Models/spaceship");
-            modelRenderer.Texture = Content.Load<Texture2D>("Models/texv1");
+            modelRenderer.MainTexture = Content.Load<Texture2D>("Models/texv1");
+
+            var boxCollider = spaceShip.AddComponent<BoxCollider>();
+            boxCollider.Update();
 
             // Ship 2
             SceneObject sceneObject = new SceneObject();
-            sceneObject.Transform.Translate(6, 0, 0);
+            sceneObject.Transform.Translate(6, 0.0f, 0);
             sceneObject.Transform.Scale = new Vector3(16);
             sceneObject.Transform.Rotate(-MathHelper.PiOver2, 0, 0);
             spaceShip.Add(sceneObject);
 
             modelRenderer = sceneObject.AddComponent<ModelRenderer>();
             modelRenderer.Model = Content.Load<Model>("Models/ship");
-            modelRenderer.Texture = Content.Load<Texture2D>("Textures/solarPanel");
+            modelRenderer.MainTexture = Content.Load<Texture2D>("Textures/huleShip");
 
 
-            // Ball
+            // Ship 3
             sceneObject = new SceneObject();
             sceneObject.Transform.Translate(-6, 0, 0);
+            sceneObject.Transform.Scale = new Vector3(16);
+            sceneObject.Transform.Rotate(-MathHelper.PiOver2, 0, 0);
             spaceShip.Add(sceneObject);
 
             modelRenderer = sceneObject.AddComponent<ModelRenderer>();
-            modelRenderer.Model = Content.Load<Model>("Models/ball");
-            modelRenderer.Texture = Content.Load<Texture2D>("Textures/huleShip");
+            modelRenderer.Model = Content.Load<Model>("Models/ship");
+            modelRenderer.MainTexture = Content.Load<Texture2D>("Textures/huleShip");
 
 
             // Floor
             sceneObject = new SceneObject();
-            sceneObject.Transform.Rotate(MathHelper.PiOver2, 0, 0);
-            sceneObject.Transform.Translate(0, -1, 0);
-            sceneObject.Transform.Scale = new Vector3(4);
+            sceneObject.Transform.Rotate(0, MathHelper.PiOver2, 0);
+            sceneObject.Transform.Translate(10, -1.5f, -5);
             scene.Add(sceneObject);
 
             modelRenderer = sceneObject.AddComponent<ModelRenderer>();
-            modelRenderer.Model = Content.Load<Model>("Models/Floor");
-            modelRenderer.Texture = Content.Load<Texture2D>("Textures/huleShip");
+            modelRenderer.Model = Content.Load<Model>("Models/Level/DockStation");
+            modelRenderer.MainTexture = Content.Load<Texture2D>("Models/Level/hullTexture_2_0");
             modelRenderer.CastShadow = false;
         }
 
