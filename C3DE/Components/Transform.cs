@@ -14,6 +14,7 @@ namespace C3DE.Components
         private Vector3 _scale;
         private Transform _parent;
         private Transform _root;
+        private bool _dirty;
         protected List<Transform> _transforms;
 
         public Transform Root
@@ -77,6 +78,7 @@ namespace C3DE.Components
             _parent = null;
             _root = null;
             _transforms = new List<Transform>();
+            _dirty = false;
             world = Matrix.Identity;
         }
 
@@ -96,18 +98,17 @@ namespace C3DE.Components
 
         public override void Update()
         {
-            world = Matrix.Identity;
-
-
-            world *= Matrix.CreateScale(_scale);
-            world *= Matrix.CreateFromYawPitchRoll(_rotation.Y, _rotation.X, _rotation.Z);
-            world *= Matrix.CreateTranslation(_position);
-
-            if (_parent != null)
+            if (!sceneObject.IsStatic || _dirty)
             {
-                world *= Matrix.CreateScale(_parent._scale);
-                world *= Matrix.CreateFromYawPitchRoll(_parent._rotation.Y, _parent._rotation.X, _parent._rotation.Z);
-                world *= Matrix.CreateTranslation(_parent._position);
+                world = Matrix.Identity;
+                world *= Matrix.CreateScale(_scale);
+                world *= Matrix.CreateFromYawPitchRoll(_rotation.Y, _rotation.X, _rotation.Z);
+                world *= Matrix.CreateTranslation(_position);
+
+                if (_parent != null)
+                    world *= _parent.world;
+
+                _dirty = false;
             }
         }
     }

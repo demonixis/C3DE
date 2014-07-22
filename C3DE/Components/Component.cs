@@ -1,14 +1,16 @@
 ﻿using Microsoft.Xna.Framework.Content;
+using System;
+using System.ComponentModel;
 
 namespace C3DE.Components
 {
     /// <summary>
     /// A component is a part of a scene object.
     /// </summary>
-    public abstract class Component
+    public abstract class Component : IComparable
     {
         protected bool enabled = true;
-        protected uint order = 1;
+        protected int order = 1;
         protected SceneObject sceneObject;
 
         /// <summary>
@@ -17,7 +19,14 @@ namespace C3DE.Components
         public bool Enabled
         {
             get { return enabled; }
-            set { enabled = value; }
+            set 
+            {
+                if (value != enabled)
+                {
+                    enabled = value;
+                    NotifyPropertyChanged("Enabled");
+                }
+            }
         }
 
         /// <summary>
@@ -29,10 +38,25 @@ namespace C3DE.Components
             internal set { sceneObject = value; }
         }
 
-        public uint Order
+        public int Order
         {
             get { return order; }
-            protected set { order = value; }
+            protected set 
+            {
+                if (value != order)
+                {
+                    order = value;
+                    NotifyPropertyChanged("Order");
+                }
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged = null;
+
+        private void NotifyPropertyChanged(string property)
+        {
+            if (PropertyChanged != null)
+                PropertyChanged(this, new PropertyChangedEventArgs(property));
         }
 
         /// <summary>
@@ -59,15 +83,18 @@ namespace C3DE.Components
         {
         }
 
-        public static int CompareTo(Component c1, Component c2)
-        {
-            return c1.CompareTo(c2);
-        }
 
         public int CompareTo(object obj)
         {
-            if (obj is Component)
-                return CompareTo(obj as Component);
+            var component = obj as Component;
+
+            if (obj == null)
+                return 1;
+
+            if (order == component.order)
+                return 0;
+            else if (order > component.order)
+                return 1;
             else
                 return -1;
         }

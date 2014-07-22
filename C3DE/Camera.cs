@@ -9,40 +9,37 @@ namespace C3DE
         internal Vector3 target;
         internal Matrix view;
         internal Matrix projection;
-        private Vector3 _reference;
-        private float _fieldOfView;
-        private float _aspectRatio;
-        private float _nearClip;
-        private float _farClip;
-        private bool _dynamic;
-
-        public bool Dynamic
-        {
-            get { return _dynamic; }
-            set { _dynamic = value; }
-        }
+        private Vector3 reference;
+        private Vector3 upVector;
+        protected float fieldOfView;
+        protected float aspectRatio;
+        protected float nearClip;
+        protected float farClip;
 
         public Camera(int width, int height)
         {
-            _fieldOfView = MathHelper.ToRadians(45);
-            _aspectRatio = (float)width / (float)height;
-            _nearClip = 1.0f;
-            _farClip = 500.0f;
-            _reference = new Vector3(0.0f, 0.0f, 1.0f);
-            _dynamic = true;
+            fieldOfView = MathHelper.ToRadians(45);
+            aspectRatio = (float)width / (float)height;
+            nearClip = 1.0f;
+            farClip = 500.0f;
+            reference = new Vector3(0.0f, 0.0f, 1.0f);
 
             position = new Vector3(0, 0.5f, -10);
             target = Vector3.Zero;
             view = Matrix.CreateLookAt(position, target, Vector3.Up);
-            projection = Matrix.CreatePerspectiveFieldOfView(_fieldOfView, _aspectRatio, _nearClip, _farClip);
-            
+
+            ComputePerspective();
             UpdateTarget();
         }
 
         public void Update()
         {
-            if (_dynamic)
-                view = Matrix.CreateLookAt(position, target, Vector3.Up);
+            view = Matrix.CreateLookAt(position, target, Vector3.Up);
+        }
+
+        public void ComputePerspective()
+        {
+            projection = Matrix.CreatePerspectiveFieldOfView(fieldOfView, aspectRatio, nearClip, farClip);
         }
 
         public virtual void Translate(ref Vector3 move)
@@ -84,7 +81,7 @@ namespace C3DE
         private void UpdateTarget()
         {
             Matrix matRotation = Matrix.CreateFromYawPitchRoll(rotation.Y, rotation.X, rotation.Z);
-            Vector3 transformedReference = Vector3.Transform(_reference, matRotation);
+            Vector3 transformedReference = Vector3.Transform(reference, matRotation);
             target = position + transformedReference;
         }
     }

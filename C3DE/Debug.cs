@@ -1,5 +1,8 @@
 namespace C3DE
 {
+    /// <summary>
+    /// An utility class to safely debug this application.
+    /// </summary>
 	public class Debug
 	{
 		public static void Log(params object[] value)

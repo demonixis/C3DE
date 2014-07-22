@@ -6,34 +6,18 @@ using System;
 
 namespace C3DE
 {
-    public class C3DEGame : Game
+    public class C3DEGame : Engine
     {
-        GraphicsDeviceManager graphics;
-        SpriteBatch spriteBatch;
-        Renderer renderer;
-        Scene scene;
-        Camera camera;
-        SceneObject spaceShip;
+        private SceneObject spaceShip;
 
         public C3DEGame()
+            : base()
         {
-            graphics = new GraphicsDeviceManager(this);
-            graphics.PreferredBackBufferWidth = 1024;
-            graphics.PreferredBackBufferHeight = 600;
             Window.Title = "C3DE - Shadow Mapping";
-            Content.RootDirectory = "Content";
-            scene = new Scene();
         }
 
         protected override void LoadContent()
         {
-            spriteBatch = new SpriteBatch(GraphicsDevice);
-
-            camera = new Camera(GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
-
-            renderer = new Renderer(GraphicsDevice);
-            renderer.LoadContent(Content);
-
             ModelRenderer modelRenderer = null;
 
             //ship
@@ -91,106 +75,91 @@ namespace C3DE
         // Just for tests, it's ugly, I know that ;)
         protected override void Update(GameTime gameTime)
         {
-            camera.Update();
-            scene.Update();
+            base.Update(gameTime);
 
             spaceShip.Transform.Rotate(0, 0.05f, 0);
 
             foreach (Transform tr in spaceShip.Transform.Transforms)
-            {
                 tr.Rotate(0, 0, -0.05f);
-            }
 
             camPosition = Vector3.Zero;
             camRotation = Vector3.Zero;
 
-            var state = Keyboard.GetState();
-            var pad = GamePad.GetState(PlayerIndex.One);
-
-            if (state.IsKeyDown(Keys.Escape) || pad.IsButtonDown(Buttons.Back))
+            if (Input.Keys.Escape || Input.Gamepad.Pressed(Buttons.Back))
                 Exit();
 
             // Move the light (oh it's so great \:D/)
-            if (pad.IsButtonDown(Buttons.DPadLeft) || state.IsKeyDown(Keys.NumPad4))
-                renderer.Light.Transform.Translate(0.1f, 0, 0);
-
-            else if (pad.IsButtonDown(Buttons.DPadRight) || state.IsKeyDown(Keys.NumPad6))
-                renderer.Light.Transform.Translate(-0.1f, 0, 0);
-
-            if (pad.IsButtonDown(Buttons.DPadUp) || state.IsKeyDown(Keys.NumPad8))
+            if (Input.Keys.Pressed(Keys.NumPad8) || Input.Gamepad.Pressed(Buttons.DPadUp))
                 renderer.Light.Transform.Translate(0, 0, 0.1f);
 
-            else if (pad.IsButtonDown(Buttons.DPadDown) || state.IsKeyDown(Keys.NumPad5))
+            else if (Input.Keys.Pressed(Keys.NumPad5) || Input.Gamepad.Pressed(Buttons.DPadDown))
                 renderer.Light.Transform.Translate(0, 0, -0.1f);
 
+            if (Input.Keys.Pressed(Keys.NumPad4) || Input.Gamepad.Pressed(Buttons.DPadLeft))
+                renderer.Light.Transform.Translate(0.1f, 0, 0);
+
+            else if (Input.Keys.Pressed(Keys.NumPad6) || Input.Gamepad.Pressed(Buttons.DPadRight))
+                renderer.Light.Transform.Translate(-0.1f, 0, 0);
+
             // Camera
-            if (state.IsKeyDown(Keys.W) || state.IsKeyDown(Keys.Up))
+            if (Input.Keys.Up || Input.Keys.Pressed(Keys.W))
                 camPosition.Z += 0.01f * gameTime.ElapsedGameTime.Milliseconds;
 
-            else if (state.IsKeyDown(Keys.S) || state.IsKeyDown(Keys.Down))
+            else if (Input.Keys.Pressed(Keys.Down) || Input.Keys.Pressed(Keys.S))
                 camPosition.Z -= 0.01f * gameTime.ElapsedGameTime.Milliseconds;
 
-            if (state.IsKeyDown(Keys.A))
+            if (Input.Keys.Pressed(Keys.A))
                 camPosition.X += 0.01f * gameTime.ElapsedGameTime.Milliseconds;
 
-            else if (state.IsKeyDown(Keys.D))
+            else if (Input.Keys.Pressed(Keys.D))
                 camPosition.X -= 0.01f * gameTime.ElapsedGameTime.Milliseconds;
 
-            if (state.IsKeyDown(Keys.Q))
+            if (Input.Keys.Pressed(Keys.Q))
                 camPosition.Y += 0.01f * gameTime.ElapsedGameTime.Milliseconds;
 
-            else if (state.IsKeyDown(Keys.E))
+            else if (Input.Keys.Pressed(Keys.E))
                 camPosition.Y -= 0.01f * gameTime.ElapsedGameTime.Milliseconds;
 
-            if (state.IsKeyDown(Keys.PageUp))
+            if (Input.Keys.Pressed(Keys.PageUp))
                 camRotation.X -= 0.01f * gameTime.ElapsedGameTime.Milliseconds;
 
-            else if (state.IsKeyDown(Keys.PageDown))
+            else if (Input.Keys.Pressed(Keys.PageDown))
                 camRotation.X += 0.01f * gameTime.ElapsedGameTime.Milliseconds;
 
-            if (state.IsKeyDown(Keys.Left))
+            if (Input.Keys.Pressed(Keys.Left))
                 camRotation.Y += 0.01f * gameTime.ElapsedGameTime.Milliseconds;
 
-            else if (state.IsKeyDown(Keys.Right))
+            else if (Input.Keys.Pressed(Keys.Right))
                 camRotation.Y -= 0.01f * gameTime.ElapsedGameTime.Milliseconds;
 
             // Hello gamepad
-            camPosition.X -= pad.ThumbSticks.Left.X * 0.005f * gameTime.ElapsedGameTime.Milliseconds;
-            camPosition.Z += pad.ThumbSticks.Left.Y * 0.005f * gameTime.ElapsedGameTime.Milliseconds;
-            camRotation.X -= pad.ThumbSticks.Right.Y * 0.0015f * gameTime.ElapsedGameTime.Milliseconds;
-            camRotation.Y -= pad.ThumbSticks.Right.X * 0.0015f * gameTime.ElapsedGameTime.Milliseconds;
+            camPosition.X -= Input.Gamepad.ThumbSticks().X * 0.005f * gameTime.ElapsedGameTime.Milliseconds;
+            camPosition.Z += Input.Gamepad.ThumbSticks().Y * 0.005f * gameTime.ElapsedGameTime.Milliseconds;
+            camRotation.X -= Input.Gamepad.ThumbSticks(true).Y * 0.0015f * gameTime.ElapsedGameTime.Milliseconds;
+            camRotation.Y -= Input.Gamepad.ThumbSticks(true).X * 0.0015f * gameTime.ElapsedGameTime.Milliseconds;
 
             // Dead zone for fucked sticks.
-            if (pad.IsConnected)
+            if (Input.Gamepad.IsConnected())
             {
-                camRotation.X = Math.Abs(pad.ThumbSticks.Right.Y) < 0.4f ? 0.0f : camRotation.X;
-                camRotation.Y = Math.Abs(pad.ThumbSticks.Right.X) < 0.4f ? 0.0f : camRotation.Y;
+                camRotation.X = Math.Abs(camRotation.X) < 0.4f ? 0.0f : camRotation.X;
+                camRotation.Y = Math.Abs(camRotation.Y) < 0.4f ? 0.0f : camRotation.Y;
             }
 
             // Apply translation and rotation.
-            camera.Translate(ref camPosition);
-            camera.Rotate(ref camRotation);
+            mainCamera.Translate(ref camPosition);
+            mainCamera.Rotate(ref camRotation);
 
-            if (state.IsKeyDown(Keys.J))
+            if (Input.Keys.Pressed(Keys.J))
                 spaceShip.Transform.Translate(0.1f, 0, 0);
 
-            else if (state.IsKeyDown(Keys.L))
+            else if (Input.Keys.Pressed(Keys.L))
                 spaceShip.Transform.Translate(-0.1f, 0, 0);
 
-            if (state.IsKeyDown(Keys.I))
+            if (Input.Keys.Pressed(Keys.I))
                 spaceShip.Transform.Translate(0, 0, 0.1f);
 
-            else if (state.IsKeyDown(Keys.K))
+            else if (Input.Keys.Pressed(Keys.K))
                 spaceShip.Transform.Translate(0, 0, -0.1f);
-
-            base.Update(gameTime);
-        }
-
-        protected override void Draw(GameTime gameTime)
-        {
-            GraphicsDevice.Clear(Color.Black);
-            renderer.render(scene, camera);
-            base.Draw(gameTime);
         }
     }
 

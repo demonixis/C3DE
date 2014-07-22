@@ -148,7 +148,7 @@ namespace C3DE
 
             _spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Opaque, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone);
             _spriteBatch.Draw(_sceneRT, Vector2.Zero, Color.White);
-            _spriteBatch.Draw(_shadowRT, new Rectangle(0, height - tileHeight, tileWidth, tileHeight), Color.White);
+            //_spriteBatch.Draw(_shadowRT, new Rectangle(0, height - tileHeight, tileWidth, tileHeight), Color.White);
             _spriteBatch.End();
         }
 

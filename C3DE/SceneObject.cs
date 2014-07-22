@@ -4,6 +4,9 @@ using System.Collections.Generic;
 
 namespace C3DE
 {
+    using PropertyChangedEventHandler = System.ComponentModel.PropertyChangedEventHandler;
+    using PropertyChangedEventArgs = System.ComponentModel.PropertyChangedEventArgs;
+
     public class ComponentChangedEventArgs : EventArgs
     {
         public Component Component { get; protected set; }
@@ -21,10 +24,16 @@ namespace C3DE
     /// </summary>
     public class SceneObject
     {
+        private enum SOFlags
+        {
+            RemoveComponent = 0x10
+        }
+
         protected Transform transform;
         protected bool enabled;
         protected bool isStatic;
         protected List<Component> components;
+        protected uint _dirtyFlags;
 
         public bool IsStatic
         {
@@ -35,7 +44,14 @@ namespace C3DE
         public bool Enabled
         {
             get { return enabled; }
-            set { enabled = value; }
+            set 
+            {
+                if (value != enabled)
+                {
+                    NotifyPropertyChanged("Enabled");
+                    enabled = value; 
+                }
+            }
         }
 
         public Transform Transform
@@ -45,6 +61,14 @@ namespace C3DE
         }
 
         public event EventHandler<ComponentChangedEventArgs> ComponentsChanged = null;
+
+        public event PropertyChangedEventHandler PropertyChanged = null;
+
+        private void NotifyPropertyChanged(string property)
+        {
+            if (PropertyChanged != null)
+                PropertyChanged(this, new PropertyChangedEventArgs(property));
+        }
 
         public SceneObject()
         {
@@ -132,6 +156,7 @@ namespace C3DE
 
             component.SceneObject = this;
             components.Add(component);
+            components.Sort();
 
             if (ComponentsChanged != null)
                 ComponentsChanged(this, new ComponentChangedEventArgs(component, true));
