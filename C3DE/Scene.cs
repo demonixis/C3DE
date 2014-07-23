@@ -63,7 +63,7 @@ namespace C3DE
                 if (modelRenderer != null)
                     _renderList.Add(modelRenderer);
 
-                sceneObject.ComponentsChanged += sceneObject_ComponentsChanged;
+                sceneObject.ComponentChanged += sceneObject_ComponentsChanged;
             }
 
             return canAdd;
@@ -93,7 +93,7 @@ namespace C3DE
                     if (modelRenderer != null)
                         _renderList.Remove(modelRenderer);
 
-                    sceneObject.ComponentsChanged -= sceneObject_ComponentsChanged;
+                    sceneObject.ComponentChanged -= sceneObject_ComponentsChanged;
                 }
             }
 

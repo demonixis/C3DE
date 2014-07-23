@@ -1,6 +1,5 @@
 ﻿using Microsoft.Xna.Framework.Content;
 using System;
-using System.ComponentModel;
 
 namespace C3DE.Components
 {
@@ -51,7 +50,7 @@ namespace C3DE.Components
             }
         }
 
-        public event PropertyChangedEventHandler PropertyChanged = null;
+        public event EventHandler<PropertyChangedEventArgs> PropertyChanged = null;
 
         private void NotifyPropertyChanged(string property)
         {

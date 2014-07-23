@@ -9,13 +9,6 @@ float shadowMapSize = 512;
 float bias = 7.0 / 1000.0;
 float4 ambientColor = float4(1.0, 1.0, 1.0, 1.0);
 
-float random(float3 seed, int i)
-{
-	float4 seed4 = float4(seed, i);
-	float dotProduct = dot(seed4, float4(12.9898, 78.233, 45.164, 94.673));
-	return frac(sin(dotProduct) * 43758.5453);
-}
-
 texture mainTexture;
 sampler textureSampler = sampler_state
 {
@@ -54,21 +47,6 @@ struct VertexShaderOutput
 	float3 normal:TEXCOORD3;
 };
 
-VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
-{
-    VertexShaderOutput output;
-
-    float4 worldPosition = mul(input.Position, World);
-    float4 viewPosition = mul(worldPosition, View);
-	
-    output.Position = mul(viewPosition, Projection);
-	output.tex_coord = input.tex_coord;
-	output.worldPosition = worldPosition;
-	output.screenPosition =  output.Position.xy / output.Position.w;
-	output.normal = mul(input.normal, World);
-
-    return output;
-}
 float calcShadowPCF(float lightSpaceDepth, float2 shadowCoordinates)
 {
 	float size = 1.0 / shadowMapSize;
@@ -83,6 +61,22 @@ float calcShadowPCF(float lightSpaceDepth, float2 shadowCoordinates)
 	shadowTerm = (samples[0] + samples[1] + samples[2] + samples[3]) / 4.0;
 
 	return shadowTerm;
+}
+
+VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
+{
+    VertexShaderOutput output;
+
+    float4 worldPosition = mul(input.Position, World);
+    float4 viewPosition = mul(worldPosition, View);
+	
+    output.Position = mul(viewPosition, Projection);
+	output.tex_coord = input.tex_coord;
+	output.worldPosition = worldPosition;
+	output.screenPosition =  output.Position.xy / output.Position.w;
+	output.normal = mul(input.normal, World);
+
+    return output;
 }
 
 float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
@@ -109,9 +103,13 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 	lightFactor = attenuation * ndl;
 	float shadowTerm = 1;
 
-	if((saturate(screenPosition).x == screenPosition.x) && (saturate(screenPosition).y == screenPosition.y))
-		shadowTerm = calcShadowPCF(lightSpaceDepth, screenPosition);
-
+	// Using this hack for now
+	if (shadowMapSize > 0)
+	{
+		if ((saturate(screenPosition).x == screenPosition.x) && (saturate(screenPosition).y == screenPosition.y))
+			shadowTerm = calcShadowPCF(lightSpaceDepth, screenPosition);
+	}
+	
     return color * ambientColor * lightFactor * shadowTerm;
 }
 

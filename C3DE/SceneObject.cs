@@ -4,21 +4,6 @@ using System.Collections.Generic;
 
 namespace C3DE
 {
-    using PropertyChangedEventHandler = System.ComponentModel.PropertyChangedEventHandler;
-    using PropertyChangedEventArgs = System.ComponentModel.PropertyChangedEventArgs;
-
-    public class ComponentChangedEventArgs : EventArgs
-    {
-        public Component Component { get; protected set; }
-        public bool Added { get; protected set; }
-
-        public ComponentChangedEventArgs(Component component, bool added)
-        {
-            Component = component;
-            Added = added;
-        }
-    }
-
     /// <summary>
     /// A scene object is the base object on the scene.
     /// </summary>
@@ -44,12 +29,12 @@ namespace C3DE
         public bool Enabled
         {
             get { return enabled; }
-            set 
+            set
             {
                 if (value != enabled)
                 {
                     NotifyPropertyChanged("Enabled");
-                    enabled = value; 
+                    enabled = value;
                 }
             }
         }
@@ -60,15 +45,31 @@ namespace C3DE
             protected set { transform = value; }
         }
 
-        public event EventHandler<ComponentChangedEventArgs> ComponentsChanged = null;
+        #region Events
 
-        public event PropertyChangedEventHandler PropertyChanged = null;
+        /// <summary>
+        /// Called when a component is added or removed.
+        /// </summary>
+        public event EventHandler<ComponentChangedEventArgs> ComponentChanged = null;
+
+        /// <summary>
+        /// Called when a registered property has changed.
+        /// </summary>
+        public event EventHandler<PropertyChangedEventArgs> PropertyChanged = null;
+
+        private void NotifyComponentChanged(Component component, bool added = true)
+        {
+            if (ComponentChanged != null)
+                ComponentChanged(this, new ComponentChangedEventArgs(component, added));
+        }
 
         private void NotifyPropertyChanged(string property)
         {
             if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(property));
         }
+
+        #endregion
 
         public SceneObject()
         {
@@ -158,8 +159,7 @@ namespace C3DE
             components.Add(component);
             components.Sort();
 
-            if (ComponentsChanged != null)
-                ComponentsChanged(this, new ComponentChangedEventArgs(component, true));
+            NotifyComponentChanged(component);
 
             return component;
         }
@@ -188,8 +188,8 @@ namespace C3DE
             {
                 components.RemoveAt(index);
 
-                if (ComponentsChanged != null)
-                    ComponentsChanged(this, new ComponentChangedEventArgs(component, false));
+                if (ComponentChanged != null)
+                    ComponentChanged(this, new ComponentChangedEventArgs(component, false));
             }
 
             return index > -1;

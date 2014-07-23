@@ -44,18 +44,20 @@
     <Compile Include="Components\ModelRenderer.cs" />
     <Compile Include="Components\Transform.cs" />
     <Compile Include="Debug.cs" />
+    <Compile Include="EgineEventArgs.cs" />
     <Compile Include="Engine.cs" />
     <Compile Include="Input\GamepadComponent.cs" />
     <Compile Include="Input\KeyboardComponent.cs" />
     <Compile Include="Input\MouseComponent.cs" />
     <Compile Include="Light.cs" />
-    <Compile Include="Materials\Material.cs" />
+    <Compile Include="Components\Materials\Material.cs" />
     <Compile Include="Scene.cs" />
     <Compile Include="C3DEGame.cs" />
     <Compile Include="SceneObject.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Renderer.cs" />
-    <Compile Include="Materials\StandardMaterial.cs" />
+    <Compile Include="Components\Materials\StandardMaterial.cs" />
+    <Compile Include="ShadowGenerator.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\**\*.*">

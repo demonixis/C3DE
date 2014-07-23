@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace C3DE.Materials
+namespace C3DE.Components.Materials
 {
     public class StandardMaterial : Material
     {
