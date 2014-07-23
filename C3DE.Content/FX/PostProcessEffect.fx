@@ -1,3 +1,5 @@
+float blurDistance;
+
 texture targetTexture;
 sampler colorMapSampler = sampler_state
 {
@@ -25,6 +27,15 @@ float4 GreyScaleIntensityPixelShader(float2 textureCoord:TEXCOORD0) : COLOR
 	return color;
 }
 
+float4 BlurPixelShader(float2 textureCoord:TEXCOORD0):COLOR
+{
+	float4 color = tex2D(colorMapSampler, float2(textureCoord.x + blurDistance, textureCoord.y + blurDistance));
+	color += tex2D(colorMapSampler, float2(textureCoord.x - blurDistance, textureCoord.y - blurDistance));
+	color += tex2D(colorMapSampler, float2(textureCoord.x + blurDistance, textureCoord.y - blurDistance));
+	color += tex2D(colorMapSampler, float2(textureCoord.x - blurDistance, textureCoord.y + blurDistance));
+	return color / 4.0;
+}
+
 technique Technique1
 {
     pass AverageColor
@@ -35,12 +46,22 @@ technique Technique1
 		PixelShader = compile ps_3_0 AverageColorPixelShader();
 #endif
     }
+
 	pass GreyScaleIntensity
 	{
 #if SM4
 		PixelShader = compile ps_4_0_level_9_3 GreyScaleIntensityPixelShader();
 #else
 		PixelShader = compile ps_3_0 GreyScaleIntensityPixelShader();
+#endif
+	}
+
+	pass Blur
+	{
+#if SM4
+		PixelShader = compile ps_4_0_level_9_3 BlurPixelShader();
+#else
+		PixelShader = compile ps_3_0 BlurPixelShader();
 #endif
 	}
 }

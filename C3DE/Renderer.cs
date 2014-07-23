@@ -13,15 +13,14 @@ namespace C3DE
     {
         private GraphicsDevice graphicsDevice;
         private RenderTarget2D _sceneRT;
-        //private RenderTarget2D _shadowRT;
         private List<ModelRenderer> _renderList;
-        //private float _shadowMapSize;
         private Light _light;
         private Effect _objectFx;
-        //private Effect _shadowFx;
+        private Effect _postProcessFx;
         private ShadowGenerator _shadowGenerator;
         private SpriteBatch _spriteBatch;
         private Color _ambientColor;
+        private bool _postProcessEnabled;
 
         public Color AmbientColor
         {
@@ -42,6 +41,7 @@ namespace C3DE
             _light = new Light();
             _ambientColor = Color.White;
             _shadowGenerator = new ShadowGenerator(device);
+            _postProcessEnabled = true; // temp for tests
         }
 
         /// <summary>
@@ -51,6 +51,7 @@ namespace C3DE
         public void LoadContent(ContentManager content)
         {
             _objectFx = content.Load<Effect>("fx/StandardEffect");
+            _postProcessFx = content.Load<Effect>("fx/PostProcessEffect");
             _shadowGenerator.LoadContent(content);
         }
 
@@ -68,13 +69,14 @@ namespace C3DE
             _objectFx.Parameters["Projection"].SetValue(camera.projection);
 
             // Shadows
+            _objectFx.Parameters["shadowMapEnabled"].SetValue(_shadowGenerator.Enabled);
+
             if (_shadowGenerator.Enabled)
             {
                 _objectFx.Parameters["shadowTexture"].SetValue(_shadowGenerator.ShadowRT);
-                //_objectFx.Parameters["shadowMapSize"].SetValue(_shadowGenerator.ShadowMapSize);
-            }
-            else
-                _objectFx.Parameters["shadowMapSize"].SetValue(0.0f);
+                _objectFx.Parameters["shadowMapSize"].SetValue(_shadowGenerator.ShadowMapSize);
+                _objectFx.Parameters["shadowBias"].SetValue(_shadowGenerator.ShadowBias);
+            }                
 
             // Light
             _objectFx.Parameters["lightView"].SetValue(_light.viewMatrix);
@@ -83,7 +85,6 @@ namespace C3DE
             _objectFx.Parameters["lightRadius"].SetValue(Light.radius);
             _objectFx.Parameters["ambientColor"].SetValue(_ambientColor.ToVector4());
             
-
             for (int i = 0; i < _renderList.Count; i++)
             {
                 _objectFx.Parameters["World"].SetValue(_renderList[i].SceneObject.Transform.world);
@@ -100,8 +101,16 @@ namespace C3DE
         /// </summary>
         private void renderBuffers()
         {
-            _spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Opaque, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone);
+            _spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Opaque, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone, _postProcessEnabled ? _postProcessFx : null);
             _spriteBatch.Draw(_sceneRT, Vector2.Zero, Color.White);
+
+            // We need to select the desired post process in a list.
+            if (_postProcessEnabled)
+            {
+                _postProcessFx.Parameters["targetTexture"].SetValue(_sceneRT);
+                _postProcessFx.Parameters["blurDistance"].SetValue(0.01f);
+                _postProcessFx.CurrentTechnique.Passes[2].Apply();
+            }
             _spriteBatch.End();
         }
 
@@ -115,11 +124,7 @@ namespace C3DE
             _renderList = scene.RenderList;
 
             if (_shadowGenerator.Enabled)
-            {
-                _shadowGenerator.Light = _light;
-                _shadowGenerator.RenderList = _renderList;
-                _shadowGenerator.renderShadows(camera);
-            }
+                _shadowGenerator.renderShadows(camera, _renderList, _light);
 
             renderObjects(camera);
             renderBuffers();

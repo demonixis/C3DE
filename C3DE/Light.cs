@@ -30,11 +30,22 @@ namespace C3DE
             set { direction = value; }
         }
 
+        public float Radius
+        {
+            get { return radius.X; }
+            set
+            {
+                radius.X = value;
+                radius.Y = value;
+                radius.Z = value;
+            }
+        }
+
         public Light()
             : base()
         {
             projectionMatrix = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45), 1, 1, 500);
-            Transform.Translate(2, 10, 2);
+            Transform.Translate(6.0f, 30.0f, -23.0f);
             radius = new Vector3(250.0f);
             direction = new Vector3(50.0f, 330.0f, 0.0f);
         }

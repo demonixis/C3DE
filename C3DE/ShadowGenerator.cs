@@ -16,22 +16,10 @@ namespace C3DE
         private GraphicsDevice _device;
         private Effect _shadowEffect;
         private float _shadowMapSize;
+        private float _shadowBias;
+        private float _shadowStrength;
         private BoundingSphere _boundingSphere;
-        private List<ModelRenderer> _renderList;
-        private Light _light;
         private bool _enabled;
-
-        public List<ModelRenderer> RenderList
-        {
-            get { return _renderList; }
-            internal set { _renderList = value; }
-        }
-
-        public Light Light
-        {
-            get { return _light; }
-            internal set { _light = value; }
-        }
 
         public RenderTarget2D ShadowRT
         {
@@ -41,6 +29,18 @@ namespace C3DE
         public float ShadowMapSize
         {
             get { return _shadowMapSize; }
+        }
+
+        public float ShadowBias
+        {
+            get { return _shadowBias; }
+            set { _shadowBias = value; }
+        }
+
+        public float ShadowStrength
+        {
+            get { return 1 - _shadowStrength; }
+            set { _shadowStrength = Math.Min(1.0f, Math.Max(0.0f, value)); }
         }
 
         public bool Enabled
@@ -53,7 +53,9 @@ namespace C3DE
         {
             _device = device;
             _enabled = true;
-            SetShadowMapSize(512);
+            _shadowBias = 0.0015f;
+            _shadowStrength = 0.8f;
+            SetShadowMapSize(1024);
         }
 
         public void LoadContent(ContentManager content)
@@ -75,36 +77,36 @@ namespace C3DE
         /// Render shadows for the specified camera.
         /// </summary>
         /// <param name="camera"></param>
-        public void renderShadows(Camera camera)
+        public void renderShadows(Camera camera, List<ModelRenderer> renderList, Light light)
         {
             _boundingSphere = new BoundingSphere();
 
-            if (_renderList.Count > 0)
+            if (renderList.Count > 0)
             {
-                for (int i = 0; i < _renderList.Count; i++)
+                for (int i = 0; i < renderList.Count; i++)
                 {
-                    if (_renderList[i].CastShadow)
-                        _boundingSphere = BoundingSphere.CreateMerged(_boundingSphere, _renderList[i].GetBoundingSphere());
+                    if (renderList[i].CastShadow)
+                        _boundingSphere = BoundingSphere.CreateMerged(_boundingSphere, renderList[i].GetBoundingSphere());
                 }
 
-                _light.Update(ref _boundingSphere);
+                light.Update(ref _boundingSphere);
             }
 
             _device.SetRenderTarget(_shadowRT);
             _device.DepthStencilState = DepthStencilState.Default;
             _device.Clear(Color.White);
 
-            _shadowEffect.Parameters["View"].SetValue(_light.viewMatrix);
-            _shadowEffect.Parameters["Projection"].SetValue(_light.projectionMatrix);
+            _shadowEffect.Parameters["View"].SetValue(light.viewMatrix);
+            _shadowEffect.Parameters["Projection"].SetValue(light.projectionMatrix);
 
-            for (int i = 0; i < _renderList.Count; i++)
+            for (int i = 0; i < renderList.Count; i++)
             {
-                if (!_renderList[i].CastShadow)
+                if (!renderList[i].CastShadow)
                     continue;
 
-                _shadowEffect.Parameters["World"].SetValue(_renderList[i].SceneObject.Transform.world);
+                _shadowEffect.Parameters["World"].SetValue(renderList[i].SceneObject.Transform.world);
                 _shadowEffect.CurrentTechnique.Passes[0].Apply();
-                _renderList[i].DrawMesh(_device);
+                renderList[i].DrawMesh(_device);
             }
 
             _device.SetRenderTarget(null);
