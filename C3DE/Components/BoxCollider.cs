@@ -7,6 +7,7 @@ namespace C3DE.Components
     /// </summary>
     public class BoxCollider : Component
     {
+        private RenderableComponent _renderable;
         private BoundingBox _box;
         private Vector3 _center;
         private bool _dirty;
@@ -32,11 +33,21 @@ namespace C3DE.Components
         }
 
         public BoxCollider()
-            : base()
+            : this (null)
+        {
+        }
+
+        public BoxCollider(SceneObject sceneObject)
+            : base(sceneObject)
         {
             _box = new BoundingBox();
             _center = Vector3.Zero;
             _dirty = true;
+        }
+
+        public override void LoadContent(Microsoft.Xna.Framework.Content.ContentManager content)
+        {
+            _renderable = GetComponent<RenderableComponent>();
         }
 
         /// <summary>
@@ -48,14 +59,9 @@ namespace C3DE.Components
             {
                 _dirty = false;
 
-                var modelRenderer = GetComponent<ModelRenderer>();
-
-                if (modelRenderer != null)
-                {
-                    var sphere = modelRenderer.GetBoundingSphere();
-                    _box = BoundingBox.CreateFromSphere(sphere);
-                    _center = sphere.Center;
-                }
+                var sphere = _renderable.GetBoundingSphere();
+                _box = BoundingBox.CreateFromSphere(sphere);
+                _center = sphere.Center;
             }
         }
     }

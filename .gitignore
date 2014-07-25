@@ -13,5 +13,5 @@ obj/
 [Bb]in
 [Dd]ebug*/
 [Rr]elease*/
-C3DE/Content/*
+C3DE.Demo/Content/*
 Libs/*.dll

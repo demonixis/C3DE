@@ -8,7 +8,7 @@ namespace C3DE
     public class App
     {
         public static ContentManager Content { get; internal set; }
-        public static GraphicsDevice Device { get; internal set; }
+        public static GraphicsDevice GraphicsDevice { get; internal set; }
     }
 
     public class Input
@@ -24,7 +24,7 @@ namespace C3DE
         protected SpriteBatch spriteBatch;
         protected Renderer renderer;
         protected Scene scene;
-        protected Camera mainCamera;
+        protected CameraPrefab mainCamera;
 
         public Engine()
         {
@@ -41,12 +41,12 @@ namespace C3DE
             base.Initialize();
 
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            mainCamera = new Camera(GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
+            mainCamera = new CameraPrefab(GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
             renderer = new Renderer(GraphicsDevice);
             renderer.LoadContent(Content);
 
             App.Content = Content;
-            App.Device = GraphicsDevice;
+            App.GraphicsDevice = GraphicsDevice;
 
             Input.Keys = new KeyboardComponent(this);
             Input.Mouse = new MouseComponent(this);
@@ -55,6 +55,8 @@ namespace C3DE
             Components.Add(Input.Keys);
             Components.Add(Input.Mouse);
             Components.Add(Input.Gamepad);
+
+            scene.LoadContent(Content);
         }
 
         protected override void Update(GameTime gameTime)

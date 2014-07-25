@@ -2,7 +2,7 @@
 
 namespace C3DE
 {
-    public class Light : SceneObject
+    public class LightPrefab : SceneObject
     {
         internal Matrix viewMatrix;
         internal Matrix projectionMatrix;
@@ -41,7 +41,7 @@ namespace C3DE
             }
         }
 
-        public Light()
+        public LightPrefab()
             : base()
         {
             projectionMatrix = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45), 1, 1, 500);

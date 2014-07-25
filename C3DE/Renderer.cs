@@ -1,4 +1,5 @@
 ﻿using C3DE.Components;
+using C3DE.PostProcess;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -13,14 +14,13 @@ namespace C3DE
     {
         private GraphicsDevice graphicsDevice;
         private RenderTarget2D _sceneRT;
-        private List<ModelRenderer> _renderList;
-        private Light _light;
+        private List<RenderableComponent> _renderList;
+        private LightPrefab _light;
         private Effect _objectFx;
-        private Effect _postProcessFx;
         private ShadowGenerator _shadowGenerator;
         private SpriteBatch _spriteBatch;
         private Color _ambientColor;
-        private bool _postProcessEnabled;
+        private PostProcessManager _postProcessManager;
 
         public Color AmbientColor
         {
@@ -28,7 +28,7 @@ namespace C3DE
             set { _ambientColor = value; }
         }
 
-        public Light Light
+        public LightPrefab Light
         {
             get { return _light; }
         }
@@ -38,10 +38,10 @@ namespace C3DE
             graphicsDevice = device;
             _spriteBatch = new SpriteBatch(device);
             _sceneRT = new RenderTarget2D(device, device.Viewport.Width, device.Viewport.Height, false, SurfaceFormat.Color, DepthFormat.Depth24, 0, RenderTargetUsage.DiscardContents);
-            _light = new Light();
+            _light = new LightPrefab();
             _ambientColor = Color.White;
             _shadowGenerator = new ShadowGenerator(device);
-            _postProcessEnabled = true; // temp for tests
+            _postProcessManager = new PostProcessManager();
         }
 
         /// <summary>
@@ -51,7 +51,6 @@ namespace C3DE
         public void LoadContent(ContentManager content)
         {
             _objectFx = content.Load<Effect>("fx/StandardEffect");
-            _postProcessFx = content.Load<Effect>("fx/PostProcessEffect");
             _shadowGenerator.LoadContent(content);
         }
 
@@ -59,7 +58,7 @@ namespace C3DE
         /// Render renderable objects
         /// </summary>
         /// <param name="camera">The camera to use.</param>
-        private void renderObjects(Camera camera)
+        private void renderObjects(Scene scene, CameraPrefab camera)
         {
             graphicsDevice.SetRenderTarget(_sceneRT);
             graphicsDevice.Clear(Color.Black);
@@ -87,10 +86,14 @@ namespace C3DE
             
             for (int i = 0; i < _renderList.Count; i++)
             {
-                _objectFx.Parameters["World"].SetValue(_renderList[i].SceneObject.Transform.world);
-                _objectFx.Parameters["mainTexture"].SetValue(_renderList[i].MainTexture);
-                _objectFx.CurrentTechnique.Passes[0].Apply();
-                _renderList[i].DrawMesh(graphicsDevice);
+                if (_renderList[i].MaterialCount > 0)
+                {
+                    _objectFx.Parameters["World"].SetValue(_renderList[i].SceneObject.Transform.world);
+                    _objectFx.Parameters["mainTexture"].SetValue(scene.Materials[_renderList[i].MaterialIndices[0]].MainTexture);
+
+                    _objectFx.CurrentTechnique.Passes[0].Apply();
+                    _renderList[i].Draw(graphicsDevice);
+                }
             }
 
             graphicsDevice.SetRenderTarget(null);
@@ -101,16 +104,9 @@ namespace C3DE
         /// </summary>
         private void renderBuffers()
         {
-            _spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Opaque, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone, _postProcessEnabled ? _postProcessFx : null);
+            // FIXME Use a fullscreen quad instead of a spritebatch
+            _spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Opaque, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone, null);
             _spriteBatch.Draw(_sceneRT, Vector2.Zero, Color.White);
-
-            // We need to select the desired post process in a list.
-            if (_postProcessEnabled)
-            {
-                _postProcessFx.Parameters["targetTexture"].SetValue(_sceneRT);
-                _postProcessFx.Parameters["blurDistance"].SetValue(0.01f);
-                _postProcessFx.CurrentTechnique.Passes[2].Apply();
-            }
             _spriteBatch.End();
         }
 
@@ -119,14 +115,14 @@ namespace C3DE
         /// </summary>
         /// <param name="scene">The scene to render.</param>
         /// <param name="camera">The camera to use for render.</param>
-        public void render(Scene scene, Camera camera)
+        public void render(Scene scene, CameraPrefab camera)
         {
             _renderList = scene.RenderList;
 
             if (_shadowGenerator.Enabled)
                 _shadowGenerator.renderShadows(camera, _renderList, _light);
 
-            renderObjects(camera);
+            renderObjects(scene, camera);
             renderBuffers();
         }
     }

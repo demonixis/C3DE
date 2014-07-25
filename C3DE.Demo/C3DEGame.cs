@@ -1,14 +1,16 @@
 using C3DE.Components;
+using C3DE.Materials;
+using C3DE.Prefabs;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 
-namespace C3DE
+namespace C3DE.Demo
 {
     public class C3DEGame : Engine
     {
-        private SceneObject spaceShip;
+        private ModelPrefab spaceShip;
 
         public C3DEGame()
             : base()
@@ -20,18 +22,22 @@ namespace C3DE
         {
             ModelRenderer modelRenderer = null;
 
+            Material spaceShipMaterial = new Material(scene);
+            spaceShipMaterial.MainTexture = Content.Load<Texture2D>("Models/texv1");
+
+            Material ship2Material = new Material(scene);
+            ship2Material.MainTexture = Content.Load<Texture2D>("Textures/huleShip");
+
+            Material dockStationMaterial = new Material(scene);
+            dockStationMaterial.MainTexture = Content.Load<Texture2D>("Models/Level/hullTexture_2_0");
+
             //ship
-            spaceShip = new SceneObject();
+            spaceShip = new ModelPrefab();
+            spaceShip.Renderer.Model = Content.Load<Model>("Models/spaceship");
+            spaceShip.Renderer.Material = spaceShipMaterial;
             spaceShip.Transform.Translate(0, 1, 0);
             spaceShip.Transform.Scale = new Vector3(0.25f);
             scene.Add(spaceShip);
-
-            modelRenderer = spaceShip.AddComponent<ModelRenderer>();
-            modelRenderer.Model = Content.Load<Model>("Models/spaceship");
-            modelRenderer.MainTexture = Content.Load<Texture2D>("Models/texv1");
-
-            var boxCollider = spaceShip.AddComponent<BoxCollider>();
-            boxCollider.Update();
 
             // Ship 2
             SceneObject sceneObject = new SceneObject();
@@ -42,7 +48,7 @@ namespace C3DE
 
             modelRenderer = sceneObject.AddComponent<ModelRenderer>();
             modelRenderer.Model = Content.Load<Model>("Models/ship");
-            modelRenderer.MainTexture = Content.Load<Texture2D>("Textures/huleShip");
+            modelRenderer.Material = ship2Material;
 
 
             // Ship 3
@@ -54,7 +60,7 @@ namespace C3DE
 
             modelRenderer = sceneObject.AddComponent<ModelRenderer>();
             modelRenderer.Model = Content.Load<Model>("Models/ship");
-            modelRenderer.MainTexture = Content.Load<Texture2D>("Textures/huleShip");
+            modelRenderer.Material = ship2Material;
 
 
             // Floor
@@ -65,8 +71,10 @@ namespace C3DE
 
             modelRenderer = sceneObject.AddComponent<ModelRenderer>();
             modelRenderer.Model = Content.Load<Model>("Models/Level/DockStation");
-            modelRenderer.MainTexture = Content.Load<Texture2D>("Models/Level/hullTexture_2_0");
+            modelRenderer.Material = dockStationMaterial; 
             modelRenderer.CastShadow = false;
+
+            this.IsMouseVisible = true;
         }
 
         Vector3 camPosition = Vector3.Zero;

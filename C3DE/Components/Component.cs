@@ -8,9 +8,14 @@ namespace C3DE.Components
     /// </summary>
     public abstract class Component : IComparable
     {
-        protected bool enabled = true;
+        private static int ComponentCounter = 0;
+
+        protected bool enabled;
         protected int order = 1;
+        protected bool initialized;
         protected SceneObject sceneObject;
+
+        #region Fields
 
         /// <summary>
         /// Determine if the component is enabled of disabled.
@@ -27,6 +32,13 @@ namespace C3DE.Components
                 }
             }
         }
+
+        public bool Initialized
+        {
+            get { return initialized; }
+        }
+
+        public int Id { get; private set; }
 
         /// <summary>
         /// Gets the scene object of this component.
@@ -50,9 +62,11 @@ namespace C3DE.Components
             }
         }
 
+        #endregion
+
         public event EventHandler<PropertyChangedEventArgs> PropertyChanged = null;
 
-        private void NotifyPropertyChanged(string property)
+        protected void NotifyPropertyChanged(string property)
         {
             if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(property));
@@ -62,17 +76,25 @@ namespace C3DE.Components
         /// Create an empty component.
         /// </summary>
         public Component()
+            : this(null)
         {
         }
 
         public Component(SceneObject sceneObj)
-            : this()
         {
             sceneObject = sceneObj;
+            initialized = false;
+            enabled = true;
+            Id = ++ComponentCounter;
         }
 
+        /// <summary>
+        /// Sets the initialized flag to true.
+        /// </summary>
+        /// <param name="content"></param>
         public virtual void LoadContent(ContentManager content)
         {
+            initialized = true;
         }
 
         /// <summary>
@@ -87,7 +109,7 @@ namespace C3DE.Components
         {
             var component = obj as Component;
 
-            if (obj == null)
+            if (component == null)
                 return 1;
 
             if (order == component.order)

@@ -3,15 +3,20 @@ using System;
 
 namespace C3DE
 {
+    public enum ComponentChangeType
+    {
+        Add = 0, Update, Remove
+    }
+
     public class ComponentChangedEventArgs : EventArgs
     {
         public Component Component { get; protected set; }
-        public bool Added { get; protected set; }
+        public ComponentChangeType ChangeType { get; protected set; }
 
-        public ComponentChangedEventArgs(Component component, bool added)
+        public ComponentChangedEventArgs(Component component, ComponentChangeType changeType)
         {
             Component = component;
-            Added = added;
+            ChangeType = changeType;
         }
     }
 

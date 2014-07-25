@@ -2,21 +2,26 @@
 
 namespace C3DE
 {
-    public class Camera
+    public class CameraPrefab
     {
         internal Vector3 position;
         internal Vector3 rotation;
         internal Vector3 target;
-        internal Matrix view;
-        internal Matrix projection;
-        private Vector3 reference;
-        private Vector3 upVector;
+        public Matrix view;
+        public Matrix projection;
+        public Vector3 reference;
+        public Vector3 upVector;
         protected float fieldOfView;
         protected float aspectRatio;
         protected float nearClip;
         protected float farClip;
 
-        public Camera(int width, int height)
+        public Matrix World
+        {
+            get { return Matrix.CreateFromYawPitchRoll(rotation.Y, rotation.X, rotation.Z) * Matrix.CreateTranslation(position); }
+        }
+
+        public CameraPrefab(int width, int height)
         {
             fieldOfView = MathHelper.ToRadians(45);
             aspectRatio = (float)width / (float)height;

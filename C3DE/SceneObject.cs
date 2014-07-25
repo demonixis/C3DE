@@ -1,4 +1,6 @@
 ﻿using C3DE.Components;
+using C3DE.Utils;
+using Microsoft.Xna.Framework.Content;
 using System;
 using System.Collections.Generic;
 
@@ -9,16 +11,24 @@ namespace C3DE
     /// </summary>
     public class SceneObject
     {
-        private enum SOFlags
-        {
-            RemoveComponent = 0x10
-        }
+        #region Private/protected declarations
+
+        private static int SceneObjectCounter = 0;
 
         protected Transform transform;
+        protected Scene scene;
         protected bool enabled;
         protected bool isStatic;
-        protected List<Component> components;
-        protected uint _dirtyFlags;
+        protected SmartList<Component> components;
+        protected bool initialized;
+
+        #endregion
+
+        #region Fields
+
+        public int Id { get; private set; }
+
+        public string Name { get; protected set; }
 
         public bool IsStatic
         {
@@ -45,6 +55,14 @@ namespace C3DE
             protected set { transform = value; }
         }
 
+        public Scene Scene
+        {
+            get { return scene; }
+            internal set { scene = value; }
+        }
+
+        #endregion
+
         #region Events
 
         /// <summary>
@@ -57,10 +75,10 @@ namespace C3DE
         /// </summary>
         public event EventHandler<PropertyChangedEventArgs> PropertyChanged = null;
 
-        private void NotifyComponentChanged(Component component, bool added = true)
+        private void NotifyComponentChanged(Component component, ComponentChangeType type = ComponentChangeType.Add)
         {
             if (ComponentChanged != null)
-                ComponentChanged(this, new ComponentChangedEventArgs(component, added));
+                ComponentChanged(this, new ComponentChangedEventArgs(component, type));
         }
 
         private void NotifyPropertyChanged(string property)
@@ -71,16 +89,54 @@ namespace C3DE
 
         #endregion
 
+        /// <summary>
+        /// Create a basic scene object.
+        /// </summary>
         public SceneObject()
         {
             transform = new Transform(this);
 
-            components = new List<Component>();
+            components = new SmartList<Component>();
             components.Add(transform);
 
             enabled = true;
             isStatic = false;
+
+            Id = ++SceneObjectCounter;
+            Name = "SceneObject_" + Id;
         }
+
+        /// <summary>
+        /// Initialize and load specific content.
+        /// </summary>
+        /// <param name="content">The content manager.</param>
+        public virtual void LoadContent(ContentManager content)
+        {
+            if (!initialized)
+            {
+                for (int i = 0; i < components.Size; i++)
+                    components[i].LoadContent(content);
+
+                components.CheckRequired = true;
+                initialized = true;
+            }
+        }
+
+        /// <summary>
+        /// Update components.
+        /// </summary>
+        public virtual void Update()
+        {
+            components.Check();
+
+            for (int i = 0; i < components.Size; i++)
+            {
+                if (components[i].Enabled)
+                    components[i].Update();
+            }
+        }
+
+        #region SceneObject collection
 
         /// <summary>
         /// Add a scene object as children of this scene object. It is not possible to add the same object twice
@@ -92,10 +148,10 @@ namespace C3DE
             if (!transform.Transforms.Contains(sceneObject.transform))
             {
                 // Add the scene object to the scene if not yet added.
-                if (sceneObject.Transform.Root == null && transform.Root != transform)
+                if (sceneObject.Scene == null && this != scene)
                 {
-                    if (transform.Root != null)
-                        transform.Root.SceneObject.Add(sceneObject);
+                    if (scene != null)
+                        scene.Add(sceneObject);
                     else
                         throw new Exception("You need to attach first the main scene object to scene.");
                 }
@@ -126,25 +182,21 @@ namespace C3DE
             {
                 transform.Transforms.Remove(sceneObject.transform);
                 sceneObject.transform.Parent = transform.Root;
-
                 return true;
             }
 
             return false;
         }
 
-        /// <summary>
-        /// Update scene object components
-        /// </summary>
-        public virtual void Update()
-        {
-            foreach (var component in components)
-            {
-                if (component.Enabled)
-                    component.Update();
-            }
-        }
+        #endregion
 
+        #region Component collection
+
+        /// <summary>
+        /// Add a component of the specified type. Note that you can't add another Transform component.
+        /// </summary>
+        /// <typeparam name="T">The component's type.</typeparam>
+        /// <returns>Return true if the component has been added, otherwise return false.</returns>
         public T AddComponent<T>() where T : Component, new()
         {
             var component = new T();
@@ -164,35 +216,44 @@ namespace C3DE
             return component;
         }
 
+        /// <summary>
+        /// Get a component of the specified type.
+        /// </summary>
+        /// <typeparam name="T">The component's type.</typeparam>
+        /// <returns>Return the first component of this type if founded, otherwise return null.</returns>
         public T GetComponent<T>() where T : Component
         {
-            foreach (var component in components)
+            for (int i = 0; i < components.Size; i++)
             {
-                if (component is T)
-                    return component as T;
+                if (components[i] is T)
+                    return components[i] as T;
             }
 
             return null;
         }
 
+        /// <summary>
+        /// Remove the component and update the scene.
+        /// </summary>
+        /// <param name="component">The component to remove.</param>
+        /// <returns>Return true if the component has been removed, otherwise return false.</returns>
         public bool RemoveComponent(Component component)
         {
             int index = -1;
-            int size = components.Count;
             int i = 0;
 
-            while (i < size && index == -1)
+            while (i < components.Size && index == -1)
                 index = (components[i] == component) ? i : index;
 
             if (index > -1)
             {
-                components.RemoveAt(index);
-
-                if (ComponentChanged != null)
-                    ComponentChanged(this, new ComponentChangedEventArgs(component, false));
+                components.Remove(component);
+                NotifyComponentChanged(component, ComponentChangeType.Remove);
             }
 
             return index > -1;
         }
+
+        #endregion
     }
 }

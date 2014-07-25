@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace C3DE.Components.Materials
+namespace C3DE.Materials
 {
     public class StandardMaterial : Material
     {
@@ -10,11 +10,10 @@ namespace C3DE.Components.Materials
         protected float shadowMapSize;
         protected bool shadowMapEnabled;
 
-        public StandardMaterial()
+        public StandardMaterial(Scene scene)
+            : base (scene)
         {
             _fxName = "StandardEffect";
-            shadowMapSize = 512;
-            shadowMapEnabled = true;
         }
 
         public void LoadContent(ContentManager content)
@@ -27,7 +26,7 @@ namespace C3DE.Components.Materials
             effect.Parameters["World"].SetValue(worldMatrix);
         }
 
-        public void Update(RenderTarget2D shadowRT, Camera camera, Light light)
+        public void Update(RenderTarget2D shadowRT, CameraPrefab camera, LightPrefab light)
         {
             effect.Parameters["View"].SetValue(camera.view);
             effect.Parameters["Projection"].SetValue(camera.projection);

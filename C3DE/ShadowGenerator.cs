@@ -10,6 +10,9 @@ using System.Threading.Tasks;
 
 namespace C3DE
 {
+    /// <summary>
+    /// A generator of shadow for a specified light.
+    /// </summary>
     public class ShadowGenerator
     {
         internal RenderTarget2D _shadowRT;
@@ -77,7 +80,7 @@ namespace C3DE
         /// Render shadows for the specified camera.
         /// </summary>
         /// <param name="camera"></param>
-        public void renderShadows(Camera camera, List<ModelRenderer> renderList, Light light)
+        public void renderShadows(CameraPrefab camera, List<RenderableComponent> renderList, LightPrefab light)
         {
             _boundingSphere = new BoundingSphere();
 
@@ -86,7 +89,7 @@ namespace C3DE
                 for (int i = 0; i < renderList.Count; i++)
                 {
                     if (renderList[i].CastShadow)
-                        _boundingSphere = BoundingSphere.CreateMerged(_boundingSphere, renderList[i].GetBoundingSphere());
+                        _boundingSphere = BoundingSphere.CreateMerged(_boundingSphere, renderList[i].BoundingSphere);
                 }
 
                 light.Update(ref _boundingSphere);
@@ -106,7 +109,7 @@ namespace C3DE
 
                 _shadowEffect.Parameters["World"].SetValue(renderList[i].SceneObject.Transform.world);
                 _shadowEffect.CurrentTechnique.Passes[0].Apply();
-                renderList[i].DrawMesh(_device);
+                renderList[i].Draw(_device);
             }
 
             _device.SetRenderTarget(null);
