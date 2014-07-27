@@ -33,7 +33,7 @@ namespace C3DE
             graphics.PreferredBackBufferHeight = 600;
             Window.Title = "C3DE";
             Content.RootDirectory = "Content";
-            scene = new Scene();
+            scene = new Scene(Content);
         }
 
         protected override void Initialize()
@@ -62,7 +62,6 @@ namespace C3DE
         protected override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-
             mainCamera.Update();
             scene.Update();
         }

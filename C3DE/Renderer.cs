@@ -28,7 +28,7 @@ namespace C3DE
             set { _ambientColor = value; }
         }
 
-        public LightPrefab Light
+        public LightPrefab Light // FIXME Create a component for that
         {
             get { return _light; }
         }
@@ -75,6 +75,7 @@ namespace C3DE
                 _objectFx.Parameters["shadowTexture"].SetValue(_shadowGenerator.ShadowRT);
                 _objectFx.Parameters["shadowMapSize"].SetValue(_shadowGenerator.ShadowMapSize);
                 _objectFx.Parameters["shadowBias"].SetValue(_shadowGenerator.ShadowBias);
+                _objectFx.Parameters["shadowStrength"].SetValue(_shadowGenerator.ShadowStrength);
             }                
 
             // Light
@@ -90,6 +91,7 @@ namespace C3DE
                 {
                     _objectFx.Parameters["World"].SetValue(_renderList[i].SceneObject.Transform.world);
                     _objectFx.Parameters["mainTexture"].SetValue(scene.Materials[_renderList[i].MaterialIndices[0]].MainTexture);
+                    _objectFx.Parameters["emissiveColor"].SetValue(scene.Materials[_renderList[i].MaterialIndices[0]].EmissiveColor.ToVector4());
 
                     _objectFx.CurrentTechnique.Passes[0].Apply();
                     _renderList[i].Draw(graphicsDevice);

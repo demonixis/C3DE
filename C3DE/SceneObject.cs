@@ -2,7 +2,6 @@
 using C3DE.Utils;
 using Microsoft.Xna.Framework.Content;
 using System;
-using System.Collections.Generic;
 
 namespace C3DE
 {
@@ -145,7 +144,7 @@ namespace C3DE
         /// <returns>Return true if added, otherwise return false.</returns>
         public virtual bool Add(SceneObject sceneObject)
         {
-            if (!transform.Transforms.Contains(sceneObject.transform))
+            if (!transform.Transforms.Contains(sceneObject.transform) && sceneObject != this)
             {
                 // Add the scene object to the scene if not yet added.
                 if (sceneObject.Scene == null && this != scene)

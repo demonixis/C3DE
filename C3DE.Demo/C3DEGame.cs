@@ -1,16 +1,21 @@
 using C3DE.Components;
+using C3DE.Geometries;
 using C3DE.Materials;
 using C3DE.Prefabs;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
+using System.Collections.Generic;
 
 namespace C3DE.Demo
 {
     public class C3DEGame : Engine
     {
-        private ModelPrefab spaceShip;
+        private Dictionary<string, Material> materials;
+        Vector3 camPosition = Vector3.Zero;
+        Vector3 camRotation = Vector3.Zero;
+        TerrainPrefab terrain;
 
         public C3DEGame()
             : base()
@@ -18,77 +23,73 @@ namespace C3DE.Demo
             Window.Title = "C3DE - Shadow Mapping";
         }
 
-        protected override void LoadContent()
+        private void CreateMaterials()
         {
-            ModelRenderer modelRenderer = null;
+            materials = new Dictionary<string, Material>(10);
 
-            Material spaceShipMaterial = new Material(scene);
-            spaceShipMaterial.MainTexture = Content.Load<Texture2D>("Models/texv1");
+            Material material = new Material(scene);
+            material.MainTexture = Content.Load<Texture2D>("Textures/huleShip");
+            materials.Add("huleShip", material);
 
-            Material ship2Material = new Material(scene);
-            ship2Material.MainTexture = Content.Load<Texture2D>("Textures/huleShip");
+            material = new Material(scene);
+            material.MainTexture = Content.Load<Texture2D>("Models/texv1");
+            materials.Add("spaceShip", material);
 
-            Material dockStationMaterial = new Material(scene);
-            dockStationMaterial.MainTexture = Content.Load<Texture2D>("Models/Level/hullTexture_2_0");
+            material = new Material(scene);
+            material.MainTexture = Content.Load<Texture2D>("Textures/tech_box");
+            materials.Add("box", material);
 
-            //ship
-            spaceShip = new ModelPrefab();
-            spaceShip.Renderer.Model = Content.Load<Model>("Models/spaceship");
-            spaceShip.Renderer.Material = spaceShipMaterial;
-            spaceShip.Transform.Translate(0, 1, 0);
-            spaceShip.Transform.Scale = new Vector3(0.25f);
-            scene.Add(spaceShip);
+            material = new Material(scene);
+            material.MainTexture = Content.Load<Texture2D>("Textures/tech_box2");
+            materials.Add("box2", material);
 
-            // Ship 2
-            SceneObject sceneObject = new SceneObject();
-            sceneObject.Transform.Translate(12, -4f, 0);
-            sceneObject.Transform.Scale = new Vector3(4);
-            sceneObject.Transform.Rotate(-MathHelper.PiOver2, 0, 0);
-            spaceShip.Add(sceneObject);
+            material = new Material(scene);
+            material.MainTexture = Content.Load<Texture2D>("Textures/heightmapTexture");
+            materials.Add("terrain", material);
 
-            modelRenderer = sceneObject.AddComponent<ModelRenderer>();
-            modelRenderer.Model = Content.Load<Model>("Models/ship");
-            modelRenderer.Material = ship2Material;
+            var skyboxMaterial = new SkyboxMaterial(scene);
+            skyboxMaterial.Textures = new Texture2D[6] {
+                Content.Load<Texture2D>("Textures/Skybox/nx"),
+                Content.Load<Texture2D>("Textures/Skybox/ny"),
+                Content.Load<Texture2D>("Textures/Skybox/nz"),
+                Content.Load<Texture2D>("Textures/Skybox/px"),
+                Content.Load<Texture2D>("Textures/Skybox/py"),
+                Content.Load<Texture2D>("Textures/Skybox/pz")
+            };
+        }
 
+        protected override void Initialize()
+        {
+            base.Initialize();
 
-            // Ship 3
-            sceneObject = new SceneObject();
-            sceneObject.Transform.Translate(-12, -4f, 0);
-            sceneObject.Transform.Scale = new Vector3(4);
-            sceneObject.Transform.Rotate(-MathHelper.PiOver2, 0, 0);
-            spaceShip.Add(sceneObject);
+            CreateMaterials();
 
-            modelRenderer = sceneObject.AddComponent<ModelRenderer>();
-            modelRenderer.Model = Content.Load<Model>("Models/ship");
-            modelRenderer.Material = ship2Material;
-
-
-            // Floor
-            sceneObject = new SceneObject();
-            sceneObject.Transform.Rotate(0, MathHelper.PiOver2, 0);
-            sceneObject.Transform.Translate(-2, -1.5f, -15);
+            // Cube
+            var sceneObject = new SceneObject();
+            sceneObject.Transform.Translate(0, 2, 0);
             scene.Add(sceneObject);
 
-            modelRenderer = sceneObject.AddComponent<ModelRenderer>();
-            modelRenderer.Model = Content.Load<Model>("Models/Level/DockStation");
-            modelRenderer.Material = dockStationMaterial; 
-            modelRenderer.CastShadow = false;
+            var mesh = sceneObject.AddComponent<MeshRenderer>();
+            mesh.Geometry = new CubeGeometry();
+            mesh.Geometry.Generate(GraphicsDevice);
+            mesh.ComputeBoundingSphere();
+            mesh.Material = materials["box"];
+
+            terrain = new TerrainPrefab("terrain");
+            terrain.Randomize(GraphicsDevice);
+            scene.Add(terrain);
+
+            terrain.Renderer.Material = materials["terrain"];
+            terrain.Transform.Translate(-terrain.Renderer.BoundingSphere.Radius / 2, 0, -terrain.Renderer.BoundingSphere.Radius / 2);
+            terrain.ApplyCollision(ref mainCamera.position);
 
             this.IsMouseVisible = true;
         }
-
-        Vector3 camPosition = Vector3.Zero;
-        Vector3 camRotation = Vector3.Zero;
 
         // Just for tests, it's ugly, I know that ;)
         protected override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-
-            spaceShip.Transform.Rotate(0, 0.05f, 0);
-
-            foreach (Transform tr in spaceShip.Transform.Transforms)
-                tr.Rotate(0, 0, -0.05f);
 
             camPosition = Vector3.Zero;
             camRotation = Vector3.Zero;
@@ -149,25 +150,15 @@ namespace C3DE.Demo
             // Dead zone for fucked sticks.
             if (Input.Gamepad.IsConnected())
             {
-                camRotation.X = Math.Abs(camRotation.X) < 0.4f ? 0.0f : camRotation.X;
-                camRotation.Y = Math.Abs(camRotation.Y) < 0.4f ? 0.0f : camRotation.Y;
+                camRotation.X = Math.Abs(camRotation.X) < 0.1f ? 0.0f : camRotation.X;
+                camRotation.Y = Math.Abs(camRotation.Y) < 0.1f ? 0.0f : camRotation.Y;
             }
 
             // Apply translation and rotation.
             mainCamera.Translate(ref camPosition);
             mainCamera.Rotate(ref camRotation);
 
-            if (Input.Keys.Pressed(Keys.J))
-                spaceShip.Transform.Translate(0.1f, 0, 0);
-
-            else if (Input.Keys.Pressed(Keys.L))
-                spaceShip.Transform.Translate(-0.1f, 0, 0);
-
-            if (Input.Keys.Pressed(Keys.I))
-                spaceShip.Transform.Translate(0, 0, 0.1f);
-
-            else if (Input.Keys.Pressed(Keys.K))
-                spaceShip.Transform.Translate(0, 0, -0.1f);
+            terrain.ApplyCollision(ref mainCamera.position);
         }
     }
 

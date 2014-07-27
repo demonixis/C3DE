@@ -4,9 +4,9 @@ namespace C3DE
 {
     public class CameraPrefab
     {
-        internal Vector3 position;
-        internal Vector3 rotation;
-        internal Vector3 target;
+        public Vector3 position;
+        public Vector3 rotation;
+        public Vector3 target;
         public Matrix view;
         public Matrix projection;
         public Vector3 reference;

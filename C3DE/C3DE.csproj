@@ -38,6 +38,16 @@
   <ItemGroup>
     <Compile Include="Components\Camera.cs" />
     <Compile Include="Components\Light.cs" />
+    <Compile Include="Components\MeshRenderer.cs" />
+    <Compile Include="Geometries\CubeGeometry.cs" />
+    <Compile Include="Geometries\CylinderGeometry.cs" />
+    <Compile Include="Geometries\Geometry.cs" />
+    <Compile Include="Geometries\QuadGeometry.cs" />
+    <Compile Include="Geometries\PyramidGeometry.cs" />
+    <Compile Include="Geometries\SphereGeometry.cs" />
+    <Compile Include="Geometries\TerrainGeometry.cs" />
+    <Compile Include="Geometries\TorusGeometry.cs" />
+    <Compile Include="Materials\SkyboxMaterial.cs" />
     <Compile Include="Prefabs\CameraPrefab.cs" />
     <Compile Include="Components\BoxCollider.cs" />
     <Compile Include="Components\Component.cs" />
@@ -55,21 +65,24 @@
     <Compile Include="PostProcess\PostProcessManager.cs" />
     <Compile Include="PostProcess\PostProcessPass.cs" />
     <Compile Include="Prefabs\ModelPrefab.cs" />
+    <Compile Include="Prefabs\TerrainPrefab.cs" />
     <Compile Include="Scene.cs" />
     <Compile Include="SceneObject.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Renderer.cs" />
     <Compile Include="Materials\StandardMaterial.cs" />
     <Compile Include="ShadowGenerator.cs" />
+    <Compile Include="Skybox.cs" />
+    <Compile Include="Utils\NoiseGenerator.cs" />
     <Compile Include="Utils\SmartList.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="MonoGame.Framework">
+    <Reference Include="MonoGame.Framework, Version=3.1.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Libs\MonoGame.Framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

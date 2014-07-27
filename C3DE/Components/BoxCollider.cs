@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 
 namespace C3DE.Components
 {
@@ -45,7 +46,7 @@ namespace C3DE.Components
             _dirty = true;
         }
 
-        public override void LoadContent(Microsoft.Xna.Framework.Content.ContentManager content)
+        public override void LoadContent(ContentManager content)
         {
             _renderable = GetComponent<RenderableComponent>();
         }

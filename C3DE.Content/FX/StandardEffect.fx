@@ -8,7 +8,9 @@ float3 lightRadius = float3(100.0, 100.0, 100.0);
 bool shadowMapEnabled = true;
 float shadowMapSize = 512;
 float shadowBias = 0.05;
+float shadowStrength = 1.0;
 float4 ambientColor = float4(1.0, 1.0, 1.0, 1.0);
+float4 emissiveColor = float4(0.0, 0.0, 0.0, 1.0);
 
 texture mainTexture;
 sampler textureSampler = sampler_state
@@ -101,7 +103,7 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 	attenuation = 1 - saturate(dot(lightDir, lightDir) * inverseLightRadiusSquared);
 	ndl = saturate(dot(input.normal, lightDir));
 	
-	lightFactor = attenuation * ndl;
+	lightFactor = max(shadowStrength, attenuation * ndl);
 
 	float shadowTerm = 1;
 
@@ -109,10 +111,10 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 	if (shadowMapEnabled == true)
 	{
 		if ((saturate(screenPosition).x == screenPosition.x) && (saturate(screenPosition).y == screenPosition.y))
-			shadowTerm = calcShadowPCF(lightSpaceDepth, screenPosition);
+			shadowTerm = max(shadowStrength, calcShadowPCF(lightSpaceDepth, screenPosition));
 	}
 	
-    return color * ambientColor * lightFactor * shadowTerm;
+    return clamp(color * ambientColor * lightFactor * shadowTerm + emissiveColor, 0.0, 1.0);
 }
 
 technique Technique1
@@ -120,8 +122,8 @@ technique Technique1
     pass Pass1
     {
 #if SM4
-		VertexShader = compile vs_4_0_level_9_3 VertexShaderFunction();
-		PixelShader = compile ps_4_0_level_9_3 PixelShaderFunction();
+		VertexShader = compile vs_4_0_level_9_1 VertexShaderFunction();
+		PixelShader = compile ps_4_0_level_9_1 PixelShaderFunction();
 #else
         VertexShader = compile vs_3_0 VertexShaderFunction();
 		PixelShader = compile ps_3_0 PixelShaderFunction();

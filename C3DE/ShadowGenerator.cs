@@ -4,9 +4,6 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace C3DE
 {
@@ -57,7 +54,7 @@ namespace C3DE
             _device = device;
             _enabled = true;
             _shadowBias = 0.0015f;
-            _shadowStrength = 0.8f;
+            _shadowStrength = 0.5f;
             SetShadowMapSize(1024);
         }
 

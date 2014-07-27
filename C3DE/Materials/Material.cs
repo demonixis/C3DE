@@ -1,6 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System.Collections.Generic;
 
 namespace C3DE.Materials
 {
@@ -11,6 +10,7 @@ namespace C3DE.Materials
         private Scene _scene;
         protected Color diffuseColor;
         protected Texture2D mainTexture;
+        protected Color emissiveColor;
         protected Effect effect;
 
         public int Id
@@ -42,9 +42,16 @@ namespace C3DE.Materials
             set { mainTexture = value; }
         }
 
+        public Color EmissiveColor
+        {
+            get { return emissiveColor; }
+            set { emissiveColor = value; }
+        }
+
         public Material(Scene scene)
         {
             diffuseColor = Color.White;
+            emissiveColor = new Color(0.0f, 0.0f, 0.0f, 1.0f);
             mainTexture = null;
             effect = null;
             _scene = scene;

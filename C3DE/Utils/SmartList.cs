@@ -1,11 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace C3DE.Utils
 {
+    /// <summary>
+    /// A list to manage component or scene object during the life cycle of the application.
+    /// Objects must be insered before the update process to not modify the structure of the main collection.
+    /// When the initialization process is done, set CheckRequired to true and call Check method before any updates.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public class SmartList<T>
     {
         private List<T> _items;

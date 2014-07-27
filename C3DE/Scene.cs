@@ -22,7 +22,6 @@ namespace C3DE
         public readonly Material DefaultMaterial;
 
         private ContentManager _content;
-        private bool _initialized;
         private SmartList<SceneObject> members;
         private List<RenderableComponent> _renderList;
         private List<Material> _materials;
@@ -68,15 +67,14 @@ namespace C3DE
         /// <summary>
         /// The root scene object which contains all scene objects.
         /// </summary>
-        public Scene()
+        public Scene(ContentManager content)
             : base()
         {
             transform.Root = transform;
             isStatic = false;
             members = new SmartList<SceneObject>();
             scene = this;
-            _content = null;
-            _initialized = false;
+            _content = content;
             _renderList = new List<RenderableComponent>();
             _materials = new List<Material>();
             _colliders = new List<BoxCollider>();
@@ -86,6 +84,43 @@ namespace C3DE
             DefaultMaterial = new Material(this);
         }
 
+        #region Lifecycle
+
+        /// <summary>
+        /// Load content of all components.
+        /// </summary>
+        /// <param name="content"></param>
+        public override void LoadContent(ContentManager content)
+        {
+            for (int i = 0; i < members.Size; i++)
+                members[i].LoadContent(_content);
+
+            members.CheckRequired = true;
+            initialized = true;
+        }
+
+        /// <summary>
+        /// Update all scene object.
+        /// </summary>
+        public override void Update()
+        {
+            base.Update();
+
+            // Check if lists needs to be updated (components waiting to be added or removed)
+            members.Check();
+
+            // Safe update
+            for (int i = 0; i < members.Size; i++)
+            {
+                if (members[i].Enabled)
+                    members[i].Update();
+            }
+        }
+
+        #endregion
+
+        #region SceneObject collection management
+
         /// <summary>
         /// Check all components of a scene object to update all list of the scene.
         /// </summary>
@@ -93,7 +128,7 @@ namespace C3DE
         /// <param name="type">Type of change.</param>
         private void CheckComponents(SceneObject sceneObject, ComponentChangeType type)
         {
-            RenderableComponent renderable = sceneObject.GetComponent<ModelRenderer>();
+            RenderableComponent renderable = sceneObject.GetComponent<RenderableComponent>();
 
             if (renderable != null)
             {
@@ -116,7 +151,16 @@ namespace C3DE
             }
         }
 
-        #region SceneObject collection management
+        /// <summary>
+        /// Called when a component is added to a registered scene object.
+        /// It's actually used to update the render list.
+        /// </summary>
+        /// <param name="sender">The scene object which as added or removed a component.</param>
+        /// <param name="e">An object which contains the component and a flag to know if it's added or removed.</param>
+        private void sceneObject_ComponentsChanged(object sender, ComponentChangedEventArgs e)
+        {
+            CheckComponents(sender as SceneObject, e.ChangeType);
+        }
 
         /// <summary>
         /// Add a scene object to the scene.
@@ -133,7 +177,7 @@ namespace C3DE
                 sceneObject.Scene = this;
                 sceneObject.Transform.Root = transform;
 
-                if (_initialized)
+                if (initialized)
                     sceneObject.LoadContent(_content);
 
                 CheckComponents(sceneObject, ComponentChangeType.Add);
@@ -225,37 +269,7 @@ namespace C3DE
 
         #endregion
 
-        #region Lifecycle
-
-        /// <summary>
-        /// Load content of all components.
-        /// </summary>
-        /// <param name="content"></param>
-        public override void LoadContent(ContentManager content)
-        {
-            for (int i = 0; i < members.Size; i++)
-                members[i].LoadContent(content);
-
-            members.CheckRequired = true;
-        }
-
-        /// <summary>
-        /// Update all scene object.
-        /// </summary>
-        public override void Update()
-        {
-            base.Update();
-
-            members.Check();
-
-            for (int i = 0; i < members.Size; i++)
-            {
-                if (members[i].Enabled)
-                    members[i].Update();
-            }
-        }
-
-        #endregion
+        #region Raycast
 
         /// <summary>
         /// Cast a ray on collidable objects.
@@ -307,15 +321,6 @@ namespace C3DE
             return collide;
         }
 
-        /// <summary>
-        /// Called when a component is added to a registered scene object.
-        /// It's actually used to update the render list.
-        /// </summary>
-        /// <param name="sender">The scene object which as added or removed a component.</param>
-        /// <param name="e">An object which contains the component and a flag to know if it's added or removed.</param>
-        private void sceneObject_ComponentsChanged(object sender, ComponentChangedEventArgs e)
-        {
-            CheckComponents(sender as SceneObject, e.ChangeType);
-        }
+        #endregion
     }
 }

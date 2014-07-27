@@ -47,13 +47,13 @@ namespace C3DE.Components
             set { _position = value; }
         }
 
-        public Vector3 Rotation
+        public Vector3 LocalRotation
         {
             get { return _rotation; }
             set { _rotation = value; }
         }
 
-        public Vector3 Scale
+        public Vector3 LocalScale
         {
             get { return _scale; }
             set { _scale = value; }
