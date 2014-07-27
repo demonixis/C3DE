@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 
-namespace C3DE.Components
+namespace C3DE.Components.Renderers
 {
     /// <summary>
     /// A component used to render an XNA model.

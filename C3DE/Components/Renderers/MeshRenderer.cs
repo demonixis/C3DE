@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 
-namespace C3DE.Components
+namespace C3DE.Components.Renderers
 {
     public class MeshRenderer : RenderableComponent
     {

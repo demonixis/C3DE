@@ -1,4 +1,5 @@
 using C3DE.Components;
+using C3DE.Components.Renderers;
 using C3DE.Geometries;
 using C3DE.Materials;
 using C3DE.Prefabs;
@@ -63,7 +64,7 @@ namespace C3DE.Demo
             base.Initialize();
 
             CreateMaterials();
-
+            
             // Cube
             var sceneObject = new SceneObject();
             sceneObject.Transform.Translate(0, 2, 0);
@@ -76,7 +77,9 @@ namespace C3DE.Demo
             mesh.Material = materials["box"];
 
             terrain = new TerrainPrefab("terrain");
-            terrain.Randomize(GraphicsDevice);
+            terrain.Flat(GraphicsDevice);
+            //terrain.Randomize(GraphicsDevice);
+            //terrain.LoadHeightmap(GraphicsDevice, Content.Load<Texture2D>("Textures/heightmap"));
             scene.Add(terrain);
 
             terrain.Renderer.Material = materials["terrain"];

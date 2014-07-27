@@ -1,4 +1,5 @@
 ﻿using C3DE.Components;
+using C3DE.Components.Renderers;
 using C3DE.PostProcess;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;

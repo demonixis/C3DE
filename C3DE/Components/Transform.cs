@@ -47,7 +47,7 @@ namespace C3DE.Components
             set { _position = value; }
         }
 
-        public Vector3 LocalRotation
+        public Vector3 Rotation
         {
             get { return _rotation; }
             set { _rotation = value; }

@@ -1,7 +1,8 @@
-﻿using Microsoft.Xna.Framework;
+﻿using C3DE.Components.Renderers;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 
-namespace C3DE.Components
+namespace C3DE.Components.Colliders
 {
     /// <summary>
     /// A component to add a box collider to an object.

@@ -40,6 +40,14 @@ namespace C3DE.Geometries
             _height = 0;
             _depth = depth;
             size = new Vector3(scale);
+
+            _data = new float[_width, Depth];
+
+            for (int x = 0; x < _width; x++)
+            {
+                for (int z = 0; z < _depth; z++)
+                    Data[x, z] = 0.0f;
+            }
         }
 
         protected override void CreateGeometry()

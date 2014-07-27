@@ -1,4 +1,5 @@
 ﻿using C3DE.Components;
+using C3DE.Components.Renderers;
 using C3DE.Geometries;
 using C3DE.Utils;
 using Microsoft.Xna.Framework;
@@ -70,6 +71,11 @@ namespace C3DE.Prefabs
                     geometry.Data[x, z] = (float)NoiseGenerator.Noise(x, z);
             }
 
+            Finalize(device);
+        }
+
+        public void Flat(GraphicsDevice device)
+        {
             Finalize(device);
         }
 

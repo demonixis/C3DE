@@ -1,4 +1,6 @@
 ﻿using C3DE.Components;
+using C3DE.Components.Colliders;
+using C3DE.Components.Renderers;
 
 namespace C3DE.Prefabs
 {
