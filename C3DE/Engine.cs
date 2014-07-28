@@ -24,7 +24,6 @@ namespace C3DE
         protected SpriteBatch spriteBatch;
         protected Renderer renderer;
         protected Scene scene;
-        protected CameraPrefab mainCamera;
 
         public Engine()
         {
@@ -41,7 +40,6 @@ namespace C3DE
             base.Initialize();
 
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            mainCamera = new CameraPrefab(GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
             renderer = new Renderer(GraphicsDevice);
             renderer.LoadContent(Content);
 
@@ -55,21 +53,23 @@ namespace C3DE
             Components.Add(Input.Keys);
             Components.Add(Input.Mouse);
             Components.Add(Input.Gamepad);
+        }
 
+        protected override void LoadContent()
+        {
             scene.LoadContent(Content);
         }
 
         protected override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-            mainCamera.Update();
             scene.Update();
         }
 
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.Black);
-            renderer.render(scene, mainCamera);
+            renderer.render(scene, scene.MainCamera);
             base.Draw(gameTime);
         }
     }

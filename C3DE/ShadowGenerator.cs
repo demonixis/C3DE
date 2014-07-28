@@ -75,10 +75,10 @@ namespace C3DE
         }
 
         /// <summary>
-        /// Render shadows for the specified camera.
+        /// Render shadows for the specified camera into a renderTarget.
         /// </summary>
         /// <param name="camera"></param>
-        public void renderShadows(CameraPrefab camera, List<RenderableComponent> renderList, LightPrefab light)
+        public void renderShadows(List<RenderableComponent> renderList, LightPrefab light)
         {
             _boundingSphere = new BoundingSphere();
 

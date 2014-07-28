@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 
 namespace C3DE.Components.Cameras
 {
@@ -9,8 +10,8 @@ namespace C3DE.Components.Cameras
 
     public class Camera : Component
     {
-        protected Matrix view;
-        protected Matrix projection;
+        protected internal Matrix view;
+        protected internal Matrix projection;
         protected Vector3 reference;
         protected Transform transform;
         private Vector3 _target;
@@ -61,6 +62,10 @@ namespace C3DE.Components.Cameras
             _farPlane = 500.0f;
             _projectionType = CameraProjectionType.Perspective;
             reference = new Vector3(0.0f, 0.0f, 1.0f);
+        }
+
+        public override void LoadContent(ContentManager content)
+        {
             transform = GetComponent<Transform>();
             Setup(transform.LocalPosition, Vector3.Zero, Vector3.Up);
         }
@@ -71,7 +76,7 @@ namespace C3DE.Components.Cameras
             _target = camTarget;
             _upVector = upVector;
             _needUpdate = true;
-            
+
             view = Matrix.CreateLookAt(sceneObject.Transform.LocalPosition, _target, Vector3.Up);
 
             ComputeProjectionMatrix();
@@ -81,9 +86,10 @@ namespace C3DE.Components.Cameras
         protected void ComputeProjectionMatrix()
         {
             if (_projectionType == CameraProjectionType.Perspective)
-                projection = Matrix.CreateOrthographic(App.GraphicsDevice.Viewport.Width, App.GraphicsDevice.Viewport.Height, _nearPlane, _farPlane);
-            else
                 projection = Matrix.CreatePerspectiveFieldOfView(_fieldOfView, _aspectRatio, _nearPlane, _farPlane);
+            else
+                projection = Matrix.CreateOrthographic(App.GraphicsDevice.Viewport.Width, App.GraphicsDevice.Viewport.Height, _nearPlane, _farPlane);
+
         }
 
         public override void Update()
@@ -97,7 +103,7 @@ namespace C3DE.Components.Cameras
 
         public Vector3 WorldToScreenPoint(Vector3 position)
         {
-           return App.GraphicsDevice.Viewport.Project(position, projection, view, Matrix.Identity);
+            return App.GraphicsDevice.Viewport.Project(position, projection, view, Matrix.Identity);
         }
 
         /// <summary>

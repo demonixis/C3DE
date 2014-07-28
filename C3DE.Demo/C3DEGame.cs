@@ -1,4 +1,5 @@
 using C3DE.Components;
+using C3DE.Components.Cameras;
 using C3DE.Components.Renderers;
 using C3DE.Geometries;
 using C3DE.Materials;
@@ -64,6 +65,12 @@ namespace C3DE.Demo
             base.Initialize();
 
             CreateMaterials();
+
+            var soCamera = new SceneObject();
+            scene.Add(soCamera);
+
+            var camera = soCamera.AddComponent<Camera>();
+            camera.Setup(new Vector3(0, 2, -10), new Vector3(0, 0, 0), Vector3.Up);
             
             // Cube
             var sceneObject = new SceneObject();
@@ -84,7 +91,7 @@ namespace C3DE.Demo
 
             terrain.Renderer.Material = materials["terrain"];
             terrain.Transform.Translate(-terrain.Renderer.BoundingSphere.Radius / 2, 0, -terrain.Renderer.BoundingSphere.Radius / 2);
-            terrain.ApplyCollision(ref mainCamera.position);
+            //terrain.ApplyCollision(ref mainCamera.Transform.Position);
 
             this.IsMouseVisible = true;
         }
@@ -158,10 +165,10 @@ namespace C3DE.Demo
             }
 
             // Apply translation and rotation.
-            mainCamera.Translate(ref camPosition);
-            mainCamera.Rotate(ref camRotation);
+            //mainCamera.Translate(ref camPosition);
+            //mainCamera.Rotate(ref camRotation);
 
-            terrain.ApplyCollision(ref mainCamera.position);
+            //terrain.ApplyCollision(ref mainCamera.position);
         }
     }
 

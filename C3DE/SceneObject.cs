@@ -60,6 +60,11 @@ namespace C3DE
             internal set { scene = value; }
         }
 
+        public SmartList<Component> Components
+        {
+            get { return components; }
+        }
+
         #endregion
 
         #region Events
@@ -209,6 +214,9 @@ namespace C3DE
             component.SceneObject = this;
             components.Add(component);
             components.Sort();
+
+            if (initialized)
+                component.LoadContent(App.Content);
 
             NotifyComponentChanged(component);
 

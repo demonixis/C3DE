@@ -132,10 +132,24 @@ namespace C3DE
         /// <param name="type">Type of change.</param>
         private void CheckComponents(SceneObject sceneObject, ComponentChangeType type)
         {
-            RenderableComponent renderable = sceneObject.GetComponent<RenderableComponent>();
+            for (int i = 0; i < sceneObject.Components.Size; i++)
+                CheckComponent(sceneObject.Components[i], type);
+        }
 
-            if (renderable != null)
+        public void CheckComponent(Component component, ComponentChangeType type)
+        {
+            if (component is Camera)
             {
+                if (type == ComponentChangeType.Add)
+                    Add(component as Camera);
+                else if (type == ComponentChangeType.Remove)
+                    Remove(component as Camera);
+            }
+            
+            else if (component is RenderableComponent)
+            {
+                var renderable = component as RenderableComponent;
+
                 if (type == ComponentChangeType.Add && !_renderList.Contains(renderable))
                     _renderList.Add(renderable);
 
@@ -143,15 +157,17 @@ namespace C3DE
                     _renderList.Remove(renderable);
             }
 
-            // FIXME replace BoxCollider by Collider
-            BoxCollider collider = sceneObject.GetComponent<BoxCollider>();
-
-            if (collider != null)
+            else if (component is BoxCollider)
             {
-                if (type == ComponentChangeType.Add && !_colliders.Contains(collider))
-                    _colliders.Add(collider);
-                else if (type == ComponentChangeType.Remove)
-                    _colliders.Remove(collider);
+                var collider = component as BoxCollider;
+
+                if (collider != null)
+                {
+                    if (type == ComponentChangeType.Add && !_colliders.Contains(collider))
+                        _colliders.Add(collider);
+                    else if (type == ComponentChangeType.Remove)
+                        _colliders.Remove(collider);
+                }
             }
         }
 
@@ -163,7 +179,7 @@ namespace C3DE
         /// <param name="e">An object which contains the component and a flag to know if it's added or removed.</param>
         private void sceneObject_ComponentsChanged(object sender, ComponentChangedEventArgs e)
         {
-            CheckComponents(sender as SceneObject, e.ChangeType);
+            CheckComponent(e.Component, e.ChangeType);
         }
 
         /// <summary>
@@ -261,6 +277,9 @@ namespace C3DE
                 _cameras.Add(camera);
                 index = _cameras.Count - 1;
             }
+
+            if (_mainCameraIndex == -1)
+                _mainCameraIndex = index;
 
             return index;
         }

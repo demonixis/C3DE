@@ -1,4 +1,5 @@
 ﻿using C3DE.Components;
+using C3DE.Components.Cameras;
 using C3DE.Components.Renderers;
 using C3DE.PostProcess;
 using Microsoft.Xna.Framework;
@@ -59,7 +60,7 @@ namespace C3DE
         /// Render renderable objects
         /// </summary>
         /// <param name="camera">The camera to use.</param>
-        private void renderObjects(Scene scene, CameraPrefab camera)
+        private void renderObjects(Scene scene, Camera camera)
         {
             graphicsDevice.SetRenderTarget(_sceneRT);
             graphicsDevice.Clear(Color.Black);
@@ -118,12 +119,12 @@ namespace C3DE
         /// </summary>
         /// <param name="scene">The scene to render.</param>
         /// <param name="camera">The camera to use for render.</param>
-        public void render(Scene scene, CameraPrefab camera)
+        public void render(Scene scene, Camera camera)
         {
             _renderList = scene.RenderList;
 
             if (_shadowGenerator.Enabled)
-                _shadowGenerator.renderShadows(camera, _renderList, _light);
+                _shadowGenerator.renderShadows(_renderList, _light);
 
             renderObjects(scene, camera);
             renderBuffers();
