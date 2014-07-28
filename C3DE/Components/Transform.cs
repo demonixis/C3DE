@@ -89,11 +89,31 @@ namespace C3DE.Components
             _position.Z += z;
         }
 
+        public void Translate(ref Vector3 translation)
+        {
+            Translate(translation.X, translation.Y, translation.Z);
+        }
+
+        public void Translate(Vector3 translation)
+        {
+            Translate(ref translation);
+        }
+
         public void Rotate(float rx, float ry, float rz)
         {
             _rotation.X += rx;
             _rotation.Y += ry;
             _rotation.Z += rz;
+        }
+
+        public void Rotate(ref Vector3 rotation)
+        {
+            Rotate(rotation.X, rotation.Y, rotation.Z);
+        }
+
+        public void Rotate(Vector3 rotation)
+        {
+            Rotate(ref rotation);
         }
 
         public override void Update()

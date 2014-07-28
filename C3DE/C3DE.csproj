@@ -74,7 +74,9 @@
     <Compile Include="Materials\StandardMaterial.cs" />
     <Compile Include="ShadowGenerator.cs" />
     <Compile Include="Skybox.cs" />
+    <Compile Include="Time.cs" />
     <Compile Include="Utils\NoiseGenerator.cs" />
+    <Compile Include="Utils\RandomHelper.cs" />
     <Compile Include="Utils\SmartList.cs" />
   </ItemGroup>
   <ItemGroup>

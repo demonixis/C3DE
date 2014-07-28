@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Input;
 
 namespace C3DE.Components.Cameras
 {
@@ -9,6 +10,13 @@ namespace C3DE.Components.Cameras
         private Transform _transform;
         private Matrix _rotationMatrix;
         private Vector3 _transformedReference;
+        private Vector3 _translation = Vector3.Zero;
+        private Vector3 _rotation = Vector3.Zero;
+        public Vector3 Velocity { get; set; }
+        public float MoveSpeed { get; set; }
+        public float RotationSpeed { get; set; }
+        public float StrafeSpeed { get; set; }
+        public bool FourAxis { get; set; }
 
         public FirstPersonController()
             : this(null)
@@ -18,7 +26,11 @@ namespace C3DE.Components.Cameras
         public FirstPersonController(SceneObject sceneObject)
             : base(sceneObject)
         {
-            
+            Velocity = Vector3.One;
+            MoveSpeed = 0.05f;
+            RotationSpeed = 0.05f;
+            StrafeSpeed = 0.05f;
+            FourAxis = true;
         }
 
         public override void LoadContent(ContentManager content)
@@ -29,22 +41,52 @@ namespace C3DE.Components.Cameras
 
         public override void Update()
         {
+            _translation = Vector3.Zero;
+            _rotation = Vector3.Zero;
+
+            if (Input.Keys.Up || Input.Keys.Pressed(Keys.W))
+                _translation.Z += 0.1f;
+
+            else if (Input.Keys.Pressed(Keys.Down) || Input.Keys.Pressed(Keys.S))
+                _translation.Z -= 0.1f;
+
+            if (Input.Keys.Pressed(Keys.A))
+                _translation.X += 0.1f;
+
+            else if (Input.Keys.Pressed(Keys.D))
+                _translation.X -= 0.1f;
+
+            if (Input.Keys.Pressed(Keys.Q))
+                _translation.Y += 0.1f;
+
+            else if (Input.Keys.Pressed(Keys.E))
+                _translation.Y -= 0.1f;
+
+            if (Input.Keys.Pressed(Keys.PageUp))
+                _rotation.X -= 0.1f;
+
+            else if (Input.Keys.Pressed(Keys.PageDown))
+                _rotation.X += 0.1f;
+
+            if (Input.Keys.Pressed(Keys.Left))
+                _rotation.Y += 0.1f;
+
+            else if (Input.Keys.Pressed(Keys.Right))
+                _rotation.Y -= 0.1f;
+
             _rotationMatrix = Matrix.CreateFromYawPitchRoll(_transform.Rotation.Y, _transform.Rotation.X, 0.0f);
-            _transformedReference = Vector3.Transform(_camera.Reference, _rotationMatrix);
-            _camera.Target = sceneObject.Transform.Position + _transformedReference;
-        }
 
-        public virtual void Translate(ref Vector3 move)
-        {
-            Matrix forwardMovement = Matrix.CreateFromYawPitchRoll(_transform.Rotation.Y, _transform.Rotation.X, 0.0f);
-            Vector3 v = Vector3.Transform(move, forwardMovement);
+            _translation *= Time.DeltaTime * MoveSpeed * Velocity;
+            _rotation *= Time.DeltaTime * RotationSpeed * Velocity;
 
-            _transform.Translate(v.X, v.Y, v.Z);
-        }
+            _transformedReference = Vector3.Transform(_translation, _rotationMatrix);
 
-        public void Rotate(ref Vector3 rot)
-        {
-            _transform.Rotate(rot.X, rot.Y, rot.Z);
+            // Translate and rotate
+            _transform.Translate(ref _transformedReference);
+            _transform.Rotate(ref _rotation);
+
+            // Update target
+            _camera.Target = sceneObject.Transform.Position + Vector3.Transform(_camera.Reference, _rotationMatrix);
         }
     }
 }

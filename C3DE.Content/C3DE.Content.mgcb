@@ -201,3 +201,14 @@
 /processorParam:TextureFormat=Color
 /build:Textures/Skybox/pz.jpg
 
+#begin Textures/marsTexture.jpg
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=0,0,0,0
+/processorParam:ColorKeyEnabled=False
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:TextureFormat=Color
+/build:Textures/marsTexture.jpg
+

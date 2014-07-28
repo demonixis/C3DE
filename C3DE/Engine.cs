@@ -37,8 +37,6 @@ namespace C3DE
 
         protected override void Initialize()
         {
-            base.Initialize();
-
             spriteBatch = new SpriteBatch(GraphicsDevice);
             renderer = new Renderer(GraphicsDevice);
             renderer.LoadContent(Content);
@@ -50,9 +48,12 @@ namespace C3DE
             Input.Mouse = new MouseComponent(this);
             Input.Gamepad = new GamepadComponent(this);
 
+            Components.Add(new Time(this));
             Components.Add(Input.Keys);
             Components.Add(Input.Mouse);
             Components.Add(Input.Gamepad);
+
+            base.Initialize();
         }
 
         protected override void LoadContent()

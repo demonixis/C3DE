@@ -132,7 +132,7 @@ namespace C3DE
         /// <param name="type">Type of change.</param>
         private void CheckComponents(SceneObject sceneObject, ComponentChangeType type)
         {
-            for (int i = 0; i < sceneObject.Components.Size; i++)
+            for (int i = 0; i < sceneObject.Components.Count; i++)
                 CheckComponent(sceneObject.Components[i], type);
         }
 

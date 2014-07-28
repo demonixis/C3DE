@@ -10,7 +10,7 @@ namespace C3DE.Geometries
         private VertexBuffer _vertexBuffer;
         private IndexBuffer _indexBuffer;
         protected Vector3 size = Vector3.One;
-        protected Vector2 uvRepeat = Vector2.One;
+        protected Vector2 repeatTexture = Vector2.One;
         protected bool invertFaces = false;
         
         protected bool constructed;
@@ -42,7 +42,13 @@ namespace C3DE.Geometries
         public Vector3 Size
         {
             get { return size; }
-            protected set { size = value; }
+            set { size = value; }
+        }
+
+        public Vector2 RepeatTexture
+        {
+            get { return repeatTexture; }
+            set { repeatTexture = value; }
         }
 
         protected abstract void CreateGeometry();
@@ -52,7 +58,7 @@ namespace C3DE.Geometries
             for (int i = 0, l = Vertices.Length; i < l; i++)
             {
                 Vertices[i].Position *= size;
-                Vertices[i].TextureCoordinate *= uvRepeat;
+                Vertices[i].TextureCoordinate *= repeatTexture;
             }
         }
 

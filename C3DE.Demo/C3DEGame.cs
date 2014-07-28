@@ -1,9 +1,11 @@
 using C3DE.Components;
 using C3DE.Components.Cameras;
 using C3DE.Components.Renderers;
+using C3DE.Demo.Scripts;
 using C3DE.Geometries;
 using C3DE.Materials;
 using C3DE.Prefabs;
+using C3DE.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -15,8 +17,6 @@ namespace C3DE.Demo
     public class C3DEGame : Engine
     {
         private Dictionary<string, Material> materials;
-        Vector3 camPosition = Vector3.Zero;
-        Vector3 camRotation = Vector3.Zero;
         TerrainPrefab terrain;
 
         public C3DEGame()
@@ -46,6 +46,10 @@ namespace C3DE.Demo
             materials.Add("box2", material);
 
             material = new Material(scene);
+            material.MainTexture = Content.Load<Texture2D>("Textures/marsTexture");
+            materials.Add("mars", material);
+
+            material = new Material(scene);
             material.MainTexture = Content.Load<Texture2D>("Textures/heightmapTexture");
             materials.Add("terrain", material);
 
@@ -71,25 +75,38 @@ namespace C3DE.Demo
 
             var camera = soCamera.AddComponent<Camera>();
             camera.Setup(new Vector3(0, 2, -10), new Vector3(0, 0, 0), Vector3.Up);
-            
-            // Cube
-            var sceneObject = new SceneObject();
-            sceneObject.Transform.Translate(0, 2, 0);
-            scene.Add(sceneObject);
 
-            var mesh = sceneObject.AddComponent<MeshRenderer>();
-            mesh.Geometry = new CubeGeometry();
-            mesh.Geometry.Generate(GraphicsDevice);
-            mesh.ComputeBoundingSphere();
-            mesh.Material = materials["box"];
+            var controller = soCamera.AddComponent<FirstPersonController>();
+
+            SceneObject so = null;
+            MeshRenderer mr = null;
+            AutoRotation ar = null;
+
+            for (int i = 0; i < 10; i++)
+            {
+                so = new SceneObject();
+                so.Transform.Translate(RandomHelper.GetVector3(-50, 2, -50, 50, 3, 50));
+                so.Transform.Rotate(RandomHelper.GetVector3(0, 0, 0, 0, (float)Math.PI, 0));
+                scene.Add(so);
+
+                ar = so.AddComponent<AutoRotation>();
+                ar.Rotation = new Vector3(0, 0.05f, 0);
+
+                mr = so.AddComponent<MeshRenderer>();
+                mr.Geometry = new CubeGeometry();
+                mr.Geometry.Generate(GraphicsDevice);
+                mr.ComputeBoundingSphere();
+                mr.Material = RandomHelper.Range(1, 5) % 2 == 0 ? materials["box"] : materials["box2"];
+            }
 
             terrain = new TerrainPrefab("terrain");
-            terrain.Flat(GraphicsDevice);
-            //terrain.Randomize(GraphicsDevice);
+            terrain.TextureRepeat = new Vector2(16);
+            //terrain.Flat(GraphicsDevice);
+            terrain.Randomize(GraphicsDevice);
             //terrain.LoadHeightmap(GraphicsDevice, Content.Load<Texture2D>("Textures/heightmap"));
             scene.Add(terrain);
 
-            terrain.Renderer.Material = materials["terrain"];
+            terrain.Renderer.Material = materials["mars"];
             terrain.Transform.Translate(-terrain.Renderer.BoundingSphere.Radius / 2, 0, -terrain.Renderer.BoundingSphere.Radius / 2);
             //terrain.ApplyCollision(ref mainCamera.Transform.Position);
 
@@ -100,9 +117,6 @@ namespace C3DE.Demo
         protected override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-
-            camPosition = Vector3.Zero;
-            camRotation = Vector3.Zero;
 
             if (Input.Keys.Escape || Input.Gamepad.Pressed(Buttons.Back))
                 Exit();
@@ -119,56 +133,6 @@ namespace C3DE.Demo
 
             else if (Input.Keys.Pressed(Keys.NumPad6) || Input.Gamepad.Pressed(Buttons.DPadRight))
                 renderer.Light.Transform.Translate(-0.1f, 0, 0);
-
-            // Camera
-            if (Input.Keys.Up || Input.Keys.Pressed(Keys.W))
-                camPosition.Z += 0.01f * gameTime.ElapsedGameTime.Milliseconds;
-
-            else if (Input.Keys.Pressed(Keys.Down) || Input.Keys.Pressed(Keys.S))
-                camPosition.Z -= 0.01f * gameTime.ElapsedGameTime.Milliseconds;
-
-            if (Input.Keys.Pressed(Keys.A))
-                camPosition.X += 0.01f * gameTime.ElapsedGameTime.Milliseconds;
-
-            else if (Input.Keys.Pressed(Keys.D))
-                camPosition.X -= 0.01f * gameTime.ElapsedGameTime.Milliseconds;
-
-            if (Input.Keys.Pressed(Keys.Q))
-                camPosition.Y += 0.01f * gameTime.ElapsedGameTime.Milliseconds;
-
-            else if (Input.Keys.Pressed(Keys.E))
-                camPosition.Y -= 0.01f * gameTime.ElapsedGameTime.Milliseconds;
-
-            if (Input.Keys.Pressed(Keys.PageUp))
-                camRotation.X -= 0.01f * gameTime.ElapsedGameTime.Milliseconds;
-
-            else if (Input.Keys.Pressed(Keys.PageDown))
-                camRotation.X += 0.01f * gameTime.ElapsedGameTime.Milliseconds;
-
-            if (Input.Keys.Pressed(Keys.Left))
-                camRotation.Y += 0.01f * gameTime.ElapsedGameTime.Milliseconds;
-
-            else if (Input.Keys.Pressed(Keys.Right))
-                camRotation.Y -= 0.01f * gameTime.ElapsedGameTime.Milliseconds;
-
-            // Hello gamepad
-            camPosition.X -= Input.Gamepad.ThumbSticks().X * 0.005f * gameTime.ElapsedGameTime.Milliseconds;
-            camPosition.Z += Input.Gamepad.ThumbSticks().Y * 0.005f * gameTime.ElapsedGameTime.Milliseconds;
-            camRotation.X -= Input.Gamepad.ThumbSticks(true).Y * 0.0015f * gameTime.ElapsedGameTime.Milliseconds;
-            camRotation.Y -= Input.Gamepad.ThumbSticks(true).X * 0.0015f * gameTime.ElapsedGameTime.Milliseconds;
-
-            // Dead zone for fucked sticks.
-            if (Input.Gamepad.IsConnected())
-            {
-                camRotation.X = Math.Abs(camRotation.X) < 0.1f ? 0.0f : camRotation.X;
-                camRotation.Y = Math.Abs(camRotation.Y) < 0.1f ? 0.0f : camRotation.Y;
-            }
-
-            // Apply translation and rotation.
-            //mainCamera.Translate(ref camPosition);
-            //mainCamera.Rotate(ref camRotation);
-
-            //terrain.ApplyCollision(ref mainCamera.position);
         }
     }
 

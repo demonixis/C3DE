@@ -2,6 +2,7 @@
 using C3DE.Utils;
 using Microsoft.Xna.Framework.Content;
 using System;
+using System.Collections.Generic;
 
 namespace C3DE
 {
@@ -18,7 +19,7 @@ namespace C3DE
         protected Scene scene;
         protected bool enabled;
         protected bool isStatic;
-        protected SmartList<Component> components;
+        protected List<Component> components;
         protected bool initialized;
 
         #endregion
@@ -60,7 +61,7 @@ namespace C3DE
             internal set { scene = value; }
         }
 
-        public SmartList<Component> Components
+        public List<Component> Components
         {
             get { return components; }
         }
@@ -100,7 +101,7 @@ namespace C3DE
         {
             transform = new Transform(this);
 
-            components = new SmartList<Component>();
+            components = new List<Component>();
             components.Add(transform);
 
             enabled = true;
@@ -118,10 +119,9 @@ namespace C3DE
         {
             if (!initialized)
             {
-                for (int i = 0; i < components.Size; i++)
+                for (int i = 0; i < components.Count; i++)
                     components[i].LoadContent(content);
 
-                components.CheckRequired = true;
                 initialized = true;
             }
         }
@@ -131,9 +131,7 @@ namespace C3DE
         /// </summary>
         public virtual void Update()
         {
-            components.Check();
-
-            for (int i = 0; i < components.Size; i++)
+            for (int i = 0; i < components.Count; i++)
             {
                 if (components[i].Enabled)
                     components[i].Update();
@@ -230,7 +228,7 @@ namespace C3DE
         /// <returns>Return the first component of this type if founded, otherwise return null.</returns>
         public T GetComponent<T>() where T : Component
         {
-            for (int i = 0; i < components.Size; i++)
+            for (int i = 0; i < components.Count; i++)
             {
                 if (components[i] is T)
                     return components[i] as T;
@@ -249,7 +247,7 @@ namespace C3DE
             int index = -1;
             int i = 0;
 
-            while (i < components.Size && index == -1)
+            while (i < components.Count && index == -1)
                 index = (components[i] == component) ? i : index;
 
             if (index > -1)
