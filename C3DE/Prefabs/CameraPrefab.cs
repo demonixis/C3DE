@@ -1,93 +1,35 @@
-﻿using Microsoft.Xna.Framework;
+﻿using C3DE.Components.Cameras;
+using Microsoft.Xna.Framework;
 
-namespace C3DE
+namespace C3DE.Prefabs
 {
-    public class CameraPrefab
+    public class CameraPrefab : SceneObject
     {
-        public Vector3 position;
-        public Vector3 rotation;
-        public Vector3 target;
-        public Matrix view;
-        public Matrix projection;
-        public Vector3 reference;
-        public Vector3 upVector;
-        protected float fieldOfView;
-        protected float aspectRatio;
-        protected float nearClip;
-        protected float farClip;
-
-        public Matrix World
+        private Camera _camera;
+        
+        public Camera Camera
         {
-            get { return Matrix.CreateFromYawPitchRoll(rotation.Y, rotation.X, rotation.Z) * Matrix.CreateTranslation(position); }
+            get { return _camera; }
         }
 
-        public CameraPrefab(int width, int height)
+        public CameraPrefab()
+            : this(null)
         {
-            fieldOfView = MathHelper.ToRadians(45);
-            aspectRatio = (float)width / (float)height;
-            nearClip = 1.0f;
-            farClip = 500.0f;
-            reference = new Vector3(0.0f, 0.0f, 1.0f);
-
-            position = new Vector3(0, 0.5f, -10);
-            target = Vector3.Zero;
-            view = Matrix.CreateLookAt(position, target, Vector3.Up);
-
-            ComputePerspective();
-            UpdateTarget();
         }
 
-        public void Update()
+        public CameraPrefab(string name)
+            : base()
         {
-            view = Matrix.CreateLookAt(position, target, Vector3.Up);
+            if (!string.IsNullOrEmpty(name))
+                Name = name;
+
+            _camera = AddComponent<Camera>();
+            _camera.Setup(new Vector3(0, 0, -10), new Vector3(0, 0, 0), Vector3.Up);
         }
 
-        public void ComputePerspective()
+        public void Setup(Vector3 position, Vector3 target, Vector3 upVector)
         {
-            projection = Matrix.CreatePerspectiveFieldOfView(fieldOfView, aspectRatio, nearClip, farClip);
-        }
-
-        public virtual void Translate(ref Vector3 move)
-        {
-            Matrix forwardMovement = Matrix.CreateFromYawPitchRoll(rotation.Y, rotation.X, rotation.Z);
-            Vector3 v = Vector3.Transform(move, forwardMovement);
-
-            position.X += v.X;
-            position.Y += v.Y;
-            position.Z += v.Z;
-
-            UpdateTarget();
-        }
-
-        public virtual void Translate(float x, float y, float z)
-        {
-            var move = new Vector3(x, y, z);
-            Translate(ref move);
-        }
-
-        public virtual void Rotate(ref Vector3 rot)
-        {
-            rotation.X += rot.X;
-            rotation.Y += rot.Y;
-            rotation.Z += rot.Z;
-
-            UpdateTarget();
-        }
-
-        public virtual void Rotate(float rx, float ry, float rz)
-        {
-            rotation.X += rx;
-            rotation.Y += ry;
-            rotation.Z += rz;
-
-            UpdateTarget();
-        }
-
-        private void UpdateTarget()
-        {
-            Matrix matRotation = Matrix.CreateFromYawPitchRoll(rotation.Y, rotation.X, rotation.Z);
-            Vector3 transformedReference = Vector3.Transform(reference, matRotation);
-            target = position + transformedReference;
+            _camera.Setup(new Vector3(0, 0, 0), new Vector3(0, 0, 0), Vector3.Up);
         }
     }
 }

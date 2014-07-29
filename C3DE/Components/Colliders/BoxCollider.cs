@@ -7,31 +7,14 @@ namespace C3DE.Components.Colliders
     /// <summary>
     /// A component to add a box collider to an object.
     /// </summary>
-    public class BoxCollider : Component
+    public class BoxCollider : Collider
     {
         private RenderableComponent _renderable;
         private BoundingBox _box;
-        private Vector3 _center;
-        private bool _dirty;
 
         public BoundingBox Box
         {
             get {return _box;}
-        }
-
-        public Vector3 Min
-        {
-            get { return _box.Min; }
-        }
-
-        public Vector3 Max
-        {
-            get { return _box.Max; }
-        }
-
-        public Vector3 Center
-        {
-            get { return _center; }
         }
 
         public BoxCollider()
@@ -44,7 +27,6 @@ namespace C3DE.Components.Colliders
         {
             _box = new BoundingBox();
             _center = Vector3.Zero;
-            _dirty = true;
         }
 
         public override void LoadContent(ContentManager content)
@@ -57,14 +39,27 @@ namespace C3DE.Components.Colliders
         /// </summary>
         public override void Update()
         {
-            if (_dirty)
+            if (dirty)
             {
-                _dirty = false;
+                dirty = false;
 
                 var sphere = _renderable.GetBoundingSphere();
                 _box = BoundingBox.CreateFromSphere(sphere);
                 _center = sphere.Center;
             }
+        }
+
+        public override bool Collides(Collider other)
+        {
+            var sc = other as SphereCollider;
+            if (sc != null)
+                return sc.Sphere.Intersects(_box);
+
+            var bc = other as BoxCollider;
+            if (bc != null)
+                return bc.Box.Intersects(_box);
+
+            return false;
         }
     }
 }

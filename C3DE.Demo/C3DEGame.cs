@@ -70,13 +70,11 @@ namespace C3DE.Demo
 
             CreateMaterials();
 
-            var soCamera = new SceneObject();
-            scene.Add(soCamera);
-
-            var camera = soCamera.AddComponent<Camera>();
+            var camera = new CameraPrefab("camera");
             camera.Setup(new Vector3(0, 2, -10), new Vector3(0, 0, 0), Vector3.Up);
+            scene.Add(camera);
 
-            var controller = soCamera.AddComponent<FirstPersonController>();
+            var controller = camera.AddComponent<FirstPersonController>();
 
             SceneObject so = null;
             MeshRenderer mr = null;

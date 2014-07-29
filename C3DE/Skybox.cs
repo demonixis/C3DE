@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using C3DE.Components.Cameras;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -126,9 +127,9 @@ namespace C3DE
             }
         }
 
-        public void Draw(GraphicsDevice device, CameraPrefab camera)
+        public void Draw(GraphicsDevice device, Camera camera)
         {
-            _skyboxFX.World = camera.World;
+            _skyboxFX.World = Matrix.Identity;
             _skyboxFX.View = camera.view;
             _skyboxFX.Projection = camera.projection;
             _skyboxFX.TextureEnabled = true;

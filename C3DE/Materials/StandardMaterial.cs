@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using C3DE.Components.Cameras;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -26,7 +27,7 @@ namespace C3DE.Materials
             effect.Parameters["World"].SetValue(worldMatrix);
         }
 
-        public void Update(RenderTarget2D shadowRT, CameraPrefab camera, LightPrefab light)
+        public void Update(RenderTarget2D shadowRT, Camera camera, LightPrefab light)
         {
             effect.Parameters["View"].SetValue(camera.view);
             effect.Parameters["Projection"].SetValue(camera.projection);
