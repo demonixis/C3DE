@@ -38,9 +38,12 @@
   <ItemGroup>
     <Compile Include="Components\Cameras\Camera.cs" />
     <Compile Include="Components\Cameras\FirstPersonController.cs" />
+    <Compile Include="Components\Colliders\BoxCollider.cs" />
     <Compile Include="Components\Colliders\Collider.cs" />
     <Compile Include="Components\Colliders\SphereCollider.cs" />
+    <Compile Include="Components\Lights\DirectionalLight.cs" />
     <Compile Include="Components\Lights\Light.cs" />
+    <Compile Include="Components\Lights\PointLight.cs" />
     <Compile Include="Components\Renderers\MeshRenderer.cs" />
     <Compile Include="Geometries\CubeGeometry.cs" />
     <Compile Include="Geometries\CylinderGeometry.cs" />
@@ -52,7 +55,6 @@
     <Compile Include="Geometries\TorusGeometry.cs" />
     <Compile Include="Materials\SkyboxMaterial.cs" />
     <Compile Include="Prefabs\CameraPrefab.cs" />
-    <Compile Include="Components\Colliders\BoxCollider.cs" />
     <Compile Include="Components\Component.cs" />
     <Compile Include="Components\Renderers\ModelRenderer.cs" />
     <Compile Include="Components\Transform.cs" />

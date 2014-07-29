@@ -42,5 +42,7 @@ namespace C3DE.Components.Colliders
         }
 
         public abstract bool Collides(Collider other);
+
+        public abstract float? IntersectedBy(ref Ray ray);
     }
 }

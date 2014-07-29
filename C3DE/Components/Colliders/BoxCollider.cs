@@ -61,5 +61,10 @@ namespace C3DE.Components.Colliders
 
             return false;
         }
+
+        public override float? IntersectedBy(ref Ray ray)
+        {
+            return ray.Intersects(_box);
+        }
     }
 }

@@ -14,7 +14,7 @@ namespace C3DE
     public struct RaycastInfo
     {
         public Ray Ray;
-        public BoxCollider Collider;
+        public Collider Collider;
         public float Distance;
     }
 
@@ -29,7 +29,7 @@ namespace C3DE
         private SmartList<SceneObject> members;
         private List<RenderableComponent> _renderList;
         private List<Material> _materials;
-        private List<BoxCollider> _colliders; // FIXME
+        private List<Collider> _colliders;
         private List<Camera> _cameras;
         private int _mainCameraIndex;
         private List<Light> _lights;
@@ -53,7 +53,7 @@ namespace C3DE
             get { return _materials; }
         }
 
-        public List<BoxCollider> Colliders
+        public List<Collider> Colliders
         {
             get { return _colliders; }
         }
@@ -81,7 +81,7 @@ namespace C3DE
             _content = content;
             _renderList = new List<RenderableComponent>();
             _materials = new List<Material>();
-            _colliders = new List<BoxCollider>();
+            _colliders = new List<Collider>();
             _cameras = new List<Camera>();
             _mainCameraIndex = -1;
             _lights = new List<Light>();
@@ -292,6 +292,38 @@ namespace C3DE
 
         #endregion
 
+        #region Light collection management
+
+        public void AddLight(Light light)
+        {
+            if (!_lights.Contains(light))
+                _lights.Add(light);
+        }
+
+        public void RemoveLight(Light light)
+        {
+            if (_lights.Contains(light))
+                _lights.Remove(light);
+        }
+
+        #endregion
+
+        #region Colliders management
+
+        public void AddCollider(Collider collider)
+        {
+            if (!_colliders.Contains(collider))
+                _colliders.Add(collider);
+        }
+
+        public void RemoveCollider(Collider collider)
+        {
+            if (_colliders.Contains(collider))
+                _colliders.Remove(collider);
+        }
+
+        #endregion
+
         #region Raycast
 
         /// <summary>
@@ -308,7 +340,7 @@ namespace C3DE
 
             for (int i = 0, l = _colliders.Count; i < l; i++)
             {
-                val = ray.Intersects(_colliders[i].Box);
+                val = _colliders[i].IntersectedBy(ref ray);
 
                 if (val.HasValue && val.Value <= distance)
                     return true;
@@ -330,7 +362,7 @@ namespace C3DE
             // A quadtree and even an octree could be very cool in the future :)
             while (i < size && collide == false)
             {
-                val = ray.Intersects(_colliders[i].Box);
+                val = _colliders[i].IntersectedBy(ref ray);
 
                 if (val.HasValue && val.Value <= distance)
                 {
