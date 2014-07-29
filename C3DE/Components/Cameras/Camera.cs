@@ -80,7 +80,7 @@ namespace C3DE.Components.Cameras
             view = Matrix.CreateLookAt(sceneObject.Transform.LocalPosition, _target, Vector3.Up);
 
             ComputeProjectionMatrix();
-            Update();
+            _needUpdate = true;
         }
 
         protected void ComputeProjectionMatrix()
