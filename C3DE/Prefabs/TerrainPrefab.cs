@@ -11,7 +11,6 @@ namespace C3DE.Prefabs
     {
         protected MeshRenderer renderer;
         private TerrainGeometry geometry;
-        private Vector2 repeatTexture;
 
         public MeshRenderer Renderer
         {
@@ -20,8 +19,8 @@ namespace C3DE.Prefabs
 
         public Vector2 TextureRepeat
         {
-            get { return geometry.RepeatTexture; }
-            set { geometry.RepeatTexture = value; }
+            get { return geometry.TextureRepeat; }
+            set { geometry.TextureRepeat = value; }
         }
         
         public TerrainPrefab(string name)

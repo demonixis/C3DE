@@ -45,7 +45,7 @@ namespace C3DE.Geometries
             set { size = value; }
         }
 
-        public Vector2 RepeatTexture
+        public Vector2 TextureRepeat
         {
             get { return repeatTexture; }
             set { repeatTexture = value; }

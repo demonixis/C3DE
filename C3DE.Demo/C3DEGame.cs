@@ -75,6 +75,10 @@ namespace C3DE.Demo
             scene.Add(camera);
 
             var controller = camera.AddComponent<FirstPersonController>();
+            controller.AngularVelocity = new Vector3(0.9f);
+            controller.Velocity = new Vector3(0.9f);
+            controller.MoveSpeed = 0.001f;
+            controller.RotationSpeed = 0.0005f;
 
             SceneObject so = null;
             MeshRenderer mr = null;
