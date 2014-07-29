@@ -3,6 +3,11 @@ using Microsoft.Xna.Framework.Content;
 
 namespace C3DE.Components.Lights
 {
+    public enum LightType
+    {
+        Ambient = 0, Directional, Point, Spot, Area
+    }
+
     public class Light : Component
     {
         internal Matrix viewMatrix;
@@ -91,7 +96,7 @@ namespace C3DE.Components.Lights
             base.LoadContent(content);
             shadowGenerator.LoadContent(content);
             // Hack
-            sceneObject.Transform.Translate(6.0f, 30.0f, -23.0f);
+            sceneObject.Transform.Translate(6.0f, 10.0f, -23.0f);
         }
 
         // Need to be changed quickly !

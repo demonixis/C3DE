@@ -77,7 +77,7 @@ namespace C3DE.Demo
 
             var controller = camera.AddComponent<FirstPersonController>();
             controller.AngularVelocity = new Vector3(0.9f);
-            controller.Velocity = new Vector3(0.9f);
+            controller.Velocity = new Vector3(0.9f, 0, 0.9f);
             controller.MoveSpeed = 0.001f;
             controller.RotationSpeed = 0.0005f;
 

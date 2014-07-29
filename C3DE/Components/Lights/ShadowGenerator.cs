@@ -55,7 +55,7 @@ namespace C3DE
         {
             _enabled = false;
             _shadowBias = 0.0015f;
-            _shadowStrength = 0.5f;
+            _shadowStrength = 0.8f;
             _light = light;
         }
 

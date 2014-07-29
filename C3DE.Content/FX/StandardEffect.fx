@@ -53,17 +53,15 @@ struct VertexShaderOutput
 float calcShadowPCF(float lightSpaceDepth, float2 shadowCoordinates)
 {
 	float size = 1.0 / shadowMapSize;
-	float shadowTerm = 0;
 	float samples[4];
+	float gradiant = lightSpaceDepth - shadowBias;
 	
-	samples[0] = (lightSpaceDepth - shadowBias < tex2D(shadowSampler, shadowCoordinates).r);
-	samples[1] = (lightSpaceDepth - shadowBias < tex2D(shadowSampler, shadowCoordinates + float2(size, 0)).r);
-	samples[2] = (lightSpaceDepth - shadowBias < tex2D(shadowSampler, shadowCoordinates + float2(0, size)).r);
-	samples[3] = (lightSpaceDepth - shadowBias < tex2D(shadowSampler, shadowCoordinates + float2(size, size)).r);
+	samples[0] = (gradiant < tex2D(shadowSampler, shadowCoordinates).r);
+	samples[1] = (gradiant < tex2D(shadowSampler, shadowCoordinates + float2(size, 0)).r);
+	samples[2] = (gradiant < tex2D(shadowSampler, shadowCoordinates + float2(0, size)).r);
+	samples[3] = (gradiant < tex2D(shadowSampler, shadowCoordinates + float2(size, size)).r);
 
-	shadowTerm = (samples[0] + samples[1] + samples[2] + samples[3]) / 4.0;
-
-	return shadowTerm;
+	return (samples[0] + samples[1] + samples[2] + samples[3]) / 4.0;
 }
 
 VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
@@ -77,7 +75,9 @@ VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
 	output.textureCoords = input.textureCoords;
 	output.worldPosition = worldPosition;
 	output.screenPosition =  output.Position.xy / output.Position.w;
-	output.normal = mul(input.normal, World);
+	
+	float4 n = float4(input.normal.x, input.normal.y, input.normal.z, 0);
+	output.normal = (float3)normalize(mul(n, World));
 
     return output;
 }
@@ -86,8 +86,8 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 {
 	float4 color = tex2D(textureSampler, input.textureCoords);
 	float4 worldPosition = input.worldPosition;
-	float3 lightDir = lightPosition - worldPosition;
-	float inverseLightRadiusSquared = 1.0 / (lightRadius * lightRadius);
+	float3 lightDir = (float3)lightPosition - (float3)worldPosition;
+	float inverseLightRadiusSquared = 1.0 / (lightRadius.x * lightRadius.x);
 	float lightFactor = 0;
 	float attenuation = 0;
 	float ndl = 0;

@@ -21,22 +21,5 @@ namespace C3DE.Materials
         {
             effect = content.Load<Effect>(_fxName);
         }
-
-        public void SetWorldMatrix(ref Matrix worldMatrix)
-        {
-            effect.Parameters["World"].SetValue(worldMatrix);
-        }
-
-        public void Update(RenderTarget2D shadowRT, Camera camera, LightPrefab light)
-        {
-            effect.Parameters["View"].SetValue(camera.view);
-            effect.Parameters["Projection"].SetValue(camera.projection);
-            effect.Parameters["shadowTexture"].SetValue(shadowRT);
-            effect.Parameters["lightView"].SetValue(light.viewMatrix);
-            effect.Parameters["lightProjection"].SetValue(light.projectionMatrix);
-            effect.Parameters["lightPosition"].SetValue(light.Transform.Position);
-            effect.Parameters["lightRadius"].SetValue(light.radius);
-            effect.Parameters["shadowMapSize"].SetValue(shadowMapSize);
-        }
     }
 }
