@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 
 namespace C3DE.Components.Lights
 {
@@ -6,6 +7,7 @@ namespace C3DE.Components.Lights
     {
         internal Matrix viewMatrix;
         internal Matrix projectionMatrix;
+        internal ShadowGenerator shadowGenerator;
 
         protected Color diffuseColor;
         protected Color specularColor;
@@ -56,6 +58,17 @@ namespace C3DE.Components.Lights
             }
         }
 
+        public bool EnableShadow
+        {
+            get { return shadowGenerator.Enabled; }
+            set { shadowGenerator.Enabled = value; }
+        }
+
+        public ShadowGenerator ShadowGenerator
+        {
+            get { return shadowGenerator; }
+        }
+
         public Light()
             : this(null)
         {
@@ -70,7 +83,15 @@ namespace C3DE.Components.Lights
             specularColor = Color.Black;
             intensity = 1.0f;
             radius = new Vector3(250.0f);
-            //sceneObject.Transform.Translate(6.0f, 30.0f, -23.0f);
+            shadowGenerator = new ShadowGenerator(this);
+        }
+
+        public override void LoadContent(ContentManager content)
+        {
+            base.LoadContent(content);
+            shadowGenerator.LoadContent(content);
+            // Hack
+            sceneObject.Transform.Translate(6.0f, 30.0f, -23.0f);
         }
 
         // Need to be changed quickly !

@@ -1,5 +1,6 @@
 ﻿using C3DE.Components;
 using C3DE.Components.Cameras;
+using C3DE.Components.Lights;
 using C3DE.Components.Renderers;
 using C3DE.PostProcess;
 using Microsoft.Xna.Framework;
@@ -17,9 +18,7 @@ namespace C3DE
         private GraphicsDevice graphicsDevice;
         private RenderTarget2D _sceneRT;
         private List<RenderableComponent> _renderList;
-        private LightPrefab _light;
         private Effect _objectFx;
-        private ShadowGenerator _shadowGenerator;
         private SpriteBatch _spriteBatch;
         private Color _ambientColor;
         private PostProcessManager _postProcessManager;
@@ -30,19 +29,12 @@ namespace C3DE
             set { _ambientColor = value; }
         }
 
-        public LightPrefab Light // FIXME Create a component for that
-        {
-            get { return _light; }
-        }
-
         public Renderer(GraphicsDevice device)
         {
             graphicsDevice = device;
             _spriteBatch = new SpriteBatch(device);
             _sceneRT = new RenderTarget2D(device, device.Viewport.Width, device.Viewport.Height, false, SurfaceFormat.Color, DepthFormat.Depth24, 0, RenderTargetUsage.DiscardContents);
-            _light = new LightPrefab();
             _ambientColor = Color.White;
-            _shadowGenerator = new ShadowGenerator(device);
             _postProcessManager = new PostProcessManager();
         }
 
@@ -53,7 +45,6 @@ namespace C3DE
         public void LoadContent(ContentManager content)
         {
             _objectFx = content.Load<Effect>("fx/StandardEffect");
-            _shadowGenerator.LoadContent(content);
         }
 
         /// <summary>
@@ -62,6 +53,10 @@ namespace C3DE
         /// <param name="camera">The camera to use.</param>
         private void renderObjects(Scene scene, Camera camera)
         {
+            // FIXME ...
+            if (scene.Lights.Count == 0)
+                return;
+
             graphicsDevice.SetRenderTarget(_sceneRT);
             graphicsDevice.Clear(Color.Black);
             graphicsDevice.DepthStencilState = DepthStencilState.Default;
@@ -69,24 +64,27 @@ namespace C3DE
             _objectFx.Parameters["View"].SetValue(camera.view);
             _objectFx.Parameters["Projection"].SetValue(camera.projection);
 
-            // Shadows
-            _objectFx.Parameters["shadowMapEnabled"].SetValue(_shadowGenerator.Enabled);
+            // FIXME Do a loop when ok
+            var light0 = scene.Lights[0];
 
-            if (_shadowGenerator.Enabled)
+            // Shadows
+            _objectFx.Parameters["shadowMapEnabled"].SetValue(light0.shadowGenerator.Enabled);
+
+            if (light0.shadowGenerator.Enabled)
             {
-                _objectFx.Parameters["shadowTexture"].SetValue(_shadowGenerator.ShadowRT);
-                _objectFx.Parameters["shadowMapSize"].SetValue(_shadowGenerator.ShadowMapSize);
-                _objectFx.Parameters["shadowBias"].SetValue(_shadowGenerator.ShadowBias);
-                _objectFx.Parameters["shadowStrength"].SetValue(_shadowGenerator.ShadowStrength);
-            }                
+                _objectFx.Parameters["shadowTexture"].SetValue(light0.shadowGenerator.ShadowMap);
+                _objectFx.Parameters["shadowMapSize"].SetValue(light0.shadowGenerator.ShadowMapSize);
+                _objectFx.Parameters["shadowBias"].SetValue(light0.shadowGenerator.ShadowBias);
+                _objectFx.Parameters["shadowStrength"].SetValue(light0.shadowGenerator.ShadowStrength);
+            }
 
             // Light
-            _objectFx.Parameters["lightView"].SetValue(_light.viewMatrix);
-            _objectFx.Parameters["lightProjection"].SetValue(_light.projectionMatrix);
-            _objectFx.Parameters["lightPosition"].SetValue(_light.Transform.Position);
-            _objectFx.Parameters["lightRadius"].SetValue(Light.radius);
+            _objectFx.Parameters["lightView"].SetValue(light0.viewMatrix);
+            _objectFx.Parameters["lightProjection"].SetValue(light0.projectionMatrix);
+            _objectFx.Parameters["lightPosition"].SetValue(light0.SceneObject.Transform.Position);
+            _objectFx.Parameters["lightRadius"].SetValue(light0.Radius);
             _objectFx.Parameters["ambientColor"].SetValue(_ambientColor.ToVector4());
-            
+
             for (int i = 0; i < _renderList.Count; i++)
             {
                 if (_renderList[i].MaterialCount > 0)
@@ -123,8 +121,9 @@ namespace C3DE
         {
             _renderList = scene.RenderList;
 
-            if (_shadowGenerator.Enabled)
-                _shadowGenerator.renderShadows(_renderList, _light);
+            for (int i = 0, l = scene.Lights.Count; i < l; i++)
+                if (scene.Lights[i].shadowGenerator.Enabled)
+                    scene.Lights[i].shadowGenerator.RenderShadows(graphicsDevice, scene.RenderList);
 
             renderObjects(scene, camera);
             renderBuffers();

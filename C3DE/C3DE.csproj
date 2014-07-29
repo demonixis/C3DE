@@ -76,7 +76,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Renderer.cs" />
     <Compile Include="Materials\StandardMaterial.cs" />
-    <Compile Include="ShadowGenerator.cs" />
+    <Compile Include="Components\Lights\ShadowGenerator.cs" />
     <Compile Include="Skybox.cs" />
     <Compile Include="Time.cs" />
     <Compile Include="Utils\NoiseGenerator.cs" />

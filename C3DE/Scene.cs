@@ -138,15 +138,7 @@ namespace C3DE
 
         public void CheckComponent(Component component, ComponentChangeType type)
         {
-            if (component is Camera)
-            {
-                if (type == ComponentChangeType.Add)
-                    Add(component as Camera);
-                else if (type == ComponentChangeType.Remove)
-                    Remove(component as Camera);
-            }
-            
-            else if (component is RenderableComponent)
+            if (component is RenderableComponent)
             {
                 var renderable = component as RenderableComponent;
 
@@ -157,17 +149,33 @@ namespace C3DE
                     _renderList.Remove(renderable);
             }
 
-            else if (component is BoxCollider)
+            else if (component is Collider)
             {
-                var collider = component as BoxCollider;
+                var collider = component as Collider;
 
-                if (collider != null)
-                {
-                    if (type == ComponentChangeType.Add && !_colliders.Contains(collider))
-                        _colliders.Add(collider);
-                    else if (type == ComponentChangeType.Remove)
-                        _colliders.Remove(collider);
-                }
+                if (type == ComponentChangeType.Add && !_colliders.Contains(collider))
+                    _colliders.Add(collider);
+                else if (type == ComponentChangeType.Remove)
+                    _colliders.Remove(collider);
+            }
+            else if (component is Camera)
+            {
+                var camera = component as Camera;
+
+                if (type == ComponentChangeType.Add && !_cameras.Contains(camera))
+                    Add(camera);
+                else if (type == ComponentChangeType.Remove)
+                    Remove(camera);
+            }
+            
+            else if (component is Light)
+            {
+                var light = component as Light;
+
+                if (type == ComponentChangeType.Add && !_lights.Contains(light))
+                    _lights.Add(light);
+                else if (type == ComponentChangeType.Remove)
+                    _lights.Remove(light);
             }
         }
 

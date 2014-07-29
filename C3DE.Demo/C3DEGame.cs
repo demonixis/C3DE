@@ -1,5 +1,6 @@
 using C3DE.Components;
 using C3DE.Components.Cameras;
+using C3DE.Components.Lights;
 using C3DE.Components.Renderers;
 using C3DE.Demo.Scripts;
 using C3DE.Geometries;
@@ -80,6 +81,13 @@ namespace C3DE.Demo
             controller.MoveSpeed = 0.001f;
             controller.RotationSpeed = 0.0005f;
 
+            var sceneLight = new SceneObject();
+            scene.Add(sceneLight);
+
+            var light = sceneLight.AddComponent<Light>();
+            light.ShadowGenerator.Enabled = true;
+            light.ShadowGenerator.SetShadowMapSize(GraphicsDevice, 1024);
+
             SceneObject so = null;
             MeshRenderer mr = null;
             AutoRotation ar = null;
@@ -123,6 +131,7 @@ namespace C3DE.Demo
             if (Input.Keys.Escape || Input.Gamepad.Pressed(Buttons.Back))
                 Exit();
 
+            /*
             // Move the light (oh it's so great \:D/)
             if (Input.Keys.Pressed(Keys.NumPad8) || Input.Gamepad.Pressed(Buttons.DPadUp))
                 renderer.Light.Transform.Translate(0, 0, 0.1f);
@@ -134,7 +143,7 @@ namespace C3DE.Demo
                 renderer.Light.Transform.Translate(0.1f, 0, 0);
 
             else if (Input.Keys.Pressed(Keys.NumPad6) || Input.Gamepad.Pressed(Buttons.DPadRight))
-                renderer.Light.Transform.Translate(-0.1f, 0, 0);
+                renderer.Light.Transform.Translate(-0.1f, 0, 0);*/
         }
     }
 

@@ -1,4 +1,5 @@
 ﻿using C3DE.Components;
+using C3DE.Components.Lights;
 using C3DE.Components.Renderers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
@@ -13,8 +14,8 @@ namespace C3DE
     /// </summary>
     public class ShadowGenerator
     {
-        internal RenderTarget2D _shadowRT;
-        private GraphicsDevice _device;
+        private Light _light;
+        private RenderTarget2D shadowMap;
         private Effect _shadowEffect;
         private float _shadowMapSize;
         private float _shadowBias;
@@ -22,9 +23,9 @@ namespace C3DE
         private BoundingSphere _boundingSphere;
         private bool _enabled;
 
-        public RenderTarget2D ShadowRT
+        public RenderTarget2D ShadowMap
         {
-            get { return _shadowRT; }
+            get { return shadowMap; }
         }
 
         public float ShadowMapSize
@@ -50,13 +51,12 @@ namespace C3DE
             set { _enabled = value; }
         }
 
-        public ShadowGenerator(GraphicsDevice device)
+        public ShadowGenerator(Light light)
         {
-            _device = device;
-            _enabled = true;
+            _enabled = false;
             _shadowBias = 0.0015f;
             _shadowStrength = 0.5f;
-            SetShadowMapSize(1024);
+            _light = light;
         }
 
         public void LoadContent(ContentManager content)
@@ -68,9 +68,9 @@ namespace C3DE
         /// Change the shadow map size and update the render target.
         /// </summary>
         /// <param name="size">Desired size, it must a power of two</param>
-        public void SetShadowMapSize(int size)
+        public void SetShadowMapSize(GraphicsDevice device, int size)
         {
-            _shadowRT = new RenderTarget2D(_device, size, size, false, SurfaceFormat.Single, DepthFormat.Depth24, 0, RenderTargetUsage.DiscardContents);
+            shadowMap = new RenderTarget2D(device, size, size, false, SurfaceFormat.Single, DepthFormat.Depth24, 0, RenderTargetUsage.DiscardContents);
             _shadowMapSize = size;
         }
 
@@ -78,7 +78,7 @@ namespace C3DE
         /// Render shadows for the specified camera into a renderTarget.
         /// </summary>
         /// <param name="camera"></param>
-        public void renderShadows(List<RenderableComponent> renderList, LightPrefab light)
+        public void RenderShadows(GraphicsDevice device, List<RenderableComponent> renderList)
         {
             _boundingSphere = new BoundingSphere();
 
@@ -90,15 +90,15 @@ namespace C3DE
                         _boundingSphere = BoundingSphere.CreateMerged(_boundingSphere, renderList[i].BoundingSphere);
                 }
 
-                light.Update(ref _boundingSphere);
+                _light.Update(ref _boundingSphere);
             }
 
-            _device.SetRenderTarget(_shadowRT);
-            _device.DepthStencilState = DepthStencilState.Default;
-            _device.Clear(Color.White);
+            device.SetRenderTarget(shadowMap);
+            device.DepthStencilState = DepthStencilState.Default;
+            device.Clear(Color.White);
 
-            _shadowEffect.Parameters["View"].SetValue(light.viewMatrix);
-            _shadowEffect.Parameters["Projection"].SetValue(light.projectionMatrix);
+            _shadowEffect.Parameters["View"].SetValue(_light.viewMatrix);
+            _shadowEffect.Parameters["Projection"].SetValue(_light.projectionMatrix);
 
             for (int i = 0; i < renderList.Count; i++)
             {
@@ -107,10 +107,10 @@ namespace C3DE
 
                 _shadowEffect.Parameters["World"].SetValue(renderList[i].SceneObject.Transform.world);
                 _shadowEffect.CurrentTechnique.Passes[0].Apply();
-                renderList[i].Draw(_device);
+                renderList[i].Draw(device);
             }
 
-            _device.SetRenderTarget(null);
+            device.SetRenderTarget(null);
         }
     }
 }
