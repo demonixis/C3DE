@@ -11,6 +11,11 @@ using System.Collections.Generic;
 
 namespace C3DE
 {
+    public enum FogMode
+    {
+        None = 0, Linear, Exp, Exp2
+    }
+
     public struct RaycastInfo
     {
         public Ray Ray;
@@ -24,7 +29,7 @@ namespace C3DE
     public class Scene : SceneObject
     {
         public readonly Material DefaultMaterial;
-
+      
         private ContentManager _content;
         private SmartList<SceneObject> members;
         private List<RenderableComponent> _renderList;
@@ -33,6 +38,12 @@ namespace C3DE
         private List<Camera> _cameras;
         private int _mainCameraIndex;
         private List<Light> _lights;
+
+        public FogMode FogMode { get; set; }
+        public Color FogColor { get; set; }
+        public float FogDensity { get; set; }
+        public float FogStart { get; set; }
+        public float FogEnd { get; set; }
 
         public Camera MainCamera
         {
@@ -86,6 +97,12 @@ namespace C3DE
             _mainCameraIndex = -1;
             _lights = new List<Light>();
             DefaultMaterial = new Material(this);
+
+            FogMode = FogMode.None;
+            FogColor = Color.Green;
+            FogDensity = 0.1f;
+            FogStart = 10.0f;
+            FogEnd = 200.0f;
         }
 
         #region Lifecycle
