@@ -45,6 +45,7 @@
     <Compile Include="Components\Lights\DirectionalLight.cs" />
     <Compile Include="Components\Lights\Light.cs" />
     <Compile Include="Components\Lights\PointLight.cs" />
+    <Compile Include="Components\Renderers\Debug\FrustrumRenderer.cs" />
     <Compile Include="Components\Renderers\MeshRenderer.cs" />
     <Compile Include="Components\Renderers\QuadRenderer.cs" />
     <Compile Include="Components\Renderers\Debug\RayRenderer.cs" />
