@@ -75,8 +75,6 @@ namespace C3DE
             _objectFx.Parameters["lightProjection"].SetValue(light0.projectionMatrix);
             _objectFx.Parameters["lightPosition"].SetValue(light0.SceneObject.Transform.Position);
             _objectFx.Parameters["lightRadius"].SetValue(light0.Radius);
-            _objectFx.Parameters["FogColor"].SetValue(scene.FogColor.ToVector4());
-            _objectFx.Parameters["FogData"].SetValue(new Vector4((int)scene.FogMode, scene.FogDensity, scene.FogStart, scene.FogEnd));
             _objectFx.Parameters["ambientColor"].SetValue(scene.AmbientColor.ToVector4());
 
             for (int i = 0; i < _renderList.Count; i++)

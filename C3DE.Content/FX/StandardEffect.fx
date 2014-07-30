@@ -11,8 +11,6 @@ float shadowBias = 0.05;
 float shadowStrength = 1.0;
 float4 ambientColor = float4(1.0, 1.0, 1.0, 1.0);
 float4 emissiveColor = float4(0.0, 0.0, 0.0, 1.0);
-float4 FogColor = float4(0.2, 0.2, 0.2, 1.0);
-float4 FogData = float4(0.0, 0.1, 10.0, 200.0);
 
 texture mainTexture;
 sampler textureSampler = sampler_state
@@ -50,7 +48,6 @@ struct VertexShaderOutput
 	float4 worldPosition:TEXCOORD1;
 	float2 screenPosition:TEXCOORD2;
 	float3 normal:TEXCOORD3;
-	float fogDistance:COLOR;
 };
 
 float calcShadowPCF(float lightSpaceDepth, float2 shadowCoordinates)
@@ -67,30 +64,6 @@ float calcShadowPCF(float lightSpaceDepth, float2 shadowCoordinates)
 	return (samples[0] + samples[1] + samples[2] + samples[3]) / 4.0;
 }
 
-float CalcFogFactor(float distance)
-{
-	float fogCoeff = 1.0;
-	int mode = (int)FogData.x;
-	float density = FogData.y;
-	float start = FogData.z;
-	float end = FogData.w;
-	float E = 2.71828;
-
-	if (mode == 1)
-		fogCoeff = (end - distance) / (end - start);
-
-	else if (mode == 2)
-		fogCoeff = 1.0 / pow(E, distance * density);
-
-	else if (mode == 3)
-		fogCoeff = 1.0 / pow(E, distance * distance * density * density);
-
-	if (mode > 0)
-		fogCoeff = clamp(fogCoeff, 0.0, 1.0);
-
-	return fogCoeff;
-}
-
 VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
 {
     VertexShaderOutput output;
@@ -105,8 +78,6 @@ VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
 	
 	float4 n = float4(input.normal.x, input.normal.y, input.normal.z, 0);
 	output.normal = (float3)normalize(mul(n, World));
-
-	output.fogDistance = viewPosition.z;
 
     return output;
 }
@@ -144,12 +115,6 @@ float4 PixelShaderFunction(VertexShaderOutput input):COLOR0
 	}
 
 	color = clamp(color * ambientColor * lightFactor * shadowTerm + emissiveColor, 0.0, 1.0);
-
-	if (FogData.x > 0)
-	{
-		float fog = CalcFogFactor(input.fogDistance);
-		color = (fog * float4(color.xyz, 1.0) * (1.0 - fog)) * FogColor;
-	}
 
 	return color;
 }

@@ -41,12 +41,6 @@ namespace C3DE
 
         public Color AmbientColor { get; set; }
 
-        public FogMode FogMode { get; set; }
-        public Color FogColor { get; set; }
-        public float FogDensity { get; set; }
-        public float FogStart { get; set; }
-        public float FogEnd { get; set; }
-
         public Camera MainCamera
         {
             get { return _mainCameraIndex > -1 ? _cameras[_mainCameraIndex] : null; }
@@ -100,11 +94,6 @@ namespace C3DE
             _lights = new List<Light>();
             DefaultMaterial = new Material(this);
             AmbientColor = Color.WhiteSmoke;
-            FogMode = FogMode.None;
-            FogColor = Color.Green;
-            FogDensity = 0.1f;
-            FogStart = 10.0f;
-            FogEnd = 200.0f;
         }
 
         #region Lifecycle
