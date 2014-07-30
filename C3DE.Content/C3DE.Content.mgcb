@@ -234,3 +234,14 @@
 /processorParam:TextureFormat=Color
 /build:Textures/terrainTexture.jpg
 
+#begin Textures/qrcode.jpg
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=0,0,0,0
+/processorParam:ColorKeyEnabled=False
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:TextureFormat=Color
+/build:Textures/qrcode.jpg
+

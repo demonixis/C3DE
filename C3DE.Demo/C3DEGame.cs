@@ -24,6 +24,9 @@ namespace C3DE.Demo
             : base()
         {
             Window.Title = "C3DE - Shadow Mapping";
+            graphics.PreferredBackBufferWidth = 1440;
+            graphics.PreferredBackBufferHeight = 900;
+            graphics.ApplyChanges();
         }
 
         private void CreateMaterials()
