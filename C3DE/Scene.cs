@@ -29,7 +29,7 @@ namespace C3DE
     public class Scene : SceneObject
     {
         public readonly Material DefaultMaterial;
-      
+
         private ContentManager _content;
         private SmartList<SceneObject> members;
         private List<RenderableComponent> _renderList;
@@ -92,7 +92,7 @@ namespace C3DE
             _cameras = new List<Camera>();
             _mainCameraIndex = -1;
             _lights = new List<Light>();
-            DefaultMaterial = new Material(this);
+            DefaultMaterial = new StandardMaterial(this);
             AmbientColor = Color.WhiteSmoke;
         }
 
@@ -104,6 +104,9 @@ namespace C3DE
         /// <param name="content"></param>
         public override void LoadContent(ContentManager content)
         {
+            for (int i = 0, l = _materials.Count; i < l; i++)
+                _materials[i].LoadContent(_content);
+
             for (int i = 0; i < members.Size; i++)
                 members[i].LoadContent(_content);
 
@@ -175,7 +178,7 @@ namespace C3DE
                 else if (type == ComponentChangeType.Remove)
                     Remove(camera);
             }
-            
+
             else if (component is Light)
             {
                 var light = component as Light;
@@ -264,7 +267,12 @@ namespace C3DE
         public void Add(Material material)
         {
             if (!_materials.Contains(material))
+            {
+                if (initialized)
+                    material.LoadContent(_content);
+
                 _materials.Add(material);
+            }
         }
 
         /// <summary>

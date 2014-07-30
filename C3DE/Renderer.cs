@@ -2,6 +2,7 @@
 using C3DE.Components.Cameras;
 using C3DE.Components.Lights;
 using C3DE.Components.Renderers;
+using C3DE.Materials;
 using C3DE.PostProcess;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
@@ -17,8 +18,6 @@ namespace C3DE
     {
         private GraphicsDevice graphicsDevice;
         private RenderTarget2D _sceneRT;
-        private List<RenderableComponent> _renderList;
-        private Effect _objectFx;
         private SpriteBatch _spriteBatch;
         private PostProcessManager _postProcessManager;
 
@@ -28,15 +27,6 @@ namespace C3DE
             _spriteBatch = new SpriteBatch(device);
             _sceneRT = new RenderTarget2D(device, device.Viewport.Width, device.Viewport.Height, false, SurfaceFormat.Color, DepthFormat.Depth24, 0, RenderTargetUsage.DiscardContents);
             _postProcessManager = new PostProcessManager();
-        }
-
-        /// <summary>
-        /// Load shaders.
-        /// </summary>
-        /// <param name="content"></param>
-        public void LoadContent(ContentManager content)
-        {
-            _objectFx = content.Load<Effect>("fx/StandardEffect");
         }
 
         /// <summary>
@@ -53,40 +43,15 @@ namespace C3DE
             graphicsDevice.Clear(Color.Black);
             graphicsDevice.DepthStencilState = DepthStencilState.Default;
 
-            _objectFx.Parameters["View"].SetValue(camera.view);
-            _objectFx.Parameters["Projection"].SetValue(camera.projection);
+            foreach (Material material in scene.Materials)
+                material.PrePass();
 
-            // FIXME Do a loop when ok
-            var light0 = scene.Lights[0];
-            
-            // Shadows
-            _objectFx.Parameters["shadowMapEnabled"].SetValue(light0.shadowGenerator.Enabled);
-
-            if (light0.shadowGenerator.Enabled)
+            for (int i = 0; i < scene.RenderList.Count; i++)
             {
-                _objectFx.Parameters["shadowTexture"].SetValue(light0.shadowGenerator.ShadowMap);
-                _objectFx.Parameters["shadowMapSize"].SetValue(light0.shadowGenerator.ShadowMapSize);
-                _objectFx.Parameters["shadowBias"].SetValue(light0.shadowGenerator.ShadowBias);
-                _objectFx.Parameters["shadowStrength"].SetValue(light0.shadowGenerator.ShadowStrength);
-            }
-
-            // Light
-            _objectFx.Parameters["lightView"].SetValue(light0.viewMatrix);
-            _objectFx.Parameters["lightProjection"].SetValue(light0.projectionMatrix);
-            _objectFx.Parameters["lightPosition"].SetValue(light0.SceneObject.Transform.Position);
-            _objectFx.Parameters["lightRadius"].SetValue(light0.Radius);
-            _objectFx.Parameters["ambientColor"].SetValue(scene.AmbientColor.ToVector4());
-
-            for (int i = 0; i < _renderList.Count; i++)
-            {
-                if (_renderList[i].MaterialCount > 0)
+                if (scene.RenderList[i].MaterialCount > 0)
                 {
-                    _objectFx.Parameters["World"].SetValue(_renderList[i].SceneObject.Transform.world);
-                    _objectFx.Parameters["mainTexture"].SetValue(scene.Materials[_renderList[i].MaterialIndices[0]].MainTexture);
-                    _objectFx.Parameters["emissiveColor"].SetValue(scene.Materials[_renderList[i].MaterialIndices[0]].EmissiveColor.ToVector4());
-
-                    _objectFx.CurrentTechnique.Passes[0].Apply();
-                    _renderList[i].Draw(graphicsDevice);
+                    scene.RenderList[i].Material.Pass(scene.RenderList[i].SceneObject.Transform);
+                    scene.RenderList[i].Draw(graphicsDevice);
                 }
             }
 
@@ -111,8 +76,6 @@ namespace C3DE
         /// <param name="camera">The camera to use for render.</param>
         public void render(Scene scene, Camera camera)
         {
-            _renderList = scene.RenderList;
-
             for (int i = 0, l = scene.Lights.Count; i < l; i++)
                 if (scene.Lights[i].shadowGenerator.Enabled)
                     scene.Lights[i].shadowGenerator.RenderShadows(graphicsDevice, scene.RenderList);

@@ -96,7 +96,7 @@ namespace C3DE.Components.Lights
             base.LoadContent(content);
             shadowGenerator.LoadContent(content);
             // Hack
-            sceneObject.Transform.Translate(6.0f, 10.0f, -23.0f);
+            sceneObject.Transform.Translate(6.0f, 5.0f, -23.0f);
         }
 
         // Need to be changed quickly !

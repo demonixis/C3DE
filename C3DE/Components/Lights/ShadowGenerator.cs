@@ -54,8 +54,8 @@ namespace C3DE
         public ShadowGenerator(Light light)
         {
             _enabled = false;
-            _shadowBias = 0.0015f;
-            _shadowStrength = 0.8f;
+            _shadowBias = 0.001f;
+            _shadowStrength = 0.65f;
             _light = light;
         }
 

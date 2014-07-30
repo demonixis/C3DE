@@ -39,7 +39,6 @@ namespace C3DE
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
             renderer = new Renderer(GraphicsDevice);
-            renderer.LoadContent(Content);
 
             App.Content = Content;
             App.GraphicsDevice = GraphicsDevice;

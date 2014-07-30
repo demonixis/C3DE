@@ -17,7 +17,7 @@ namespace C3DE.Demo
 {
     public class C3DEGame : Engine
     {
-        private Dictionary<string, Material> materials;
+        private Dictionary<string, StandardMaterial> materials;
         TerrainPrefab terrain;
 
         public C3DEGame()
@@ -28,31 +28,35 @@ namespace C3DE.Demo
 
         private void CreateMaterials()
         {
-            materials = new Dictionary<string, Material>(10);
+            materials = new Dictionary<string, StandardMaterial>(10);
 
-            Material material = new Material(scene);
+            StandardMaterial material = new StandardMaterial(scene);
             material.MainTexture = Content.Load<Texture2D>("Textures/huleShip");
             materials.Add("huleShip", material);
 
-            material = new Material(scene);
+            material = new StandardMaterial(scene);
             material.MainTexture = Content.Load<Texture2D>("Models/texv1");
             materials.Add("spaceShip", material);
 
-            material = new Material(scene);
+            material = new StandardMaterial(scene);
             material.MainTexture = Content.Load<Texture2D>("Textures/tech_box");
             materials.Add("box", material);
 
-            material = new Material(scene);
+            material = new StandardMaterial(scene);
             material.MainTexture = Content.Load<Texture2D>("Textures/tech_box2");
             materials.Add("box2", material);
 
-            material = new Material(scene);
+            material = new StandardMaterial(scene);
             material.MainTexture = Content.Load<Texture2D>("Textures/marsTexture");
             materials.Add("mars", material);
 
-            material = new Material(scene);
+            material = new StandardMaterial(scene);
             material.MainTexture = Content.Load<Texture2D>("Textures/heightmapTexture");
             materials.Add("terrain", material);
+
+            material = new StandardMaterial(scene);
+            material.MainTexture = Content.Load<Texture2D>("Textures/terrainTexture");
+            materials.Add("terrain2", material);
 
             var skyboxMaterial = new SkyboxMaterial(scene);
             skyboxMaterial.Textures = new Texture2D[6] {
@@ -76,8 +80,8 @@ namespace C3DE.Demo
             scene.Add(camera);
 
             var controller = camera.AddComponent<FirstPersonController>();
-            controller.AngularVelocity = new Vector3(0.9f);
-            controller.Velocity = new Vector3(0.9f, 0, 0.9f);
+            controller.AngularVelocity = new Vector3(0.01f, 0.9f, 0);
+            controller.Velocity = new Vector3(0.9f, 0.4f, 0.9f);
             controller.MoveSpeed = 0.001f;
             controller.RotationSpeed = 0.0005f;
 
@@ -113,10 +117,10 @@ namespace C3DE.Demo
             terrain.TextureRepeat = new Vector2(16);
             //terrain.Flat(GraphicsDevice);
             terrain.Randomize(GraphicsDevice);
-            //terrain.LoadHeightmap(GraphicsDevice, Content.Load<Texture2D>("Textures/heightmap"));
+            //terrain.LoadHeightmap(GraphicsDevice, Content.Load<Texture2D>("Textures/heightmap2"));
             scene.Add(terrain);
 
-            terrain.Renderer.Material = materials["mars"];
+            terrain.Renderer.Material = materials["terrain2"];
             terrain.Transform.Translate(-terrain.Renderer.BoundingSphere.Radius / 2, 0, -terrain.Renderer.BoundingSphere.Radius / 2);
             //terrain.ApplyCollision(ref mainCamera.Transform.Position);
 
