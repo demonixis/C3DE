@@ -36,6 +36,7 @@
     </StartupObject>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Components\Renderers\Debug\BoundingBoxRenderer.cs" />
     <Compile Include="Components\Cameras\Camera.cs" />
     <Compile Include="Components\Cameras\FirstPersonController.cs" />
     <Compile Include="Components\Colliders\BoxCollider.cs" />
@@ -45,6 +46,8 @@
     <Compile Include="Components\Lights\Light.cs" />
     <Compile Include="Components\Lights\PointLight.cs" />
     <Compile Include="Components\Renderers\MeshRenderer.cs" />
+    <Compile Include="Components\Renderers\QuadRenderer.cs" />
+    <Compile Include="Components\Renderers\Debug\RayRenderer.cs" />
     <Compile Include="Geometries\CubeGeometry.cs" />
     <Compile Include="Geometries\CylinderGeometry.cs" />
     <Compile Include="Geometries\Geometry.cs" />

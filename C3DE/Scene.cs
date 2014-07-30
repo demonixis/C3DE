@@ -39,6 +39,8 @@ namespace C3DE
         private int _mainCameraIndex;
         private List<Light> _lights;
 
+        public Color AmbientColor { get; set; }
+
         public FogMode FogMode { get; set; }
         public Color FogColor { get; set; }
         public float FogDensity { get; set; }
@@ -97,7 +99,7 @@ namespace C3DE
             _mainCameraIndex = -1;
             _lights = new List<Light>();
             DefaultMaterial = new Material(this);
-
+            AmbientColor = Color.WhiteSmoke;
             FogMode = FogMode.None;
             FogColor = Color.Green;
             FogDensity = 0.1f;

@@ -20,21 +20,13 @@ namespace C3DE
         private List<RenderableComponent> _renderList;
         private Effect _objectFx;
         private SpriteBatch _spriteBatch;
-        private Color _ambientColor;
         private PostProcessManager _postProcessManager;
-
-        public Color AmbientColor
-        {
-            get { return _ambientColor; }
-            set { _ambientColor = value; }
-        }
 
         public Renderer(GraphicsDevice device)
         {
             graphicsDevice = device;
             _spriteBatch = new SpriteBatch(device);
             _sceneRT = new RenderTarget2D(device, device.Viewport.Width, device.Viewport.Height, false, SurfaceFormat.Color, DepthFormat.Depth24, 0, RenderTargetUsage.DiscardContents);
-            _ambientColor = Color.White;
             _postProcessManager = new PostProcessManager();
         }
 
@@ -85,7 +77,7 @@ namespace C3DE
             _objectFx.Parameters["lightRadius"].SetValue(light0.Radius);
             _objectFx.Parameters["FogColor"].SetValue(scene.FogColor.ToVector4());
             _objectFx.Parameters["FogData"].SetValue(new Vector4((int)scene.FogMode, scene.FogDensity, scene.FogStart, scene.FogEnd));
-            _objectFx.Parameters["ambientColor"].SetValue(_ambientColor.ToVector4());
+            _objectFx.Parameters["ambientColor"].SetValue(scene.AmbientColor.ToVector4());
 
             for (int i = 0; i < _renderList.Count; i++)
             {
