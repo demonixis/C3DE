@@ -50,7 +50,7 @@ namespace C3DE
             {
                 if (scene.RenderList[i].MaterialCount > 0)
                 {
-                    scene.RenderList[i].Material.Pass(scene.RenderList[i].SceneObject.Transform);
+                    scene.RenderList[i].Material.Pass(scene.RenderList[i]);
                     scene.RenderList[i].Draw(graphicsDevice);
                 }
             }

@@ -19,6 +19,7 @@ namespace C3DE.Demo
     {
         private Dictionary<string, StandardMaterial> materials;
         TerrainPrefab terrain;
+        Transform lightTransform;
 
         public C3DEGame()
             : base()
@@ -91,6 +92,8 @@ namespace C3DE.Demo
             var sceneLight = new SceneObject();
             scene.Add(sceneLight);
 
+            lightTransform = sceneLight.Transform;
+
             var light = sceneLight.AddComponent<Light>();
             light.ShadowGenerator.Enabled = true;
             light.ShadowGenerator.SetShadowMapSize(GraphicsDevice, 1024);
@@ -113,6 +116,7 @@ namespace C3DE.Demo
                 mr.Geometry = new CubeGeometry();
                 mr.Geometry.Generate(GraphicsDevice);
                 mr.ComputeBoundingSphere();
+                mr.RecieveShadow = false;
                 mr.Material = RandomHelper.Range(1, 5) % 2 == 0 ? materials["box"] : materials["box2"];
             }
 
@@ -138,19 +142,19 @@ namespace C3DE.Demo
             if (Input.Keys.Escape || Input.Gamepad.Pressed(Buttons.Back))
                 Exit();
 
-            /*
+            
             // Move the light (oh it's so great \:D/)
             if (Input.Keys.Pressed(Keys.NumPad8) || Input.Gamepad.Pressed(Buttons.DPadUp))
-                renderer.Light.Transform.Translate(0, 0, 0.1f);
+                lightTransform.Translate(0, 0, 0.1f);
 
             else if (Input.Keys.Pressed(Keys.NumPad5) || Input.Gamepad.Pressed(Buttons.DPadDown))
-                renderer.Light.Transform.Translate(0, 0, -0.1f);
+                lightTransform.Translate(0, 0, -0.1f);
 
             if (Input.Keys.Pressed(Keys.NumPad4) || Input.Gamepad.Pressed(Buttons.DPadLeft))
-                renderer.Light.Transform.Translate(0.1f, 0, 0);
+                lightTransform.Translate(0.1f, 0, 0);
 
             else if (Input.Keys.Pressed(Keys.NumPad6) || Input.Gamepad.Pressed(Buttons.DPadRight))
-                renderer.Light.Transform.Translate(-0.1f, 0, 0);*/
+                lightTransform.Translate(-0.1f, 0, 0);
         }
     }
 

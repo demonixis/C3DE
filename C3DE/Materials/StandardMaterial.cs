@@ -1,4 +1,5 @@
 ﻿using C3DE.Components;
+using C3DE.Components.Renderers;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -46,11 +47,12 @@ namespace C3DE.Materials
             effect.Parameters["ambientColor"].SetValue(scene.AmbientColor.ToVector4());
         }
 
-        public override void Pass(Transform transform)
+        public override void Pass(RenderableComponent renderable)
         {
+            effect.Parameters["receiveShadow"].SetValue(renderable.RecieveShadow);
             effect.Parameters["mainTexture"].SetValue(mainTexture);
             effect.Parameters["emissiveColor"].SetValue(emissiveColor.ToVector4());
-            effect.Parameters["World"].SetValue(transform.world);
+            effect.Parameters["World"].SetValue(renderable.SceneObject.Transform.world);
             effect.CurrentTechnique.Passes[0].Apply();
         }
     }

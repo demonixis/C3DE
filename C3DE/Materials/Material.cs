@@ -1,4 +1,5 @@
 ﻿using C3DE.Components;
+using C3DE.Components.Renderers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -64,7 +65,7 @@ namespace C3DE.Materials
 
         public abstract void PrePass();
 
-        public abstract void Pass(Transform transform);
+        public abstract void Pass(RenderableComponent renderable);
 
         public void Dispose()
         {

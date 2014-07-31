@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework.Content;
+﻿using C3DE.Components.Renderers;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace C3DE.Materials
@@ -29,7 +30,7 @@ namespace C3DE.Materials
 
         }
 
-        public override void Pass(Components.Transform transform)
+        public override void Pass(RenderableComponent renderable)
         {
 
         }
