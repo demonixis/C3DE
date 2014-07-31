@@ -50,36 +50,6 @@
 /processorParam:TextureFormat=DxtCompressed
 /build:Models/ship.fbx
 
-#begin Models/spaceship.fbx
-/importer:FbxImporter
-/processor:ModelProcessor
-/processorParam:ColorKeyColor=0,0,0,0
-/processorParam:ColorKeyEnabled=True
-/processorParam:DefaultEffect=BasicEffect
-/processorParam:GenerateMipmaps=True
-/processorParam:GenerateTangentFrames=False
-/processorParam:PremultiplyTextureAlpha=True
-/processorParam:PremultiplyVertexColors=True
-/processorParam:ResizeTexturesToPowerOfTwo=False
-/processorParam:RotationX=0
-/processorParam:RotationY=0
-/processorParam:RotationZ=0
-/processorParam:Scale=1
-/processorParam:SwapWindingOrder=False
-/processorParam:TextureFormat=DxtCompressed
-/build:Models/spaceship.fbx
-
-#begin Models/texv1.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=0,0,0,0
-/processorParam:ColorKeyEnabled=False
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:TextureFormat=Color
-/build:Models/texv1.png
-
 #begin Textures/heightmap.jpg
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -112,17 +82,6 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:TextureFormat=Color
 /build:Textures/huleShip.png
-
-#begin Textures/tech_box.jpg
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=0,0,0,0
-/processorParam:ColorKeyEnabled=False
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:TextureFormat=Color
-/build:Textures/tech_box.jpg
 
 #begin Textures/tech_box2.png
 /importer:TextureImporter
@@ -201,28 +160,6 @@
 /processorParam:TextureFormat=Color
 /build:Textures/Skybox/pz.jpg
 
-#begin Textures/marsTexture.jpg
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=0,0,0,0
-/processorParam:ColorKeyEnabled=False
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:TextureFormat=Color
-/build:Textures/marsTexture.jpg
-
-#begin Textures/heightmap2.jpg
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=0,0,0,0
-/processorParam:ColorKeyEnabled=False
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:TextureFormat=Color
-/build:Textures/heightmap2.jpg
-
 #begin Textures/terrainTexture.jpg
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -234,7 +171,13 @@
 /processorParam:TextureFormat=Color
 /build:Textures/terrainTexture.jpg
 
-#begin Textures/qrcode.jpg
+#begin FX/DiffuseSpecularTextureEffect.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:FX/DiffuseSpecularTextureEffect.fx
+
+#begin Textures/EmptySpace.dds
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=0,0,0,0
@@ -243,11 +186,11 @@
 /processorParam:PremultiplyAlpha=True
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:TextureFormat=Color
-/build:Textures/qrcode.jpg
+/build:Textures/EmptySpace.dds
 
-#begin FX/DiffuseSpecularTextureEffect.fx
+#begin FX/SkyboxEffect.fx
 /importer:EffectImporter
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
-/build:FX/DiffuseSpecularTextureEffect.fx
+/build:FX/SkyboxEffect.fx
 

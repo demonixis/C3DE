@@ -38,8 +38,13 @@ namespace C3DE
         private List<Camera> _cameras;
         private int _mainCameraIndex;
         private List<Light> _lights;
+        private Vector4 _ambientColor;
 
-        public Color AmbientColor { get; set; }
+        public Color AmbientColor
+        {
+            get { return new Color(_ambientColor); }
+            set { _ambientColor = value.ToVector4(); }
+        }
 
         public Camera MainCamera
         {
@@ -92,8 +97,8 @@ namespace C3DE
             _cameras = new List<Camera>();
             _mainCameraIndex = -1;
             _lights = new List<Light>();
+            _ambientColor = Color.White.ToVector4();
             DefaultMaterial = new StandardMaterial(this);
-            AmbientColor = Color.WhiteSmoke;
         }
 
         #region Lifecycle

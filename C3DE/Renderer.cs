@@ -20,6 +20,12 @@ namespace C3DE
         private RenderTarget2D _sceneRT;
         private SpriteBatch _spriteBatch;
         private PostProcessManager _postProcessManager;
+        private Skybox _skybox;
+
+        public Skybox Skybox
+        {
+            get { return _skybox; }
+        }
 
         public Renderer(GraphicsDevice device)
         {
@@ -27,6 +33,7 @@ namespace C3DE
             _spriteBatch = new SpriteBatch(device);
             _sceneRT = new RenderTarget2D(device, device.Viewport.Width, device.Viewport.Height, false, SurfaceFormat.Color, DepthFormat.Depth24, 0, RenderTargetUsage.DiscardContents);
             _postProcessManager = new PostProcessManager();
+            _skybox = new Skybox();
         }
 
         /// <summary>
@@ -42,6 +49,9 @@ namespace C3DE
             graphicsDevice.SetRenderTarget(_sceneRT);
             graphicsDevice.Clear(Color.Black);
             graphicsDevice.DepthStencilState = DepthStencilState.Default;
+
+            if (_skybox.Enabled)
+                _skybox.Draw(graphicsDevice, camera);
 
             foreach (Material material in scene.Materials)
                 material.PrePass();
@@ -68,7 +78,7 @@ namespace C3DE
             _spriteBatch.Draw(_sceneRT, Vector2.Zero, Color.White);
             _spriteBatch.End();
         }
-
+        
         /// <summary>
         /// Render the scene with the specified camera.
         /// </summary>

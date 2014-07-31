@@ -57,7 +57,7 @@
     <Compile Include="Geometries\SphereGeometry.cs" />
     <Compile Include="Geometries\TerrainGeometry.cs" />
     <Compile Include="Geometries\TorusGeometry.cs" />
-    <Compile Include="Materials\DiffuseSpecular.cs" />
+    <Compile Include="Materials\DiffuseSpecularMaterial.cs" />
     <Compile Include="Materials\SkyboxMaterial.cs" />
     <Compile Include="Prefabs\CameraPrefab.cs" />
     <Compile Include="Components\Component.cs" />

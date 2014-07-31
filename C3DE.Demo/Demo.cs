@@ -11,25 +11,13 @@ namespace C3DE.Demo
         {
             Dictionary<string, Material> materials = new Dictionary<string, Material>(10);
 
-            StandardMaterial material = new StandardMaterial(scene);
-            material.MainTexture = content.Load<Texture2D>("Textures/tech_box");
-            materials.Add("box", material);
-
-            material = new StandardMaterial(scene);
+            var material = new StandardMaterial(scene);
             material.MainTexture = content.Load<Texture2D>("Textures/tech_box2");
             materials.Add("box2", material);
 
             material = new StandardMaterial(scene);
             material.MainTexture = content.Load<Texture2D>("Textures/huleShip");
             materials.Add("huleShip", material);
-
-            material = new StandardMaterial(scene);
-            material.MainTexture = content.Load<Texture2D>("Models/texv1");
-            materials.Add("spaceShip", material);
-
-            material = new StandardMaterial(scene);
-            material.MainTexture = content.Load<Texture2D>("Textures/marsTexture");
-            materials.Add("mars", material);
 
             material = new StandardMaterial(scene);
             material.MainTexture = content.Load<Texture2D>("Textures/heightmapTexture");

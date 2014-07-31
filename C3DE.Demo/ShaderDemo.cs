@@ -23,8 +23,8 @@ namespace C3DE.Demo
             : base()
         {
             Window.Title = "C3DE - Shader demo";
-            graphics.PreferredBackBufferWidth = 1280;
-            graphics.PreferredBackBufferHeight = 800;
+            graphics.PreferredBackBufferWidth = 1024;
+            graphics.PreferredBackBufferHeight = 600;
             graphics.ApplyChanges();
         }
 
@@ -54,14 +54,19 @@ namespace C3DE.Demo
             light.ShadowGenerator.SetShadowMapSize(GraphicsDevice, 1024);
 
             var terrain = new TerrainPrefab("terrain");
-            terrain.TextureRepeat = new Vector2(16);
-            terrain.Flat(GraphicsDevice);
+            terrain.TextureRepeat = new Vector2(8);
+            terrain.Randomize(GraphicsDevice);
             scene.Add(terrain);
 
-            terrain.Renderer.Material = materials["terrain2"];
+            var terrainMaterial = new DiffuseSpecularMaterial(scene);
+            terrainMaterial.MainTexture = Content.Load<Texture2D>("Textures/terrainTexture");
+
+            terrain.Renderer.Material = terrainMaterial;
+            terrain.Renderer.CastShadow = true;
+            terrain.Renderer.RecieveShadow = false;
             terrain.Transform.Translate(-terrain.Renderer.BoundingSphere.Radius / 2, 0, -terrain.Renderer.BoundingSphere.Radius / 2);
 
-            var material = new DiffuseSpecular(scene);
+            var material = new DiffuseSpecularMaterial(scene);
             material.MainTexture = Content.Load<Texture2D>("Textures/tech_box2");
 
             var cubeScene = new SceneObject();
@@ -77,6 +82,16 @@ namespace C3DE.Demo
             cube.Geometry.Generate(GraphicsDevice);
             cube.Material = material;
 
+            renderer.Skybox.LoadContent(Content);
+            renderer.Skybox.Generate(GraphicsDevice, new Texture2D[] {
+                Content.Load<Texture2D>("Textures/Skybox/px"),   
+                Content.Load<Texture2D>("Textures/Skybox/nx"),
+                Content.Load<Texture2D>("Textures/Skybox/py"),
+                Content.Load<Texture2D>("Textures/Skybox/ny"),
+                Content.Load<Texture2D>("Textures/Skybox/pz"),
+                Content.Load<Texture2D>("Textures/Skybox/nz")
+            });
+
             this.IsMouseVisible = true;
         }
 
@@ -90,16 +105,19 @@ namespace C3DE.Demo
 
             // Move the light (oh it's so great \:D/)
             if (Input.Keys.Pressed(Keys.NumPad8) || Input.Gamepad.Pressed(Buttons.DPadUp))
-                lightTransform.Translate(0, 0, 0.1f);
+                lightTransform.Translate(0, 0.1f, 0.0f);
 
             else if (Input.Keys.Pressed(Keys.NumPad5) || Input.Gamepad.Pressed(Buttons.DPadDown))
-                lightTransform.Translate(0, 0, -0.1f);
+                lightTransform.Translate(0, -0.1f, 0.0f);
 
             if (Input.Keys.Pressed(Keys.NumPad4) || Input.Gamepad.Pressed(Buttons.DPadLeft))
                 lightTransform.Translate(0.1f, 0, 0);
 
             else if (Input.Keys.Pressed(Keys.NumPad6) || Input.Gamepad.Pressed(Buttons.DPadRight))
                 lightTransform.Translate(-0.1f, 0, 0);
+
+            if (Input.Keys.Enter)
+                Console.WriteLine(lightTransform.Position);
         }
     }
 }
