@@ -29,7 +29,7 @@ namespace C3DE.Prefabs
 
         public void Setup(Vector3 position, Vector3 target, Vector3 upVector)
         {
-            _camera.Setup(new Vector3(0, 0, 0), new Vector3(0, 0, 0), Vector3.Up);
+            _camera.Setup(position, target, upVector);
         }
     }
 }

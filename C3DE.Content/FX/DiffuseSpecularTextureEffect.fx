@@ -3,21 +3,22 @@ float4x4 View;
 float4x4 Projection;
 float4x4 WorldInverseTranspose;
 
-float4 AmbientColor = float4(1, 1, 1, 1);
+float4 AmbientColor = float4(1.0, 1.0, 1.0, 1.0);
 float AmbientIntensity = 0.1;
+float4 EmissiveColor = float4(0.0, 0.0, 0.0, 1.0);
 
-float3 DiffuseLightDirection = float3(1, 0, 0);
-float4 DiffuseColor = float4(1, 1, 1, 1);
+float3 DiffuseLightDirection = float3(1.0, 0.0, 0.0);
+float4 DiffuseColor = float4(1.0, 1.0, 1.0, 1.0);
 float DiffuseIntensity = 1.0;
 
-float Shininess = 200;
-float4 SpecularColor = float4(1, 1, 1, 1);
-float SpecularIntensity = 1;
-float3 ViewVector = float3(1, 0, 0);
+float Shininess = 200.0;
+float4 SpecularColor = float4(1.0, 1.0, 1.0, 1.0);
+float SpecularIntensity = 1.0;
+float3 ViewVector = float3(1.0, 0.0, 0.0);
 
-texture ModelTexture;
+texture MainTexture;
 sampler2D textureSampler = sampler_state {
-	Texture = (ModelTexture);
+	Texture = (MainTexture);
 	MinFilter = Linear;
 	MagFilter = Linear;
 	AddressU = Clamp;
@@ -70,7 +71,7 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 	float4 textureColor = tex2D(textureSampler, input.TextureCoordinate);
 	textureColor.a = 1;
 
-	return saturate(textureColor * (input.Color) + AmbientColor * AmbientIntensity + specular);
+	return saturate(textureColor * (input.Color) + AmbientColor * AmbientIntensity + specular + EmissiveColor);
 }
 
 technique Textured

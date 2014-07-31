@@ -1,5 +1,6 @@
 ﻿using C3DE.Components;
 using C3DE.Components.Renderers;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -9,10 +10,18 @@ namespace C3DE.Materials
     {
         protected float shadowMapSize;
         protected bool shadowMapEnabled;
+        protected Color emissiveColor;
+
+        public Color EmissiveColor
+        {
+            get { return emissiveColor; }
+            set { emissiveColor = value; }
+        }
 
         public StandardMaterial(Scene scene)
             : base (scene)
         {
+            emissiveColor = new Color(0.0f, 0.0f, 0.0f, 1.0f);
         }
 
         public override void LoadContent(ContentManager content)

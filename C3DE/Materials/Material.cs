@@ -11,9 +11,8 @@ namespace C3DE.Materials
         private static int MaterialCounter = 0;
 
         protected Scene scene;
-        protected Color diffuseColor;
+        protected Vector4 diffuseColor;
         protected Texture2D mainTexture;
-        protected Color emissiveColor;
         protected Effect effect;
 
         public int Id
@@ -35,8 +34,8 @@ namespace C3DE.Materials
 
         public Color DiffuseColor
         {
-            get { return diffuseColor; }
-            set { diffuseColor = value; }
+            get { return new Color(diffuseColor); }
+            set { diffuseColor = value.ToVector4(); }
         }
 
         public Texture2D MainTexture
@@ -45,16 +44,9 @@ namespace C3DE.Materials
             set { mainTexture = value; }
         }
 
-        public Color EmissiveColor
-        {
-            get { return emissiveColor; }
-            set { emissiveColor = value; }
-        }
-
         public Material(Scene mainScene)
         {
-            diffuseColor = Color.White;
-            emissiveColor = new Color(0.0f, 0.0f, 0.0f, 1.0f);
+            diffuseColor = Color.White.ToVector4();
             scene = mainScene;
             scene.Add(this);
             Id = MaterialCounter++;

@@ -1,4 +1,4 @@
-using C3DE.Components;
+﻿using C3DE.Components;
 using C3DE.Components.Cameras;
 using C3DE.Components.Lights;
 using C3DE.Components.Renderers;
@@ -15,69 +15,25 @@ using System.Collections.Generic;
 
 namespace C3DE.Demo
 {
-    public class C3DEGame : Engine
+    public class TerrainDemo : Engine
     {
-        private Dictionary<string, Material> materials;
         TerrainPrefab terrain;
         Transform lightTransform;
 
-        public C3DEGame()
+        public TerrainDemo()
             : base()
         {
-            Window.Title = "C3DE - Shadow Mapping";
-            graphics.PreferredBackBufferWidth = 1440;
-            graphics.PreferredBackBufferHeight = 900;
+            Window.Title = "C3DE - Terrain";
+            graphics.PreferredBackBufferWidth = 1280;
+            graphics.PreferredBackBufferHeight = 800;
             graphics.ApplyChanges();
-        }
-
-        private void CreateMaterials()
-        {
-            materials = new Dictionary<string, Material>(10);
-
-            DiffuseSpecular df = new DiffuseSpecular(scene);
-            df.MainTexture = Content.Load<Texture2D>("Textures/tech_box");
-            materials.Add("box", df);
-
-            df = new DiffuseSpecular(scene);
-            df.MainTexture = Content.Load<Texture2D>("Textures/tech_box2");
-            materials.Add("box2", df);
-
-            StandardMaterial material = new StandardMaterial(scene);
-            material.MainTexture = Content.Load<Texture2D>("Textures/huleShip");
-            materials.Add("huleShip", material);
-
-            material = new StandardMaterial(scene);
-            material.MainTexture = Content.Load<Texture2D>("Models/texv1");
-            materials.Add("spaceShip", material);
-
-            material = new StandardMaterial(scene);
-            material.MainTexture = Content.Load<Texture2D>("Textures/marsTexture");
-            materials.Add("mars", material);
-
-            material = new StandardMaterial(scene);
-            material.MainTexture = Content.Load<Texture2D>("Textures/heightmapTexture");
-            materials.Add("terrain", material);
-
-            material = new StandardMaterial(scene);
-            material.MainTexture = Content.Load<Texture2D>("Textures/terrainTexture");
-            materials.Add("terrain2", material);
-
-            var skyboxMaterial = new SkyboxMaterial(scene);
-            skyboxMaterial.Textures = new Texture2D[6] {
-                Content.Load<Texture2D>("Textures/Skybox/nx"),
-                Content.Load<Texture2D>("Textures/Skybox/ny"),
-                Content.Load<Texture2D>("Textures/Skybox/nz"),
-                Content.Load<Texture2D>("Textures/Skybox/px"),
-                Content.Load<Texture2D>("Textures/Skybox/py"),
-                Content.Load<Texture2D>("Textures/Skybox/pz")
-            };
         }
 
         protected override void Initialize()
         {
             base.Initialize();
 
-            CreateMaterials();
+            var materials = Demo.CreateMaterials(Content, scene);
 
             var camera = new CameraPrefab("camera");
             camera.Setup(new Vector3(0, 2, -10), new Vector3(0, 0, 0), Vector3.Up);
@@ -122,14 +78,12 @@ namespace C3DE.Demo
 
             terrain = new TerrainPrefab("terrain");
             terrain.TextureRepeat = new Vector2(16);
-            //terrain.Flat(GraphicsDevice);
             terrain.Randomize(GraphicsDevice);
             //terrain.LoadHeightmap(GraphicsDevice, Content.Load<Texture2D>("Textures/heightmap2"));
             scene.Add(terrain);
 
             terrain.Renderer.Material = materials["terrain2"];
             terrain.Transform.Translate(-terrain.Renderer.BoundingSphere.Radius / 2, 0, -terrain.Renderer.BoundingSphere.Radius / 2);
-            //terrain.ApplyCollision(ref mainCamera.Transform.Position);
 
             this.IsMouseVisible = true;
         }
@@ -142,7 +96,6 @@ namespace C3DE.Demo
             if (Input.Keys.Escape || Input.Gamepad.Pressed(Buttons.Back))
                 Exit();
 
-            
             // Move the light (oh it's so great \:D/)
             if (Input.Keys.Pressed(Keys.NumPad8) || Input.Gamepad.Pressed(Buttons.DPadUp))
                 lightTransform.Translate(0, 0, 0.1f);
@@ -155,16 +108,6 @@ namespace C3DE.Demo
 
             else if (Input.Keys.Pressed(Keys.NumPad6) || Input.Gamepad.Pressed(Buttons.DPadRight))
                 lightTransform.Translate(-0.1f, 0, 0);
-        }
-    }
-
-    // Entry point.
-    static class Program
-    {
-        static void Main(string[] args)
-        {
-            using (C3DEGame game = new C3DEGame())
-                game.Run();
         }
     }
 }
