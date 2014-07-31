@@ -73,18 +73,17 @@ VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
 
 	float4 worldPosition = mul(input.Position, World);
 	float4 viewPosition = mul(worldPosition, View);
+	float4 n = float4(input.normal.x, input.normal.y, input.normal.z, 0);
 
 	output.Position = mul(viewPosition, Projection);
 	output.textureCoords = input.textureCoords;
-	output.worldPosition = worldPosition;
-
-	float4 n = float4(input.normal.x, input.normal.y, input.normal.z, 0);
 	output.normal = (float3)normalize(mul(n, World));
+	output.worldPosition = worldPosition;
 
 	return output;
 }
 
-float4 PixelShaderFunction(VertexShaderOutput input) :COLOR0
+float4 PixelShaderFunction(VertexShaderOutput input):COLOR0
 {
 	float4 color = tex2D(textureSampler, input.textureCoords);
 	float4 worldPosition = input.worldPosition;

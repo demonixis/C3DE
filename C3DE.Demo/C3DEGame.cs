@@ -17,7 +17,7 @@ namespace C3DE.Demo
 {
     public class C3DEGame : Engine
     {
-        private Dictionary<string, StandardMaterial> materials;
+        private Dictionary<string, Material> materials;
         TerrainPrefab terrain;
         Transform lightTransform;
 
@@ -32,7 +32,15 @@ namespace C3DE.Demo
 
         private void CreateMaterials()
         {
-            materials = new Dictionary<string, StandardMaterial>(10);
+            materials = new Dictionary<string, Material>(10);
+
+            DiffuseSpecular df = new DiffuseSpecular(scene);
+            df.MainTexture = Content.Load<Texture2D>("Textures/tech_box");
+            materials.Add("box", df);
+
+            df = new DiffuseSpecular(scene);
+            df.MainTexture = Content.Load<Texture2D>("Textures/tech_box2");
+            materials.Add("box2", df);
 
             StandardMaterial material = new StandardMaterial(scene);
             material.MainTexture = Content.Load<Texture2D>("Textures/huleShip");
@@ -41,14 +49,6 @@ namespace C3DE.Demo
             material = new StandardMaterial(scene);
             material.MainTexture = Content.Load<Texture2D>("Models/texv1");
             materials.Add("spaceShip", material);
-
-            material = new StandardMaterial(scene);
-            material.MainTexture = Content.Load<Texture2D>("Textures/tech_box");
-            materials.Add("box", material);
-
-            material = new StandardMaterial(scene);
-            material.MainTexture = Content.Load<Texture2D>("Textures/tech_box2");
-            materials.Add("box2", material);
 
             material = new StandardMaterial(scene);
             material.MainTexture = Content.Load<Texture2D>("Textures/marsTexture");

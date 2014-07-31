@@ -245,3 +245,9 @@
 /processorParam:TextureFormat=Color
 /build:Textures/qrcode.jpg
 
+#begin FX/DiffuseSpecularTextureEffect.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:FX/DiffuseSpecularTextureEffect.fx
+
