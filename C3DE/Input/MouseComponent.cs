@@ -57,7 +57,7 @@ namespace C3DE.Inputs
         /// </summary>
         /// <param name="button">The button to test</param>
         /// <returns>True if draggin then false</returns>
-        public bool Drag(MouseButton button)
+        public bool Drag(MouseButton button = MouseButton.Left)
         {
             return Down(button) && Moving;
         }

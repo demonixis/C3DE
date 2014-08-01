@@ -28,7 +28,7 @@ namespace C3DE.Components.Renderers.Debug
         {
             if (effect == null)
             {
-                effect = new BasicEffect(App.GraphicsDevice);
+                effect = new BasicEffect(Application.GraphicsDevice);
                 effect.VertexColorEnabled = false;
                 effect.LightingEnabled = false;
             }
@@ -43,23 +43,23 @@ namespace C3DE.Components.Renderers.Debug
             effect.View = camera.view;
             effect.Projection = camera.projection;
 
-            App.GraphicsDevice.RasterizerState = new RasterizerState() { CullMode = CullMode.None };
+            Application.GraphicsDevice.RasterizerState = new RasterizerState() { CullMode = CullMode.None };
 
             foreach (EffectPass pass in effect.CurrentTechnique.Passes)
             {
                 pass.Apply();
 
-                App.GraphicsDevice.DrawUserPrimitives(PrimitiveType.LineList, verts, 0, 1);
+                Application.GraphicsDevice.DrawUserPrimitives(PrimitiveType.LineList, verts, 0, 1);
 
                 effect.World = Matrix.Invert(Matrix.CreateLookAt(
                     verts[1].Position,
                     verts[0].Position,
                     (ray.Direction != Vector3.Up) ? Vector3.Up : Vector3.Left));
 
-                App.GraphicsDevice.DrawUserIndexedPrimitives(PrimitiveType.LineList, arrowVerts, 0, 5, arrowIndexs, 0, 4);
+                Application.GraphicsDevice.DrawUserIndexedPrimitives(PrimitiveType.LineList, arrowVerts, 0, 5, arrowIndexs, 0, 4);
             }
 
-            App.GraphicsDevice.RasterizerState = new RasterizerState() { CullMode = CullMode.CullClockwiseFace };
+            Application.GraphicsDevice.RasterizerState = new RasterizerState() { CullMode = CullMode.CullClockwiseFace };
         }
     }
 }

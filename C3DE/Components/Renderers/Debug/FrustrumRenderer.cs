@@ -38,7 +38,7 @@ namespace C3DE.Components.Renderers.Debug
         {
             if (effect == null)
             {
-                effect = new BasicEffect(App.GraphicsDevice);
+                effect = new BasicEffect(Application.GraphicsDevice);
                 effect.VertexColorEnabled = true;
                 effect.LightingEnabled = false;
             }
@@ -56,7 +56,7 @@ namespace C3DE.Components.Renderers.Debug
             foreach (EffectPass pass in effect.CurrentTechnique.Passes)
             {
                 pass.Apply();
-                App.GraphicsDevice.DrawUserIndexedPrimitives(PrimitiveType.LineList, vertices, 0, 8, indices, 0, indices.Length / 2);
+                Application.GraphicsDevice.DrawUserIndexedPrimitives(PrimitiveType.LineList, vertices, 0, 8, indices, 0, indices.Length / 2);
             }
         }
     }

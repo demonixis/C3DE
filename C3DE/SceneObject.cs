@@ -214,7 +214,7 @@ namespace C3DE
             components.Sort();
 
             if (initialized)
-                component.LoadContent(App.Content);
+                component.LoadContent(Application.Content);
 
             NotifyComponentChanged(component);
 

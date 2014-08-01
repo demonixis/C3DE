@@ -27,16 +27,6 @@ namespace C3DE.Demo
             material.MainTexture = content.Load<Texture2D>("Textures/terrainTexture");
             materials.Add("terrain2", material);
 
-            var skyboxMaterial = new SkyboxMaterial(scene);
-            skyboxMaterial.Textures = new Texture2D[6] {
-                content.Load<Texture2D>("Textures/Skybox/nx"),
-                content.Load<Texture2D>("Textures/Skybox/ny"),
-                content.Load<Texture2D>("Textures/Skybox/nz"),
-                content.Load<Texture2D>("Textures/Skybox/px"),
-                content.Load<Texture2D>("Textures/Skybox/py"),
-                content.Load<Texture2D>("Textures/Skybox/pz")
-            };
-
             return materials;
         }
     }

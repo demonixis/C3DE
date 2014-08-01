@@ -36,6 +36,7 @@
     </StartupObject>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Components\Cameras\OrbitController.cs" />
     <Compile Include="Components\Renderers\Debug\BoundingBoxRenderer.cs" />
     <Compile Include="Components\Cameras\Camera.cs" />
     <Compile Include="Components\Cameras\FirstPersonController.cs" />
@@ -58,7 +59,6 @@
     <Compile Include="Geometries\TerrainGeometry.cs" />
     <Compile Include="Geometries\TorusGeometry.cs" />
     <Compile Include="Materials\DiffuseSpecularMaterial.cs" />
-    <Compile Include="Materials\SkyboxMaterial.cs" />
     <Compile Include="Prefabs\CameraPrefab.cs" />
     <Compile Include="Components\Component.cs" />
     <Compile Include="Components\Renderers\ModelRenderer.cs" />

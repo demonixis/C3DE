@@ -23,8 +23,8 @@ namespace C3DE.Demo
             : base()
         {
             Window.Title = "C3DE - Shader demo";
-            graphics.PreferredBackBufferWidth = 1024;
-            graphics.PreferredBackBufferHeight = 600;
+            graphics.PreferredBackBufferWidth = 1280;
+            graphics.PreferredBackBufferHeight = 800;
             graphics.ApplyChanges();
         }
 
@@ -38,11 +38,7 @@ namespace C3DE.Demo
             camera.Setup(new Vector3(0, 2, -10), new Vector3(0, 0, 0), Vector3.Up);
             scene.Add(camera);
 
-            var controller = camera.AddComponent<FirstPersonController>();
-            controller.AngularVelocity = new Vector3(0.01f, 0.9f, 0);
-            controller.Velocity = new Vector3(0.9f, 0.4f, 0.9f);
-            controller.MoveSpeed = 0.001f;
-            controller.RotationSpeed = 0.0005f;
+            var controller = camera.AddComponent<OrbitController>();
 
             var sceneLight = new SceneObject();
             scene.Add(sceneLight);

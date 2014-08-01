@@ -57,7 +57,7 @@ namespace C3DE.Components.Cameras
             : base(sceneObject)
         {
             _fieldOfView = MathHelper.ToRadians(45);
-            _aspectRatio = (float)App.GraphicsDevice.Viewport.Width / (float)App.GraphicsDevice.Viewport.Height;
+            _aspectRatio = (float)Application.GraphicsDevice.Viewport.Width / (float)Application.GraphicsDevice.Viewport.Height;
             _nearPlane = 1.0f;
             _farPlane = 500.0f;
             _projectionType = CameraProjectionType.Perspective;
@@ -88,7 +88,7 @@ namespace C3DE.Components.Cameras
             if (_projectionType == CameraProjectionType.Perspective)
                 projection = Matrix.CreatePerspectiveFieldOfView(_fieldOfView, _aspectRatio, _nearPlane, _farPlane);
             else
-                projection = Matrix.CreateOrthographic(App.GraphicsDevice.Viewport.Width, App.GraphicsDevice.Viewport.Height, _nearPlane, _farPlane);
+                projection = Matrix.CreateOrthographic(Application.GraphicsDevice.Viewport.Width, Application.GraphicsDevice.Viewport.Height, _nearPlane, _farPlane);
 
         }
 
@@ -103,7 +103,7 @@ namespace C3DE.Components.Cameras
 
         public Vector3 WorldToScreenPoint(Vector3 position)
         {
-            return App.GraphicsDevice.Viewport.Project(position, projection, view, Matrix.Identity);
+            return Application.GraphicsDevice.Viewport.Project(position, projection, view, Matrix.Identity);
         }
 
         /// <summary>
@@ -114,7 +114,7 @@ namespace C3DE.Components.Cameras
         /// <returns>Position on 3D world</returns>
         public Vector3 ScreenToWorld(Vector3 position)
         {
-            return App.GraphicsDevice.Viewport.Unproject(position, projection, view, Matrix.Identity);
+            return Application.GraphicsDevice.Viewport.Unproject(position, projection, view, Matrix.Identity);
         }
 
         public Ray GetRay(Vector2 position)
@@ -122,8 +122,8 @@ namespace C3DE.Components.Cameras
             Vector3 nearPoint = new Vector3(position, 0);
             Vector3 farPoint = new Vector3(position, 1);
 
-            nearPoint = App.GraphicsDevice.Viewport.Unproject(nearPoint, projection, view, Matrix.Identity);
-            farPoint = App.GraphicsDevice.Viewport.Unproject(farPoint, projection, view, Matrix.Identity);
+            nearPoint = Application.GraphicsDevice.Viewport.Unproject(nearPoint, projection, view, Matrix.Identity);
+            farPoint = Application.GraphicsDevice.Viewport.Unproject(farPoint, projection, view, Matrix.Identity);
 
             // Get the direction
             Vector3 direction = farPoint - nearPoint;
