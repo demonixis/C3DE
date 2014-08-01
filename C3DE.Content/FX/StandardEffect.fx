@@ -40,7 +40,11 @@ sampler shadowSampler = sampler_state
 
 struct VertexShaderInput
 {
-	float4 Position:POSITION0;
+#if SM4
+	float4 Position : SV_Position;
+#else
+	float4 Position : POSITION0;
+#endif
 	float2 textureCoords:TEXCOORD0;
 	float3 normal:NORMAL0;
 };

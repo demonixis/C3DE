@@ -18,7 +18,11 @@ samplerCUBE SkyboxSampler = sampler_state
 
 struct VertexShaderInput
 {
+#if SM4
+	float4 Position : SV_Position;
+#else
 	float4 Position : POSITION0;
+#endif
 };
 
 struct VertexShaderOutput

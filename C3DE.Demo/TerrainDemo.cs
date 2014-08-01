@@ -73,7 +73,7 @@ namespace C3DE.Demo
                 mr.Geometry.Generate(GraphicsDevice);
                 mr.ComputeBoundingSphere();
                 mr.RecieveShadow = false;
-                mr.Material = RandomHelper.Range(1, 5) % 2 == 0 ? materials["box"] : materials["box2"];
+                mr.Material = materials["box2"];
             }
 
             terrain = new TerrainPrefab("terrain");

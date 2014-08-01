@@ -4,7 +4,11 @@ float4x4 Projection;
 
 struct VertexShaderInput
 {
-    float4 Position : POSITION0;
+#if SM4
+	float4 Position : SV_Position;
+#else
+	float4 Position : POSITION0;
+#endif
 };
 
 struct VertexShaderOutput

@@ -56,7 +56,11 @@ sampler2D shadowSampler = sampler_state
 
 struct VertexShaderInput
 {
+#if SM4
+	float4 Position : SV_Position;
+#else
 	float4 Position : POSITION0;
+#endif
 	float4 Normal : NORMAL0;
 	float2 TextureCoordinate : TEXCOORD0;
 };
@@ -145,8 +149,8 @@ technique Textured
 	pass Pass1
 	{
 #if SM4
-		VertexShader = compile vs_4_0_level_9_1 VertexShaderFunction();
-		PixelShader = compile ps_4_0_level_9_1 PixelShaderFunction();
+		VertexShader = compile vs_4_0_level_9_3 VertexShaderFunction();
+		PixelShader = compile ps_4_0_level_9_3 PixelShaderFunction();
 #else
 		VertexShader = compile vs_3_0 VertexShaderFunction();
 		PixelShader = compile ps_3_0 PixelShaderFunction();
