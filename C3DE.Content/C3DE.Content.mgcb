@@ -3,7 +3,7 @@
 
 /outputDir:..\C3DE.Demo\Content
 /intermediateDir:obj
-/platform:Windows
+/platform:Linux
 /config:
 /profile:HiDef
 /compress:False
@@ -193,4 +193,32 @@
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
 /build:FX/SkyboxEffect.fx
+
+#begin Textures/water.jpg
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=0,0,0,0
+/processorParam:ColorKeyEnabled=False
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:TextureFormat=Color
+/build:Textures/water.jpg
+
+#begin Textures/wavesbump.jpg
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=0,0,0,0
+/processorParam:ColorKeyEnabled=False
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:TextureFormat=Color
+/build:Textures/wavesbump.jpg
+
+#begin FX/WaterEffect.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:FX/WaterEffect.fx
 

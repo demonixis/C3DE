@@ -45,6 +45,26 @@ namespace C3DE.Components.Cameras
 
         public override void Update()
         {
+            UpdateKeyboardInput();
+            UpdateGamepadInput();
+
+            _rotationMatrix = Matrix.CreateFromYawPitchRoll(_transform.Rotation.Y, _transform.Rotation.X, 0.0f);
+
+            _transformedReference = Vector3.Transform(_translation, !FourAxis ? Matrix.CreateRotationY(_transform.Rotation.Y) : _rotationMatrix);
+
+            // Translate and rotate
+            _transform.Translate(ref _transformedReference);
+            _transform.Rotate(ref _rotation);
+
+            // Update target
+            _camera.Target = sceneObject.Transform.Position + Vector3.Transform(_camera.Reference, _rotationMatrix);
+
+            _translation *= Velocity;
+            _rotation *= AngularVelocity;
+        }
+
+        private void UpdateKeyboardInput()
+        {
             if (Input.Keys.Up || Input.Keys.Pressed(Keys.W))
                 _translation.Z += MoveSpeed * Time.DeltaTime;
 
@@ -74,20 +94,20 @@ namespace C3DE.Components.Cameras
 
             else if (Input.Keys.Pressed(Keys.Right))
                 _rotation.Y -= RotationSpeed * Time.DeltaTime;
+        }
 
-            _rotationMatrix = Matrix.CreateFromYawPitchRoll(_transform.Rotation.Y, _transform.Rotation.X, 0.0f);
+        private void UpdateGamepadInput()
+        {
+            _translation.Z += Input.Gamepad.LeftStickValue().Y * MoveSpeed * Time.DeltaTime;
+            _translation.X -= Input.Gamepad.LeftStickValue().X * StrafeSpeed * Time.DeltaTime;
 
-            _transformedReference = Vector3.Transform(_translation, !FourAxis ? Matrix.CreateRotationY(_transform.Rotation.Y) : _rotationMatrix);
+            _rotation.X -= Input.Gamepad.RightStickValue().Y * MoveSpeed / 2 * Time.DeltaTime;
+            _rotation.Y -= Input.Gamepad.RightStickValue().X * RotationSpeed * Time.DeltaTime;
 
-            // Translate and rotate
-            _transform.Translate(ref _transformedReference);
-            _transform.Rotate(ref _rotation);
-
-            // Update target
-            _camera.Target = sceneObject.Transform.Position + Vector3.Transform(_camera.Reference, _rotationMatrix);
-
-            _translation *= Velocity;
-            _rotation *= AngularVelocity;
+            if (Input.Gamepad.LeftShoulder())
+                _translation.Y -= MoveSpeed / 2 * Time.DeltaTime;
+            else if (Input.Gamepad.RightShoulder())
+                _translation.Y += MoveSpeed / 2 * Time.DeltaTime;
         }
     }
 }

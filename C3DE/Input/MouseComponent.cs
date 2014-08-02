@@ -29,7 +29,7 @@ namespace C3DE.Inputs
 
         public int Wheel
         {
-            get { return _mouseState.ScrollWheelValue; }
+            get { return _mouseState.ScrollWheelValue - _prevState.ScrollWheelValue; }
         }
 
         public bool Moving

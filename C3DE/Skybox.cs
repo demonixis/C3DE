@@ -27,7 +27,7 @@ namespace C3DE
             _effect = content.Load<Effect>("FX/SkyboxEffect");
         }
 
-        public void Generate(GraphicsDevice device, TextureCube texture, float size = 50.0f)
+        public void Generate(GraphicsDevice device, TextureCube texture, float size = 250.0f)
         {
             _geometry.Size = new Vector3(size);
             _geometry.Generate(device);
@@ -35,9 +35,9 @@ namespace C3DE
             Enabled = true;
         }
 
-        public void Generate(GraphicsDevice device, Texture2D[] textures, float size = 50.0f)
+        public void Generate(GraphicsDevice device, Texture2D[] textures, float size = 250.0f)
         {
-            _geometry.Size = new Vector3(50);
+            _geometry.Size = new Vector3(size);
             _geometry.Generate(device);
 
             _texture = new TextureCube(device, textures[0].Width, false, SurfaceFormat.Color);
@@ -48,9 +48,6 @@ namespace C3DE
                 textureData = new Color[textures[i].Width * textures[i].Height];
                 textures[i].GetData<Color>(textureData);
                 _texture.SetData<Color>((CubeMapFace)i, textureData);
-
-
-
             }
             
             Enabled = true;

@@ -17,7 +17,6 @@ namespace C3DE.Demo
 {
     public class TerrainDemo : Engine
     {
-        TerrainPrefab terrain;
         Transform lightTransform;
 
         public TerrainDemo()
@@ -40,51 +39,56 @@ namespace C3DE.Demo
             scene.Add(camera);
 
             var controller = camera.AddComponent<FirstPersonController>();
-            controller.AngularVelocity = new Vector3(0.01f, 0.9f, 0);
-            controller.Velocity = new Vector3(0.9f, 0.4f, 0.9f);
-            controller.MoveSpeed = 0.001f;
-            controller.RotationSpeed = 0.0005f;
 
             var sceneLight = new SceneObject();
             scene.Add(sceneLight);
-
-            lightTransform = sceneLight.Transform;
 
             var light = sceneLight.AddComponent<Light>();
             light.ShadowGenerator.Enabled = true;
             light.ShadowGenerator.SetShadowMapSize(GraphicsDevice, 1024);
 
-            SceneObject so = null;
-            MeshRenderer mr = null;
-            AutoRotation ar = null;
+            lightTransform = sceneLight.Transform;
 
-            for (int i = 0; i < 10; i++)
-            {
-                so = new SceneObject();
-                so.Transform.Translate(RandomHelper.GetVector3(-50, 2, -50, 50, 3, 50));
-                so.Transform.Rotate(RandomHelper.GetVector3(0, 0, 0, 0, (float)Math.PI, 0));
-                scene.Add(so);
-
-                ar = so.AddComponent<AutoRotation>();
-                ar.Rotation = new Vector3(0, 0.05f, 0);
-
-                mr = so.AddComponent<MeshRenderer>();
-                mr.Geometry = new CubeGeometry();
-                mr.Geometry.Generate(GraphicsDevice);
-                mr.ComputeBoundingSphere();
-                mr.RecieveShadow = false;
-                mr.Material = materials["box2"];
-            }
-
-            terrain = new TerrainPrefab("terrain");
+            var terrain = new TerrainPrefab("terrain");
             terrain.TextureRepeat = new Vector2(16);
-            terrain.Randomize(GraphicsDevice);
-            //terrain.LoadHeightmap(GraphicsDevice, Content.Load<Texture2D>("Textures/heightmap2"));
+            //terrain.Randomize(GraphicsDevice);
+            terrain.Transform.Translate(0, -10, 0);
+            terrain.LoadHeightmap(GraphicsDevice, Content.Load<Texture2D>("Textures/heightmap"));
+            terrain.Renderer.RecieveShadow = false;
             scene.Add(terrain);
 
             terrain.Renderer.Material = materials["terrain2"];
             terrain.Transform.Translate(-terrain.Renderer.BoundingSphere.Radius / 2, 0, -terrain.Renderer.BoundingSphere.Radius / 2);
 
+            var waterPlane = new SceneObject();
+            waterPlane.Transform.Translate(0, 0, 0);
+            scene.Add(waterPlane);
+
+            var waterMaterial = new WaterMaterial(scene);
+            waterMaterial.MainTexture = Content.Load<Texture2D>("Textures/water");
+            waterMaterial.BumpTexture = Content.Load<Texture2D>("Textures/wavesbump");
+
+            var waterRenderer = waterPlane.AddComponent<MeshRenderer>();
+            waterRenderer.CastShadow = false;
+            waterRenderer.RecieveShadow = false;
+            waterRenderer.Geometry = new PlaneGeometry();
+            //waterRenderer.Geometry.TextureRepeat = new Vector2(32);
+            waterRenderer.Geometry.Size = new Vector3(terrain.Renderer.BoundingSphere.Radius * 0.5f);
+            waterRenderer.Geometry.Generate(GraphicsDevice);
+            waterRenderer.Material = waterMaterial;
+
+            renderer.Skybox.LoadContent(Content);
+            renderer.Skybox.Generate(GraphicsDevice, new Texture2D[] {
+                Content.Load<Texture2D>("Textures/Skybox/px"),   
+                Content.Load<Texture2D>("Textures/Skybox/nx"),
+                Content.Load<Texture2D>("Textures/Skybox/py"),
+                Content.Load<Texture2D>("Textures/Skybox/ny"),
+                Content.Load<Texture2D>("Textures/Skybox/pz"),
+                Content.Load<Texture2D>("Textures/Skybox/nz")
+            });
+
+            Input.Gamepad.Sensitivity = new Vector2(1, 0.75f);
+      
             this.IsMouseVisible = true;
         }
 

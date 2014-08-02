@@ -53,12 +53,14 @@
     <Compile Include="Geometries\CubeGeometry.cs" />
     <Compile Include="Geometries\CylinderGeometry.cs" />
     <Compile Include="Geometries\Geometry.cs" />
+    <Compile Include="Geometries\PlaneGeometry.cs" />
     <Compile Include="Geometries\QuadGeometry.cs" />
     <Compile Include="Geometries\PyramidGeometry.cs" />
     <Compile Include="Geometries\SphereGeometry.cs" />
     <Compile Include="Geometries\TerrainGeometry.cs" />
     <Compile Include="Geometries\TorusGeometry.cs" />
     <Compile Include="Materials\DiffuseSpecularMaterial.cs" />
+    <Compile Include="Materials\WaterMaterial.cs" />
     <Compile Include="Prefabs\CameraPrefab.cs" />
     <Compile Include="Components\Component.cs" />
     <Compile Include="Components\Renderers\ModelRenderer.cs" />

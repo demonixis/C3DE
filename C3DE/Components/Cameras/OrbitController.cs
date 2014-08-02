@@ -16,6 +16,8 @@ namespace C3DE.Components.Cameras
 
         private float _distance;
         private Vector2 _angle;
+        private Vector3 _position;
+        private Vector3 _target;
 
         public OrbitController()
             : this(null)
@@ -26,7 +28,7 @@ namespace C3DE.Components.Cameras
             : base(sceneObject)
         {
             _angle = Vector2.Zero;
-            _distance = 10;
+            _distance = 25;
         }
 
         public override void LoadContent(ContentManager content)
@@ -37,27 +39,67 @@ namespace C3DE.Components.Cameras
 
         public override void Update()
         {
-            // TODO add a needUpdate flag
+            UpdateKeyboardInput();
+            UpdateMouseInput();
+            UpdateGamepadInput();
 
-            if (Input.Mouse.Drag())
+            _position = Vector3.Transform(Vector3.Backward, Matrix.CreateFromYawPitchRoll(_angle.X, _angle.Y, 0));
+            _position *= _distance;
+            _position += _camera.Target;
+
+            _transform.Position = _position;
+            _camera.Target = _target;
+        }
+
+        private void UpdateKeyboardInput()
+        {
+            if (Input.Keys.Pressed(Keys.PageUp))
+                _distance += 1f;
+            else if (Input.Keys.Pressed(Keys.PageUp))
+                _distance -= 1f;
+
+            if (Input.Keys.Up)
+                _angle.Y -= 0.1f;
+            else if (Input.Keys.Down)
+                _angle.Y += 0.1f;
+
+            if (Input.Keys.Left)
+                _angle.X -= 0.1f;
+            else if (Input.Keys.Right)
+                _angle.X += 0.1f;
+        }
+
+        private void UpdateMouseInput()
+        {
+            if (Input.Mouse.Down(Inputs.MouseButton.Left) && Input.Mouse.Drag())
             {
                 _angle.X -= 0.01f * Input.Mouse.Delta.X;
                 _angle.Y -= 0.01f * Input.Mouse.Delta.Y;
             }
 
-            if (Input.Keys.Pressed(Keys.PageUp))
-                _distance += 1f;
-            else if (Input.Keys.Pressed(Keys.PageDown))
-                _distance -= 1f;
+            if (Input.Mouse.Down(Inputs.MouseButton.Right))
+            {
+                _target.X += 0.1f * Input.Mouse.Delta.X;
+                _target.Y += 0.1f * Input.Mouse.Delta.Y;
+            }
 
-            if (Input.Mouse.Wheel != 0.0)
-                _distance -= Input.Mouse.Wheel * 0.01f;
+            if (Input.Mouse.Down(Inputs.MouseButton.Middle))
+                _target.Y += 0.1f * Input.Mouse.Delta.Y;
 
-            var position = Vector3.Transform(Vector3.Backward, Matrix.CreateFromYawPitchRoll(_angle.X, _angle.Y, 0));
-            position *= _distance;
-            position += _camera.Target;
+            _distance -= Input.Mouse.Wheel * 0.01f;
+        }
 
-            _transform.Position = position;
+        private void UpdateGamepadInput()
+        {
+            _angle += Input.Gamepad.LeftStickValue() * 0.05f;
+
+            _target.X += Input.Gamepad.RightStickValue().X * 0.1f;
+            _target.Y += Input.Gamepad.RightStickValue().Y * 0.1f;
+
+            if (Input.Gamepad.LeftShoulder())
+                _distance += 0.1f;
+            else if (Input.Gamepad.RightShoulder())
+                _distance -= 0.1f;
         }
     }
 }

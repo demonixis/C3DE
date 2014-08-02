@@ -11,19 +11,19 @@ namespace C3DE.Demo
         {
             Dictionary<string, Material> materials = new Dictionary<string, Material>(10);
 
-            var material = new StandardMaterial(scene);
+            var material = new DiffuseSpecularMaterial(scene);
             material.MainTexture = content.Load<Texture2D>("Textures/tech_box2");
             materials.Add("box2", material);
 
-            material = new StandardMaterial(scene);
+            material = new DiffuseSpecularMaterial(scene);
             material.MainTexture = content.Load<Texture2D>("Textures/huleShip");
             materials.Add("huleShip", material);
 
-            material = new StandardMaterial(scene);
+            material = new DiffuseSpecularMaterial(scene);
             material.MainTexture = content.Load<Texture2D>("Textures/heightmapTexture");
             materials.Add("terrain", material);
 
-            material = new StandardMaterial(scene);
+            material = new DiffuseSpecularMaterial(scene);
             material.MainTexture = content.Load<Texture2D>("Textures/terrainTexture");
             materials.Add("terrain2", material);
 

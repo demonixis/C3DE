@@ -4,12 +4,18 @@ C3DE : Cool 3D Engine
 ### What is it ?
 C3DE is a research project to create a small but powerfull 3D engine powered by MonoGame.
 
-#### Some experimental features
+#### Some features
 
 - Scene (parent/child groups)
+- Camera (Perspective and Orthographic)
 - Component based
 - Model rendering (Built and loaded thru the MonoGame content pipeline)
-- Shadow mapping
+- Custom Mesh rendering : Cube, Sphere, Cylinder and more !
+- Terrain : Flat, Random (with Pelrin Noise) and from Heightmap
+- Materials (DiffuseSpecular, Water, Skybox)
+- Shadow mapping (Need smoothing now)
+- Skybox
+- Input management (Keyboard, Mouse and Gamepad)
 
 ```C#
 public class SuperCoolGame : Game
@@ -40,7 +46,7 @@ public class SuperCoolGame : Game
 
 		var modelRenderer = spaceShip.AddComponent<ModelRenderer>();
 		modelRenderer.Model = Content.Load<Model>("Models/spaceship");
-		modelRenderer.Texture = Content.Load<Texture2D>("Models/texv1");
+		modelRenderer.MainTexture = Content.Load<Texture2D>("Models/texv1");
 	}
 
 	protected override void Draw(GameTime gameTime)
@@ -53,12 +59,13 @@ public class SuperCoolGame : Game
 ```
 
 ### What's next ?
-- Material support
-- Easily use of custom shader
-- Input management
 - Post processing
+- Smooth and nice shadows
+- Lighting support
+- More
 
 ### Requirement
-You need a fresh copy of MonoGame assembly. It doesn't work with DirectX port at this moment because there is a bug in DrawUserIndexedPrimitive. So use OpenTK or the SDL2 port for now.
+You need a fresh copy of MonoGame assembly. 
+Notice that some shader doesn't work yet with DirectX port, You can help me to fix that with a nice Pull Request.
 
 MIT License

@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using System;
 
 namespace C3DE.Inputs
 {
@@ -7,15 +8,27 @@ namespace C3DE.Inputs
     {
         private GamePadState[] _gpState;
         private GamePadState[] _previousGpState;
-        private Vector2 _sensitivity;
+        private Vector2 _sensibility;
+        private Vector2 _deadZone;
+        private Vector2 _tmpVector;
 
         public Vector2 Sensitivity
         {
-            get { return _sensitivity; }
+            get { return _sensibility; }
             set
             {
                 if (value.X >= 0.0f && value.Y >= 0.0f)
-                    _sensitivity = value;
+                    _sensibility = value;
+            }
+        }
+
+        public Vector2 DeadZone
+        {
+            get { return _deadZone; }
+            set
+            {
+                if (value.X >= 0.0f && value.Y >= 0.0f)
+                    _deadZone = value;
             }
         }
 
@@ -31,7 +44,8 @@ namespace C3DE.Inputs
                 _previousGpState[i] = _gpState[i];
             }
 
-            _sensitivity = Vector2.One;
+            _deadZone = new Vector2(0.4f);
+            _sensibility = Vector2.One;
         }
 
         public override void Update(GameTime gameTime)
@@ -81,9 +95,9 @@ namespace C3DE.Inputs
         public Vector2 ThumbSticks(bool left = true, PlayerIndex index = PlayerIndex.One)
         {
             if (left)
-                return _gpState[(int)index].ThumbSticks.Left * _sensitivity;
+                return CheckDeadZone(_gpState[(int)index].ThumbSticks.Left) * _sensibility;
             else
-                return _gpState[(int)index].ThumbSticks.Right * _sensitivity;
+                return CheckDeadZone(_gpState[(int)index].ThumbSticks.Right) * _sensibility;
         }
 
         #region Digital pad
@@ -250,5 +264,12 @@ namespace C3DE.Inputs
         }
 
         #endregion
+
+        private Vector2 CheckDeadZone(Vector2 vector)
+        {
+            _tmpVector.X = (Math.Abs(vector.X) >= _deadZone.X) ? vector.X : 0.0f;
+            _tmpVector.Y = (Math.Abs(vector.Y) >= _deadZone.Y) ? vector.Y : 0.0f;
+            return _tmpVector;
+        }
     }
 }
