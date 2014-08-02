@@ -3,7 +3,7 @@
 
 /outputDir:..\C3DE.Demo\Content
 /intermediateDir:obj
-/platform:Linux
+/platform:Windows
 /config:
 /profile:HiDef
 /compress:False

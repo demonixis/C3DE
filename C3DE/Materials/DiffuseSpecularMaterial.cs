@@ -25,11 +25,8 @@ namespace C3DE.Materials
         }
 
         public float DiffuseIntensity { get; set; }
-        public float DiffuseOffset { get; set; }
         public float SpecularIntensity { get; set; }
         public float Shininess { get; set; }
-
-        public Texture2D NormalMap { get; set; }
 
         public DiffuseSpecularMaterial(Scene scene)
             : base (scene)
@@ -66,6 +63,7 @@ namespace C3DE.Materials
                 effect.Parameters["ShadowMapSize"].SetValue(light0.shadowGenerator.ShadowMapSize);
                 effect.Parameters["ShadowBias"].SetValue(light0.shadowGenerator.ShadowBias);
                 effect.Parameters["ShadowStrength"].SetValue(light0.shadowGenerator.ShadowStrength);
+                effect.Parameters["ShadowSamples"].SetValue((float)light0.ShadowGenerator.ShadowSamples);
             }
 
             // Light
@@ -78,19 +76,22 @@ namespace C3DE.Materials
 
             var dir0 = light0 as C3DE.Components.Lights.DirectionalLight;
 
-            if (dir0 != null)    
-                effect.Parameters["DiffuseLightDirection"].SetValue(dir0.Direction);
-            else
+            if (dir0 == null)    
             {
-                Vector3 cDir = light0.SceneObject.Transform.Rotation;
-                cDir.Normalize();
+                Vector3 cDir = light0.SceneObject.Transform.Position;
+                
+                if (cDir != Vector3.Zero)
+                    cDir.Normalize();
+                else
+                    cDir = new Vector3(1, 1, 0);
+
                 effect.Parameters["DiffuseLightDirection"].SetValue(cDir);
             }
+            else
+                effect.Parameters["DiffuseLightDirection"].SetValue(dir0.Direction);
             
-            effect.Parameters["DiffuseLightDirection"].SetValue(new Vector3(-0.2f, 0f, -1.0f)); // FIXME
             effect.Parameters["DiffuseColor"].SetValue(diffuseColor);
             effect.Parameters["DiffuseIntensity"].SetValue(DiffuseIntensity);
-            effect.Parameters["DiffuseOffset"].SetValue(DiffuseOffset);
             effect.Parameters["Shininess"].SetValue(Shininess);
             effect.Parameters["SpecularColor"].SetValue(_specularColor);
             effect.Parameters["SpecularIntensity"].SetValue(SpecularIntensity);

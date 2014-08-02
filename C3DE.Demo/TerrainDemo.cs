@@ -54,7 +54,7 @@ namespace C3DE.Demo
             //terrain.Randomize(GraphicsDevice);
             terrain.Transform.Translate(0, -10, 0);
             terrain.LoadHeightmap(GraphicsDevice, Content.Load<Texture2D>("Textures/heightmap"));
-            terrain.Renderer.RecieveShadow = false;
+            //terrain.Renderer.RecieveShadow = false;
             scene.Add(terrain);
 
             terrain.Renderer.Material = materials["terrain2"];
@@ -69,7 +69,7 @@ namespace C3DE.Demo
             waterMaterial.BumpTexture = Content.Load<Texture2D>("Textures/wavesbump");
 
             var waterRenderer = waterPlane.AddComponent<MeshRenderer>();
-            waterRenderer.CastShadow = false;
+            //waterRenderer.CastShadow = false;
             waterRenderer.RecieveShadow = false;
             waterRenderer.Geometry = new PlaneGeometry();
             //waterRenderer.Geometry.TextureRepeat = new Vector2(32);

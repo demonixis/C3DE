@@ -1,3 +1,10 @@
+static const float2 poissonDisk[4] = {
+	float2(-0.94201624, -0.39906216),
+	float2(0.94558609, -0.76890725),
+	float2(-0.094184101, -0.92938870),
+	float2(0.34495938, 0.29387760)
+};
+
 // Matrix
 float4x4 World;
 float4x4 View;
@@ -17,7 +24,6 @@ float4x4 LightProjection0;
 float3 DiffuseLightDirection = float3(1.0, 0.0, 0.0);
 float4 DiffuseColor = float4(1.0, 1.0, 1.0, 1.0);
 float DiffuseIntensity = 1.0;
-float DiffuseOffset = 0.0;
 
 // Specular 
 float Shininess = 200.0;
@@ -30,6 +36,7 @@ bool ShadowMapEnabled = true;
 float ShadowMapSize = 512;
 float ShadowBias = 0.05;
 float ShadowStrength = 1.0;
+float ShadowSamples = 0;
 bool RecieveShadows = true;
 
 texture MainTexture;
@@ -88,6 +95,20 @@ float calcShadowPCF(float lightSpaceDepth, float2 shadowCoordinates)
 	return (samples[0] + samples[1] + samples[2] + samples[3]) / 4.0;
 }
 
+float shadowPoissonSampling(float lightSpaceDepth, float2 shadowCoordinates)
+{
+	float shadowTerm = 0;
+	float samples = 8;
+	float visibility = 1.0f;
+
+	visibility -= (1 / ShadowSamples) * (lightSpaceDepth < tex2D(shadowSampler, shadowCoordinates + poissonDisk[0] / 100).r);
+	visibility -= (1 / ShadowSamples) * (lightSpaceDepth < tex2D(shadowSampler, shadowCoordinates + poissonDisk[1] / 100).r);
+	visibility -= (1 / ShadowSamples) * (lightSpaceDepth < tex2D(shadowSampler, shadowCoordinates + poissonDisk[2] / 100).r);
+	visibility -= (1 / ShadowSamples) * (lightSpaceDepth < tex2D(shadowSampler, shadowCoordinates + poissonDisk[3] / 100).r);
+
+	return 1.0 - visibility;
+}
+
 VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
 {
 	VertexShaderOutput output;
@@ -95,13 +116,10 @@ VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
 	float4 worldPosition = mul(input.Position, World);
 	float4 viewPosition = mul(worldPosition, View);
 	float4 normal = normalize(mul(input.Normal, WorldInverseTranspose));
-	float lightIntensity = dot(normal, float4(DiffuseLightDirection, 0.0));
+	float lightIntensity = dot(normal, float4(DiffuseLightDirection, 1.0));
 
 	output.Position = mul(viewPosition, Projection);
-	float4 color = DiffuseColor * DiffuseIntensity;
-	
-	if (RecieveShadows == true)
-		color *= lightIntensity + DiffuseOffset;
+	float4 color = DiffuseColor * DiffuseIntensity * lightIntensity;
 	
 	output.Color = saturate(color);
 	output.Normal = float3(normal.x, normal.y, normal.z);
@@ -124,7 +142,7 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 	// Shadow Map.
 	float shadowTerm = 1.0;
 
-	if (ShadowMapEnabled == true)
+	if (ShadowMapEnabled == true && RecieveShadows == true)
 	{
 		// Transform to light space
 		float4 lightSpacePosition = mul(mul(input.WorldPosition, LightView0), LightProjection0);
@@ -133,8 +151,15 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 
 		float2 screenPosition = 0.5 + float2(lightSpacePosition.x, -lightSpacePosition.y) * 0.5;
 
+		float shadow = 1.0;
+
+		if (ShadowSamples > 0)
+			 shadow = shadowPoissonSampling(lightSpacePosition.z, screenPosition);
+		else
+			shadow = calcShadowPCF(lightSpacePosition.z, screenPosition);
+
 		if ((saturate(screenPosition).x == screenPosition.x) && (saturate(screenPosition).y == screenPosition.y))
-			shadowTerm = max(ShadowStrength, calcShadowPCF(lightSpacePosition.z, screenPosition));
+			shadowTerm = max(ShadowStrength, shadow);
 	}
 
 	// Final composition.

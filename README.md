@@ -65,7 +65,6 @@ public class SuperCoolGame : Game
 - More
 
 ### Requirement
-You need a fresh copy of MonoGame assembly. 
-Notice that some shader doesn't work yet with DirectX port, You can help me to fix that with a nice Pull Request.
+You need a fresh copy of MonoGame assembly (OpenGL or DirectX).
 
 MIT License

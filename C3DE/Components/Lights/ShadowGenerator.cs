@@ -20,6 +20,7 @@ namespace C3DE
         private float _shadowMapSize;
         private float _shadowBias;
         private float _shadowStrength;
+        private int _shadowSamples;
         private BoundingSphere _boundingSphere;
         private bool _enabled;
 
@@ -45,6 +46,12 @@ namespace C3DE
             set { _shadowStrength = Math.Min(1.0f, Math.Max(0.0f, value)); }
         }
 
+        public int ShadowSamples
+        {
+            get { return _shadowSamples; }
+            set { _shadowSamples = value; }
+        }
+
         public bool Enabled
         {
             get { return _enabled; }
@@ -55,7 +62,8 @@ namespace C3DE
         {
             _enabled = false;
             _shadowBias = 0.005f;
-            _shadowStrength = 1.0f;
+            _shadowStrength = 0.8f;
+            _shadowSamples = 0;
             _light = light;
         }
 
