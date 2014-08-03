@@ -5,7 +5,7 @@ namespace C3DE.Components.Lights
 {
     public enum LightType
     {
-        Ambient = 0, Directional, Point, Spot, Area
+        Directional, Point, Spot, Area
     }
 
     public class Light : Component
@@ -95,8 +95,6 @@ namespace C3DE.Components.Lights
         {
             base.LoadContent(content);
             shadowGenerator.LoadContent(content);
-            // Hack
-            sceneObject.Transform.Translate(6.0f, 5.0f, -23.0f);
         }
 
         // Need to be changed quickly !

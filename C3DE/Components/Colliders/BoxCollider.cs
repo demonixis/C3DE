@@ -14,11 +14,12 @@ namespace C3DE.Components.Colliders
 
         public BoundingBox Box
         {
-            get {return _box;}
+            get { return _box; }
+            set { _box = value; }
         }
 
         public BoxCollider()
-            : this (null)
+            : this(null)
         {
         }
 

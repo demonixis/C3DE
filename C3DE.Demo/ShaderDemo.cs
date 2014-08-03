@@ -34,35 +34,23 @@ namespace C3DE.Demo
 
             var materials = Demo.CreateMaterials(Content, scene);
 
-            var camera = new CameraPrefab("camera");
+            var camera = new CameraPrefab("camera", scene);
             camera.Setup(new Vector3(0, 2, -10), new Vector3(0, 0, 0), Vector3.Up);
-            scene.Add(camera);
+            camera.AddComponent<OrbitController>();
 
-            var controller = camera.AddComponent<OrbitController>();
+            // And a light
+            var light = new LightPrefab("light", LightType.Point, scene);
+            light.EnableShadows = true;
+            lightTransform = light.Transform;
 
-            var sceneLight = new SceneObject();
-            scene.Add(sceneLight);
-
-            lightTransform = sceneLight.Transform;
-
-            var light = sceneLight.AddComponent<Light>();
-            light.ShadowGenerator.Enabled = true;
-            light.ShadowGenerator.SetShadowMapSize(GraphicsDevice, 1024);
-
-            var terrain = new TerrainPrefab("terrain");
+            var terrain = new TerrainPrefab("terrain", scene);
             terrain.TextureRepeat = new Vector2(8);
-            terrain.Randomize(GraphicsDevice);
-            scene.Add(terrain);
+            terrain.Randomize();
+            terrain.Renderer.Material = new StandardMaterial(scene);
+            terrain.Renderer.Material.MainTexture = Content.Load<Texture2D>("Textures/terrainTexture");
+            terrain.Transform.Translate(-terrain.Width >> 1, 0, -terrain.Depth / 2);
 
-            var terrainMaterial = new DiffuseSpecularMaterial(scene);
-            terrainMaterial.MainTexture = Content.Load<Texture2D>("Textures/terrainTexture");
-
-            terrain.Renderer.Material = terrainMaterial;
-            terrain.Renderer.CastShadow = true;
-            terrain.Renderer.RecieveShadow = false;
-            terrain.Transform.Translate(-terrain.Renderer.BoundingSphere.Radius / 2, 0, -terrain.Renderer.BoundingSphere.Radius / 2);
-
-            var material = new DiffuseSpecularMaterial(scene);
+            var material = new StandardMaterial(scene);
             material.MainTexture = Content.Load<Texture2D>("Textures/tech_box2");
 
             var cubeScene = new SceneObject();
@@ -78,17 +66,16 @@ namespace C3DE.Demo
             cube.Geometry.Generate(GraphicsDevice);
             cube.Material = material;
 
-            renderer.Skybox.LoadContent(Content);
-            renderer.Skybox.Generate(GraphicsDevice, new Texture2D[] {
-                Content.Load<Texture2D>("Textures/Skybox/px"),   
-                Content.Load<Texture2D>("Textures/Skybox/nx"),
-                Content.Load<Texture2D>("Textures/Skybox/py"),
-                Content.Load<Texture2D>("Textures/Skybox/ny"),
-                Content.Load<Texture2D>("Textures/Skybox/pz"),
-                Content.Load<Texture2D>("Textures/Skybox/nz")
+            renderer.Skybox.Generate(GraphicsDevice, Content, new string[] {
+                "Textures/Skybox/px",   
+                "Textures/Skybox/nx",
+                "Textures/Skybox/py",
+                "Textures/Skybox/ny",
+                "Textures/Skybox/pz",
+                "Textures/Skybox/nz"
             });
 
-            this.IsMouseVisible = true;
+            Screen.ShowCursor = true;
         }
 
         // Just for tests, it's ugly, I know that ;)
@@ -105,6 +92,13 @@ namespace C3DE.Demo
 
             else if (Input.Keys.Pressed(Keys.NumPad5) || Input.Gamepad.Pressed(Buttons.DPadDown))
                 lightTransform.Translate(0, -0.1f, 0.0f);
+
+            // Move the light (oh it's so great \:D/)
+            if (Input.Keys.Pressed(Keys.NumPad7) || Input.Gamepad.Pressed(Buttons.DPadUp))
+                lightTransform.Translate(0, 0.0f, 0.1f);
+
+            else if (Input.Keys.Pressed(Keys.NumPad9) || Input.Gamepad.Pressed(Buttons.DPadDown))
+                lightTransform.Translate(0, 0.0f, -0.1f);
 
             if (Input.Keys.Pressed(Keys.NumPad4) || Input.Gamepad.Pressed(Buttons.DPadLeft))
                 lightTransform.Translate(0.1f, 0, 0);

@@ -34,65 +34,45 @@ namespace C3DE.Demo
 
             var materials = Demo.CreateMaterials(Content, scene);
 
-            var camera = new CameraPrefab("camera");
+            // Add a camera with a FPS controller
+            var camera = new CameraPrefab("camera", scene);
             camera.Setup(new Vector3(0, 2, -10), new Vector3(0, 0, 0), Vector3.Up);
-            scene.Add(camera);
+            camera.AddComponent<FirstPersonController>();
 
-            var controller = camera.AddComponent<FirstPersonController>();
+            // And a light
+            var light = new LightPrefab("light", LightType.Directional, scene);
+            light.EnableShadows = true;
 
-            var sceneLight = new SceneObject();
-            scene.Add(sceneLight);
+            // Just for playing with light
+            lightTransform = light.Transform;
 
-            var light = sceneLight.AddComponent<Light>();
-            light.ShadowGenerator.Enabled = true;
-            light.ShadowGenerator.SetShadowMapSize(GraphicsDevice, 1024);
-
-            lightTransform = sceneLight.Transform;
-
-            var terrain = new TerrainPrefab("terrain");
+            // Finally a terrain
+            var terrain = new TerrainPrefab("terrain", scene);
             terrain.TextureRepeat = new Vector2(16);
-            //terrain.Randomize(GraphicsDevice);
-            terrain.Transform.Translate(0, -10, 0);
-            terrain.LoadHeightmap(GraphicsDevice, Content.Load<Texture2D>("Textures/heightmap"));
-            //terrain.Renderer.RecieveShadow = false;
-            scene.Add(terrain);
+            terrain.LoadHeightmap("Textures/heightmap");
+            terrain.Renderer.Material = new StandardMaterial(scene);
+            terrain.Renderer.Material.MainTexture = Content.Load<Texture2D>("Textures/terrainTexture");
+            terrain.Transform.Translate(-terrain.Width >> 1, -10, -terrain.Depth >> 1);            
 
-            terrain.Renderer.Material = materials["terrain2"];
-            terrain.Transform.Translate(-terrain.Renderer.BoundingSphere.Radius / 2, 0, -terrain.Renderer.BoundingSphere.Radius / 2);
+            // With water !
+            var water = new WaterPrefab("water", scene);
 
-            var waterPlane = new SceneObject();
-            waterPlane.Transform.Translate(0, 0, 0);
-            scene.Add(waterPlane);
-
-            var waterMaterial = new WaterMaterial(scene);
-            waterMaterial.MainTexture = Content.Load<Texture2D>("Textures/water");
-            waterMaterial.BumpTexture = Content.Load<Texture2D>("Textures/wavesbump");
-
-            var waterRenderer = waterPlane.AddComponent<MeshRenderer>();
-            //waterRenderer.CastShadow = false;
-            waterRenderer.RecieveShadow = false;
-            waterRenderer.Geometry = new PlaneGeometry();
-            //waterRenderer.Geometry.TextureRepeat = new Vector2(32);
-            waterRenderer.Geometry.Size = new Vector3(terrain.Renderer.BoundingSphere.Radius * 0.5f);
-            waterRenderer.Geometry.Generate(GraphicsDevice);
-            waterRenderer.Material = waterMaterial;
-
-            renderer.Skybox.LoadContent(Content);
-            renderer.Skybox.Generate(GraphicsDevice, new Texture2D[] {
-                Content.Load<Texture2D>("Textures/Skybox/px"),   
-                Content.Load<Texture2D>("Textures/Skybox/nx"),
-                Content.Load<Texture2D>("Textures/Skybox/py"),
-                Content.Load<Texture2D>("Textures/Skybox/ny"),
-                Content.Load<Texture2D>("Textures/Skybox/pz"),
-                Content.Load<Texture2D>("Textures/Skybox/nz")
+            water.Generate("Textures/water", "Textures/wavesbump", new Vector3(terrain.Width * 0.5f));
+            
+            // Don't miss the Skybox ;)
+            renderer.Skybox.Generate(GraphicsDevice, Content, new string[] {
+                "Textures/Skybox/px",   
+                "Textures/Skybox/nx",
+                "Textures/Skybox/py",
+                "Textures/Skybox/ny",
+                "Textures/Skybox/pz",
+                "Textures/Skybox/nz"
             });
 
             Input.Gamepad.Sensitivity = new Vector2(1, 0.75f);
-      
-            this.IsMouseVisible = true;
+            Screen.ShowCursor = true;
         }
 
-        // Just for tests, it's ugly, I know that ;)
         protected override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
@@ -100,7 +80,6 @@ namespace C3DE.Demo
             if (Input.Keys.Escape || Input.Gamepad.Pressed(Buttons.Back))
                 Exit();
 
-            // Move the light (oh it's so great \:D/)
             if (Input.Keys.Pressed(Keys.NumPad8) || Input.Gamepad.Pressed(Buttons.DPadUp))
                 lightTransform.Translate(0, 0, 0.1f);
 

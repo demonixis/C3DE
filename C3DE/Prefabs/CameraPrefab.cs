@@ -1,35 +1,37 @@
 ﻿using C3DE.Components.Cameras;
+using C3DE.Components.Colliders;
 using Microsoft.Xna.Framework;
 
 namespace C3DE.Prefabs
 {
-    public class CameraPrefab : SceneObject
+    public class CameraPrefab : Prefab
     {
-        private Camera _camera;
+        protected Camera camera;
+        protected SphereCollider collider;
         
         public Camera Camera
         {
-            get { return _camera; }
+            get { return camera; }
         }
 
-        public CameraPrefab()
-            : this(null)
+        public SphereCollider Collider
         {
+            get { return collider; }
         }
 
-        public CameraPrefab(string name)
-            : base()
+        public CameraPrefab(string name, Scene scene)
+            : base(name, scene)
         {
-            if (!string.IsNullOrEmpty(name))
-                Name = name;
+            camera = AddComponent<Camera>();
+            collider = AddComponent<SphereCollider>();
 
-            _camera = AddComponent<Camera>();
-            _camera.Setup(new Vector3(0, 0, -10), new Vector3(0, 0, 0), Vector3.Up);
+            camera.Setup(new Vector3(0, 0, -10), new Vector3(0, 0, 0), Vector3.Up);
+            collider.Sphere = new BoundingSphere(transform.Position, 2.5f);
         }
 
         public void Setup(Vector3 position, Vector3 target, Vector3 upVector)
         {
-            _camera.Setup(position, target, upVector);
+            camera.Setup(position, target, upVector);
         }
     }
 }

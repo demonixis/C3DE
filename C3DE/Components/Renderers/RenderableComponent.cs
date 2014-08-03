@@ -56,6 +56,9 @@ namespace C3DE.Components.Renderers
 
         public void AddMaterial(Material material)
         {
+            if (sceneObject.Scene == null)
+                sceneObject.Scene = material.scene;
+
             var index = material.Index;
 
             if (materials.IndexOf(index) == -1)

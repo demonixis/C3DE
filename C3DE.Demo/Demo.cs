@@ -11,19 +11,19 @@ namespace C3DE.Demo
         {
             Dictionary<string, Material> materials = new Dictionary<string, Material>(10);
 
-            var material = new DiffuseSpecularMaterial(scene);
+            var material = new StandardMaterial(scene);
             material.MainTexture = content.Load<Texture2D>("Textures/tech_box2");
             materials.Add("box2", material);
 
-            material = new DiffuseSpecularMaterial(scene);
+            material = new StandardMaterial(scene);
             material.MainTexture = content.Load<Texture2D>("Textures/huleShip");
             materials.Add("huleShip", material);
 
-            material = new DiffuseSpecularMaterial(scene);
+            material = new StandardMaterial(scene);
             material.MainTexture = content.Load<Texture2D>("Textures/heightmapTexture");
             materials.Add("terrain", material);
 
-            material = new DiffuseSpecularMaterial(scene);
+            material = new StandardMaterial(scene);
             material.MainTexture = content.Load<Texture2D>("Textures/terrainTexture");
             materials.Add("terrain2", material);
 
@@ -36,7 +36,7 @@ namespace C3DE.Demo
     {
         static void Main(string[] args)
         {
-            using (var game = new TerrainDemo())
+            using (var game = new ShaderDemo())
                 game.Run();
         }
     }

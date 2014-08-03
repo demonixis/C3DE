@@ -1,34 +1,35 @@
 ﻿using C3DE.Components.Lights;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 
-namespace C3DE
+namespace C3DE.Prefabs
 {
-    public class LightPrefab : SceneObject
+    public class LightPrefab : Prefab
     {
         private Light _light;
         private LightType _type;
 
-        public LightPrefab()
-            : this(null)
+        public bool EnableShadows
         {
-
+            get { return _light.shadowGenerator.Enabled; }
+            set { _light.shadowGenerator.Enabled = value; }
         }
 
-        public LightPrefab(string name)
-            : base()
+        public LightPrefab(string name, LightType type, Scene scene)
+            : base(name, scene)
         {
-            if (!string.IsNullOrEmpty(name))
-                Name = name;
-
-            _light = new Light(this);
+            SetLighType(type);
+            _light.shadowGenerator.SetShadowMapSize(Application.GraphicsDevice, 1024);
         }
 
         public void SetLighType(LightType type)
         {
             if (type == LightType.Directional)
-                _light = new DirectionalLight(this);
+                _light = AddComponent<DirectionalLight>();
             else if (type == LightType.Point)
-                _light = new PointLight(this);
+                _light = AddComponent<PointLight>();
+            else
+                _light = AddComponent<Light>(); // TODO: Make it abstract !
 
             _type = type;
         }

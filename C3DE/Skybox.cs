@@ -4,6 +4,7 @@ using C3DE.Geometries;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 
 namespace C3DE
 {
@@ -22,23 +23,20 @@ namespace C3DE
             _world = Matrix.Identity;
         }
 
-        public void LoadContent(ContentManager content)
+        public void Generate(GraphicsDevice device, ContentManager content, string[] textureNames, float size = 250.0f)
         {
+            if (textureNames.Length != 6)
+                throw new Exception("The array of texture names must contain 6 elements.");
+
             _effect = content.Load<Effect>("FX/SkyboxEffect");
-        }
 
-        public void Generate(GraphicsDevice device, TextureCube texture, float size = 250.0f)
-        {
             _geometry.Size = new Vector3(size);
             _geometry.Generate(device);
-            _texture = texture;
-            Enabled = true;
-        }
 
-        public void Generate(GraphicsDevice device, Texture2D[] textures, float size = 250.0f)
-        {
-            _geometry.Size = new Vector3(size);
-            _geometry.Generate(device);
+            Texture2D[] textures = new Texture2D[6];
+
+            for (int i = 0; i < 6; i++)
+                textures[i] = content.Load<Texture2D>(textureNames[i]);
 
             _texture = new TextureCube(device, textures[0].Width, false, SurfaceFormat.Color);
             Color[] textureData;
@@ -49,7 +47,7 @@ namespace C3DE
                 textures[i].GetData<Color>(textureData);
                 _texture.SetData<Color>((CubeMapFace)i, textureData);
             }
-            
+
             Enabled = true;
         }
 

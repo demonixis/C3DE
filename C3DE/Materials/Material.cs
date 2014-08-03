@@ -10,7 +10,7 @@ namespace C3DE.Materials
     {
         private static int MaterialCounter = 0;
 
-        protected Scene scene;
+        protected internal Scene scene;
         protected Vector4 diffuseColor;
         protected Texture2D mainTexture;
         protected Effect effect;
@@ -24,7 +24,7 @@ namespace C3DE.Materials
         public string Name
         {
             get;
-            protected set;
+            set;
         }
 
         internal int Index

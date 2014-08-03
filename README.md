@@ -4,65 +4,86 @@ C3DE : Cool 3D Engine
 ### What is it ?
 C3DE is a research project to create a small but powerfull 3D engine powered by MonoGame.
 
-#### Some features
+![](https://38.media.tumblr.com/8ea2ecf9ca3cca7bdae5a35a79643a57/tumblr_n9ovtvpnMt1s15knro2_500.jpg)
 
-- Scene (parent/child groups)
-- Camera (Perspective and Orthographic)
+### Some features
+
+- Scene (parent/child)
 - Component based
-- Model rendering (Built and loaded thru the MonoGame content pipeline)
-- Custom Mesh rendering : Cube, Sphere, Cylinder and more !
-- Terrain : Flat, Random (with Pelrin Noise) and from Heightmap
-- Materials (DiffuseSpecular, Water, Skybox)
-- Shadow mapping (Need smoothing now)
-- Skybox
-- Input management (Keyboard, Mouse and Gamepad)
+- Cameras
+ - Perspective
+ - Orthographic
+- Model (FBX/X with content pipeline)
+- Custom Mesh geometry
+ - Cube
+ - Cylinder
+ - Plane
+ - Pyramid
+ - Quad
+ - Sphere
+ - Torus
+- Terrain
+ - Flat
+ - Random generated with Pelrin Noise
+ - From Heightmap
+- Materials
+ - DiffuseSpecular
+ - Water
+ - Skybox
+ - Custom
+- Shadow mapping (Need work)
+- Input management 
+ - Keyboard
+ - Mouse
+ - Gamepad
+
+### Sample
 
 ```C#
-public class SuperCoolGame : Game
+public class SuperCoolGame : Engine
 {
-	GraphicsDeviceManager graphics;
-	Renderer renderer;
-	Scene scene;
-	Camera camera;
-
 	public SuperCoolGame()
+	    : base()
 	{
-		graphics = new GraphicsDeviceManager(this);
-		Content.RootDirectory = "Content";
 	}
 
-	protected override void LoadContent()
-	{
-		renderer = new Renderer(GraphicsDevice);
-		renderer.LoadContent(Content);
-		
-		scene = new Scene();
-		camera = new Camera(GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
+	protected override void Initialize()
+    {
+        base.Initialize();
 
-		// Space Ship
-		var spaceShip = new SceneObject();
-		spaceShip.Transform.Scale = new Vector3(0.25f);
-		scene.Add(spaceShip);
+        // Create a camera node with an orbit controller.
+        var camera = new CameraPrefab("camera");
+        camera.Setup(new Vector3(0, 2, -10), Vector3.Zero, Vector3.Up);
+        camera.AddComponent<OrbitController>();
+        scene.Add(camera);
 
-		var modelRenderer = spaceShip.AddComponent<ModelRenderer>();
-		modelRenderer.Model = Content.Load<Model>("Models/spaceship");
-		modelRenderer.MainTexture = Content.Load<Texture2D>("Models/texv1");
-	}
+        // Add a light with shadows
+        var sceneLight = new SceneObject();
+        scene.Add(sceneLight);
 
-	protected override void Draw(GameTime gameTime)
-	{
-		GraphicsDevice.Clear(Color.Black);
-		renderer.render(scene, camera);
-		base.Draw(gameTime);
-	}
+        var light = sceneLight.AddComponent<Light>();
+        light.ShadowGenerator.Enabled = true;
+
+        // Add a terrain generated with Pelrin Noise.
+        var terrain = new TerrainPrefab("terrain");
+        scene.Add(terrain);
+        
+        terrain.TextureRepeat = new Vector2(16);
+        terrain.Randomize(GraphicsDevice);
+        terrain.Renderer.Material = new DiffuseSpecularMaterial(scene);
+        terrain.Renderer.Material.MainTexture = Content.Load<Texture2D>("Textures/terrain");
+    }
 }
 ```
 
 ### What's next ?
 - Post processing
-- Smooth and nice shadows
-- Lighting support
-- More
+- Smooth shadows
+- More light types (Point, Directional, Spot, Area)
+- Multipass lighting
+- Instancing
+- Collision management
+- Editor
 
 ### Requirement
 You need a fresh copy of MonoGame assembly (OpenGL or DirectX).

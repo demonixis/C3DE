@@ -69,7 +69,7 @@ namespace C3DE
 
         public void LoadContent(ContentManager content)
         {
-            _shadowEffect = content.Load<Effect>("fx/ShadowMapEffect");
+            _shadowEffect = Application.Content.Load<Effect>("fx/ShadowMapEffect");
         }
 
         /// <summary>

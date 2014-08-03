@@ -14,6 +14,7 @@ namespace C3DE.Components.Colliders
         public BoundingSphere Sphere
         {
             get { return _sphere; }
+            set { _sphere = value; }
         }
 
         public SphereCollider()

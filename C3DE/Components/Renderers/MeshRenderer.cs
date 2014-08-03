@@ -15,9 +15,10 @@ namespace C3DE.Components.Renderers
             get { return geometry; }
             set
             {
-                if (value != geometry)
+                if (value != geometry && value != null)
                 {
                     geometry = value;
+                    _dirty = true;
                 }
             }
         }
@@ -51,7 +52,7 @@ namespace C3DE.Components.Renderers
             var width = box.Max.X - box.Min.X;
             var height = box.Max.Y - box.Min.Y;
             var depth = box.Max.Z - box.Min.Z;
-           
+
             boundingSphere = new BoundingSphere();
             boundingSphere.Radius = (int)Math.Max(Math.Max(width, height), depth);
             boundingSphere.Center = sceneObject.Transform.LocalPosition;
@@ -61,6 +62,19 @@ namespace C3DE.Components.Renderers
         public override BoundingSphere GetBoundingSphere()
         {
             return boundingSphere;
+        }
+
+        public override void Update()
+        {
+            base.Update();
+
+            if (_dirty)
+            {
+                if (geometry.Constructed)
+                    ComputeBoundingSphere();
+
+                _dirty = false;
+            }
         }
 
         public override void Draw(GraphicsDevice device)

@@ -7,10 +7,11 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace C3DE.Prefabs
 {
-    public class TerrainPrefab : SceneObject
+    public class TerrainPrefab : Prefab
     {
         protected MeshRenderer renderer;
-        private TerrainGeometry geometry;
+        protected TerrainGeometry geometry;
+        // protected TerrainCollider collider;
 
         public MeshRenderer Renderer
         {
@@ -22,17 +23,30 @@ namespace C3DE.Prefabs
             get { return geometry.TextureRepeat; }
             set { geometry.TextureRepeat = value; }
         }
-        
-        public TerrainPrefab(string name)
-            : base()
-        {
-            if (!string.IsNullOrEmpty(name))
-                Name = name;
 
+        public int Width
+        {
+            get { return geometry.Width; }
+        }
+
+        public int Height
+        {
+            get { return geometry.Height; }
+        }
+
+        public int Depth
+        {
+            get { return geometry.Depth; }
+        }
+
+        public TerrainPrefab(string name, Scene scene)
+            : base(name, scene)
+        {
             geometry = new TerrainGeometry(100, 100, 1);
 
             renderer = AddComponent<MeshRenderer>();
             renderer.Geometry = geometry;
+            renderer.CastShadow = false;
         }
 
         /// <summary>
@@ -40,8 +54,10 @@ namespace C3DE.Prefabs
         /// </summary>
         /// <param name="device"></param>
         /// <param name="heightmap"></param>
-        public void LoadHeightmap(GraphicsDevice device, Texture2D heightmap)
+        public void LoadHeightmap(string heightmapName)
         {
+            var heightmap = Application.Content.Load<Texture2D>(heightmapName);
+
             geometry.Width = heightmap.Width;
             geometry.Depth = heightmap.Height;
 
@@ -54,18 +70,17 @@ namespace C3DE.Prefabs
                 for (int y = 0; y < geometry.Depth; y++)
                     geometry.Data[x, y] = colors[x + y * geometry.Width].R / 10.0f; // Max height 25.5f
 
-            Finalize(device);
+            Build();
         }
 
         /// <summary>
         /// Randomize the heightdata with the perlin noise algorithm.
         /// </summary>
-        /// <param name="device"></param>
         /// <param name="octaves"></param>
         /// <param name="amplitude"></param>
         /// <param name="frequency"></param>
         /// <param name="persistence"></param>
-        public void Randomize(GraphicsDevice device, int octaves = 2, int amplitude = 22, double frequency = 0.085, double persistence = 0.3)
+        public void Randomize(int octaves = 2, int amplitude = 22, double frequency = 0.085, double persistence = 0.3)
         {
             geometry.Data = new float[geometry.Width, geometry.Depth];
 
@@ -77,17 +92,17 @@ namespace C3DE.Prefabs
                     geometry.Data[x, z] = (float)NoiseGenerator.Noise(x, z);
             }
 
-            Finalize(device);
+            Build();
         }
 
-        public void Flat(GraphicsDevice device)
+        public void Flat()
         {
-            Finalize(device);
+            Build();
         }
 
-        private void Finalize(GraphicsDevice device)
+        private void Build()
         {
-            renderer.Geometry.Generate(device);
+            renderer.Geometry.Generate(Application.GraphicsDevice);
             renderer.ComputeBoundingSphere();
         }
 

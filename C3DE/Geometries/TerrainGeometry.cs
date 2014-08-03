@@ -52,19 +52,6 @@ namespace C3DE.Geometries
 
         protected override void CreateGeometry()
         {
-            bool needComputeNormal = false;
-
-            if (_data == null)
-            {
-                _data = new float[_width, _depth];
-
-                for (int x = 0; x < _width; x++)
-                    for (int z = 0; z < _depth; z++)
-                        _data[x, z] = 0.0f;
-
-                needComputeNormal = true;
-            }
-
             Vertices = new VertexPositionNormalTexture[_width * _depth];
 
             for (int x = 0; x < _width; x++)
@@ -107,8 +94,7 @@ namespace C3DE.Geometries
                 }
             }
 
-            if (needComputeNormal)
-                ComputeNormals();
+            ComputeNormals();
         }
     }
 }

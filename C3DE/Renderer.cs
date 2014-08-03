@@ -78,7 +78,7 @@ namespace C3DE
             _spriteBatch.Draw(_sceneRT, Vector2.Zero, Color.White);
             _spriteBatch.End();
         }
-        
+
         /// <summary>
         /// Render the scene with the specified camera.
         /// </summary>

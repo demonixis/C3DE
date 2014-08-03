@@ -14,6 +14,7 @@ namespace C3DE.Components.Lights
         public DirectionalLight(SceneObject sceneObject)
             : base(sceneObject)
         {
+            Direction = new Vector3(1, 1, 0);
         }
     }
 }

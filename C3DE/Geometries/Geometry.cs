@@ -51,6 +51,11 @@ namespace C3DE.Geometries
             set { repeatTexture = value; }
         }
 
+        public bool Constructed
+        {
+            get { return constructed; }
+        }
+
         protected abstract void CreateGeometry();
 
         protected virtual void ApplyParameters()
@@ -73,14 +78,17 @@ namespace C3DE.Geometries
 
         public void Generate(GraphicsDevice device)
         {
-            if (!constructed)
+            if (constructed)
             {
-                CreateGeometry();
-                
-                ApplyParameters();
-                CreateBuffers(device);
-                constructed = true;
+                _vertexBuffer.Dispose();
+                _indexBuffer.Dispose();
             }
+
+            CreateGeometry();
+                
+            ApplyParameters();
+            CreateBuffers(device);
+            constructed = true;
         }
 
         public void ComputeNormals()
