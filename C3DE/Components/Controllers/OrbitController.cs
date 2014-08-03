@@ -46,7 +46,7 @@ namespace C3DE.Components.Controllers
             MaxAngle = MathHelper.PiOver2 - 0.1f;
             MinDistance = 1.0f;
             MaxDistance = 100.0f;
-            RotationSpeed = 1.0f;
+            RotationSpeed = 0.05f;
             MoveSpeed = 2.0f;
             StrafeSpeed = 1.75f;
             GamepadSensibility = 2.5f;
@@ -93,14 +93,14 @@ namespace C3DE.Components.Controllers
                 _distanceVelocity -= MoveSpeed * Time.DeltaTime;
 
             if (Input.Keys.Up)
-                _angle.Y -= RotationSpeed * Time.DeltaTime;
+                _angle.Y -= RotationSpeed * Time.DeltaTime * 25.0f;
             else if (Input.Keys.Down)
-                _angle.Y += RotationSpeed * Time.DeltaTime;
+                _angle.Y += RotationSpeed * Time.DeltaTime * 25.0f;
 
             if (Input.Keys.Left)
-                _angle.X -= RotationSpeed * Time.DeltaTime;
+                _angle.X -= RotationSpeed * Time.DeltaTime * 25.0f;
             else if (Input.Keys.Right)
-                _angle.X += RotationSpeed * Time.DeltaTime;
+                _angle.X += RotationSpeed * Time.DeltaTime * 25.0f;
         }
 
         private void UpdateMouseInput()
@@ -117,12 +117,12 @@ namespace C3DE.Components.Controllers
                 _positionVelicoty.Y += StrafeSpeed * Input.Mouse.Delta.Y * Time.DeltaTime;
             }
 
-            _distanceVelocity -= Input.Mouse.Wheel * MoveSpeed * Time.DeltaTime;
+            _distanceVelocity -= Input.Mouse.Wheel / 4.0f * MoveSpeed * Time.DeltaTime;
         }
 
         private void UpdateGamepadInput()
         {
-            _angle += Input.Gamepad.LeftStickValue() * RotationSpeed * Time.DeltaTime * GamepadSensibility;
+            _angle += Input.Gamepad.LeftStickValue() * RotationSpeed * Time.DeltaTime * GamepadSensibility * 25.0f;
 
             _positionVelicoty.X += Input.Gamepad.RightStickValue().X * StrafeSpeed * Time.DeltaTime * GamepadSensibility;
             _positionVelicoty.Y += Input.Gamepad.RightStickValue().Y * StrafeSpeed * Time.DeltaTime * GamepadSensibility;
