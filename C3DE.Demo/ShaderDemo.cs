@@ -1,5 +1,6 @@
 ﻿using C3DE.Components;
-using C3DE.Components.Cameras;
+using C3DE.Components;
+using C3DE.Components.Controllers;
 using C3DE.Components.Lights;
 using C3DE.Components.Renderers;
 using C3DE.Demo.Scripts;
@@ -40,6 +41,9 @@ namespace C3DE.Demo
 
             // And a light
             var light = new LightPrefab("light", LightType.Point, scene);
+            light.Transform.Position = new Vector3(0, 15, 30);
+            light.Light.ShadowGenerator.ShadowSamples = 16;
+            light.Light.ShadowGenerator.SetShadowMapSize(GraphicsDevice, 4096);
             light.EnableShadows = true;
             lightTransform = light.Transform;
 
@@ -54,7 +58,7 @@ namespace C3DE.Demo
             material.MainTexture = Content.Load<Texture2D>("Textures/tech_box2");
 
             var cubeScene = new SceneObject();
-            cubeScene.Transform.Translate(0, 2.5f, 3);
+            cubeScene.Transform.Translate(0, 5.5f, 3);
             cubeScene.Transform.LocalScale = new Vector3(2.0f);
             cubeScene.Transform.Rotate((float)Math.PI / 4, 0, (float)Math.PI / 4);
             var autoRot = cubeScene.AddComponent<AutoRotation>();

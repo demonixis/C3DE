@@ -36,10 +36,11 @@
     </StartupObject>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Components\Cameras\OrbitController.cs" />
+    <Compile Include="Components\Controllers\Controller.cs" />
+    <Compile Include="Components\Controllers\OrbitController.cs" />
     <Compile Include="Components\Renderers\Debug\BoundingBoxRenderer.cs" />
-    <Compile Include="Components\Cameras\Camera.cs" />
-    <Compile Include="Components\Cameras\FirstPersonController.cs" />
+    <Compile Include="Components\Camera.cs" />
+    <Compile Include="Components\Controllers\FirstPersonController.cs" />
     <Compile Include="Components\Colliders\BoxCollider.cs" />
     <Compile Include="Components\Colliders\Collider.cs" />
     <Compile Include="Components\Colliders\SphereCollider.cs" />

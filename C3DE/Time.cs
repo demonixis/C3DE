@@ -9,7 +9,7 @@ namespace C3DE
 
         public static float DeltaTime
         {
-            get { return __deltaTime * __timeScale; }
+            get { return __deltaTime * __timeScale / 1000.0f; }
         }
 
         public static float TimeScale

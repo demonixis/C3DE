@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Input;
 
-namespace C3DE.Components.Cameras
+namespace C3DE.Components.Controllers
 {
     public class FirstPersonController : Component
     {
@@ -12,8 +12,8 @@ namespace C3DE.Components.Cameras
         private Vector3 _transformedReference;
         private Vector3 _translation = Vector3.Zero;
         private Vector3 _rotation = Vector3.Zero;
-        public Vector3 Velocity { get; set; }
-        public Vector3 AngularVelocity { get; set; }
+        public float Velocity { get; set; }
+        public float AngularVelocity { get; set; }
         public float MoveSpeed { get; set; }
         public float RotationSpeed { get; set; }
         public float LookSpeed { get; set; }
@@ -28,12 +28,12 @@ namespace C3DE.Components.Cameras
         public FirstPersonController(SceneObject sceneObject)
             : base(sceneObject)
         {
-            Velocity = Vector3.Zero;
-            AngularVelocity = Vector3.Zero;
-            MoveSpeed = 0.01f;
-            RotationSpeed = 0.005f;
-            LookSpeed = 0.01f;
-            StrafeSpeed = 0.01f;
+            Velocity = 0.95f;
+            AngularVelocity = 0.95f;
+            MoveSpeed = 1.0f;
+            RotationSpeed = 0.1f;
+            LookSpeed = 0.15f;
+            StrafeSpeed = 0.75f;
             FourAxis = false;
         }
 
@@ -101,7 +101,7 @@ namespace C3DE.Components.Cameras
             _translation.Z += Input.Gamepad.LeftStickValue().Y * MoveSpeed * Time.DeltaTime;
             _translation.X -= Input.Gamepad.LeftStickValue().X * StrafeSpeed * Time.DeltaTime;
 
-            _rotation.X -= Input.Gamepad.RightStickValue().Y * MoveSpeed / 2 * Time.DeltaTime;
+            _rotation.X -= Input.Gamepad.RightStickValue().Y * LookSpeed * Time.DeltaTime;
             _rotation.Y -= Input.Gamepad.RightStickValue().X * RotationSpeed * Time.DeltaTime;
 
             if (Input.Gamepad.LeftShoulder())

@@ -1,10 +1,8 @@
-﻿using C3DE.Components.Cameras;
-using C3DE.Components.Colliders;
+﻿using C3DE.Components.Colliders;
 using C3DE.Components.Renderers;
 using C3DE.Geometries;
 using C3DE.Materials;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 

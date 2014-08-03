@@ -1,5 +1,4 @@
-﻿using C3DE.Components.Cameras;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace C3DE.Components.Renderers.Debug

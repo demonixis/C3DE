@@ -1,4 +1,4 @@
-﻿using C3DE.Components.Cameras;
+﻿using C3DE.Components;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 

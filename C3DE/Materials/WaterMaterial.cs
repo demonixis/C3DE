@@ -42,7 +42,7 @@ namespace C3DE.Materials
 
         public override void PrePass()
         {
-            _totalTime += Time.DeltaTime / 5000.0f;
+            _totalTime += Time.DeltaTime / 10.0f;
 
             effect.Parameters["View"].SetValue(scene.MainCamera.view);
             effect.Parameters["Projection"].SetValue(scene.MainCamera.projection);

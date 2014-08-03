@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 
-namespace C3DE.Components.Cameras
+namespace C3DE.Components
 {
     public enum CameraProjectionType
     {

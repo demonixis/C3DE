@@ -9,6 +9,11 @@ namespace C3DE.Prefabs
         private Light _light;
         private LightType _type;
 
+        public Light Light
+        {
+            get { return _light; }
+        }
+
         public bool EnableShadows
         {
             get { return _light.shadowGenerator.Enabled; }

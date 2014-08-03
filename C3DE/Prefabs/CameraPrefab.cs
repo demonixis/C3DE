@@ -1,4 +1,4 @@
-﻿using C3DE.Components.Cameras;
+﻿using C3DE.Components;
 using C3DE.Components.Colliders;
 using Microsoft.Xna.Framework;
 
