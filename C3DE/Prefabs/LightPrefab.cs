@@ -29,7 +29,7 @@ namespace C3DE.Prefabs
             : base(name, scene)
         {
             _light = AddComponent<Light>();
-            _light.Type = LightType.Ambient;
+            _light.Type = type;
             _light.shadowGenerator.SetShadowMapSize(Application.GraphicsDevice, 1024);
         }
     }

@@ -10,20 +10,20 @@ namespace C3DE.Materials
     {
         private Matrix _worldInvertTranspose;
         private Vector3 _shadowData;
-        private Vector3 _diffuseColor;
-        private Vector3 _emissiveColor;
-        private Vector3 _specularColor;
+        private Vector4 _diffuseColor;
+        private Vector4 _emissiveColor;
+        private Vector4 _specularColor;
 
         public Color EmissiveColor
         {
             get { return new Color(_emissiveColor); }
-            set { _emissiveColor = value.ToVector3(); }
+            set { _emissiveColor = value.ToVector4(); }
         }
 
         public Color SpecularColor
         {
             get { return new Color(_specularColor); }
-            set { _specularColor = value.ToVector3(); }
+            set { _specularColor = value.ToVector4(); }
         }
 
         public float Shininess { get; set; }
@@ -31,9 +31,9 @@ namespace C3DE.Materials
         public SuperMaterial(Scene scene)
             : base(scene)
         {
-            _diffuseColor = new Vector3(1.0f, 1.0f, 1.0f);
-            _emissiveColor = new Vector3(0.0f, 0.0f, 0.0f);
-            _specularColor = new Vector3(0.8f, 0.8f, 0.8f);
+            _diffuseColor = new Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+            _emissiveColor = new Vector4(0.0f, 0.0f, 0.0f, 1.0f);
+            _specularColor = new Vector4(0.8f, 0.8f, 0.8f, 1.0f);
             Shininess = 200.0f;
         }
 
@@ -42,18 +42,21 @@ namespace C3DE.Materials
             effect = content.Load<Effect>("FX/StandardEffect").Clone();
         }
 
+        Vector3 _camView;
+
         public override void PrePass()
         {
+            // FIXME - Set these parameters at first time and only on change and only for this effet
+            // I need to cache effects and not clone it.
+
+            _camView = Vector3.Transform(scene.MainCamera.Target - scene.MainCamera.SceneObject.Transform.Position, Matrix.CreateRotationY(0.0f));
+            _camView.Normalize();
+
             // Matrix and camera.
             effect.Parameters["View"].SetValue(scene.MainCamera.view);
             effect.Parameters["Projection"].SetValue(scene.MainCamera.projection);
             effect.Parameters["EyePosition"].SetValue(scene.MainCamera.SceneObject.Transform.Position);
-
-            // Material properties.
-            effect.Parameters["AmbientColor"].SetValue(scene.AmbientColor.ToVector3());
-            effect.Parameters["EmissiveColor"].SetValue(_emissiveColor);
-            effect.Parameters["SpecularColor"].SetValue(_specularColor);
-            effect.Parameters["Shininess"].SetValue(Shininess);
+            effect.Parameters["ViewPosition"].SetValue(_camView);
 
             var light0 = scene.Lights[0]; // FIXME
 
@@ -74,13 +77,20 @@ namespace C3DE.Materials
             effect.Parameters["LightRange"].SetValue(light0.Range);
             effect.Parameters["LightFallOff"].SetValue((int)light0.FallOf);
             effect.Parameters["LightType"].SetValue((int)light0.Type);
+
+            // Material properties.
+            effect.Parameters["AmbientColor"].SetValue(scene.AmbientColor.ToVector4());
+            effect.Parameters["DiffuseColor"].SetValue(_diffuseColor);
+            effect.Parameters["EmissiveColor"].SetValue(_emissiveColor);
+            effect.Parameters["SpecularColor"].SetValue(_specularColor);
+            effect.Parameters["Shininess"].SetValue(Shininess);
         }
 
         public override void Pass(RenderableComponent renderable)
         {
             _worldInvertTranspose = Matrix.Transpose(Matrix.Invert(renderable.SceneObject.Transform.world));
             effect.Parameters["MainTexture"].SetValue(mainTexture);
-            effect.Parameters["RecieveShadows"].SetValue(renderable.RecieveShadow);
+            effect.Parameters["RecieveShadow"].SetValue(renderable.RecieveShadow);
             effect.Parameters["World"].SetValue(renderable.SceneObject.Transform.world);
             effect.Parameters["WorldInverseTranspose"].SetValue(_worldInvertTranspose);
             effect.CurrentTechnique.Passes[0].Apply();

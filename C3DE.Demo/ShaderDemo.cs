@@ -36,26 +36,41 @@ namespace C3DE.Demo
             var materials = Demo.CreateMaterials(Content, scene);
 
             var camera = new CameraPrefab("camera", scene);
-            camera.Setup(new Vector3(0, 2, -10), new Vector3(0, 0, 0), Vector3.Up);
             camera.AddComponent<OrbitController>();
 
             // And a light
             var light = new LightPrefab("light", LightType.Point, scene);
-            light.Transform.Position = new Vector3(0, 15, 30);
-            light.Light.ShadowGenerator.ShadowSamples = 16;
+            light.Transform.Position = new Vector3(0, 15, 15);
+            light.Light.Range = 50;
+            light.Light.Intensity = 2.0f;
+            light.Light.DiffuseColor = Color.Violet;
+            light.Light.Direction = new Vector3(0, -1, -1);
+            light.Light.Angle = 120;
             light.Light.ShadowGenerator.SetShadowMapSize(GraphicsDevice, 4096);
             light.EnableShadows = true;
             lightTransform = light.Transform;
 
+            var lr = light.AddComponent<MeshRenderer>();
+            lr.Geometry = new SphereGeometry(1f, 8);
+            lr.Geometry.Generate(GraphicsDevice);
+            lr.Material = new StandardMaterial(scene);
+            lr.Material.DiffuseColor = Color.Green;
+
             var terrain = new TerrainPrefab("terrain", scene);
             terrain.TextureRepeat = new Vector2(8);
             terrain.Randomize();
-            terrain.Renderer.Material = new StandardMaterial(scene);
+            terrain.Renderer.Material = new SuperMaterial(scene);
             terrain.Renderer.Material.MainTexture = Content.Load<Texture2D>("Textures/terrainTexture");
             terrain.Transform.Translate(-terrain.Width >> 1, 0, -terrain.Depth / 2);
 
-            var material = new StandardMaterial(scene);
+            var material = new SuperMaterial(scene);
             material.MainTexture = Content.Load<Texture2D>("Textures/tech_box2");
+            material.DiffuseColor = new Color(0.8f, 0.8f, 1.0f, 1.0f);
+            material.SpecularColor = new Color(0.8f, 0.8f, 0.8f, 1.0f);
+            material.Shininess = 500;
+            material.EmissiveColor = new Color(0f, 0.5f, 0.0f, 0.1f);
+
+            scene.AmbientColor = new Color(0.0f, 0.0f, 0.0f, 1.0f);
 
             var cubeScene = new SceneObject();
             cubeScene.Transform.Translate(0, 5.5f, 3);
@@ -66,6 +81,7 @@ namespace C3DE.Demo
             scene.Add(cubeScene);
 
             var cube = cubeScene.AddComponent<MeshRenderer>();
+            cube.RecieveShadow = false;
             cube.Geometry = new CubeGeometry();
             cube.Geometry.Generate(GraphicsDevice);
             cube.Material = material;
@@ -78,9 +94,6 @@ namespace C3DE.Demo
                 "Textures/Skybox/pz",
                 "Textures/Skybox/nz"
             });
-
-            var mat = new SuperMaterial(scene);
-
 
             Screen.ShowCursor = true;
         }
