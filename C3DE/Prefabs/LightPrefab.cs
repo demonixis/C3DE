@@ -7,11 +7,16 @@ namespace C3DE.Prefabs
     public class LightPrefab : Prefab
     {
         private Light _light;
-        private LightType _type;
-
+        
         public Light Light
         {
             get { return _light; }
+        }
+
+        public LightType Type
+        {
+            get { return _light.Type; }
+            set { _light.Type = value; }
         }
 
         public bool EnableShadows
@@ -23,20 +28,9 @@ namespace C3DE.Prefabs
         public LightPrefab(string name, LightType type, Scene scene)
             : base(name, scene)
         {
-            SetLighType(type);
+            _light = AddComponent<Light>();
+            _light.Type = LightType.Ambient;
             _light.shadowGenerator.SetShadowMapSize(Application.GraphicsDevice, 1024);
-        }
-
-        public void SetLighType(LightType type)
-        {
-            if (type == LightType.Directional)
-                _light = AddComponent<DirectionalLight>();
-            else if (type == LightType.Point)
-                _light = AddComponent<PointLight>();
-            else
-                _light = AddComponent<Light>(); // TODO: Make it abstract !
-
-            _type = type;
         }
     }
 }

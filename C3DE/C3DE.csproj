@@ -45,9 +45,7 @@
     <Compile Include="Components\Colliders\BoxCollider.cs" />
     <Compile Include="Components\Colliders\Collider.cs" />
     <Compile Include="Components\Colliders\SphereCollider.cs" />
-    <Compile Include="Components\Lights\DirectionalLight.cs" />
     <Compile Include="Components\Lights\Light.cs" />
-    <Compile Include="Components\Lights\PointLight.cs" />
     <Compile Include="Components\Renderers\Debug\FrustrumRenderer.cs" />
     <Compile Include="Components\Renderers\MeshRenderer.cs" />
     <Compile Include="Components\Renderers\QuadRenderer.cs" />
@@ -62,6 +60,7 @@
     <Compile Include="Geometries\TerrainGeometry.cs" />
     <Compile Include="Geometries\TorusGeometry.cs" />
     <Compile Include="Materials\StandardMaterial.cs" />
+    <Compile Include="Materials\SuperMaterial.cs" />
     <Compile Include="Materials\WaterMaterial.cs" />
     <Compile Include="Prefabs\CameraPrefab.cs" />
     <Compile Include="Components\Component.cs" />

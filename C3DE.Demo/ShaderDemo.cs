@@ -79,6 +79,9 @@ namespace C3DE.Demo
                 "Textures/Skybox/nz"
             });
 
+            var mat = new SuperMaterial(scene);
+
+
             Screen.ShowCursor = true;
         }
 

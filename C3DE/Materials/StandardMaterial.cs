@@ -1,4 +1,5 @@
-﻿using C3DE.Components.Renderers;
+﻿using C3DE.Components.Lights;
+using C3DE.Components.Renderers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -74,22 +75,15 @@ namespace C3DE.Materials
             effect.Parameters["AmbientIntensity"].SetValue(0.1f);
             effect.Parameters["EmissiveColor"].SetValue(_emissiveColor);
 
-            if (light0 is C3DE.Components.Lights.DirectionalLight)
-            {
-                var dir0 = light0 as C3DE.Components.Lights.DirectionalLight;
-                effect.Parameters["DiffuseLightDirection"].SetValue(dir0.Direction);
-            }
-            else
+            // FIXME Do a loop when ok
+            if (light0.Type != LightType.Directional)
             {
                 Vector3 cDir = light0.SceneObject.Transform.Position;
-                
-                if (cDir != Vector3.Zero)
-                    cDir.Normalize();
-                else
-                    cDir = new Vector3(1, 1, 0);
-
+                cDir.Normalize();
                 effect.Parameters["DiffuseLightDirection"].SetValue(cDir);
             }
+            else
+                effect.Parameters["DiffuseLightDirection"].SetValue(light0.Direction);
             
             effect.Parameters["DiffuseColor"].SetValue(diffuseColor);
             effect.Parameters["DiffuseIntensity"].SetValue(DiffuseIntensity);

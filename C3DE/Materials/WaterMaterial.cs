@@ -1,4 +1,5 @@
 ﻿using C3DE.Components;
+using C3DE.Components.Lights;
 using C3DE.Components.Renderers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
@@ -50,16 +51,14 @@ namespace C3DE.Materials
 
             // FIXME Do a loop when ok
             var light0 = scene.Lights[0];
-            var dir0 = light0 as C3DE.Components.Lights.DirectionalLight;
-
-            if (dir0 == null)
+            if (light0.Type != LightType.Directional)
             {
-                Vector3 cDir = light0.SceneObject.Transform.Rotation;
+                Vector3 cDir = light0.SceneObject.Transform.Position;
                 cDir.Normalize();
                 effect.Parameters["LightDirection"].SetValue(cDir);
             }
             else
-                effect.Parameters["LightDirection"].SetValue(dir0.Direction);
+                effect.Parameters["LightDirection"].SetValue(light0.Direction);
 
             // Light
             effect.Parameters["AmbientColor"].SetValue(scene.AmbientColor.ToVector4());
