@@ -5,19 +5,15 @@ namespace C3DE.Components.Lights
 {
     public enum LightType
     {
-        Directional, Point, Spot, Area
+        Ambient = 0, Directional, Point, Spot, Area
     }
 
     public class Light : Component
     {
-        internal Matrix viewMatrix;
-        internal Matrix projectionMatrix;
-        internal ShadowGenerator shadowGenerator;
-
-        protected Color diffuseColor;
-        protected Color specularColor;
-        protected float intensity;
-        protected Vector3 radius;
+        internal protected Matrix viewMatrix;
+        internal protected Matrix projectionMatrix;
+        internal protected ShadowGenerator shadowGenerator;
+        internal protected Vector3 diffuseColor;
 
         public Matrix View
         {
@@ -27,40 +23,6 @@ namespace C3DE.Components.Lights
         public Matrix Projection
         {
             get { return projectionMatrix; }
-        }
-
-        public Matrix ViewProjection
-        {
-            get { return viewMatrix * projectionMatrix; }
-        }
-
-        public Color DiffuseColor
-        {
-            get { return diffuseColor; }
-            set { diffuseColor = value; }
-        }
-
-        public Color SpecularColor
-        {
-            get { return specularColor; }
-            set { specularColor = value; }
-        }
-
-        public float Intensity
-        {
-            get { return intensity; }
-            set { intensity = value; }
-        }
-
-        public float Radius
-        {
-            get { return radius.X; }
-            set
-            {
-                radius.X = value;
-                radius.Y = value;
-                radius.Z = value;
-            }
         }
 
         public bool EnableShadow
@@ -74,6 +36,42 @@ namespace C3DE.Components.Lights
             get { return shadowGenerator; }
         }
 
+        /// <summary>
+        /// The color of the light.
+        /// </summary>
+        public Color DiffuseColor
+        {
+            get { return new Color(diffuseColor); }
+            set { diffuseColor = value.ToVector3(); }
+        }
+
+        /// <summary>
+        /// The intensity of the light.
+        /// </summary>
+        public float Intensity { get; set; }
+
+        /// <summary>
+        /// The maximum distance of emission.
+        /// </summary>
+        public float Range { get; set; }
+
+        public float FallOf { get; set; }
+
+        /// <summary>
+        /// The type of the light.
+        /// </summary>
+        public LightType Type { get; set; }
+
+        /// <summary>
+        /// The direction of the directional light.
+        /// </summary>
+        public Vector3 Direction { get; set; }
+
+        /// <summary>
+        /// The angle used by the Spot light.
+        /// </summary>
+        public float Angle { get; set; }
+
         public Light()
             : this(null)
         {
@@ -84,10 +82,11 @@ namespace C3DE.Components.Lights
         {
             viewMatrix = Matrix.Identity;
             projectionMatrix = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45), 1, 1, 500);
-            diffuseColor = Color.White;
-            specularColor = Color.Black;
-            intensity = 1.0f;
-            radius = new Vector3(250.0f);
+            diffuseColor = new Vector3(0.0f);
+            Intensity = 1.0f;
+            Type = LightType.Ambient;
+            Range = 5000.0f;
+            FallOf = 2.0f;
             shadowGenerator = new ShadowGenerator(this);
         }
 

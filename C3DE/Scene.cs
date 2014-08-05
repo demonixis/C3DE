@@ -38,6 +38,7 @@ namespace C3DE
         private int _mainCameraIndex;
         private List<Light> _lights;
         private Vector4 _ambientColor;
+        private List<Behaviour> _scripts;
 
         public Color AmbientColor
         {
@@ -79,6 +80,11 @@ namespace C3DE
             get { return _cameras; }
         }
 
+        public List<Behaviour> Behaviours
+        {
+            get { return _scripts; }
+        }
+
         /// <summary>
         /// The root scene object which contains all scene objects.
         /// </summary>
@@ -90,12 +96,13 @@ namespace C3DE
             members = new SmartList<SceneObject>();
             scene = this;
             _content = content;
-            _renderList = new List<RenderableComponent>();
-            _materials = new List<Material>();
-            _colliders = new List<Collider>();
-            _cameras = new List<Camera>();
+            _renderList = new List<RenderableComponent>(10);
+            _materials = new List<Material>(5);
+            _colliders = new List<Collider>(5);
+            _cameras = new List<Camera>(1);
             _mainCameraIndex = -1;
-            _lights = new List<Light>();
+            _scripts = new List<Behaviour>(5);
+            _lights = new List<Light>(2);
             _ambientColor = Color.White.ToVector4();
             DefaultMaterial = new StandardMaterial(this);
         }
@@ -164,15 +171,26 @@ namespace C3DE
                     _renderList.Remove(renderable);
             }
 
+            else if (component is Behaviour)
+            {
+                var script = component as Behaviour;
+
+                if (type == ComponentChangeType.Add)
+                    AddScript(script);
+                else if (type == ComponentChangeType.Remove)
+                    RemoveScript(script);
+            }
+
             else if (component is Collider)
             {
                 var collider = component as Collider;
 
-                if (type == ComponentChangeType.Add && !_colliders.Contains(collider))
-                    _colliders.Add(collider);
+                if (type == ComponentChangeType.Add)
+                    AddCollider(collider);
                 else if (type == ComponentChangeType.Remove)
-                    _colliders.Remove(collider);
+                    RemoveCollider(collider);
             }
+
             else if (component is Camera)
             {
                 var camera = component as Camera;
@@ -187,10 +205,10 @@ namespace C3DE
             {
                 var light = component as Light;
 
-                if (type == ComponentChangeType.Add && !_lights.Contains(light))
-                    _lights.Add(light);
+                if (type == ComponentChangeType.Add)
+                    AddLight(light);
                 else if (type == ComponentChangeType.Remove)
-                    _lights.Remove(light);
+                    RemoveLight(light);
             }
         }
 
@@ -348,6 +366,22 @@ namespace C3DE
         {
             if (_colliders.Contains(collider))
                 _colliders.Remove(collider);
+        }
+
+        #endregion
+
+        #region Behaviours management
+
+        public void AddScript(Behaviour script)
+        {
+            if (!_scripts.Contains(script))
+                _scripts.Add(script);
+        }
+
+        public void RemoveScript(Behaviour script)
+        {
+            if (_scripts.Contains(script))
+                _scripts.Remove(script);
         }
 
         #endregion
