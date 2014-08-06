@@ -9,7 +9,6 @@ namespace C3DE.Materials
     public class SuperMaterial : Material
     {
         private Matrix _worldInvertTranspose;
-        private Vector3 _shadowData;
         private Vector4 _diffuseColor;
         private Vector4 _emissiveColor;
         private Vector4 _specularColor;
@@ -42,30 +41,21 @@ namespace C3DE.Materials
             effect = content.Load<Effect>("FX/StandardEffect").Clone();
         }
 
-        Vector3 _camView;
-
         public override void PrePass()
         {
             // FIXME - Set these parameters at first time and only on change and only for this effet
             // I need to cache effects and not clone it.
 
-            _camView = Vector3.Transform(scene.MainCamera.Target - scene.MainCamera.SceneObject.Transform.Position, Matrix.CreateRotationY(0.0f));
-            _camView.Normalize();
-
             // Matrix and camera.
             effect.Parameters["View"].SetValue(scene.MainCamera.view);
             effect.Parameters["Projection"].SetValue(scene.MainCamera.projection);
             effect.Parameters["EyePosition"].SetValue(scene.MainCamera.SceneObject.Transform.Position);
-            effect.Parameters["ViewPosition"].SetValue(_camView);
+            effect.Parameters["ViewPosition"].SetValue(scene.MainCamera.camView);
 
             var light0 = scene.Lights[0]; // FIXME
 
             // Update shadow data.
-            _shadowData.X = light0.shadowGenerator.Enabled ? light0.shadowGenerator.ShadowMapSize : 0;
-            _shadowData.Y = light0.shadowGenerator.ShadowBias;
-            _shadowData.Z = light0.shadowGenerator.ShadowStrength;
-
-            effect.Parameters["ShadowData"].SetValue(_shadowData);
+            effect.Parameters["ShadowData"].SetValue(light0.shadowGenerator.Data);
 
             // Light
             effect.Parameters["LightView"].SetValue(light0.viewMatrix);

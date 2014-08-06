@@ -59,6 +59,7 @@
     <Compile Include="Geometries\SphereGeometry.cs" />
     <Compile Include="Geometries\TerrainGeometry.cs" />
     <Compile Include="Geometries\TorusGeometry.cs" />
+    <Compile Include="Materials\BasicMaterial.cs" />
     <Compile Include="Utils\GraphicsHelper.cs" />
     <Compile Include="Materials\StandardMaterial.cs" />
     <Compile Include="Materials\SuperMaterial.cs" />

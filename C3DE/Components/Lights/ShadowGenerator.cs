@@ -23,6 +23,7 @@ namespace C3DE
         private int _shadowSamples;
         private BoundingSphere _boundingSphere;
         private bool _enabled;
+        private Vector3 _shadowData;
 
         public RenderTarget2D ShadowMap
         {
@@ -37,25 +38,36 @@ namespace C3DE
         public float ShadowBias
         {
             get { return _shadowBias; }
-            set { _shadowBias = value; }
+            set
+            {
+                _shadowBias = value;
+                _shadowData.Y = value;
+            }
         }
 
         public float ShadowStrength
         {
             get { return 1 - _shadowStrength; }
-            set { _shadowStrength = Math.Min(1.0f, Math.Max(0.0f, value)); }
-        }
-
-        public int ShadowSamples
-        {
-            get { return _shadowSamples; }
-            set { _shadowSamples = value; }
+            set
+            {
+                _shadowStrength = Math.Min(1.0f, Math.Max(0.0f, value));
+                _shadowData.Z = _shadowStrength;
+            }
         }
 
         public bool Enabled
         {
             get { return _enabled; }
-            set { _enabled = value; }
+            set
+            {
+                _enabled = value;
+                _shadowData.X = value ? _shadowMapSize : 0;
+            }
+        }
+
+        public Vector3 Data
+        {
+            get { return _shadowData; }
         }
 
         public ShadowGenerator(Light light)
@@ -63,8 +75,8 @@ namespace C3DE
             _enabled = false;
             _shadowBias = 0.005f;
             _shadowStrength = 0.8f;
-            _shadowSamples = 0;
             _light = light;
+            _shadowData = new Vector3(0, 0, 0);
         }
 
         public void LoadContent(ContentManager content)
@@ -80,6 +92,10 @@ namespace C3DE
         {
             shadowMap = new RenderTarget2D(device, size, size, false, SurfaceFormat.Single, DepthFormat.Depth24, 0, RenderTargetUsage.DiscardContents);
             _shadowMapSize = size;
+
+            _shadowData.X = _enabled ? _shadowMapSize : 0;
+            _shadowData.Y = _shadowBias;
+            _shadowData.Z = _shadowStrength;
         }
 
         /// <summary>

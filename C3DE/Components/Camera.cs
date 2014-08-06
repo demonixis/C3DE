@@ -12,6 +12,7 @@ namespace C3DE.Components
     {
         protected internal Matrix view;
         protected internal Matrix projection;
+        protected internal Vector3 camView;
         protected Vector3 reference;
         protected Transform transform;
         private Vector3 _target;
@@ -22,6 +23,7 @@ namespace C3DE.Components
         private float _farPlane;
         private CameraProjectionType _projectionType;
         private bool _needUpdate;
+        private Matrix _matrixRotation0;
 
         public Vector3 Reference
         {
@@ -62,6 +64,7 @@ namespace C3DE.Components
             _farPlane = 500.0f;
             _projectionType = CameraProjectionType.Perspective;
             reference = new Vector3(0.0f, 0.0f, 1.0f);
+            _matrixRotation0 = Matrix.CreateRotationY(0.0f);
         }
 
         public override void LoadContent(ContentManager content)
@@ -97,6 +100,9 @@ namespace C3DE.Components
             if (!sceneObject.IsStatic || _needUpdate)
             {
                 view = Matrix.CreateLookAt(transform.Position, _target, _upVector);
+
+                camView = Vector3.Transform(_target - transform.Position, _matrixRotation0);
+                
                 _needUpdate = false;
             }
         }
