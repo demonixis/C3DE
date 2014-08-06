@@ -82,6 +82,7 @@ namespace C3DE.Components.Lights
         {
             viewMatrix = Matrix.Identity;
             projectionMatrix = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45), 1, 1, 500);
+            viewMatrix = Matrix.CreateLookAt(Vector3.Zero, Vector3.UnitX, Vector3.Up);
             diffuseColor = new Vector3(0.0f);
             Intensity = 1.0f;
             Type = LightType.Ambient;
@@ -94,6 +95,11 @@ namespace C3DE.Components.Lights
         {
             base.LoadContent(content);
             shadowGenerator.LoadContent(content);
+        }
+
+        public override void Update()
+        {
+            base.Update();
         }
 
         // Need to be changed quickly !

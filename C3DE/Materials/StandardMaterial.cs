@@ -64,7 +64,6 @@ namespace C3DE.Materials
                 effect.Parameters["ShadowMapSize"].SetValue(light0.shadowGenerator.ShadowMapSize);
                 effect.Parameters["ShadowBias"].SetValue(light0.shadowGenerator.ShadowBias);
                 effect.Parameters["ShadowStrength"].SetValue(light0.shadowGenerator.ShadowStrength);
-                effect.Parameters["ShadowSamples"].SetValue(0);
             }
 
             // Light
