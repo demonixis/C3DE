@@ -64,7 +64,7 @@ namespace C3DE.Demo
             terrain.Transform.Translate(-terrain.Width >> 1, 0, -terrain.Depth / 2);
 
             var material = new SuperMaterial(scene);
-            material.MainTexture = Content.Load<Texture2D>("Textures/tech_box2");
+            material.MainTexture = GraphicsHelper.CreateCheckboardTexture(Color.Red, Color.White); //Content.Load<Texture2D>("Textures/tech_box2");
             material.DiffuseColor = new Color(0.8f, 0.8f, 1.0f, 1.0f);
             material.SpecularColor = new Color(0.8f, 0.8f, 0.8f, 1.0f);
             material.Shininess = 500;
