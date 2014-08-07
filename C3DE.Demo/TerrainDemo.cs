@@ -66,12 +66,12 @@ namespace C3DE.Demo
             
             // Don't miss the Skybox ;)
             renderer.Skybox.Generate(GraphicsDevice, Content, new string[] {
-                "Textures/Skybox/px",   
-                "Textures/Skybox/nx",
-                "Textures/Skybox/py",
-                "Textures/Skybox/ny",
-                "Textures/Skybox/pz",
-                "Textures/Skybox/nz"
+                "Textures/Skybox/bluesky/px",   
+                "Textures/Skybox/bluesky/nx",
+                "Textures/Skybox/bluesky/py",
+                "Textures/Skybox/bluesky/ny",
+                "Textures/Skybox/bluesky/pz",
+                "Textures/Skybox/bluesky/nz"
             });
 
             Input.Gamepad.Sensitivity = new Vector2(1, 0.75f);

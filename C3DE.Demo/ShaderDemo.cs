@@ -114,12 +114,12 @@ namespace C3DE.Demo
 
             // Skybox
             renderer.Skybox.Generate(GraphicsDevice, Content, new string[] {
-                "Textures/Skybox/px",   
-                "Textures/Skybox/nx",
-                "Textures/Skybox/py",
-                "Textures/Skybox/ny",
-                "Textures/Skybox/pz",
-                "Textures/Skybox/nz"
+                "Textures/Skybox/bluesky/px",   
+                "Textures/Skybox/bluesky/nx",
+                "Textures/Skybox/bluesky/py",
+                "Textures/Skybox/bluesky/ny",
+                "Textures/Skybox/bluesky/pz",
+                "Textures/Skybox/bluesky/nz"
             });
 
             Screen.ShowCursor = true;

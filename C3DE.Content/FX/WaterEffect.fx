@@ -56,7 +56,7 @@ struct VertexShaderOutput
 {
 	float4 Position : POSITION0;
 	float2 UV : TEXCOORD0;
-	float3 View : TEXCOORD1;
+	float4 WorldPosition : TEXCOORD1;
 	float3x3 WorldToTangentSpace : TEXCOORD2;
 };
 
@@ -80,7 +80,7 @@ VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
 	output.WorldToTangentSpace[1] = cross(output.WorldToTangentSpace[0], normal);
 	output.WorldToTangentSpace[2] = normal;
 	
-	output.View = normalize(float4(EyePosition, 1.0) - worldPosition);
+	output.WorldPosition = worldPosition;
 
 	return output;
 }
@@ -104,9 +104,9 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 	float4 normal = float4(normalMap, 1.0);
 
 	float4 diffuse = saturate(dot(LightDirection, normal)) * LightColor * LightIntensity;
-	float4 R = normalize(2.0 * diffuse * normal - float4(LightDirection, 1.0));
-	float4 specular = SpecularColor * max(pow(saturate(dot(R, input.View)), Shininess), 0);
-
+	float3 R = normalize(2 * diffuse.xyz * normal - float4(LightDirection, 1.0));
+	float4 specular = SpecularColor * pow(saturate(dot(R, LightDirection)), Shininess);
+	
 	float4 finalColor = AmbientColor + (color * DiffuseColor * diffuse) + specular;
 	finalColor.a = Alpha;
 

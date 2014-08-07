@@ -89,10 +89,10 @@ float4 CalcSpotLightColor(float3 normal, float4 worldPosition)
 	float3 lightDirection = normalize(LightPosition - worldPosition);
 	float3 diffuse = saturate(dot(normal, lightDirection));
 
-	float d = dot(-lightDirection, normalize(LightDirection));
+	float d = dot(lightDirection, normalize(LightDirection));
 	float a = cos(LightSpotAngle);
 
-	float attenuation = 0.0;
+	float attenuation = 1.0;
 
 	if (a < d)
 		attenuation = 1 - pow(clamp(a / d, 0, 1), LightFallOff);

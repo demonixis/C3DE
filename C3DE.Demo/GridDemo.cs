@@ -44,8 +44,8 @@ namespace C3DE.Demo
             light.Light.Intensity = 2.0f;
             light.Light.FallOf = 5f;
             light.Light.DiffuseColor = Color.Violet;
-            light.Light.Direction = new Vector3(0, 1, -1);
-            light.Light.Angle = MathHelper.PiOver4;
+            light.Light.Direction = new Vector3(-1, 1, -1);
+            light.Light.Angle = 0.1f;
             light.Light.ShadowGenerator.ShadowStrength = 0.6f; // FIXME need to be inverted
             light.Light.ShadowGenerator.SetShadowMapSize(GraphicsDevice, 1024);
             light.EnableShadows = true;
@@ -96,6 +96,7 @@ namespace C3DE.Demo
 
             //c2.AddComponent<AutoRotation>().Rotation = new Vector3(0.0f, 0.0f, -0.03f);
             c2.Transform.Translate(0, 3, 0);
+            c2.Transform.LocalScale = new Vector3(5);
             var m2 = c2.AddComponent<MeshRenderer>();
             m2.Geometry = new CubeGeometry();
             m2.Geometry.Generate(GraphicsDevice);
@@ -103,12 +104,12 @@ namespace C3DE.Demo
 
             // Skybox
             renderer.Skybox.Generate(GraphicsDevice, Content, new string[] {
-                "Textures/Skybox/px",   
-                "Textures/Skybox/nx",
-                "Textures/Skybox/py",
-                "Textures/Skybox/ny",
-                "Textures/Skybox/pz",
-                "Textures/Skybox/nz"
+                "Textures/Skybox/starfield/px",   
+                "Textures/Skybox/starfield/nx",
+                "Textures/Skybox/starfield/py",
+                "Textures/Skybox/starfield/ny",
+                "Textures/Skybox/starfield/pz",
+                "Textures/Skybox/starfield/nz"
             });
 
             Screen.ShowCursor = true;
@@ -132,6 +133,30 @@ namespace C3DE.Demo
                 translation.Z += Input.Mouse.Delta.Y * 0.1f;
 
             translation.X += Input.Mouse.Delta.X * 0.1f;
+
+            if (Input.Keys.JustPressed(Keys.F1))
+                light.Light.Type = LightType.Ambient;
+            else if (Input.Keys.JustPressed(Keys.F2))
+                light.Light.Type = LightType.Directional;
+            else if (Input.Keys.JustPressed(Keys.F3))
+                light.Light.Type = LightType.Point;
+            else if (Input.Keys.JustPressed(Keys.F4))
+                light.Light.Type = LightType.Spot;
+
+            if (Input.Keys.Pressed(Keys.Add))
+                light.Light.Range += 0.1f;
+            else if (Input.Keys.Pressed(Keys.Subtract))
+                light.Light.Range -= 0.1f;
+
+            if (Input.Keys.Pressed(Keys.Divide))
+                light.Light.Intensity += 0.1f;
+            else if (Input.Keys.Pressed(Keys.Multiply))
+                light.Light.Intensity -= 0.1f;
+
+            if (Input.Keys.Pressed(Keys.P))
+                light.Light.FallOf += 0.1f;
+            else if (Input.Keys.Pressed(Keys.M))
+                light.Light.FallOf -= 0.1f;
 
             light.Transform.Translate(ref translation);
         }
