@@ -84,8 +84,9 @@ namespace C3DE.Components.Lights
             viewMatrix = Matrix.Identity;
             projectionMatrix = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45), 1, 1, 500);
             viewMatrix = Matrix.CreateLookAt(Vector3.Zero, Vector3.Zero, Vector3.Up);
-            diffuseColor = new Vector3(0.0f);
+            diffuseColor = new Vector3(1.0f, 1.0f, 1.0f);
             Intensity = 1.0f;
+            Direction = new Vector3(1, 1, 0);
             Type = LightType.Ambient;
             Range = 5000.0f;
             FallOf = 2.0f;

@@ -10,11 +10,6 @@ using System.Collections.Generic;
 
 namespace C3DE
 {
-    public enum FogMode
-    {
-        None = 0, Linear, Exp, Exp2
-    }
-
     public struct RaycastInfo
     {
         public Ray Ray;
@@ -40,11 +35,7 @@ namespace C3DE
         private Vector4 _ambientColor;
         private List<Behaviour> _scripts;
 
-        public Color AmbientColor
-        {
-            get { return new Color(_ambientColor); }
-            set { _ambientColor = value.ToVector4(); }
-        }
+        public RenderSettings RenderSettings { get; private set; }
 
         public Camera MainCamera
         {
@@ -105,6 +96,7 @@ namespace C3DE
             _lights = new List<Light>(2);
             _ambientColor = Color.White.ToVector4();
             DefaultMaterial = new StandardMaterial(this);
+            RenderSettings = new RenderSettings();
         }
 
         #region Lifecycle

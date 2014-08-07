@@ -3,18 +3,19 @@ float4x4 World;
 float4x4 View;
 float4x4 Projection;
 
-// Lighting
+// Material
 float4 AmbientColor = float4(1.0, 1.0, 1.0, 1.0);
-float AmbientIntensity = 1.0;
-float3 LightDirection = float3(1.0, 1.0, 0.0);
 float4 DiffuseColor = float4(1.0, 1.0, 1.0, 1.0);
-float DiffuseIntensity = 1.0;
 float4 SpecularColor = float4(0.8, 0.8, 0.8, 1.0);
-float SpecularIntensity = 1.0;
 float Shininess = 250.0;
 
+// Light
+float3 LightDirection = float3(1.0, 1.0, 0.0);
+float LightIntensity = 1.0;
+float4 LightColor = float4(1, 1, 1, 1);
+
 // Misc
-float3 CameraPosition = float3(0, 0, 1);
+float3 EyePosition = float3(0, 0, 1);
 float TotalTime = 0.0;
 float Alpha = 0.3;
 
@@ -47,14 +48,14 @@ struct VertexShaderInput
 #else
 	float4 Position : POSITION0;
 #endif
-	float2 TextureCoordinate : TEXCOORD0;
+	float2 UV : TEXCOORD0;
 	float3 Normal : NORMAL0;
 };
 
 struct VertexShaderOutput
 {
 	float4 Position : POSITION0;
-	float2 TextureCoordinate : TEXCOORD0;
+	float2 UV : TEXCOORD0;
 	float3 View : TEXCOORD1;
 	float3x3 WorldToTangentSpace : TEXCOORD2;
 };
@@ -70,7 +71,7 @@ VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
 	float4 worldPosition = mul(input.Position, World);
 	float4 viewPosition = mul(worldPosition, View);
 	output.Position = mul(viewPosition, Projection);
-	output.TextureCoordinate = input.TextureCoordinate;
+	output.UV = input.UV;
 
 	float3 normal = mul(normalize(input.Normal), World);
 
@@ -79,34 +80,34 @@ VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
 	output.WorldToTangentSpace[1] = cross(output.WorldToTangentSpace[0], normal);
 	output.WorldToTangentSpace[2] = normal;
 	
-	output.View = normalize(float4(CameraPosition, 1.0) - worldPosition);
+	output.View = normalize(float4(EyePosition, 1.0) - worldPosition);
 
 	return output;
 }
 
 float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 {
-	input.TextureCoordinate.x = input.TextureCoordinate.x * 20.0 + sin(TotalTime * 3.0 + 10.0) / 256.0;
-	input.TextureCoordinate.y = input.TextureCoordinate.y * 20.0;
+	input.UV.x = input.UV.x * 20.0 + sin(TotalTime * 3.0 + 10.0) / 256.0;
+	input.UV.y = input.UV.y * 20.0;
 
-	float4 color = tex2D(WaterMapSampler, input.TextureCoordinate);
+	float4 color = tex2D(WaterMapSampler, input.UV);
 
-	input.TextureCoordinate.y += (sin(TotalTime * 3.0 + 10.0) / 256) + (TotalTime / 16);
-	float3 normalMap = 2.0 * (tex2D(NormalMapSampler, input.TextureCoordinate)) - 1.0;
+	input.UV.y += (sin(TotalTime * 3.0 + 10.0) / 256) + (TotalTime / 16);
+	float3 normalMap = 2.0 * (tex2D(NormalMapSampler, input.UV)) - 1.0;
 
-	input.TextureCoordinate.y -= ((sin(TotalTime * 3.0 + 10) / 256.0) + (TotalTime / 16.0)) * 2.0;
-	float3 normalMap2 = (2.0 * (tex2D(NormalMapSampler, input.TextureCoordinate))) - 1.0;
+	input.UV.y -= ((sin(TotalTime * 3.0 + 10) / 256.0) + (TotalTime / 16.0)) * 2.0;
+	float3 normalMap2 = (2.0 * (tex2D(NormalMapSampler, input.UV))) - 1.0;
 
 	normalMap = (normalMap + normalMap2) / 2.0;
 	normalMap = normalize(mul(normalMap, input.WorldToTangentSpace));
 	
 	float4 normal = float4(normalMap, 1.0);
 
-	float4 diffuse = saturate(dot(-LightDirection, normal));
+	float4 diffuse = saturate(dot(-LightDirection, normal)) * LightColor * LightIntensity;
 	float4 reflect = normalize(2.0 * diffuse * normal - float4(LightDirection, 1.0));
-	float4 specular = SpecularColor * SpecularIntensity * max(pow(saturate(dot(reflect, input.View)), Shininess), 0) * 250.0;
+	float4 specular = SpecularColor * max(pow(saturate(dot(reflect, input.View)), Shininess), 0) * 250.0;
 
-	float4 finalColor = (color * AmbientColor * AmbientIntensity) + (color * DiffuseColor * DiffuseIntensity * diffuse) + specular;
+	float4 finalColor = AmbientColor + (color * DiffuseColor * diffuse) + specular;
 	finalColor.a = Alpha;
 
 	return finalColor;

@@ -62,6 +62,7 @@
     <Compile Include="Materials\SimpleMaterial.cs" />
     <Compile Include="Prefabs\Meshes\CubePrefab.cs" />
     <Compile Include="Prefabs\Meshes\SpherePrefab.cs" />
+    <Compile Include="RenderSettings.cs" />
     <Compile Include="Utils\GraphicsHelper.cs" />
     <Compile Include="Materials\StandardMaterial.cs" />
     <Compile Include="Materials\SuperMaterial.cs" />

@@ -14,8 +14,6 @@ namespace C3DE.Materials
 
         public Texture2D BumpTexture { get; set; }
         public float WaterTransparency { get; set; }
-        public float DiffuseIntensity { get; set; }
-        public float SpecularIntensity { get; set; }
         public float Shininess { get; set; }
 
         public Color SpecularColor
@@ -29,10 +27,8 @@ namespace C3DE.Materials
         {
             WaterTransparency = 0.45f;
             DiffuseColor = Color.White;
-            DiffuseIntensity = 1.0f;
-            SpecularIntensity = 0.0f;
             Shininess = 250.0f;
-            _specularColor = Color.Red.ToVector4();// new Vector4(0.6f, 0.6f, 0.6f, 1.0f);
+            _specularColor = new Vector4(0.6f, 0.6f, 0.6f, 1.0f);
             _totalTime = 0.0f;
         }
 
@@ -47,34 +43,26 @@ namespace C3DE.Materials
 
             effect.Parameters["View"].SetValue(scene.MainCamera.view);
             effect.Parameters["Projection"].SetValue(scene.MainCamera.projection);
-            effect.Parameters["CameraPosition"].SetValue(scene.MainCamera.SceneObject.Transform.Position);
-
-            // FIXME Do a loop when ok
-            var light0 = scene.Lights[0];
-            if (light0.Type != LightType.Directional)
-            {
-                Vector3 cDir = light0.SceneObject.Transform.Position;
-                cDir.Normalize();
-                effect.Parameters["LightDirection"].SetValue(cDir);
-            }
-            else
-                effect.Parameters["LightDirection"].SetValue(light0.Direction);
+            effect.Parameters["EyePosition"].SetValue(scene.MainCamera.SceneObject.Transform.Position);
 
             // Light
-            effect.Parameters["AmbientColor"].SetValue(scene.AmbientColor.ToVector4());
-            effect.Parameters["AmbientIntensity"].SetValue(1.0f);
-            effect.Parameters["DiffuseColor"].SetValue(diffuseColor);
-            effect.Parameters["DiffuseIntensity"].SetValue(DiffuseIntensity);
-            effect.Parameters["SpecularColor"].SetValue(_specularColor);
-            effect.Parameters["Shininess"].SetValue(Shininess);
+            var light0 = scene.Lights[0]; // FIXME
+            effect.Parameters["LightColor"].SetValue(light0.diffuseColor);
+            effect.Parameters["LightDirection"].SetValue(light0.Direction);
+            effect.Parameters["LightIntensity"].SetValue(light0.Intensity);
+       
+            effect.Parameters["AmbientColor"].SetValue(scene.RenderSettings.ambientColor);
             effect.Parameters["TotalTime"].SetValue(_totalTime);
-            effect.Parameters["WaterTexture"].SetValue(mainTexture);
-            effect.Parameters["NormalTexture"].SetValue(BumpTexture);
-            effect.Parameters["Alpha"].SetValue(WaterTransparency);
         }
 
         public override void Pass(RenderableComponent renderable)
         {
+            effect.Parameters["WaterTexture"].SetValue(mainTexture);
+            effect.Parameters["NormalTexture"].SetValue(BumpTexture);
+            effect.Parameters["Alpha"].SetValue(WaterTransparency);
+            effect.Parameters["DiffuseColor"].SetValue(diffuseColor);
+            effect.Parameters["SpecularColor"].SetValue(_specularColor);
+            effect.Parameters["Shininess"].SetValue(Shininess);
             effect.Parameters["World"].SetValue(renderable.SceneObject.Transform.world);
             effect.CurrentTechnique.Passes[0].Apply();
         }

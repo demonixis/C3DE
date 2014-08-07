@@ -33,8 +33,6 @@ namespace C3DE.Demo
         {
             base.Initialize();
 
-            scene.AmbientColor = new Color(0.0f, 0.0f, 0.0f, 1.0f);
-
             // Camera
             var camera = new CameraPrefab("camera", scene);
             camera.AddComponent<OrbitController>();
@@ -64,7 +62,6 @@ namespace C3DE.Demo
             var terrainMaterial = new SuperMaterial(scene);
             terrainMaterial.MainTexture = GraphicsHelper.CreateBorderTexture(Color.LightGreen, Color.LightSeaGreen, 128, 128, 1);
             terrainMaterial.Shininess = 10;
-            terrainMaterial.SpecularColor = scene.AmbientColor;
 
             var terrain = new TerrainPrefab("terrain", scene);
             terrain.TextureRepeat = new Vector2(16);

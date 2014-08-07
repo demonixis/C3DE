@@ -42,6 +42,7 @@ namespace C3DE.Demo
 
             // And a light
             var light = new LightPrefab("light", LightType.Directional, scene);
+            light.Light.Direction = new Vector3(1, 1, 0);
             light.EnableShadows = true;
 
             // Just for playing with light
@@ -51,7 +52,7 @@ namespace C3DE.Demo
             var terrain = new TerrainPrefab("terrain", scene);
             terrain.TextureRepeat = new Vector2(16);
             terrain.LoadHeightmap("Textures/heightmap");
-            terrain.Renderer.Material = new StandardMaterial(scene);
+            terrain.Renderer.Material = new SuperMaterial(scene);
             terrain.Renderer.Material.MainTexture = Content.Load<Texture2D>("Textures/terrainTexture");
             terrain.Transform.Translate(-terrain.Width >> 1, -10, -terrain.Depth >> 1);            
 

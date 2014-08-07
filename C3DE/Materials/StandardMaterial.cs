@@ -70,7 +70,7 @@ namespace C3DE.Materials
             effect.Parameters["LightView0"].SetValue(light0.viewMatrix);
             effect.Parameters["LightProjection0"].SetValue(light0.projectionMatrix);
 
-            effect.Parameters["AmbientColor"].SetValue(scene.AmbientColor.ToVector4());
+            effect.Parameters["AmbientColor"].SetValue(scene.RenderSettings.ambientColor);
             effect.Parameters["AmbientIntensity"].SetValue(0.1f);
             effect.Parameters["EmissiveColor"].SetValue(_emissiveColor);
 

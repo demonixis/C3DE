@@ -31,8 +31,8 @@ namespace C3DE.Materials
         {
             _diffuseColor = new Vector4(1.0f, 1.0f, 1.0f, 1.0f);
             _emissiveColor = new Vector4(0.0f, 0.0f, 0.0f, 1.0f);
-            _specularColor = new Vector4(0.8f, 0.8f, 0.8f, 1.0f);
-            Shininess = 200.0f;
+            _specularColor = new Vector4(0.6f, 0.6f, 0.6f, 1.0f);
+            Shininess = 250.0f;
         }
 
         public override void LoadContent(ContentManager content)
@@ -74,7 +74,7 @@ namespace C3DE.Materials
         public override void Pass(RenderableComponent renderable)
         {
             // Material properties.
-            effect.Parameters["AmbientColor"].SetValue(scene.AmbientColor.ToVector4());
+            effect.Parameters["AmbientColor"].SetValue(scene.RenderSettings.ambientColor);
             effect.Parameters["DiffuseColor"].SetValue(_diffuseColor);
             effect.Parameters["EmissiveColor"].SetValue(_emissiveColor);
             effect.Parameters["SpecularColor"].SetValue(_specularColor);

@@ -49,7 +49,7 @@ namespace C3DE.Materials
             effect.Parameters["Projection"].SetValue(scene.MainCamera.projection);
 
             // Material
-            effect.Parameters["AmbientColor"].SetValue(scene.AmbientColor.ToVector4());
+            effect.Parameters["AmbientColor"].SetValue(scene.RenderSettings.ambientColor);
             effect.Parameters["DiffuseColor"].SetValue(diffuseColor);
             effect.Parameters["EmissiveColor"].SetValue(_emissiveColor);
             effect.Parameters["Alpha"].SetValue(_alpha);
