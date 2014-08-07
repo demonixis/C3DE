@@ -77,7 +77,7 @@ float4 CalcDirectionalLightColor(float3 normal, float4 worldPosition)
 float4 CalcPointLightColor(float3 normal, float4 worldPosition)
 {
 	float3 lightDirection = normalize(LightPosition - worldPosition);
-	float diffuse = saturate(dot(normalize(normal), lightDirection));
+	float diffuse = saturate(dot(normal, lightDirection));
 	float d = distance(LightPosition, worldPosition);
 	float attenuation = 1 - pow(clamp(d / LightRange, 0, 1), LightFallOff);
 
@@ -87,7 +87,7 @@ float4 CalcPointLightColor(float3 normal, float4 worldPosition)
 float4 CalcSpotLightColor(float3 normal, float4 worldPosition)
 {
 	float3 lightDirection = normalize(LightPosition - worldPosition);
-	float3 diffuse = saturate(dot(normalize(normal), lightDirection));
+	float3 diffuse = saturate(dot(normal, lightDirection));
 
 	float d = dot(-lightDirection, normalize(LightDirection));
 	float a = cos(LightSpotAngle);
@@ -111,9 +111,9 @@ float4 CalcSpecularColor(float3 normal, float4 worldPosition, float4 color, int 
 	if (type == 2)
 		lightDirection = normalize(LightPosition - worldPosition);
 
-	float3 R = normalize(2 * normal - lightDirection);
+	float3 R = normalize(2 * color.xyz * normal - lightDirection);
 
-	return SpecularColor * pow(saturate(dot(R, normalize(EyePosition - worldPosition))), Shininess);
+	return SpecularColor * pow(saturate(dot(R, normalize(LightPosition - worldPosition))), Shininess);
 }
 
 struct VertexShaderInput

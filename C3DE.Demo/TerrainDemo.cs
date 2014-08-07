@@ -49,11 +49,14 @@ namespace C3DE.Demo
             lightTransform = light.Transform;
 
             // Finally a terrain
+            var terrainMat = new SuperMaterial(scene);
+            terrainMat.MainTexture = Content.Load<Texture2D>("Textures/terrainTexture");
+            terrainMat.Shininess = 50;
+
             var terrain = new TerrainPrefab("terrain", scene);
-            terrain.TextureRepeat = new Vector2(16);
+            terrain.TextureRepeat = new Vector2(2);
             terrain.LoadHeightmap("Textures/heightmap");
-            terrain.Renderer.Material = new SuperMaterial(scene);
-            terrain.Renderer.Material.MainTexture = Content.Load<Texture2D>("Textures/terrainTexture");
+            terrain.Renderer.Material = terrainMat;
             terrain.Transform.Translate(-terrain.Width >> 1, -10, -terrain.Depth >> 1);            
 
             // With water !
