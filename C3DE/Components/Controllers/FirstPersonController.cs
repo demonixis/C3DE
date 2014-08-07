@@ -19,6 +19,7 @@ namespace C3DE.Components.Controllers
         public float LookSpeed { get; set; }
         public float StrafeSpeed { get; set; }
         public bool FourAxis { get; set; }
+        public Vector2 MouseSensibility { get; set; }
 
         public FirstPersonController()
             : this(null)
@@ -34,6 +35,7 @@ namespace C3DE.Components.Controllers
             RotationSpeed = 0.1f;
             LookSpeed = 0.15f;
             StrafeSpeed = 0.75f;
+            MouseSensibility = new Vector2(0.15f, 0.15f);
             FourAxis = false;
         }
 
@@ -45,6 +47,7 @@ namespace C3DE.Components.Controllers
 
         public override void Update()
         {
+            UpdateMouseInput();
             UpdateKeyboardInput();
             UpdateGamepadInput();
 
@@ -94,6 +97,24 @@ namespace C3DE.Components.Controllers
 
             else if (Input.Keys.Pressed(Keys.Right))
                 _rotation.Y -= RotationSpeed * Time.DeltaTime;
+
+            if (Input.Keys.JustPressed(Keys.Tab))
+                FourAxis = !FourAxis;
+        }
+
+        private void UpdateMouseInput()
+        {
+            if (Input.Mouse.Drag())
+            {
+                _rotation.Y -= Input.Mouse.Delta.X * RotationSpeed * MouseSensibility.Y * Time.DeltaTime;
+                _rotation.X += Input.Mouse.Delta.Y * RotationSpeed * MouseSensibility.X * Time.DeltaTime;
+            }
+
+            if (Input.Mouse.Drag(Inputs.MouseButton.Middle))
+            {
+                _translation.Y += Input.Mouse.Delta.Y * MoveSpeed * MouseSensibility.Y * Time.DeltaTime;
+                _translation.X += Input.Mouse.Delta.X * StrafeSpeed * MouseSensibility.X * Time.DeltaTime;
+            }
         }
 
         private void UpdateGamepadInput()

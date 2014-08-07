@@ -103,9 +103,9 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 	
 	float4 normal = float4(normalMap, 1.0);
 
-	float4 diffuse = saturate(dot(-LightDirection, normal)) * LightColor * LightIntensity;
-	float4 reflect = normalize(2.0 * diffuse * normal - float4(LightDirection, 1.0));
-	float4 specular = SpecularColor * max(pow(saturate(dot(reflect, input.View)), Shininess), 0) * 250.0;
+	float4 diffuse = saturate(dot(LightDirection, normal)) * LightColor * LightIntensity;
+	float4 R = normalize(2.0 * diffuse * normal - float4(LightDirection, 1.0));
+	float4 specular = SpecularColor * max(pow(saturate(dot(R, input.View)), Shininess), 0);
 
 	float4 finalColor = AmbientColor + (color * DiffuseColor * diffuse) + specular;
 	finalColor.a = Alpha;
