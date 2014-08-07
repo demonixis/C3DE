@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace C3DE.Components.Lights
 {
@@ -82,7 +83,7 @@ namespace C3DE.Components.Lights
         {
             viewMatrix = Matrix.Identity;
             projectionMatrix = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45), 1, 1, 500);
-            viewMatrix = Matrix.CreateLookAt(Vector3.Zero, Vector3.UnitX, Vector3.Up);
+            viewMatrix = Matrix.CreateLookAt(Vector3.Zero, Vector3.Zero, Vector3.Up);
             diffuseColor = new Vector3(0.0f);
             Intensity = 1.0f;
             Type = LightType.Ambient;
@@ -100,6 +101,11 @@ namespace C3DE.Components.Lights
         public override void Update()
         {
             base.Update();
+
+            if (!sceneObject.IsStatic)
+            {
+                //viewMatrix = Matrix.CreateLookAt(sceneObject.Transform.Position, Vector3.Zero, Vector3.Up);
+            }
         }
 
         // Need to be changed quickly !
@@ -113,6 +119,13 @@ namespace C3DE.Components.Lights
 
             float dist = Vector3.Distance(sceneObject.Transform.Position, sphere.Center);
             projectionMatrix = Matrix.CreateOrthographicOffCenter(-size, size, size, -size, dist - sphere.Radius, dist + sphere.Radius * 2);
+        }
+
+        public void DrawShadowMap(SpriteBatch sb)
+        {
+            sb.Begin(SpriteSortMode.Deferred, BlendState.Opaque, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone, null);
+            sb.Draw(shadowGenerator.ShadowMap, new Rectangle(0, 0, 100, 100), Color.White);
+            sb.End();
         }
     }
 }

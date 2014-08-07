@@ -88,6 +88,8 @@ namespace C3DE
 
             renderObjects(scene, camera);
             renderBuffers();
+
+            scene.Lights[0].DrawShadowMap(_spriteBatch);
         }
     }
 }

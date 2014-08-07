@@ -16,14 +16,14 @@ using System.Collections.Generic;
 
 namespace C3DE.Demo
 {
-    public class ShaderDemo : Engine
+    public class GridDemo : Engine
     {
-        Transform lightTransform;
+        LightPrefab light;
 
-        public ShaderDemo()
+        public GridDemo()
             : base()
         {
-            Window.Title = "C3DE - Shader demo";
+            Window.Title = "C3DE - Grid demo";
             graphics.PreferredBackBufferWidth = 1024;
             graphics.PreferredBackBufferHeight = 600;
             graphics.ApplyChanges();
@@ -40,21 +40,20 @@ namespace C3DE.Demo
             camera.AddComponent<OrbitController>();
 
             // Light
-            var lightPrefab = new LightPrefab("light", LightType.Directional, scene);
-            lightPrefab.Transform.Position = new Vector3(0, 15, 15);
-            lightPrefab.Light.Range = 25;
-            lightPrefab.Light.Intensity = 2.0f;
-            lightPrefab.Light.FallOf = 5f;
-            lightPrefab.Light.DiffuseColor = Color.Violet;
-            lightPrefab.Light.Direction = new Vector3(0, 1, -1);
-            lightPrefab.Light.Angle = MathHelper.PiOver4;
-            lightPrefab.Light.ShadowGenerator.ShadowStrength = 0.6f; // FIXME need to be inverted
-            lightPrefab.Light.ShadowGenerator.SetShadowMapSize(GraphicsDevice, 1024);
-            lightPrefab.EnableShadows = true;
-            lightTransform = lightPrefab.Transform;
+            light = new LightPrefab("light", LightType.Point, scene);
+            light.Transform.Position = new Vector3(0, 15, 15);
+            light.Light.Range = 25;
+            light.Light.Intensity = 2.0f;
+            light.Light.FallOf = 5f;
+            light.Light.DiffuseColor = Color.Violet;
+            light.Light.Direction = new Vector3(0, 1, -1);
+            light.Light.Angle = MathHelper.PiOver4;
+            light.Light.ShadowGenerator.ShadowStrength = 0.6f; // FIXME need to be inverted
+            light.Light.ShadowGenerator.SetShadowMapSize(GraphicsDevice, 1024);
+            light.EnableShadows = true;
 
-            var lightSphere = lightPrefab.AddComponent<MeshRenderer>();
-            lightSphere.Geometry = new SphereGeometry(1f, 8);
+            var lightSphere = light.AddComponent<MeshRenderer>();
+            lightSphere.Geometry = new SphereGeometry(2f, 4);
             lightSphere.Geometry.Generate(GraphicsDevice);
             lightSphere.CastShadow = false;
             lightSphere.RecieveShadow = false;
@@ -63,13 +62,13 @@ namespace C3DE.Demo
 
             // Terrain
             var terrainMaterial = new SuperMaterial(scene);
-            terrainMaterial.MainTexture = Content.Load<Texture2D>("Textures/terrainTexture");
-            terrainMaterial.Shininess = 500;
+            terrainMaterial.MainTexture = GraphicsHelper.CreateBorderTexture(Color.LightGreen, Color.LightSeaGreen, 128, 128, 1);
+            terrainMaterial.Shininess = 10;
             terrainMaterial.SpecularColor = scene.AmbientColor;
-            
+
             var terrain = new TerrainPrefab("terrain", scene);
-            terrain.TextureRepeat = new Vector2(8);
-            terrain.Randomize();
+            terrain.TextureRepeat = new Vector2(16);
+            terrain.Flat();
             terrain.Renderer.Material = terrainMaterial;
             terrain.Transform.Translate(-terrain.Width >> 1, 0, -terrain.Depth / 2);
 
@@ -82,7 +81,7 @@ namespace C3DE.Demo
             cubeSuperMaterial.EmissiveColor = new Color(0f, 0.0f, 0.1f, 1.0f);
 
             var cubeScene = new SceneObject();
-            cubeScene.Transform.Translate(0, 5.5f, 15);
+            cubeScene.Transform.Translate(0, 5.5f, 0);
             cubeScene.Transform.LocalScale = new Vector3(1.0f);
             cubeScene.Transform.Rotate((float)Math.PI / 4, 0, (float)Math.PI / 4);
             var autoRot = cubeScene.AddComponent<AutoRotation>();
@@ -95,25 +94,15 @@ namespace C3DE.Demo
             cube.Geometry.Generate(GraphicsDevice);
             cube.Material = cubeSuperMaterial;
 
-            // Second cube
-            var simpleMaterial = new SimpleMaterial(scene);
-            simpleMaterial.MainTexture = GraphicsHelper.CreateCheckboardTexture(new Color(1, 0, 0, 0.3f), new Color(1, 1, 1, 0.3f));
-            simpleMaterial.Alpha = 0.3f;
+            var c2 = new SceneObject();
+            cubeScene.Add(c2);
 
-            var cube2Scene = new SceneObject();
-            cube2Scene.Transform.Translate(-20, 5.5f, -5);
-            cube2Scene.Transform.LocalScale = new Vector3(3.0f);
-            cube2Scene.Transform.Rotate(-MathHelper.PiOver4, 0, -MathHelper.PiOver4);
-            var autoRot2 = cube2Scene.AddComponent<AutoRotation>();
-            autoRot2.Rotation = new Vector3(0.02f, 0.01f, 0.03f);
-            scene.Add(cube2Scene);
-
-            var cube2 = cube2Scene.AddComponent<MeshRenderer>();
-            cube2.RecieveShadow = false;
-            cube2.CastShadow = true;
-            cube2.Geometry = new CubeGeometry();
-            cube2.Geometry.Generate(GraphicsDevice);
-            cube2.Material = simpleMaterial;
+            //c2.AddComponent<AutoRotation>().Rotation = new Vector3(0.0f, 0.0f, -0.03f);
+            c2.Transform.Translate(0, 3, 0);
+            var m2 = c2.AddComponent<MeshRenderer>();
+            m2.Geometry = new CubeGeometry();
+            m2.Geometry.Generate(GraphicsDevice);
+            m2.Material = cubeSuperMaterial;
 
             // Skybox
             renderer.Skybox.Generate(GraphicsDevice, Content, new string[] {
@@ -144,13 +133,10 @@ namespace C3DE.Demo
                 translation.Y += Input.Mouse.Delta.Y * 0.1f;
             else
                 translation.Z += Input.Mouse.Delta.Y * 0.1f;
-            
+
             translation.X += Input.Mouse.Delta.X * 0.1f;
 
-            lightTransform.Translate(ref translation);
-
-            if (Input.Keys.Enter)
-                Console.WriteLine(lightTransform.Position);
+            light.Transform.Translate(ref translation);
         }
     }
 }

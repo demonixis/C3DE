@@ -75,6 +75,8 @@ namespace C3DE.Components.Renderers
 
                 _dirty = false;
             }
+
+            boundingSphere.Center = sceneObject.Transform.Position;
         }
 
         public override void Draw(GraphicsDevice device)

@@ -8,7 +8,6 @@ namespace C3DE.Materials
 {
     public class SuperMaterial : Material
     {
-        private Matrix _worldInvertTranspose;
         private Vector4 _diffuseColor;
         private Vector4 _emissiveColor;
         private Vector4 _specularColor;
@@ -38,13 +37,15 @@ namespace C3DE.Materials
 
         public override void LoadContent(ContentManager content)
         {
-            effect = content.Load<Effect>("FX/StandardEffect").Clone();
+            effect = content.Load<Effect>("FX/StandardEffect");
         }
 
         public override void PrePass()
         {
             // FIXME - Set these parameters at first time and only on change and only for this effet
             // I need to cache effects and not clone it.
+
+            // FIXME - Please update just once per effect
 
             // Matrix and camera.
             effect.Parameters["View"].SetValue(scene.MainCamera.view);
@@ -56,6 +57,7 @@ namespace C3DE.Materials
 
             // Update shadow data.
             effect.Parameters["ShadowData"].SetValue(light0.shadowGenerator.Data);
+            effect.Parameters["ShadowMap"].SetValue(light0.shadowGenerator.ShadowMap);
 
             // Light
             effect.Parameters["LightView"].SetValue(light0.viewMatrix);
@@ -67,22 +69,20 @@ namespace C3DE.Materials
             effect.Parameters["LightRange"].SetValue(light0.Range);
             effect.Parameters["LightFallOff"].SetValue((int)light0.FallOf);
             effect.Parameters["LightType"].SetValue((int)light0.Type);
+        }
 
+        public override void Pass(RenderableComponent renderable)
+        {
             // Material properties.
             effect.Parameters["AmbientColor"].SetValue(scene.AmbientColor.ToVector4());
             effect.Parameters["DiffuseColor"].SetValue(_diffuseColor);
             effect.Parameters["EmissiveColor"].SetValue(_emissiveColor);
             effect.Parameters["SpecularColor"].SetValue(_specularColor);
             effect.Parameters["Shininess"].SetValue(Shininess);
-        }
 
-        public override void Pass(RenderableComponent renderable)
-        {
-            _worldInvertTranspose = Matrix.Transpose(Matrix.Invert(renderable.SceneObject.Transform.world));
             effect.Parameters["MainTexture"].SetValue(mainTexture);
             effect.Parameters["RecieveShadow"].SetValue(renderable.RecieveShadow);
             effect.Parameters["World"].SetValue(renderable.SceneObject.Transform.world);
-            effect.Parameters["WorldInverseTranspose"].SetValue(_worldInvertTranspose);
             effect.CurrentTechnique.Passes[0].Apply();
         }
     }

@@ -2,7 +2,6 @@
 float4x4 World;
 float4x4 View;
 float4x4 Projection;
-float4x4 WorldInverseTranspose;
 
 // Camera
 float3 EyePosition = float3(1.0, 0.0, 0.0);
@@ -54,11 +53,12 @@ sampler2D shadowSampler = sampler_state
 	AddressV = Clamp;
 };
 
+// ShadowData [0] => Map size [1] => Bias [2] => Strength
 float CalcShadowPCF(float lightSpaceDepth, float2 shadowCoordinates)
 {
-	float size = 1.0 / ShadowData[1];
+	float size = 1.0 / ShadowData[0];
 	float samples[4];
-	float gradiant = lightSpaceDepth - ShadowData[2];
+	float gradiant = lightSpaceDepth - ShadowData[1];
 
 	samples[0] = (gradiant < tex2D(shadowSampler, shadowCoordinates).r) ? 1.0 : 0.0;
 	samples[1] = (gradiant < tex2D(shadowSampler, shadowCoordinates + float2(size, 0)).r) ? 1.0 : 0.0;
@@ -111,9 +111,9 @@ float4 CalcSpecularColor(float3 normal, float4 worldPosition, float4 color, int 
 	if (type == 2)
 		lightDirection = normalize(LightPosition - worldPosition);
 
-	float3 R = normalize(2 * color * normal - lightDirection);
-	
-	return SpecularColor * pow(saturate(dot(R, normalize(ViewPosition))), Shininess);
+	float3 R = normalize(2 * normal - lightDirection);
+
+	return SpecularColor * pow(saturate(dot(R, normalize(EyePosition - worldPosition))), Shininess);
 }
 
 struct VertexShaderInput
@@ -173,16 +173,14 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 
 		float2 screenPosition = 0.5 + float2(lightSpacePosition.x, -lightSpacePosition.y) * 0.5;
 
-		float shadow = CalcShadowPCF(lightSpacePosition.z, screenPosition);
-
 		if ((saturate(screenPosition).x == screenPosition.x) && (saturate(screenPosition).y == screenPosition.y))
-			shadowTerm = max(ShadowData[2], shadow);
+			shadowTerm = max(ShadowData[2], CalcShadowPCF(lightSpacePosition.z, screenPosition));
 	}
 
-	float4 finalDiffuse = AmbientColor * baseDiffuse * lightFactor * shadowTerm;
+	float4 finalDiffuse = baseDiffuse * lightFactor * shadowTerm;
 	float4 finalSpecular = CalcSpecularColor(normal, input.WorldPosition, finalDiffuse, LightType);
-	
-	return AmbientColor + (baseDiffuse * lightFactor * shadowTerm) + finalSpecular + EmissiveColor;
+
+	return AmbientColor + finalDiffuse + finalSpecular + EmissiveColor;
 }
 
 technique Textured
