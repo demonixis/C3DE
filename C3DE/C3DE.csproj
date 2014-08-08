@@ -63,6 +63,12 @@
     <Compile Include="Prefabs\Meshes\CubePrefab.cs" />
     <Compile Include="Prefabs\Meshes\SpherePrefab.cs" />
     <Compile Include="RenderSettings.cs" />
+    <Compile Include="UI\Button.cs" />
+    <Compile Include="UI\Checkbox.cs" />
+    <Compile Include="UI\GUIManager.cs" />
+    <Compile Include="UI\GUISkin.cs" />
+    <Compile Include="UI\Label.cs" />
+    <Compile Include="UI\GUIElement.cs" />
     <Compile Include="Utils\GraphicsHelper.cs" />
     <Compile Include="Materials\StandardMaterial.cs" />
     <Compile Include="Materials\SuperMaterial.cs" />

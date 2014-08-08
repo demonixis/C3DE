@@ -111,17 +111,6 @@
 /processorParam:DebugMode=Auto
 /build:FX/DiffuseSpecularTextureEffect.fx
 
-#begin Textures/EmptySpace.dds
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=0,0,0,0
-/processorParam:ColorKeyEnabled=False
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:TextureFormat=Color
-/build:Textures/EmptySpace.dds
-
 #begin FX/SkyboxEffect.fx
 /importer:EffectImporter
 /processor:EffectProcessor

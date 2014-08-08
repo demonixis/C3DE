@@ -1,4 +1,5 @@
 ﻿using C3DE.Inputs;
+using C3DE.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -68,6 +69,7 @@ namespace C3DE
         protected SpriteBatch spriteBatch;
         protected Renderer renderer;
         protected Scene scene;
+        protected GUIManager gui;
 
         public Engine(string title = "C3DE", int width = 1024, int height = 600)
         {
@@ -77,6 +79,7 @@ namespace C3DE
             Window.Title = title;
             Content.RootDirectory = "Content";
             scene = new Scene(Content);
+            gui = new GUIManager(Content);
 
             Application.Content = Content;
             Application.GraphicsDevice = GraphicsDevice;
@@ -111,6 +114,8 @@ namespace C3DE
             Components.Add(Input.Keys);
             Components.Add(Input.Mouse);
             Components.Add(Input.Gamepad);
+
+            gui.Initialize();
 
             base.Initialize();
         }
