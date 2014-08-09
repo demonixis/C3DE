@@ -367,7 +367,11 @@ namespace C3DE
         public void AddScript(Behaviour script)
         {
             if (!_scripts.Contains(script))
+            {
                 _scripts.Add(script);
+                script.Awake();
+                script.Start();
+            }
         }
 
         public void RemoveScript(Behaviour script)

@@ -301,3 +301,8 @@
 /processorParam:DebugMode=Auto
 /build:FX/ReflectionEffect.fx
 
+#begin Font/Default.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/build:Font/Default.spritefont
+

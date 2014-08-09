@@ -17,8 +17,6 @@ namespace C3DE.Demo
 {
     public class GridDemo : Engine
     {
-        LightPrefab light;
-
         public GridDemo()
             : base()
         {
@@ -37,25 +35,28 @@ namespace C3DE.Demo
             camera.AddComponent<OrbitController>();
 
             // Light
-            light = new LightPrefab("light", LightType.Point, scene);
-            light.Transform.Position = new Vector3(0, 15, 15);
-            light.Light.Range = 25;
-            light.Light.Intensity = 2.0f;
-            light.Light.FallOf = 5f;
-            light.Light.DiffuseColor = Color.Violet;
-            light.Light.Direction = new Vector3(-1, 1, -1);
-            light.Light.Angle = 0.1f;
-            light.Light.ShadowGenerator.ShadowStrength = 0.6f; // FIXME need to be inverted
-            light.Light.ShadowGenerator.SetShadowMapSize(GraphicsDevice, 1024);
-            light.EnableShadows = true;
+            var lightPrefab = new LightPrefab("lightPrefab", LightType.Point, scene);
+            lightPrefab.Transform.Position = new Vector3(0, 15, 15);
+            lightPrefab.Light.Range = 25;
+            lightPrefab.Light.Intensity = 2.0f;
+            lightPrefab.Light.FallOf = 5f;
+            lightPrefab.Light.DiffuseColor = Color.Violet;
+            lightPrefab.Light.Direction = new Vector3(-1, 1, -1);
+            lightPrefab.Light.Angle = 0.1f;
+            lightPrefab.Light.ShadowGenerator.ShadowStrength = 0.6f; // FIXME need to be inverted
+            lightPrefab.Light.ShadowGenerator.SetShadowMapSize(GraphicsDevice, 1024);
+            lightPrefab.EnableShadows = true;
+            lightPrefab.AddComponent<SimpleGUI>();
+            lightPrefab.AddComponent<MoveLight>();
+            lightPrefab.AddComponent<DemoBehaviour>();
 
-            var lightSphere = light.AddComponent<MeshRenderer>();
-            lightSphere.Geometry = new SphereGeometry(2f, 4);
-            lightSphere.Geometry.Generate(GraphicsDevice);
-            lightSphere.CastShadow = false;
-            lightSphere.RecieveShadow = false;
-            lightSphere.Material = new SimpleMaterial(scene);
-            lightSphere.Material.MainTexture = GraphicsHelper.CreateTexture(Color.Yellow, 1, 1);
+            var lightPrefabSphere = lightPrefab.AddComponent<MeshRenderer>();
+            lightPrefabSphere.Geometry = new SphereGeometry(2f, 4);
+            lightPrefabSphere.Geometry.Generate(GraphicsDevice);
+            lightPrefabSphere.CastShadow = false;
+            lightPrefabSphere.RecieveShadow = false;
+            lightPrefabSphere.Material = new SimpleMaterial(scene);
+            lightPrefabSphere.Material.MainTexture = GraphicsHelper.CreateTexture(Color.Yellow, 1, 1);
 
             // Terrain
             var terrainMaterial = new StandardMaterial(scene);
@@ -74,11 +75,11 @@ namespace C3DE.Demo
             cubeSuperMaterial.DiffuseColor = Color.WhiteSmoke;
             cubeSuperMaterial.SpecularColor = new Color(0.8f, 0.8f, 0.8f, 1.0f);
             cubeSuperMaterial.Shininess = 10;
-            cubeSuperMaterial.EmissiveColor = new Color(0f, 0.0f, 0.1f, 1.0f);
+            cubeSuperMaterial.EmissiveColor = new Color(0f, 0.0f, 0.2f, 1.0f);
 
             var cubeScene = new SceneObject();
-            cubeScene.Transform.Translate(0, 5.5f, 0);
-            cubeScene.Transform.LocalScale = new Vector3(1.0f);
+            cubeScene.Transform.Translate(0, 6f, 0);
+            cubeScene.Transform.LocalScale = new Vector3(4.0f);
             cubeScene.Transform.Rotate((float)Math.PI / 4, 0, (float)Math.PI / 4);
             var autoRot = cubeScene.AddComponent<AutoRotation>();
             autoRot.Rotation = new Vector3(0, 0.01f, 0);
@@ -89,17 +90,6 @@ namespace C3DE.Demo
             cube.Geometry = new CubeGeometry();
             cube.Geometry.Generate(GraphicsDevice);
             cube.Material = cubeSuperMaterial;
-
-            var c2 = new SceneObject();
-            cubeScene.Add(c2);
-
-            //c2.AddComponent<AutoRotation>().Rotation = new Vector3(0.0f, 0.0f, -0.03f);
-            c2.Transform.Translate(0, 3, 0);
-            c2.Transform.LocalScale = new Vector3(5);
-            var m2 = c2.AddComponent<MeshRenderer>();
-            m2.Geometry = new CubeGeometry();
-            m2.Geometry.Generate(GraphicsDevice);
-            m2.Material = cubeSuperMaterial;
 
             // Skybox
             renderer.Skybox.Generate(GraphicsDevice, Content, new string[] {
@@ -112,52 +102,6 @@ namespace C3DE.Demo
             });
 
             Screen.ShowCursor = true;
-        }
-
-        Vector3 translation;
-
-        // Just for tests, it's ugly, I know that ;)
-        protected override void Update(GameTime gameTime)
-        {
-            base.Update(gameTime);
-
-            if (Input.Keys.Escape || Input.Gamepad.Pressed(Buttons.Back))
-                Exit();
-
-            translation = Vector3.Zero;
-
-            if (Input.Mouse.Down(Inputs.MouseButton.Middle))
-                translation.Y += Input.Mouse.Delta.Y * 0.1f;
-            else
-                translation.Z += Input.Mouse.Delta.Y * 0.1f;
-
-            translation.X += Input.Mouse.Delta.X * 0.1f;
-
-            if (Input.Keys.JustPressed(Keys.F1))
-                light.Light.Type = LightType.Ambient;
-            else if (Input.Keys.JustPressed(Keys.F2))
-                light.Light.Type = LightType.Directional;
-            else if (Input.Keys.JustPressed(Keys.F3))
-                light.Light.Type = LightType.Point;
-            else if (Input.Keys.JustPressed(Keys.F4))
-                light.Light.Type = LightType.Spot;
-
-            if (Input.Keys.Pressed(Keys.Add))
-                light.Light.Range += 0.1f;
-            else if (Input.Keys.Pressed(Keys.Subtract))
-                light.Light.Range -= 0.1f;
-
-            if (Input.Keys.Pressed(Keys.Divide))
-                light.Light.Intensity += 0.1f;
-            else if (Input.Keys.Pressed(Keys.Multiply))
-                light.Light.Intensity -= 0.1f;
-
-            if (Input.Keys.Pressed(Keys.P))
-                light.Light.FallOf += 0.1f;
-            else if (Input.Keys.Pressed(Keys.M))
-                light.Light.FallOf -= 0.1f;
-
-            light.Transform.Translate(ref translation);
         }
     }
 }

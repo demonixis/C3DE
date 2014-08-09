@@ -69,7 +69,6 @@ namespace C3DE
         protected SpriteBatch spriteBatch;
         protected Renderer renderer;
         protected Scene scene;
-        protected GUIManager gui;
 
         public Engine(string title = "C3DE", int width = 1024, int height = 600)
         {
@@ -79,7 +78,6 @@ namespace C3DE
             Window.Title = title;
             Content.RootDirectory = "Content";
             scene = new Scene(Content);
-            gui = new GUIManager(Content);
 
             Application.Content = Content;
             Application.GraphicsDevice = GraphicsDevice;
@@ -100,11 +98,12 @@ namespace C3DE
 
         protected override void Initialize()
         {
-            spriteBatch = new SpriteBatch(GraphicsDevice);
-            renderer = new Renderer(GraphicsDevice);
-
             if (Application.GraphicsDevice == null)
                 Application.GraphicsDevice = GraphicsDevice;
+
+            spriteBatch = new SpriteBatch(GraphicsDevice);
+            renderer = new Renderer(GraphicsDevice);
+            renderer.LoadContent(Content);
 
             Input.Keys = new KeyboardComponent(this);
             Input.Mouse = new MouseComponent(this);
@@ -114,9 +113,7 @@ namespace C3DE
             Components.Add(Input.Keys);
             Components.Add(Input.Mouse);
             Components.Add(Input.Gamepad);
-
-            gui.Initialize();
-
+           
             base.Initialize();
         }
 

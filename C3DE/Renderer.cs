@@ -1,8 +1,11 @@
 ﻿using C3DE.Components;
 using C3DE.Materials;
 using C3DE.PostProcess;
+using C3DE.UI;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using System.Collections.Generic;
 
 namespace C3DE
 {
@@ -16,6 +19,7 @@ namespace C3DE
         private SpriteBatch _spriteBatch;
         private PostProcessManager _postProcessManager;
         private Skybox _skybox;
+        internal GUI gui;
 
         public Skybox Skybox
         {
@@ -29,6 +33,12 @@ namespace C3DE
             _sceneRT = new RenderTarget2D(device, device.Viewport.Width, device.Viewport.Height, false, SurfaceFormat.Color, DepthFormat.Depth24, 0, RenderTargetUsage.DiscardContents);
             _postProcessManager = new PostProcessManager();
             _skybox = new Skybox();
+        }
+
+        public void LoadContent(ContentManager content)
+        {
+            gui = new GUI(_spriteBatch);
+            gui.LoadContent(content);
         }
 
         /// <summary>
@@ -74,6 +84,21 @@ namespace C3DE
             _spriteBatch.End();
         }
 
+        private void renderUI(List<Behaviour> scripts)
+        {
+            var size = scripts.Count;
+
+            if (size > 0)
+            {
+                _spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone);
+
+                for (int i = 0; i < size; i++)
+                    scripts[i].OnGUI(gui);
+
+                _spriteBatch.End();
+            }
+        }
+
         /// <summary>
         /// Render the scene with the specified camera.
         /// </summary>
@@ -87,6 +112,7 @@ namespace C3DE
 
             renderObjects(scene, camera);
             renderBuffers();
+            renderUI(scene.Behaviours);
         }
     }
 }

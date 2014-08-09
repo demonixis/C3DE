@@ -20,7 +20,6 @@ namespace C3DE
         private float _shadowMapSize;
         private float _shadowBias;
         private float _shadowStrength;
-        private int _shadowSamples;
         private BoundingSphere _boundingSphere;
         private bool _enabled;
         private Vector3 _shadowData;
