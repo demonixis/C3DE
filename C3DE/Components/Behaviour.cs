@@ -19,10 +19,6 @@ namespace C3DE.Components
         {
         }
 
-        public virtual void Update()
-        {
-        }
-
         public virtual void OnGUI()
         {
         }

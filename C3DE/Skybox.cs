@@ -15,6 +15,12 @@ namespace C3DE
         private TextureCube _texture;
         private Effect _effect;
 
+        public TextureCube Texture
+        {
+            get { return _texture; }
+            set { _texture = value; }
+        }
+
         public bool Enabled { get; set; }
     
         public Skybox()

@@ -59,6 +59,7 @@
     <Compile Include="Geometries\SphereGeometry.cs" />
     <Compile Include="Geometries\TerrainGeometry.cs" />
     <Compile Include="Geometries\TorusGeometry.cs" />
+    <Compile Include="Materials\ReflectiveMaterial.cs" />
     <Compile Include="Materials\SimpleMaterial.cs" />
     <Compile Include="Prefabs\Meshes\CubePrefab.cs" />
     <Compile Include="Prefabs\Meshes\SpherePrefab.cs" />
@@ -71,7 +72,6 @@
     <Compile Include="UI\GUIElement.cs" />
     <Compile Include="Utils\GraphicsHelper.cs" />
     <Compile Include="Materials\StandardMaterial.cs" />
-    <Compile Include="Materials\SuperMaterial.cs" />
     <Compile Include="Materials\WaterMaterial.cs" />
     <Compile Include="Prefabs\CameraPrefab.cs" />
     <Compile Include="Components\Component.cs" />

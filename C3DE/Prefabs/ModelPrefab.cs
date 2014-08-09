@@ -64,27 +64,5 @@ namespace C3DE.Prefabs
 
             collider.Box = new BoundingBox(min, max);
         }
-
-        public void ExtractMaterials()
-        {
-            BasicEffect effect;
-            StandardMaterial material;
-
-            foreach (ModelMesh mesh in renderer.Model.Meshes)
-            {
-                foreach (ModelMeshPart meshPart in mesh.MeshParts)
-                {
-                    effect = meshPart.Effect as BasicEffect;
-
-                    if (effect != null)
-                    {
-                        material = new StandardMaterial(scene);
-                        material.Name = effect.Texture.Name;
-                        material.MainTexture = effect.Texture;
-                        renderer.AddMaterial(material);
-                    }
-                }
-            }
-        }
     }
 }

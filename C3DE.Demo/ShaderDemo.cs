@@ -1,5 +1,4 @@
 ﻿using C3DE.Components;
-using C3DE.Components;
 using C3DE.Components.Controllers;
 using C3DE.Components.Lights;
 using C3DE.Components.Renderers;
@@ -33,6 +32,16 @@ namespace C3DE.Demo
         {
             base.Initialize();
 
+            // Skybox
+            renderer.Skybox.Generate(GraphicsDevice, Content, new string[] {
+                "Textures/Skybox/bluesky/px",   
+                "Textures/Skybox/bluesky/nx",
+                "Textures/Skybox/bluesky/py",
+                "Textures/Skybox/bluesky/ny",
+                "Textures/Skybox/bluesky/pz",
+                "Textures/Skybox/bluesky/nz"
+            });
+
             // Camera
             var camera = new CameraPrefab("camera", scene);
             camera.AddComponent<OrbitController>();
@@ -60,7 +69,7 @@ namespace C3DE.Demo
             lightSphere.Material.MainTexture = GraphicsHelper.CreateTexture(Color.Yellow, 1, 1);
 
             // Terrain
-            var terrainMaterial = new SuperMaterial(scene);
+            var terrainMaterial = new StandardMaterial(scene);
             terrainMaterial.MainTexture = Content.Load<Texture2D>("Textures/terrainTexture");
             terrainMaterial.Shininess = 500;
             
@@ -71,7 +80,7 @@ namespace C3DE.Demo
             terrain.Transform.Translate(-terrain.Width >> 1, 0, -terrain.Depth / 2);
 
             // Cube
-            var cubeSuperMaterial = new SuperMaterial(scene);
+            var cubeSuperMaterial = new StandardMaterial(scene);
             cubeSuperMaterial.MainTexture = GraphicsHelper.CreateCheckboardTexture(Color.FloralWhite, Color.DodgerBlue); //Content.Load<Texture2D>("Textures/tech_box2");
             cubeSuperMaterial.DiffuseColor = Color.WhiteSmoke;
             cubeSuperMaterial.SpecularColor = new Color(0.8f, 0.8f, 0.8f, 1.0f);
@@ -112,15 +121,26 @@ namespace C3DE.Demo
             cube2.Geometry.Generate(GraphicsDevice);
             cube2.Material = simpleMaterial;
 
-            // Skybox
-            renderer.Skybox.Generate(GraphicsDevice, Content, new string[] {
-                "Textures/Skybox/bluesky/px",   
-                "Textures/Skybox/bluesky/nx",
-                "Textures/Skybox/bluesky/py",
-                "Textures/Skybox/bluesky/ny",
-                "Textures/Skybox/bluesky/pz",
-                "Textures/Skybox/bluesky/nz"
-            });
+            // Third cube
+            var reflectiveMaterial = new ReflectiveMaterial(scene);
+            reflectiveMaterial.MainTexture = cubeSuperMaterial.MainTexture;
+            reflectiveMaterial.TextureCube = renderer.Skybox.Texture;
+            reflectiveMaterial.DiffuseColor = Color.Red;
+
+            var cube3Scene = new SceneObject();
+            cube3Scene.Transform.Translate(0, 7.5f, -30);
+            cube3Scene.Transform.LocalScale = new Vector3(4.0f);
+            cube3Scene.Transform.Rotate(MathHelper.PiOver4, 0, -MathHelper.PiOver2);
+            var autoRot3 = cube3Scene.AddComponent<AutoRotation>();
+            autoRot3.Rotation = new Vector3(0.1f, 0.02f, 0.03f);
+            scene.Add(cube3Scene);
+
+            var cube3 = cube3Scene.AddComponent<MeshRenderer>();
+            cube3.RecieveShadow = false;
+            cube3.CastShadow = true;
+            cube3.Geometry = new CubeGeometry();
+            cube3.Geometry.Generate(GraphicsDevice);
+            cube3.Material = reflectiveMaterial;
 
             Screen.ShowCursor = true;
         }

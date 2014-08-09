@@ -99,12 +99,6 @@
 /processorParam:TextureFormat=Color
 /build:Textures/terrainTexture.jpg
 
-#begin FX/DiffuseSpecularTextureEffect.fx
-/importer:EffectImporter
-/processor:EffectProcessor
-/processorParam:DebugMode=Auto
-/build:FX/DiffuseSpecularTextureEffect.fx
-
 #begin FX/SkyboxEffect.fx
 /importer:EffectImporter
 /processor:EffectProcessor
@@ -300,4 +294,10 @@
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
 /build:FX/PostProcess/GreyScale.fx
+
+#begin FX/ReflectionEffect.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:FX/ReflectionEffect.fx
 

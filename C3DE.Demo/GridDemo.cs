@@ -1,5 +1,4 @@
 ﻿using C3DE.Components;
-using C3DE.Components;
 using C3DE.Components.Controllers;
 using C3DE.Components.Lights;
 using C3DE.Components.Renderers;
@@ -59,7 +58,7 @@ namespace C3DE.Demo
             lightSphere.Material.MainTexture = GraphicsHelper.CreateTexture(Color.Yellow, 1, 1);
 
             // Terrain
-            var terrainMaterial = new SuperMaterial(scene);
+            var terrainMaterial = new StandardMaterial(scene);
             terrainMaterial.MainTexture = GraphicsHelper.CreateBorderTexture(Color.LightGreen, Color.LightSeaGreen, 128, 128, 1);
             terrainMaterial.Shininess = 10;
 
@@ -70,7 +69,7 @@ namespace C3DE.Demo
             terrain.Transform.Translate(-terrain.Width >> 1, 0, -terrain.Depth / 2);
 
             // Cube
-            var cubeSuperMaterial = new SuperMaterial(scene);
+            var cubeSuperMaterial = new StandardMaterial(scene);
             cubeSuperMaterial.MainTexture = GraphicsHelper.CreateCheckboardTexture(Color.FloralWhite, Color.DodgerBlue); //Content.Load<Texture2D>("Textures/tech_box2");
             cubeSuperMaterial.DiffuseColor = Color.WhiteSmoke;
             cubeSuperMaterial.SpecularColor = new Color(0.8f, 0.8f, 0.8f, 1.0f);

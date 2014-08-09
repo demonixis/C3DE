@@ -1,5 +1,4 @@
 ﻿using C3DE.Components;
-using C3DE.Components;
 using C3DE.Components.Controllers;
 using C3DE.Components.Lights;
 using C3DE.Components.Renderers;
@@ -33,8 +32,6 @@ namespace C3DE.Demo
         {
             base.Initialize();
 
-            var materials = Demo.CreateMaterials(Content, scene);
-
             // Add a camera with a FPS controller
             var camera = new CameraPrefab("camera", scene);
             camera.Setup(new Vector3(0, 2, -10), new Vector3(0, 0, 0), Vector3.Up);
@@ -49,7 +46,7 @@ namespace C3DE.Demo
             lightTransform = light.Transform;
 
             // Finally a terrain
-            var terrainMat = new SuperMaterial(scene);
+            var terrainMat = new StandardMaterial(scene);
             terrainMat.MainTexture = Content.Load<Texture2D>("Textures/terrainTexture");
             terrainMat.Shininess = 50;
 

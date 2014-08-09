@@ -95,7 +95,7 @@ namespace C3DE
             _scripts = new List<Behaviour>(5);
             _lights = new List<Light>(2);
             _ambientColor = Color.White.ToVector4();
-            DefaultMaterial = new StandardMaterial(this);
+            DefaultMaterial = new SimpleMaterial(this);
             RenderSettings = new RenderSettings();
         }
 
