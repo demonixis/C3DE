@@ -17,20 +17,24 @@ static const float3 c64col[16] = {
 	float3(255.0,255.0,255.0)
 };
 
-texture targetTexture;
-sampler colorMapSampler = sampler_state
+texture TargetTexture;
+sampler2D textureSampler = sampler_state
 {
-	texture = (targetTexture);
-	minfilter = linear;
-	magfilter = linear;
-	mipfilter = linear;
-	addressu = wrap;
-	addressv = wrap;
+	Texture = (MainTexture);
+	MinFilter = Linear;
+	MagFilter = Linear;
+	MipFilter = Linear;
+	AddressU = Wrap;
+	AddressV = Wrap;
 };
 
-float4 C64PixelShader(float2 UV:TEXCOORD0) : COLOR
+#if SM4
+float4 C64PixelShader(float4 position : SV_Position, float4 color : COLOR0, float2 UV : TEXCOORD0) : COLOR
+#else
+float4 C64PixelShader(float4 position : POSITION0, float4 color : COLOR0, float2 UV : TEXCOORD0) : COLOR
+#endif
 {
-	float3 samp = tex2D(colorMapSampler, UV).xyz;
+	float3 samp = tex2D(textureSampler, UV).xyz;
 	float3 match = float3(0.0, 0.0, 0.0);
 	float bestDot = 8.0;
 	float cDot = 0.0;
@@ -46,7 +50,7 @@ float4 C64PixelShader(float2 UV:TEXCOORD0) : COLOR
 		}
 	}
 	
-	return tex2D(colorMapSampler, UV);
+	return float4(match / 255.0, 0.0);
 }
 
 technique PostProcess

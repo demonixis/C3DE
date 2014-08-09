@@ -1,23 +1,27 @@
 float blurDistance;
 
-texture targetTexture;
-sampler colorMapSampler = sampler_state
+texture TargetTexture;
+sampler2D textureSampler = sampler_state
 {
-	texture = (targetTexture);
-	minfilter = linear;
-	magfilter = linear;
-	mipfilter = linear;
-	addressu = wrap;
-	addressv = wrap;
+	Texture = (MainTexture);
+	MinFilter = Linear;
+	MagFilter = Linear;
+	MipFilter = Linear;
+	AddressU = Wrap;
+	AddressV = Wrap;
 };
 
-float4 BlurPixelShader(float2 textureCoord:TEXCOORD0):COLOR
+#if SM4
+float4 BlurPixelShader(float4 position : SV_Position, float4 color : COLOR0, float2 UV : TEXCOORD0) : COLOR
+#else
+float4 BlurPixelShader(float4 position : POSITION0, float4 color : COLOR0, float2 UV : TEXCOORD0) : COLOR
+#endif
 {
-	float4 color = tex2D(colorMapSampler, float2(textureCoord.x + blurDistance, textureCoord.y + blurDistance));
-	color += tex2D(colorMapSampler, float2(textureCoord.x - blurDistance, textureCoord.y - blurDistance));
-	color += tex2D(colorMapSampler, float2(textureCoord.x + blurDistance, textureCoord.y - blurDistance));
-	color += tex2D(colorMapSampler, float2(textureCoord.x - blurDistance, textureCoord.y + blurDistance));
-	return color / 4.0;
+	float4 diffuse = tex2D(textureSampler, float2(UV.x + blurDistance, UV.y + blurDistance));
+	diffuse += tex2D(textureSampler, float2(UV.x - blurDistance, UV.y - blurDistance));
+	diffuse += tex2D(textureSampler, float2(UV.x + blurDistance, UV.y - blurDistance));
+	diffuse += tex2D(textureSampler, float2(UV.x - blurDistance, UV.y + blurDistance));
+	return diffuse / 4.0;
 }
 
 technique Technique1
@@ -25,7 +29,7 @@ technique Technique1
 	pass Blur
 	{
 #if SM4
-		PixelShader = compile ps_4_0_level_9_3 BlurPixelShader();
+		PixelShader = compile ps_4_0_level_9_1 BlurPixelShader();
 #else
 		PixelShader = compile ps_3_0 BlurPixelShader();
 #endif

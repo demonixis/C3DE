@@ -73,7 +73,6 @@ namespace C3DE
             graphicsDevice.SetRenderTarget(null);
         }
 
-
         /// <summary>
         /// Render buffers to screen.
         /// </summary>
