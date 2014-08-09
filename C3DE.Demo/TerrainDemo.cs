@@ -77,11 +77,7 @@ namespace C3DE.Demo
             Input.Gamepad.Sensitivity = new Vector2(1, 0.75f);
             Screen.ShowCursor = true;
 
-            scene.RenderSettings.FogMode = FogMode.Exp2;
-            scene.RenderSettings.FogStart = 0;
-            scene.RenderSettings.FogEnd = 100;
-            scene.RenderSettings.FogEnabled = true;
-            scene.RenderSettings.FogDensity = 0.01f;
+            scene.RenderSettings.FogMode = FogMode.Linear;
         }
 
         protected override void Update(GameTime gameTime)

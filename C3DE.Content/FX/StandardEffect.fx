@@ -1,5 +1,5 @@
-// Constants
-const float E = 2.71828;
+#include "ShadowMap.fxh"
+#include "Fog.fxh"
 
 // Matrix
 float4x4 World;
@@ -14,8 +14,6 @@ float4 SpecularColor = float4(0.8, 0.8, 0.8, 1.0);
 float Shininess = 200.0;
 
 // Lighting
-float4x4 LightView;
-float4x4 LightProjection;
 float3 LightColor;
 float3 LightDirection;
 float3 LightPosition;
@@ -25,14 +23,6 @@ float LightRange;
 int LightFallOff;
 int NbLights;
 int LightType = 0;
-
-// Fog [0] => Mode [1] => Density [2] => Start [3] => End
-float4 FogData = float4(0.0, 0.1, 10.0, 200.0);
-float4 FogColor = float4(0.8, 0.8, 0.8, 1.0);
-
-// ShadowData [0] => Map size [1] => Bias [2] => Strength
-float3 ShadowData = float3(0, 0.05, 1.0);
-bool RecieveShadow = false;
 
 float3 EyePosition = float3(1, 1, 0);
 
@@ -46,55 +36,6 @@ sampler2D textureSampler = sampler_state
 	AddressU = Wrap;
 	AddressV = Wrap;
 };
-
-texture ShadowMap;
-sampler2D shadowSampler = sampler_state
-{
-	Texture = (ShadowMap);
-	MinFilter = Point;
-	MagFilter = Point;
-	MipFilter = Point;
-	AddressU = Clamp;
-	AddressV = Clamp;
-};
-
-float CalcFogFactor(float camDistance)
-{
-	float fogCoeff = 1.0;
-	int mode = (int)FogData.x;
-	float density = FogData.y;
-	float start = FogData.z;
-	float end = FogData.w;
-	
-	if (mode == 1)
-		fogCoeff = (end - camDistance) / (end - start);
-
-	else if (mode == 2)
-		fogCoeff = 1.0 / pow(E, camDistance * density);
-
-	else if (mode == 3)
-		fogCoeff = 1.0 / pow(E, camDistance * camDistance * density * density);
-
-	if (mode > 0)
-		fogCoeff = clamp(fogCoeff, 0.0, 1.0);
-
-	return fogCoeff;
-}
-
-// ShadowData [0] => Map size [1] => Bias [2] => Strength
-float CalcShadowPCF(float lightSpaceDepth, float2 shadowCoordinates)
-{
-	float size = 1.0 / ShadowData[0];
-	float samples[4];
-	float gradiant = lightSpaceDepth - ShadowData[1];
-
-	samples[0] = (gradiant < tex2D(shadowSampler, shadowCoordinates).r) ? 1.0 : 0.0;
-	samples[1] = (gradiant < tex2D(shadowSampler, shadowCoordinates + float2(size, 0)).r) ? 1.0 : 0.0;
-	samples[2] = (gradiant < tex2D(shadowSampler, shadowCoordinates + float2(0, size)).r) ? 1.0 : 0.0;
-	samples[3] = (gradiant < tex2D(shadowSampler, shadowCoordinates + float2(size, size)).r) ? 1.0 : 0.0;
-
-	return (samples[0] + samples[1] + samples[2] + samples[3]) / 4.0;
-}
 
 float4 CalcDirectionalLightColor(float3 normal, float4 worldPosition)
 {
@@ -174,7 +115,7 @@ VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
 	output.UV = input.UV;
 	output.Normal = mul(input.Normal, World);
 	output.WorldPosition = worldPosition;
-	output.FogDistance = distance(worldPosition.xy, EyePosition.xy);
+	output.FogDistance = distance(worldPosition, EyePosition);
 
 	return output;
 }
@@ -184,7 +125,7 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 	float4 baseDiffuse = DiffuseColor * tex2D(textureSampler, input.UV);
 	float4 lightFactor = float4(1, 1, 1, 1);
 	float3 normal = normalize(input.Normal);
-	float shadowTerm = 1;
+	float shadowTerm = CalcShadow(input.WorldPosition);
 
 	// Apply a light influence.
 	if (LightType == 1)
@@ -194,30 +135,11 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 	else if (LightType == 3)
 		lightFactor = CalcSpotLightColor(normal, input.WorldPosition);
 
-	// ShadowData [0] => Map size [1] => Bias [2] => Strength
-	if (ShadowData[0] > 0 && RecieveShadow == true)
-	{
-		float4 lightSpacePosition = mul(mul(input.WorldPosition, LightView), LightProjection);
-		lightSpacePosition -= ShadowData[1];
-		lightSpacePosition /= lightSpacePosition.w;
-
-		float2 screenPosition = 0.5 + float2(lightSpacePosition.x, -lightSpacePosition.y) * 0.5;
-
-		if ((saturate(screenPosition).x == screenPosition.x) && (saturate(screenPosition).y == screenPosition.y))
-			shadowTerm = max(ShadowData[2], CalcShadowPCF(lightSpacePosition.z, screenPosition));
-	}
-
 	float4 finalDiffuse = baseDiffuse * lightFactor * shadowTerm;
 	float4 finalSpecular = CalcSpecularColor(normal, input.WorldPosition, finalDiffuse, LightType);
 	float4 finalCompose = AmbientColor + finalDiffuse + finalSpecular + EmissiveColor;
 	
-	if (FogData.x > 0)
-	{
-		float fog = CalcFogFactor(input.FogDistance);
-		finalCompose = (fog * finalCompose + (1.0 - fog)) * FogColor;
-	}
-	
-	return finalCompose;
+	return ApplyFog(finalCompose, input.FogDistance);
 }
 
 technique Textured

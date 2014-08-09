@@ -56,10 +56,10 @@ namespace C3DE
             ambientColor = new Vector4(0.1f, 0.1f, 0.1f, 1.0f);
             fogData = Vector4.Zero;
             FogEnabled = false;
-            FogMode = FogMode.Linear;
-            FogDensity = 0.1f;
-            FogStart = 10.0f;
-            FogEnd = 250.0f;
+            FogMode = FogMode.None;
+            FogDensity = 0.01f;
+            FogStart = 0.0f;
+            FogEnd = 100.0f;
             fogColor = Vector4.One;
         }
     }
