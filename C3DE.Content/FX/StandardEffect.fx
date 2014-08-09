@@ -1,11 +1,10 @@
+// Constants
+const float E = 2.71828;
+
 // Matrix
 float4x4 World;
 float4x4 View;
 float4x4 Projection;
-
-// Camera
-float3 EyePosition = float3(1.0, 0.0, 0.0);
-float3 ViewPosition = float3(1.0, 0.0, 0.0);
 
 // Material
 float4 AmbientColor = float4(0.1, 0.1, 0.1, 1.0);
@@ -27,9 +26,15 @@ int LightFallOff;
 int NbLights;
 int LightType = 0;
 
+// Fog [0] => Mode [1] => Density [2] => Start [3] => End
+float4 FogData = float4(0.0, 0.1, 10.0, 200.0);
+float4 FogColor = float4(0.8, 0.8, 0.8, 1.0);
+
 // ShadowData [0] => Map size [1] => Bias [2] => Strength
 float3 ShadowData = float3(0, 0.05, 1.0);
 bool RecieveShadow = false;
+
+float3 EyePosition = float3(1, 1, 0);
 
 texture MainTexture;
 sampler2D textureSampler = sampler_state
@@ -52,6 +57,29 @@ sampler2D shadowSampler = sampler_state
 	AddressU = Clamp;
 	AddressV = Clamp;
 };
+
+float CalcFogFactor(float camDistance)
+{
+	float fogCoeff = 1.0;
+	int mode = (int)FogData.x;
+	float density = FogData.y;
+	float start = FogData.z;
+	float end = FogData.w;
+	
+	if (mode == 1)
+		fogCoeff = (end - camDistance) / (end - start);
+
+	else if (mode == 2)
+		fogCoeff = 1.0 / pow(E, camDistance * density);
+
+	else if (mode == 3)
+		fogCoeff = 1.0 / pow(E, camDistance * camDistance * density * density);
+
+	if (mode > 0)
+		fogCoeff = clamp(fogCoeff, 0.0, 1.0);
+
+	return fogCoeff;
+}
 
 // ShadowData [0] => Map size [1] => Bias [2] => Strength
 float CalcShadowPCF(float lightSpaceDepth, float2 shadowCoordinates)
@@ -133,6 +161,7 @@ struct VertexShaderOutput
 	float2 UV : TEXCOORD0;
 	float3 Normal : TEXCOORD1;
 	float4 WorldPosition : TEXCOORD2;
+	float FogDistance : FOG;
 };
 
 VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
@@ -145,6 +174,7 @@ VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
 	output.UV = input.UV;
 	output.Normal = mul(input.Normal, World);
 	output.WorldPosition = worldPosition;
+	output.FogDistance = distance(worldPosition.xy, EyePosition.xy);
 
 	return output;
 }
@@ -179,8 +209,15 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 
 	float4 finalDiffuse = baseDiffuse * lightFactor * shadowTerm;
 	float4 finalSpecular = CalcSpecularColor(normal, input.WorldPosition, finalDiffuse, LightType);
-
-	return AmbientColor + finalDiffuse + finalSpecular + EmissiveColor;
+	float4 finalCompose = AmbientColor + finalDiffuse + finalSpecular + EmissiveColor;
+	
+	if (FogData.x > 0)
+	{
+		float fog = CalcFogFactor(input.FogDistance);
+		finalCompose = (fog * finalCompose + (1.0 - fog)) * FogColor;
+	}
+	
+	return finalCompose;
 }
 
 technique Textured

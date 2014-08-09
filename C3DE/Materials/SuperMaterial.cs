@@ -51,7 +51,7 @@ namespace C3DE.Materials
             effect.Parameters["View"].SetValue(scene.MainCamera.view);
             effect.Parameters["Projection"].SetValue(scene.MainCamera.projection);
             effect.Parameters["EyePosition"].SetValue(scene.MainCamera.SceneObject.Transform.Position);
-            effect.Parameters["ViewPosition"].SetValue(scene.MainCamera.camView);
+            //effect.Parameters["ViewPosition"].SetValue(scene.MainCamera.camView);
 
             var light0 = scene.Lights[0]; // FIXME
 
@@ -69,6 +69,10 @@ namespace C3DE.Materials
             effect.Parameters["LightRange"].SetValue(light0.Range);
             effect.Parameters["LightFallOff"].SetValue((int)light0.FallOf);
             effect.Parameters["LightType"].SetValue((int)light0.Type);
+
+            // Fog
+            effect.Parameters["FogColor"].SetValue(scene.RenderSettings.fogColor);
+            effect.Parameters["FogData"].SetValue(scene.RenderSettings.fogData);
         }
 
         public override void Pass(RenderableComponent renderable)

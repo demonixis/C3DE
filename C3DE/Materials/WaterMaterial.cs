@@ -43,7 +43,7 @@ namespace C3DE.Materials
 
             effect.Parameters["View"].SetValue(scene.MainCamera.view);
             effect.Parameters["Projection"].SetValue(scene.MainCamera.projection);
-            effect.Parameters["EyePosition"].SetValue(scene.MainCamera.SceneObject.Transform.Position);
+            //effect.Parameters["EyePosition"].SetValue(scene.MainCamera.SceneObject.Transform.Position);
 
             // Light
             var light0 = scene.Lights[0]; // FIXME

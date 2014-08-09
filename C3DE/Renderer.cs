@@ -69,8 +69,7 @@ namespace C3DE
         /// </summary>
         private void renderBuffers()
         {
-            // FIXME Use a fullscreen quad instead of a spritebatch
-            _spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Opaque, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone, null);
+            _spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Opaque, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone);
             _spriteBatch.Draw(_sceneRT, Vector2.Zero, Color.White);
             _spriteBatch.End();
         }
@@ -88,8 +87,6 @@ namespace C3DE
 
             renderObjects(scene, camera);
             renderBuffers();
-
-            scene.Lights[0].DrawShadowMap(_spriteBatch);
         }
     }
 }

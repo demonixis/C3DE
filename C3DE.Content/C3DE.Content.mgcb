@@ -13,12 +13,6 @@
 
 #---------------------------------- Content ---------------------------------#
 
-#begin FX/PostProcessEffect.fx
-/importer:EffectImporter
-/processor:EffectProcessor
-/processorParam:DebugMode=Auto
-/build:FX/PostProcessEffect.fx
-
 #begin FX/ShadowMapEffect.fx
 /importer:EffectImporter
 /processor:EffectProcessor
@@ -282,4 +276,28 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:TextureFormat=Color
 /build:Textures/Skybox/bluesky/pz.jpg
+
+#begin FX/PostProcess/C64Filter.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:FX/PostProcess/C64Filter.fx
+
+#begin FX/PostProcess/AverageColor.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:FX/PostProcess/AverageColor.fx
+
+#begin FX/PostProcess/Blur.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:FX/PostProcess/Blur.fx
+
+#begin FX/PostProcess/GreyScale.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:FX/PostProcess/GreyScale.fx
 
