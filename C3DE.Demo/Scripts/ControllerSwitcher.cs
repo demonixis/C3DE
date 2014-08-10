@@ -39,6 +39,18 @@ namespace C3DE.Demo.Scripts
             _orbitController.MaxDistance = 200;
         }
 
+        public void SetControllerActive(int id)
+        {
+            _orbitController.Enabled = (id == 0) ? true : false;
+            _fpController.Enabled = !_orbitController.Enabled;
+
+            if (_fpController.Enabled && _resetPosition)
+            {
+                transform.Position = new Vector3(0, 2, 0);
+                _camera.Target = Vector3.Zero;
+            }
+        }
+
         public override void OnGUI(GUI gui)
         {
             gui.Box(_box, "Controller");

@@ -58,8 +58,8 @@ namespace C3DE
             FogEnabled = false;
             FogMode = FogMode.None;
             FogDensity = 0.01f;
-            FogStart = 0.0f;
-            FogEnd = 100.0f;
+            FogStart = 20.0f;
+            FogEnd = 150.0f;
             fogColor = Vector4.One;
         }
     }

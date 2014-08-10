@@ -1,6 +1,7 @@
 ﻿using C3DE.Components;
 using C3DE.Components.Controllers;
 using C3DE.Components.Lights;
+using C3DE.Demo.Scripts;
 using C3DE.Materials;
 using C3DE.Prefabs;
 using Microsoft.Xna.Framework;
@@ -29,15 +30,17 @@ namespace C3DE.Demo
             // Add a camera with a FPS controller
             var camera = new CameraPrefab("camera", scene);
             camera.Setup(new Vector3(0, 2, -10), new Vector3(0, 0, 0), Vector3.Up);
-            camera.AddComponent<FirstPersonController>();
+            var cc = camera.AddComponent<ControllerSwitcher>();
+            cc.SetControllerActive(1);
 
             // And a light
-            var light = new LightPrefab("light", LightType.Directional, scene);
-            light.Light.Direction = new Vector3(1, 1, 0);
-            light.EnableShadows = true;
-
-            // Just for playing with light
-            lightTransform = light.Transform;
+            var lightPrefab = new LightPrefab("light", LightType.Directional, scene);
+            lightPrefab.Light.Direction = new Vector3(1, 1, 0);
+            lightPrefab.Light.DiffuseColor = Color.LightSkyBlue;
+            lightPrefab.AddComponent<LightMoverKeys>();
+            lightPrefab.AddComponent<LightSwitcher>();
+            lightPrefab.AddComponent<DemoBehaviour>();
+            lightPrefab.EnableShadows = true;
 
             // Finally a terrain
             var terrainMat = new StandardMaterial(scene);
@@ -61,16 +64,6 @@ namespace C3DE.Demo
             Screen.ShowCursor = true;
 
             scene.RenderSettings.FogMode = FogMode.Linear;
-        }
-
-        protected override void Update(GameTime gameTime)
-        {
-            base.Update(gameTime);
-
-            if (Input.Keys.Escape || Input.Gamepad.Pressed(Buttons.Back))
-                Exit();
-
-
         }
     }
 }
