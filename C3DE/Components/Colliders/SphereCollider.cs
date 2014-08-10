@@ -1,6 +1,4 @@
-﻿using C3DE.Components.Renderers;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
+﻿using Microsoft.Xna.Framework;
 
 namespace C3DE.Components.Colliders
 {

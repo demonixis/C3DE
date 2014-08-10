@@ -37,8 +37,8 @@ namespace C3DE.UI
             Checkbox = new Texture2D[3] 
             {
                 GraphicsHelper.CreateBorderTexture(Color.White, new Color(0.08f, 0.12f, 0.16f, 0.7f), 48, 48, 2),         // Normal
-                GraphicsHelper.CreateTexture(new Color(0.16f, 0.19f, 0.23f, 0.7f), 1, 1),                            // Hover
-                GraphicsHelper.CreateTexture(new Color(0.19f, 0.23f, 0.27f, 0.7f), 1, 1)                             // Clicked
+                GraphicsHelper.CreateTexture(Color.DarkGray, 1, 1),                            // Hover
+                GraphicsHelper.CreateTexture(Color.White, 1, 1)                             // Clicked
             };
 
             TextColor = Color.White;

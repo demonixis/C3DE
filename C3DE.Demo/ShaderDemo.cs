@@ -1,6 +1,4 @@
-﻿using C3DE.Components;
-using C3DE.Components.Controllers;
-using C3DE.Components.Lights;
+﻿using C3DE.Components.Lights;
 using C3DE.Components.Renderers;
 using C3DE.Demo.Scripts;
 using C3DE.Geometries;
@@ -9,9 +7,7 @@ using C3DE.Prefabs;
 using C3DE.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using System;
-using System.Collections.Generic;
 
 namespace C3DE.Demo
 {
@@ -21,8 +17,8 @@ namespace C3DE.Demo
             : base()
         {
             Window.Title = "C3DE - Shader demo";
-            graphics.PreferredBackBufferWidth = 1024;
-            graphics.PreferredBackBufferHeight = 600;
+            graphics.PreferredBackBufferWidth = Demo.ScreenWidth;
+            graphics.PreferredBackBufferHeight = Demo.ScreenHeight;
             graphics.ApplyChanges();
         }
 
@@ -31,33 +27,26 @@ namespace C3DE.Demo
             base.Initialize();
 
             // Skybox
-            renderer.Skybox.Generate(GraphicsDevice, Content, new string[] {
-                "Textures/Skybox/bluesky/px",   
-                "Textures/Skybox/bluesky/nx",
-                "Textures/Skybox/bluesky/py",
-                "Textures/Skybox/bluesky/ny",
-                "Textures/Skybox/bluesky/pz",
-                "Textures/Skybox/bluesky/nz"
-            });
+            renderer.Skybox.Generate(GraphicsDevice, Content, Demo.BlueSkybox);
 
             // Camera
             var camera = new CameraPrefab("camera", scene);
-            camera.AddComponent<OrbitController>();
+            camera.AddComponent<ControllerSwitcher>();
             camera.AddComponent<DemoBehaviour>();
 
             // Light
             var lightPrefab = new LightPrefab("light", LightType.Directional, scene);
-           // lightPrefab.Transform.Translate(0, 20, 20);
+            lightPrefab.Transform.Translate(0, 10, 0);
             lightPrefab.Light.Range = 25;
             lightPrefab.Light.Intensity = 2.0f;
             lightPrefab.Light.FallOf = 5f;
-            lightPrefab.Light.DiffuseColor = Color.Violet;
+            lightPrefab.Light.DiffuseColor = Color.LightCoral;
             lightPrefab.Light.Direction = new Vector3(0, 1, -1);
             lightPrefab.Light.Angle = MathHelper.PiOver4;
             lightPrefab.Light.ShadowGenerator.ShadowStrength = 0.6f; // FIXME need to be inverted
             lightPrefab.Light.ShadowGenerator.SetShadowMapSize(GraphicsDevice, 1024);
             lightPrefab.EnableShadows = true;
-            lightPrefab.AddComponent<LightMover>();
+            lightPrefab.AddComponent<LightMoverKeys>();
             lightPrefab.AddComponent<LightSwitcher>();
 
             var lightSphere = lightPrefab.AddComponent<MeshRenderer>();
@@ -78,6 +67,9 @@ namespace C3DE.Demo
             terrain.Randomize();
             terrain.Renderer.Material = terrainMaterial;
             terrain.Transform.Translate(-terrain.Width >> 1, 0, -terrain.Depth / 2);
+
+            var water = new WaterPrefab("water", scene);
+            water.Generate("Textures/water", "Textures/wavesbump", new Vector3(terrain.Width * 0.5f));
 
             // Cube
             var cubeSuperMaterial = new StandardMaterial(scene);
@@ -129,10 +121,10 @@ namespace C3DE.Demo
 
             var cube3Scene = new SceneObject();
             cube3Scene.Transform.Translate(0, 7.5f, -30);
-            cube3Scene.Transform.LocalScale = new Vector3(4.0f);
+            cube3Scene.Transform.LocalScale = new Vector3(4.0f, 2.0f, 1.5f);
             cube3Scene.Transform.Rotate(MathHelper.PiOver4, 0, -MathHelper.PiOver2);
             var autoRot3 = cube3Scene.AddComponent<AutoRotation>();
-            autoRot3.Rotation = new Vector3(0.1f, 0.02f, 0.03f);
+            autoRot3.Rotation = new Vector3(0.1f, 0.02f, 0.01f);
             scene.Add(cube3Scene);
 
             var cube3 = cube3Scene.AddComponent<MeshRenderer>();

@@ -1,5 +1,4 @@
-﻿using C3DE.Components;
-using C3DE.Components.Controllers;
+﻿using C3DE.Components.Controllers;
 using C3DE.Components.Lights;
 using C3DE.Components.Renderers;
 using C3DE.Demo.Scripts;
@@ -8,10 +7,7 @@ using C3DE.Materials;
 using C3DE.Prefabs;
 using C3DE.Utils;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using System;
-using System.Collections.Generic;
 
 namespace C3DE.Demo
 {
@@ -21,8 +17,8 @@ namespace C3DE.Demo
             : base()
         {
             Window.Title = "C3DE - Grid demo";
-            graphics.PreferredBackBufferWidth = 1024;
-            graphics.PreferredBackBufferHeight = 600;
+            graphics.PreferredBackBufferWidth = Demo.ScreenWidth;
+            graphics.PreferredBackBufferHeight = Demo.ScreenHeight;
             graphics.ApplyChanges();
         }
 
@@ -92,14 +88,7 @@ namespace C3DE.Demo
             cube.Material = cubeSuperMaterial;
 
             // Skybox
-            renderer.Skybox.Generate(GraphicsDevice, Content, new string[] {
-                "Textures/Skybox/starfield/px",   
-                "Textures/Skybox/starfield/nx",
-                "Textures/Skybox/starfield/py",
-                "Textures/Skybox/starfield/ny",
-                "Textures/Skybox/starfield/pz",
-                "Textures/Skybox/starfield/nz"
-            });
+            renderer.Skybox.Generate(GraphicsDevice, Content, Demo.StarsSkybox);
 
             Screen.ShowCursor = true;
         }

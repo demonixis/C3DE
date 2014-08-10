@@ -120,6 +120,11 @@ namespace C3DE.Components
                 return -1;
         }
 
+        public T AddComponent<T>() where T : Component, new()
+        {
+            return sceneObject.AddComponent<T>();
+        }
+
         public T GetComponent<T>() where T : Component
         {
             return sceneObject.GetComponent<T>();

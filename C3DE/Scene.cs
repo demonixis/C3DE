@@ -24,16 +24,17 @@ namespace C3DE
     {
         public readonly Material DefaultMaterial;
 
-        private ContentManager _content;
-        private SmartList<SceneObject> members;
-        private List<RenderableComponent> _renderList;
-        private List<Material> _materials;
-        private List<Collider> _colliders;
-        private List<Camera> _cameras;
+        internal protected ContentManager _content;
+        internal protected SmartList<SceneObject> members;
+        internal protected List<RenderableComponent> renderList;
+        internal protected List<Material> materials;
+        internal protected List<Collider> colliders;
+        internal protected List<Camera> cameras;
+        internal protected List<Light> lights;
+        internal protected Vector4 ambientColor;
+        internal protected List<Behaviour> scripts;
+
         private int _mainCameraIndex;
-        private List<Light> _lights;
-        private Vector4 _ambientColor;
-        private List<Behaviour> _scripts;
         private List<Component> _componentsToDestroy;
         private bool _needRemoveCheck;
 
@@ -41,7 +42,7 @@ namespace C3DE
 
         public Camera MainCamera
         {
-            get { return _mainCameraIndex > -1 ? _cameras[_mainCameraIndex] : null; }
+            get { return _mainCameraIndex > -1 ? cameras[_mainCameraIndex] : null; }
             set { _mainCameraIndex = Add(value); }
         }
 
@@ -50,32 +51,32 @@ namespace C3DE
         /// </summary>
         public List<RenderableComponent> RenderList
         {
-            get { return _renderList; }
+            get { return renderList; }
         }
 
         public List<Material> Materials
         {
-            get { return _materials; }
+            get { return materials; }
         }
 
         public List<Collider> Colliders
         {
-            get { return _colliders; }
+            get { return colliders; }
         }
 
         public List<Light> Lights
         {
-            get { return _lights; }
+            get { return lights; }
         }
 
         public List<Camera> Cameras
         {
-            get { return _cameras; }
+            get { return cameras; }
         }
 
         public List<Behaviour> Behaviours
         {
-            get { return _scripts; }
+            get { return scripts; }
         }
 
         /// <summary>
@@ -89,16 +90,16 @@ namespace C3DE
             members = new SmartList<SceneObject>();
             scene = this;
             _content = content;
-            _renderList = new List<RenderableComponent>(10);
-            _materials = new List<Material>(5);
-            _colliders = new List<Collider>(5);
-            _cameras = new List<Camera>(1);
+            renderList = new List<RenderableComponent>(10);
+            materials = new List<Material>(5);
+            colliders = new List<Collider>(5);
+            cameras = new List<Camera>(1);
             _mainCameraIndex = -1;
-            _scripts = new List<Behaviour>(5);
-            _lights = new List<Light>(2);
+            scripts = new List<Behaviour>(5);
+            lights = new List<Light>(2);
             _componentsToDestroy = new List<Component>();
             _needRemoveCheck = false;
-            _ambientColor = Color.White.ToVector4();
+            ambientColor = Color.White.ToVector4();
             DefaultMaterial = new SimpleMaterial(this);
             RenderSettings = new RenderSettings();
         }
@@ -111,8 +112,8 @@ namespace C3DE
         /// <param name="content"></param>
         public override void LoadContent(ContentManager content)
         {
-            for (int i = 0, l = _materials.Count; i < l; i++)
-                _materials[i].LoadContent(_content);
+            for (int i = 0, l = materials.Count; i < l; i++)
+                materials[i].LoadContent(_content);
 
             for (int i = 0; i < members.Size; i++)
                 members[i].LoadContent(_content);
@@ -175,11 +176,11 @@ namespace C3DE
             {
                 var renderable = component as RenderableComponent;
 
-                if (type == ComponentChangeType.Add && !_renderList.Contains(renderable))
-                    _renderList.Add(renderable);
+                if (type == ComponentChangeType.Add && !renderList.Contains(renderable))
+                    renderList.Add(renderable);
 
                 else if (type == ComponentChangeType.Remove)
-                    _renderList.Remove(renderable);
+                    renderList.Remove(renderable);
             }
 
             else if (component is Behaviour)
@@ -206,7 +207,7 @@ namespace C3DE
             {
                 var camera = component as Camera;
 
-                if (type == ComponentChangeType.Add && !_cameras.Contains(camera))
+                if (type == ComponentChangeType.Add && !cameras.Contains(camera))
                     Add(camera);
                 else if (type == ComponentChangeType.Remove)
                     Remove(camera);
@@ -270,12 +271,12 @@ namespace C3DE
         /// <param name="material"></param>
         public void Add(Material material)
         {
-            if (!_materials.Contains(material))
+            if (!materials.Contains(material))
             {
                 if (initialized)
                     material.LoadContent(_content);
 
-                _materials.Add(material);
+                materials.Add(material);
             }
         }
 
@@ -285,9 +286,9 @@ namespace C3DE
         /// <param name="material"></param>
         public void Remove(Material material)
         {
-            if (_materials.Contains(material))
+            if (materials.Contains(material))
             {
-                _materials.Remove(material);
+                materials.Remove(material);
                 material.Dispose();
             }
         }
@@ -298,12 +299,12 @@ namespace C3DE
 
         protected int Add(Camera camera)
         {
-            var index = _cameras.IndexOf(camera);
+            var index = cameras.IndexOf(camera);
 
             if (index == -1)
             {
-                _cameras.Add(camera);
-                index = _cameras.Count - 1;
+                cameras.Add(camera);
+                index = cameras.Count - 1;
             }
 
             if (_mainCameraIndex == -1)
@@ -314,21 +315,21 @@ namespace C3DE
 
         protected void Add(Light light)
         {
-            if (!_lights.Contains(light))
-                _lights.Add(light);
+            if (!lights.Contains(light))
+                lights.Add(light);
         }
 
         protected void Add(Collider collider)
         {
-            if (!_colliders.Contains(collider))
-                _colliders.Add(collider);
+            if (!colliders.Contains(collider))
+                colliders.Add(collider);
         }
 
         protected void Add(Behaviour script)
         {
-            if (!_scripts.Contains(script))
+            if (!scripts.Contains(script))
             {
-                _scripts.Add(script);
+                scripts.Add(script);
                 script.Awake();
                 script.Start();
             }
@@ -336,26 +337,26 @@ namespace C3DE
 
         protected void Remove(Behaviour script)
         {
-            if (_scripts.Contains(script))
-                _scripts.Remove(script);
+            if (scripts.Contains(script))
+                scripts.Remove(script);
         }
 
         protected void Remove(Light light)
         {
-            if (_lights.Contains(light))
-                _lights.Remove(light);
+            if (lights.Contains(light))
+                lights.Remove(light);
         }
 
         protected void Remove(Collider collider)
         {
-            if (_colliders.Contains(collider))
-                _colliders.Remove(collider);
+            if (colliders.Contains(collider))
+                colliders.Remove(collider);
         }
 
         protected void Remove(Camera camera)
         {
-            if (_cameras.Contains(camera))
-                _cameras.Remove(camera);
+            if (cameras.Contains(camera))
+                cameras.Remove(camera);
         }
 
         #endregion
@@ -438,9 +439,9 @@ namespace C3DE
             Ray ray = new Ray(origin, direction);
             float? val;
 
-            for (int i = 0, l = _colliders.Count; i < l; i++)
+            for (int i = 0, l = colliders.Count; i < l; i++)
             {
-                val = _colliders[i].IntersectedBy(ref ray);
+                val = colliders[i].IntersectedBy(ref ray);
 
                 if (val.HasValue && val.Value <= distance)
                     return true;
@@ -456,17 +457,17 @@ namespace C3DE
             Ray ray = new Ray(origin, direction);
             float? val;
             int i = 0;
-            int size = _colliders.Count;
+            int size = colliders.Count;
             bool collide = false;
 
             // A quadtree and even an octree could be very cool in the future :)
             while (i < size && collide == false)
             {
-                val = _colliders[i].IntersectedBy(ref ray);
+                val = colliders[i].IntersectedBy(ref ray);
 
                 if (val.HasValue && val.Value <= distance)
                 {
-                    info.Collider = _colliders[i];
+                    info.Collider = colliders[i];
                     info.Distance = val.Value;
                     info.Ray = ray;
                     collide = true;

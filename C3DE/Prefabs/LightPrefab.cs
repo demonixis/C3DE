@@ -1,6 +1,4 @@
 ﻿using C3DE.Components.Lights;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
 
 namespace C3DE.Prefabs
 {

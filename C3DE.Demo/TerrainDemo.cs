@@ -1,17 +1,11 @@
 ﻿using C3DE.Components;
 using C3DE.Components.Controllers;
 using C3DE.Components.Lights;
-using C3DE.Components.Renderers;
-using C3DE.Demo.Scripts;
-using C3DE.Geometries;
 using C3DE.Materials;
 using C3DE.Prefabs;
-using C3DE.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using System;
-using System.Collections.Generic;
 
 namespace C3DE.Demo
 {
@@ -23,8 +17,8 @@ namespace C3DE.Demo
             : base()
         {
             Window.Title = "C3DE - Terrain";
-            graphics.PreferredBackBufferWidth = 1280;
-            graphics.PreferredBackBufferHeight = 800;
+            graphics.PreferredBackBufferWidth = Demo.ScreenWidth;
+            graphics.PreferredBackBufferHeight = Demo.ScreenHeight;
             graphics.ApplyChanges();
         }
 
@@ -58,18 +52,10 @@ namespace C3DE.Demo
 
             // With water !
             var water = new WaterPrefab("water", scene);
-
             water.Generate("Textures/water", "Textures/wavesbump", new Vector3(terrain.Width * 0.5f));
             
             // Don't miss the Skybox ;)
-            renderer.Skybox.Generate(GraphicsDevice, Content, new string[] {
-                "Textures/Skybox/bluesky/px",   
-                "Textures/Skybox/bluesky/nx",
-                "Textures/Skybox/bluesky/py",
-                "Textures/Skybox/bluesky/ny",
-                "Textures/Skybox/bluesky/pz",
-                "Textures/Skybox/bluesky/nz"
-            });
+            renderer.Skybox.Generate(GraphicsDevice, Content, Demo.BlueSkybox);
 
             Input.Gamepad.Sensitivity = new Vector2(1, 0.75f);
             Screen.ShowCursor = true;
@@ -84,17 +70,7 @@ namespace C3DE.Demo
             if (Input.Keys.Escape || Input.Gamepad.Pressed(Buttons.Back))
                 Exit();
 
-            if (Input.Keys.Pressed(Keys.NumPad8) || Input.Gamepad.Pressed(Buttons.DPadUp))
-                lightTransform.Translate(0, 0, 0.1f);
 
-            else if (Input.Keys.Pressed(Keys.NumPad5) || Input.Gamepad.Pressed(Buttons.DPadDown))
-                lightTransform.Translate(0, 0, -0.1f);
-
-            if (Input.Keys.Pressed(Keys.NumPad4) || Input.Gamepad.Pressed(Buttons.DPadLeft))
-                lightTransform.Translate(0.1f, 0, 0);
-
-            else if (Input.Keys.Pressed(Keys.NumPad6) || Input.Gamepad.Pressed(Buttons.DPadRight))
-                lightTransform.Translate(-0.1f, 0, 0);
         }
     }
 }

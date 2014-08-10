@@ -1,5 +1,4 @@
 ﻿using C3DE.Components;
-using C3DE.Components.Renderers;
 using C3DE.Geometries;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;

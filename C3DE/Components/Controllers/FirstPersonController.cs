@@ -18,7 +18,7 @@ namespace C3DE.Components.Controllers
         public float RotationSpeed { get; set; }
         public float LookSpeed { get; set; }
         public float StrafeSpeed { get; set; }
-        public bool FourAxis { get; set; }
+        public bool Fly { get; set; }
         public Vector2 MouseSensibility { get; set; }
 
         public FirstPersonController()
@@ -36,7 +36,7 @@ namespace C3DE.Components.Controllers
             LookSpeed = 0.15f;
             StrafeSpeed = 0.75f;
             MouseSensibility = new Vector2(0.15f, 0.15f);
-            FourAxis = false;
+            Fly = false;
         }
 
         public override void LoadContent(ContentManager content)
@@ -53,7 +53,7 @@ namespace C3DE.Components.Controllers
 
             _rotationMatrix = Matrix.CreateFromYawPitchRoll(_transform.Rotation.Y, _transform.Rotation.X, 0.0f);
 
-            _transformedReference = Vector3.Transform(_translation, !FourAxis ? Matrix.CreateRotationY(_transform.Rotation.Y) : _rotationMatrix);
+            _transformedReference = Vector3.Transform(_translation, !Fly ? Matrix.CreateRotationY(_transform.Rotation.Y) : _rotationMatrix);
 
             // Translate and rotate
             _transform.Translate(ref _transformedReference);
@@ -99,7 +99,7 @@ namespace C3DE.Components.Controllers
                 _rotation.Y -= RotationSpeed * Time.DeltaTime;
 
             if (Input.Keys.JustPressed(Keys.Tab))
-                FourAxis = !FourAxis;
+                Fly = !Fly;
         }
 
         private void UpdateMouseInput()

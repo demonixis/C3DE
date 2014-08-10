@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using System.Text;
 
 namespace C3DE.UI
 {
@@ -68,8 +69,10 @@ namespace C3DE.UI
             _spriteBatch.Draw(Skin.Checkbox[0], _cacheRect, Color.White);
 
             // Draw the text
-            _cacheVec2.X = rect.Height + Skin.Margin;
-            _cacheVec2.Y = rect.Y;
+            text = WrapText(Skin.Font, text, rect.Width);
+            _cacheVec2 = Skin.Font.MeasureString(text);
+            _cacheVec2.X = rect.X + rect.Height + Skin.Margin;
+            _cacheVec2.Y = rect.Y + rect.Height / 2 - _cacheVec2.Y / 2;
 
             Label(_cacheVec2, text);
 
@@ -97,6 +100,10 @@ namespace C3DE.UI
                 _cacheRect.Height = rect.Height - 2;
 
                 _spriteBatch.Draw(Skin.Checkbox[index], _cacheRect, Color.White);
+
+                // Restore previous state if not clicked
+                if (isChecked && index > 0)
+                    index = 2;
             }
 
             return index == 2;
@@ -107,6 +114,35 @@ namespace C3DE.UI
             _cacheVec2.X = scale;
             _cacheVec2.Y = scale;
             _spriteBatch.DrawString(Skin.Font, text, position, Skin.TextColor, rotation, Vector2.Zero, _cacheVec2, SpriteEffects.None, 1);
+        }
+
+        private string WrapText(SpriteFont spriteFont, string text, float maxLineWidth)
+        {
+            string[] words = text.Split(' ');
+
+            StringBuilder sb = new StringBuilder();
+
+            float lineWidth = 0.0f;
+            float spaceWidth = spriteFont.MeasureString(" ").X;
+            Vector2 wordSize = Vector2.Zero;
+
+            foreach (string word in words)
+            {
+                wordSize = spriteFont.MeasureString(word);
+
+                if (lineWidth + wordSize.X < maxLineWidth)
+                {
+                    sb.Append(word + " ");
+                    lineWidth += wordSize.X + spaceWidth;
+                }
+                else
+                {
+                    sb.Append("\n" + word + " ");
+                    lineWidth = wordSize.X + spaceWidth;
+                }
+            }
+
+            return sb.ToString();
         }
     }
 }

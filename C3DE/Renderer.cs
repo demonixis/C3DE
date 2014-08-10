@@ -60,14 +60,14 @@ namespace C3DE
 
             foreach (Material material in scene.Materials)
                 material.PrePass();
-            
+
             for (int i = 0; i < scene.RenderList.Count; i++)
             {
                 if (scene.RenderList[i].MaterialCount > 0)
-                {
-                    scene.RenderList[i].Material.Pass(scene.RenderList[i]);
-                    scene.RenderList[i].Draw(graphicsDevice);
-                }
+                    scene.RenderList[i].Material = scene.DefaultMaterial;
+
+                scene.RenderList[i].Material.Pass(scene.RenderList[i]);
+                scene.RenderList[i].Draw(graphicsDevice);
             }
 
             graphicsDevice.SetRenderTarget(null);
@@ -86,7 +86,7 @@ namespace C3DE
         private void renderUI(List<Behaviour> scripts)
         {
             var size = scripts.Count;
-            scripts[0].SceneObject.Scene.Lights[0].DrawShadowMap(_spriteBatch);
+
             if (size > 0)
             {
                 _spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone);

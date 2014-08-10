@@ -1,7 +1,5 @@
-﻿using C3DE.Components;
-using C3DE.Components.Colliders;
+﻿using C3DE.Components.Colliders;
 using C3DE.Components.Renderers;
-using C3DE.Materials;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
