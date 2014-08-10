@@ -63,7 +63,7 @@ namespace C3DE.Demo
             Input.Gamepad.Sensitivity = new Vector2(1, 0.75f);
             Screen.ShowCursor = true;
 
-            scene.RenderSettings.FogMode = FogMode.Linear;
+            scene.RenderSettings.FogMode = FogMode.Exp2;
         }
     }
 }

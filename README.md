@@ -4,38 +4,19 @@ C3DE : Cool 3D Engine
 ### What is it ?
 C3DE is a research project to create a small but powerfull 3D engine powered by MonoGame.
 
-![](https://38.media.tumblr.com/8ea2ecf9ca3cca7bdae5a35a79643a57/tumblr_n9ovtvpnMt1s15knro2_500.jpg)
+![](http://31.media.tumblr.com/2b3a6bc77bde93d240e70ceda38c62a3/tumblr_na3ly0wf231s15knro1_1280.png)
 
 ### Some features
 
 - Scene (parent/child)
 - Component based
 - Cameras
- - Perspective
- - Orthographic
 - Model (FBX/X with content pipeline)
 - Custom Mesh geometry
- - Cube
- - Cylinder
- - Plane
- - Pyramid
- - Quad
- - Sphere
- - Torus
-- Terrain
- - Flat
- - Random generated with Pelrin Noise
- - From Heightmap
-- Materials
- - DiffuseSpecular
- - Water
- - Skybox
- - Custom
-- Shadow mapping (Need work)
-- Input management 
- - Keyboard
- - Mouse
- - Gamepad
+- Terrain: Flat, Random, Heightmap
+- Materials: Standard, Simple, Reflective, Water, Custom
+- Shadow mapping
+- Input management: Keyboard, Mouse, Gamepad 
 
 ### Sample
 
@@ -52,25 +33,18 @@ public class SuperCoolGame : Engine
         base.Initialize();
 
         // Create a camera node with an orbit controller.
-        var camera = new CameraPrefab("camera");
-        camera.Setup(new Vector3(0, 2, -10), Vector3.Zero, Vector3.Up);
+        var camera = new CameraPrefab("camera", scene);
         camera.AddComponent<OrbitController>();
-        scene.Add(camera);
 
         // Add a light with shadows
-        var sceneLight = new SceneObject();
-        scene.Add(sceneLight);
-
-        var light = sceneLight.AddComponent<Light>();
-        light.ShadowGenerator.Enabled = true;
+        var lightPrefab = new LightPrefab("light", LightType.Directional, scene);
+        lightPrefab.EnableShadows = true;
 
         // Add a terrain generated with Pelrin Noise.
-        var terrain = new TerrainPrefab("terrain");
-        scene.Add(terrain);
-        
+        var terrain = new TerrainPrefab("terrain", scene);
         terrain.TextureRepeat = new Vector2(16);
-        terrain.Randomize(GraphicsDevice);
-        terrain.Renderer.Material = new DiffuseSpecularMaterial(scene);
+        terrain.Randomize();
+        terrain.Renderer.Material = new StandardMaterial(scene);
         terrain.Renderer.Material.MainTexture = Content.Load<Texture2D>("Textures/terrain");
     }
 }
@@ -78,8 +52,7 @@ public class SuperCoolGame : Engine
 
 ### What's next ?
 - Post processing
-- Smooth shadows
-- More light types (Point, Directional, Spot, Area)
+- More light types (Spot, Area)
 - Multipass lighting
 - Instancing
 - Collision management
