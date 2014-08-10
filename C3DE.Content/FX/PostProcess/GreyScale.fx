@@ -1,7 +1,7 @@
 texture TargetTexture;
 sampler2D textureSampler = sampler_state
 {
-	Texture = (MainTexture);
+	Texture = <TargetTexture>;
 	MinFilter = Linear;
 	MagFilter = Linear;
 	MipFilter = Linear;
@@ -9,13 +9,20 @@ sampler2D textureSampler = sampler_state
 	AddressV = Wrap;
 };
 
-#if SM4
-float4 GreyScaleIntensityPixelShader(float4 position : SV_Position, float4 color : COLOR0, float2 UV : TEXCOORD0) : COLOR
-#else
-float4 GreyScaleIntensityPixelShader(float4 position : POSITION0, float4 color : COLOR0, float2 UV : TEXCOORD0) : COLOR
-#endif
+struct PixelShaderInput
 {
-	float4 diffuse = tex2D(textureSampler, UV);
+#if SM4
+	float4 Position : SV_Position;
+#else
+	float4 Position : POSITION0;
+#endif
+	float4 Color : COLOR0;
+	float2 UV : TEXCOORD0;
+};
+
+float4 GreyScaleIntensityPixelShader(PixelShaderInput input) : COLOR
+{
+	float4 diffuse = tex2D(textureSampler, input.UV);
 	diffuse.rgb = dot(diffuse.rgb, float3(0.3, 0.59, 0.11));
 	diffuse.a = 1.0f;
 	return diffuse;

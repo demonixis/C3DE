@@ -20,7 +20,7 @@ static const float3 c64col[16] = {
 texture TargetTexture;
 sampler2D textureSampler = sampler_state
 {
-	Texture = (MainTexture);
+	Texture = <TargetTexture>;
 	MinFilter = Linear;
 	MagFilter = Linear;
 	MipFilter = Linear;
@@ -28,13 +28,20 @@ sampler2D textureSampler = sampler_state
 	AddressV = Wrap;
 };
 
-#if SM4
-float4 C64PixelShader(float4 position : SV_Position, float4 color : COLOR0, float2 UV : TEXCOORD0) : COLOR
-#else
-float4 C64PixelShader(float4 position : POSITION0, float4 color : COLOR0, float2 UV : TEXCOORD0) : COLOR
-#endif
+struct PixelShaderInput
 {
-	float3 samp = tex2D(textureSampler, UV).xyz;
+#if SM4
+	float4 Position : SV_Position;
+#else
+	float4 Position : POSITION0;
+#endif
+	float4 Color : COLOR0;
+	float2 UV : TEXCOORD0;
+};
+
+float4 C64PixelShader(PixelShaderInput input) : COLOR
+{
+	float3 samp = tex2D(textureSampler, input.UV).xyz;
 	float3 match = float3(0.0, 0.0, 0.0);
 	float bestDot = 8.0;
 	float cDot = 0.0;
