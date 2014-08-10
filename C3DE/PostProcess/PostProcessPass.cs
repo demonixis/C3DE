@@ -1,14 +1,16 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 
 namespace C3DE.PostProcess
 {
     public abstract class PostProcessPass : IComparable
     {
-        protected Effect postProcessFx;
+        protected Effect effect;
         protected int order;
 
-        public abstract void Apply(RenderTarget2D renderTarget);
+        public abstract void LoadContent(ContentManager content);
+        public abstract void Apply(SpriteBatch spriteBatch, RenderTarget2D renderTarget);
 
         public int CompareTo(object obj)
         {

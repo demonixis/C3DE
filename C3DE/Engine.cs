@@ -121,11 +121,6 @@ namespace C3DE
             scene.LoadContent(Content);
         }
 
-        protected override void BeginRun()
-        {
-            base.BeginRun();
-        }
-
         protected override void Update(GameTime gameTime)
         {
             base.Update(gameTime);

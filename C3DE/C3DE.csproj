@@ -60,6 +60,7 @@
     <Compile Include="Geometries\TorusGeometry.cs" />
     <Compile Include="Materials\ReflectiveMaterial.cs" />
     <Compile Include="Materials\SimpleMaterial.cs" />
+    <Compile Include="PostProcess\BlurPass.cs" />
     <Compile Include="Prefabs\Meshes\CubePrefab.cs" />
     <Compile Include="Prefabs\Meshes\SpherePrefab.cs" />
     <Compile Include="RenderSettings.cs" />

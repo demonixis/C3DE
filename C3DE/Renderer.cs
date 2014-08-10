@@ -19,7 +19,7 @@ namespace C3DE
         private SpriteBatch _spriteBatch;
         private PostProcessManager _postProcessManager;
         private Skybox _skybox;
-        internal GUI gui;
+        internal GUI _guiManager;
 
         public Skybox Skybox
         {
@@ -37,8 +37,9 @@ namespace C3DE
 
         public void LoadContent(ContentManager content)
         {
-            gui = new GUI(_spriteBatch);
-            gui.LoadContent(content);
+            _guiManager = new GUI(_spriteBatch);
+            _guiManager.LoadContent(content);
+            _postProcessManager.LoadContent(content);
         }
 
         /// <summary>
@@ -92,10 +93,15 @@ namespace C3DE
                 _spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone);
 
                 for (int i = 0; i < size; i++)
-                    scripts[i].OnGUI(gui);
+                    scripts[i].OnGUI(_guiManager);
 
                 _spriteBatch.End();
             }
+        }
+
+        private void renderPostProcess()
+        {
+            _postProcessManager.Draw(_spriteBatch, _sceneRT);
         }
 
         /// <summary>
@@ -111,6 +117,7 @@ namespace C3DE
 
             renderObjects(scene, camera);
             renderBuffers();
+            //renderPostProcess();
             renderUI(scene.Behaviours);
         }
     }
