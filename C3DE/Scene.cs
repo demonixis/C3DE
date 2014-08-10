@@ -34,6 +34,8 @@ namespace C3DE
         private List<Light> _lights;
         private Vector4 _ambientColor;
         private List<Behaviour> _scripts;
+        private List<Component> _componentsToDestroy;
+        private bool _needRemoveCheck;
 
         public RenderSettings RenderSettings { get; private set; }
 
@@ -94,6 +96,8 @@ namespace C3DE
             _mainCameraIndex = -1;
             _scripts = new List<Behaviour>(5);
             _lights = new List<Light>(2);
+            _componentsToDestroy = new List<Component>();
+            _needRemoveCheck = false;
             _ambientColor = Color.White.ToVector4();
             DefaultMaterial = new SimpleMaterial(this);
             RenderSettings = new RenderSettings();
@@ -124,10 +128,25 @@ namespace C3DE
         {
             base.Update();
 
-            // Check if lists needs to be updated (components waiting to be added or removed)
+            // First - Check if we need to remove some components.
+            if (_needRemoveCheck)
+            {
+                for (int i = 0, l = _componentsToDestroy.Count; i < l; i++)
+                {
+                    if (_componentsToDestroy[i] != null)
+                    {
+                        CheckComponent(_componentsToDestroy[i], ComponentChangeType.Remove);
+                        _componentsToDestroy[i] = null;
+                    }
+                }
+
+                _needRemoveCheck = false;
+            }
+
+            // Second - Check if we need to remove some SceneObjectlists.
             members.Check();
 
-            // Safe update
+            // Third - Safe update
             for (int i = 0; i < members.Size; i++)
             {
                 if (members[i].Enabled)
@@ -137,7 +156,7 @@ namespace C3DE
 
         #endregion
 
-        #region SceneObject collection management
+        #region SceneObjects/Components management
 
         /// <summary>
         /// Check all components of a scene object to update all list of the scene.
@@ -168,9 +187,9 @@ namespace C3DE
                 var script = component as Behaviour;
 
                 if (type == ComponentChangeType.Add)
-                    AddScript(script);
+                    Add(script);
                 else if (type == ComponentChangeType.Remove)
-                    RemoveScript(script);
+                    Remove(script);
             }
 
             else if (component is Collider)
@@ -178,9 +197,9 @@ namespace C3DE
                 var collider = component as Collider;
 
                 if (type == ComponentChangeType.Add)
-                    AddCollider(collider);
+                    Add(collider);
                 else if (type == ComponentChangeType.Remove)
-                    RemoveCollider(collider);
+                    Remove(collider);
             }
 
             else if (component is Camera)
@@ -198,9 +217,9 @@ namespace C3DE
                 var light = component as Light;
 
                 if (type == ComponentChangeType.Add)
-                    AddLight(light);
+                    Add(light);
                 else if (type == ComponentChangeType.Remove)
-                    RemoveLight(light);
+                    Remove(light);
             }
         }
 
@@ -241,38 +260,9 @@ namespace C3DE
             return canAdd;
         }
 
-        /// <summary>
-        /// Remove a scene object from the scene.
-        /// </summary>
-        /// <param name="sceneObject">The scene object to remove.</param>
-        /// <returns>Return true if the component has been removed, otherwise return false.</returns>
-        public override bool Remove(SceneObject sceneObject)
-        {
-            bool canRemove = base.Remove(sceneObject);
-            int index = -1;
-
-            if (canRemove)
-            {
-                index = members.IndexOf(sceneObject);
-
-                if (index > -1)
-                {
-                    sceneObject.ComponentChanged -= sceneObject_ComponentsChanged;
-
-                    CheckComponents(sceneObject, ComponentChangeType.Remove);
-
-                    members.Remove(sceneObject);
-                    sceneObject.Scene = null;
-                    sceneObject.Transform.Root = null;
-                }
-            }
-
-            return canRemove && (index > -1);
-        }
-
         #endregion
 
-        #region Material collection management
+        #region Add/Remove materials
 
         /// <summary>
         /// Add a new material.
@@ -304,9 +294,9 @@ namespace C3DE
 
         #endregion
 
-        #region Camera collection management
+        #region Add/Remove components
 
-        public int Add(Camera camera)
+        protected int Add(Camera camera)
         {
             var index = _cameras.IndexOf(camera);
 
@@ -322,49 +312,19 @@ namespace C3DE
             return index;
         }
 
-        public void Remove(Camera camera)
-        {
-            if (_cameras.Contains(camera))
-                _cameras.Remove(camera);
-        }
-
-        #endregion
-
-        #region Light collection management
-
-        public void AddLight(Light light)
+        protected void Add(Light light)
         {
             if (!_lights.Contains(light))
                 _lights.Add(light);
         }
 
-        public void RemoveLight(Light light)
-        {
-            if (_lights.Contains(light))
-                _lights.Remove(light);
-        }
-
-        #endregion
-
-        #region Colliders management
-
-        public void AddCollider(Collider collider)
+        protected void Add(Collider collider)
         {
             if (!_colliders.Contains(collider))
                 _colliders.Add(collider);
         }
 
-        public void RemoveCollider(Collider collider)
-        {
-            if (_colliders.Contains(collider))
-                _colliders.Remove(collider);
-        }
-
-        #endregion
-
-        #region Behaviours management
-
-        public void AddScript(Behaviour script)
+        protected void Add(Behaviour script)
         {
             if (!_scripts.Contains(script))
             {
@@ -374,10 +334,92 @@ namespace C3DE
             }
         }
 
-        public void RemoveScript(Behaviour script)
+        protected void Remove(Behaviour script)
         {
             if (_scripts.Contains(script))
                 _scripts.Remove(script);
+        }
+
+        protected void Remove(Light light)
+        {
+            if (_lights.Contains(light))
+                _lights.Remove(light);
+        }
+
+        protected void Remove(Collider collider)
+        {
+            if (_colliders.Contains(collider))
+                _colliders.Remove(collider);
+        }
+
+        protected void Remove(Camera camera)
+        {
+            if (_cameras.Contains(camera))
+                _cameras.Remove(camera);
+        }
+
+        #endregion
+
+        #region Destroy SceneObjects/Components
+
+        private int GetFirstToRemoveComponentNullIndex()
+        {
+            for (int i = 0, l = _componentsToDestroy.Count; i < l; i++)
+            {
+                if (_componentsToDestroy[i] == null)
+                    return i;
+            }
+
+            return -1;
+        }
+
+        public void Destroy(SceneObject sceneObject)
+        {
+            for (int i = 0, l = sceneObject.Components.Count; i < l; i++)
+                Destroy(sceneObject.Components[i]);
+
+            members.Remove(sceneObject);
+        }
+
+        public void Destroy(Component component)
+        {
+            var index = GetFirstToRemoveComponentNullIndex();
+
+            if (index > -1)
+                _componentsToDestroy[index] = component;
+            else
+                _componentsToDestroy.Add(component);
+
+            _needRemoveCheck = true;
+        }
+
+        #endregion
+
+        #region SceneObject search
+
+        public SceneObject Find(string name)
+        {
+            for (int i = 0; i < members.Size; i++)
+            {
+                if (members[i].Name == name)
+                    return members[i];
+            }
+
+            return null;
+        }
+
+        public SceneObject FindObjectOfType<T>() where T : Component, new()
+        {
+            Component component = null;
+
+            for (int i = 0; i < members.Size; i++)
+            {
+                component = members[i].GetComponent<T>();
+                if (component != null)
+                    return members[i];
+            }
+
+            return null;
         }
 
         #endregion

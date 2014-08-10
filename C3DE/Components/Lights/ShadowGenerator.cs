@@ -125,12 +125,12 @@ namespace C3DE
 
             for (int i = 0; i < renderList.Count; i++)
             {
-                if (!renderList[i].CastShadow)
-                    continue;
-
-                _shadowEffect.Parameters["World"].SetValue(renderList[i].SceneObject.Transform.world);
-                _shadowEffect.CurrentTechnique.Passes[0].Apply();
-                renderList[i].Draw(device);
+                if (renderList[i].CastShadow)
+                {
+                    _shadowEffect.Parameters["World"].SetValue(renderList[i].SceneObject.Transform.world);
+                    _shadowEffect.CurrentTechnique.Passes[0].Apply();
+                    renderList[i].Draw(device);
+                }
             }
 
             device.SetRenderTarget(null);

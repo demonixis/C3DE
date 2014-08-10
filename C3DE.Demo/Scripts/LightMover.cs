@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace C3DE.Demo.Scripts
 {
-    public class MoveLight : Behaviour
+    public class LightMover : Behaviour
     {
         private Vector3 translation;
         private Light _light;
@@ -19,10 +19,7 @@ namespace C3DE.Demo.Scripts
         {
             translation = Vector3.Zero;
 
-            if (Input.Mouse.Down(Inputs.MouseButton.Middle))
-                translation.Y += Input.Mouse.Delta.Y * 0.1f;
-            else
-                translation.Z += Input.Mouse.Delta.Y * 0.1f;
+            translation.Z += Input.Mouse.Delta.Y * 0.1f;
 
             translation.X += Input.Mouse.Delta.X * 0.1f;
 
@@ -40,7 +37,10 @@ namespace C3DE.Demo.Scripts
                 _light.FallOf += 0.1f;
             else if (Input.Keys.Pressed(Keys.M))
                 _light.FallOf -= 0.1f;
-            
+
+            if (Input.Mouse.Down(Inputs.MouseButton.Middle))
+                translation.Y += Input.Mouse.Delta.Y * 0.1f;
+
             transform.Translate(ref translation);
         }
     }

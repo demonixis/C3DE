@@ -17,8 +17,6 @@ namespace C3DE.Demo
 {
     public class ShaderDemo : Engine
     {
-        Transform lightTransform;
-
         public ShaderDemo()
             : base()
         {
@@ -45,10 +43,11 @@ namespace C3DE.Demo
             // Camera
             var camera = new CameraPrefab("camera", scene);
             camera.AddComponent<OrbitController>();
+            camera.AddComponent<DemoBehaviour>();
 
             // Light
             var lightPrefab = new LightPrefab("light", LightType.Directional, scene);
-            lightPrefab.Transform.Position = new Vector3(0, 15, 15);
+           // lightPrefab.Transform.Translate(0, 20, 20);
             lightPrefab.Light.Range = 25;
             lightPrefab.Light.Intensity = 2.0f;
             lightPrefab.Light.FallOf = 5f;
@@ -58,7 +57,8 @@ namespace C3DE.Demo
             lightPrefab.Light.ShadowGenerator.ShadowStrength = 0.6f; // FIXME need to be inverted
             lightPrefab.Light.ShadowGenerator.SetShadowMapSize(GraphicsDevice, 1024);
             lightPrefab.EnableShadows = true;
-            lightTransform = lightPrefab.Transform;
+            lightPrefab.AddComponent<LightMover>();
+            lightPrefab.AddComponent<LightSwitcher>();
 
             var lightSphere = lightPrefab.AddComponent<MeshRenderer>();
             lightSphere.Geometry = new SphereGeometry(1f, 8);
@@ -143,31 +143,6 @@ namespace C3DE.Demo
             cube3.Material = reflectiveMaterial;
 
             Screen.ShowCursor = true;
-        }
-
-        Vector3 translation;
-
-        // Just for tests, it's ugly, I know that ;)
-        protected override void Update(GameTime gameTime)
-        {
-            base.Update(gameTime);
-
-            if (Input.Keys.Escape || Input.Gamepad.Pressed(Buttons.Back))
-                Exit();
-
-            translation = Vector3.Zero;
-
-            if (Input.Mouse.Down(Inputs.MouseButton.Middle))
-                translation.Y += Input.Mouse.Delta.Y * 0.1f;
-            else
-                translation.Z += Input.Mouse.Delta.Y * 0.1f;
-            
-            translation.X += Input.Mouse.Delta.X * 0.1f;
-
-            lightTransform.Translate(ref translation);
-
-            if (Input.Keys.Enter)
-                Console.WriteLine(lightTransform.Position);
         }
     }
 }

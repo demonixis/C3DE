@@ -99,16 +99,6 @@ namespace C3DE.Components.Lights
             shadowGenerator.LoadContent(content);
         }
 
-        public override void Update()
-        {
-            base.Update();
-
-            if (!sceneObject.IsStatic)
-            {
-                //viewMatrix = Matrix.CreateLookAt(sceneObject.Transform.Position, Vector3.Zero, Vector3.Up);
-            }
-        }
-
         // Need to be changed quickly !
         public void Update(ref BoundingSphere sphere)
         {

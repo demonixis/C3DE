@@ -35,6 +35,9 @@ namespace C3DE.Components.Renderers
             _vertices[3] = new VertexPositionTexture(new Vector3(1.0f, -1.0f, 1.0f), new Vector2(1.0f, 1.0f));
 
             _indices = new short[] { 0, 3, 2, 0, 1, 3 };
+
+            CastShadow = false;
+            RecieveShadow = false;
         }
 
         public void Draw(GraphicsDevice device, Vector2 topLeftCorner, Vector2 bottomRightCorner)
@@ -53,12 +56,12 @@ namespace C3DE.Components.Renderers
 
         public override void Draw(GraphicsDevice device)
         {
-            Draw(device, new Vector2(-1.0f, -1.0f), new Vector2(1.0f, 1.0f));
+            Draw(device, -Vector2.One, Vector2.One);
         }
 
         public override BoundingSphere GetBoundingSphere()
         {
-            throw new NotImplementedException();
+            return new BoundingSphere(Vector3.Zero, 1);
         }
     }
 }

@@ -9,18 +9,18 @@ namespace C3DE.Geometries
         {
             var position = new Vector3[4]
             {
-                new Vector3(-1.0f, 1.0f, 1.0f),
-                new Vector3(-1.0f, -1.0f, 1.0f),
-                new Vector3(1.0f, -1.0f, 1.0f),
-                new Vector3(1.0f, 1.0f, 1.0f)
+                new Vector3(-1.0f, 1.0f, 0.0f),
+                new Vector3(1.0f, 1.0f, 0.0f),
+                new Vector3(1.0f, -1.0f, 0.0f),
+                new Vector3(-1.0f, -1.0f, 0.0f)
             };
 
             var uvs = new Vector2[4]
             {
-                new Vector2(0.0f, 1.0f),
                 new Vector2(0.0f, 0.0f),
                 new Vector2(1.0f, 0.0f),
-                new Vector2(1.0f, 1.0f)
+                new Vector2(1.0f, 1.0f),
+                new Vector2(0.0f, 1.0f)
             };
 
             Vertices = new VertexPositionNormalTexture[4];

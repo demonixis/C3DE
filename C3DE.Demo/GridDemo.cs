@@ -46,8 +46,8 @@ namespace C3DE.Demo
             lightPrefab.Light.ShadowGenerator.ShadowStrength = 0.6f; // FIXME need to be inverted
             lightPrefab.Light.ShadowGenerator.SetShadowMapSize(GraphicsDevice, 1024);
             lightPrefab.EnableShadows = true;
-            lightPrefab.AddComponent<SimpleGUI>();
-            lightPrefab.AddComponent<MoveLight>();
+            lightPrefab.AddComponent<LightSwitcher>();
+            lightPrefab.AddComponent<LightMover>();
             lightPrefab.AddComponent<DemoBehaviour>();
 
             var lightPrefabSphere = lightPrefab.AddComponent<MeshRenderer>();

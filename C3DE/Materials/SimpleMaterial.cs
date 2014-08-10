@@ -1,5 +1,4 @@
-﻿using C3DE.Components.Lights;
-using C3DE.Components.Renderers;
+﻿using C3DE.Components.Renderers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;

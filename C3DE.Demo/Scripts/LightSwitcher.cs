@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace C3DE.Demo.Scripts
 {
-    public class SimpleGUI : Behaviour
+    public class LightSwitcher : Behaviour
     {
         private Rectangle _box;
         private Rectangle _btn1;
