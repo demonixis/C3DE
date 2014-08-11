@@ -28,7 +28,7 @@ namespace C3DE.Demo
         // Entry point.
         static void Main(string[] args)
         {
-            using (var game = new GridDemo())
+            using (var game = new ShaderDemo())
                 game.Run();
         }
     }

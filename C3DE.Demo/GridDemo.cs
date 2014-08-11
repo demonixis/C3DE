@@ -31,7 +31,7 @@ namespace C3DE.Demo
             // Camera
             var camera = new CameraPrefab("camera", scene);
             camera.AddComponent<OrbitController>();
-            camera.AddComponent<RayPicking>();
+            camera.AddComponent<RayPickingTester>();
 
             // Light
             var lightPrefab = new LightPrefab("lightPrefab", LightType.Point, scene);

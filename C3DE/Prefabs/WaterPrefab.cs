@@ -27,11 +27,11 @@ namespace C3DE.Prefabs
         public WaterPrefab(string name, Scene scene)
             : base(name, scene)
         {
-            collider = AddComponent<BoxCollider>();
             renderer = AddComponent<MeshRenderer>();
             renderer.CastShadow = false;
             renderer.RecieveShadow = false;
             renderer.Geometry = new PlaneGeometry();
+            collider = AddComponent<BoxCollider>();
         }
 
         public void Generate(string waterTexture, string bumpTexture, Vector3 size)
@@ -50,8 +50,7 @@ namespace C3DE.Prefabs
             renderer.Material = material;
             renderer.Geometry.Size = size;
             renderer.Geometry.Generate(Application.GraphicsDevice);
-            collider.Box = new BoundingBox(Vector3.Zero, size);
-            collider.Center = transform.Position;
+            collider.Box = new BoundingBox(transform.Position, size);
         }
     }
 }

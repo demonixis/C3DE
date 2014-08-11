@@ -276,3 +276,9 @@
 /processorParam:TextureFormat=Color
 /build:Textures/tree.png
 
+#begin FX/TransparentEffect.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:FX/TransparentEffect.fx
+

@@ -1,4 +1,5 @@
-﻿using C3DE.Components.Lights;
+﻿using C3DE.Components.Colliders;
+using C3DE.Components.Lights;
 using C3DE.Components.Renderers;
 using C3DE.Demo.Scripts;
 using C3DE.Geometries;
@@ -33,6 +34,7 @@ namespace C3DE.Demo
             var camera = new CameraPrefab("camera", scene);
             camera.AddComponent<ControllerSwitcher>();
             camera.AddComponent<DemoBehaviour>();
+            camera.AddComponent<RayPickingTester>();
 
             // Light
             var lightPrefab = new LightPrefab("light", LightType.Directional, scene);
@@ -70,6 +72,7 @@ namespace C3DE.Demo
 
             var water = new WaterPrefab("water", scene);
             water.Generate("Textures/water", "Textures/wavesbump", new Vector3(terrain.Width * 0.5f));
+            scene.Destroy(water.Collider);
 
             // Cube
             var cubeSuperMaterial = new StandardMaterial(scene);
@@ -80,6 +83,7 @@ namespace C3DE.Demo
             cubeSuperMaterial.EmissiveColor = new Color(0f, 0.0f, 0.1f, 1.0f);
 
             var cubeScene = new SceneObject();
+            cubeScene.Name = "Super Cube";
             cubeScene.Transform.Translate(0, 5.5f, 15);
             cubeScene.Transform.LocalScale = new Vector3(1.0f);
             cubeScene.Transform.Rotate((float)Math.PI / 4, 0, (float)Math.PI / 4);
@@ -92,6 +96,7 @@ namespace C3DE.Demo
             cube.Geometry = new CubeGeometry();
             cube.Geometry.Generate(GraphicsDevice);
             cube.Material = cubeSuperMaterial;
+            cube.AddComponent<BoxCollider>();
 
             // Second cube
             var simpleMaterial = new SimpleMaterial(scene);
@@ -99,6 +104,7 @@ namespace C3DE.Demo
             simpleMaterial.Alpha = 0.3f;
 
             var cube2Scene = new SceneObject();
+            cube2Scene.Name = "Simple Cube";
             cube2Scene.Transform.Translate(-20, 5.5f, -5);
             cube2Scene.Transform.LocalScale = new Vector3(3.0f);
             cube2Scene.Transform.Rotate(-MathHelper.PiOver4, 0, -MathHelper.PiOver4);
@@ -112,6 +118,7 @@ namespace C3DE.Demo
             cube2.Geometry = new CubeGeometry();
             cube2.Geometry.Generate(GraphicsDevice);
             cube2.Material = simpleMaterial;
+            cube2.AddComponent<BoxCollider>();
 
             // Third cube
             var reflectiveMaterial = new ReflectiveMaterial(scene);
@@ -120,6 +127,7 @@ namespace C3DE.Demo
             reflectiveMaterial.DiffuseColor = Color.Red;
 
             var cube3Scene = new SceneObject();
+            cube3Scene.Name = "Reflective Cube";
             cube3Scene.Transform.Translate(0, 7.5f, -30);
             cube3Scene.Transform.LocalScale = new Vector3(4.0f, 2.0f, 1.5f);
             cube3Scene.Transform.Rotate(MathHelper.PiOver4, 0, -MathHelper.PiOver2);
@@ -133,6 +141,7 @@ namespace C3DE.Demo
             cube3.Geometry = new CubeGeometry();
             cube3.Geometry.Generate(GraphicsDevice);
             cube3.Material = reflectiveMaterial;
+            cube3.AddComponent<BoxCollider>();
 
             Screen.ShowCursor = true;
         }

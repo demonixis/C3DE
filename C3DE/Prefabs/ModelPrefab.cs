@@ -34,7 +34,7 @@ namespace C3DE.Prefabs
             Vector3 transformedPosition;
             Vector3 min = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
             Vector3 max = new Vector3(float.MinValue, float.MinValue, float.MinValue);
-            Matrix[] bonesTransforms = null;
+            Matrix[] bonesTransforms = new Matrix[renderer.Model.Bones.Count];
             
             renderer.Model.CopyAbsoluteBoneTransformsTo(bonesTransforms);
 

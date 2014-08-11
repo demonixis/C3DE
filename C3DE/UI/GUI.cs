@@ -79,10 +79,10 @@ namespace C3DE.UI
             // If checked, draw the check square
             if (isChecked)
             {
-                _cacheRect.X = rect.X + 1;
-                _cacheRect.Y = rect.Y + 1;
-                _cacheRect.Width = rect.Height - 2;
-                _cacheRect.Height = rect.Height - 2;
+                _cacheRect.X = rect.X + 4;
+                _cacheRect.Y = rect.Y + 4;
+                _cacheRect.Width = rect.Height - 8;
+                _cacheRect.Height = rect.Height - 8;
 
                 _spriteBatch.Draw(Skin.Checkbox[2], _cacheRect, Color.White);
             }
@@ -93,11 +93,11 @@ namespace C3DE.UI
 
                 if (Input.Mouse.Clicked())
                     index = isChecked ? 0 : 2;
-     
-                _cacheRect.X = rect.X + 1;
-                _cacheRect.Y = rect.Y + 1;
-                _cacheRect.Width = rect.Height - 2;
-                _cacheRect.Height = rect.Height - 2;
+
+                _cacheRect.X = rect.X + 4;
+                _cacheRect.Y = rect.Y + 4;
+                _cacheRect.Width = rect.Height - 8;
+                _cacheRect.Height = rect.Height - 8; ;
 
                 _spriteBatch.Draw(Skin.Checkbox[index], _cacheRect, Color.White);
 

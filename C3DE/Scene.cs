@@ -472,6 +472,8 @@ namespace C3DE
                     info.Ray = ray;
                     collide = true;
                 }
+
+                i++;
             }
 
             return collide;

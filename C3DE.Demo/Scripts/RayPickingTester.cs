@@ -3,16 +3,18 @@ using Microsoft.Xna.Framework;
 
 namespace C3DE.Demo.Scripts
 {
-    public class RayPicking : Behaviour
+    public class RayPickingTester : Behaviour
     {
         private Scene scene;
         private Camera camera;
-        private bool _hit;
+        private string _hit;
+        private RaycastInfo _raycastInfo;
 
         public override void Start()
         {
             scene = sceneObject.Scene;
             camera = scene.MainCamera;
+            _hit = "Nothing";
         }
 
         public override void Update()
@@ -23,13 +25,18 @@ namespace C3DE.Demo.Scripts
             {
                 var ray = camera.GetRay(Input.Mouse.Position);
 
-                _hit = scene.Raycast(ray.Position, ray.Direction, 50);
+                if (scene.Raycast(ray.Position, ray.Direction, 50, out _raycastInfo))
+                {
+                    _hit = _raycastInfo.Collider.SceneObject.Name;
+                }
+                else
+                    _hit = "Nothing";
             }
         }
 
         public override void OnGUI(UI.GUI gui)
         {
-            gui.Box(new Rectangle(10, 10, 70, 30), _hit ? "Hit" : "Nop");
+            gui.Box(new Rectangle(10, 10, 150, 30), _hit);
         }
     }
 }

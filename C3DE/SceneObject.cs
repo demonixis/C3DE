@@ -27,7 +27,7 @@ namespace C3DE
 
         public int Id { get; private set; }
 
-        public string Name { get; protected set; }
+        public string Name { get; set; }
 
         public bool IsStatic
         {

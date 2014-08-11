@@ -65,6 +65,7 @@ namespace C3DE.Components.Controllers
             UpdateKeyboardInput();
             UpdateMouseInput();
             UpdateGamepadInput();
+            UpdateTouchInput();
 
             _angle += _angleVelocity;
             _distance += _distanceVelocity;
@@ -131,6 +132,11 @@ namespace C3DE.Components.Controllers
                 _distanceVelocity += MoveSpeed * Time.DeltaTime * GamepadSensibility;
             else if (Input.Gamepad.RightShoulder())
                 _distanceVelocity -= MoveSpeed * Time.DeltaTime * GamepadSensibility;
+        }
+
+        public void UpdateTouchInput()
+        {
+            _angle += Input.Touch.Delta() * RotationSpeed * Time.DeltaTime;
         }
 
         private void CheckAngle()
