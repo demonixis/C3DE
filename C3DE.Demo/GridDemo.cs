@@ -1,6 +1,8 @@
-﻿using C3DE.Components.Controllers;
+﻿using C3DE.Components.Colliders;
+using C3DE.Components.Controllers;
 using C3DE.Components.Lights;
 using C3DE.Components.Renderers;
+using C3DE.Components.Renderers.Debug;
 using C3DE.Demo.Scripts;
 using C3DE.Geometries;
 using C3DE.Materials;
@@ -29,6 +31,7 @@ namespace C3DE.Demo
             // Camera
             var camera = new CameraPrefab("camera", scene);
             camera.AddComponent<OrbitController>();
+            camera.AddComponent<RayPicking>();
 
             // Light
             var lightPrefab = new LightPrefab("lightPrefab", LightType.Point, scene);
@@ -86,6 +89,9 @@ namespace C3DE.Demo
             cube.Geometry = new CubeGeometry();
             cube.Geometry.Generate(GraphicsDevice);
             cube.Material = cubeSuperMaterial;
+
+            cubeScene.AddComponent<BoxCollider>();
+            cubeScene.AddComponent<BoundingBoxRenderer>();
 
             // Skybox
             renderer.Skybox.Generate(GraphicsDevice, Content, Demo.StarsSkybox);

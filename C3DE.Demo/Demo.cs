@@ -2,8 +2,8 @@ namespace C3DE.Demo
 {
     public static class Demo
     {
-        public static int ScreenWidth = 1440;
-        public static int ScreenHeight = 900;
+        public static int ScreenWidth = 1024;
+        public static int ScreenHeight = 600;
 
         public static string[] BlueSkybox = new string[6] 
         {
@@ -28,7 +28,7 @@ namespace C3DE.Demo
         // Entry point.
         static void Main(string[] args)
         {
-            using (var game = new TerrainDemo())
+            using (var game = new GridDemo())
                 game.Run();
         }
     }

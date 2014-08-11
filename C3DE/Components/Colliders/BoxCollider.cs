@@ -1,6 +1,7 @@
 ﻿using C3DE.Components.Renderers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
+using System;
 
 namespace C3DE.Components.Colliders
 {
@@ -33,6 +34,9 @@ namespace C3DE.Components.Colliders
         public override void LoadContent(ContentManager content)
         {
             _renderable = GetComponent<RenderableComponent>();
+
+            if (_renderable == null)
+                throw new Exception("You need to attach a renderable component before a BoxCollider.");
         }
 
         /// <summary>

@@ -1,14 +1,16 @@
-﻿using Microsoft.Xna.Framework;
+﻿using C3DE.Components.Colliders;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 
 namespace C3DE.Components.Renderers.Debug
 {
-    public static class BoundingBoxRenderer
+    public class BoundingBoxRenderer : RenderableComponent
     {
-        #region Properties
-
-        private static VertexPositionColor[] verts = new VertexPositionColor[8];
-        private static short[] indices = new short[]
+        private BoxCollider collider;
+        private VertexPositionColor[] verts = new VertexPositionColor[8];
+        private readonly short[] indices = new short[]
         {
             0, 1,
             1, 2,
@@ -24,34 +26,52 @@ namespace C3DE.Components.Renderers.Debug
             7, 4,
         };
 
-        private static BasicEffect effect;
+        private BasicEffect effect;
 
-        #endregion
-
-        public static void Draw(BoundingBox box, Camera camera, Color color)
+        public BoundingBoxRenderer()
+            : this(null)
         {
-            if (effect == null)
-            {
-                effect = new BasicEffect(Application.GraphicsDevice);
-                effect.VertexColorEnabled = true;
-                effect.LightingEnabled = false;
-            }
+        }
 
-            Vector3[] corners = box.GetCorners();
+        public BoundingBoxRenderer(SceneObject sceneObject)
+            : base(sceneObject)
+        {
+
+        }
+
+        public override void LoadContent(ContentManager content)
+        {
+            effect = new BasicEffect(Application.GraphicsDevice);
+            effect.VertexColorEnabled = true;
+            effect.LightingEnabled = false;
+            collider = GetComponent<BoxCollider>();
+
+            if (collider == null)
+                throw new Exception("You need to attach a BoxCollider to this SceneObject to use the BoundingBoxRenderer.");
+        }
+
+        public override void Draw(GraphicsDevice device)
+        {
+            Vector3[] corners = collider.Box.GetCorners();
             for (int i = 0; i < 8; i++)
             {
                 verts[i].Position = corners[i];
-                verts[i].Color = color;
+                verts[i].Color = Color.Green;
             }
 
-            effect.View = camera.view;
-            effect.Projection = camera.projection;
+            effect.View = sceneObject.Scene.MainCamera.view;
+            effect.Projection = sceneObject.Scene.MainCamera.projection;
 
             foreach (EffectPass pass in effect.CurrentTechnique.Passes)
             {
                 pass.Apply();
-                Application.GraphicsDevice.DrawUserIndexedPrimitives(PrimitiveType.LineList, verts, 0, 8, indices, 0, indices.Length / 2);
+                device.DrawUserIndexedPrimitives(PrimitiveType.LineList, verts, 0, 8, indices, 0, indices.Length / 2);
             }
+        }
+
+        public override BoundingSphere GetBoundingSphere()
+        {
+            return new BoundingSphere();
         }
     }
 }

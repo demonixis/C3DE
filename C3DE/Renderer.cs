@@ -64,7 +64,7 @@ namespace C3DE
 
             for (int i = 0; i < scene.RenderList.Count; i++)
             {
-                if (scene.RenderList[i].MaterialCount > 0)
+                if (scene.RenderList[i].MaterialCount == 0)
                     scene.RenderList[i].Material = scene.DefaultMaterial;
 
                 scene.RenderList[i].Material.Pass(scene.RenderList[i]);

@@ -38,7 +38,7 @@ namespace C3DE.Components.Colliders
             _min = Vector3.Zero;
             _max = Vector3.Zero;
             _center = Vector3.Zero;
-            dirty = false;
+            dirty = true;
         }
 
         public abstract bool Collides(Collider other);
