@@ -60,6 +60,7 @@ namespace C3DE
         public static KeyboardComponent Keys { get; internal set; }
         public static MouseComponent Mouse { get; internal set; }
         public static GamepadComponent Gamepad { get; internal set; }
+        public static TouchComponent Touch { get; internal set; }
     }
 
     public class Engine : Game
@@ -107,11 +108,13 @@ namespace C3DE
             Input.Keys = new KeyboardComponent(this);
             Input.Mouse = new MouseComponent(this);
             Input.Gamepad = new GamepadComponent(this);
+            Input.Touch = new TouchComponent(this);
 
             Components.Add(new Time(this));
             Components.Add(Input.Keys);
             Components.Add(Input.Mouse);
             Components.Add(Input.Gamepad);
+            Components.Add(Input.Touch);
            
             base.Initialize();
         }

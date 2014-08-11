@@ -58,12 +58,14 @@
     <Compile Include="Geometries\SphereGeometry.cs" />
     <Compile Include="Geometries\TerrainGeometry.cs" />
     <Compile Include="Geometries\TorusGeometry.cs" />
+    <Compile Include="Input\TouchComponent.cs" />
     <Compile Include="Materials\ReflectiveMaterial.cs" />
     <Compile Include="Materials\SimpleMaterial.cs" />
     <Compile Include="PostProcess\BlurPass.cs" />
     <Compile Include="Prefabs\Meshes\CubePrefab.cs" />
     <Compile Include="Prefabs\Meshes\SpherePrefab.cs" />
     <Compile Include="RenderSettings.cs" />
+    <Compile Include="Resources\ResourcesHelper.cs" />
     <Compile Include="UI\GUISkin.cs" />
     <Compile Include="UI\GUI.cs" />
     <Compile Include="Utils\GraphicsHelper.cs" />
