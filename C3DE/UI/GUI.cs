@@ -39,10 +39,10 @@ namespace C3DE.UI
         {
             var index = 0;
 
-            if (rect.Contains(Input.Mouse.Position))
+            if (rect.Contains(Input.Mouse.Position) || rect.Contains(Input.Touch.GetPosition()))
             {
                 index = 1;
-                if (Input.Mouse.Clicked())
+                if (Input.Mouse.Clicked() || Input.Touch.JustPressed())
                     index = 2;
             }
 
@@ -87,11 +87,11 @@ namespace C3DE.UI
                 _spriteBatch.Draw(Skin.Checkbox[2], _cacheRect, Color.White);
             }
 
-            if (rect.Contains(Input.Mouse.Position))
+            if (rect.Contains(Input.Mouse.Position) || rect.Contains(Input.Touch.GetPosition()))
             {
                 index = 1;
 
-                if (Input.Mouse.Clicked())
+                if (Input.Mouse.Clicked() || Input.Touch.JustPressed())
                     index = isChecked ? 0 : 2;
 
                 _cacheRect.X = rect.X + 4;

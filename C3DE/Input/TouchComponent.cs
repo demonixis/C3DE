@@ -29,6 +29,11 @@ namespace C3DE.Inputs
             }
         }
 
+        public int TouchCount
+        {
+            get { return touchCollection.Count; }
+        }
+
         public bool Available
         {
             get { return TouchPanel.IsGestureAvailable; }
@@ -122,6 +127,16 @@ namespace C3DE.Inputs
             _released[index] = touchCollection[index].State == TouchLocationState.Released;
 
             _pressure[index] = touchCollection[index].Pressure;
+
+            // For a proper delta value.
+            if (lastTouchCollection.Count > index)
+            {
+                if (lastTouchCollection[index].State != TouchLocationState.Moved)
+                {
+                    _lastPosition[index].X = _position[index].X;
+                    _lastPosition[index].Y = _position[index].Y;
+                }
+            }
         }
 
         public void RestoreTouchState(int index = 0)

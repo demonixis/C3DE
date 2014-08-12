@@ -18,6 +18,7 @@ namespace C3DE.Components.Controllers
         private Vector3 _target;
         private Vector2 _angleVelocity;
         private Vector3 _positionVelicoty;
+        private Vector3 _cacheVec3;
         private float _distanceVelocity;
 
         public float MinAngle { get; set; }
@@ -136,7 +137,15 @@ namespace C3DE.Components.Controllers
 
         public void UpdateTouchInput()
         {
-            _angle += Input.Touch.Delta() * RotationSpeed * Time.DeltaTime;
+            if (Input.Touch.TouchCount == 1)
+                _angle += Input.Touch.Delta() * RotationSpeed * Time.DeltaTime;
+            /*else if (Input.Touch.TouchCount == 3)
+            {
+                _cacheVec3.X = Input.Touch.Delta().X;
+                _cacheVec3.Y = Input.Touch.Delta().Y;
+                _cacheVec3.Z = 0;
+                _positionVelicoty += _cacheVec3 * StrafeSpeed * Time.DeltaTime;
+            }*/
         }
 
         private void CheckAngle()

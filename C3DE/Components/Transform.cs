@@ -63,6 +63,38 @@ namespace C3DE.Components
         {
             get { return world; }
         }
+		
+		public Vector3 Forward
+		{
+			get
+			{	
+				return getTransformedVector(Vector3.Up);
+			}
+		}
+
+		public Vector3 Backward
+		{
+			get
+			{	
+				return getTransformedVector(Vector3.Backward);
+			}
+		}
+
+		public Vector3 Right
+		{
+			get
+			{	
+				return getTransformedVector(Vector3.Right);
+			}
+		}
+
+		public Vector3 Left
+		{
+			get
+			{	
+				return getTransformedVector(Vector3.Left);
+			}
+		}
 
         public Transform()
             : this(null)
@@ -131,5 +163,10 @@ namespace C3DE.Components
                 _dirty = false;
             }
         }
+		
+		private Vector3 getTransformedVector(Vector3 direction)
+		{
+			return Vector3.Transform(direction, Matrix.CreateFromYawPitchRoll(_rotation.Y, _rotation.X, _rotation.Z));
+		}
     }
 }
