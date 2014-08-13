@@ -37,13 +37,9 @@ namespace C3DE.Components.Renderers
             if (model != null)
             {
                 foreach (ModelMesh mesh in model.Meshes)
-                {
                     boundingSphere = BoundingSphere.CreateMerged(boundingSphere, mesh.BoundingSphere);
-                }
 
-                boundingSphere = model.Meshes[0].BoundingSphere;
-                boundingSphere.Radius += 0.1f;
-                boundingSphere.Center = sceneObject.Transform.LocalPosition;
+                boundingSphere.Center = sceneObject.Transform.Position;
                 boundingSphere.Transform(sceneObject.Transform.world);
 
                 UpdateColliders();
