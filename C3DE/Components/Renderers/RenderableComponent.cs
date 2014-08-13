@@ -1,4 +1,5 @@
-﻿using C3DE.Materials;
+﻿using C3DE.Components.Colliders;
+using C3DE.Materials;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
@@ -10,7 +11,7 @@ namespace C3DE.Components.Renderers
     /// </summary>
     public abstract class RenderableComponent : Component
     {
-        protected BoundingSphere boundingSphere; // FIXME
+        protected internal BoundingSphere boundingSphere;
         protected internal List<int> materials;
         protected internal int materialCount;
 
@@ -40,12 +41,7 @@ namespace C3DE.Components.Renderers
         }
 
         public RenderableComponent()
-            : this(null)
-        {
-        }
-
-        public RenderableComponent(SceneObject sceneObject)
-            : base(sceneObject)
+            : base()
         {
             CastShadow = true;
             RecieveShadow = true;
@@ -79,7 +75,19 @@ namespace C3DE.Components.Renderers
             }
         }
 
-        public abstract BoundingSphere GetBoundingSphere();
+        protected void UpdateColliders()
+        {
+            var colliders = GetComponents<Collider>();
+            var size = colliders.Length;
+
+            if (size > 0)
+            {
+                for (var i = 0; i < size; i++)
+                    colliders[i].Compute();
+            }
+        }
+
+        public abstract void ComputeBoundingSphere();
 
         public abstract void Draw(GraphicsDevice device);
     }

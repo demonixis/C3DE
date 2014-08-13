@@ -25,7 +25,7 @@ namespace C3DE.Demo.Scripts
             {
                 var ray = camera.GetRay(Input.Mouse.Position);
 
-                if (scene.Raycast(ray.Position, ray.Direction, 50, out _raycastInfo))
+                if (scene.Raycast(ray.Position, ray.Direction, 250, out _raycastInfo))
                 {
                     _hit = _raycastInfo.Collider.SceneObject.Name;
                 }

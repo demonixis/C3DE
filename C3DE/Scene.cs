@@ -24,7 +24,6 @@ namespace C3DE
     {
         public readonly Material DefaultMaterial;
 
-        internal protected ContentManager _content;
         internal protected SmartList<SceneObject> members;
         internal protected List<RenderableComponent> renderList;
         internal protected List<Material> materials;
@@ -86,10 +85,8 @@ namespace C3DE
             : base()
         {
             transform.Root = transform;
-            isStatic = false;
             members = new SmartList<SceneObject>();
             scene = this;
-            _content = content;
             renderList = new List<RenderableComponent>(10);
             materials = new List<Material>(5);
             colliders = new List<Collider>(5);
@@ -110,13 +107,13 @@ namespace C3DE
         /// Load content of all components.
         /// </summary>
         /// <param name="content"></param>
-        public override void LoadContent(ContentManager content)
+        public override void Initialize()
         {
             for (int i = 0, l = materials.Count; i < l; i++)
-                materials[i].LoadContent(_content);
+                materials[i].LoadContent(Application.Content);
 
             for (int i = 0; i < members.Size; i++)
-                members[i].LoadContent(_content);
+                members[i].Initialize();
 
             members.CheckRequired = true;
             initialized = true;
@@ -176,11 +173,11 @@ namespace C3DE
             {
                 var renderable = component as RenderableComponent;
 
-                if (type == ComponentChangeType.Add && !renderList.Contains(renderable))
-                    renderList.Add(renderable);
+                if (type == ComponentChangeType.Add)
+                    Add(renderable);
 
                 else if (type == ComponentChangeType.Remove)
-                    renderList.Remove(renderable);
+                    Remove(renderable);
             }
 
             else if (component is Behaviour)
@@ -251,7 +248,7 @@ namespace C3DE
                 sceneObject.Transform.Root = transform;
 
                 if (initialized)
-                    sceneObject.LoadContent(_content);
+                    sceneObject.Initialize();
 
                 CheckComponents(sceneObject, ComponentChangeType.Add);
 
@@ -274,7 +271,7 @@ namespace C3DE
             if (!materials.Contains(material))
             {
                 if (initialized)
-                    material.LoadContent(_content);
+                    material.LoadContent(Application.Content);
 
                 materials.Add(material);
             }
@@ -313,6 +310,12 @@ namespace C3DE
             return index;
         }
 
+        protected void Add(RenderableComponent renderable)
+        {
+            if (!renderList.Contains(renderable))
+                renderList.Add(renderable);
+        }
+
         protected void Add(Light light)
         {
             if (!lights.Contains(light))
@@ -328,11 +331,13 @@ namespace C3DE
         protected void Add(Behaviour script)
         {
             if (!scripts.Contains(script))
-            {
                 scripts.Add(script);
-                script.Awake();
-                script.Start();
-            }
+        }
+
+        protected void Remove(RenderableComponent renderable)
+        {
+            if (renderList.Contains(renderable))
+                renderList.Remove(renderable);
         }
 
         protected void Remove(Behaviour script)
@@ -427,16 +432,8 @@ namespace C3DE
 
         #region Raycast
 
-        /// <summary>
-        /// Cast a ray on collidable objects.
-        /// </summary>
-        /// <param name="origin">Ray's position.</param>
-        /// <param name="direction">Ray's direction.</param>
-        /// <param name="distance">Maximum distance.</param>
-        /// <returns></returns>
-        public bool Raycast(Vector3 origin, Vector3 direction, float distance)
+        private bool Raycast(Ray ray, float distance = 1000.0f)
         {
-            Ray ray = new Ray(origin, direction);
             float? val;
 
             for (int i = 0, l = colliders.Count; i < l; i++)
@@ -450,11 +447,10 @@ namespace C3DE
             return false;
         }
 
-        public bool Raycast(Vector3 origin, Vector3 direction, float distance, out RaycastInfo info)
+        public bool Raycast(Ray ray, float distance, out RaycastInfo info)
         {
             info = new RaycastInfo();
 
-            Ray ray = new Ray(origin, direction);
             float? val;
             int i = 0;
             int size = colliders.Count;
@@ -477,6 +473,45 @@ namespace C3DE
             }
 
             return collide;
+        }
+
+        public bool Raycast(Vector3 origin, Vector3 direction, float distance = 1000.0f)
+        {
+            return Raycast(new Ray(origin, direction), distance);
+        }
+
+        public bool Raycast(Vector3 origin, Vector3 direction, float distance, out RaycastInfo info)
+        {
+            return Raycast(new Ray(origin, direction), distance, out info);
+        }
+
+        public bool RaycastAll(Ray ray, float distance, out RaycastInfo[] raycastInfos)
+        {
+            List<RaycastInfo> infos = new List<RaycastInfo>();
+            RaycastInfo info = new RaycastInfo();
+            float? val;
+
+            for (int i = 0, l = colliders.Count; i < l; i++)
+            {
+                val = colliders[i].IntersectedBy(ref ray);
+
+                if (val.HasValue && val.Value <= distance)
+                {
+                    info.Collider = colliders[i];
+                    info.Distance = val.Value;
+                    info.Ray = ray;
+                    infos.Add(info);
+                }
+            }
+
+            raycastInfos = infos.ToArray();
+
+            return raycastInfos.Length > 0;
+        }
+
+        public bool RaycastAll(Vector3 origin, Vector3 direction, float distance, out RaycastInfo[] infos)
+        {
+            return RaycastAll(new Ray(origin, direction), distance, out infos);
         }
 
         #endregion

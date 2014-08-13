@@ -17,7 +17,6 @@ namespace C3DE
         protected Transform transform;
         protected Scene scene;
         protected bool enabled;
-        protected bool isStatic;
         protected List<Component> components;
         protected bool initialized;
 
@@ -29,11 +28,9 @@ namespace C3DE
 
         public string Name { get; set; }
 
-        public bool IsStatic
-        {
-            get { return isStatic; }
-            set { isStatic = value; }
-        }
+        public string Tag { get; set; }
+
+        public bool IsStatic { get; set; }
 
         public bool Enabled
         {
@@ -96,30 +93,33 @@ namespace C3DE
         /// <summary>
         /// Create a basic scene object.
         /// </summary>
-        public SceneObject()
+        public SceneObject(string name = "")
         {
-            transform = new Transform(this);
+            transform = new Transform();
+            transform.SceneObject = this;
 
-            components = new List<Component>();
+            components = new List<Component>(5);
             components.Add(transform);
 
-            enabled = true;
-            isStatic = false;
+            transform.Awake();
 
-            Id = ++SceneObjectCounter;
-            Name = "SceneObject_" + Id;
+            enabled = true;
+            IsStatic = false;
+
+            Id = SceneObjectCounter + 1;
+            Name = !string.IsNullOrEmpty(name) ? name : "SceneObject_" + Id;
         }
 
         /// <summary>
         /// Initialize and load specific content.
         /// </summary>
         /// <param name="content">The content manager.</param>
-        public virtual void LoadContent(ContentManager content)
+        public virtual void Initialize()
         {
             if (!initialized)
             {
                 for (int i = 0; i < components.Count; i++)
-                    components[i].LoadContent(content);
+                    components[i].Start();
 
                 initialized = true;
             }
@@ -134,6 +134,10 @@ namespace C3DE
             {
                 if (components[i].Enabled)
                     components[i].Update();
+                else
+                {
+                    Console.WriteLine("disabled " + components[i].Id);
+                }
             }
         }
 
@@ -209,11 +213,13 @@ namespace C3DE
             }
 
             component.SceneObject = this;
+            component.Awake();
+
             components.Add(component);
             components.Sort();
 
             if (initialized)
-                component.LoadContent(Application.Content);
+                component.Start();
 
             NotifyComponentChanged(component);
 
@@ -234,6 +240,19 @@ namespace C3DE
             }
 
             return null;
+        }
+
+        public T[] GetComponents<T>() where T : Component
+        {
+            List<T> comps = new List<T>();
+
+            for (int i = 0; i < components.Count; i++)
+            {
+                if (components[i] is T)
+                    comps.Add(components[i] as T);
+            }
+
+            return comps.ToArray();
         }
 
         /// <summary>

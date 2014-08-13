@@ -53,7 +53,7 @@ namespace C3DE.Demo
 
             var lightSphere = lightPrefab.AddComponent<MeshRenderer>();
             lightSphere.Geometry = new SphereGeometry(1f, 8);
-            lightSphere.Geometry.Generate(GraphicsDevice);
+            lightSphere.Geometry.Generate();
             lightSphere.CastShadow = false;
             lightSphere.RecieveShadow = false;
             lightSphere.Material = new SimpleMaterial(scene);
@@ -94,7 +94,7 @@ namespace C3DE.Demo
             var cube = cubeScene.AddComponent<MeshRenderer>();
             cube.RecieveShadow = false;
             cube.Geometry = new CubeGeometry();
-            cube.Geometry.Generate(GraphicsDevice);
+            cube.Geometry.Generate();
             cube.Material = cubeSuperMaterial;
             cube.AddComponent<BoxCollider>();
 
@@ -116,7 +116,7 @@ namespace C3DE.Demo
             cube2.RecieveShadow = false;
             cube2.CastShadow = true;
             cube2.Geometry = new CubeGeometry();
-            cube2.Geometry.Generate(GraphicsDevice);
+            cube2.Geometry.Generate();
             cube2.Material = simpleMaterial;
             cube2.AddComponent<BoxCollider>();
 
@@ -139,7 +139,7 @@ namespace C3DE.Demo
             cube3.RecieveShadow = false;
             cube3.CastShadow = true;
             cube3.Geometry = new CubeGeometry();
-            cube3.Geometry.Generate(GraphicsDevice);
+            cube3.Geometry.Generate();
             cube3.Material = reflectiveMaterial;
             cube3.AddComponent<BoxCollider>();
 

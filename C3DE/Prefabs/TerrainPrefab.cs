@@ -102,7 +102,7 @@ namespace C3DE.Prefabs
 
         private void Build()
         {
-            renderer.Geometry.Generate(Application.GraphicsDevice);
+            renderer.Geometry.Generate();
             renderer.ComputeBoundingSphere();
         }
 

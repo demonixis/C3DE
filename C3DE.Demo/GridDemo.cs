@@ -2,7 +2,6 @@
 using C3DE.Components.Controllers;
 using C3DE.Components.Lights;
 using C3DE.Components.Renderers;
-using C3DE.Components.Renderers.Debug;
 using C3DE.Demo.Scripts;
 using C3DE.Geometries;
 using C3DE.Materials;
@@ -51,7 +50,7 @@ namespace C3DE.Demo
 
             var lightPrefabSphere = lightPrefab.AddComponent<MeshRenderer>();
             lightPrefabSphere.Geometry = new SphereGeometry(2f, 4);
-            lightPrefabSphere.Geometry.Generate(GraphicsDevice);
+            lightPrefabSphere.Geometry.Generate();
             lightPrefabSphere.CastShadow = false;
             lightPrefabSphere.RecieveShadow = false;
             lightPrefabSphere.Material = new SimpleMaterial(scene);
@@ -87,11 +86,10 @@ namespace C3DE.Demo
             var cube = cubeScene.AddComponent<MeshRenderer>();
             cube.RecieveShadow = false;
             cube.Geometry = new CubeGeometry();
-            cube.Geometry.Generate(GraphicsDevice);
+            cube.Geometry.Generate();
             cube.Material = cubeSuperMaterial;
 
             cubeScene.AddComponent<BoxCollider>();
-            cubeScene.AddComponent<BoundingBoxRenderer>();
 
             // Skybox
             renderer.Skybox.Generate(GraphicsDevice, Content, Demo.StarsSkybox);

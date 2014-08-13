@@ -14,7 +14,6 @@ namespace C3DE.Components
         protected internal Matrix projection;
         protected internal Vector3 camView;
         protected Vector3 reference;
-        protected Transform transform;
         private Vector3 _target;
         private Vector3 _upVector;
         private float _fieldOfView;
@@ -51,12 +50,7 @@ namespace C3DE.Components
         }
 
         public Camera()
-            : this(null)
-        {
-        }
-
-        public Camera(SceneObject sceneObject)
-            : base(sceneObject)
+            : base()
         {
             _fieldOfView = MathHelper.ToRadians(45);
             _aspectRatio = (float)Application.GraphicsDevice.Viewport.Width / (float)Application.GraphicsDevice.Viewport.Height;
@@ -67,9 +61,8 @@ namespace C3DE.Components
             _matrixRotation0 = Matrix.CreateRotationY(0.0f);
         }
 
-        public override void LoadContent(ContentManager content)
+        public override void Start()
         {
-            transform = GetComponent<Transform>();
             Setup(transform.LocalPosition, Vector3.Zero, Vector3.Up);
         }
 

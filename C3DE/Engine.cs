@@ -121,7 +121,7 @@ namespace C3DE
 
         protected override void LoadContent()
         {
-            scene.LoadContent(Content);
+            scene.Initialize();
         }
 
         protected override void Update(GameTime gameTime)

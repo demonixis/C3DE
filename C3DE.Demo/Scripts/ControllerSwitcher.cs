@@ -56,24 +56,10 @@ namespace C3DE.Demo.Scripts
             gui.Box(_box, "Controller");
 
             if (gui.Button(_btn1, "Orbit"))
-            {
-                _orbitController.Enabled = true;
-                _fpController.Enabled = false;
-            }
+                SetControllerActive(0);
 
             if (gui.Button(_btn2, "First Person"))
-            {
-                _orbitController.Enabled = false;
-                _fpController.Enabled = true;
-
-                _fpController.Fly = _flyMode;
-
-                if (_resetPosition)
-                {
-                    transform.Position = new Vector3(0, 2, 0);
-                    _camera.Target = Vector3.Zero;
-                }
-            }
+                SetControllerActive(1);
 
             _resetPosition = gui.Checkbox(_checkRect, "Reset position", _resetPosition);
             _flyMode = gui.Checkbox(_checkRect2, "Fly Mode", _flyMode);

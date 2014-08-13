@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 
 namespace C3DE.Geometries
 {
@@ -9,12 +10,12 @@ namespace C3DE.Geometries
         private short[] _indices;
         private VertexBuffer _vertexBuffer;
         private IndexBuffer _indexBuffer;
+        private bool _constructed;
+
         protected Vector3 size = Vector3.One;
         protected Vector2 repeatTexture = Vector2.One;
         protected bool invertFaces = false;
         
-        protected bool constructed;
-
         public VertexPositionNormalTexture[] Vertices
         {
             get { return _vertices; }
@@ -53,7 +54,20 @@ namespace C3DE.Geometries
 
         public bool Constructed
         {
-            get { return constructed; }
+            get { return _constructed; }
+            protected set
+            {
+                _constructed = true;
+                NotifyConstructionDone();
+            }
+        }
+
+        public event EventHandler<EventArgs> ConstructionDone = null;
+
+        public void NotifyConstructionDone()
+        {
+            if (ConstructionDone != null)
+                ConstructionDone(this, EventArgs.Empty);
         }
 
         protected abstract void CreateGeometry();
@@ -76,9 +90,9 @@ namespace C3DE.Geometries
             _indexBuffer.SetData(_indices);
         }
 
-        public void Generate(GraphicsDevice device)
+        public void Generate()
         {
-            if (constructed)
+            if (Constructed)
             {
                 _vertexBuffer.Dispose();
                 _indexBuffer.Dispose();
@@ -87,8 +101,8 @@ namespace C3DE.Geometries
             CreateGeometry();
                 
             ApplyParameters();
-            CreateBuffers(device);
-            constructed = true;
+            CreateBuffers(Application.GraphicsDevice);
+            Constructed = true;
         }
 
         public void ComputeNormals()

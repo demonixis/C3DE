@@ -12,8 +12,6 @@ namespace C3DE.Demo
 {
     public class TerrainDemo : Engine
     {
-        Transform lightTransform;
-
         public TerrainDemo()
             : base()
         {

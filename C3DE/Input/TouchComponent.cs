@@ -16,8 +16,10 @@ namespace C3DE.Inputs
         private float[] _pressure;
         private int _maxFingerPoints;
         private bool _needUpdate;
-        private Vector2 _sensitivity;
         private Vector2 _cacheVec2;
+
+        public float DeadZone { get; set; }
+        public float MaxDelta { get; set; }
 
         public int MaxFingerPoints
         {
@@ -39,15 +41,7 @@ namespace C3DE.Inputs
             get { return TouchPanel.IsGestureAvailable; }
         }
 
-        public Vector2 Sensitivity
-        {
-            get { return _sensitivity; }
-            set
-            {
-                if (value.X >= 0.0f && value.Y >= 0.0f)
-                    _sensitivity = value;
-            }
-        }
+        public Vector2 Sensitivity { get; set; }
 
         public TouchComponent(Game game)
             : base(game)
@@ -60,7 +54,9 @@ namespace C3DE.Inputs
             else
                 _maxFingerPoints = 0;
 
-            _sensitivity = Vector2.One;
+            Sensitivity = Vector2.One;
+            MaxDelta = 100;
+            DeadZone = 1;
             _needUpdate = true;
         }
 
@@ -184,8 +180,14 @@ namespace C3DE.Inputs
                 return Vector2.Zero;
 
             _cacheVec2 = _position[id] - _lastPosition[id];
-            _cacheVec2.X = (Math.Abs(_cacheVec2.X) > 100) ? 0 : _cacheVec2.X * _sensitivity.X;
-            _cacheVec2.Y = (Math.Abs(_cacheVec2.Y) > 100) ? 0 : _cacheVec2.Y * _sensitivity.Y;
+            _cacheVec2.X = Math.Abs(_cacheVec2.X);
+            _cacheVec2.Y = Math.Abs(_cacheVec2.Y);
+
+            if (_cacheVec2.X > DeadZone && _cacheVec2.X < MaxDelta)
+                _cacheVec2.X = (_position[id].X - _lastPosition[id].X) * Sensitivity.X;
+
+            if (_cacheVec2.Y > DeadZone && _cacheVec2.Y < MaxDelta)
+                _cacheVec2.Y = (_position[id].Y - _lastPosition[id].Y) * Sensitivity.Y;
 
             return _cacheVec2;
         }
@@ -208,7 +210,7 @@ namespace C3DE.Inputs
 
         public bool JustPressed(int id = 0)
         {
-            if (id >= MaxFingerPoints)
+            if (id >= lastTouchCollection.Count)
                 return false;
 
             return (lastTouchCollection[id].State == TouchLocationState.Pressed || lastTouchCollection[id].State == TouchLocationState.Moved) && touchCollection[id].State == TouchLocationState.Released;
@@ -216,7 +218,7 @@ namespace C3DE.Inputs
 
         public bool JustReleased(int id = 0)
         {
-            if (id >= MaxFingerPoints)
+            if (id >= lastTouchCollection.Count)
                 return false;
 
             return touchCollection[id].State == TouchLocationState.Released && (lastTouchCollection[id].State == TouchLocationState.Pressed || lastTouchCollection[id].State == TouchLocationState.Moved);

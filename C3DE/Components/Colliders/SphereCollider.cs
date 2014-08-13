@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using C3DE.Components.Renderers;
+using Microsoft.Xna.Framework;
 
 namespace C3DE.Components.Colliders
 {
@@ -16,22 +17,22 @@ namespace C3DE.Components.Colliders
         }
 
         public SphereCollider()
-            : this(null)
-        {
-        }
-
-        public SphereCollider(SceneObject sceneObject)
-            : base(sceneObject)
+            : base()
         {
             _sphere = new BoundingSphere();
         }
 
-        /// <summary>
-        /// Compute the bounding box.
-        /// </summary>
-        public override void Update()
+        public override void Start()
         {
+            
+        }
 
+        public override void Compute()
+        {
+            var renderable = GetComponent<RenderableComponent>();
+
+            if (renderable != null)
+                _sphere = renderable.boundingSphere;
         }
 
         public override bool Collides(Collider other)

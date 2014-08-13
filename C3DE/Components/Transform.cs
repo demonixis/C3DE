@@ -97,12 +97,7 @@ namespace C3DE.Components
 		}
 
         public Transform()
-            : this(null)
-        {
-        }
-
-        public Transform(SceneObject sceneObject)
-            : base (sceneObject)
+            : base ()
         {
             _position = Vector3.Zero;
             _rotation = Vector3.Zero;

@@ -6,11 +6,8 @@ namespace C3DE.Prefabs
     public abstract class Prefab : SceneObject
     {
         public Prefab(string name, Scene scene)
-            : base()
+            : base(name)
         {
-            if (!string.IsNullOrEmpty(name))
-                Name = name;
-
             this.scene = scene;
             this.scene.Add(this);
         }

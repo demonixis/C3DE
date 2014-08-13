@@ -1,13 +1,13 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Input;
+using System;
 
 namespace C3DE.Components.Controllers
 {
     public class FirstPersonController : Component
     {
         private Camera _camera;
-        private Transform _transform;
         private Matrix _rotationMatrix;
         private Vector3 _transformedReference;
         private Vector3 _translation = Vector3.Zero;
@@ -22,12 +22,7 @@ namespace C3DE.Components.Controllers
         public Vector2 MouseSensibility { get; set; }
 
         public FirstPersonController()
-            : this(null)
-        {
-        }
-
-        public FirstPersonController(SceneObject sceneObject)
-            : base(sceneObject)
+            : base()
         {
             Velocity = 0.95f;
             AngularVelocity = 0.95f;
@@ -39,10 +34,12 @@ namespace C3DE.Components.Controllers
             Fly = false;
         }
 
-        public override void LoadContent(ContentManager content)
+        public override void Start()
         {
             _camera = GetComponent<Camera>();
-            _transform = GetComponent<Transform>();
+
+            if (_camera == null)
+                throw new Exception("No camera attached to this scene object.");
         }
 
         public override void Update()
@@ -51,16 +48,16 @@ namespace C3DE.Components.Controllers
             UpdateKeyboardInput();
             UpdateGamepadInput();
 
-            _rotationMatrix = Matrix.CreateFromYawPitchRoll(_transform.Rotation.Y, _transform.Rotation.X, 0.0f);
+            _rotationMatrix = Matrix.CreateFromYawPitchRoll(transform.Rotation.Y, transform.Rotation.X, 0.0f);
 
-            _transformedReference = Vector3.Transform(_translation, !Fly ? Matrix.CreateRotationY(_transform.Rotation.Y) : _rotationMatrix);
+            _transformedReference = Vector3.Transform(_translation, !Fly ? Matrix.CreateRotationY(transform.Rotation.Y) : _rotationMatrix);
 
             // Translate and rotate
-            _transform.Translate(ref _transformedReference);
-            _transform.Rotate(ref _rotation);
+            transform.Translate(ref _transformedReference);
+            transform.Rotate(ref _rotation);
 
             // Update target
-            _camera.Target = sceneObject.Transform.Position + Vector3.Transform(_camera.Reference, _rotationMatrix);
+            _camera.Target = transform.Position + Vector3.Transform(_camera.Reference, _rotationMatrix);
 
             _translation *= Velocity;
             _rotation *= AngularVelocity;

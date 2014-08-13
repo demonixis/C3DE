@@ -77,7 +77,7 @@ namespace C3DE
             _shadowData = new Vector3(0, 0, 0);
         }
 
-        public void LoadContent(ContentManager content)
+        public void Initialize()
         {
             _shadowEffect = Application.Content.Load<Effect>("fx/ShadowMapEffect");
         }

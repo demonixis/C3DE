@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Input;
+using System;
 
 namespace C3DE.Components.Controllers
 {
@@ -11,7 +12,6 @@ namespace C3DE.Components.Controllers
     public class OrbitController : Component
     {
         private Camera _camera;
-        private Transform _transform;
         private float _distance;
         private Vector2 _angle;
         private Vector3 _position;
@@ -33,12 +33,7 @@ namespace C3DE.Components.Controllers
         public float AngularVelocity { get; set; }
 
         public OrbitController()
-            : this(null)
-        {
-        }
-
-        public OrbitController(SceneObject sceneObject)
-            : base(sceneObject)
+            : base()
         {
             _angle = new Vector2(0.0f, -MathHelper.Pi / 6.0f);
             _distance = 35;
@@ -55,10 +50,12 @@ namespace C3DE.Components.Controllers
             AngularVelocity = 0.95f;
         }
 
-        public override void LoadContent(ContentManager content)
+        public override void Start()
         {
             _camera = GetComponent<Camera>();
-            _transform = GetComponent<Transform>();
+
+            if (_camera == null)
+                throw new Exception("No camera attached to this scene object.");
         }
 
         public override void Update()
@@ -79,7 +76,7 @@ namespace C3DE.Components.Controllers
             _position *= _distance;
             _position += _camera.Target;
 
-            _transform.Position = _position;
+            transform.Position = _position;
             _camera.Target = _target;
 
             _angleVelocity *= AngularVelocity;
@@ -139,13 +136,13 @@ namespace C3DE.Components.Controllers
         {
             if (Input.Touch.TouchCount == 1)
                 _angle += Input.Touch.Delta() * RotationSpeed * Time.DeltaTime;
-            /*else if (Input.Touch.TouchCount == 3)
+            else if (Input.Touch.TouchCount == 3)
             {
                 _cacheVec3.X = Input.Touch.Delta().X;
                 _cacheVec3.Y = Input.Touch.Delta().Y;
                 _cacheVec3.Z = 0;
-                _positionVelicoty += _cacheVec3 * StrafeSpeed * Time.DeltaTime;
-            }*/
+                _positionVelicoty += _cacheVec3 * StrafeSpeed * Time.DeltaTime * 0.5f;
+            }
         }
 
         private void CheckAngle()

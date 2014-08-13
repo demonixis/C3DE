@@ -28,18 +28,15 @@ namespace C3DE.Components.Colliders
         }
 
         public Collider()
-            : this(null)
-        {
-        }
-
-        public Collider(SceneObject sceneObject)
-            : base(sceneObject)
+            : base()
         {
             _min = Vector3.Zero;
             _max = Vector3.Zero;
             _center = Vector3.Zero;
             dirty = true;
         }
+
+        public abstract void Compute();
 
         public abstract bool Collides(Collider other);
 

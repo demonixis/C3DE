@@ -1,4 +1,5 @@
-﻿using C3DE.Geometries;
+﻿using C3DE.Components.Colliders;
+using C3DE.Geometries;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -7,9 +8,9 @@ namespace C3DE.Components.Renderers
 {
     public class MeshRenderer : RenderableComponent
     {
+        private bool _haveListener;
         protected Geometry geometry;
-        protected bool _dirty;
-
+        
         public Geometry Geometry
         {
             get { return geometry; }
@@ -17,25 +18,43 @@ namespace C3DE.Components.Renderers
             {
                 if (value != geometry && value != null)
                 {
+                    if (geometry != null && _haveListener)
+                    {
+                        geometry.ConstructionDone -= OnGeometryConstructionDone;
+                        _haveListener = false;
+                    }
+
                     geometry = value;
-                    _dirty = true;
+
+                    if (!geometry.Constructed)
+                    {
+                        geometry.ConstructionDone += OnGeometryConstructionDone;
+                        _haveListener = true;
+                    }
                 }
             }
         }
 
+        private void OnGeometryConstructionDone(object sender, EventArgs e)
+        {
+            if (geometry != null)
+                geometry.ConstructionDone -= OnGeometryConstructionDone;
+
+            _haveListener = false;
+
+            ComputeBoundingSphere();
+        }
+
         public MeshRenderer()
-            : this(null)
+            : base()
         {
         }
 
-        public MeshRenderer(SceneObject sceneObject)
-            : base(sceneObject)
+        public override void ComputeBoundingSphere()
         {
-            _dirty = true;
-        }
+            if (geometry == null)
+                return;
 
-        public void ComputeBoundingSphere()
-        {
             var box = new BoundingBox(new Vector3(float.MaxValue), new Vector3(float.MinValue));
 
             for (var i = 0; i < geometry.Vertices.Length; i++)
@@ -57,26 +76,14 @@ namespace C3DE.Components.Renderers
             boundingSphere.Radius = (int)Math.Max(Math.Max(width, height), depth);
             boundingSphere.Center = sceneObject.Transform.LocalPosition;
             boundingSphere.Transform(sceneObject.Transform.world);
-        }
 
-        public override BoundingSphere GetBoundingSphere()
-        {
-            return boundingSphere;
+            UpdateColliders();
         }
 
         public override void Update()
         {
-            base.Update();
-
-            if (_dirty)
-            {
-                if (geometry.Constructed)
-                    ComputeBoundingSphere();
-
-                _dirty = false;
-            }
-
-            boundingSphere.Center = sceneObject.Transform.Position;
+            if (!sceneObject.IsStatic)
+                boundingSphere.Center = transform.Position;
         }
 
         public override void Draw(GraphicsDevice device)

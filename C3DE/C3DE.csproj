@@ -38,17 +38,14 @@
   <ItemGroup>
     <Compile Include="Components\Behaviour.cs" />
     <Compile Include="Components\Controllers\OrbitController.cs" />
-    <Compile Include="Components\Renderers\Debug\BoundingBoxRenderer.cs" />
     <Compile Include="Components\Camera.cs" />
     <Compile Include="Components\Controllers\FirstPersonController.cs" />
     <Compile Include="Components\Colliders\BoxCollider.cs" />
     <Compile Include="Components\Colliders\Collider.cs" />
     <Compile Include="Components\Colliders\SphereCollider.cs" />
     <Compile Include="Components\Lights\Light.cs" />
-    <Compile Include="Components\Renderers\Debug\FrustrumRenderer.cs" />
     <Compile Include="Components\Renderers\MeshRenderer.cs" />
-    <Compile Include="Components\Renderers\QuadRenderer.cs" />
-    <Compile Include="Components\Renderers\Debug\RayRenderer.cs" />
+    <Compile Include="QuadRenderer.cs" />
     <Compile Include="Geometries\CubeGeometry.cs" />
     <Compile Include="Geometries\CylinderGeometry.cs" />
     <Compile Include="Geometries\Geometry.cs" />

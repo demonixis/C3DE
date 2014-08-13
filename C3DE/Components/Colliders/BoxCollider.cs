@@ -10,7 +10,6 @@ namespace C3DE.Components.Colliders
     /// </summary>
     public class BoxCollider : Collider
     {
-        private RenderableComponent _renderable;
         private BoundingBox _box;
 
         public BoundingBox Box
@@ -20,23 +19,15 @@ namespace C3DE.Components.Colliders
         }
 
         public BoxCollider()
-            : this(null)
-        {
-        }
-
-        public BoxCollider(SceneObject sceneObject)
-            : base(sceneObject)
+            : base()
         {
             _box = new BoundingBox();
             _center = Vector3.Zero;
         }
 
-        public override void LoadContent(ContentManager content)
+        public override void Start()
         {
-            _renderable = GetComponent<RenderableComponent>();
-
-            if (_renderable == null)
-                throw new Exception("You need to attach a renderable component before a BoxCollider.");
+            Compute();
         }
 
         /// <summary>
@@ -44,14 +35,15 @@ namespace C3DE.Components.Colliders
         /// </summary>
         public override void Update()
         {
-            if (dirty)
-            {
-                dirty = false;
 
-                var sphere = _renderable.GetBoundingSphere();
-                _box = BoundingBox.CreateFromSphere(sphere);
-                _center = sphere.Center;
-            }
+        }
+
+        public override void Compute()
+        {
+            var renderable = GetComponent<RenderableComponent>();
+
+            if (renderable != null)
+                _box = BoundingBox.CreateFromSphere(renderable.boundingSphere);
         }
 
         public override bool Collides(Collider other)

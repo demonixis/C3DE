@@ -2,9 +2,9 @@
 using Microsoft.Xna.Framework.Graphics;
 using System;
 
-namespace C3DE.Components.Renderers
+namespace C3DE
 {
-    public class QuadRenderer : RenderableComponent
+    public class QuadRenderer
     {
         private VertexPositionTexture[] _vertices;
         private short[] _indices;
@@ -35,9 +35,6 @@ namespace C3DE.Components.Renderers
             _vertices[3] = new VertexPositionTexture(new Vector3(1.0f, -1.0f, 1.0f), new Vector2(1.0f, 1.0f));
 
             _indices = new short[] { 0, 3, 2, 0, 1, 3 };
-
-            CastShadow = false;
-            RecieveShadow = false;
         }
 
         public void Draw(GraphicsDevice device, Vector2 topLeftCorner, Vector2 bottomRightCorner)
@@ -54,14 +51,9 @@ namespace C3DE.Components.Renderers
             device.DrawUserIndexedPrimitives<VertexPositionTexture>(PrimitiveType.TriangleList, _vertices, 0, 4, _indices, 0, 2);
         }
 
-        public override void Draw(GraphicsDevice device)
+        public void Draw(GraphicsDevice device)
         {
             Draw(device, -Vector2.One, Vector2.One);
-        }
-
-        public override BoundingSphere GetBoundingSphere()
-        {
-            return new BoundingSphere(Vector3.Zero, 1);
         }
     }
 }

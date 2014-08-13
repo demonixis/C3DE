@@ -14,21 +14,25 @@ namespace C3DE.Components
         protected int order = 1;
         protected bool initialized;
         protected SceneObject sceneObject;
+        protected Transform transform;
 
         #region Fields
 
-        /// <summary>
-        /// Determine if the component is enabled of disabled.
-        /// </summary>
         public bool Enabled
         {
             get { return enabled; }
-            set 
+            set
             {
                 if (value != enabled)
                 {
                     enabled = value;
+
                     NotifyPropertyChanged("Enabled");
+
+                    if (enabled)
+                        OnEnabled();
+                    else
+                        OnDisabled();
                 }
             }
         }
@@ -64,6 +68,8 @@ namespace C3DE.Components
 
         #endregion
 
+        #region Events
+
         public event EventHandler<PropertyChangedEventArgs> PropertyChanged = null;
 
         protected void NotifyPropertyChanged(string property)
@@ -72,27 +78,36 @@ namespace C3DE.Components
                 PropertyChanged(this, new PropertyChangedEventArgs(property));
         }
 
+        #endregion
+
         /// <summary>
         /// Create an empty component.
         /// </summary>
         public Component()
-            : this(null)
         {
-        }
-
-        public Component(SceneObject sceneObj)
-        {
-            sceneObject = sceneObj;
             initialized = false;
             enabled = true;
             Id = ++ComponentCounter;
+        }
+
+        public virtual void OnEnabled()
+        {
+        }
+
+        public virtual void OnDisabled()
+        {
+        }
+
+        public virtual void Awake()
+        {
+            transform = GetComponent<Transform>();
         }
 
         /// <summary>
         /// Sets the initialized flag to true.
         /// </summary>
         /// <param name="content"></param>
-        public virtual void LoadContent(ContentManager content)
+        public virtual void Start()
         {
             initialized = true;
         }
@@ -128,6 +143,11 @@ namespace C3DE.Components
         public T GetComponent<T>() where T : Component
         {
             return sceneObject.GetComponent<T>();
+        }
+
+        public T[] GetComponents<T>() where T : Component
+        {
+            return sceneObject.GetComponents<T>();
         }
     }
 }

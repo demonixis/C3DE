@@ -74,12 +74,7 @@ namespace C3DE.Components.Lights
         public float Angle { get; set; }
 
         public Light()
-            : this(null)
-        {
-        }
-
-        public Light(SceneObject sceneObject)
-            : base(sceneObject)
+            : base()
         {
             viewMatrix = Matrix.Identity;
             projectionMatrix = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45), 1, 1, 500);
@@ -93,10 +88,9 @@ namespace C3DE.Components.Lights
             shadowGenerator = new ShadowGenerator(this);
         }
 
-        public override void LoadContent(ContentManager content)
+        public override void Start()
         {
-            base.LoadContent(content);
-            shadowGenerator.LoadContent(content);
+            shadowGenerator.Initialize();
         }
 
         // Need to be changed quickly !
