@@ -134,10 +134,6 @@ namespace C3DE
             {
                 if (components[i].Enabled)
                     components[i].Update();
-                else
-                {
-                    Console.WriteLine("disabled " + components[i].Id);
-                }
             }
         }
 

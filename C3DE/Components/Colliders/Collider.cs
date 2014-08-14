@@ -49,6 +49,11 @@ namespace C3DE.Components.Colliders
             _center = Vector3.Zero;
         }
 
+        public override void Start()
+        {
+            Compute();
+        }
+
         /// <summary>
         /// Compute the collider if a renderable component is attached to the scene object.
         /// This method can be called by a renderable component if needed.

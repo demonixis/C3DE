@@ -103,7 +103,6 @@ namespace C3DE.Prefabs
         private void Build()
         {
             renderer.Geometry.Generate();
-            renderer.ComputeBoundingSphere();
         }
 
         public void ApplyCollision(Transform tr)

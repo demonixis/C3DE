@@ -8,7 +8,7 @@ namespace C3DE.Demo.Scripts
         private Scene scene;
         private Camera camera;
         private string _hit;
-        private RaycastInfo _raycastInfo;
+        private RaycastInfo[] _raycastInfo;
 
         public override void Start()
         {
@@ -25,9 +25,17 @@ namespace C3DE.Demo.Scripts
             {
                 var ray = camera.GetRay(Input.Mouse.Position);
 
-                if (scene.Raycast(ray.Position, ray.Direction, 250, out _raycastInfo))
+                if (scene.RaycastAll(ray.Position, ray.Direction, 250, out _raycastInfo))
                 {
-                    _hit = _raycastInfo.Collider.SceneObject.Name;
+                    foreach (var info in _raycastInfo)
+                    {
+                        // Exclude the camera.
+                        if (info.Distance > 0)
+                        {
+                            _hit = info.Collider.SceneObject.Name;
+                            return;
+                        }
+                    }
                 }
                 else
                     _hit = "Nothing";

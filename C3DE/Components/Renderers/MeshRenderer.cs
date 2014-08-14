@@ -50,7 +50,7 @@ namespace C3DE.Components.Renderers
         {
         }
 
-        public override void ComputeBoundingSphere()
+        protected override void ComputeBoundingSphere()
         {
             if (geometry == null)
                 return;
@@ -78,12 +78,6 @@ namespace C3DE.Components.Renderers
             boundingSphere.Transform(sceneObject.Transform.world);
 
             UpdateColliders();
-        }
-
-        public override void Update()
-        {
-            if (!sceneObject.IsStatic)
-                boundingSphere.Center = transform.Position;
         }
 
         public override void Draw(GraphicsDevice device)

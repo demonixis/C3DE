@@ -37,6 +37,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Components\Behaviour.cs" />
+    <Compile Include="Components\Controllers\Controller.cs" />
     <Compile Include="Components\Controllers\OrbitController.cs" />
     <Compile Include="Components\Camera.cs" />
     <Compile Include="Components\Controllers\FirstPersonController.cs" />

@@ -60,6 +60,12 @@ namespace C3DE.Components.Renderers
             materialCount = 0;
         }
 
+        public override void Update()
+        {
+            if (!sceneObject.IsStatic)
+                boundingSphere.Center = transform.Position;
+        }
+
         /// <summary>
         /// Add a material, if the component have not a material it is used by default.
         /// If the material is already added it is used by default.
