@@ -34,8 +34,8 @@ namespace C3DE.Components.Colliders
         {
             if (!sceneObject.IsStatic)
             {
-                //_box.Min = transform.Position - Min;
-                //_box.Max = transform.Position + Max;
+                _box.Min = transform.Position * transform.LocalScale;
+                _box.Max = (transform.Position + Max) * transform.LocalScale;
             }
         }
 

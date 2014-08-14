@@ -37,8 +37,8 @@ namespace C3DE.Demo.Scripts
                         }
                     }
                 }
-                else
-                    _hit = "Nothing";
+                
+                _hit = "Nothing";
             }
         }
 

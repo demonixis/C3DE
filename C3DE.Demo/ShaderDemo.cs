@@ -118,7 +118,15 @@ namespace C3DE.Demo
             cube2.Geometry = new CubeGeometry();
             cube2.Geometry.Generate();
             cube2.Material = simpleMaterial;
-            cube2.AddComponent<BoxCollider>();
+            cube2.AddComponent<SphereCollider>();
+
+            var path = cube2.AddComponent<SimplePath>();
+            path.Begin();
+            path.AddPath(new Vector3(45, 3.5f, 45));
+            path.AddPath(new Vector3(-45, 2.5f, 45));
+            path.AddPath(new Vector3(-45, 5.5f, -45));
+            path.AddPath(new Vector3(45, 5.5f, -45));
+            path.End();
 
             // Third cube
             var reflectiveMaterial = new ReflectiveMaterial(scene);

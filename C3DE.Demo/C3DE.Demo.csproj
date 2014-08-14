@@ -61,6 +61,7 @@
     <Compile Include="Scripts\LightMoverKeys.cs" />
     <Compile Include="Scripts\LightSwitcher.cs" />
     <Compile Include="Scripts\RayPickingTester.cs" />
+    <Compile Include="Scripts\SimplePath.cs" />
     <Compile Include="ShaderDemo.cs" />
     <Compile Include="TerrainDemo.cs" />
   </ItemGroup>
