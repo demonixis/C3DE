@@ -326,3 +326,9 @@
 /processorParam:TextureFormat=Color
 /build:Textures/Skybox/bluesky/pz.jpg
 
+#begin FX/TerrainEffect.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:FX/TerrainEffect.fx
+

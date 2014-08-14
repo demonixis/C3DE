@@ -49,7 +49,9 @@ namespace C3DE.Demo
             terrain.TextureRepeat = new Vector2(2);
             terrain.LoadHeightmap("Textures/heightmap");
             terrain.Renderer.Material = terrainMat;
-            terrain.Transform.Translate(-terrain.Width >> 1, -10, -terrain.Depth >> 1);            
+            terrain.Transform.Translate(-terrain.Width >> 1, -10, -terrain.Depth >> 1);
+
+            terrain.GenerateWeightMap();
 
             // With water !
             var water = new WaterPrefab("water", scene);

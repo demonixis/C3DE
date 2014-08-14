@@ -168,5 +168,43 @@ namespace C3DE.Prefabs
 
             return (terrainHeigth * geometry.Size.Y * transform.LocalScale.Y);
         }
+
+        public static Texture2D t;
+
+        public Texture2D GenerateWeightMap()
+        {
+            var width = geometry.Width;
+            var depth = geometry.Depth;
+
+            var wMap = new Texture2D(Application.GraphicsDevice, width, depth, false, SurfaceFormat.Color);
+            var colors = new Color[width * depth];
+            float data = 0;
+
+            for (int x = 0; x < geometry.Width; x++)
+            {
+                for (int z = 0; z < geometry.Depth; z++)
+                {
+                    data = geometry.Data[x, z];
+
+                    if (data < 3)
+                        colors[x + z * width] = Color.Red;
+
+                    else if (data >= 3 && data < 15)
+                        colors[x + z * width] = Color.Black;
+
+                    else if (data >= 15 && data < 20)
+                        colors[x + z * width] = Color.Green;
+
+                    else
+                        colors[x + z * width] = Color.Blue;
+                }
+            }
+
+            wMap.SetData(colors);
+
+            t = wMap;
+
+            return wMap;
+        }
     }
 }

@@ -81,6 +81,7 @@ namespace C3DE
         {
             _spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Opaque, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone);
             _spriteBatch.Draw(_sceneRT, Vector2.Zero, Color.White);
+            _spriteBatch.Draw(Prefabs.TerrainPrefab.t, new Rectangle(0, 0, 250, 250), Color.White);
             _spriteBatch.End();
         }
 
