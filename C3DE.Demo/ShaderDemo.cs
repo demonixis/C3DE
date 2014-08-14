@@ -97,6 +97,7 @@ namespace C3DE.Demo
             cube.Geometry.Generate();
             cube.Material = cubeSuperMaterial;
             cube.AddComponent<BoxCollider>();
+            cube.AddComponent<BoundingBoxRenderer>();
 
             // Second cube
             var simpleMaterial = new SimpleMaterial(scene);
@@ -118,7 +119,8 @@ namespace C3DE.Demo
             cube2.Geometry = new CubeGeometry();
             cube2.Geometry.Generate();
             cube2.Material = simpleMaterial;
-            cube2.AddComponent<SphereCollider>();
+            cube2.AddComponent<BoxCollider>();
+            cube2.AddComponent<BoundingBoxRenderer>();
 
             var path = cube2.AddComponent<SimplePath>();
             path.Begin();
@@ -149,7 +151,8 @@ namespace C3DE.Demo
             cube3.Geometry = new CubeGeometry();
             cube3.Geometry.Generate();
             cube3.Material = reflectiveMaterial;
-            cube3.AddComponent<BoxCollider>();
+            cube3.AddComponent<SphereCollider>();
+            cube3.AddComponent<BoundingBoxRenderer>();
 
             Screen.ShowCursor = true;
         }

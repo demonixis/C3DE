@@ -34,8 +34,8 @@ namespace C3DE.Components.Colliders
         {
             if (!sceneObject.IsStatic)
             {
-                _box.Min = transform.Position * transform.LocalScale;
-                _box.Max = (transform.Position + Max) * transform.LocalScale;
+                _box.Min = Min + transform.Position;
+                _box.Max = transform.Position + Max * transform.LocalScale;
             }
         }
 
@@ -45,7 +45,7 @@ namespace C3DE.Components.Colliders
 
             if (renderable != null)
             {
-                _box = BoundingBox.CreateFromSphere(renderable.boundingSphere);
+                _box = new BoundingBox(Vector3.Zero, new Vector3(renderable.boundingSphere.Radius));
                 Min = _box.Min;
                 Max = _box.Max;
             }

@@ -45,7 +45,9 @@
     <Compile Include="Components\Colliders\Collider.cs" />
     <Compile Include="Components\Colliders\SphereCollider.cs" />
     <Compile Include="Components\Lights\Light.cs" />
+    <Compile Include="Components\Renderers\BoundingBoxRenderer.cs" />
     <Compile Include="Components\Renderers\MeshRenderer.cs" />
+    <Compile Include="Materials\DummyMaterial.cs" />
     <Compile Include="QuadRenderer.cs" />
     <Compile Include="Geometries\CubeGeometry.cs" />
     <Compile Include="Geometries\CylinderGeometry.cs" />
