@@ -32,7 +32,11 @@ namespace C3DE.Components.Colliders
             var renderable = GetComponent<RenderableComponent>();
 
             if (renderable != null)
+            {
                 _sphere = renderable.boundingSphere;
+                Min = new Vector3(-_sphere.Radius);
+                Max = new Vector3(_sphere.Radius);
+            }
         }
 
         public override bool Collides(Collider other)

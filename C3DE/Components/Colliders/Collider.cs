@@ -4,27 +4,26 @@ namespace C3DE.Components.Colliders
 {
     public abstract class Collider : Component
     {
-        protected Vector3 _min;
-        protected Vector3 _max;
-        protected Vector3 _center;
-        protected bool dirty;
+        private Vector3 _min;
+        private Vector3 _max;
+        private Vector3 _center;
 
         public Vector3 Min
         {
             get { return _min; }
-            set { _min = value; }
+            protected set { _min = value; }
         }
 
         public Vector3 Max 
         {
             get { return _max; }
-            set { _max = value; }
+            protected set { _max = value; }
         }
 
         public Vector3 Center 
         {
             get { return _center; }
-            set { _center = value; } 
+            protected set { _center = value; } 
         }
 
         public Collider()
@@ -33,7 +32,12 @@ namespace C3DE.Components.Colliders
             _min = Vector3.Zero;
             _max = Vector3.Zero;
             _center = Vector3.Zero;
-            dirty = true;
+        }
+
+        public override void Update()
+        {
+            if (!sceneObject.IsStatic)
+                _center = transform.Position;
         }
 
         public abstract void Compute();

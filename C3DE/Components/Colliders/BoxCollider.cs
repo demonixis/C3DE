@@ -22,7 +22,6 @@ namespace C3DE.Components.Colliders
             : base()
         {
             _box = new BoundingBox();
-            _center = Vector3.Zero;
         }
 
         public override void Start()
@@ -30,31 +29,25 @@ namespace C3DE.Components.Colliders
             Compute();
         }
 
-        /// <summary>
-        /// Compute the bounding box.
-        /// </summary>
-        public override void Update()
-        {
-
-        }
-
         public override void Compute()
         {
             var renderable = GetComponent<RenderableComponent>();
 
             if (renderable != null)
+            {
                 _box = BoundingBox.CreateFromSphere(renderable.boundingSphere);
+                Min = _box.Min;
+                Max = _box.Max;
+            }
         }
 
         public override bool Collides(Collider other)
         {
-            var sc = other as SphereCollider;
-            if (sc != null)
-                return sc.Sphere.Intersects(_box);
+            if (other is SphereCollider)
+                return (other as SphereCollider).Sphere.Intersects(_box);
 
-            var bc = other as BoxCollider;
-            if (bc != null)
-                return bc.Box.Intersects(_box);
+            if (other is BoxCollider)
+                return (other as BoxCollider).Box.Intersects(_box);
 
             return false;
         }
