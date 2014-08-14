@@ -7,6 +7,10 @@ using System;
 
 namespace C3DE.Components.Renderers
 {
+    /// <summary>
+    /// A debug renderer which can draw a bouding box. The component allow you to use 
+    /// a bounding box or a bounding sphere in input.
+    /// </summary>
     public class BoundingBoxRenderer : RenderableComponent
     {
         private VertexPositionColor[] _vertices;
@@ -16,6 +20,9 @@ namespace C3DE.Components.Renderers
         private SphereCollider _sphere;
         private Color _color;
 
+        /// <summary>
+        /// Create a bounding box renderer.
+        /// </summary>
         public BoundingBoxRenderer()
             : base()
         {
@@ -23,6 +30,9 @@ namespace C3DE.Components.Renderers
             _indices = new short[] { 0, 1, 1, 2, 2, 3, 3, 0, 0, 4, 1, 5, 2, 6, 3, 7, 4, 5, 5, 6, 6, 7, 7, 4 };
         }
 
+        /// <summary>
+        /// Gets the collider attached on the object and uses it for rendering.
+        /// </summary>
         public override void Start()
         {
             _box = GetComponent<BoxCollider>();

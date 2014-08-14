@@ -23,22 +23,10 @@ namespace C3DE.Demo.Scripts
 
             if (Input.Mouse.Clicked())
             {
-                var ray = camera.GetRay(Input.Mouse.Position);
-
-                if (scene.RaycastAll(ray.Position, ray.Direction, 250, out _raycastInfo))
-                {
-                    foreach (var info in _raycastInfo)
-                    {
-                        // Exclude the camera.
-                        if (info.Distance > 0)
-                        {
-                            _hit = info.Collider.SceneObject.Name;
-                            return;
-                        }
-                    }
-                }
-                
-                _hit = "Nothing";
+                if (scene.RaycastAll(camera.GetRay(Input.Mouse.Position), 250, out _raycastInfo))
+                    _hit = _raycastInfo[0].Collider.SceneObject.Name;
+                else
+                    _hit = "Nothing";
             }
         }
 

@@ -27,6 +27,7 @@ namespace C3DE.Prefabs
 
             camera.Setup(new Vector3(0, 0, -10), new Vector3(0, 0, 0), Vector3.Up);
             collider.Sphere = new BoundingSphere(transform.Position, 2.5f);
+            collider.IsPickable = false;
         }
 
         public void Setup(Vector3 position, Vector3 target, Vector3 upVector)

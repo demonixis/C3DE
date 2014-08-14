@@ -459,14 +459,17 @@ namespace C3DE
             // A quadtree and even an octree could be very cool in the future :)
             while (i < size && collide == false)
             {
-                val = colliders[i].IntersectedBy(ref ray);
-
-                if (val.HasValue && val.Value <= distance)
+                if (colliders[i].IsPickable)
                 {
-                    info.Collider = colliders[i];
-                    info.Distance = val.Value;
-                    info.Ray = ray;
-                    collide = true;
+                    val = colliders[i].IntersectedBy(ref ray);
+
+                    if (val.HasValue && val.Value <= distance)
+                    {
+                        info.Collider = colliders[i];
+                        info.Distance = val.Value;
+                        info.Ray = ray;
+                        collide = true;
+                    }
                 }
 
                 i++;
@@ -493,14 +496,17 @@ namespace C3DE
 
             for (int i = 0, l = colliders.Count; i < l; i++)
             {
-                val = colliders[i].IntersectedBy(ref ray);
-
-                if (val.HasValue && val.Value <= distance)
+                if (colliders[i].IsPickable)
                 {
-                    info.Collider = colliders[i];
-                    info.Distance = val.Value;
-                    info.Ray = ray;
-                    infos.Add(info);
+                    val = colliders[i].IntersectedBy(ref ray);
+
+                    if (val.HasValue && val.Value <= distance)
+                    {
+                        info.Collider = colliders[i];
+                        info.Distance = val.Value;
+                        info.Ray = ray;
+                        infos.Add(info);
+                    }
                 }
             }
 

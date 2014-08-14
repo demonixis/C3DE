@@ -32,6 +32,7 @@ namespace C3DE.Prefabs
             renderer.ReceiveShadow = false;
             renderer.Geometry = new PlaneGeometry();
             collider = AddComponent<BoxCollider>();
+            collider.IsPickable = false;
         }
 
         public void Generate(string waterTexture, string bumpTexture, Vector3 size)

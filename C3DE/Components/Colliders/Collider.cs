@@ -39,6 +39,16 @@ namespace C3DE.Components.Colliders
         }
 
         /// <summary>
+        /// Allow or not the collider to be picked by a ray cast.
+        /// </summary>
+        public bool IsPickable { get; set; }
+
+        /// <summary>
+        /// Indicates whether the collider a trigger.
+        /// </summary>
+        public bool IsTrigger { get; set; }
+
+        /// <summary>
         /// Create an emtpy collider.
         /// </summary>
         public Collider()
@@ -47,6 +57,8 @@ namespace C3DE.Components.Colliders
             _min = Vector3.Zero;
             _max = Vector3.Zero;
             _center = Vector3.Zero;
+            IsPickable = true;
+            IsTrigger = false;
         }
 
         public override void Start()
