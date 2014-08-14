@@ -55,7 +55,7 @@ namespace C3DE.Demo
             lightSphere.Geometry = new SphereGeometry(1f, 8);
             lightSphere.Geometry.Generate();
             lightSphere.CastShadow = false;
-            lightSphere.RecieveShadow = false;
+            lightSphere.ReceiveShadow = false;
             lightSphere.Material = new SimpleMaterial(scene);
             lightSphere.Material.MainTexture = GraphicsHelper.CreateTexture(Color.Yellow, 1, 1);
 
@@ -92,7 +92,7 @@ namespace C3DE.Demo
             scene.Add(cubeScene);
 
             var cube = cubeScene.AddComponent<MeshRenderer>();
-            cube.RecieveShadow = false;
+            cube.ReceiveShadow = false;
             cube.Geometry = new CubeGeometry();
             cube.Geometry.Generate();
             cube.Material = cubeSuperMaterial;
@@ -113,7 +113,7 @@ namespace C3DE.Demo
             scene.Add(cube2Scene);
 
             var cube2 = cube2Scene.AddComponent<MeshRenderer>();
-            cube2.RecieveShadow = false;
+            cube2.ReceiveShadow = false;
             cube2.CastShadow = true;
             cube2.Geometry = new CubeGeometry();
             cube2.Geometry.Generate();
@@ -136,7 +136,7 @@ namespace C3DE.Demo
             scene.Add(cube3Scene);
 
             var cube3 = cube3Scene.AddComponent<MeshRenderer>();
-            cube3.RecieveShadow = false;
+            cube3.ReceiveShadow = false;
             cube3.CastShadow = true;
             cube3.Geometry = new CubeGeometry();
             cube3.Geometry.Generate();

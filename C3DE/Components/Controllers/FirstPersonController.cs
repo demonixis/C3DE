@@ -5,22 +5,25 @@ using System;
 
 namespace C3DE.Components.Controllers
 {
-    public class FirstPersonController : Component
+    /// <summary>
+    /// A first person camera controller component.
+    /// </summary>
+    public class FirstPersonController : Controller
     {
         private Camera _camera;
         private Matrix _rotationMatrix;
         private Vector3 _transformedReference;
         private Vector3 _translation = Vector3.Zero;
         private Vector3 _rotation = Vector3.Zero;
-        public float Velocity { get; set; }
-        public float AngularVelocity { get; set; }
-        public float MoveSpeed { get; set; }
-        public float RotationSpeed { get; set; }
-        public float LookSpeed { get; set; }
-        public float StrafeSpeed { get; set; }
-        public bool Fly { get; set; }
-        public Vector2 MouseSensibility { get; set; }
 
+        /// <summary>
+        /// Enable or disable the flying mode. Default is false.
+        /// </summary>
+        public bool Fly { get; set; }
+
+        /// <summary>
+        /// Create a first person controller with default values.
+        /// </summary>
         public FirstPersonController()
             : base()
         {
@@ -30,7 +33,7 @@ namespace C3DE.Components.Controllers
             RotationSpeed = 0.1f;
             LookSpeed = 0.15f;
             StrafeSpeed = 0.75f;
-            MouseSensibility = new Vector2(0.15f, 0.15f);
+            MouseSensibility = new Vector2(0.15f);
             Fly = false;
         }
 

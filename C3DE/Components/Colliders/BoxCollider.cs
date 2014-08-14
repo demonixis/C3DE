@@ -12,21 +12,31 @@ namespace C3DE.Components.Colliders
     {
         private BoundingBox _box;
 
+        /// <summary>
+        /// Gets the bounding box.
+        /// </summary>
         public BoundingBox Box
         {
             get { return _box; }
             set { _box = value; }
         }
 
+        /// <summary>
+        /// Create an empty box collider.
+        /// </summary>
         public BoxCollider()
             : base()
         {
             _box = new BoundingBox();
         }
 
-        public override void Start()
+        public override void Update()
         {
-            Compute();
+            if (!sceneObject.IsStatic)
+            {
+                _box.Min = transform.Position - Min;
+                _box.Max = transform.Position + Max;
+            }
         }
 
         public override void Compute()

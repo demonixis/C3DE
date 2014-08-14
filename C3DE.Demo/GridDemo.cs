@@ -52,7 +52,7 @@ namespace C3DE.Demo
             lightPrefabSphere.Geometry = new SphereGeometry(2f, 4);
             lightPrefabSphere.Geometry.Generate();
             lightPrefabSphere.CastShadow = false;
-            lightPrefabSphere.RecieveShadow = false;
+            lightPrefabSphere.ReceiveShadow = false;
             lightPrefabSphere.Material = new SimpleMaterial(scene);
             lightPrefabSphere.Material.MainTexture = GraphicsHelper.CreateTexture(Color.Yellow, 1, 1);
 
@@ -84,7 +84,7 @@ namespace C3DE.Demo
             scene.Add(cubeScene);
 
             var cube = cubeScene.AddComponent<MeshRenderer>();
-            cube.RecieveShadow = false;
+            cube.ReceiveShadow = false;
             cube.Geometry = new CubeGeometry();
             cube.Geometry.Generate();
             cube.Material = cubeSuperMaterial;

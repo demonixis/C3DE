@@ -4,27 +4,34 @@ using Microsoft.Xna.Framework;
 namespace C3DE.Components.Colliders
 {
     /// <summary>
-    /// A component to add a box collider to an object.
+    /// A sphere collider component used to handle collisions by sphere.
     /// </summary>
     public class SphereCollider : Collider
     {
         private BoundingSphere _sphere;
 
+        /// <summary>
+        /// Gets the bounding sphere.
+        /// </summary>
         public BoundingSphere Sphere
         {
             get { return _sphere; }
             set { _sphere = value; }
         }
 
+        /// <summary>
+        /// Create an empty sphere collider.
+        /// </summary>
         public SphereCollider()
             : base()
         {
             _sphere = new BoundingSphere();
         }
 
-        public override void Start()
+        public override void Update()
         {
-            
+            if (!sceneObject.IsStatic)
+                _sphere.Center = transform.Position;
         }
 
         public override void Compute()
@@ -41,13 +48,11 @@ namespace C3DE.Components.Colliders
 
         public override bool Collides(Collider other)
         {
-            var sc = other as SphereCollider;
-            if (sc != null)
-                return sc.Sphere.Intersects(_sphere);
+            if (other is SphereCollider)
+                return (other as SphereCollider).Sphere.Intersects(_sphere);
 
-            var bc = other as BoxCollider;
-            if (bc != null)
-                return bc.Box.Intersects(_sphere);
+            if (other is BoxCollider)
+                return (other as BoxCollider).Box.Intersects(_sphere);
 
             return false;
         }

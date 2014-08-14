@@ -15,41 +15,56 @@ namespace C3DE.Components.Renderers
         protected internal List<int> materials;
         protected internal int materialCount;
 
+        /// <summary>
+        /// Indicates whether the object can cast shadow. 
+        /// </summary>
         public bool CastShadow { get; set; }
-        public bool RecieveShadow { get; set; }
+
+        /// <summary>
+        /// Indicates whether the object can receive shadow.
+        /// </summary>
+        public bool ReceiveShadow { get; set; }
 
         protected internal List<int> MaterialIndices
         {
             get { return materials; }
         }
 
+        /// <summary>
+        /// Gets the main material.
+        /// </summary>
         public Material Material
         {
             get { return materialCount > 0 ? sceneObject.Scene.Materials[materials[0]] : null; }
             set { AddMaterial(value); }
         }
 
+        /// <summary>
+        /// Gets the number of materials.
+        /// </summary>
         public int MaterialCount
         {
             get { return materialCount; }
         }
 
-        public BoundingSphere BoundingSphere
-        {
-            get { return boundingSphere; }
-            protected set { boundingSphere = value; }
-        }
-
+        /// <summary>
+        /// Create a renderable component which can cast and receive shadow. No material is assigned.
+        /// </summary>
         public RenderableComponent()
             : base()
         {
             CastShadow = true;
-            RecieveShadow = true;
+            ReceiveShadow = true;
             boundingSphere = new BoundingSphere();
             materials = new List<int>(1);
             materialCount = 0;
         }
 
+        /// <summary>
+        /// Add a material, if the component have not a material it is used by default.
+        /// If the material is already added it is used by default.
+        /// </summary>
+        /// <param name="material"></param>
         public void AddMaterial(Material material)
         {
             if (sceneObject.Scene == null)
@@ -64,6 +79,10 @@ namespace C3DE.Components.Renderers
             }
         }
 
+        /// <summary>
+        /// Remove a material.
+        /// </summary>
+        /// <param name="material">The material to remove.</param>
         public void RemoveMaterial(Material material)
         {
             var index = material.Index;
@@ -75,6 +94,9 @@ namespace C3DE.Components.Renderers
             }
         }
 
+        /// <summary>
+        /// Compute colliders size.
+        /// </summary>
         protected void UpdateColliders()
         {
             var colliders = GetComponents<Collider>();
@@ -87,8 +109,15 @@ namespace C3DE.Components.Renderers
             }
         }
 
-        public abstract void ComputeBoundingSphere();
+        /// <summary>
+        /// Compute the internal bouding sphere of the collider, it's required by the shadow generator.
+        /// </summary>
+        protected abstract void ComputeBoundingSphere();
 
+        /// <summary>
+        /// Draw the content of the component.
+        /// </summary>
+        /// <param name="device"></param>
         public abstract void Draw(GraphicsDevice device);
     }
 }

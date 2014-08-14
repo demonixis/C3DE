@@ -6,10 +6,10 @@ using System;
 namespace C3DE.Components.Controllers
 {
     /// <summary>
-    /// An orbit controller component to attach to a SceneObject with a Camera component.
+    /// An orbit controller component.
     /// It allows user to move and rotate the camera around a point.
     /// </summary>
-    public class OrbitController : Component
+    public class OrbitController : Controller
     {
         private Camera _camera;
         private float _distance;
@@ -21,17 +21,29 @@ namespace C3DE.Components.Controllers
         private Vector3 _cacheVec3;
         private float _distanceVelocity;
 
+        /// <summary>
+        /// Gets or sets the min angle on y-axis.
+        /// </summary>
         public float MinAngle { get; set; }
-        public float MaxAngle { get; set; }
-        public float MinDistance { get; set; }
-        public float MaxDistance { get; set; }
-        public float RotationSpeed { get; set; }
-        public float MoveSpeed { get; set; }
-        public float StrafeSpeed { get; set; }
-        public float GamepadSensibility { get; set; }
-        public float Velocity { get; set; }
-        public float AngularVelocity { get; set; }
 
+        /// <summary>
+        /// Gets or sets the max angle on y-axis.
+        /// </summary>
+        public float MaxAngle { get; set; }
+
+        /// <summary>
+        /// Gets or sets the min distance from the target.
+        /// </summary>
+        public float MinDistance { get; set; }
+
+        /// <summary>
+        /// Gets or sets the max distance from the target.
+        /// </summary>
+        public float MaxDistance { get; set; }
+
+        /// <summary>
+        /// Create an orbit controller with default values.
+        /// </summary>
         public OrbitController()
             : base()
         {

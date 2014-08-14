@@ -29,7 +29,7 @@ namespace C3DE.Prefabs
         {
             renderer = AddComponent<MeshRenderer>();
             renderer.CastShadow = false;
-            renderer.RecieveShadow = false;
+            renderer.ReceiveShadow = false;
             renderer.Geometry = new PlaneGeometry();
             collider = AddComponent<BoxCollider>();
         }

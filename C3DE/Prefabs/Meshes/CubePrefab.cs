@@ -26,7 +26,7 @@ namespace C3DE.Prefabs.Meshes
             _renderer = AddComponent<MeshRenderer>();
             _renderer.Geometry = new CubeGeometry();
             _renderer.Geometry.Size = new Vector3(size);
-            _renderer.RecieveShadow = false;
+            _renderer.ReceiveShadow = false;
             _collider = AddComponent<BoxCollider>();
         }
     }

@@ -84,7 +84,7 @@ namespace C3DE.Materials
             effect.Parameters["Shininess"].SetValue(Shininess);
 
             effect.Parameters["MainTexture"].SetValue(mainTexture);
-            effect.Parameters["RecieveShadow"].SetValue(renderable.RecieveShadow);
+            effect.Parameters["RecieveShadow"].SetValue(renderable.ReceiveShadow);
             effect.Parameters["World"].SetValue(renderable.SceneObject.Transform.world);
             effect.CurrentTechnique.Passes[0].Apply();
         }
