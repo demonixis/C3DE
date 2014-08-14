@@ -116,6 +116,11 @@ namespace C3DE.UI
             _spriteBatch.DrawString(Skin.Font, text, position, Skin.TextColor, rotation, Vector2.Zero, _cacheVec2, SpriteEffects.None, 1);
         }
 
+        public void DrawTexture(Rectangle rect, Texture2D texture)
+        {
+            _spriteBatch.Draw(texture, rect, Color.White);
+        }
+
         private string WrapText(SpriteFont spriteFont, string text, float maxLineWidth)
         {
             string[] words = text.Split(' ');

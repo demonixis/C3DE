@@ -39,6 +39,11 @@ namespace C3DE.Prefabs
             get { return geometry.Depth; }
         }
 
+        public float SandLayer { get; set; }
+        public float GroundLayer { get; set; }
+        public float RockLayer { get; set; }
+        public float SnowLayer { get; set; }
+
         public TerrainPrefab(string name, Scene scene)
             : base(name, scene)
         {
@@ -47,6 +52,11 @@ namespace C3DE.Prefabs
             renderer = AddComponent<MeshRenderer>();
             renderer.Geometry = geometry;
             renderer.CastShadow = false;
+
+            SandLayer = 6;
+            GroundLayer = 12;
+            RockLayer = 23;
+            SnowLayer = 50;
         }
 
         /// <summary>
@@ -169,8 +179,6 @@ namespace C3DE.Prefabs
             return (terrainHeigth * geometry.Size.Y * transform.LocalScale.Y);
         }
 
-        public static Texture2D t;
-
         public Texture2D GenerateWeightMap()
         {
             var width = geometry.Width;
@@ -186,13 +194,13 @@ namespace C3DE.Prefabs
                 {
                     data = geometry.Data[x, z];
 
-                    if (data < 3)
+                    if (data < SandLayer)
                         colors[x + z * width] = Color.Red;
 
-                    else if (data >= 3 && data < 15)
+                    else if (data >= SandLayer && data < GroundLayer)
                         colors[x + z * width] = Color.Black;
 
-                    else if (data >= 15 && data < 20)
+                    else if (data >= GroundLayer && data < RockLayer)
                         colors[x + z * width] = Color.Green;
 
                     else
@@ -201,8 +209,6 @@ namespace C3DE.Prefabs
             }
 
             wMap.SetData(colors);
-
-            t = wMap;
 
             return wMap;
         }

@@ -35,23 +35,31 @@ namespace C3DE.Demo
             var lightPrefab = new LightPrefab("light", LightType.Directional, scene);
             lightPrefab.Light.Direction = new Vector3(1, 1, 0);
             lightPrefab.Light.DiffuseColor = Color.LightSkyBlue;
+            lightPrefab.Light.Intensity = 1.5f;
             lightPrefab.AddComponent<LightMoverKeys>();
             lightPrefab.AddComponent<LightSwitcher>();
             lightPrefab.AddComponent<DemoBehaviour>();
             lightPrefab.EnableShadows = true;
 
             // Finally a terrain
-            var terrainMat = new StandardMaterial(scene);
-            terrainMat.MainTexture = Content.Load<Texture2D>("Textures/terrainTexture");
-            terrainMat.Shininess = 50;
+            var terrainMat = new TerrainMaterial(scene);
 
             var terrain = new TerrainPrefab("terrain", scene);
-            terrain.TextureRepeat = new Vector2(2);
+            //terrain.TextureRepeat = new Vector2(2);
             terrain.LoadHeightmap("Textures/heightmap");
             terrain.Renderer.Material = terrainMat;
             terrain.Transform.Translate(-terrain.Width >> 1, -10, -terrain.Depth >> 1);
+            terrain.AddComponent<WeightMapViewer>();
 
-            terrain.GenerateWeightMap();
+            var map = terrain.GenerateWeightMap();
+
+            terrainMat.MainTexture = Content.Load<Texture2D>("Textures/Terrain/Grass");
+            terrainMat.SandTexture = Content.Load<Texture2D>("Textures/Terrain/Sand");
+            terrainMat.SnowTexture = Content.Load<Texture2D>("Textures/Terrain/Snow");
+            terrainMat.RockTexture = Content.Load<Texture2D>("Textures/Terrain/Rock");
+            terrainMat.WeightTexture = map;
+            terrainMat.Tiling = new Vector2(4);
+            
 
             // With water !
             var water = new WaterPrefab("water", scene);
@@ -63,6 +71,7 @@ namespace C3DE.Demo
             Input.Gamepad.Sensitivity = new Vector2(1, 0.75f);
             Screen.ShowCursor = true;
 
+            scene.RenderSettings.FogDensity = 0.005f;
             scene.RenderSettings.FogMode = FogMode.Exp2;
         }
     }

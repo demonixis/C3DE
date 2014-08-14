@@ -1,3 +1,6 @@
+#include "ShadowMap.fxh"
+#include "Fog.fxh"
+
 // Matrix
 float4x4 World;
 float4x4 View;
@@ -14,6 +17,7 @@ float4 LightColor = float4(1, 1, 1, 1);
 
 // Misc
 float2 TextureTiling = float2(1, 1);
+float3 EyePosition = float3(1, 1, 0);
 
 texture2D MainTexture;
 sampler2D MainTextureSampler = sampler_state
@@ -86,6 +90,8 @@ struct VertexShaderOutput
 	float4 Position : POSITION0;
 	float2 UV : TEXCOORD0;
 	float3 Normal : TEXCOORD1;
+	float4 WorldPosition : TEXCOORD2;
+	float FogDistance : FOG;
 };
 
 VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
@@ -97,6 +103,8 @@ VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
 	output.Position = mul(viewPosition, Projection);
 	output.UV = input.UV;
 	output.Normal = mul(input.Normal, World);
+	output.WorldPosition = worldPosition;
+	output.FogDistance = distance(worldPosition, EyePosition);
 
 	return output;
 }
@@ -104,7 +112,9 @@ VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
 float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 {
 	float light = dot(normalize(input.Normal), normalize(LightDirection));
-	light = saturate(light * LightColor * LightIntensity);
+	light = saturate(light * LightColor * LightIntensity + 0.4);
+	
+	float shadowTerm = CalcShadow(input.WorldPosition);
 	
 	float3 sandTex = tex2D(SandTextureSampler, input.UV * TextureTiling);
 	float rockTex = tex2D(RockTextureSampler, input.UV * TextureTiling);
@@ -114,10 +124,11 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 	
 	float3 baseCompose = clamp(1.0 - weightTex.r - weightTex.g - weightTex.b, 0, 1);
 	baseCompose *= mainTex;
-	
 	baseCompose += weightTex.r * sandTex + weightTex.g * rockTex + weightTex.b * snowTex;
 	
-	return AmbientColor + (DiffuseColor * float4(baseCompose, 1.0) * light);
+	float4 finalCompose = AmbientColor + (DiffuseColor * float4(baseCompose, 1.0) * light * shadowTerm);
+	
+	return ApplyFog(finalCompose, input.FogDistance);
 }
 
 technique Terrain

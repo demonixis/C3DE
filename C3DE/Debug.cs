@@ -9,7 +9,7 @@ namespace C3DE
 		{
 #if DEBUG
 			for (int i = 0, l = value.Length; i < l; i++)
-				System.Console.WriteLine(value.ToString());
+				System.Console.WriteLine(value[i].ToString());
 #endif
 		}
 		

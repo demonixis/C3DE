@@ -44,10 +44,15 @@ namespace C3DE.Demo.Scripts
             _orbitController.Enabled = (id == 0) ? true : false;
             _fpController.Enabled = !_orbitController.Enabled;
 
-            if (_fpController.Enabled && _resetPosition)
+            if (_fpController.Enabled)
             {
-                transform.Position = new Vector3(0, 2, 0);
-                _camera.Target = Vector3.Zero;
+                if (_resetPosition)
+                {
+                    transform.Position = new Vector3(0, 2, 0);
+                    _camera.Target = Vector3.Zero;
+                }
+
+                _fpController.Fly = _flyMode;
             }
         }
 
