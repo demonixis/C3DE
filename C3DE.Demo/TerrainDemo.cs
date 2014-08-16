@@ -4,6 +4,7 @@ using C3DE.Components.Lights;
 using C3DE.Demo.Scripts;
 using C3DE.Materials;
 using C3DE.Prefabs;
+using C3DE.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -70,6 +71,7 @@ namespace C3DE.Demo
 
             Input.Gamepad.Sensitivity = new Vector2(1, 0.75f);
             Screen.ShowCursor = true;
+            GUI.Skin = Demo.CreateSkin(Content);
 
             scene.RenderSettings.FogDensity = 0.01f;
             scene.RenderSettings.FogMode = FogMode.Exp2;

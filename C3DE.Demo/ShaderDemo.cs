@@ -5,6 +5,7 @@ using C3DE.Demo.Scripts;
 using C3DE.Geometries;
 using C3DE.Materials;
 using C3DE.Prefabs;
+using C3DE.UI;
 using C3DE.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -155,6 +156,8 @@ namespace C3DE.Demo
             cube3.AddComponent<BoundingBoxRenderer>();
 
             Screen.ShowCursor = true;
+
+            GUI.Skin = Demo.CreateSkin(Content);
         }
     }
 }

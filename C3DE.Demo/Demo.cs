@@ -1,3 +1,7 @@
+using C3DE.UI;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
 namespace C3DE.Demo
 {
     public static class Demo
@@ -25,10 +29,25 @@ namespace C3DE.Demo
             "Textures/Skybox/starfield/nz"
         };
 
+        public static GUISkin CreateSkin(ContentManager content)
+        {
+            GUISkin skin = new GUISkin();
+            skin.Box = content.Load<Texture2D>("Textures/UI/grey_panel");
+            skin.Buttons[0] = content.Load<Texture2D>("Textures/UI/grey_button00");
+            skin.Buttons[1] = content.Load<Texture2D>("Textures/UI/grey_button01");
+            skin.Buttons[2] = content.Load<Texture2D>("Textures/UI/grey_button02");
+            skin.Checkbox[0] = content.Load<Texture2D>("Textures/UI/grey_box");
+            skin.Checkbox[1] = content.Load<Texture2D>("Textures/UI/grey_checkmarkWhite");
+            skin.Checkbox[2] = content.Load<Texture2D>("Textures/UI/grey_checkmarkGrey");
+            skin.Font = content.Load<SpriteFont>("Font/SegoeUILight");
+            skin.TextColor = Color.Black;
+            return skin;
+        }
+
         // Entry point.
         static void Main(string[] args)
         {
-            using (var game = new ShaderDemo())
+            using (var game = new TerrainDemo())
                 game.Run();
         }
     }
