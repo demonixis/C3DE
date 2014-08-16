@@ -24,7 +24,10 @@ int LightFallOff;
 int NbLights;
 int LightType = 0;
 
+// Misc
 float3 EyePosition = float3(1, 1, 0);
+float2 TextureTiling = float2(1, 1);
+float2 TextureOffset = float2(0, 0);
 
 texture MainTexture;
 sampler2D textureSampler = sampler_state
@@ -122,7 +125,7 @@ VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
 
 float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 {
-	float4 baseDiffuse = DiffuseColor * tex2D(textureSampler, input.UV);
+	float4 baseDiffuse = DiffuseColor * tex2D(textureSampler, (input.UV + TextureOffset) * TextureTiling);
 	float4 lightFactor = float4(1, 1, 1, 1);
 	float3 normal = normalize(input.Normal);
 	float shadowTerm = CalcShadow(input.WorldPosition);

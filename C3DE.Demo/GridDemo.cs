@@ -60,9 +60,9 @@ namespace C3DE.Demo
             var terrainMaterial = new StandardMaterial(scene);
             terrainMaterial.MainTexture = GraphicsHelper.CreateBorderTexture(Color.LightGreen, Color.LightSeaGreen, 128, 128, 1);
             terrainMaterial.Shininess = 10;
+            terrainMaterial.Tiling = new Vector2(16);
 
             var terrain = new TerrainPrefab("terrain", scene);
-            terrain.TextureRepeat = new Vector2(16);
             terrain.Flat();
             terrain.Renderer.Material = terrainMaterial;
             terrain.Transform.Translate(-terrain.Width >> 1, 0, -terrain.Depth / 2);

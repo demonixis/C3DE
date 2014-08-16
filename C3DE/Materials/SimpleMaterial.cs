@@ -54,6 +54,8 @@ namespace C3DE.Materials
             effect.Parameters["AmbientColor"].SetValue(scene.RenderSettings.ambientColor);
             effect.Parameters["DiffuseColor"].SetValue(diffuseColor);
             effect.Parameters["EmissiveColor"].SetValue(_emissiveColor);
+            effect.Parameters["TextureTiling"].SetValue(Tiling);
+            effect.Parameters["TextureOffset"].SetValue(Offset);
             effect.Parameters["Alpha"].SetValue(_alpha);
             effect.Parameters["MainTexture"].SetValue(mainTexture);
             effect.Parameters["World"].SetValue(renderable.SceneObject.Transform.world);

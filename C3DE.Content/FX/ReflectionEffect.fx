@@ -4,7 +4,11 @@ float4x4 Projection;
 float4x4 WorldInverseTranspose;
 
 float4 TintColor = float4(1, 1, 1, 1);
-float3 EyePosition;
+float3 EyePosition = float3(0, 0, 1);
+
+// Misc
+float2 TextureTiling = float2(1, 1);
+float2 TextureOffset = float2(0, 0);
 
 Texture ReflectiveTexture;
 samplerCUBE reflectiveSampler = sampler_state

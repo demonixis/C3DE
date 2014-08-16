@@ -9,6 +9,10 @@ float4 DiffuseColor = float4(1.0, 1.0, 1.0, 1.0);
 float4 EmissiveColor = float4(0.0, 0.0, 0.0, 1.0);
 float Alpha = 1.0;
 
+// Misc
+float2 TextureTiling = float2(1, 1);
+float2 TextureOffset = float2(0, 0);
+
 texture MainTexture;
 sampler2D textureSampler = sampler_state 
 {
@@ -50,7 +54,7 @@ VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
 
 float4 PixelShaderFunctionNoAlpha(VertexShaderOutput input) : COLOR0
 {
-	return AmbientColor + (DiffuseColor * tex2D(textureSampler, input.UV)) + EmissiveColor;
+	return AmbientColor + (DiffuseColor * tex2D(textureSampler, (input.UV + TextureOffset) * TextureTiling)) + EmissiveColor;
 }
 
 float4 PixelShaderFunctionAlpha(VertexShaderOutput input) : COLOR0

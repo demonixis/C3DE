@@ -15,8 +15,6 @@ namespace C3DE.Materials
 
         public Texture2D WeightTexture { get; set; }
 
-        public Vector2 Tiling { get; set; }
-
         public TerrainMaterial(Scene scene)
             : base(scene)
         {
@@ -57,6 +55,7 @@ namespace C3DE.Materials
             effect.Parameters["AmbientColor"].SetValue(scene.RenderSettings.ambientColor);
             effect.Parameters["DiffuseColor"].SetValue(diffuseColor);
             effect.Parameters["TextureTiling"].SetValue(Tiling);
+            effect.Parameters["TextureOffset"].SetValue(Offset);
 
             effect.Parameters["MainTexture"].SetValue(mainTexture);
             effect.Parameters["SnowTexture"].SetValue(SnowTexture);

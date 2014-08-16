@@ -15,6 +15,8 @@ float LightIntensity = 1.0;
 float4 LightColor = float4(1, 1, 1, 1);
 
 // Misc
+float2 TextureTiling = float2(1, 1);
+float2 TextureOffset = float2(0, 0);
 float3 EyePosition = float3(0, 0, 1);
 float TotalTime = 0.0;
 float Alpha = 0.3;
@@ -87,8 +89,8 @@ VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
 
 float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 {
-	input.UV.x = input.UV.x * 20.0 + sin(TotalTime * 3.0 + 10.0) / 256.0;
-	input.UV.y = input.UV.y * 20.0;
+	input.UV.x = ((input.UV.x + TextureOffset.x) * TextureTiling.x) * 20.0 + sin(TotalTime * 3.0 + 10.0) / 256.0;
+	input.UV.y = ((input.UV.y + TextureOffset.y) * TextureTiling.y) * 20.0;
 
 	float4 color = tex2D(WaterMapSampler, input.UV);
 

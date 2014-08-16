@@ -44,6 +44,8 @@ namespace C3DE.Materials
 
             effect.Parameters["TintColor"].SetValue(diffuseColor);
             effect.Parameters["ReflectiveTexture"].SetValue(TextureCube);
+            //effect.Parameters["TextureTiling"].SetValue(Tiling);
+            //effect.Parameters["TextureOffset"].SetValue(Offset);
             effect.Parameters["World"].SetValue(renderable.SceneObject.Transform.world);
             effect.Parameters["WorldInverseTranspose"].SetValue(_worldInvertTranspose);
             effect.CurrentTechnique.Passes[0].Apply();

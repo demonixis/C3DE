@@ -17,6 +17,7 @@ float4 LightColor = float4(1, 1, 1, 1);
 
 // Misc
 float2 TextureTiling = float2(1, 1);
+float2 TextureOffset = float2(0, 0);
 float3 EyePosition = float3(1, 1, 0);
 
 texture2D MainTexture;
@@ -116,10 +117,10 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 	
 	float shadowTerm = CalcShadow(input.WorldPosition);
 	
-	float3 sandTex = tex2D(SandTextureSampler, input.UV * TextureTiling);
-	float rockTex = tex2D(RockTextureSampler, input.UV * TextureTiling);
-	float3 snowTex = tex2D(SnowTextureSampler, input.UV * TextureTiling);
-	float3 mainTex = tex2D(MainTextureSampler, input.UV * TextureTiling);
+	float3 sandTex = tex2D(SandTextureSampler, (input.UV + TextureOffset) * TextureTiling);
+	float3 rockTex = tex2D(RockTextureSampler, (input.UV + TextureOffset) * TextureTiling);
+	float3 snowTex = tex2D(SnowTextureSampler, (input.UV + TextureOffset) * TextureTiling);
+	float3 mainTex = tex2D(MainTextureSampler, (input.UV + TextureOffset) * TextureTiling);
 	float3 weightTex = tex2D(WeightMapSampler, input.UV);
 	
 	float3 baseCompose = clamp(1.0 - weightTex.r - weightTex.g - weightTex.b, 0, 1);

@@ -63,9 +63,9 @@ namespace C3DE.Demo
             var terrainMaterial = new StandardMaterial(scene);
             terrainMaterial.MainTexture = Content.Load<Texture2D>("Textures/terrainTexture");
             terrainMaterial.Shininess = 500;
-            
+            terrainMaterial.Tiling = new Vector2(16);
+
             var terrain = new TerrainPrefab("terrain", scene);
-            terrain.TextureRepeat = new Vector2(8);
             terrain.Randomize();
             terrain.Renderer.Material = terrainMaterial;
             terrain.Transform.Translate(-terrain.Width >> 1, 0, -terrain.Depth / 2);

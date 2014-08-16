@@ -77,6 +77,8 @@ namespace C3DE.Materials
             effect.Parameters["EmissiveColor"].SetValue(_emissiveColor);
             effect.Parameters["SpecularColor"].SetValue(_specularColor);
             effect.Parameters["Shininess"].SetValue(Shininess);
+            effect.Parameters["TextureTiling"].SetValue(Tiling);
+            effect.Parameters["TextureOffset"].SetValue(Offset);
 
             effect.Parameters["MainTexture"].SetValue(mainTexture);
             effect.Parameters["RecieveShadow"].SetValue(renderable.ReceiveShadow);

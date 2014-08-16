@@ -9,6 +9,10 @@ float4 DiffuseColor = float4(1.0, 1.0, 1.0, 1.0);
 float4 EmissiveColor = float4(0.0, 0.0, 0.0, 1.0);
 float4 TransparentColor = float4(1.0, 0.0, 1.0, 1.0);
 
+// Mist
+float2 TextureTiling = float2(1, 1);
+float2 TextureOffset = float2(0, 0);
+
 texture2D MainTexture;
 sampler2D textureSampler = sampler_state
 {
@@ -50,7 +54,7 @@ VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
 
 float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 {
-	float4 diffuse = tex2D(textureSampler, input.UV);
+	float4 diffuse = tex2D(textureSampler, (input.UV + TextureOffset) * TextureTiling);
 	float4 finalColor = AmbientColor + DiffuseColor * diffuse + EmissiveColor;
 	finalColor.a = 1.0;
 

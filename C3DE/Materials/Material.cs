@@ -43,6 +43,10 @@ namespace C3DE.Materials
             set { mainTexture = value; }
         }
 
+        public Vector2 Tiling { get; set; }
+
+        public Vector2 Offset { get; set; }
+
         public Material(Scene mainScene)
         {
             diffuseColor = Color.White.ToVector4();
@@ -50,6 +54,8 @@ namespace C3DE.Materials
             scene.Add(this);
             Id = MaterialCounter++;
             Name = "Material_" + Id;
+            Tiling = Vector2.One;
+            Offset = Vector2.Zero;
         }
 
         public abstract void LoadContent(ContentManager content);

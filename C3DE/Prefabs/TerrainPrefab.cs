@@ -18,12 +18,6 @@ namespace C3DE.Prefabs
             get { return renderer; }
         }
 
-        public Vector2 TextureRepeat
-        {
-            get { return geometry.TextureRepeat; }
-            set { geometry.TextureRepeat = value; }
-        }
-
         public int Width
         {
             get { return geometry.Width; }

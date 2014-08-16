@@ -117,6 +117,8 @@ namespace C3DE
             for (int i = 0, l = materials.Count; i < l; i++)
                 materials[i].LoadContent(Application.Content);
 
+            UpdateEffectMaterialMatching();
+
             for (int i = 0; i < members.Size; i++)
                 members[i].Initialize();
 
@@ -275,15 +277,17 @@ namespace C3DE
         {
             if (!materials.Contains(material))
             {
-                if (initialized)
-                    material.LoadContent(Application.Content);
-
                 materials.Add(material);
 
-                if (!effects.Contains(material.effect))
+                if (initialized)
                 {
-                    effects.Add(material.effect);
-                    materialsEffectIndex.Add(effects.IndexOf(material.effect), materials.IndexOf(material));
+                    material.LoadContent(Application.Content);
+
+                    if (!effects.Contains(material.effect))
+                    {
+                        effects.Add(material.effect);
+                        materialsEffectIndex.Add(effects.IndexOf(material.effect), materials.IndexOf(material));
+                    }
                 }
             }
         }
@@ -298,6 +302,18 @@ namespace C3DE
             {
                 materials.Remove(material);
                 material.Dispose();
+            }
+        }
+
+        private void UpdateEffectMaterialMatching()
+        {
+            for (int i = 0, l = materials.Count; i < l; i++)
+            {
+                if (!effects.Contains(materials[i].effect))
+                {
+                    effects.Add(materials[i].effect);
+                    materialsEffectIndex.Add(effects.IndexOf(materials[i].effect), materials.IndexOf(materials[i]));
+                }
             }
         }
 
