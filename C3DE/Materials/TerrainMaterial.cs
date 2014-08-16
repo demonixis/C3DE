@@ -26,7 +26,7 @@ namespace C3DE.Materials
 
         public override void LoadContent(ContentManager content)
         {
-            effect = content.Load<Effect>("FX/TerrainEffect").Clone();
+            effect = content.Load<Effect>("FX/TerrainEffect");
         }
 
         public override void PrePass()
@@ -49,7 +49,6 @@ namespace C3DE.Materials
             // Fog
             effect.Parameters["FogColor"].SetValue(scene.RenderSettings.fogColor);
             effect.Parameters["FogData"].SetValue(scene.RenderSettings.fogData);
-            
         }
 
         public override void Pass(RenderableComponent renderable)

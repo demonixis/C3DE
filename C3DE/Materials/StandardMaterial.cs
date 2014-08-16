@@ -41,11 +41,6 @@ namespace C3DE.Materials
 
         public override void PrePass()
         {
-            // FIXME - Set these parameters at first time and only on change and only for this effet
-            // I need to cache effects and not clone it.
-
-            // FIXME - Please update just once per effect
-
             // Matrix and camera.
             effect.Parameters["View"].SetValue(scene.MainCamera.view);
             effect.Parameters["Projection"].SetValue(scene.MainCamera.projection);

@@ -6,6 +6,7 @@ using C3DE.Materials;
 using C3DE.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 
 namespace C3DE
@@ -27,6 +28,8 @@ namespace C3DE
         internal protected SmartList<SceneObject> members;
         internal protected List<RenderableComponent> renderList;
         internal protected List<Material> materials;
+        internal protected List<Effect> effects;
+        internal protected Dictionary<int, int> materialsEffectIndex;
         internal protected List<Collider> colliders;
         internal protected List<Camera> cameras;
         internal protected List<Light> lights;
@@ -89,6 +92,8 @@ namespace C3DE
             scene = this;
             renderList = new List<RenderableComponent>(10);
             materials = new List<Material>(5);
+            effects = new List<Effect>(5);
+            materialsEffectIndex = new Dictionary<int, int>(5);
             colliders = new List<Collider>(5);
             cameras = new List<Camera>(1);
             _mainCameraIndex = -1;
@@ -274,6 +279,12 @@ namespace C3DE
                     material.LoadContent(Application.Content);
 
                 materials.Add(material);
+
+                if (!effects.Contains(material.effect))
+                {
+                    effects.Add(material.effect);
+                    materialsEffectIndex.Add(effects.IndexOf(material.effect), materials.IndexOf(material));
+                }
             }
         }
 

@@ -59,9 +59,11 @@ namespace C3DE
             if (_skybox.Enabled)
                 _skybox.Draw(graphicsDevice, camera);
 
-            foreach (Material material in scene.Materials)
-                material.PrePass();
+            // Prepass, Update light, eye position, etc.
+            for (int i = 0; i < scene.effects.Count; i++)
+                scene.materials[scene.materialsEffectIndex[i]].PrePass();
 
+            // Pass, Update matrix, material attributes, etc.
             for (int i = 0; i < scene.RenderList.Count; i++)
             {
                 if (scene.RenderList[i].MaterialCount == 0)

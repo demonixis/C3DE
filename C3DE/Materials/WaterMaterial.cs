@@ -48,13 +48,12 @@ namespace C3DE.Materials
             effect.Parameters["LightColor"].SetValue(light0.diffuseColor);
             effect.Parameters["LightDirection"].SetValue(light0.Direction);
             effect.Parameters["LightIntensity"].SetValue(light0.Intensity);
-       
             effect.Parameters["AmbientColor"].SetValue(scene.RenderSettings.ambientColor);
-            effect.Parameters["TotalTime"].SetValue(_totalTime);
         }
 
         public override void Pass(RenderableComponent renderable)
         {
+            effect.Parameters["TotalTime"].SetValue(_totalTime);
             effect.Parameters["WaterTexture"].SetValue(mainTexture);
             effect.Parameters["NormalTexture"].SetValue(BumpTexture);
             effect.Parameters["Alpha"].SetValue(WaterTransparency);

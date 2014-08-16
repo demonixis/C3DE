@@ -71,7 +71,7 @@ namespace C3DE.Demo
             Input.Gamepad.Sensitivity = new Vector2(1, 0.75f);
             Screen.ShowCursor = true;
 
-            scene.RenderSettings.FogDensity = 0.005f;
+            scene.RenderSettings.FogDensity = 0.01f;
             scene.RenderSettings.FogMode = FogMode.Exp2;
         }
     }

@@ -12,7 +12,7 @@ namespace C3DE.Materials
         protected internal Scene scene;
         protected Vector4 diffuseColor;
         protected Texture2D mainTexture;
-        protected Effect effect;
+        protected internal Effect effect;
 
         public int Id
         {
