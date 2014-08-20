@@ -1,3 +1,5 @@
+#include "Fog.fxh"
+
 // Matrix
 float4x4 World;
 float4x4 View;
@@ -7,6 +9,7 @@ float4x4 Projection;
 float4 AmbientColor = float4(1.0, 1.0, 1.0, 1.0);
 float4 DiffuseColor = float4(1.0, 1.0, 1.0, 1.0);
 float4 SpecularColor = float4(0.8, 0.8, 0.8, 1.0);
+float4 ReflectionColor = float4(1, 1, 1, 1);
 float Shininess = 250.0;
 
 // Light
@@ -17,6 +20,8 @@ float4 LightColor = float4(1, 1, 1, 1);
 // Misc
 float2 TextureTiling = float2(1, 1);
 float2 TextureOffset = float2(0, 0);
+bool ReflectiveMapEnabled = false;
+bool NormalMapEnabled = false;
 float3 EyePosition = float3(0, 0, 1);
 float TotalTime = 0.0;
 float Alpha = 0.3;
@@ -43,6 +48,17 @@ sampler2D NormalMapSampler = sampler_state
 	AddressV = Wrap;
 };
 
+Texture ReflectiveTexture;
+samplerCUBE reflectiveSampler = sampler_state
+{
+	Texture = <ReflectiveTexture>;
+	MinFilter = Linear;
+	MagFilter = Linear;
+	MipFilter = Linear;
+	AddressU = Mirror;
+	AddressV = Mirror;
+};
+
 struct VertexShaderInput
 {
 #if SM4
@@ -58,8 +74,11 @@ struct VertexShaderOutput
 {
 	float4 Position : POSITION0;
 	float2 UV : TEXCOORD0;
-	float4 WorldPosition : TEXCOORD1;
-	float3x3 WorldToTangentSpace : TEXCOORD2;
+	float3 Normal : TEXCOORD1;
+	float3 Reflection : TEXCOORD2;
+	float4 WorldPosition : TEXCOORD3;
+	float3x3 WorldToTangentSpace : TEXCOORD4;
+	float FogDistance : FOG;
 };
 
 VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
@@ -75,44 +94,59 @@ VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
 	output.Position = mul(viewPosition, Projection);
 	output.UV = input.UV;
 
-	float3 normal = mul(normalize(input.Normal), World);
+	float3 normal = input.Normal;
+	output.Normal = normal;
+	
+	// Reflection
+	float3 viewDirection = EyePosition - worldPosition;
+	output.Reflection = reflect(-normalize(viewDirection), normalize(normal));
 
+	output.WorldPosition = worldPosition;
+	
 	// [0] Tangent / [1] Binormal / [2] Normal
 	output.WorldToTangentSpace[0] = cross(normal, float3(-1.0, 0.0, 0.0));
 	output.WorldToTangentSpace[1] = cross(output.WorldToTangentSpace[0], normal);
 	output.WorldToTangentSpace[2] = normal;
 	
-	output.WorldPosition = worldPosition;
+	output.FogDistance = distance(worldPosition, EyePosition);
 
 	return output;
 }
 
 float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 {
-	input.UV.x = ((input.UV.x + TextureOffset.x) * TextureTiling.x) * 20.0 + sin(TotalTime * 3.0 + 10.0) / 256.0;
-	input.UV.y = ((input.UV.y + TextureOffset.y) * TextureTiling.y) * 20.0;
+	input.UV.x = input.UV.x * 20.0 + sin(TotalTime * 3.0 + 10.0) / 256.0;
+	input.UV.y = input.UV.y * 20.0;
 
-	float4 color = tex2D(WaterMapSampler, input.UV);
-
-	input.UV.y += (sin(TotalTime * 3.0 + 10.0) / 256) + (TotalTime / 16);
-	float3 normalMap = 2.0 * (tex2D(NormalMapSampler, input.UV)) - 1.0;
-
-	input.UV.y -= ((sin(TotalTime * 3.0 + 10) / 256.0) + (TotalTime / 16.0)) * 2.0;
-	float3 normalMap2 = (2.0 * (tex2D(NormalMapSampler, input.UV))) - 1.0;
-
-	normalMap = (normalMap + normalMap2) / 2.0;
-	normalMap = normalize(mul(normalMap, input.WorldToTangentSpace));
+	float4 baseColor = tex2D(WaterMapSampler, (input.UV + TextureOffset) * TextureTiling);
+	float4 normal = float4(input.Normal, 1.0);
+	float4 reflectColor = float4(1, 1, 1, 1);
 	
-	float4 normal = float4(normalMap, 1.0);
+	if (ReflectiveMapEnabled == true)
+		reflectColor = ReflectionColor * texCUBE(reflectiveSampler, normalize(input.Reflection));
+	
+	if (NormalMapEnabled == true)
+	{
+		input.UV.y += (sin(TotalTime * 3.0 + 10.0) / 256) + (TotalTime / 16);
+		float3 normalMap = 2.0 * (tex2D(NormalMapSampler, (input.UV + TextureOffset) * TextureTiling)) - 1.0;
+
+		input.UV.y -= ((sin(TotalTime * 3.0 + 10) / 256.0) + (TotalTime / 16.0)) * 2.0;
+		float3 normalMap2 = (2.0 * (tex2D(NormalMapSampler, (input.UV + TextureOffset) * TextureTiling))) - 1.0;
+
+		normalMap = (normalMap + normalMap2) / 2.0;
+		normalMap = normalize(mul(normalMap, input.WorldToTangentSpace));
+		
+		normal = float4(normalMap, 1.0);
+	}
 
 	float4 diffuse = saturate(dot(LightDirection, normal)) * LightColor * LightIntensity;
 	float3 R = normalize(2 * diffuse.xyz * normal - float4(LightDirection, 1.0));
 	float4 specular = SpecularColor * pow(saturate(dot(R, LightDirection)), Shininess);
 	
-	float4 finalColor = AmbientColor + (color * DiffuseColor * diffuse) + specular;
+	float4 finalColor = AmbientColor + (baseColor * DiffuseColor * diffuse * reflectColor) + specular;
 	finalColor.a = Alpha;
 
-	return finalColor;
+	return ApplyFog(finalColor, input.FogDistance);
 }
 
 technique Water

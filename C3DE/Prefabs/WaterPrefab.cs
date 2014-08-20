@@ -46,7 +46,7 @@ namespace C3DE.Prefabs
                 material.MainTexture = Application.Content.Load<Texture2D>(waterTexture);
 
             if (!string.IsNullOrEmpty(bumpTexture))
-                material.BumpTexture = Application.Content.Load<Texture2D>(bumpTexture);
+                material.NormalMap = Application.Content.Load<Texture2D>(bumpTexture);
 
             renderer.Material = material;
             renderer.Geometry.Size = size;

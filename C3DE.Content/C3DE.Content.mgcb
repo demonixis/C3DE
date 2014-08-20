@@ -31,12 +31,6 @@
 /processorParam:DebugMode=Auto
 /build:FX/SkyboxEffect.fx
 
-#begin FX/WaterEffect.fx
-/importer:EffectImporter
-/processor:EffectProcessor
-/processorParam:DebugMode=Auto
-/build:FX/WaterEffect.fx
-
 #begin FX/SimpleEffect.fx
 /importer:EffectImporter
 /processor:EffectProcessor
@@ -116,17 +110,6 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:TextureFormat=Color
 /build:Textures/water.jpg
-
-#begin Textures/wavesbump.jpg
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=0,0,0,0
-/processorParam:ColorKeyEnabled=False
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:TextureFormat=Color
-/build:Textures/wavesbump.jpg
 
 #begin Textures/Terrain/Grass.jpg
 /importer:TextureImporter
@@ -413,4 +396,21 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:TextureFormat=Color
 /build:Textures/UI/grey_checkmarkWhite.png
+
+#begin FX/WaterEffect.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:FX/WaterEffect.fx
+
+#begin Textures/wavesbump.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=0,0,0,0
+/processorParam:ColorKeyEnabled=False
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:TextureFormat=Color
+/build:Textures/wavesbump.png
 

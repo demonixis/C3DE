@@ -7,16 +7,27 @@ namespace C3DE.Materials
 {
     public class ReflectiveMaterial : Material
     {
-        private Matrix _worldInvertTranspose;
+        private bool _mainTextureEnabled;
         private Vector4 _reflectionColor;
 
-        public TextureCube TextureCube { get; set; }
-        
+        public new Texture2D MainTexture
+        {
+            get { return mainTexture; }
+            set
+            {
+                mainTexture = value;
+                _mainTextureEnabled = (value != null);
+            }
+        }
+
+        public TextureCube ReflectionMap { get; set; }
+
         public Color ReflectionColor
         {
             get { return new Color(_reflectionColor); }
             set { _reflectionColor = value.ToVector4(); }
         }
+
 
         public ReflectiveMaterial(Scene scene)
             : base(scene)
@@ -40,14 +51,16 @@ namespace C3DE.Materials
 
         public override void Pass(RenderableComponent renderable)
         {
-            _worldInvertTranspose = Matrix.Transpose(Matrix.Invert(renderable.SceneObject.Transform.world));
+            effect.Parameters["MainTextureEnabled"].SetValue(_mainTextureEnabled);
 
-            effect.Parameters["TintColor"].SetValue(diffuseColor);
-            effect.Parameters["ReflectiveTexture"].SetValue(TextureCube);
-            //effect.Parameters["TextureTiling"].SetValue(Tiling);
-            //effect.Parameters["TextureOffset"].SetValue(Offset);
+            if (_mainTextureEnabled)
+                effect.Parameters["MainTexture"].SetValue(mainTexture);
+
+            effect.Parameters["ReflectionColor"].SetValue(diffuseColor);
+            effect.Parameters["ReflectiveTexture"].SetValue(ReflectionMap);
+            effect.Parameters["TextureTiling"].SetValue(Tiling);
+            effect.Parameters["TextureOffset"].SetValue(Offset);
             effect.Parameters["World"].SetValue(renderable.SceneObject.Transform.world);
-            effect.Parameters["WorldInverseTranspose"].SetValue(_worldInvertTranspose);
             effect.CurrentTechnique.Passes[0].Apply();
         }
     }

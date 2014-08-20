@@ -43,7 +43,7 @@ namespace C3DE.Demo
             lightPrefab.Light.Range = 25;
             lightPrefab.Light.Intensity = 2.0f;
             lightPrefab.Light.FallOf = 5f;
-            lightPrefab.Light.DiffuseColor = Color.LightCoral;
+            //lightPrefab.Light.DiffuseColor = Color.LightCoral;
             lightPrefab.Light.Direction = new Vector3(0, 1, -1);
             lightPrefab.Light.Angle = MathHelper.PiOver4;
             lightPrefab.Light.ShadowGenerator.ShadowStrength = 0.6f; // FIXME need to be inverted
@@ -73,6 +73,9 @@ namespace C3DE.Demo
 
             var water = new WaterPrefab("water", scene);
             water.Generate("Textures/water", "Textures/wavesbump", new Vector3(terrain.Width * 0.5f));
+            (water.Renderer.Material as WaterMaterial).ReflectiveMap = renderer.Skybox.Texture;
+            (water.Renderer.Material as WaterMaterial).WaterTransparency = 0.6f;
+    
             scene.Destroy(water.Collider);
 
             // Cube
@@ -98,7 +101,7 @@ namespace C3DE.Demo
             cube.Geometry.Generate();
             cube.Material = cubeSuperMaterial;
             cube.AddComponent<BoxCollider>();
-            cube.AddComponent<BoundingBoxRenderer>();
+            //cube.AddComponent<BoundingBoxRenderer>();
 
             // Second cube
             var simpleMaterial = new SimpleMaterial(scene);
@@ -121,7 +124,7 @@ namespace C3DE.Demo
             cube2.Geometry.Generate();
             cube2.Material = simpleMaterial;
             cube2.AddComponent<BoxCollider>();
-            cube2.AddComponent<BoundingBoxRenderer>();
+            //cube2.AddComponent<BoundingBoxRenderer>();
 
             var path = cube2.AddComponent<SimplePath>();
             path.Begin();
@@ -134,16 +137,14 @@ namespace C3DE.Demo
             // Third cube
             var reflectiveMaterial = new ReflectiveMaterial(scene);
             reflectiveMaterial.MainTexture = cubeSuperMaterial.MainTexture;
-            reflectiveMaterial.TextureCube = renderer.Skybox.Texture;
-            reflectiveMaterial.DiffuseColor = Color.Red;
+            reflectiveMaterial.ReflectionMap = renderer.Skybox.Texture;
 
             var cube3Scene = new SceneObject();
             cube3Scene.Name = "Reflective Cube";
-            cube3Scene.Transform.Translate(0, 7.5f, -30);
-            cube3Scene.Transform.LocalScale = new Vector3(4.0f, 2.0f, 1.5f);
-            cube3Scene.Transform.Rotate(MathHelper.PiOver4, 0, -MathHelper.PiOver2);
+            cube3Scene.Transform.Translate(0, 8, -30);
+            cube3Scene.Transform.LocalScale = new Vector3(4);
             var autoRot3 = cube3Scene.AddComponent<AutoRotation>();
-            autoRot3.Rotation = new Vector3(0.1f, 0.02f, 0.01f);
+            autoRot3.Rotation = new Vector3(0.01f, 0.02f, 0.01f);
             scene.Add(cube3Scene);
 
             var cube3 = cube3Scene.AddComponent<MeshRenderer>();
@@ -153,7 +154,7 @@ namespace C3DE.Demo
             cube3.Geometry.Generate();
             cube3.Material = reflectiveMaterial;
             cube3.AddComponent<SphereCollider>();
-            cube3.AddComponent<BoundingBoxRenderer>();
+            //cube3.AddComponent<BoundingBoxRenderer>();
 
             Screen.ShowCursor = true;
 

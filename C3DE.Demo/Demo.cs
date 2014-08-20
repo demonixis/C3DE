@@ -47,7 +47,7 @@ namespace C3DE.Demo
         // Entry point.
         static void Main(string[] args)
         {
-            using (var game = new TerrainDemo())
+            using (var game = new ShaderDemo())
                 game.Run();
         }
     }
