@@ -11,7 +11,6 @@ namespace C3DE.Components.Renderers
     /// </summary>
     public class ModelRenderer : RenderableComponent
     {
-        private bool _haveListener;
         protected Model model;
 
         public Model Model

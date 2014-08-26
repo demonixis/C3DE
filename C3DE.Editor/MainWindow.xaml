@@ -1,0 +1,84 @@
+﻿<Window x:Class="C3DE.Editor.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:C3DE.Editor.MonoGameBridge"
+        xmlns:component="clr-namespace:C3DE.Editor.Components"
+        WindowStartupLocation="CenterScreen" WindowState="Maximized"
+        Title="C3DE Editor" Height="600" Width="800" Icon="Game.ico">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="250" />
+        </Grid.ColumnDefinitions>
+        <Menu Grid.Row="0" Grid.ColumnSpan="2">
+            <MenuItem Header="File">
+                <MenuItem Header="New Scene" />
+                <MenuItem Header="Load Scene" />
+                <MenuItem Header="Save Scene" />
+                <Separator />
+                <MenuItem Header="New Project" />
+                <MenuItem Header="Load Project" />
+                <MenuItem Header="Save Project" />
+                <Separator />
+                <MenuItem Header="Exit" />
+            </MenuItem>
+            <MenuItem Header="Assets">
+                <MenuItem Header="Add">
+                    <MenuItem Header="Texture" />
+                    <MenuItem Header="Font" />
+                    <MenuItem Header="Model" />
+                    <Separator />
+                    <MenuItem Header="Material" />
+                    <MenuItem Header="Shader" />
+                </MenuItem>
+            </MenuItem>
+            <MenuItem Header="Scene">
+                <MenuItem Header="Empty" />
+                <Separator />
+                <MenuItem Header="3D Object">
+                    <MenuItem Header="Cube" />
+                    <MenuItem Header="Cylinder" />
+                    <MenuItem Header="Quad" />
+                    <MenuItem Header="Plane" />
+                    <MenuItem Header="Pyramid" />
+                    <MenuItem Header="Sphere" />
+                    <MenuItem Header="Torus" />
+                </MenuItem>
+                <MenuItem Header="Terrain">
+                    <MenuItem Header="Terrain" />
+                    <MenuItem Header="Water" />
+                </MenuItem>
+                <MenuItem Header="Light">
+                    <MenuItem Header="Directional Light" />
+                    <MenuItem Header="Point Light" />
+                    <MenuItem Header="Spot Light" />
+                </MenuItem>
+                <MenuItem Header="Camera" />
+            </MenuItem>
+            <MenuItem Header="Help">
+                <MenuItem Header="About" />
+            </MenuItem>
+        </Menu>
+        <local:GameEditorHost 
+            x:Name="MonoGameHost" 
+            Grid.Row="1" 
+            Grid.Column="0" 
+            Margin="0" 
+            SnapsToDevicePixels="True" 
+            Stretch="Fill" />
+
+        <StackPanel Grid.Row="1" Grid.Column="1">
+            <component:TransformControl />
+            <Line />
+            <TreeView>
+                <TreeViewItem Header="Scene">
+                    <TreeViewItem Header="Camera" />
+                </TreeViewItem>
+            </TreeView>
+        </StackPanel>
+    </Grid>
+</Window>
