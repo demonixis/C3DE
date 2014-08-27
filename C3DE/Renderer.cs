@@ -19,11 +19,18 @@ namespace C3DE
         private SpriteBatch _spriteBatch;
         private PostProcessManager _postProcessManager;
         private Skybox _skybox;
+        private bool _needsBufferUpdate;
         internal GUI _guiManager;
 
         public Skybox Skybox
         {
             get { return _skybox; }
+        }
+
+        public bool NeedsBufferUpdate
+        {
+            get { return _needsBufferUpdate; }
+            set { _needsBufferUpdate = value; }
         }
 
         public Renderer(GraphicsDevice device)
@@ -33,6 +40,7 @@ namespace C3DE
             _sceneRT = new RenderTarget2D(device, device.Viewport.Width, device.Viewport.Height, false, SurfaceFormat.Color, DepthFormat.Depth24, 0, RenderTargetUsage.DiscardContents);
             _postProcessManager = new PostProcessManager();
             _skybox = new Skybox();
+            _needsBufferUpdate = false;
         }
 
         public void LoadContent(ContentManager content)
@@ -113,6 +121,12 @@ namespace C3DE
         /// <param name="camera">The camera to use for render.</param>
         public void render(Scene scene, Camera camera)
         {
+            if (_needsBufferUpdate)
+            {
+                _sceneRT = new RenderTarget2D(graphicsDevice, graphicsDevice.Viewport.Width, graphicsDevice.Viewport.Height, false, SurfaceFormat.Color, DepthFormat.Depth24, 0, RenderTargetUsage.DiscardContents);
+                _needsBufferUpdate = false;
+            }
+
             for (int i = 0, l = scene.Lights.Count; i < l; i++)
                 if (scene.Lights[i].shadowGenerator.Enabled)
                     scene.Lights[i].shadowGenerator.RenderShadows(graphicsDevice, scene.RenderList);

@@ -10,8 +10,8 @@ namespace C3DE
     public class Application
     {
         internal static Game Game { get; set; }
-        public static ContentManager Content { get; internal set; }
-        public static GraphicsDevice GraphicsDevice { get; internal set; }
+        public static ContentManager Content { get; set; }
+        public static GraphicsDevice GraphicsDevice { get; set; }
         
         public static void TargetFrameRate(long frameRate)
         {
@@ -40,7 +40,7 @@ namespace C3DE
             set { Application.Game.IsMouseVisible = value; }
         }
 
-        internal static void Setup(int width, int height, bool? lockCursor, bool? showCursor)
+        public static void Setup(int width, int height, bool? lockCursor, bool? showCursor)
         {
             Width = width;
             Height = height;

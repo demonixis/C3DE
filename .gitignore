@@ -14,4 +14,5 @@ obj/
 [Dd]ebug*/
 [Rr]elease*/
 C3DE.Demo/Content/*
+C3DE.Editor/Content/*
 Libs/*.dll

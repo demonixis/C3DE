@@ -76,7 +76,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="MonoGameBridge\GameEditorHost.cs" />
+    <Compile Include="MonoGameBridge\C3DEGameHost.cs" />
+    <Compile Include="MonoGameBridge\GraphicsDeviceService.cs" />
     <Compile Include="Views\SceneSettingsWindow.xaml.cs">
       <DependentUpon>SceneSettingsWindow.xaml</DependentUpon>
     </Compile>
@@ -127,6 +128,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Game.ico" />
+    <Content Include="Content\**\*.*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\C3DE\C3DE.csproj">

@@ -63,7 +63,7 @@
                 <MenuItem Header="About" />
             </MenuItem>
         </Menu>
-        <local:GameEditorHost 
+        <local:C3DEGameHost 
             x:Name="MonoGameHost" 
             Grid.Row="1" 
             Grid.Column="0" 
