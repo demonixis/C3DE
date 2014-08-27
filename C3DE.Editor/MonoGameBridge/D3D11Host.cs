@@ -214,7 +214,8 @@ namespace C3DE.Editor.MonoGameBridge
                 _lastRenderingTime = renderingEventArgs.RenderingTime;
 
                 GraphicsDevice.SetRenderTarget(_renderTarget);
-                Draw();
+                Draw(_renderTarget);
+  
                 GraphicsDevice.Flush();
             }
 
@@ -274,7 +275,7 @@ namespace C3DE.Editor.MonoGameBridge
 
         }
 
-        protected virtual void Draw()
+        protected virtual void Draw(RenderTarget2D renderTarget)
         {
            
         }

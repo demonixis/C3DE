@@ -132,9 +132,27 @@ namespace C3DE
                     scene.Lights[i].shadowGenerator.RenderShadows(graphicsDevice, scene.RenderList);
 
             renderObjects(scene, camera);
+
             renderBuffers();
             //renderPostProcess();
             renderUI(scene.Behaviours);
+        }
+
+        public void RenderEditor(Scene scene, Camera camera, RenderTarget2D target)
+        {
+            if (_needsBufferUpdate)
+            {
+                _sceneRT = new RenderTarget2D(graphicsDevice, graphicsDevice.Viewport.Width, graphicsDevice.Viewport.Height, false, SurfaceFormat.Color, DepthFormat.Depth24, 0, RenderTargetUsage.DiscardContents);
+                _needsBufferUpdate = false;
+            }
+
+            renderObjects(scene, camera);
+            renderBuffers();
+
+            graphicsDevice.SetRenderTarget(target);
+            _spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Opaque, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone);
+            _spriteBatch.Draw(_sceneRT, Vector2.Zero, Color.White);
+            _spriteBatch.End();
         }
     }
 }

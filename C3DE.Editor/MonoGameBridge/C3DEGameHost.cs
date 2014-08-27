@@ -58,6 +58,7 @@ namespace C3DE.Editor.MonoGameBridge
         private void PopulateSceneWithThings()
         {
             var camera = new CameraPrefab("camera", scene);
+            camera.Transform.Position = new Vector3(0, 2, -10);
 
             var lightPrefab = new LightPrefab("lightPrefab", LightType.Directional, scene);
             lightPrefab.Transform.Position = new Vector3(0, 15, 15);
@@ -93,10 +94,10 @@ namespace C3DE.Editor.MonoGameBridge
             renderer.NeedsBufferUpdate = true;
         }
 
-        protected override void Draw()
+        protected override void Draw(RenderTarget2D renderTarget)
         {
             graphicsDevice.Clear(Color.CornflowerBlue);
-            renderer.render(scene, scene.MainCamera);
+            renderer.RenderEditor(scene, scene.MainCamera, renderTarget);
         }
 
         public object GetService(Type serviceType)
