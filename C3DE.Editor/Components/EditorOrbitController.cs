@@ -18,10 +18,6 @@ namespace C3DE.Editor.Components
         private Vector2 _angle;
         private Vector3 _position;
         private Vector3 _target;
-        private Vector2 _angleVelocity;
-        private Vector3 _positionVelicoty;
-        private Vector3 _cacheVec3;
-        private float _distanceVelocity;
 
         /// <summary>
         /// Gets or sets the min angle on y-axis.
@@ -56,29 +52,31 @@ namespace C3DE.Editor.Components
             MaxAngle = MathHelper.PiOver2 - 0.1f;
             MinDistance = 1.0f;
             MaxDistance = 100.0f;
-            RotationSpeed = 0.05f;
-            MoveSpeed = 2.0f;
-            StrafeSpeed = 1.75f;
-            GamepadSensibility = 2.5f;
-            Velocity = 0.95f;
-            AngularVelocity = 0.90f;
+            RotationSpeed = 0.25f;
+            MoveSpeed = 10.0f;
+            StrafeSpeed = 10f;
         }
 
         public override void Start()
         {
             _camera = GetComponent<Camera>();
-
-            if (_camera == null)
-                throw new Exception("No camera attached to this scene object.");
         }
 
         public override void Update()
         {
-            UpdateMouseInput();
+            if (Input.Mouse.Down(Inputs.MouseButton.Left))
+            {
+                _angle.X -= RotationSpeed * Input.Mouse.Delta.X * Time.DeltaTime;
+                _angle.Y -= RotationSpeed * Input.Mouse.Delta.Y * Time.DeltaTime;
+            }
+ 
+            if (Input.Mouse.Down(Inputs.MouseButton.Right))
+            {
+                _target.X += StrafeSpeed * Input.Mouse.Delta.X * Time.DeltaTime;
+                _target.Y += StrafeSpeed * Input.Mouse.Delta.Y * Time.DeltaTime;
+            }
 
-            _angle += _angleVelocity;
-            _distance += _distanceVelocity;
-            _target += _positionVelicoty;
+            _distance -= (Input.Mouse as EditorMouseComponent).Wheel * 0.01f * MoveSpeed * Time.DeltaTime;
 
             CheckAngle();
             CheckDistance();
@@ -89,27 +87,6 @@ namespace C3DE.Editor.Components
 
             transform.Position = _position;
             _camera.Target = _target;
-
-            _angleVelocity *= AngularVelocity;
-            _distanceVelocity *= Velocity;
-            _positionVelicoty *= Velocity;
-        }
-
-        private void UpdateMouseInput()
-        {
-            if (Input.Mouse.Down(Inputs.MouseButton.Left))
-            {
-                _angleVelocity.X -= RotationSpeed * Input.Mouse.Delta.X * Time.DeltaTime;
-                _angleVelocity.Y -= RotationSpeed * Input.Mouse.Delta.Y * Time.DeltaTime;
-            }
-
-            if (Input.Mouse.Down(Inputs.MouseButton.Right))
-            {
-                _positionVelicoty.X += StrafeSpeed * Input.Mouse.Delta.X * Time.DeltaTime;
-                _positionVelicoty.Y += StrafeSpeed * Input.Mouse.Delta.Y * Time.DeltaTime;
-            }
-
-            _distanceVelocity -= (Input.Mouse as EditorMouseComponent).Wheel * 0.01f * MoveSpeed * Time.DeltaTime;
         }
 
         private void CheckAngle()

@@ -18,6 +18,7 @@ namespace C3DE.Editor.Components
         private UIElement _uiElement;
         private int _mouseWheel;
         private int _lastMouseWheel;
+        private bool _needsUpdate;
         
         #region Fields
 
@@ -58,6 +59,7 @@ namespace C3DE.Editor.Components
             LastMouseButtons = new bool[3];
             _sensibility = new Vector2(0.05f);
             _uiElement = uiElement;
+            _needsUpdate = false;
         }
 
         public override void Initialize()
@@ -88,6 +90,13 @@ namespace C3DE.Editor.Components
             // Delta
             _delta.X = (X - LastX) * _sensibility.X;
             _delta.Y = (Y - LastY) * _sensibility.Y;
+
+            if (_needsUpdate)
+            {
+                X = LastX;
+                Y = LastY;
+                _needsUpdate = false;
+            }
         }
 
         #region Mouse click
@@ -165,12 +174,15 @@ namespace C3DE.Editor.Components
 
             X = (int)position.X;
             Y = (int)position.Y;
+
+            _needsUpdate = true;
         }
 
         private void OnMouseWheel(object sender, WpfMouseWheelEventArgs e)
         {
             _lastMouseWheel = _mouseWheel;
             _mouseWheel = e.Delta;
+            _needsUpdate = true;
         }
     }
 }

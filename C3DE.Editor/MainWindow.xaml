@@ -16,15 +16,15 @@
         </Grid.ColumnDefinitions>
         <Menu Grid.Row="0" Grid.ColumnSpan="2">
             <MenuItem Header="File">
-                <MenuItem Header="New Scene" />
-                <MenuItem Header="Load Scene" />
-                <MenuItem Header="Save Scene" />
+                <MenuItem Header="New Scene" x:Name="Menu_File_NewP" Click="OnMenuFileClick" />
+                <MenuItem Header="Load Scene" x:Name="Menu_File_LoadP" Click="OnMenuFileClick" />
+                <MenuItem Header="Save Scene" x:Name="Menu_File_SaveP" Click="OnMenuFileClick" />
                 <Separator />
                 <MenuItem Header="New Project" />
                 <MenuItem Header="Load Project" />
                 <MenuItem Header="Save Project" />
                 <Separator />
-                <MenuItem Header="Exit" />
+                <MenuItem Header="Exit" x:Name="Menu_File_Exit" Click="OnMenuFileClick" />
             </MenuItem>
             <MenuItem Header="Assets">
                 <MenuItem Header="Add">
@@ -40,31 +40,31 @@
                 <MenuItem Header="Empty" />
                 <Separator />
                 <MenuItem Header="3D Object">
-                    <MenuItem Header="Cube" />
-                    <MenuItem Header="Cylinder" />
-                    <MenuItem Header="Quad" />
-                    <MenuItem Header="Plane" />
-                    <MenuItem Header="Pyramid" />
-                    <MenuItem Header="Sphere" />
-                    <MenuItem Header="Torus" />
+                    <MenuItem Header="Cube" x:Name="Menu_SO_Cube" Click="OnMenuAddSceneObjectClick" />
+                    <MenuItem Header="Cylinder" x:Name="Menu_SO_Cylinder" Click="OnMenuAddSceneObjectClick" />
+                    <MenuItem Header="Quad" x:Name="Menu_SO_Quad" Click="OnMenuAddSceneObjectClick" />
+                    <MenuItem Header="Plane" x:Name="Menu_SO_Plane" Click="OnMenuAddSceneObjectClick" />
+                    <MenuItem Header="Pyramid" x:Name="Menu_SO_Pyramid" Click="OnMenuAddSceneObjectClick" />
+                    <MenuItem Header="Sphere" x:Name="Menu_SO_Sphere" Click="OnMenuAddSceneObjectClick" />
+                    <MenuItem Header="Torus" x:Name="Menu_SO_Torus" Click="OnMenuAddSceneObjectClick" />
                 </MenuItem>
                 <MenuItem Header="Terrain">
-                    <MenuItem Header="Terrain" />
-                    <MenuItem Header="Water" />
+                    <MenuItem Header="Terrain" x:Name="Menu_SO_Terrain" Click="OnMenuAddSceneObjectClick" />
+                    <MenuItem Header="Water" x:Name="Menu_SO_Water" Click="OnMenuAddSceneObjectClick" />
                 </MenuItem>
                 <MenuItem Header="Light">
-                    <MenuItem Header="Directional Light" />
-                    <MenuItem Header="Point Light" />
-                    <MenuItem Header="Spot Light" />
+                    <MenuItem Header="Directional Light" x:Name="Menu_Light_Directional" Click="OnMenuAddSceneObjectClick" />
+                    <MenuItem Header="Point Light" x:Name="Menu_Light_Point" Click="OnMenuAddSceneObjectClick" />
+                    <MenuItem Header="Spot Light" x:Name="Menu_Light_Spot" Click="OnMenuAddSceneObjectClick" />
                 </MenuItem>
-                <MenuItem Header="Camera" />
+                <MenuItem Header="Camera" x:Name="Menu_SO_Camera" Click="OnMenuAddSceneObjectClick" />
             </MenuItem>
             <MenuItem Header="Help">
-                <MenuItem Header="About" />
+                <MenuItem Header="About" x:Name="Menu_Help_About" Click="OnMenuHelpClick" />
             </MenuItem>
         </Menu>
         <local:C3DEGameHost 
-            x:Name="MonoGameHost" 
+            x:Name="editorGameHost" 
             Grid.Row="1" 
             Grid.Column="0" 
             Margin="0" 
