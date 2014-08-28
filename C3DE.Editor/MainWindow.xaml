@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:C3DE.Editor.MonoGameBridge"
         xmlns:component="clr-namespace:C3DE.Editor.Components"
-        WindowStartupLocation="CenterScreen" WindowState="Maximized"
+        
         Title="C3DE Editor" Height="600" Width="800" Icon="Game.ico">
     <Grid>
         <Grid.RowDefinitions>

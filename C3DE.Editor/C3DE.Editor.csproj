@@ -92,6 +92,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Components\EditorOrbitController.cs" />
+    <Compile Include="Components\EditorMouseComponent.cs" />
     <Compile Include="MonoGameBridge\C3DEGameHost.cs" />
     <Compile Include="MonoGameBridge\GraphicsDeviceService.cs" />
     <Compile Include="Views\SceneSettingsWindow.xaml.cs">

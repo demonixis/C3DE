@@ -61,7 +61,7 @@ namespace C3DE.Editor.Components
             StrafeSpeed = 1.75f;
             GamepadSensibility = 2.5f;
             Velocity = 0.95f;
-            AngularVelocity = 0.95f;
+            AngularVelocity = 0.90f;
         }
 
         public override void Start()
@@ -97,7 +97,7 @@ namespace C3DE.Editor.Components
 
         private void UpdateMouseInput()
         {
-            if (Input.Mouse.Down(Inputs.MouseButton.Left) && Input.Mouse.Drag())
+            if (Input.Mouse.Down(Inputs.MouseButton.Left))
             {
                 _angleVelocity.X -= RotationSpeed * Input.Mouse.Delta.X * Time.DeltaTime;
                 _angleVelocity.Y -= RotationSpeed * Input.Mouse.Delta.Y * Time.DeltaTime;
@@ -109,7 +109,7 @@ namespace C3DE.Editor.Components
                 _positionVelicoty.Y += StrafeSpeed * Input.Mouse.Delta.Y * Time.DeltaTime;
             }
 
-            _distanceVelocity -= Input.Mouse.Wheel / 4.0f * MoveSpeed * Time.DeltaTime;
+            _distanceVelocity -= (Input.Mouse as EditorMouseComponent).Wheel * 0.01f * MoveSpeed * Time.DeltaTime;
         }
 
         private void CheckAngle()

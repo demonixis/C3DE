@@ -12,8 +12,8 @@ namespace C3DE.Inputs
     {
         private MouseState _mouseState;
         private MouseState _prevState;
-        private Vector2 _delta;
-        private Vector2 _sensibility;
+        protected Vector2 _delta;
+        protected Vector2 _sensibility;
 
         #region Fields
 
@@ -130,7 +130,7 @@ namespace C3DE.Inputs
             return MouseButtonState(button, ButtonState.Released);
         }
 
-        private bool MouseButtonState(MouseButton button, ButtonState state)
+        protected virtual bool MouseButtonState(MouseButton button, ButtonState state)
         {
             bool result = false;
 
