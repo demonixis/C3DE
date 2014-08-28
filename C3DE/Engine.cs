@@ -57,10 +57,10 @@ namespace C3DE
 
     public class Input
     {
-        public static KeyboardComponent Keys { get; internal set; }
-        public static MouseComponent Mouse { get; internal set; }
-        public static GamepadComponent Gamepad { get; internal set; }
-        public static TouchComponent Touch { get; internal set; }
+        public static KeyboardComponent Keys { get; set; }
+        public static MouseComponent Mouse { get; set; }
+        public static GamepadComponent Gamepad { get; set; }
+        public static TouchComponent Touch { get; set; }
     }
 
     public class Engine : Game

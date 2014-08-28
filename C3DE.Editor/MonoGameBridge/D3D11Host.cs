@@ -200,7 +200,7 @@ namespace C3DE.Editor.MonoGameBridge
             if (!_timer.IsRunning)
                 return;
 
-            Update();
+            Update(_timer);
 
             // Recreate back buffer if necessary.
             if (_resetBackBuffer)
@@ -270,7 +270,7 @@ namespace C3DE.Editor.MonoGameBridge
 
         }
 
-        protected virtual void Update()
+        protected virtual void Update(Stopwatch timer)
         {
 
         }

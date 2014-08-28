@@ -14,6 +14,8 @@ using C3DE.Prefabs;
 using C3DE.Materials;
 using C3DE.Utils;
 using C3DE.Components.Lights;
+using System.Diagnostics;
+using C3DE.Editor.Components;
 
 namespace C3DE.Editor.MonoGameBridge
 {
@@ -21,8 +23,9 @@ namespace C3DE.Editor.MonoGameBridge
     {
         private GraphicsDeviceService graphicsService;
 
+        private GameTime _gameTime;
         private GameServiceContainer services;
-        private GameComponentCollection gameComponents;
+        private List<IUpdateable> updateableComponents;
         private SpriteBatch spriteBatch;
         private Renderer renderer;
         private ContentManager content;
@@ -32,7 +35,9 @@ namespace C3DE.Editor.MonoGameBridge
         {
             base.Initialize();
 
-            gameComponents = new GameComponentCollection();
+            _gameTime = new GameTime(TimeSpan.Zero, TimeSpan.Zero);
+            
+            updateableComponents = new List<IUpdateable>();
             graphicsService = new GraphicsDeviceService(graphicsDevice);
 
             services = new GameServiceContainer();
@@ -42,8 +47,16 @@ namespace C3DE.Editor.MonoGameBridge
             content.RootDirectory = "Content";
             scene = new Scene(content);
 
+            var mouseComponent = new MouseComponent(null);
+            updateableComponents.Add(mouseComponent);
+
+            var timerComponent = new Time(null);
+            updateableComponents.Add(timerComponent);
+
             Application.Content = content;
             Application.GraphicsDevice = GraphicsDevice;
+
+            Input.Mouse = mouseComponent;
 
             Screen.Setup((int)ActualWidth, (int)ActualHeight, null, null);
 
@@ -58,7 +71,7 @@ namespace C3DE.Editor.MonoGameBridge
         private void PopulateSceneWithThings()
         {
             var camera = new CameraPrefab("camera", scene);
-            camera.Transform.Position = new Vector3(0, 2, -10);
+            camera.AddComponent<EditorOrbitController>();
 
             var lightPrefab = new LightPrefab("lightPrefab", LightType.Directional, scene);
             lightPrefab.Transform.Position = new Vector3(0, 15, 15);
@@ -72,9 +85,11 @@ namespace C3DE.Editor.MonoGameBridge
             terrainMaterial.Tiling = new Vector2(16);
 
             var terrain = new TerrainPrefab("terrain", scene);
-            terrain.Flat();
+            terrain.Randomize();
             terrain.Renderer.Material = terrainMaterial;
             terrain.Transform.Translate(-terrain.Width >> 1, 0, -terrain.Depth / 2);
+
+            camera.Transform.Position = new Vector3(-terrain.Width >> 1, 2, -terrain.Depth / 2);
 
             renderer.Skybox.Generate(GraphicsDevice, content, new string[6] 
             {
@@ -92,6 +107,19 @@ namespace C3DE.Editor.MonoGameBridge
             base.OnRenderSizeChanged(sizeInfo);
             Screen.Setup((int)sizeInfo.NewSize.Width, (int)sizeInfo.NewSize.Height, null, null);
             renderer.NeedsBufferUpdate = true;
+        }
+
+        protected override void Update(Stopwatch timer)
+        {
+            base.Update(timer);
+
+            _gameTime.ElapsedGameTime = timer.Elapsed;
+            _gameTime.TotalGameTime += timer.Elapsed;
+
+            foreach (var component in updateableComponents)
+                component.Update(_gameTime);
+
+            scene.Update();
         }
 
         protected override void Draw(RenderTarget2D renderTarget)
