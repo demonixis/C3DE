@@ -21,6 +21,16 @@ namespace C3DE.Editor.MonoGameBridge
     using XnaVector2 = Microsoft.Xna.Framework.Vector2;
     using XnaVector3 = Microsoft.Xna.Framework.Vector3;
 
+    public class SceneObjectAddedEventArgs : EventArgs
+    {
+        public SceneObject SceneObject { get; private set; }
+
+        public SceneObjectAddedEventArgs(SceneObject sceneObject)
+        {
+            SceneObject = sceneObject;
+        }
+    }
+
     public sealed class C3DEGameHost : D3D11Host, IServiceProvider
     {
         private GameTime _gameTime;
@@ -33,6 +43,8 @@ namespace C3DE.Editor.MonoGameBridge
         private Camera _mainCamera;
         private List<string> _sceneObjectToAdd;
 
+        public event EventHandler<SceneObjectAddedEventArgs> SceneObjectAdded = null;
+        public event EventHandler<EventArgs> SceneObjectRemoved = null;
 
         protected override void Initialize()
         {
@@ -73,16 +85,19 @@ namespace C3DE.Editor.MonoGameBridge
 
         private void PopulateSceneWithThings()
         {
-            var camera = new CameraPrefab("Editor_MainCamera", _scene);
+            var camera = new CameraPrefab("Editor_MainCamera");
+            _scene.Add(camera);
             camera.AddComponent<EditorOrbitController>();
             _mainCamera = camera.Camera;
 
-            var lightPrefab = new LightPrefab("Editor_MainLight", LightType.Directional, _scene);
+            var lightPrefab = new LightPrefab("Editor_MainLight", LightType.Directional);
+            _scene.Add(lightPrefab);
             lightPrefab.Transform.Position = new XnaVector3(0, 15, 15);
             lightPrefab.Light.Direction = new XnaVector3(0, 1, -1);
 
             // Grid
-            var terrain = new TerrainPrefab("terrain", _scene);
+            var terrain = new TerrainPrefab("terrain");
+            _scene.Add(terrain);
             terrain.Flat();
             terrain.Renderer.Material = new SimpleMaterial(_scene);
             terrain.Renderer.Material.MainTexture = GraphicsHelper.CreateBorderTexture(XnaColor.LightBlue, new XnaColor(0.45f, 0.45f, 0.45f), 128, 128, 1);
@@ -160,7 +175,7 @@ namespace C3DE.Editor.MonoGameBridge
             switch (type)
             {
                 case "Cube":
-                    sceneObject = new CubePrefab(type, _scene);
+                    sceneObject = new CubePrefab(type);
                     break;
 
                 case "Cylinder": break;
@@ -168,31 +183,36 @@ namespace C3DE.Editor.MonoGameBridge
                 case "Plane": break;
                 case "Pyramid": break;
                 case "Sphere":
-                    sceneObject = new SpherePrefab(type, _scene);
+                    sceneObject = new SpherePrefab(type);
                     break;
                 case "Torus": break;
 
                 case "Terrain":
-                    var terrain = new TerrainPrefab(type, _scene);
+                    var terrain = new TerrainPrefab(type);
                     terrain.Flat();
                     terrain.Renderer.Material = _scene.DefaultMaterial;
                     sceneObject = terrain;
                     break;
 
                 case "Water":
-                    var water = new WaterPrefab(type, _scene);
+                    var water = new WaterPrefab(type);
                     water.Generate(string.Empty, string.Empty, new XnaVector3(10));
                     water.Renderer.Material.MainTexture = GraphicsHelper.CreateTexture(XnaColor.LightSeaGreen, 1, 1);
                     sceneObject = water;
                     break;
 
-                case "Directional": sceneObject = new LightPrefab(type, LightType.Directional, _scene); break;
-                case "Point": sceneObject = new LightPrefab(type, LightType.Point, _scene); break;
-                case "Spot": sceneObject = new LightPrefab(type, LightType.Spot, _scene); break;
+                case "Directional": sceneObject = new LightPrefab(type, LightType.Directional); break;
+                case "Point": sceneObject = new LightPrefab(type, LightType.Point); break;
+                case "Spot": sceneObject = new LightPrefab(type, LightType.Spot); break;
 
-                case "Camera": sceneObject = new CameraPrefab(type, _scene); break;
+                case "Camera": sceneObject = new CameraPrefab(type); break;
                 default: break;
             }
+
+            _scene.Add(sceneObject);
+
+            if (SceneObjectAdded != null)
+                SceneObjectAdded(this, new SceneObjectAddedEventArgs(sceneObject));
         }
     }
 }

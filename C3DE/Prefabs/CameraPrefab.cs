@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework;
 
 namespace C3DE.Prefabs
 {
-    public class CameraPrefab : Prefab
+    public class CameraPrefab : SceneObject
     {
         protected Camera camera;
         protected SphereCollider collider;
@@ -19,8 +19,8 @@ namespace C3DE.Prefabs
             get { return collider; }
         }
 
-        public CameraPrefab(string name, Scene scene)
-            : base(name, scene)
+        public CameraPrefab(string name)
+            : base(name)
         {
             camera = AddComponent<Camera>();
             collider = AddComponent<SphereCollider>();

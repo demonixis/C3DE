@@ -89,7 +89,6 @@
     <Compile Include="PostProcess\PostProcessManager.cs" />
     <Compile Include="PostProcess\PostProcessPass.cs" />
     <Compile Include="Prefabs\ModelPrefab.cs" />
-    <Compile Include="Prefabs\Prefab.cs" />
     <Compile Include="Prefabs\TerrainPrefab.cs" />
     <Compile Include="Prefabs\WaterPrefab.cs" />
     <Compile Include="Scene.cs" />

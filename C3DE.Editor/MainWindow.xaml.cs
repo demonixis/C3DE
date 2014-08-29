@@ -3,6 +3,7 @@ using System.Windows.Controls;
 
 namespace C3DE.Editor
 {
+    using C3DE.Editor.MonoGameBridge;
     using WpfApplication = System.Windows.Application;
 
     /// <summary>
@@ -16,6 +17,8 @@ namespace C3DE.Editor
         {
             InitializeComponent();
             _separator = new char[1] { '_' };
+
+            editorGameHost.SceneObjectAdded += OnSceneObjectAdded;
         }
 
         private void OnMenuFileClick(object sender, RoutedEventArgs e)
@@ -45,6 +48,15 @@ namespace C3DE.Editor
         private void OnMenuHelpClick(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        private void OnSceneObjectAdded(object sender, SceneObjectAddedEventArgs e)
+        {
+            var item = new TreeViewItem();
+            item.Header = e.SceneObject.Name;
+            item.Tag = e.SceneObject.Id;
+
+            sceneTreeView.Items.Add(item);
         }
     }
 }

@@ -8,7 +8,7 @@ using System;
 
 namespace C3DE.Prefabs
 {
-    public class WaterPrefab : Prefab
+    public class WaterPrefab : SceneObject
     {
         protected MeshRenderer renderer;
         protected WaterMaterial material;
@@ -24,8 +24,8 @@ namespace C3DE.Prefabs
             get { return collider; }
         }
 
-        public WaterPrefab(string name, Scene scene)
-            : base(name, scene)
+        public WaterPrefab(string name)
+            : base(name)
         {
             renderer = AddComponent<MeshRenderer>();
             renderer.CastShadow = false;

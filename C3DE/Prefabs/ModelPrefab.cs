@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace C3DE.Prefabs
 {
-    public class ModelPrefab : Prefab
+    public class ModelPrefab : SceneObject
     {
         protected ModelRenderer renderer;
         protected BoxCollider collider;
@@ -20,8 +20,8 @@ namespace C3DE.Prefabs
             get { return collider; }
         }
 
-        public ModelPrefab(string name, Scene scene)
-            : base(name, scene)
+        public ModelPrefab(string name)
+            : base(name)
         {
             renderer = AddComponent<ModelRenderer>();
             collider = AddComponent<BoxCollider>();

@@ -32,13 +32,15 @@ namespace C3DE.Demo
             renderer.Skybox.Generate(GraphicsDevice, Content, Demo.BlueSkybox);
 
             // Camera
-            var camera = new CameraPrefab("camera", scene);
+            var camera = new CameraPrefab("camera");
+            scene.Add(camera);
+
             camera.AddComponent<ControllerSwitcher>();
             camera.AddComponent<DemoBehaviour>();
             camera.AddComponent<RayPickingTester>();
-
+            
             // Light
-            var lightPrefab = new LightPrefab("light", LightType.Directional, scene);
+            var lightPrefab = new LightPrefab("light", LightType.Directional);
             lightPrefab.Transform.Translate(0, 10, 0);
             lightPrefab.Light.Range = 25;
             lightPrefab.Light.Intensity = 2.0f;
@@ -51,6 +53,7 @@ namespace C3DE.Demo
             lightPrefab.EnableShadows = true;
             lightPrefab.AddComponent<LightMoverKeys>();
             lightPrefab.AddComponent<LightSwitcher>();
+            scene.Add(lightPrefab);
 
             var lightSphere = lightPrefab.AddComponent<MeshRenderer>();
             lightSphere.Geometry = new SphereGeometry(1f, 8);
@@ -66,15 +69,18 @@ namespace C3DE.Demo
             terrainMaterial.Shininess = 500;
             terrainMaterial.Tiling = new Vector2(16);
 
-            var terrain = new TerrainPrefab("terrain", scene);
+            var terrain = new TerrainPrefab("terrain");
             terrain.Randomize();
             terrain.Renderer.Material = terrainMaterial;
             terrain.Transform.Translate(-terrain.Width >> 1, 0, -terrain.Depth / 2);
+            scene.Add(terrain);
 
-            var water = new WaterPrefab("water", scene);
+            var water = new WaterPrefab("water");
+            scene.Add(water);
             water.Generate("Textures/water", "Textures/wavesbump", new Vector3(terrain.Width * 0.5f));
             (water.Renderer.Material as WaterMaterial).ReflectiveMap = renderer.Skybox.Texture;
             (water.Renderer.Material as WaterMaterial).WaterTransparency = 0.6f;
+            
     
             scene.Destroy(water.Collider);
 

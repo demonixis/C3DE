@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework;
 
 namespace C3DE.Prefabs.Meshes
 {
-    public class CubePrefab : Prefab
+    public class CubePrefab : SceneObject
     {
         private MeshRenderer _renderer;
         private BoxCollider _collider;
@@ -20,15 +20,9 @@ namespace C3DE.Prefabs.Meshes
             get { return _collider; }
         }
 
-        public CubePrefab(string name, Scene scene, float size = 1.0f)
-            : base(name, scene)
+        public CubePrefab(string name, float size = 1.0f)
+            : base(name)
         {
-            
-        }
-
-        public override void Initialize()
-        {
-            base.Initialize();
             _renderer = AddComponent<MeshRenderer>();
             _renderer.Geometry = new CubeGeometry();
             _renderer.Geometry.Size = new Vector3(1);

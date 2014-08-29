@@ -114,6 +114,8 @@ namespace C3DE
         /// <param name="content"></param>
         public override void Initialize()
         {
+            DefaultMaterial.MainTexture = GraphicsHelper.CreateTexture(Color.AntiqueWhite, 1, 1);
+
             for (int i = 0, l = materials.Count; i < l; i++)
                 materials[i].LoadContent(Application.Content);
 
