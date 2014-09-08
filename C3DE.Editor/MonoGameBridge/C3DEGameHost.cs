@@ -42,6 +42,7 @@ namespace C3DE.Editor.MonoGameBridge
         private Scene _scene;
         private Camera _mainCamera;
         private List<string> _sceneObjectToAdd;
+        private SceneObject _selectedObject;
 
         public event EventHandler<SceneObjectAddedEventArgs> SceneObjectAdded = null;
         public event EventHandler<EventArgs> SceneObjectRemoved = null;
@@ -99,8 +100,8 @@ namespace C3DE.Editor.MonoGameBridge
             var terrain = new TerrainPrefab("terrain");
             _scene.Add(terrain);
             terrain.Flat();
-            terrain.Renderer.Material = new SimpleMaterial(_scene);
-            terrain.Renderer.Material.MainTexture = GraphicsHelper.CreateBorderTexture(XnaColor.LightBlue, new XnaColor(0.45f, 0.45f, 0.45f), 128, 128, 1);
+            terrain.Renderer.Material = new TransparentMaterial(_scene);
+            terrain.Renderer.Material.MainTexture = GraphicsHelper.CreateBorderTexture(XnaColor.Gray, XnaColor.Transparent, 256, 256, 2);
             terrain.Renderer.Material.Tiling = new XnaVector2(16); ;
             terrain.Transform.Translate(-terrain.Width >> 1, 0, -terrain.Depth / 2);
 
@@ -110,8 +111,8 @@ namespace C3DE.Editor.MonoGameBridge
             {
                 "Editor/Skybox/skybox_gradiant_side",   
                 "Editor/Skybox/skybox_gradiant_side",
-                "Editor/Skybox/skybox_gradiant_top",
                 "Editor/Skybox/skybox_gradiant_bottom",
+                "Editor/Skybox/skybox_gradiant_top",
                 "Editor/Skybox/skybox_gradiant_side",
                 "Editor/Skybox/skybox_gradiant_side"
             });
@@ -148,6 +149,24 @@ namespace C3DE.Editor.MonoGameBridge
 
             foreach (var component in _gameComponents)
                 component.Update(_gameTime);
+
+            if (Input.Mouse.Clicked(MouseButton.Left))
+            {
+                var ray = _mainCamera.GetRay(Input.Mouse.Position);
+                RaycastInfo info;
+
+                if (_scene.Raycast(ray, 100, out info))
+                {
+                    _selectedObject = info.Collider.SceneObject;
+                    Debug.Log("SceneObject selected");
+                }
+            }
+
+            if (_selectedObject != null)
+            {
+                if (Input.Mouse.Down(MouseButton.Left))
+                    _selectedObject.Transform.Translate(Input.Mouse.Delta.X, 0, Input.Mouse.Delta.Y);
+            }
 
             _scene.Update();
         }

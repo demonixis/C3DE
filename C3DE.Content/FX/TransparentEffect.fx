@@ -7,7 +7,6 @@ float4x4 Projection;
 float4 AmbientColor = float4(0.0, 0.0, 0.0, 1.0);
 float4 DiffuseColor = float4(1.0, 1.0, 1.0, 1.0);
 float4 EmissiveColor = float4(0.0, 0.0, 0.0, 1.0);
-float4 TransparentColor = float4(1.0, 0.0, 1.0, 1.0);
 
 // Mist
 float2 TextureTiling = float2(1, 1);
@@ -56,10 +55,8 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 {
 	float4 diffuse = tex2D(textureSampler, (input.UV + TextureOffset) * TextureTiling);
 	float4 finalColor = AmbientColor + DiffuseColor * diffuse + EmissiveColor;
-	finalColor.a = 1.0;
-
-	if (diffuse.x == TransparentColor.x && diffuse.y == TransparentColor.y && diffuse.z == TransparentColor.z)
-		finalColor = float4(0, 0, 0, 0);
+	
+	clip(diffuse.a < 0.1f ? -1 : 1);
 
 	return finalColor;
 }
@@ -68,9 +65,6 @@ technique Transparent
 {
 	pass Pass1
 	{
-		AlphaBlendEnable = TRUE;
-		DestBlend = INVSRCALPHA;
-		SrcBlend = SRCALPHA;
 #if SM4
 		VertexShader = compile vs_4_0_level_9_1 VertexShaderFunction();
 		PixelShader = compile ps_4_0_level_9_1 PixelShaderFunction();

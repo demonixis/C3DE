@@ -1,5 +1,6 @@
 ﻿using C3DE.Components;
 using C3DE.Components.Controllers;
+using C3DE.Inputs;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Input;
@@ -64,13 +65,13 @@ namespace C3DE.Editor.Components
 
         public override void Update()
         {
-            if (Input.Mouse.Down(Inputs.MouseButton.Left))
+            if (Input.Mouse.Down(MouseButton.Right))
             {
                 _angle.X -= RotationSpeed * Input.Mouse.Delta.X * Time.DeltaTime;
                 _angle.Y -= RotationSpeed * Input.Mouse.Delta.Y * Time.DeltaTime;
             }
  
-            if (Input.Mouse.Down(Inputs.MouseButton.Right))
+            if (Input.Mouse.Down(MouseButton.Middle))
             {
                 _target.X += StrafeSpeed * Input.Mouse.Delta.X * Time.DeltaTime;
                 _target.Y += StrafeSpeed * Input.Mouse.Delta.Y * Time.DeltaTime;

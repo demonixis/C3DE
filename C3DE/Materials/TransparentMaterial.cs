@@ -8,13 +8,6 @@ namespace C3DE.Materials
     public class TransparentMaterial : Material
     {
         private Vector4 _emissiveColor;
-        private Vector4 _transparentColor;
-
-        public Color TransparentColor
-        {
-            get { return new Color(_transparentColor); }
-            set { _transparentColor = value.ToVector4(); }
-        }
 
         public Color EmissiveColor
         {
@@ -27,7 +20,6 @@ namespace C3DE.Materials
         {
             diffuseColor = new Vector4(1.0f, 1.0f, 1.0f, 1.0f);
             _emissiveColor = new Vector4(0.0f, 0.0f, 0.0f, 1.0f);
-            _transparentColor = new Vector4(1.0f, 0.0f, 1.0f, 1.0f);
         }
 
         public override void LoadContent(ContentManager content)
@@ -44,10 +36,11 @@ namespace C3DE.Materials
         public override void Pass(RenderableComponent renderable)
         {
             // Material
+            effect.Parameters["TextureTiling"].SetValue(Tiling);
+            effect.Parameters["TextureOffset"].SetValue(Offset);
             effect.Parameters["AmbientColor"].SetValue(scene.RenderSettings.ambientColor);
             effect.Parameters["DiffuseColor"].SetValue(diffuseColor);
             effect.Parameters["EmissiveColor"].SetValue(_emissiveColor);
-            effect.Parameters["TransparentColor"].SetValue(_transparentColor);
             effect.Parameters["MainTexture"].SetValue(mainTexture);
             effect.Parameters["World"].SetValue(renderable.SceneObject.Transform.world);
             effect.CurrentTechnique.Passes[0].Apply();
