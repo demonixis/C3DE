@@ -16,6 +16,7 @@ namespace C3DE.Editor.MonoGameBridge
 {
     using C3DE.Components;
     using C3DE.Components.Renderers;
+    using C3DE.Geometries;
     using C3DE.Prefabs.Meshes;
     using XnaColor = Microsoft.Xna.Framework.Color;
     using XnaVector2 = Microsoft.Xna.Framework.Vector2;
@@ -36,6 +37,7 @@ namespace C3DE.Editor.MonoGameBridge
         private GameTime _gameTime;
         private GameServiceContainer _services;
         private List<GameComponent> _gameComponents;
+        private EditorMouseComponent _mouse;
         private SpriteBatch _spriteBatch;
         private Renderer _renderer;
         private ContentManager _content;
@@ -66,7 +68,8 @@ namespace C3DE.Editor.MonoGameBridge
             Application.Content = _content;
             Application.GraphicsDevice = GraphicsDevice;
 
-            Input.Mouse = new EditorMouseComponent(null, this);
+            _mouse = new EditorMouseComponent(null, this);
+            Input.Mouse = _mouse;
 
             _gameComponents.Add(new Time(null));
             _gameComponents.Add(Input.Mouse);
@@ -152,13 +155,19 @@ namespace C3DE.Editor.MonoGameBridge
 
             if (Input.Mouse.Clicked(MouseButton.Left))
             {
-                var ray = _mainCamera.GetRay(Input.Mouse.Position);
+                var ray = _mainCamera.GetRay((Input.Mouse as EditorMouseComponent).Position);
                 RaycastInfo info;
 
                 if (_scene.Raycast(ray, 100, out info))
                 {
+                    if (info.Collider.SceneObject == _selectedObject)
+                        return;
+
+                    if (info.Collider.SceneObject != _selectedObject)
+                        UnselectSceneObject();
+
                     _selectedObject = info.Collider.SceneObject;
-                    Debug.Log("SceneObject selected");
+                    _selectedObject.GetComponent<RenderableComponent>().Material.DiffuseColor = new XnaColor(0, 0, 0.2f, 0.3f);
                 }
             }
 
@@ -169,6 +178,15 @@ namespace C3DE.Editor.MonoGameBridge
             }
 
             _scene.Update();
+        }
+
+        private void UnselectSceneObject()
+        {
+            if (_selectedObject != null)
+            {
+                var renderer = _selectedObject.GetComponent<RenderableComponent>();
+                renderer.Material.DiffuseColor = XnaColor.White;
+            }
         }
 
         protected override void Draw(RenderTarget2D renderTarget)
@@ -194,17 +212,32 @@ namespace C3DE.Editor.MonoGameBridge
             switch (type)
             {
                 case "Cube":
-                    sceneObject = new CubePrefab(type);
+                    sceneObject = new MeshPrefab<CubeGeometry>(type);
                     break;
 
-                case "Cylinder": break;
-                case "Quad": break;
-                case "Plane": break;
-                case "Pyramid": break;
-                case "Sphere":
-                    sceneObject = new SpherePrefab(type);
+                case "Cylinder":
+                    sceneObject = new MeshPrefab<CylinderGeometry>(type);
                     break;
-                case "Torus": break;
+
+                case "Quad":
+                    sceneObject = new MeshPrefab<QuadGeometry>(type);
+                    break;
+
+                case "Plane":
+                    sceneObject = new MeshPrefab<PlaneGeometry>(type);
+                    break;
+
+                case "Pyramid":
+                    sceneObject = new MeshPrefab<PyramidGeometry>(type);
+                    break;
+
+                case "Sphere":
+                    sceneObject = new MeshPrefab<SphereGeometry>(type);;
+                    break;
+
+                case "Torus":
+                    sceneObject = new MeshPrefab<TorusGeometry>(type);
+                    break;
 
                 case "Terrain":
                     var terrain = new TerrainPrefab(type);

@@ -11,6 +11,11 @@ namespace C3DE.Geometries
         private int _nbSlices;
         private int _nbSegments;
 
+        public TorusGeometry()
+            : this(2, 1, 8, 8)
+        {
+        }
+
         public TorusGeometry(float radiusExterior, float radiusInterior, int nbSlices, int nbSegments)
         {
             _radiusExterior = radiusExterior;
