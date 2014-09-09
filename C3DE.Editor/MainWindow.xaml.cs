@@ -58,5 +58,10 @@ namespace C3DE.Editor
 
             sceneTreeView.Items.Add(item);
         }
+
+        private void CheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

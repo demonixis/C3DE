@@ -72,8 +72,15 @@
             Stretch="Fill" />
 
         <StackPanel Grid.Row="1" Grid.Column="1">
+            <StackPanel Orientation="Horizontal" Margin="5 2 5 5">
+                <CheckBox Content="Enabled" Checked="CheckBox_Checked" Margin="0 0 20 0"/>
+                <TextBox Text="SceneObject" Width="160" />
+            </StackPanel>
+
             <component:TransformControl />
-            <Line />
+            
+            <Label Content="Scene" />
+  
             <TreeView x:Name="sceneTreeView">
                 <TreeViewItem Header="Main Camera" />
             </TreeView>
