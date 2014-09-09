@@ -108,7 +108,7 @@ namespace C3DE
             {
                 for (int i = 0; i < renderList.Count; i++)
                 {
-                    if (renderList[i].CastShadow)
+                    if (renderList[i].Enabled && renderList[i].CastShadow)
                         _boundingSphere = BoundingSphere.CreateMerged(_boundingSphere, renderList[i].boundingSphere);
                 }
 

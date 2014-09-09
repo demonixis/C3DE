@@ -27,8 +27,8 @@ namespace C3DE.Prefabs.Meshes
             _renderer.Geometry = new T();
             _renderer.Geometry.Size = new Vector3(1);
             _renderer.ReceiveShadow = false;
-            _collider = AddComponent<SphereCollider>();
             _renderer.Geometry.Generate();
+            _collider = AddComponent<SphereCollider>();
         }
     }
 }

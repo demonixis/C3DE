@@ -65,8 +65,6 @@
     <Compile Include="Materials\SimpleMaterial.cs" />
     <Compile Include="Materials\TransparentMaterial.cs" />
     <Compile Include="PostProcess\BlurPass.cs" />
-    <Compile Include="Prefabs\Meshes\CubePrefab.cs" />
-    <Compile Include="Prefabs\Meshes\SpherePrefab.cs" />
     <Compile Include="RenderSettings.cs" />
     <Compile Include="Resources\ResourcesHelper.cs" />
     <Compile Include="UI\GUISkin.cs" />

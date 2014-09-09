@@ -74,11 +74,14 @@ namespace C3DE
             // Pass, Update matrix, material attributes, etc.
             for (int i = 0; i < scene.RenderList.Count; i++)
             {
-                if (scene.RenderList[i].MaterialCount == 0)
-                    scene.RenderList[i].Material = scene.DefaultMaterial;
+                if (scene.renderList[i].Enabled)
+                {
+                    if (scene.RenderList[i].MaterialCount == 0)
+                        scene.RenderList[i].Material = scene.DefaultMaterial;
 
-                scene.RenderList[i].Material.Pass(scene.RenderList[i]);
-                scene.RenderList[i].Draw(graphicsDevice);
+                    scene.RenderList[i].Material.Pass(scene.RenderList[i]);
+                    scene.RenderList[i].Draw(graphicsDevice);
+                }
             }
 
             graphicsDevice.SetRenderTarget(null);
@@ -103,7 +106,8 @@ namespace C3DE
                 _spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone);
 
                 for (int i = 0; i < size; i++)
-                    scripts[i].OnGUI(_guiManager);
+                    if (scripts[i].Enabled)
+                        scripts[i].OnGUI(_guiManager);
 
                 _spriteBatch.End();
             }

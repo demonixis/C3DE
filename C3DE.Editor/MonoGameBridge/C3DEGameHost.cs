@@ -89,6 +89,8 @@ namespace C3DE.Editor.MonoGameBridge
 
         private void PopulateSceneWithThings()
         {
+            _scene.DefaultMaterial.MainTexture = GraphicsHelper.CreateCheckboardTexture(Color.Blue, Color.White, 64, 64);
+
             var camera = new CameraPrefab("Editor_MainCamera");
             _scene.Add(camera);
             camera.AddComponent<EditorOrbitController>();
@@ -110,15 +112,7 @@ namespace C3DE.Editor.MonoGameBridge
 
             camera.Transform.Position = new XnaVector3(-terrain.Width >> 1, 2, -terrain.Depth / 2);
 
-            _renderer.Skybox.Generate(GraphicsDevice, _content, new string[6] 
-            {
-                "Editor/Skybox/skybox_gradiant_side",   
-                "Editor/Skybox/skybox_gradiant_side",
-                "Editor/Skybox/skybox_gradiant_bottom",
-                "Editor/Skybox/skybox_gradiant_top",
-                "Editor/Skybox/skybox_gradiant_side",
-                "Editor/Skybox/skybox_gradiant_side"
-            });
+            _renderer.Skybox.Generate();
         }
 
         protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo)
@@ -167,7 +161,13 @@ namespace C3DE.Editor.MonoGameBridge
                         UnselectSceneObject();
 
                     _selectedObject = info.Collider.SceneObject;
-                    _selectedObject.GetComponent<RenderableComponent>().Material.DiffuseColor = new XnaColor(0, 0, 0.2f, 0.3f);
+
+                    var boxRenderer = _selectedObject.GetComponent<BoundingBoxRenderer>();
+
+                    if (boxRenderer == null)
+                        boxRenderer = _selectedObject.AddComponent<BoundingBoxRenderer>();
+
+                    boxRenderer.Enabled = true;
                 }
             }
 
@@ -184,8 +184,7 @@ namespace C3DE.Editor.MonoGameBridge
         {
             if (_selectedObject != null)
             {
-                var renderer = _selectedObject.GetComponent<RenderableComponent>();
-                renderer.Material.DiffuseColor = XnaColor.White;
+                _selectedObject.GetComponent<BoundingBoxRenderer>().Enabled = false;
             }
         }
 
@@ -211,33 +210,13 @@ namespace C3DE.Editor.MonoGameBridge
 
             switch (type)
             {
-                case "Cube":
-                    sceneObject = new MeshPrefab<CubeGeometry>(type);
-                    break;
-
-                case "Cylinder":
-                    sceneObject = new MeshPrefab<CylinderGeometry>(type);
-                    break;
-
-                case "Quad":
-                    sceneObject = new MeshPrefab<QuadGeometry>(type);
-                    break;
-
-                case "Plane":
-                    sceneObject = new MeshPrefab<PlaneGeometry>(type);
-                    break;
-
-                case "Pyramid":
-                    sceneObject = new MeshPrefab<PyramidGeometry>(type);
-                    break;
-
-                case "Sphere":
-                    sceneObject = new MeshPrefab<SphereGeometry>(type);;
-                    break;
-
-                case "Torus":
-                    sceneObject = new MeshPrefab<TorusGeometry>(type);
-                    break;
+                case "Cube": sceneObject = new MeshPrefab<CubeGeometry>(type); break;
+                case "Cylinder": sceneObject = new MeshPrefab<CylinderGeometry>(type); break;
+                case "Quad": sceneObject = new MeshPrefab<QuadGeometry>(type); break;
+                case "Plane": sceneObject = new MeshPrefab<PlaneGeometry>(type); break;
+                case "Pyramid": sceneObject = new MeshPrefab<PyramidGeometry>(type); break;
+                case "Sphere": sceneObject = new MeshPrefab<SphereGeometry>(type); break;
+                case "Torus": sceneObject = new MeshPrefab<TorusGeometry>(type); break;
 
                 case "Terrain":
                     var terrain = new TerrainPrefab(type);
