@@ -80,18 +80,17 @@ namespace C3DE.Demo
             water.Generate("Textures/water", "Textures/wavesbump", new Vector3(terrain.Width * 0.5f));
             (water.Renderer.Material as WaterMaterial).ReflectiveMap = renderer.Skybox.Texture;
             (water.Renderer.Material as WaterMaterial).WaterTransparency = 0.6f;
-            
     
             scene.Destroy(water.Collider);
 
             // Cube
-            var cubeSuperMaterial = new StandardMaterial(scene);
+            var cubeSuperMaterial = new FresnelMaterial(scene);
             cubeSuperMaterial.MainTexture = GraphicsHelper.CreateCheckboardTexture(Color.FloralWhite, Color.DodgerBlue); //Content.Load<Texture2D>("Textures/tech_box2");
             cubeSuperMaterial.DiffuseColor = Color.WhiteSmoke;
-            cubeSuperMaterial.SpecularColor = new Color(0.8f, 0.8f, 0.8f, 1.0f);
+            /*cubeSuperMaterial.SpecularColor = new Color(0.8f, 0.8f, 0.8f, 1.0f);
             cubeSuperMaterial.Shininess = 10;
             cubeSuperMaterial.EmissiveColor = new Color(0f, 0.0f, 0.1f, 1.0f);
-
+            */
             var cubeScene = new SceneObject();
             cubeScene.Name = "Super Cube";
             cubeScene.Transform.Translate(0, 5.5f, 15);
@@ -103,7 +102,7 @@ namespace C3DE.Demo
 
             var cube = cubeScene.AddComponent<MeshRenderer>();
             cube.ReceiveShadow = false;
-            cube.Geometry = new CubeGeometry();
+            cube.Geometry = new TorusGeometry(4, 1.5f, 32, 32);
             cube.Geometry.Generate();
             cube.Material = cubeSuperMaterial;
             cube.AddComponent<BoxCollider>();

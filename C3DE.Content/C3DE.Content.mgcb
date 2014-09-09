@@ -1,7 +1,7 @@
 
 #----------------------------- Global Properties ----------------------------#
 
-/outputDir:..\C3DE.Editor\Content
+/outputDir:..\C3DE.Demo\Content
 /intermediateDir:obj
 /platform:Windows
 /config:
@@ -413,3 +413,16 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:TextureFormat=Color
 /build:Textures/wavesbump.png
+
+#begin FX/FresnelEffect.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:FX/FresnelEffect.fx
+
+#begin FX/ToonEffect.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:FX/ToonEffect.fx
+

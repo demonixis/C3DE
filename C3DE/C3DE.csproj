@@ -49,6 +49,7 @@
     <Compile Include="Components\Renderers\MeshRenderer.cs" />
     <Compile Include="Materials\DummyMaterial.cs" />
     <Compile Include="Materials\TerrainMaterial.cs" />
+    <Compile Include="Materials\ToonMaterial.cs" />
     <Compile Include="Prefabs\MeshPrefab.cs" />
     <Compile Include="QuadRenderer.cs" />
     <Compile Include="Geometries\CubeGeometry.cs" />

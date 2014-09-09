@@ -49,6 +49,16 @@ namespace C3DE.Components
             }
         }
 
+        public Matrix ViewMatrix
+        {
+            get { return view; }
+        }
+
+        public Matrix ProjectionMatrix
+        {
+            get { return projection; }
+        }
+
         public Camera()
             : base()
         {
