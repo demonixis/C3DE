@@ -1,0 +1,15 @@
+﻿<UserControl x:Class="C3DE.Editor.Views.Components.Vector3LineControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" Height="30" Width="230">
+    <StackPanel Orientation="Horizontal">
+        <Label Content="X" />
+        <TextBox VerticalAlignment="Center" Margin="5 3 5 3" Width="50" Text="0" x:Name="xValue" />
+        <Label Content="Y" />
+        <TextBox VerticalAlignment="Center" Margin="5 3 5 3" Width="50" Text="0" x:Name="yValue" />
+        <Label Content="Z" />
+        <TextBox VerticalAlignment="Center" Margin="5 3 5 3" Width="50" Text="0" x:Name="zValue" />
+    </StackPanel>
+</UserControl>

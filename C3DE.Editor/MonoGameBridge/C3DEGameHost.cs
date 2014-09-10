@@ -15,6 +15,7 @@ using System.Windows;
 namespace C3DE.Editor.MonoGameBridge
 {
     using C3DE.Components;
+    using C3DE.Components.Colliders;
     using C3DE.Components.Renderers;
     using C3DE.Geometries;
     using C3DE.Prefabs.Meshes;
@@ -227,6 +228,7 @@ namespace C3DE.Editor.MonoGameBridge
 
                 case "Water":
                     var water = new WaterPrefab(type);
+                    _scene.Add(water);
                     water.Generate(string.Empty, string.Empty, new XnaVector3(10));
                     water.Renderer.Material.MainTexture = GraphicsHelper.CreateTexture(XnaColor.LightSeaGreen, 1, 1);
                     sceneObject = water;
@@ -239,6 +241,10 @@ namespace C3DE.Editor.MonoGameBridge
                 case "Camera": sceneObject = new CameraPrefab(type); break;
                 default: break;
             }
+            
+            var collider = sceneObject.GetComponent<Collider>();
+            if (collider != null)
+                collider.IsPickable = true;
 
             _scene.Add(sceneObject);
 

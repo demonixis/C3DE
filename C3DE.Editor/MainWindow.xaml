@@ -2,9 +2,8 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:C3DE.Editor.MonoGameBridge"
-        xmlns:component="clr-namespace:C3DE.Editor.Components"
-        
-        Title="C3DE Editor" Height="600" Width="800" Icon="Game.ico">
+        xmlns:component="clr-namespace:C3DE.Editor.Views.Components"
+        Title="C3DE Editor" Height="600" Width="1280" Icon="Game.ico">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="20" />
@@ -72,17 +71,18 @@
             Stretch="Fill" />
 
         <StackPanel Grid.Row="1" Grid.Column="1">
-            <StackPanel Orientation="Horizontal" Margin="5 2 5 5">
-                <CheckBox Content="Enabled" Checked="CheckBox_Checked" Margin="0 0 20 0"/>
-                <TextBox Text="SceneObject" Width="160" />
-            </StackPanel>
-
-            <component:TransformControl />
-            
+            <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+                <StackPanel Orientation="Vertical" x:Name="componentContainer">
+                    <component:SceneObjectControl x:Name="sceneObjectComponent" />
+                    <component:TransformControl x:Name="transformComponent" />
+                    <component:ColliderControl x:Name="colliderComponent" />
+                </StackPanel>
+            </ScrollViewer>
             <Label Content="Scene" />
   
-            <TreeView x:Name="sceneTreeView">
-                <TreeViewItem Header="Main Camera" />
+            <TreeView x:Name="sceneTreeView" AllowDrop="True">
+                <TreeViewItem Header="Main Camera" Tag="0" />
+                <TreeViewItem Header="Ambient Light" Tag="1" />
             </TreeView>
         </StackPanel>
     </Grid>

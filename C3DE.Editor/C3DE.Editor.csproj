@@ -95,9 +95,26 @@
     <Compile Include="Components\EditorMouseComponent.cs" />
     <Compile Include="MonoGameBridge\C3DEGameHost.cs" />
     <Compile Include="MonoGameBridge\GraphicsDeviceService.cs" />
+    <Compile Include="Views\Components\ColliderControl.xaml.cs">
+      <DependentUpon>ColliderControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Components\SceneObjectControl.xaml.cs">
+      <DependentUpon>SceneObjectControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Components\Vector3LineControl.xaml.cs">
+      <DependentUpon>Vector3LineControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\SceneSettingsWindow.xaml.cs">
       <DependentUpon>SceneSettingsWindow.xaml</DependentUpon>
     </Compile>
+    <Page Include="Views\Components\ColliderControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Components\SceneObjectControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\Components\TransformControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -117,6 +134,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Views\Components\Vector3LineControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\SceneSettingsWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

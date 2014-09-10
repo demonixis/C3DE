@@ -4,6 +4,8 @@ using System.Windows.Controls;
 namespace C3DE.Editor
 {
     using C3DE.Editor.MonoGameBridge;
+    using System;
+    using System.Windows.Input;
     using WpfApplication = System.Windows.Application;
 
     /// <summary>
@@ -12,6 +14,9 @@ namespace C3DE.Editor
     public partial class MainWindow : Window
     {
         private char[] _separator;
+        private Point _lastMouseDown;
+        private TreeViewItem _draggedItem;
+        private TreeViewItem _target;
 
         public MainWindow()
         {
@@ -43,25 +48,6 @@ namespace C3DE.Editor
                 var tmp = item.Name.Split(_separator);
                 editorGameHost.Add(tmp[2]);
             }
-        }
-
-        private void OnMenuHelpClick(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void OnSceneObjectAdded(object sender, SceneObjectAddedEventArgs e)
-        {
-            var item = new TreeViewItem();
-            item.Header = e.SceneObject.Name;
-            item.Tag = e.SceneObject.Id;
-
-            sceneTreeView.Items.Add(item);
-        }
-
-        private void CheckBox_Checked(object sender, RoutedEventArgs e)
-        {
-
         }
     }
 }
