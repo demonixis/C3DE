@@ -2,26 +2,7 @@
 float4x4 World;
 float4x4 View;
 float4x4 Projection;
-
-// Material
-float4 AmbientColor = float4(0.0, 0.0, 0.0, 1.0);
-float4 DiffuseColor = float4(1.0, 1.0, 1.0, 1.0);
-float4 EmissiveColor = float4(0.0, 0.0, 0.0, 1.0);
-
-// Mist
-float2 TextureTiling = float2(1, 1);
-float2 TextureOffset = float2(0, 0);
-
-texture2D MainTexture;
-sampler2D textureSampler = sampler_state
-{
-	Texture = < MainTexture >;
-	MinFilter = Linear;
-	MagFilter = Linear;
-	MipFilter = Linear;
-	AddressU = Wrap;
-	AddressV = Wrap;
-};
+float3 EyePosition = float3(1, 0, 0);
 
 struct VertexShaderInput
 {
@@ -31,12 +12,15 @@ struct VertexShaderInput
 	float4 Position : POSITION0;
 #endif
 	float2 UV : TEXCOORD0;
+	float3 Normal : NORMAL0;
 };
 
 struct VertexShaderOutput
 {
 	float4 Position : POSITION0;
 	float2 UV : TEXCOORD0;
+	float3 Normal : TEXCOORD1;
+	float4 WorldPosition : TEXCOORD2;
 };
 
 VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
@@ -47,21 +31,29 @@ VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
 	float4 viewPosition = mul(worldPosition, View);
 	output.Position = mul(viewPosition, Projection);
 	output.UV = input.UV;
-
+	output.WorldPosition = worldPosition;
+	output.Normal = input.Normal;
+	
 	return output;
 }
 
 float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 {
-	float4 diffuse = tex2D(textureSampler, (input.UV + TextureOffset) * TextureTiling);
-	float4 finalColor = AmbientColor + DiffuseColor * diffuse + EmissiveColor;
+	float3 normal = normalize(mul(input.Normal, World));
+	float4 color = float4(1, 1, 1, 1);
+	float3 viewDirection = normalize(EyePosition - input.WorldPosition);
 	
-	clip(diffuse.a < 0.1f ? -1 : 1);
-
+	// Fresnel
+	float term = dot(viewDirection, normal);
+	term = saturate(1.0 - term);
+	
+	float4 finalColor = color * term;
+	finalColor.a = 1;
+	
 	return finalColor;
 }
 
-technique Transparent
+technique Fresnel
 {
 	pass Pass1
 	{

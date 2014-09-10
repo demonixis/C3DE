@@ -6,8 +6,8 @@ namespace C3DE.Demo
 {
     public static class Demo
     {
-        public static int ScreenWidth = 1440;
-        public static int ScreenHeight = 900;
+        public static int ScreenWidth = 1024;
+        public static int ScreenHeight = 720;
 
         public static string[] BlueSkybox = new string[6] 
         {

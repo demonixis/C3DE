@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace C3DE.Prefabs
 {
-    public class TerrainPrefab : Prefab
+    public class TerrainPrefab : SceneObject
     {
         protected MeshRenderer renderer;
         protected TerrainGeometry geometry;
@@ -38,8 +38,8 @@ namespace C3DE.Prefabs
         public float RockLayer { get; set; }
         public float SnowLayer { get; set; }
 
-        public TerrainPrefab(string name, Scene scene)
-            : base(name, scene)
+        public TerrainPrefab(string name)
+            : base(name)
         {
             geometry = new TerrainGeometry(100, 100, 1);
 

@@ -4,7 +4,7 @@ C3DE : Cool 3D Engine
 ### What is it ?
 C3DE is a research project to create a small but powerfull 3D engine powered by MonoGame.
 
-![](http://31.media.tumblr.com/2b3a6bc77bde93d240e70ceda38c62a3/tumblr_na3ly0wf231s15knro1_1280.png)
+![](http://38.media.tumblr.com/88d6831c96fbdc0dcac7e90654f193ae/tumblr_naltfbT5uf1s15knro1_1280.jpg)
 
 ### Some features
 
@@ -13,10 +13,11 @@ C3DE is a research project to create a small but powerfull 3D engine powered by 
 - Cameras
 - Model (FBX/X with content pipeline)
 - Custom Mesh geometry
-- Terrain: Flat, Random, Heightmap
-- Materials: Standard, Simple, Reflective, Water, Custom
+- Terrain: Flat, Random, Heightmap, multi textured
+- Materials: Standard, Simple, Reflective, Water, Lava, Custom
 - Shadow mapping
 - Input management: Keyboard, Mouse, Gamepad 
+- Procedural texture generation
 
 ### Sample
 

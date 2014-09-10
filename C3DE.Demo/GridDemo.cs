@@ -28,12 +28,14 @@ namespace C3DE.Demo
             base.Initialize();
 
             // Camera
-            var camera = new CameraPrefab("camera", scene);
+            var camera = new CameraPrefab("camera");
+            scene.Add(camera);
             camera.AddComponent<OrbitController>();
             camera.AddComponent<RayPickingTester>();
-
+            
             // Light
-            var lightPrefab = new LightPrefab("lightPrefab", LightType.Point, scene);
+            var lightPrefab = new LightPrefab("lightPrefab", LightType.Point);
+            scene.Add(lightPrefab);
             lightPrefab.Transform.Position = new Vector3(0, 15, 15);
             lightPrefab.Light.Range = 25;
             lightPrefab.Light.Intensity = 2.0f;
@@ -62,10 +64,11 @@ namespace C3DE.Demo
             terrainMaterial.Shininess = 10;
             terrainMaterial.Tiling = new Vector2(16);
 
-            var terrain = new TerrainPrefab("terrain", scene);
+            var terrain = new TerrainPrefab("terrain");
             terrain.Flat();
             terrain.Renderer.Material = terrainMaterial;
             terrain.Transform.Translate(-terrain.Width >> 1, 0, -terrain.Depth / 2);
+            scene.Add(terrain);
 
             // Cube
             var cubeSuperMaterial = new StandardMaterial(scene);

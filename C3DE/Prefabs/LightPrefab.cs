@@ -2,7 +2,7 @@
 
 namespace C3DE.Prefabs
 {
-    public class LightPrefab : Prefab
+    public class LightPrefab : SceneObject
     {
         private Light _light;
         
@@ -23,8 +23,8 @@ namespace C3DE.Prefabs
             set { _light.shadowGenerator.Enabled = value; }
         }
 
-        public LightPrefab(string name, LightType type, Scene scene)
-            : base(name, scene)
+        public LightPrefab(string name, LightType type)
+            : base(name)
         {
             _light = AddComponent<Light>();
             _light.Type = type;

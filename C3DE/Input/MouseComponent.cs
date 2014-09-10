@@ -12,8 +12,8 @@ namespace C3DE.Inputs
     {
         private MouseState _mouseState;
         private MouseState _prevState;
-        private Vector2 _delta;
-        private Vector2 _sensibility;
+        protected Vector2 _delta;
+        protected Vector2 _sensibility;
 
         #region Fields
 
@@ -99,14 +99,14 @@ namespace C3DE.Inputs
             base.Update(gameTime);
         }
 
-        public void SetPosition(int x, int y)
+        public virtual void SetPosition(int x, int y)
         {
             Mouse.SetPosition(x, y);
         }
 
         #region Mouse click
 
-        public bool Clicked(MouseButton button = MouseButton.Left)
+        public virtual bool Clicked(MouseButton button = MouseButton.Left)
         {
             bool clicked = false;
 
@@ -120,17 +120,17 @@ namespace C3DE.Inputs
             return clicked;
         }
 
-        public bool Down(MouseButton button)
+        public virtual bool Down(MouseButton button)
         {
             return MouseButtonState(button, ButtonState.Pressed);
         }
 
-        public bool Up(MouseButton button = MouseButton.Left)
+        public virtual bool Up(MouseButton button = MouseButton.Left)
         {
             return MouseButtonState(button, ButtonState.Released);
         }
 
-        private bool MouseButtonState(MouseButton button, ButtonState state)
+        protected virtual bool MouseButtonState(MouseButton button, ButtonState state)
         {
             bool result = false;
 

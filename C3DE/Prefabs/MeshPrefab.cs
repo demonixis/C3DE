@@ -5,28 +5,29 @@ using Microsoft.Xna.Framework;
 
 namespace C3DE.Prefabs.Meshes
 {
-    public class SpherePrefab : Prefab
+    public class MeshPrefab<T> : SceneObject where T : Geometry, new()
     {
         private MeshRenderer _renderer;
-        private SphereCollider _collider;
+        private Collider _collider;
 
         public MeshRenderer Renderer
         {
             get { return _renderer; }
         }
 
-        public SphereCollider Collider
+        public Collider Collider
         {
             get { return _collider; }
         }
 
-        public SpherePrefab(string name, Scene scene, float size = 1.0f)
-            : base(name, scene)
+        public MeshPrefab(string name, float size = 1.0f)
+            : base(name)
         {
             _renderer = AddComponent<MeshRenderer>();
-            _renderer.Geometry = new CubeGeometry();
-            _renderer.Geometry.Size = new Vector3(size);
+            _renderer.Geometry = new T();
+            _renderer.Geometry.Size = new Vector3(1);
             _renderer.ReceiveShadow = false;
+            _renderer.Geometry.Generate();
             _collider = AddComponent<SphereCollider>();
         }
     }

@@ -27,13 +27,15 @@ namespace C3DE.Demo
             base.Initialize();
 
             // Add a camera with a FPS controller
-            var camera = new CameraPrefab("camera", scene);
+            var camera = new CameraPrefab("camera");
+            scene.Add(camera);
             camera.Setup(new Vector3(0, 2, -10), new Vector3(0, 0, 0), Vector3.Up);
             var cc = camera.AddComponent<ControllerSwitcher>();
             cc.SetControllerActive(1);
-
+            
             // And a light
-            var lightPrefab = new LightPrefab("light", LightType.Directional, scene);
+            var lightPrefab = new LightPrefab("light", LightType.Directional);
+            scene.Add(lightPrefab);
             lightPrefab.Light.Direction = new Vector3(1, 1, 0);
             lightPrefab.Light.DiffuseColor = Color.LightSkyBlue;
             lightPrefab.Light.Intensity = 1.5f;
@@ -45,13 +47,12 @@ namespace C3DE.Demo
             // Finally a terrain
             var terrainMat = new TerrainMaterial(scene);
 
-            var terrain = new TerrainPrefab("terrain", scene);
-            //terrain.TextureRepeat = new Vector2(2);
+            var terrain = new TerrainPrefab("terrain");
+            scene.Add(terrain);
             terrain.LoadHeightmap("Textures/heightmap");
             terrain.Renderer.Material = terrainMat;
             terrain.Transform.Translate(-terrain.Width >> 1, -10, -terrain.Depth >> 1);
             terrain.AddComponent<WeightMapViewer>();
-
             var map = terrain.GenerateWeightMap();
 
             terrainMat.MainTexture = Content.Load<Texture2D>("Textures/Terrain/Grass");
@@ -61,9 +62,9 @@ namespace C3DE.Demo
             terrainMat.WeightTexture = map;
             terrainMat.Tiling = new Vector2(4);
             
-
             // With water !
-            var water = new WaterPrefab("water", scene);
+            var water = new WaterPrefab("water");
+            scene.Add(water);
             water.Generate("Textures/water", "Textures/wavesbump", new Vector3(terrain.Width * 0.5f));
             
             // Don't miss the Skybox ;)

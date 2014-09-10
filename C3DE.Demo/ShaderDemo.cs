@@ -32,13 +32,15 @@ namespace C3DE.Demo
             renderer.Skybox.Generate(GraphicsDevice, Content, Demo.BlueSkybox);
 
             // Camera
-            var camera = new CameraPrefab("camera", scene);
+            var camera = new CameraPrefab("camera");
+            scene.Add(camera);
+
             camera.AddComponent<ControllerSwitcher>();
             camera.AddComponent<DemoBehaviour>();
             camera.AddComponent<RayPickingTester>();
-
+            
             // Light
-            var lightPrefab = new LightPrefab("light", LightType.Directional, scene);
+            var lightPrefab = new LightPrefab("light", LightType.Directional);
             lightPrefab.Transform.Translate(0, 10, 0);
             lightPrefab.Light.Range = 25;
             lightPrefab.Light.Intensity = 2.0f;
@@ -51,6 +53,7 @@ namespace C3DE.Demo
             lightPrefab.EnableShadows = true;
             lightPrefab.AddComponent<LightMoverKeys>();
             lightPrefab.AddComponent<LightSwitcher>();
+            scene.Add(lightPrefab);
 
             var lightSphere = lightPrefab.AddComponent<MeshRenderer>();
             lightSphere.Geometry = new SphereGeometry(1f, 8);
@@ -66,26 +69,34 @@ namespace C3DE.Demo
             terrainMaterial.Shininess = 500;
             terrainMaterial.Tiling = new Vector2(16);
 
-            var terrain = new TerrainPrefab("terrain", scene);
+            var terrain = new TerrainPrefab("terrain");
             terrain.Randomize();
             terrain.Renderer.Material = terrainMaterial;
             terrain.Transform.Translate(-terrain.Width >> 1, 0, -terrain.Depth / 2);
+            scene.Add(terrain);
 
-            var water = new WaterPrefab("water", scene);
+            var water = new WaterPrefab("water");
+            scene.Add(water);
             water.Generate("Textures/water", "Textures/wavesbump", new Vector3(terrain.Width * 0.5f));
             (water.Renderer.Material as WaterMaterial).ReflectiveMap = renderer.Skybox.Texture;
             (water.Renderer.Material as WaterMaterial).WaterTransparency = 0.6f;
-    
+
+            var lavaMaterial = new LavaMaterial(scene);
+            lavaMaterial.MainTexture = Content.Load<Texture2D>("Textures/lava_texture");
+            lavaMaterial.NormalMap = Content.Load<Texture2D>("Textures/lava_bump");
+
+            water.Renderer.MainMaterial = lavaMaterial;
+
             scene.Destroy(water.Collider);
 
             // Cube
-            var cubeSuperMaterial = new StandardMaterial(scene);
+            var cubeSuperMaterial = new FresnelMaterial(scene);
             cubeSuperMaterial.MainTexture = GraphicsHelper.CreateCheckboardTexture(Color.FloralWhite, Color.DodgerBlue); //Content.Load<Texture2D>("Textures/tech_box2");
             cubeSuperMaterial.DiffuseColor = Color.WhiteSmoke;
-            cubeSuperMaterial.SpecularColor = new Color(0.8f, 0.8f, 0.8f, 1.0f);
+            /*cubeSuperMaterial.SpecularColor = new Color(0.8f, 0.8f, 0.8f, 1.0f);
             cubeSuperMaterial.Shininess = 10;
             cubeSuperMaterial.EmissiveColor = new Color(0f, 0.0f, 0.1f, 1.0f);
-
+            */
             var cubeScene = new SceneObject();
             cubeScene.Name = "Super Cube";
             cubeScene.Transform.Translate(0, 5.5f, 15);
@@ -97,7 +108,7 @@ namespace C3DE.Demo
 
             var cube = cubeScene.AddComponent<MeshRenderer>();
             cube.ReceiveShadow = false;
-            cube.Geometry = new CubeGeometry();
+            cube.Geometry = new TorusGeometry(4, 1.5f, 32, 32);
             cube.Geometry.Generate();
             cube.Material = cubeSuperMaterial;
             cube.AddComponent<BoxCollider>();

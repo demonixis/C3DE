@@ -14,6 +14,7 @@ namespace C3DE.Components.Renderers
         protected internal BoundingSphere boundingSphere;
         protected internal List<int> materials;
         protected internal int materialCount;
+        protected int materialIndex;
 
         /// <summary>
         /// Indicates whether the object can cast shadow. 
@@ -30,12 +31,24 @@ namespace C3DE.Components.Renderers
             get { return materials; }
         }
 
+        public Material MainMaterial
+        {
+            get { return Material; }
+            set
+            {
+                var index = AddMaterial(value);
+
+                if (index > -1 && index < materials.Count)
+                    materialIndex = index;
+            }
+        }
+
         /// <summary>
         /// Gets the main material.
         /// </summary>
         public Material Material
         {
-            get { return materialCount > 0 ? sceneObject.Scene.Materials[materials[0]] : null; }
+            get { return materialCount > 0 ? sceneObject.Scene.Materials[materials[materialIndex]] : null; }
             set { AddMaterial(value); }
         }
 
@@ -58,6 +71,7 @@ namespace C3DE.Components.Renderers
             boundingSphere = new BoundingSphere();
             materials = new List<int>(1);
             materialCount = 0;
+            materialIndex = 0;
         }
 
         public override void Update()
@@ -71,18 +85,21 @@ namespace C3DE.Components.Renderers
         /// If the material is already added it is used by default.
         /// </summary>
         /// <param name="material"></param>
-        public void AddMaterial(Material material)
+        public int AddMaterial(Material material)
         {
             if (sceneObject.Scene == null)
                 sceneObject.Scene = material.scene;
 
             var index = material.Index;
+            var matIndex = materials.IndexOf(index);
 
-            if (materials.IndexOf(index) == -1)
+            if (matIndex == -1)
             {
                 materials.Add(material.Index);
-                materialCount++;
+                matIndex = materialCount++;
             }
+
+            return matIndex;
         }
 
         /// <summary>

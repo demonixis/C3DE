@@ -49,6 +49,16 @@ namespace C3DE.Components
             }
         }
 
+        public Matrix ViewMatrix
+        {
+            get { return view; }
+        }
+
+        public Matrix ProjectionMatrix
+        {
+            get { return projection; }
+        }
+
         public Camera()
             : base()
         {
@@ -68,7 +78,7 @@ namespace C3DE.Components
 
         public void Setup(Vector3 position, Vector3 camTarget, Vector3 upVector)
         {
-            sceneObject.Transform.Position = position;
+            transform.Position = position;
             _target = camTarget;
             _upVector = upVector;
             _needUpdate = true;
@@ -79,13 +89,22 @@ namespace C3DE.Components
             _needUpdate = true;
         }
 
-        protected void ComputeProjectionMatrix()
+        public void ComputeProjectionMatrix()
         {
             if (_projectionType == CameraProjectionType.Perspective)
                 projection = Matrix.CreatePerspectiveFieldOfView(_fieldOfView, _aspectRatio, _nearPlane, _farPlane);
             else
                 projection = Matrix.CreateOrthographic(Application.GraphicsDevice.Viewport.Width, Application.GraphicsDevice.Viewport.Height, _nearPlane, _farPlane);
+        }
 
+        public void ComputeProjectionMatrix(float fov, float aspect, float near, float far)
+        {
+            _fieldOfView = fov;
+            _aspectRatio = aspect;
+            _nearPlane = near;
+            _farPlane = far;
+
+            ComputeProjectionMatrix();
         }
 
         public override void Update()

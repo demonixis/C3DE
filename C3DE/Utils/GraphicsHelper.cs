@@ -5,6 +5,24 @@ namespace C3DE.Utils
 {
     public class GraphicsHelper
     {
+        public static Texture2D CreateGradiantTexture(Color start, Color end, int width = 128, int height = 128)
+        {
+            Texture2D texture = new Texture2D(Application.GraphicsDevice, width, height);
+            Color[] colors = new Color[width * height];
+
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    colors[x + y * width] = Color.Lerp(start, end, (float)y / (float)height);
+                }
+            }
+
+            texture.SetData<Color>(colors);
+
+            return texture;
+        }
+
         public static Texture2D CreateCheckboardTexture(Color firstTile, Color secondTile, int width = 128, int height = 128)
         {
             Texture2D texture = new Texture2D(Application.GraphicsDevice, width, height);

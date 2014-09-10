@@ -37,13 +37,14 @@ namespace C3DE.Components
 
         public Vector3 Position
         {
-            get { return (_parent != null) ? _parent.Position + _position : _position; }
+            get { return _position; }
             set { _position = value; }
         }
 
+        // FIXME
         public Vector3 LocalPosition
         {
-            get { return _position; }
+            get { return (_parent != null) ? _parent.LocalPosition - _position : _position; }
             set { _position = value; }
         }
 
@@ -51,6 +52,13 @@ namespace C3DE.Components
         {
             get { return _rotation; }
             set { _rotation = value; }
+        }
+
+        // FIXME
+        public Vector3 LocalRotation
+        {
+            get;
+            set;
         }
 
         public Vector3 LocalScale

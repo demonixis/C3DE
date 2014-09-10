@@ -1,21 +1,27 @@
+static const float ToonThresholds[4] = { 0.95, 0.5, 0.2, 0.03 };
+static const float ToonBrightnessLevels[5] = { 1.0, 0.8, 0.6, 0.35, 0.2 };
+
 // Matrix
 float4x4 World;
 float4x4 View;
 float4x4 Projection;
 
 // Material
-float4 AmbientColor = float4(0.0, 0.0, 0.0, 1.0);
+float4 AmbientColor = float4(0.1, 0.1, 0.1, 1.0);
 float4 DiffuseColor = float4(1.0, 1.0, 1.0, 1.0);
 float4 EmissiveColor = float4(0.0, 0.0, 0.0, 1.0);
 
-// Mist
+// Misc
 float2 TextureTiling = float2(1, 1);
 float2 TextureOffset = float2(0, 0);
 
-texture2D MainTexture;
-sampler2D textureSampler = sampler_state
+// Light
+float3 LightDirection = float3(0, 1, 1);
+
+texture MainTexture;
+sampler2D textureSampler = sampler_state 
 {
-	Texture = < MainTexture >;
+	Texture = (MainTexture);
 	MinFilter = Linear;
 	MagFilter = Linear;
 	MipFilter = Linear;
@@ -31,12 +37,14 @@ struct VertexShaderInput
 	float4 Position : POSITION0;
 #endif
 	float2 UV : TEXCOORD0;
+	float3 Normal : NORMAL0;
 };
 
 struct VertexShaderOutput
 {
 	float4 Position : POSITION0;
 	float2 UV : TEXCOORD0;
+	float3 Normal : TEXCOORD1;
 };
 
 VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
@@ -47,21 +55,32 @@ VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
 	float4 viewPosition = mul(worldPosition, View);
 	output.Position = mul(viewPosition, Projection);
 	output.UV = input.UV;
+	output.Normal = normalize(mul(input.Normal, World));
 
 	return output;
 }
 
 float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 {
-	float4 diffuse = tex2D(textureSampler, (input.UV + TextureOffset) * TextureTiling);
-	float4 finalColor = AmbientColor + DiffuseColor * diffuse + EmissiveColor;
+	float4 color = (DiffuseColor * tex2D(textureSampler, (input.UV + TextureOffset) * TextureTiling));
 	
-	clip(diffuse.a < 0.1f ? -1 : 1);
-
-	return finalColor;
+	float diffuse = saturate(dot(input.Normal, LightDirection));
+	
+	if (diffuse > ToonThresholds[0])
+		color *= ToonBrightnessLevels[0];
+	else if (diffuse > ToonThresholds[1])
+		color *= ToonBrightnessLevels[1];
+	else if (diffuse > ToonThresholds[2])
+		color *= ToonBrightnessLevels[2];
+	else if (diffuse > ToonThresholds[3])
+		color *= ToonBrightnessLevels[3];
+	else
+		color *= ToonBrightnessLevels[4];
+	
+	return AmbientColor + color + EmissiveColor;
 }
 
-technique Transparent
+technique Toon
 {
 	pass Pass1
 	{

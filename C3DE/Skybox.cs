@@ -1,5 +1,6 @@
 ﻿using C3DE.Components;
 using C3DE.Geometries;
+using C3DE.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -21,27 +22,22 @@ namespace C3DE
         }
 
         public bool Enabled { get; set; }
-    
+
         public Skybox()
         {
             _geometry = new CubeGeometry();
             _world = Matrix.Identity;
         }
 
-        public void Generate(GraphicsDevice device, ContentManager content, string[] textureNames, float size = 250.0f)
+        public void Generate(GraphicsDevice device, ContentManager content, Texture2D[] textures, float size = 250.0f)
         {
-            if (textureNames.Length != 6)
-                throw new Exception("The array of texture names must contain 6 elements.");
+            if (textures.Length != 6)
+                throw new Exception("The array of texture names must contains 6 elements.");
 
             _effect = content.Load<Effect>("FX/SkyboxEffect");
 
             _geometry.Size = new Vector3(size);
             _geometry.Generate();
-
-            Texture2D[] textures = new Texture2D[6];
-
-            for (int i = 0; i < 6; i++)
-                textures[i] = content.Load<Texture2D>(textureNames[i]);
 
             _texture = new TextureCube(device, textures[0].Width, false, SurfaceFormat.Color);
             Color[] textureData;
@@ -54,6 +50,32 @@ namespace C3DE
             }
 
             Enabled = true;
+        }
+
+        public void Generate(GraphicsDevice device, ContentManager content, string[] textureNames, float size = 250.0f)
+        {
+            Texture2D[] textures = new Texture2D[6];
+
+            for (int i = 0; i < 6; i++)
+                textures[i] = content.Load<Texture2D>(textureNames[i]);
+
+            Generate(device, content, textures, size);
+        }
+
+        public void Generate()
+        {
+            var skyTop = GraphicsHelper.CreateTexture(new Color(168, 189, 255), 8, 8);
+            var skySide = GraphicsHelper.CreateGradiantTexture(new Color(168, 189, 255), Color.White, 8, 8);
+            var skyBottom = GraphicsHelper.CreateTexture(Color.White, 8, 8);
+
+            Generate(Application.GraphicsDevice, Application.Content, new Texture2D[] {    
+                skySide,
+                skySide,
+                skyTop,
+                skyBottom,
+                skySide,
+                skySide
+            }, 1000.0f);
         }
 
         public void Draw(GraphicsDevice device, Camera camera)

@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace C3DE.Materials
 {
-    public class TransparentMaterial : Material
+    public class ToonMaterial : Material
     {
         private Vector4 _emissiveColor;
 
@@ -15,7 +15,7 @@ namespace C3DE.Materials
             set { _emissiveColor = value.ToVector4(); }
         }
 
-        public TransparentMaterial(Scene scene)
+        public ToonMaterial(Scene scene)
             : base(scene)
         {
             diffuseColor = new Vector4(1.0f, 1.0f, 1.0f, 1.0f);
@@ -24,23 +24,29 @@ namespace C3DE.Materials
 
         public override void LoadContent(ContentManager content)
         {
-            effect = content.Load<Effect>("FX/TransparentEffect");
+            effect = content.Load<Effect>("FX/ToonEffect");
         }
 
         public override void PrePass()
         {
             effect.Parameters["View"].SetValue(scene.MainCamera.view);
             effect.Parameters["Projection"].SetValue(scene.MainCamera.projection);
+
+            var light0 = scene.Lights[0]; // FIXME
+
+          
+            // Light
+            effect.Parameters["LightDirection"].SetValue(light0.Direction);
         }
 
         public override void Pass(RenderableComponent renderable)
         {
             // Material
-            effect.Parameters["TextureTiling"].SetValue(Tiling);
-            effect.Parameters["TextureOffset"].SetValue(Offset);
             effect.Parameters["AmbientColor"].SetValue(scene.RenderSettings.ambientColor);
             effect.Parameters["DiffuseColor"].SetValue(diffuseColor);
             effect.Parameters["EmissiveColor"].SetValue(_emissiveColor);
+            effect.Parameters["TextureTiling"].SetValue(Tiling);
+            effect.Parameters["TextureOffset"].SetValue(Offset);
             effect.Parameters["MainTexture"].SetValue(mainTexture);
             effect.Parameters["World"].SetValue(renderable.SceneObject.Transform.world);
             effect.CurrentTechnique.Passes[0].Apply();
