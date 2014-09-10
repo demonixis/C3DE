@@ -48,6 +48,7 @@
     <Compile Include="Components\Renderers\BoundingBoxRenderer.cs" />
     <Compile Include="Components\Renderers\MeshRenderer.cs" />
     <Compile Include="Materials\DummyMaterial.cs" />
+    <Compile Include="Materials\LavaMaterial.cs" />
     <Compile Include="Materials\TerrainMaterial.cs" />
     <Compile Include="Materials\ToonMaterial.cs" />
     <Compile Include="Prefabs\MeshPrefab.cs" />

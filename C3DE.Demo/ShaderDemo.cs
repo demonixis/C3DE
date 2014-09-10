@@ -80,7 +80,13 @@ namespace C3DE.Demo
             water.Generate("Textures/water", "Textures/wavesbump", new Vector3(terrain.Width * 0.5f));
             (water.Renderer.Material as WaterMaterial).ReflectiveMap = renderer.Skybox.Texture;
             (water.Renderer.Material as WaterMaterial).WaterTransparency = 0.6f;
-    
+
+            var lavaMaterial = new LavaMaterial(scene);
+            lavaMaterial.MainTexture = Content.Load<Texture2D>("Textures/lava_texture");
+            lavaMaterial.NormalMap = Content.Load<Texture2D>("Textures/lava_bump");
+
+            water.Renderer.MainMaterial = lavaMaterial;
+
             scene.Destroy(water.Collider);
 
             // Cube
