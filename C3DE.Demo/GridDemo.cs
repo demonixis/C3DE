@@ -27,6 +27,8 @@ namespace C3DE.Demo
         {
             base.Initialize();
 
+            var scene = sceneManager.ActiveScene;
+
             // Camera
             var camera = new CameraPrefab("camera");
             scene.Add(camera);

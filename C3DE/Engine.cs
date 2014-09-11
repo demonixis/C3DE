@@ -5,6 +5,9 @@ using Microsoft.Xna.Framework.Input;
 
 namespace C3DE
 {
+    /// <summary>
+    /// The starting point of the engine. Managers, registry objects, etc. are initialized here.
+    /// </summary>
     public class Engine : Game
     {
         protected GraphicsDeviceManager graphics;
@@ -64,6 +67,11 @@ namespace C3DE
         protected override void LoadContent()
         {
             sceneManager.Initialize();
+        }
+
+        protected override void BeginRun()
+        {
+            base.BeginRun();
         }
 
         protected override void Update(GameTime gameTime)

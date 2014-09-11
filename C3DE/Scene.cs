@@ -18,7 +18,7 @@ namespace C3DE
     }
 
     /// <summary>
-    /// The scene is responsible to store scene objects.
+    /// The scene is responsible to store scene objects, components.
     /// </summary>
     public class Scene : SceneObject
     {
@@ -32,7 +32,6 @@ namespace C3DE
         internal protected List<Collider> colliders;
         internal protected List<Camera> cameras;
         internal protected List<Light> lights;
-        internal protected Vector4 ambientColor;
         internal protected List<Behaviour> scripts;
 
         private int _mainCameraIndex;
@@ -40,8 +39,6 @@ namespace C3DE
         private bool _needRemoveCheck;
 
         public RenderSettings RenderSettings { get; private set; }
-
-        public string Name { get; protected set; }
 
         public Camera MainCamera
         {
@@ -103,7 +100,6 @@ namespace C3DE
             lights = new List<Light>(2);
             _componentsToDestroy = new List<Component>();
             _needRemoveCheck = false;
-            ambientColor = Color.White.ToVector4();
             DefaultMaterial = new SimpleMaterial(this);
             RenderSettings = new RenderSettings();
         }

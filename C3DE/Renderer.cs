@@ -9,7 +9,7 @@ using System.Collections.Generic;
 namespace C3DE
 {
     /// <summary>
-    /// The renderer will render a scene to the screen according to a camera view.
+    /// The renderer is responsible to render a scene with a camera view to the screen.
     /// </summary>
     public class Renderer
     {

@@ -1,8 +1,18 @@
 ﻿namespace C3DE
 {
+    /// <summary>
+    /// A static class to gets informations about the screen.
+    /// </summary>
     public class Screen
     {
+        /// <summary>
+        /// Gets the screen's width.
+        /// </summary>
         public static int Width { get; internal set; }
+
+        /// <summary>
+        /// Gets the screen's height.
+        /// </summary>
         public static int Height { get; internal set; }
 
         public static int WidthPerTwo { get; internal set; }

@@ -28,6 +28,8 @@ namespace C3DE.Demo
         {
             base.Initialize();
 
+            var scene = sceneManager.ActiveScene;
+
             // Skybox
             renderer.Skybox.Generate(GraphicsDevice, Content, Demo.BlueSkybox);
 
@@ -81,12 +83,6 @@ namespace C3DE.Demo
             (water.Renderer.Material as WaterMaterial).ReflectiveMap = renderer.Skybox.Texture;
             (water.Renderer.Material as WaterMaterial).WaterTransparency = 0.6f;
 
-            var lavaMaterial = new LavaMaterial(scene);
-            lavaMaterial.MainTexture = Content.Load<Texture2D>("Textures/lava_texture");
-            lavaMaterial.NormalMap = Content.Load<Texture2D>("Textures/lava_bump");
-
-            water.Renderer.MainMaterial = lavaMaterial;
-
             scene.Destroy(water.Collider);
 
             // Cube
@@ -97,6 +93,7 @@ namespace C3DE.Demo
             cubeSuperMaterial.Shininess = 10;
             cubeSuperMaterial.EmissiveColor = new Color(0f, 0.0f, 0.1f, 1.0f);
             */
+
             var cubeScene = new SceneObject();
             cubeScene.Name = "Super Cube";
             cubeScene.Transform.Translate(0, 5.5f, 15);
@@ -170,6 +167,11 @@ namespace C3DE.Demo
             Screen.ShowCursor = true;
 
             GUI.Skin = Demo.CreateSkin(Content);
+        }
+
+        protected override void Update(GameTime gameTime)
+        {
+            base.Update(gameTime);
         }
     }
 }

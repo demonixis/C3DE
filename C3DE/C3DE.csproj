@@ -108,6 +108,18 @@
     <Compile Include="Utils\SmartList.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\Shaders\FresnelEffect.dx11.mgfxo" />
+    <EmbeddedResource Include="Resources\Shaders\LavaEffect.dx11.mgfxo" />
+    <EmbeddedResource Include="Resources\Shaders\ReflectionEffect.dx11.mgfxo" />
+    <EmbeddedResource Include="Resources\Shaders\SimpleEffect.dx11.mgfxo" />
+    <EmbeddedResource Include="Resources\Shaders\SkyboxEffect.dx11.mgfxo" />
+    <EmbeddedResource Include="Resources\Shaders\StandardEffect.dx11.mgfxo" />
+    <EmbeddedResource Include="Resources\Shaders\TerrainEffect.dx11.mgfxo" />
+    <EmbeddedResource Include="Resources\Shaders\ToonEffect.dx11.mgfxo" />
+    <EmbeddedResource Include="Resources\Shaders\TransparentEffect.dx11.mgfxo" />
+    <EmbeddedResource Include="Resources\Shaders\WaterEffect.dx11.mgfxo" />
+  </ItemGroup>
+  <ItemGroup>
     <Reference Include="MonoGame.Framework, Version=3.1.2.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Libs\MonoGame.Framework.dll</HintPath>
