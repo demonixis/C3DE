@@ -31,7 +31,7 @@ namespace C3DE.Geometries
             Vertices[10] = new VertexPositionNormalTexture(new Vector3(-1.0f, -1.0f, -1.0f), normal, bottomLeft);
             Vertices[11] = new VertexPositionNormalTexture(new Vector3(0.0f, 1.0f, 0.0f), normal, topRight);
 
-            Indices = new short[] 
+            Indices = new ushort[] 
             { 
                 0, 1, 2, 
                 3, 4, 5, 

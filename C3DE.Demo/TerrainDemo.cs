@@ -69,12 +69,6 @@ namespace C3DE.Demo
             scene.Add(water);
             water.Generate("Textures/water", "Textures/wavesbump", new Vector3(terrain.Width * 0.5f));
 
-            var lavaMaterial = new LavaMaterial(scene);
-            lavaMaterial.MainTexture = Content.Load<Texture2D>("Textures/lava_texture");
-            lavaMaterial.NormalMap = Content.Load<Texture2D>("Textures/lava_bump");
-
-            water.Renderer.MainMaterial = lavaMaterial;
-            
             // Don't miss the Skybox ;)
             renderer.Skybox.Generate(GraphicsDevice, Content, Demo.BlueSkybox);
 

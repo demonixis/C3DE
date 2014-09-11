@@ -36,7 +36,7 @@ namespace C3DE.Geometries
 
             int indexCount = 0;
             Vertices = new VertexPositionNormalTexture[(_nbSegments + 1) * (_nbSlices + 1)];
-            Indices = new short[_nbSegments * _nbSlices * (lines ? 8 : 6)];
+            Indices = new ushort[_nbSegments * _nbSlices * (lines ? 8 : 6)];
 
             for (int j = 0; j <= _nbSegments; j++)
             {
@@ -74,10 +74,10 @@ namespace C3DE.Geometries
                     // 1---3
                     if (j < _nbSegments && i < _nbSlices)
                     {
-                        short i0 = (short)((j * (_nbSlices + 1)) + i);
-                        short i1 = (short)((j * (_nbSlices + 1)) + i + 1);
-                        short i2 = (short)(((j + 1) * (_nbSlices + 1)) + i);
-                        short i3 = (short)(((j + 1) * (_nbSlices + 1)) + i + 1);
+                        ushort i0 = (ushort)((j * (_nbSlices + 1)) + i);
+                        ushort i1 = (ushort)((j * (_nbSlices + 1)) + i + 1);
+                        ushort i2 = (ushort)(((j + 1) * (_nbSlices + 1)) + i);
+                        ushort i3 = (ushort)(((j + 1) * (_nbSlices + 1)) + i + 1);
 
                         Indices[indexCount++] = i0;
                         Indices[indexCount++] = invertFaces ? i1 : i3;

@@ -7,7 +7,7 @@ namespace C3DE.Geometries
     public abstract class Geometry
     {
         private VertexPositionNormalTexture[] _vertices;
-        private short[] _indices;
+        private ushort[] _indices;
         private VertexBuffer _vertexBuffer;
         private IndexBuffer _indexBuffer;
         private bool _constructed;
@@ -22,7 +22,7 @@ namespace C3DE.Geometries
             protected set { _vertices = value; }
         }
 
-        public short[] Indices
+        public ushort[] Indices
         {
             get { return _indices; }
             protected set { _indices = value; }
