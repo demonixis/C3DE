@@ -1,5 +1,4 @@
 ﻿using C3DE.Components;
-using Microsoft.Xna.Framework.Content;
 using System;
 using System.Collections.Generic;
 

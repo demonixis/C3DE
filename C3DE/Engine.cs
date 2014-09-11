@@ -1,74 +1,16 @@
 ﻿using C3DE.Inputs;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using System;
 
 namespace C3DE
 {
-    public class Application
-    {
-        internal static Game Game { get; set; }
-        public static ContentManager Content { get; set; }
-        public static GraphicsDevice GraphicsDevice { get; set; }
-        
-        public static void TargetFrameRate(long frameRate)
-        {
-            Game.TargetElapsedTime = new TimeSpan(10000000L / frameRate);
-        }
-
-        public static void Quit()
-        {
-            Game.Exit();
-        }
-    }
-
-    public class Screen
-    {
-        public static int Width { get; internal set; }
-        public static int Height { get; internal set; }
-
-        public static int WidthPerTwo { get; internal set; }
-        public static int HeightPerTwo { get; internal set; }
-
-        public static bool LockCursor { get; set; }
-
-        public static bool ShowCursor
-        {
-            get { return Application.Game.IsMouseVisible; }
-            set { Application.Game.IsMouseVisible = value; }
-        }
-
-        public static void Setup(int width, int height, bool? lockCursor, bool? showCursor)
-        {
-            Width = width;
-            Height = height;
-            WidthPerTwo = width >> 1;
-            HeightPerTwo = height >> 1;
-
-            if (lockCursor.HasValue)
-                LockCursor = lockCursor.Value;
-
-            if (showCursor.HasValue)
-                ShowCursor = showCursor.Value;
-        }
-    }
-
-    public class Input
-    {
-        public static KeyboardComponent Keys { get; set; }
-        public static MouseComponent Mouse { get; set; }
-        public static GamepadComponent Gamepad { get; set; }
-        public static TouchComponent Touch { get; set; }
-    }
-
     public class Engine : Game
     {
         protected GraphicsDeviceManager graphics;
         protected SpriteBatch spriteBatch;
         protected Renderer renderer;
-        protected Scene scene;
+        protected SceneManager sceneManager;
 
         public Engine(string title = "C3DE", int width = 1024, int height = 600)
         {
@@ -77,7 +19,7 @@ namespace C3DE
             graphics.PreferredBackBufferHeight = height;
             Window.Title = title;
             Content.RootDirectory = "Content";
-            scene = new Scene(Content);
+            sceneManager = new SceneManager();
 
             Application.Content = Content;
             Application.GraphicsDevice = GraphicsDevice;
@@ -121,19 +63,19 @@ namespace C3DE
 
         protected override void LoadContent()
         {
-            scene.Initialize();
+            sceneManager.Initialize();
         }
 
         protected override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-            scene.Update();
+            sceneManager.Update();
         }
 
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.Black);
-            renderer.render(scene, scene.MainCamera);
+            renderer.render(sceneManager.ActiveScene, sceneManager.ActiveScene.MainCamera);
             base.Draw(gameTime);
         }
 

@@ -5,7 +5,6 @@ using C3DE.Components.Renderers;
 using C3DE.Materials;
 using C3DE.Utils;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 
@@ -41,6 +40,8 @@ namespace C3DE
         private bool _needRemoveCheck;
 
         public RenderSettings RenderSettings { get; private set; }
+
+        public string Name { get; protected set; }
 
         public Camera MainCamera
         {
@@ -84,9 +85,10 @@ namespace C3DE
         /// <summary>
         /// The root scene object which contains all scene objects.
         /// </summary>
-        public Scene(ContentManager content)
+        public Scene(string name)
             : base()
         {
+            Name = name;
             transform.Root = transform;
             members = new SmartList<SceneObject>();
             scene = this;
