@@ -10,7 +10,7 @@ using C3DE.Utils;
 using Microsoft.Xna.Framework;
 using System;
 
-namespace C3DE.Demo
+namespace C3DE.Demo.Scenes
 {
     public class GridDemo : Scene
     {

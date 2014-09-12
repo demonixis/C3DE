@@ -1,15 +1,12 @@
-﻿using C3DE.Components;
-using C3DE.Components.Controllers;
-using C3DE.Components.Lights;
+﻿using C3DE.Components.Lights;
 using C3DE.Demo.Scripts;
 using C3DE.Materials;
 using C3DE.Prefabs;
 using C3DE.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 
-namespace C3DE.Demo
+namespace C3DE.Demo.Scenes
 {
     public class TerrainDemo : Scene
     {

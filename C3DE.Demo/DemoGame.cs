@@ -1,13 +1,15 @@
+using C3DE.Demo.Scenes;
 using C3DE.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+
 namespace C3DE.Demo
 {
     public static class DemoGame
     {
-        public static int ScreenWidth = 1024;
-        public static int ScreenHeight = 720;
+        public const int ScreenWidth = 1024;
+        public const int ScreenHeight = 720;
 
         public static string[] BlueSkybox = new string[6] 
         {
@@ -47,9 +49,10 @@ namespace C3DE.Demo
         // Entry point.
         static void Main(string[] args)
         {
-            using (var game = new Engine("C3DE Game Engine", 1280, 720))
+            using (var game = new Engine("C3DE Game Engine", ScreenWidth, ScreenHeight))
             {
-                Application.SceneManager.Add(new TerrainDemo(), true);
+                Application.SceneManager.Add(new MenuDemo(), true);
+                Application.SceneManager.Add(new TerrainDemo());
                 Application.SceneManager.Add(new ShaderDemo());
                 Application.SceneManager.Add(new GridDemo());
                 Application.LoadLevel(1);

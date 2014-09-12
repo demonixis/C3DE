@@ -52,6 +52,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DemoGame.cs" />
+    <Compile Include="Scenes\MenuDemo.cs" />
     <Compile Include="Scripts\FresnelMaterial.cs" />
     <Compile Include="Scenes\GridDemo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -61,6 +62,7 @@
     <Compile Include="Scripts\LightMover.cs" />
     <Compile Include="Scripts\LightMoverKeys.cs" />
     <Compile Include="Scripts\LightSwitcher.cs" />
+    <Compile Include="Scripts\MenuBehaviour.cs" />
     <Compile Include="Scripts\RayPickingTester.cs" />
     <Compile Include="Scripts\SimplePath.cs" />
     <Compile Include="Scripts\WeightMapViewer.cs" />

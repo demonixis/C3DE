@@ -7,8 +7,8 @@ namespace C3DE.Demo.Scripts
     {
         public override void Update()
         {
-            if (Input.Keys.Escape || Input.Gamepad.Pressed(Buttons.Back))
-                Application.Quit();
+            if (Input.Keys.JustPressed(Keys.Escape) || Input.Gamepad.JustPressed(Buttons.Back))
+                Application.LoadLevel(1);
         }
     }
 }

@@ -11,7 +11,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 
-namespace C3DE.Demo
+namespace C3DE.Demo.Scenes
 {
     public class ShaderDemo : Scene
     {
