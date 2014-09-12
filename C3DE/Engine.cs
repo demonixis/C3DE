@@ -27,6 +27,7 @@ namespace C3DE
             Application.Content = Content;
             Application.GraphicsDevice = GraphicsDevice;
             Application.Game = this;
+            Application.SceneManager = sceneManager;
 
             Screen.Setup(width, height, false, true);
 

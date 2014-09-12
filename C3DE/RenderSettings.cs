@@ -15,6 +15,7 @@ namespace C3DE
         internal Vector4 fogColor;
         internal Vector4 ambientColor;
         internal Vector4 fogData;
+        internal Skybox skybox;
 
         /// <summary>
         /// Gets or sets the global ambient color.
@@ -75,6 +76,11 @@ namespace C3DE
             set { fogData.W = value; }
         }
 
+        public Skybox Skybox
+        {
+            get { return skybox; }
+        }
+
         /// <summary>
         /// Create the render setting with default values.
         /// </summary>
@@ -88,6 +94,7 @@ namespace C3DE
             FogStart = 20.0f;
             FogEnd = 150.0f;
             fogColor = Vector4.One;
+            skybox = new Skybox();
         }
     }
 }

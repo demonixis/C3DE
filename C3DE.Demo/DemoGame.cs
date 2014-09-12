@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 namespace C3DE.Demo
 {
-    public static class Demo
+    public static class DemoGame
     {
         public static int ScreenWidth = 1024;
         public static int ScreenHeight = 720;
@@ -47,8 +47,14 @@ namespace C3DE.Demo
         // Entry point.
         static void Main(string[] args)
         {
-            using (var game = new TerrainDemo())
+            using (var game = new Engine("C3DE Game Engine", 1280, 720))
+            {
+                Application.SceneManager.Add(new TerrainDemo(), true);
+                Application.SceneManager.Add(new ShaderDemo());
+                Application.SceneManager.Add(new GridDemo());
+                Application.LoadLevel(1);
                 game.Run();
+            }
         }
     }
 }

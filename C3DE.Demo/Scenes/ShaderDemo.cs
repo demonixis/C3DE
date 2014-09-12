@@ -13,29 +13,20 @@ using System;
 
 namespace C3DE.Demo
 {
-    public class ShaderDemo : Engine
+    public class ShaderDemo : Scene
     {
-        public ShaderDemo()
-            : base()
-        {
-            Window.Title = "C3DE - Shader demo";
-            graphics.PreferredBackBufferWidth = Demo.ScreenWidth;
-            graphics.PreferredBackBufferHeight = Demo.ScreenHeight;
-            graphics.ApplyChanges();
-        }
+        public ShaderDemo() : base("Shader demo") { }  
 
-        protected override void Initialize()
+        public override void Initialize()
         {
             base.Initialize();
 
-            var scene = sceneManager.ActiveScene;
-
             // Skybox
-            renderer.Skybox.Generate(GraphicsDevice, Content, Demo.BlueSkybox);
+            RenderSettings.Skybox.Generate(Application.GraphicsDevice, Application.Content, DemoGame.BlueSkybox);
 
             // Camera
             var camera = new CameraPrefab("camera");
-            scene.Add(camera);
+            Add(camera);
 
             camera.AddComponent<ControllerSwitcher>();
             camera.AddComponent<DemoBehaviour>();
@@ -51,11 +42,11 @@ namespace C3DE.Demo
             lightPrefab.Light.Direction = new Vector3(0, 1, -1);
             lightPrefab.Light.Angle = MathHelper.PiOver4;
             lightPrefab.Light.ShadowGenerator.ShadowStrength = 0.6f; // FIXME need to be inverted
-            lightPrefab.Light.ShadowGenerator.SetShadowMapSize(GraphicsDevice, 1024);
+            lightPrefab.Light.ShadowGenerator.SetShadowMapSize(Application.GraphicsDevice, 1024);
             lightPrefab.EnableShadows = true;
             lightPrefab.AddComponent<LightMoverKeys>();
             lightPrefab.AddComponent<LightSwitcher>();
-            scene.Add(lightPrefab);
+            Add(lightPrefab);
 
             var lightSphere = lightPrefab.AddComponent<MeshRenderer>();
             lightSphere.Geometry = new SphereGeometry(1f, 8);
@@ -67,7 +58,7 @@ namespace C3DE.Demo
 
             // Terrain
             var terrainMaterial = new StandardMaterial(scene);
-            terrainMaterial.MainTexture = Content.Load<Texture2D>("Textures/terrainTexture");
+            terrainMaterial.MainTexture = Application.Content.Load<Texture2D>("Textures/terrainTexture");
             terrainMaterial.Shininess = 500;
             terrainMaterial.Tiling = new Vector2(16);
 
@@ -75,15 +66,15 @@ namespace C3DE.Demo
             terrain.Randomize();
             terrain.Renderer.Material = terrainMaterial;
             terrain.Transform.Translate(-terrain.Width >> 1, 0, -terrain.Depth / 2);
-            scene.Add(terrain);
+            Add(terrain);
 
             var water = new WaterPrefab("water");
-            scene.Add(water);
+            Add(water);
             water.Generate("Textures/water", "Textures/wavesbump", new Vector3(terrain.Width * 0.5f));
-            (water.Renderer.Material as WaterMaterial).ReflectiveMap = renderer.Skybox.Texture;
+            (water.Renderer.Material as WaterMaterial).ReflectiveMap = scene.RenderSettings.Skybox.Texture;
             (water.Renderer.Material as WaterMaterial).WaterTransparency = 0.6f;
 
-            scene.Destroy(water.Collider);
+            Destroy(water.Collider);
 
             // Cube
             var cubeSuperMaterial = new FresnelMaterial(scene);
@@ -101,7 +92,7 @@ namespace C3DE.Demo
             cubeScene.Transform.Rotate((float)Math.PI / 4, 0, (float)Math.PI / 4);
             var autoRot = cubeScene.AddComponent<AutoRotation>();
             autoRot.Rotation = new Vector3(0, 0.01f, 0);
-            scene.Add(cubeScene);
+            Add(cubeScene);
 
             var cube = cubeScene.AddComponent<MeshRenderer>();
             cube.ReceiveShadow = false;
@@ -123,7 +114,7 @@ namespace C3DE.Demo
             cube2Scene.Transform.Rotate(-MathHelper.PiOver4, 0, -MathHelper.PiOver4);
             var autoRot2 = cube2Scene.AddComponent<AutoRotation>();
             autoRot2.Rotation = new Vector3(0.02f, 0.01f, 0.03f);
-            scene.Add(cube2Scene);
+            Add(cube2Scene);
 
             var cube2 = cube2Scene.AddComponent<MeshRenderer>();
             cube2.ReceiveShadow = false;
@@ -145,7 +136,7 @@ namespace C3DE.Demo
             // Third cube
             var reflectiveMaterial = new ReflectiveMaterial(scene);
             reflectiveMaterial.MainTexture = cubeSuperMaterial.MainTexture;
-            reflectiveMaterial.ReflectionMap = renderer.Skybox.Texture;
+            reflectiveMaterial.ReflectionMap = scene.RenderSettings.Skybox.Texture;
 
             var cube3Scene = new SceneObject();
             cube3Scene.Name = "Reflective Cube";
@@ -153,7 +144,7 @@ namespace C3DE.Demo
             cube3Scene.Transform.LocalScale = new Vector3(4);
             var autoRot3 = cube3Scene.AddComponent<AutoRotation>();
             autoRot3.Rotation = new Vector3(0.01f, 0.02f, 0.01f);
-            scene.Add(cube3Scene);
+            Add(cube3Scene);
 
             var cube3 = cube3Scene.AddComponent<MeshRenderer>();
             cube3.ReceiveShadow = false;
@@ -166,12 +157,7 @@ namespace C3DE.Demo
 
             Screen.ShowCursor = true;
 
-            GUI.Skin = Demo.CreateSkin(Content);
-        }
-
-        protected override void Update(GameTime gameTime)
-        {
-            base.Update(gameTime);
+            GUI.Skin = DemoGame.CreateSkin(Application.Content);
         }
     }
 }

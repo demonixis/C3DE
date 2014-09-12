@@ -12,32 +12,23 @@ using System;
 
 namespace C3DE.Demo
 {
-    public class GridDemo : Engine
+    public class GridDemo : Scene
     {
-        public GridDemo()
-            : base()
-        {
-            Window.Title = "C3DE - Grid demo";
-            graphics.PreferredBackBufferWidth = Demo.ScreenWidth;
-            graphics.PreferredBackBufferHeight = Demo.ScreenHeight;
-            graphics.ApplyChanges();
-        }
+        public GridDemo() : base("Grid demo") { }
 
-        protected override void Initialize()
+        public override void Initialize()
         {
             base.Initialize();
 
-            var scene = sceneManager.ActiveScene;
-
             // Camera
             var camera = new CameraPrefab("camera");
-            scene.Add(camera);
+            Add(camera);
             camera.AddComponent<OrbitController>();
             camera.AddComponent<RayPickingTester>();
             
             // Light
             var lightPrefab = new LightPrefab("lightPrefab", LightType.Point);
-            scene.Add(lightPrefab);
+            Add(lightPrefab);
             lightPrefab.Transform.Position = new Vector3(0, 15, 15);
             lightPrefab.Light.Range = 25;
             lightPrefab.Light.Intensity = 2.0f;
@@ -46,7 +37,7 @@ namespace C3DE.Demo
             lightPrefab.Light.Direction = new Vector3(-1, 1, -1);
             lightPrefab.Light.Angle = 0.1f;
             lightPrefab.Light.ShadowGenerator.ShadowStrength = 0.6f; // FIXME need to be inverted
-            lightPrefab.Light.ShadowGenerator.SetShadowMapSize(GraphicsDevice, 1024);
+            lightPrefab.Light.ShadowGenerator.SetShadowMapSize(Application.GraphicsDevice, 1024);
             lightPrefab.EnableShadows = true;
             lightPrefab.AddComponent<LightSwitcher>();
             lightPrefab.AddComponent<LightMover>();
@@ -70,7 +61,7 @@ namespace C3DE.Demo
             terrain.Flat();
             terrain.Renderer.Material = terrainMaterial;
             terrain.Transform.Translate(-terrain.Width >> 1, 0, -terrain.Depth / 2);
-            scene.Add(terrain);
+            Add(terrain);
 
             // Cube
             var cubeSuperMaterial = new StandardMaterial(scene);
@@ -86,7 +77,7 @@ namespace C3DE.Demo
             cubeScene.Transform.Rotate((float)Math.PI / 4, 0, (float)Math.PI / 4);
             var autoRot = cubeScene.AddComponent<AutoRotation>();
             autoRot.Rotation = new Vector3(0, 0.01f, 0);
-            scene.Add(cubeScene);
+            Add(cubeScene);
 
             var cube = cubeScene.AddComponent<MeshRenderer>();
             cube.ReceiveShadow = false;
@@ -97,7 +88,7 @@ namespace C3DE.Demo
             cubeScene.AddComponent<BoxCollider>();
 
             // Skybox
-            renderer.Skybox.Generate(GraphicsDevice, Content, Demo.StarsSkybox);
+            RenderSettings.Skybox.Generate(Application.GraphicsDevice, Application.Content, DemoGame.StarsSkybox);
 
             Screen.ShowCursor = true;
         }

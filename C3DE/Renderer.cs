@@ -17,14 +17,8 @@ namespace C3DE
         private RenderTarget2D _sceneRT;
         private SpriteBatch _spriteBatch;
         private PostProcessManager _postProcessManager;
-        private Skybox _skybox;
         private bool _needsBufferUpdate;
         internal GUI _guiManager;
-
-        public Skybox Skybox
-        {
-            get { return _skybox; }
-        }
 
         public bool NeedsBufferUpdate
         {
@@ -38,7 +32,6 @@ namespace C3DE
             _spriteBatch = new SpriteBatch(device);
             _sceneRT = new RenderTarget2D(device, device.Viewport.Width, device.Viewport.Height, false, SurfaceFormat.Color, DepthFormat.Depth24, 0, RenderTargetUsage.DiscardContents);
             _postProcessManager = new PostProcessManager();
-            _skybox = new Skybox();
             _needsBufferUpdate = false;
         }
 
@@ -63,8 +56,8 @@ namespace C3DE
             graphicsDevice.Clear(Color.Black);
             graphicsDevice.DepthStencilState = DepthStencilState.Default;
 
-            if (_skybox.Enabled)
-                _skybox.Draw(graphicsDevice, camera);
+            if (scene.RenderSettings.Skybox.Enabled)
+                scene.RenderSettings.Skybox.Draw(graphicsDevice, camera);
 
             // Prepass, Update light, eye position, etc.
             for (int i = 0; i < scene.effects.Count; i++)
