@@ -138,12 +138,17 @@ namespace C3DE.UI
 
         public void DrawTexture(Rectangle rect, Texture2D texture)
         {
-            DrawTexture(ref rect, texture);
+            DrawTexture(ref rect, texture, Color.White);
         }
 
         public void DrawTexture(ref Rectangle rect, Texture2D texture)
         {
-            _spriteBatch.Draw(texture, rect, Color.White);
+            DrawTexture(ref rect, texture, Color.White);
+        }
+
+        public void DrawTexture(ref Rectangle rect, Texture2D texture, Color color)
+        {
+            _spriteBatch.Draw(texture, rect, color);
         }
 
         public Vector2 MeasureString(string text)

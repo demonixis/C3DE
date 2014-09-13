@@ -8,9 +8,9 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace C3DE.Demo.Scenes
 {
-    public class TerrainDemo : Scene
+    public class HeightmapDemo : Scene
     {
-        public TerrainDemo() : base("Terrain Demo") { }
+        public HeightmapDemo() : base("Terrain Demo") { }
 
         public override void Initialize()
         {

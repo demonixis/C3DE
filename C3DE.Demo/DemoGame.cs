@@ -52,8 +52,8 @@ namespace C3DE.Demo
             using (var game = new Engine("C3DE Game Engine", ScreenWidth, ScreenHeight))
             {
                 Application.SceneManager.Add(new MenuDemo(), true);
-                Application.SceneManager.Add(new TerrainDemo());
-                Application.SceneManager.Add(new ShaderDemo());
+                Application.SceneManager.Add(new HeightmapDemo());
+                Application.SceneManager.Add(new RandomTerrain());
                 Application.SceneManager.Add(new GridDemo());
                 Application.LoadLevel(1);
                 game.Run();

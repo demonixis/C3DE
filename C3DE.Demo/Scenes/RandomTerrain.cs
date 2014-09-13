@@ -13,9 +13,9 @@ using System;
 
 namespace C3DE.Demo.Scenes
 {
-    public class ShaderDemo : Scene
+    public class RandomTerrain : Scene
     {
-        public ShaderDemo() : base("Shader demo") { }  
+        public RandomTerrain() : base("Shader demo") { }  
 
         public override void Initialize()
         {

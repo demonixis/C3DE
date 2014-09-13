@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // Les informations générales relatives à un assembly dépendent de 
 // l'ensemble d'attributs suivant. Changez les valeurs de ces attributs pour modifier les informations
 // associées à un assembly.
-[assembly: AssemblyTitle("C3DE.Demo")]
-[assembly: AssemblyDescription("C3DE.Demo")]
+[assembly: AssemblyTitle("C3DE.Demo.Kinect")]
+[assembly: AssemblyDescription("C3DE Demo with Kinect Sensor")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Demonixis Games")]
-[assembly: AssemblyProduct("C3DE.Demo")]
+[assembly: AssemblyProduct("C3DE")]
 [assembly: AssemblyCopyright("Copyright ©  2014")]
 [assembly: AssemblyTrademark("Demonixis Games")]
 [assembly: AssemblyCulture("")]
