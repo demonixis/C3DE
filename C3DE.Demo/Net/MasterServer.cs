@@ -132,8 +132,6 @@ namespace C3DE.Net
 
                                 if (index > -1)
                                 {
-                                    Debug.Log("Data incoming");
-
                                     byte type = incMessage.ReadByte();
 
                                     // Update the correct entity

@@ -26,6 +26,7 @@ namespace C3DE.Demo.Scripts
                 if (gui.Button(new Rectangle(15, 15, 100, 45), "Create Server"))
                 {
                     Network.StartServer("C3DE Network Game", "127.0.0.1", 4096, 4);
+                    Network.JoinServer("C3DE Network Game", "127.0.0.1", 4096);
                     SpawnPlayer();
                 }
 
@@ -41,7 +42,7 @@ namespace C3DE.Demo.Scripts
         {
             sceneObject.Scene.MainCamera.GetComponent<OrbitController>().Enabled = false;
 
-            var so = Network.Instanciate<MeshPrefab<CubeGeometry>>(Vector3.Zero, Vector3.Zero);
+            var so = Network.Instanciate<MeshPrefab<CubeGeometry>>(new Vector3(1, 0.5f, 2), Vector3.Zero);
             so.AddComponent<ThirdPersonController>();
         }
     }

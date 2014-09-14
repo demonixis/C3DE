@@ -18,6 +18,17 @@ namespace C3DE.Components.Net
 
         public string Name { get; set; }
         public NetConnection Connection { get; set; }
+/*
+        public bool IsMine
+        {
+            get
+            {
+                //if (Connection != null && Network.Client != null)
+                  //  return Connection.RemoteUniqueIdentifier == Network.Client.UniqueIdentifier;
+
+                return false;
+            }
+        }*/
 
         public NetworkView()
             : base()
@@ -49,7 +60,6 @@ namespace C3DE.Components.Net
 
                     if (_lastPosition != _position)
                         SendTransformChange(MSTransformType.Translation, ref _position);
-
 
                     if (_lastRotation != _rotation)
                         SendTransformChange(MSTransformType.Rotation, ref _position);

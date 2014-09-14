@@ -17,10 +17,10 @@ namespace C3DE.Net
         private float _elapsedTime;
         private List<NetworkView> netViews;
 
-        public static int SendRate
+        public static float SendRate
         {
-            get { return (int)_sendRate * 100; }
-            set { _sendRate = value * 100.0f; }
+            get { return _sendRate; }
+            set { _sendRate = value; }
         }
 
         public static bool IsClient
@@ -44,7 +44,7 @@ namespace C3DE.Net
             : base(game)
         {
             _instance = this;
-            _sendRate = 50; // 50 ms 
+            _sendRate = 0.05f; // 50 ms 
             _elapsedTime = 0;
             netViews = new List<NetworkView>();
             game.Exiting += OnGameExiting;
@@ -60,36 +60,46 @@ namespace C3DE.Net
         {
             base.Update(gameTime);
 
-            _elapsedTime += Time.DeltaTime;
-
-            if (_elapsedTime >= Network.SendRate)
+            if (IsClient)
             {
-                // Check for server messages.
-                while ((incMessage = client.ReadMessage()) != null)
+                _elapsedTime += Time.DeltaTime;
+
+                if (_elapsedTime >= _sendRate)
                 {
-                    if (incMessage.MessageType == NetIncomingMessageType.Data)
+                    // Check for server messages.
+                    while ((incMessage = client.ReadMessage()) != null)
                     {
-                        if (incMessage.ReadByte() == (byte)MSPacketType.WorldState)
+                        if (incMessage.MessageType == NetIncomingMessageType.Data)
                         {
-                            int worldSize = incMessage.ReadInt32();
-
-                            if (netViews.Count != worldSize)
+                            if (incMessage.ReadByte() == (byte)MSPacketType.WorldState)
                             {
-                                // All world need to be updated
-                            }
+                                int worldSize = incMessage.ReadInt32();
 
-                            for (int i = 0; i < worldSize; i++)
-                            {
-                                incMessage.ReadAllProperties(netViews[i]);
-                            }
+                                if (netViews.Count != worldSize)
+                                {
+                                    var diff = worldSize - netViews.Count;
 
-                            // Check what has changed
-                            // Apply to all objects
+                                    // Just for test...
+                                    for (int i = 0; i < diff; i++)
+                                    {
+                                        var so = Network.Instanciate<C3DE.Prefabs.Meshes.MeshPrefab<C3DE.Geometries.CubeGeometry>>(Vector3.Zero, Vector3.Zero);
+                                        so.AddComponent<C3DE.Components.Controllers.ThirdPersonController>();
+                                    }
+                                }
+
+                                for (int i = 0; i < worldSize; i++)
+                                {
+                                    incMessage.ReadAllProperties(netViews[i]);
+                                }
+
+                                // Check what has changed
+                                // Apply to all objects
+                            }
                         }
                     }
-                }
 
-                _elapsedTime = 0;
+                    _elapsedTime = 0;
+                }
             }
         }
 

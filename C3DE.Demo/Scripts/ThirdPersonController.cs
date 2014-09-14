@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using C3DE.Components.Net;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Input;
 using System;
@@ -10,6 +11,7 @@ namespace C3DE.Components.Controllers
         private Vector3 _transformedReference;
         private Vector3 _translation = Vector3.Zero;
         private Vector3 _rotation = Vector3.Zero;
+        private NetworkView _ntView;
 
         public ThirdPersonController()
             : base()
@@ -22,19 +24,27 @@ namespace C3DE.Components.Controllers
             StrafeSpeed = 0.75f;
         }
 
+        public override void Start()
+        {
+            _ntView = GetComponent<NetworkView>();
+        }
+
         public override void Update()
         {
-            UpdateKeyboardInput();
-            UpdateGamepadInput();
+            //if (_ntView.IsMine)
+            {
+                UpdateKeyboardInput();
+                UpdateGamepadInput();
 
-            _transformedReference = Vector3.Transform(_translation, Matrix.CreateRotationY(transform.Rotation.Y));
+                _transformedReference = Vector3.Transform(_translation, Matrix.CreateRotationY(transform.Rotation.Y));
 
-            // Translate and rotate
-            transform.Translate(ref _transformedReference);
-            transform.Rotate(ref _rotation);
+                // Translate and rotate
+                transform.Translate(ref _transformedReference);
+                transform.Rotate(ref _rotation);
 
-            _translation *= Velocity;
-            _rotation *= AngularVelocity;
+                _translation *= Velocity;
+                _rotation *= AngularVelocity;
+            }
         }
 
         private void UpdateKeyboardInput()
