@@ -159,6 +159,11 @@ namespace C3DE
             }
         }
 
+        public void Unload()
+        {
+       
+        }
+
         #endregion
 
         #region SceneObjects/Components management

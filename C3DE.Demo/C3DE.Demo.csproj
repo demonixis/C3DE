@@ -38,6 +38,9 @@
     <ApplicationIcon>Game.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Lidgren.Network">
+      <HintPath>..\Libs\Lidgren.Network.dll</HintPath>
+    </Reference>
     <Reference Include="MonoGame.Framework, Version=3.1.2.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Libs\MonoGame.Framework.dll</HintPath>
@@ -52,7 +55,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DemoGame.cs" />
+    <Compile Include="Net\MasterServer.cs" />
+    <Compile Include="Net\Network.cs" />
+    <Compile Include="Net\NetworkView.cs" />
     <Compile Include="Scenes\MenuDemo.cs" />
+    <Compile Include="Scenes\NetworkScene.cs" />
     <Compile Include="Scripts\FresnelMaterial.cs" />
     <Compile Include="Scenes\GridDemo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -63,6 +70,7 @@
     <Compile Include="Scripts\LightMoverKeys.cs" />
     <Compile Include="Scripts\LightSwitcher.cs" />
     <Compile Include="Scripts\MenuBehaviour.cs" />
+    <Compile Include="Scripts\NetworkManager.cs" />
     <Compile Include="Scripts\RayPickingTester.cs" />
     <Compile Include="Scripts\SimplePath.cs" />
     <Compile Include="Scripts\WeightMapViewer.cs" />

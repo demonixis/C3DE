@@ -53,6 +53,12 @@ namespace C3DE.Components
             internal set { sceneObject = value; }
         }
 
+        public Transform Transform
+        {
+            get { return transform; }
+            internal set { transform = value; }
+        }
+
         public int Order
         {
             get { return order; }

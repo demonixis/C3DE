@@ -45,6 +45,7 @@
     <Compile Include="Components\Colliders\BoxCollider.cs" />
     <Compile Include="Components\Colliders\Collider.cs" />
     <Compile Include="Components\Colliders\SphereCollider.cs" />
+    <Compile Include="Components\Controllers\ThirdPersonController.cs" />
     <Compile Include="Components\Lights\Light.cs" />
     <Compile Include="Components\Renderers\BoundingBoxRenderer.cs" />
     <Compile Include="Components\Renderers\MeshRenderer.cs" />
@@ -106,7 +107,8 @@
     <Compile Include="Utils\NoiseGenerator.cs" />
     <Compile Include="Utils\RandomHelper.cs" />
     <Compile Include="Utils\SmartList.cs" />
-  </ItemGroup><!--
+  </ItemGroup>
+  <!--
   <ItemGroup>
     <EmbeddedResource Include="Resources\Shaders\FresnelEffect.dx11.mgfxo" />
     <EmbeddedResource Include="Resources\Shaders\LavaEffect.dx11.mgfxo" />

@@ -55,6 +55,7 @@ namespace C3DE.Demo
                 Application.SceneManager.Add(new HeightmapDemo());
                 Application.SceneManager.Add(new RandomTerrain());
                 Application.SceneManager.Add(new GridDemo());
+                Application.SceneManager.Add(new NetworkScene());
                 Application.LoadLevel(1);
                 game.Run();
             }
