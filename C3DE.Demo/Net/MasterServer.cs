@@ -56,7 +56,6 @@ namespace C3DE.Net
         public void Stop()
         {
             _running = false;
-            _mainThread.Join();
             _server.Shutdown("Server shuting down...");
             Debug.Log("Server Stopped");
         }

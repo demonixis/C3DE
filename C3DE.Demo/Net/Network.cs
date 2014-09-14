@@ -47,6 +47,13 @@ namespace C3DE.Net
             _sendRate = 50; // 50 ms 
             _elapsedTime = 0;
             netViews = new List<NetworkView>();
+            game.Exiting += OnGameExiting;
+        }
+
+        private void OnGameExiting(object sender, EventArgs e)
+        {
+            if (server != null)
+                server.Stop();
         }
 
         public override void Update(GameTime gameTime)
@@ -58,7 +65,7 @@ namespace C3DE.Net
             if (_elapsedTime >= Network.SendRate)
             {
                 // Check for server messages.
-                while((incMessage = client.ReadMessage()) != null)
+                while ((incMessage = client.ReadMessage()) != null)
                 {
                     if (incMessage.MessageType == NetIncomingMessageType.Data)
                     {
@@ -134,7 +141,7 @@ namespace C3DE.Net
             var sceneObject = Activator.CreateInstance<T>();
             sceneObject.Transform.Position = position;
             sceneObject.Transform.Rotation = rotation;
-            
+
             var netView = sceneObject.AddComponent<NetworkView>();
             _instance.netViews.Add(netView);
 
