@@ -55,6 +55,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DemoGame.cs" />
+    <Compile Include="Net\HostData.cs" />
     <Compile Include="Net\MasterServer.cs" />
     <Compile Include="Net\Network.cs" />
     <Compile Include="Net\NetworkView.cs" />

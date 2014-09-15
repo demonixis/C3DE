@@ -9,5 +9,9 @@ namespace C3DE.Components
         public virtual void OnGUI(GUI gui) { }
 
         public virtual void OnDestroy() { }
+
+        public virtual void OnServerInitialized() { }
+
+        public virtual void OnConnectedToServer() { }
     }
 }

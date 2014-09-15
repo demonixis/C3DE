@@ -161,7 +161,8 @@ namespace C3DE
 
         public void Unload()
         {
-       
+            foreach (Behaviour script in Behaviours)
+                script.OnDestroy();
         }
 
         #endregion

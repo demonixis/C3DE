@@ -27,6 +27,7 @@ namespace C3DE.Net
         protected List<NetworkView> _gameWorldState;
         protected bool _running;
         protected int _worldCount;
+        protected HostData[] _hostData;
         private Vector3 _cacheVec3;
 
         public MasterServer(string gameName, string ip, int port, int maxConnections)
@@ -41,6 +42,18 @@ namespace C3DE.Net
             _cacheVec3 = Vector3.Zero;
             _gameName = gameName;
             _mainThread = new Thread(ProcessServer);
+
+            _hostData = new HostData[1];
+            _hostData[0] = new HostData()
+            {
+                Comment = "",
+                ConnectedPlayers = 0,
+                GameName = _gameName,
+                GUID = System.Guid.NewGuid().ToString(),
+                IpAdress = ip,
+                PlayerLimit = maxConnections,
+                Port = port
+            };
         }
 
         public void Start()
@@ -58,6 +71,11 @@ namespace C3DE.Net
             _running = false;
             _server.Shutdown("Server shuting down...");
             Debug.Log("Server Stopped");
+        }
+
+        public HostData[] RequestHostList()
+        {
+            return _hostData;
         }
 
         protected Vector3 GetVector3(NetIncomingMessage message)
