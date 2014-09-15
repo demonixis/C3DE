@@ -74,7 +74,7 @@
     <Compile Include="Scripts\NetworkManager.cs" />
     <Compile Include="Scripts\RayPickingTester.cs" />
     <Compile Include="Scripts\SimplePath.cs" />
-    <Compile Include="Scripts\ThirdPersonController.cs" />
+    <Compile Include="Scripts\NetThirdPersonController.cs" />
     <Compile Include="Scripts\WeightMapViewer.cs" />
     <Compile Include="Scenes\RandomTerrain.cs" />
     <Compile Include="Scenes\HeightmapDemo.cs" />

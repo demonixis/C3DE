@@ -6,7 +6,7 @@ namespace C3DE.Components
     /// <summary>
     /// A component is a part of a scene object.
     /// </summary>
-    public abstract class Component : IComparable
+    public abstract class Component : IComparable, ICloneable
     {
         private static int ComponentCounter = 0;
 
@@ -154,6 +154,11 @@ namespace C3DE.Components
         public T[] GetComponents<T>() where T : Component
         {
             return sceneObject.GetComponents<T>();
+        }
+
+        public virtual object Clone()
+        {
+            return MemberwiseClone();
         }
     }
 }

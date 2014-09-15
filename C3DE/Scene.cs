@@ -412,6 +412,14 @@ namespace C3DE
             return -1;
         }
 
+        public static SceneObject Instanciate(SceneObject sceneObject, Vector3 position, Vector3 rotation)
+        {
+            SceneObject so = (SceneObject)sceneObject.Clone();
+            so.Transform.Position = position;
+            so.Transform.Rotation = rotation;
+            return so;
+        }
+
         public void Destroy(SceneObject sceneObject)
         {
             for (int i = 0, l = sceneObject.Components.Count; i < l; i++)

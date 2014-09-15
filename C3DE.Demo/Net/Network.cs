@@ -1,4 +1,6 @@
 ﻿using C3DE.Components.Net;
+using C3DE.Geometries;
+using C3DE.Prefabs.Meshes;
 using Lidgren.Network;
 using Microsoft.Xna.Framework;
 using System;
@@ -16,6 +18,7 @@ namespace C3DE.Net
         private static float _sendRate;
         private float _elapsedTime;
         private List<NetworkView> netViews;
+        public static readonly string UniqId = Guid.NewGuid().ToString();
 
         public static float SendRate
         {
@@ -80,10 +83,13 @@ namespace C3DE.Net
                                     var diff = worldSize - netViews.Count;
 
                                     // Just for test...
+                                    // It's fucking ugly...
+                                    // But it's for testing...
+                                    // FOR TESTING >_<'
                                     for (int i = 0; i < diff; i++)
                                     {
-                                        var so = Network.Instanciate<C3DE.Prefabs.Meshes.MeshPrefab<C3DE.Geometries.CubeGeometry>>(Vector3.Zero, Vector3.Zero);
-                                        so.AddComponent<C3DE.Components.Controllers.ThirdPersonController>();
+                                        var so = Instanciate(new MeshPrefab<CubeGeometry>(), Vector3.Zero, Vector3.Zero);
+                                        so.AddComponent<C3DE.Components.Controllers.NetThirdPersonController>();
                                     }
                                 }
 
@@ -126,8 +132,6 @@ namespace C3DE.Net
         {
             if (!IsServer || !IsClient)
             {
-                IsClient = true;
-
                 NetPeerConfiguration config = new NetPeerConfiguration(gameName);
 
                 client = new NetClient(config);
@@ -138,6 +142,8 @@ namespace C3DE.Net
                 outMessage.Write(gameName);
 
                 client.Connect(ipAdress, port, outMessage);
+
+                IsClient = true;
             }
         }
 
@@ -146,18 +152,43 @@ namespace C3DE.Net
             client.SendMessage(message, NetDeliveryMethod.ReliableOrdered, 0);
         }
 
-        public static SceneObject Instanciate<T>(Vector3 position, Vector3 rotation) where T : SceneObject, new()
+        public static SceneObject Instanciate(SceneObject sceneObject, Vector3 position, Vector3 rotation)
         {
-            var sceneObject = Activator.CreateInstance<T>();
-            sceneObject.Transform.Position = position;
-            sceneObject.Transform.Rotation = rotation;
+            return Instanciate(sceneObject, position, rotation, UniqId);
+        }
 
-            var netView = sceneObject.AddComponent<NetworkView>();
+        private static SceneObject Instanciate(SceneObject sceneObject, Vector3 position, Vector3 rotation, string uniqId)
+        {
+            var so = Scene.Instanciate(sceneObject, position, rotation);
+            so.Transform.Position = position;
+            so.Transform.Rotation = rotation;
+
+            var netView = so.GetComponent<NetworkView>();
+            if (netView == null)
+                netView = so.AddComponent<NetworkView>();
+            
+            netView.uid = uniqId;
+
+            outMessage = client.CreateMessage();
+            outMessage.Write((byte)MSPacketType.New);
+            outMessage.Write(uniqId);
+            outMessage.Write(so.Name);
+            outMessage.Write(Vec3ToString(so.Transform.Position));
+            outMessage.Write(Vec3ToString(so.Transform.Rotation));
+            outMessage.Write(Vec3ToString(so.Transform.LocalScale));
+
+            client.SendMessage(outMessage, NetDeliveryMethod.ReliableOrdered, 0);
+
             _instance.netViews.Add(netView);
 
-            Application.SceneManager.ActiveScene.Add(sceneObject);
+            Application.SceneManager.ActiveScene.Add(so);
 
             return sceneObject;
+        }
+
+        private static string Vec3ToString(Vector3 vec3)
+        {
+            return vec3.X + "_" + vec3.Y + "_" + vec3.Z;
         }
     }
 }

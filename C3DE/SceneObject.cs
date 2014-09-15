@@ -7,7 +7,7 @@ namespace C3DE
     /// <summary>
     /// A scene object is the base object on the scene.
     /// </summary>
-    public class SceneObject
+    public class SceneObject : ICloneable
     {
         #region Private/protected declarations
 
@@ -192,19 +192,12 @@ namespace C3DE
 
         #region Component collection
 
-        /// <summary>
-        /// Add a component of the specified type. Note that you can't add another Transform component.
-        /// </summary>
-        /// <typeparam name="T">The component's type.</typeparam>
-        /// <returns>Return true if the component has been added, otherwise return false.</returns>
-        public T AddComponent<T>() where T : Component, new()
+        internal Component AddComponent(Component component)
         {
-            var component = new T();
-
             if (component is Transform)
             {
                 component = null;
-                return transform as T;
+                return transform;
             }
 
             component.SceneObject = this;
@@ -219,6 +212,18 @@ namespace C3DE
             NotifyComponentChanged(component);
 
             return component;
+        }
+
+        /// <summary>
+        /// Add a component of the specified type. Note that you can't add another Transform component.
+        /// </summary>
+        /// <typeparam name="T">The component's type.</typeparam>
+        /// <returns>Return true if the component has been added, otherwise return false.</returns>
+        public T AddComponent<T>() where T : Component, new()
+        {
+            var component = new T();
+
+            return (T)AddComponent(component);
         }
 
         /// <summary>
@@ -273,5 +278,15 @@ namespace C3DE
         }
 
         #endregion
+
+        public object Clone()
+        {
+            SceneObject sceneObject = new SceneObject(Name + "_Cloned");
+
+            foreach (Component component in components)
+                sceneObject.AddComponent((Component)component.Clone());
+
+            return sceneObject;
+        }
     }
 }

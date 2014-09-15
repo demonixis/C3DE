@@ -1,6 +1,7 @@
 ﻿using C3DE.Net;
 using Lidgren.Network;
 using Microsoft.Xna.Framework;
+using System;
 
 namespace C3DE.Components.Net
 {
@@ -12,34 +13,39 @@ namespace C3DE.Components.Net
         private Vector3 _lastRotation;
         private Vector3 _scale;
         private Vector3 _lastScale;
-        private NetIncomingMessage _incMessage;
         private NetOutgoingMessage _outMessage;
         private float _elapsedTime;
-
+        private bool _ready;
+        private NetConnection _connection;
         public string Name { get; set; }
-        public NetConnection Connection { get; set; }
-/*
-        public bool IsMine
+
+        public new Transform Transform
         {
-            get
+            get { return transform; }
+            set { SetTransform(value); }
+        }
+
+        internal string uid;
+
+        public NetConnection Connection
+        {
+            get { return _connection; }
+            set
             {
-                //if (Connection != null && Network.Client != null)
-                  //  return Connection.RemoteUniqueIdentifier == Network.Client.UniqueIdentifier;
-
-                return false;
+                _connection = value;
+                _ready = _connection != null;
             }
-        }*/
-
-        public NetworkView()
-            : base()
-        {
-
         }
 
-        public override void Start()
+        public bool IsMine()
         {
+            if (Network.IsClient)
+                return uid == Network.UniqId;
 
+            return false;
         }
+
+        public NetworkView() : base() { }
 
         public override void Update()
         {

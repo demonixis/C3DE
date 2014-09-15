@@ -10,7 +10,7 @@ namespace C3DE.Net
 {
     public enum MSPacketType
     {
-        Login = 0, Transform, WorldState
+        Login = 0, New, Remove, Transform, WorldState
     }
 
     public enum MSTransformType

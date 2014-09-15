@@ -6,14 +6,14 @@ using System;
 
 namespace C3DE.Components.Controllers
 {
-    public class ThirdPersonController : Controller
+    public class NetThirdPersonController : Controller
     {
         private Vector3 _transformedReference;
         private Vector3 _translation = Vector3.Zero;
         private Vector3 _rotation = Vector3.Zero;
         private NetworkView _ntView;
 
-        public ThirdPersonController()
+        public NetThirdPersonController()
             : base()
         {
             Velocity = 0.95f;
@@ -31,7 +31,7 @@ namespace C3DE.Components.Controllers
 
         public override void Update()
         {
-            //if (_ntView.IsMine)
+            if (_ntView.IsMine())
             {
                 UpdateKeyboardInput();
                 UpdateGamepadInput();
