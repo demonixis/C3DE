@@ -20,6 +20,8 @@ namespace C3DE.Prefabs.Meshes
             get { return _collider; }
         }
 
+        public MeshPrefab() : this("MeshPrefab", 1.0f) { }
+
         public MeshPrefab(string name, float size = 1.0f)
             : base(name)
         {

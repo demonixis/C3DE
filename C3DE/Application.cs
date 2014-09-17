@@ -13,7 +13,7 @@ namespace C3DE
         /// <summary>
         /// Gets or sets the Game instance.
         /// </summary>
-        internal static Game Game { get; set; }
+        public static Game Game { get; set; }
 
         /// <summary>
         /// Gets or sets the content manager.

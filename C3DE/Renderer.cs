@@ -69,9 +69,10 @@ namespace C3DE
                 if (scene.renderList[i].Enabled)
                 {
                     if (scene.RenderList[i].MaterialCount == 0)
-                        scene.RenderList[i].Material = scene.DefaultMaterial;
-
-                    scene.RenderList[i].Material.Pass(scene.RenderList[i]);
+                        scene.DefaultMaterial.Pass(scene.renderList[i]);
+                    else
+                        scene.RenderList[i].Material.Pass(scene.RenderList[i]);
+                    
                     scene.RenderList[i].Draw(graphicsDevice);
                 }
             }

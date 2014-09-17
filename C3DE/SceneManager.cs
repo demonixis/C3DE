@@ -20,6 +20,16 @@ namespace C3DE
             set { LoadLevel(value); }
         }
 
+        public int Size
+        {
+            get { return _scenes.Count; }
+        }
+
+        public Scene this[int index]
+        {
+            get { return _scenes[index]; }
+        }
+
         /// <summary>
         /// Create the scene manager and initialize a default scene.
         /// </summary>
@@ -119,6 +129,9 @@ namespace C3DE
         {
             if (_levelToLoad > -1)
             {
+                if (_activeSceneIndex > -1)
+                    _scenes[_activeSceneIndex].Unload();
+
                 _activeSceneIndex = _levelToLoad;
                 _levelToLoad = -1;
                 _scenes[_activeSceneIndex].Initialize();

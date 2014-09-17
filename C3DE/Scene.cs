@@ -159,6 +159,12 @@ namespace C3DE
             }
         }
 
+        public void Unload()
+        {
+            foreach (Behaviour script in Behaviours)
+                script.OnDestroy();
+        }
+
         #endregion
 
         #region SceneObjects/Components management
@@ -257,12 +263,36 @@ namespace C3DE
                 if (initialized)
                     sceneObject.Initialize();
 
-                CheckComponents(sceneObject, ComponentChangeType.Add);
-
-                sceneObject.ComponentChanged += sceneObject_ComponentsChanged;
+                if (sceneObject.Enabled)
+                {
+                    CheckComponents(sceneObject, ComponentChangeType.Add);
+                    sceneObject.PropertyChanged += sceneObject_PropertyChanged;
+                    sceneObject.ComponentChanged += sceneObject_ComponentsChanged;
+                }
             }
 
             return canAdd;
+        }
+
+        void sceneObject_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.Name == "Enabled")
+            {
+                var sceneObject = sender as SceneObject;
+
+                if (sceneObject.Enabled)
+                {
+                    CheckComponents(sceneObject, ComponentChangeType.Add);
+                    sceneObject.PropertyChanged += sceneObject_PropertyChanged;
+                    sceneObject.ComponentChanged += sceneObject_ComponentsChanged;
+                }
+                else
+                {
+                    CheckComponents(sceneObject, ComponentChangeType.Remove);
+                    sceneObject.PropertyChanged -= sceneObject_PropertyChanged;
+                    sceneObject.ComponentChanged -= sceneObject_ComponentsChanged;
+                }
+            }
         }
 
         #endregion
@@ -406,15 +436,31 @@ namespace C3DE
             return -1;
         }
 
-        public void Destroy(SceneObject sceneObject)
+        public static SceneObject Instanciate(SceneObject sceneObject, Vector3 position, Vector3 rotation)
+        {
+            SceneObject clone = (SceneObject)sceneObject.Clone();
+            clone.Transform.Position = position;
+            clone.Transform.Rotation = rotation;
+
+            Application.SceneManager.ActiveScene.Add(clone);
+
+            return clone;
+        }
+
+        public static void Destroy(SceneObject sceneObject)
+        {
+            Application.SceneManager.ActiveScene.Remove(sceneObject);
+        }
+
+        public void DestroyObject(SceneObject sceneObject)
         {
             for (int i = 0, l = sceneObject.Components.Count; i < l; i++)
-                Destroy(sceneObject.Components[i]);
+                this.DestroyComponent(sceneObject.Components[i]);
 
             members.Remove(sceneObject);
         }
 
-        public void Destroy(Component component)
+        public void DestroyComponent(Component component)
         {
             var index = GetFirstToRemoveComponentNullIndex();
 
