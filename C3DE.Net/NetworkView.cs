@@ -7,6 +7,8 @@ namespace C3DE.Components.Net
 {
     public class NetworkView : Behaviour
     {
+        internal int uniqId;
+        internal int networkId;
         private Vector3 _position;
         private Vector3 _lastPosition;
         private Vector3 _rotation;
@@ -15,9 +17,25 @@ namespace C3DE.Components.Net
         private Vector3 _lastScale;
         private NetOutgoingMessage _outMessage;
         private float _elapsedTime;
-        private bool _ready;
         private NetConnection _connection;
-        public string Name { get; set; }
+
+        public int UniqId
+        {
+            get { return uniqId; }
+            internal protected set { uniqId = value; }
+        }
+
+        public int NetworkId
+        {
+            get { return networkId; }
+            internal protected set { networkId = value; }
+        }
+
+        public NetConnection Connection
+        {
+            get { return _connection; }
+            set { _connection = value; }
+        }
 
         public new Transform Transform
         {
@@ -25,27 +43,20 @@ namespace C3DE.Components.Net
             set { SetTransform(value); }
         }
 
-        internal string uid;
-
-        public NetConnection Connection
+        public NetworkView()
+            : base()
         {
-            get { return _connection; }
-            set
-            {
-                _connection = value;
-                _ready = _connection != null;
-            }
+            uniqId = -1;
+            networkId = -1;
         }
 
         public bool IsMine()
         {
             if (Network.IsClient)
-                return uid == Network.UniqId;
+                return networkId == Network.Id;
 
             return false;
         }
-
-        public NetworkView() : base() { }
 
         public override void Update()
         {
@@ -80,9 +91,14 @@ namespace C3DE.Components.Net
 
         protected void SendTransformChange(MSTransformType type, ref Vector3 vector)
         {
+            // 0: Packet type
+            // 1: Type
+            // 2: Uniq Id
+            // 3-5: X/Y/Z
             _outMessage = Network.Client.CreateMessage();
             _outMessage.Write((byte)MSPacketType.Transform);
             _outMessage.Write((byte)type);
+            _outMessage.Write(uniqId);
             _outMessage.Write(vector.X);
             _outMessage.Write(vector.Y);
             _outMessage.Write(vector.Z);
@@ -92,6 +108,34 @@ namespace C3DE.Components.Net
         internal void SetTransform(Transform tr)
         {
             transform = tr;
+        }
+
+        internal void SetTransform(MSTransformType type, Vector3 value)
+        {
+            if (type == MSTransformType.Translation)
+                transform.Position = value;
+            else if (type == MSTransformType.Rotation)
+                transform.Rotation = value;
+            else
+                transform.LocalScale = value;
+        }
+
+        public override object Clone()
+        {
+            NetworkView netView = new NetworkView();
+
+            netView.uniqId = -1;
+            netView.networkId = networkId;
+            netView._elapsedTime = _elapsedTime;
+            netView._lastPosition = _lastPosition;
+            netView._lastRotation = _lastRotation;
+            netView._lastScale = _lastScale;
+            netView._position = _position;
+            netView._rotation = _rotation;
+            netView._scale = _scale;
+            netView.Connection = null;
+
+            return netView;
         }
     }
 }

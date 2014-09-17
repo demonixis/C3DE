@@ -105,7 +105,7 @@ namespace C3DE
             enabled = true;
             IsStatic = false;
 
-            Id = SceneObjectCounter + 1;
+            Id = SceneObjectCounter++;
             Name = !string.IsNullOrEmpty(name) ? name : "SceneObject_" + Id;
         }
 
@@ -279,9 +279,29 @@ namespace C3DE
 
         #endregion
 
+        public static SceneObject FindById(int id)
+        {
+            for (int i = 0; i < Application.SceneManager.ActiveScene.members.Size; i++)
+                if (Application.SceneManager.ActiveScene.members[i].Id == id)
+                    return Application.SceneManager.ActiveScene.members[i];
+
+            return null;
+        }
+
+        public static SceneObject[] FindSceneObjectsById(int id)
+        {
+            List<SceneObject> sceneObjects = new List<SceneObject>();
+
+            for (int i = 0; i < Application.SceneManager.ActiveScene.members.Size; i++)
+                if (Application.SceneManager.ActiveScene.members[i].Id == id)
+                    sceneObjects.Add(Application.SceneManager.ActiveScene.members[i]);
+
+            return sceneObjects.ToArray();
+        }
+
         public object Clone()
         {
-            SceneObject sceneObject = new SceneObject(Name + "_Cloned");
+            SceneObject sceneObject = new SceneObject(Name + " (Clone)");
 
             foreach (Component component in components)
                 sceneObject.AddComponent((Component)component.Clone());

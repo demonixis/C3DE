@@ -74,7 +74,7 @@ namespace C3DE.Demo.Scenes
             (water.Renderer.Material as WaterMaterial).ReflectiveMap = scene.RenderSettings.Skybox.Texture;
             (water.Renderer.Material as WaterMaterial).WaterTransparency = 0.6f;
 
-            Destroy(water.Collider);
+            DestroyComponent(water.Collider);
 
             // Cube
             var cubeSuperMaterial = new FresnelMaterial(scene);

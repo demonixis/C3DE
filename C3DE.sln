@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "C3DE.Demo", "C3DE.Demo\C3DE
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "C3DE.Demo .Kinect", "C3DE.Demo\C3DE.Demo .Kinect.csproj", "{CC5397B7-F940-48F0-B46D-0ED9193C7397}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "C3DE.Net", "C3DE.Net\C3DE.Net.csproj", "{97980242-FD4C-466D-B7DD-4D0F7275CB06}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{CC5397B7-F940-48F0-B46D-0ED9193C7397}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CC5397B7-F940-48F0-B46D-0ED9193C7397}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CC5397B7-F940-48F0-B46D-0ED9193C7397}.Release|Any CPU.Build.0 = Release|Any CPU
+		{97980242-FD4C-466D-B7DD-4D0F7275CB06}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{97980242-FD4C-466D-B7DD-4D0F7275CB06}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{97980242-FD4C-466D-B7DD-4D0F7275CB06}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{97980242-FD4C-466D-B7DD-4D0F7275CB06}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

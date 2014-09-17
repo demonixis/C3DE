@@ -4,6 +4,7 @@ using Lidgren.Network;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
+using System.Text;
 using System.Threading;
 
 namespace C3DE.Net
@@ -21,14 +22,16 @@ namespace C3DE.Net
     public class MasterServer
     {
         protected Thread _mainThread;
-        protected string _gameName;
         protected NetServer _server;
         protected NetPeerConfiguration _netConfig;
+        protected int _playerCount;
         protected List<NetworkView> _gameWorldState;
+        protected Dictionary<int, int> _instancedPrefabs;
         protected bool _running;
         protected int _worldCount;
-        protected HostData[] _hostData;
+        protected HostData _hostData;
         private Vector3 _cacheVec3;
+        private int _netCounter;
 
         public MasterServer(string gameName, string ip, int port, int maxConnections)
         {
@@ -40,15 +43,13 @@ namespace C3DE.Net
             _running = false;
             _worldCount = 0;
             _cacheVec3 = Vector3.Zero;
-            _gameName = gameName;
             _mainThread = new Thread(ProcessServer);
-
-            _hostData = new HostData[1];
-            _hostData[0] = new HostData()
+            _netCounter = 0;
+            _hostData = new HostData()
             {
                 Comment = "",
                 ConnectedPlayers = 0,
-                GameName = _gameName,
+                GameName = gameName,
                 GUID = System.Guid.NewGuid().ToString(),
                 IpAdress = ip,
                 PlayerLimit = maxConnections,
@@ -60,7 +61,7 @@ namespace C3DE.Net
         {
             if (_running)
                 _running = false;
-       
+
             _server.Start();
             _mainThread.Start();
             Debug.Log("Server Started");
@@ -73,9 +74,27 @@ namespace C3DE.Net
             Debug.Log("Server Stopped");
         }
 
-        public HostData[] RequestHostList()
+        public HostData RequestHostList()
         {
             return _hostData;
+        }
+
+        protected string GetPrefabs()
+        {
+            StringBuilder sb = new StringBuilder();
+            int size = _instancedPrefabs.Count;
+            int i = 0;
+
+            foreach (var keyValue in _instancedPrefabs)
+            {
+                sb.Append(string.Concat(keyValue.Key, "_", keyValue.Value));
+
+                if (i < size - 1)
+                    sb.Append("|");
+                i++;
+            }
+
+            return sb.ToString();
         }
 
         protected Vector3 GetVector3(NetIncomingMessage message)
@@ -86,7 +105,7 @@ namespace C3DE.Net
             return _cacheVec3;
         }
 
-        protected int IndexOf(NetConnection connection)
+        protected int IndexOfState(NetConnection connection)
         {
             for (int i = 0; i < _worldCount; i++)
             {
@@ -97,10 +116,23 @@ namespace C3DE.Net
             return -1;
         }
 
+        protected int IndexOfState(int uuid)
+        {
+            for (int i = 0; i < _worldCount; i++)
+            {
+                if (_gameWorldState[i].uniqId == uuid)
+                    return i;
+            }
+
+            return -1;
+        }
+
         protected virtual void ProcessServer()
         {
             _running = true;
             _gameWorldState = new List<NetworkView>();
+            _instancedPrefabs = new Dictionary<int, int>();
+            _playerCount = 0;
             NetIncomingMessage incMessage;
             NetOutgoingMessage outMessage;
             DateTime time = DateTime.Now;
@@ -121,50 +153,101 @@ namespace C3DE.Net
 
                             incMessage.SenderConnection.Approve();
 
-                            var network = new NetworkView();
-                            network.Name = incMessage.ReadString();
-                            network.SetTransform(new Transform());
-                            network.Connection = incMessage.SenderConnection;
-
-                            _gameWorldState.Add(network);
-                            _worldCount++;
+                            Debug.Log("Approved new connection and updated world");
 
                             outMessage = _server.CreateMessage();
-                            outMessage.Write((byte)MSPacketType.WorldState);
-                            outMessage.Write(_worldCount);
+                            outMessage.Write((byte)MSPacketType.Login);
+                            outMessage.Write(++_playerCount);
 
-                            for (int i = 0; i < _worldCount; i++)
-                                outMessage.WriteAllProperties(_gameWorldState[i]);
+                            outMessage.Write(GetPrefabs());
 
                             _server.SendMessage(outMessage, incMessage.SenderConnection, NetDeliveryMethod.ReliableOrdered, 0);
-
-                            Debug.Log("Approved new connection and updated world");
 
                             break;
 
                         case NetIncomingMessageType.Data:
+                            var messageType = (byte)incMessage.ReadByte();
 
-                            if (incMessage.ReadByte() == (byte)MSPacketType.Transform)
+                            // 0: Add code   (byte)
+                            // 1: PrefabID   (int)
+                            // 3: Network Id (int)
+                            // 3: Position   (String)
+                            // 4: Roation    (String)
+                            // 5: Scale      (String)
+                            if (messageType == (byte)MSPacketType.New)
                             {
-                                var index = IndexOf(incMessage.SenderConnection);
+                                var prefabId = incMessage.ReadInt32();
+                                var networkId = incMessage.ReadInt32();
+
+                                if (_instancedPrefabs.ContainsKey(prefabId))
+                                    _instancedPrefabs[prefabId]++;
+                                else
+                                    _instancedPrefabs.Add(prefabId, 1);
+
+                                var network = new NetworkView();
+                                network.uniqId = _netCounter++;
+                                network.networkId = networkId;
+                                network.Connection = incMessage.SenderConnection;
+
+                                var position = incMessage.ReadString();
+                                var rotation = incMessage.ReadString();
+                                var scale = incMessage.ReadString();
+
+                                var transform = new Transform();
+                                transform.Position = NetHelper.StringToVector3(position);
+                                transform.Rotation = NetHelper.StringToVector3(rotation);
+                                transform.LocalScale = NetHelper.StringToVector3(scale);
+                                network.SetTransform(transform);
+
+                                _gameWorldState.Add(network);
+                                _worldCount++;
+
+                                outMessage = _server.CreateMessage();
+                                outMessage.Write((byte)MSPacketType.New);
+                                outMessage.Write(_worldCount);
+                                outMessage.Write(prefabId);
+                                outMessage.Write(networkId);
+                                outMessage.Write(position);
+                                outMessage.Write(rotation);
+                                outMessage.Write(scale);
+
+                                for (int i = 0; i < _worldCount; i++)
+                                    outMessage.WriteAllProperties(_gameWorldState[i]);
+
+                                _server.SendMessage(outMessage, _server.Connections, NetDeliveryMethod.ReliableOrdered, 0);
+                            }
+
+                            // 0: Remove code
+                            // 1: Network ID
+                            else if (messageType == (byte)MSPacketType.Remove)
+                            {
+                                // FIXME
+                            }
+
+                            else if (messageType == (byte)MSPacketType.Transform)
+                            {
+                                var index = IndexOfState(incMessage.SenderConnection);
 
                                 if (index > -1)
                                 {
                                     byte type = incMessage.ReadByte();
+                                    Vector3 vec3 = GetVector3(incMessage);
 
                                     // Update the correct entity
                                     if ((byte)MSTransformType.Translation == type)
-                                        _gameWorldState[index].Transform.Position = GetVector3(incMessage);
+                                        _gameWorldState[index].Transform.Position = vec3;
 
                                     else if ((byte)MSTransformType.Rotation == type)
-                                        _gameWorldState[index].Transform.Rotation = GetVector3(incMessage);
+                                        _gameWorldState[index].Transform.Rotation = vec3;
 
                                     else if ((byte)MSTransformType.Scale == type)
-                                        _gameWorldState[index].Transform.LocalScale = GetVector3(incMessage);
+                                        _gameWorldState[index].Transform.LocalScale = vec3;
 
                                     outMessage = _server.CreateMessage();
-                                    outMessage.Write((byte)MSPacketType.WorldState);
-                                    outMessage.Write(_worldCount);
+                                    outMessage.Write((byte)MSPacketType.Transform);
+                                    outMessage.Write(index);
+                                    outMessage.Write(type);
+                                    outMessage.Write(NetHelper.Vector3ToString(vec3));
 
                                     for (int i = 0; i < _worldCount; i++)
                                         outMessage.WriteAllProperties(_gameWorldState[i]);
@@ -181,7 +264,7 @@ namespace C3DE.Net
 
                             if (incMessage.SenderConnection.Status == NetConnectionStatus.Disconnected || incMessage.SenderConnection.Status == NetConnectionStatus.Disconnecting)
                             {
-                                var index = IndexOf(incMessage.SenderConnection);
+                                var index = IndexOfState(incMessage.SenderConnection);
 
                                 if (index > 0)
                                 {
