@@ -79,10 +79,10 @@ namespace C3DE.Components.Net
                         SendTransformChange(MSTransformType.Translation, ref _position);
 
                     if (_lastRotation != _rotation)
-                        SendTransformChange(MSTransformType.Rotation, ref _position);
+                        SendTransformChange(MSTransformType.Rotation, ref _rotation);
 
                     if (_lastScale != _scale)
-                        SendTransformChange(MSTransformType.Scale, ref _position);
+                        SendTransformChange(MSTransformType.Scale, ref _scale);
 
                     _elapsedTime = 0;
                 }
@@ -98,10 +98,8 @@ namespace C3DE.Components.Net
             _outMessage = Network.Client.CreateMessage();
             _outMessage.Write((byte)MSPacketType.Transform);
             _outMessage.Write((byte)type);
-            _outMessage.Write(uniqId);
-            _outMessage.Write(vector.X);
-            _outMessage.Write(vector.Y);
-            _outMessage.Write(vector.Z);
+            _outMessage.Write(sceneObject.Id);
+            _outMessage.Write(NetHelper.Vector3ToString(vector));
             Network.SendMessage(_outMessage);
         }
 

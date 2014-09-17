@@ -97,14 +97,6 @@ namespace C3DE.Net
             return sb.ToString();
         }
 
-        protected Vector3 GetVector3(NetIncomingMessage message)
-        {
-            _cacheVec3.X = message.ReadFloat();
-            _cacheVec3.Y = message.ReadFloat();
-            _cacheVec3.Z = message.ReadFloat();
-            return _cacheVec3;
-        }
-
         protected int IndexOfState(NetConnection connection)
         {
             for (int i = 0; i < _worldCount; i++)
@@ -231,7 +223,9 @@ namespace C3DE.Net
                                 if (index > -1)
                                 {
                                     byte type = incMessage.ReadByte();
-                                    Vector3 vec3 = GetVector3(incMessage);
+                                    int id = incMessage.ReadInt32();
+                                    var str = incMessage.ReadString();
+                                    Vector3 vec3 = NetHelper.StringToVector3(str);
 
                                     // Update the correct entity
                                     if ((byte)MSTransformType.Translation == type)
@@ -245,8 +239,8 @@ namespace C3DE.Net
 
                                     outMessage = _server.CreateMessage();
                                     outMessage.Write((byte)MSPacketType.Transform);
-                                    outMessage.Write(index);
                                     outMessage.Write(type);
+                                    outMessage.Write(id);
                                     outMessage.Write(NetHelper.Vector3ToString(vec3));
 
                                     for (int i = 0; i < _worldCount; i++)

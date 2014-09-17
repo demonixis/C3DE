@@ -63,6 +63,14 @@ namespace C3DE.Net
                 server.Stop();
         }
 
+        private int GetNetViewBySceneObjectId(int id)
+        {
+            for (int i = 0, l = netViews.Count; i < l; i++)
+                if (netViews[i].SceneObject.Id == id)
+                    return i;
+            return -1;
+        }
+
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
@@ -135,12 +143,16 @@ namespace C3DE.Net
                             }
                             else if (messageType == (byte)MSPacketType.Transform)
                             {
-                                int index = incMessage.ReadInt32();
                                 var type = (MSTransformType)incMessage.ReadByte();
+                                var id = incMessage.ReadInt32();
                                 var vec = NetHelper.StringToVector3(incMessage.ReadString());
+                                var index = GetNetViewBySceneObjectId(id);
 
-                                if (index < netViews.Count && !netViews[index].IsMine())
+                                if (!netViews[index].IsMine())
                                     netViews[index].SetTransform(type, vec);
+
+                                foreach (var nv in netViews)
+                                    incMessage.ReadAllProperties(nv);
                             }
                             else if (messageType == (byte)MSPacketType.WorldState)
                             {
