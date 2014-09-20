@@ -52,6 +52,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DemoGame.cs" />
+    <Compile Include="Scenes\HexagonTerrain.cs" />
     <Compile Include="Scenes\MenuDemo.cs" />
     <Compile Include="Scripts\FresnelMaterial.cs" />
     <Compile Include="Scenes\GridDemo.cs" />
@@ -59,6 +60,7 @@
     <Compile Include="Scripts\AutoRotation.cs" />
     <Compile Include="Scripts\ControllerSwitcher.cs" />
     <Compile Include="Scripts\DemoBehaviour.cs" />
+    <Compile Include="Scripts\HexaGridBuilder.cs" />
     <Compile Include="Scripts\LightMover.cs" />
     <Compile Include="Scripts\LightMoverKeys.cs" />
     <Compile Include="Scripts\LightSwitcher.cs" />

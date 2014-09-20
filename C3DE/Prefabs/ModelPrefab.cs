@@ -10,6 +10,11 @@ namespace C3DE.Prefabs
         protected ModelRenderer renderer;
         protected BoxCollider collider;
 
+        public Model Model
+        {
+            get { return renderer.Model; }
+        }
+
         public ModelRenderer Renderer
         {
             get { return renderer; }

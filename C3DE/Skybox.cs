@@ -64,9 +64,9 @@ namespace C3DE
 
         public void Generate()
         {
-            var skyTop = GraphicsHelper.CreateTexture(new Color(168, 189, 255), 8, 8);
-            var skySide = GraphicsHelper.CreateGradiantTexture(new Color(168, 189, 255), Color.White, 8, 8);
-            var skyBottom = GraphicsHelper.CreateTexture(Color.White, 8, 8);
+            var skyTop = GraphicsHelper.CreateTexture(new Color(168, 189, 255), 64, 64);
+            var skySide = GraphicsHelper.CreateGradiantTexture(new Color(168, 189, 255), Color.White, 64, 64);
+            var skyBottom = GraphicsHelper.CreateTexture(Color.White, 64, 64);
 
             Generate(Application.GraphicsDevice, Application.Content, new Texture2D[] {    
                 skySide,

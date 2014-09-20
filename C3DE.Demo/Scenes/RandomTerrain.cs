@@ -74,8 +74,6 @@ namespace C3DE.Demo.Scenes
             (water.Renderer.Material as WaterMaterial).ReflectiveMap = scene.RenderSettings.Skybox.Texture;
             (water.Renderer.Material as WaterMaterial).WaterTransparency = 0.6f;
 
-            Destroy(water.Collider);
-
             // Cube
             var cubeSuperMaterial = new FresnelMaterial(scene);
             cubeSuperMaterial.MainTexture = GraphicsHelper.CreateCheckboardTexture(Color.FloralWhite, Color.DodgerBlue); //Content.Load<Texture2D>("Textures/tech_box2");
@@ -156,8 +154,6 @@ namespace C3DE.Demo.Scenes
             //cube3.AddComponent<BoundingBoxRenderer>();
 
             Screen.ShowCursor = true;
-
-            GUI.Skin = DemoGame.CreateSkin(Application.Content);
         }
     }
 }

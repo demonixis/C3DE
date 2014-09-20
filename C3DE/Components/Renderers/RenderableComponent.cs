@@ -26,6 +26,11 @@ namespace C3DE.Components.Renderers
         /// </summary>
         public bool ReceiveShadow { get; set; }
 
+        public BoundingSphere BoundingSphere
+        {
+            get { return boundingSphere; }
+        }
+
         protected internal List<int> MaterialIndices
         {
             get { return materials; }

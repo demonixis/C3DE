@@ -56,12 +56,10 @@ namespace C3DE.Demo.Scripts
             _titleSize = 3.0f;
             _titleRect = new Vector2(Screen.WidthPerTwo - titleSize.X * _titleSize / 2, titleSize.Y * _titleSize);
 
-            _demos = new DemoWidget[3]
-            {
-                new DemoWidget("Heightmap terrain", 2),
-                new DemoWidget("Procedural terrain", 3),
-                new DemoWidget("Light system", 4)
-            };
+            _demos = new DemoWidget[Application.SceneManager.Size - 2];
+
+            for (int i = 0; i < _demos.Length; i++)
+                _demos[i] = new DemoWidget(Application.SceneManager[i + 2].Name, i + 2);
 
             float x = Screen.WidthPerTwo - DemoWidget.Width / 2;
             float y = Screen.HeightPerTwo - ((DemoWidget.Height + _margin) * _demos.Length) / 2;

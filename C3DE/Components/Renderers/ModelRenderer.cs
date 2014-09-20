@@ -2,6 +2,7 @@
 using C3DE.Materials;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.Collections.Generic;
 
 namespace C3DE.Components.Renderers
@@ -40,6 +41,7 @@ namespace C3DE.Components.Renderers
 
                 boundingSphere.Center = sceneObject.Transform.Position;
                 boundingSphere.Transform(sceneObject.Transform.world);
+                boundingSphere.Radius *= Math.Max(Math.Max(transform.LocalScale.X, transform.LocalScale.Y), transform.LocalScale.Z);
 
                 UpdateColliders();
             }
