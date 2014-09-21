@@ -10,8 +10,8 @@ namespace C3DE.Resources
     {
         public static Assembly GetAssembly()
         {
-#if WINDOWS_STOREAPP
-            return typeof(ResourceHelper).GetTypeInfo().Assembly;
+#if NETFX_CORE
+            return typeof(ResourcesHelper).GetTypeInfo().Assembly;
 #else
             return Assembly.GetExecutingAssembly();
 #endif

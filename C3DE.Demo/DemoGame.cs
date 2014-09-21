@@ -46,6 +46,7 @@ namespace C3DE.Demo
             return skin;
         }
 
+#if !NETFX_CORE
         // Entry point.
         static void Main(string[] args)
         {
@@ -60,5 +61,6 @@ namespace C3DE.Demo
                 game.Run();
             }
         }
+#endif
     }
 }
