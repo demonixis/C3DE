@@ -46,7 +46,7 @@ namespace C3DE.Components.Renderers
             Material = new DummyMaterial(sceneObject.Scene);
         }
 
-        protected override void ComputeBoundingSphere()
+        public override void ComputeBoundingSphere()
         {
         }
 

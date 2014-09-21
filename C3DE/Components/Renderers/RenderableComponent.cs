@@ -140,7 +140,7 @@ namespace C3DE.Components.Renderers
         /// <summary>
         /// Compute the internal bouding sphere of the collider, it's required by the shadow generator.
         /// </summary>
-        protected abstract void ComputeBoundingSphere();
+        public abstract void ComputeBoundingSphere();
 
         /// <summary>
         /// Draw the content of the component.
