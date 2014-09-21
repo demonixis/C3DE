@@ -60,7 +60,6 @@ namespace C3DE.Demo.Scenes
 
             Input.Gamepad.Sensitivity = new Vector2(1, 0.75f);
             Screen.ShowCursor = true;
-            GUI.Skin = DemoGame.CreateSkin(Application.Content);
 
             // Don't miss the Skybox ;)
             RenderSettings.Skybox.Generate(Application.GraphicsDevice, Application.Content, DemoGame.BlueSkybox);

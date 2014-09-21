@@ -50,7 +50,7 @@ namespace C3DE.Components.Renderers
         {
         }
 
-        protected override void ComputeBoundingSphere()
+        public override void ComputeBoundingSphere()
         {
             if (geometry == null)
                 return;

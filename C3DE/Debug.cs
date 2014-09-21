@@ -12,7 +12,7 @@ namespace C3DE
         /// <param name="value">A single message or an array of messages.</param>
 		public static void Log(params object[] value)
 		{
-#if DEBUG
+#if DEBUG && !NETFX_CORE
 			for (int i = 0, l = value.Length; i < l; i++)
 				System.Console.WriteLine(value[i].ToString());
 #endif

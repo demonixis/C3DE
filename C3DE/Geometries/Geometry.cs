@@ -1,10 +1,11 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using System.Collections.Generic;
 
 namespace C3DE.Geometries
 {
-    public abstract class Geometry
+    public class Geometry
     {
         private VertexPositionNormalTexture[] _vertices;
         private ushort[] _indices;
@@ -15,17 +16,17 @@ namespace C3DE.Geometries
         protected Vector3 size = Vector3.One;
         protected Vector2 repeatTexture = Vector2.One;
         protected bool invertFaces = false;
-        
+
         public VertexPositionNormalTexture[] Vertices
         {
             get { return _vertices; }
-            protected set { _vertices = value; }
+            internal protected set { _vertices = value; }
         }
 
         public ushort[] Indices
         {
             get { return _indices; }
-            protected set { _indices = value; }
+            internal protected set { _indices = value; }
         }
 
         public VertexBuffer VertexBuffer
@@ -70,7 +71,7 @@ namespace C3DE.Geometries
                 ConstructionDone(this, EventArgs.Empty);
         }
 
-        protected abstract void CreateGeometry();
+        protected virtual void CreateGeometry() { }
 
         protected virtual void ApplyParameters()
         {
@@ -85,7 +86,7 @@ namespace C3DE.Geometries
         {
             _vertexBuffer = new VertexBuffer(device, typeof(VertexPositionNormalTexture), _vertices.Length, BufferUsage.WriteOnly);
             _vertexBuffer.SetData(_vertices);
-                
+
             _indexBuffer = new IndexBuffer(device, IndexElementSize.SixteenBits, _indices.Length, BufferUsage.WriteOnly);
             _indexBuffer.SetData(_indices);
         }
@@ -99,7 +100,7 @@ namespace C3DE.Geometries
             }
 
             CreateGeometry();
-                
+
             ApplyParameters();
             CreateBuffers(Application.GraphicsDevice);
             Constructed = true;

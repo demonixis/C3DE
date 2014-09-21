@@ -133,7 +133,7 @@ namespace C3DE.Components.Controllers
                 positionVelicoty.Y += StrafeSpeed * Input.Mouse.Delta.Y * Time.DeltaTime;
             }
 
-            distanceVelocity -= Input.Mouse.Wheel / 4.0f * MoveSpeed * Time.DeltaTime;
+            distanceVelocity -= Input.Mouse.Wheel * 0.05f * MoveSpeed * Time.DeltaTime;
         }
 
         private void UpdateGamepadInput()

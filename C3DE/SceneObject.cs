@@ -306,6 +306,11 @@ namespace C3DE
             foreach (Component component in components)
                 sceneObject.AddComponent((Component)component.Clone());
 
+            // Fixme
+            sceneObject.Transform.Position = transform.Position;
+            sceneObject.Transform.Rotation = transform.Rotation;
+            sceneObject.Transform.LocalScale = transform.LocalScale;
+
             return sceneObject;
         }
     }

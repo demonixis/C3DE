@@ -58,7 +58,7 @@ namespace C3DE.Demo.Scenes
 
             // Terrain
             var terrainMaterial = new StandardMaterial(scene);
-            terrainMaterial.MainTexture = Application.Content.Load<Texture2D>("Textures/terrainTexture");
+            terrainMaterial.MainTexture = Application.Content.Load<Texture2D>("Textures/Terrain/Grass");
             terrainMaterial.Shininess = 500;
             terrainMaterial.Tiling = new Vector2(16);
 
@@ -156,8 +156,6 @@ namespace C3DE.Demo.Scenes
             //cube3.AddComponent<BoundingBoxRenderer>();
 
             Screen.ShowCursor = true;
-
-            GUI.Skin = DemoGame.CreateSkin(Application.Content);
         }
     }
 }

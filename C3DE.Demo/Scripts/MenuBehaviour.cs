@@ -58,8 +58,8 @@ namespace C3DE.Demo.Scripts
 
             _demos = new DemoWidget[Application.SceneManager.Size - 2];
 
-            for (var i = 2; i < Application.SceneManager.Size; i++)
-                _demos[i - 2] = new DemoWidget(Application.SceneManager[i].Name, i);
+            for (int i = 0; i < _demos.Length; i++)
+                _demos[i] = new DemoWidget(Application.SceneManager[i + 2].Name, i + 2);
 
             float x = Screen.WidthPerTwo - DemoWidget.Width / 2;
             float y = Screen.HeightPerTwo - ((DemoWidget.Height + _margin) * _demos.Length) / 2;

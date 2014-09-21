@@ -46,6 +46,7 @@ namespace C3DE.Demo
             return skin;
         }
 
+#if !NETFX_CORE
         // Entry point.
         static void Main(string[] args)
         {
@@ -55,10 +56,12 @@ namespace C3DE.Demo
                 Application.SceneManager.Add(new HeightmapDemo());
                 Application.SceneManager.Add(new RandomTerrain());
                 Application.SceneManager.Add(new GridDemo());
+                Application.SceneManager.Add(new HexagonTerrainDemo());
                 Application.SceneManager.Add(new NetworkScene());
                 Application.LoadLevel(1);
                 game.Run();
             }
         }
+#endif
     }
 }

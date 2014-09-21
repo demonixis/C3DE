@@ -62,7 +62,9 @@ namespace C3DE
         /// </summary>
         public static void Quit()
         {
+#if !NETFX_CORE
             Game.Exit();
+#endif
         }
     }
 }
