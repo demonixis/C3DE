@@ -1,23 +1,23 @@
 ﻿using C3DE.Demo.Scenes;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using C3DE.UI;
 
 namespace C3DE.Demo
 {
     public class AndroidGame : Engine
     {
-		public AndroidGame() : base() { 
-
-		}
+		public AndroidGame() : base() { }
 
         protected override void Initialize()
         {
-            Application.SceneManager.Add(new MenuDemo(), true);
-            Application.SceneManager.Add(new HeightmapDemo());
-            Application.SceneManager.Add(new RandomTerrain());
-            Application.SceneManager.Add(new GridDemo());
-            Application.SceneManager.Add(new HexagonTerrainDemo());
+            GUI.Skin = DemoGame.CreateSkin(Content);
+
+            Application.SceneManager.Add(new HeightmapTerrain());
+			Application.SceneManager.Add(new RandomTerrain ());
+            Application.SceneManager.Add(new HexagonTerrain());
             Application.LoadLevel(1);
+
             base.Initialize();
         }
     }

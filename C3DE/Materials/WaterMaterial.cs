@@ -65,7 +65,11 @@ namespace C3DE.Materials
 
         public override void LoadContent(ContentManager content)
         {
+#if ANDROID
+            effect = content.Load<Effect>("FX/Android/WaterEffect");
+#else
             effect = content.Load<Effect>("FX/WaterEffect");
+#endif
         }
 
         public override void PrePass()
@@ -74,7 +78,14 @@ namespace C3DE.Materials
 
             effect.Parameters["View"].SetValue(scene.MainCamera.view);
             effect.Parameters["Projection"].SetValue(scene.MainCamera.projection);
+
+#if !ANDROID
             effect.Parameters["EyePosition"].SetValue(scene.MainCamera.SceneObject.Transform.Position);
+
+            // Fog
+            effect.Parameters["FogColor"].SetValue(scene.RenderSettings.fogColor);
+            effect.Parameters["FogData"].SetValue(scene.RenderSettings.fogData);
+#endif
 
             // Light
             var light0 = scene.Lights[0]; // FIXME
@@ -82,20 +93,14 @@ namespace C3DE.Materials
             effect.Parameters["LightDirection"].SetValue(light0.Direction);
             effect.Parameters["LightIntensity"].SetValue(light0.Intensity);
             effect.Parameters["AmbientColor"].SetValue(scene.RenderSettings.ambientColor);
-
-            // Fog
-            effect.Parameters["FogColor"].SetValue(scene.RenderSettings.fogColor);
-            effect.Parameters["FogData"].SetValue(scene.RenderSettings.fogData);
         }
 
         public override void Pass(RenderableComponent renderable)
         {
-            effect.Parameters["ReflectiveMapEnabled"].SetValue(_reflectiveMapEnabled);
-            effect.Parameters["NormalMapEnabled"].SetValue(_normalMapEnabled);
-
             effect.Parameters["TotalTime"].SetValue(_totalTime);
             effect.Parameters["WaterTexture"].SetValue(mainTexture);
 
+#if !ANDROID
             if (_normalMapEnabled)
                 effect.Parameters["NormalTexture"].SetValue(NormalMap);
 
@@ -104,6 +109,10 @@ namespace C3DE.Materials
                 effect.Parameters["ReflectiveTexture"].SetValue(ReflectiveMap);
                 effect.Parameters["ReflectionColor"].SetValue(_reflectionColor);
             }
+
+            effect.Parameters["ReflectiveMapEnabled"].SetValue(_reflectiveMapEnabled);
+            effect.Parameters["NormalMapEnabled"].SetValue(_normalMapEnabled);
+#endif
 
             effect.Parameters["TextureTiling"].SetValue(Tiling);
             effect.Parameters["TextureOffset"].SetValue(Offset);
