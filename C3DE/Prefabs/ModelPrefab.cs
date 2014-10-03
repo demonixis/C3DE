@@ -32,6 +32,21 @@ namespace C3DE.Prefabs
             collider = AddComponent<BoxCollider>();
         }
 
+#if ANDROID
+
+		public void LoadModel(string modelPath)
+		{
+			renderer.Model = Application.Content.Load<Model>(modelPath);
+			BoundingSphere sphere = new BoundingSphere();
+
+			foreach (ModelMesh mesh in renderer.Model.Meshes) 
+				sphere = BoundingSphere.CreateMerged (sphere, mesh.BoundingSphere);
+
+			collider.Box = BoundingBox.CreateFromSphere (sphere);
+		}
+
+#else
+
         public void LoadModel(string modelPath)
         {
             renderer.Model = Application.Content.Load<Model>(modelPath);
@@ -67,5 +82,7 @@ namespace C3DE.Prefabs
 
             collider.Box = new BoundingBox(min, max);
         }
+
+#endif
     }
 }

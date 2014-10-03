@@ -47,6 +47,10 @@ namespace C3DE
             if (Application.GraphicsDevice == null)
                 Application.GraphicsDevice = GraphicsDevice;
 
+#if ANDROID
+			Screen.Setup (GraphicsDevice.Adapter.CurrentDisplayMode.Width, GraphicsDevice.Adapter.CurrentDisplayMode.Height, null, null);
+#endif
+
             spriteBatch = new SpriteBatch(GraphicsDevice);
             renderer = new Renderer(GraphicsDevice);
             renderer.LoadContent(Content);

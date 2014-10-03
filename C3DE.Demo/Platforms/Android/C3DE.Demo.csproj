@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectTypeGuids>{EFBA0AD7-5A72-4C68-AF49-83D382785DCF};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <ProjectGuid>{0C5C051E-7DB3-424A-A4C9-5F73FAB3B983}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>C3DE.Demo</RootNamespace>
+    <MonoAndroidResourcePrefix>Resources</MonoAndroidResourcePrefix>
+    <MonoAndroidAssetsPrefix>Assets</MonoAndroidAssetsPrefix>
+    <AndroidUseLatestPlatformSdk>True</AndroidUseLatestPlatformSdk>
+    <AndroidApplication>True</AndroidApplication>
+    <AndroidResgenFile>Resources\Resource.designer.cs</AndroidResgenFile>
+    <AndroidResgenClass>Resource</AndroidResgenClass>
+    <AssemblyName>C3DE.Demo</AssemblyName>
+    <TargetFrameworkVersion>v4.4</TargetFrameworkVersion>
+    <AndroidManifest>Properties\AndroidManifest.xml</AndroidManifest>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;ANDROID</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AndroidLinkMode>None</AndroidLinkMode>
+    <ConsolePause>false</ConsolePause>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <AndroidUseSharedRuntime>false</AndroidUseSharedRuntime>
+    <DefineConstants>ANDROID</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core" />
+    <Reference Include="Mono.Android" />
+    <Reference Include="OpenTK-1.0" />
+    <Reference Include="MonoGame.Framework">
+      <HintPath>..\..\..\Libs\Android\MonoGame.Framework.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="MainActivity.cs" />
+    <Compile Include="AndroidGame.cs" />
+    <Compile Include="Resources\Resource.designer.cs" />
+    <Compile Include="..\..\Properties\AssemblyInfo.cs">
+      <Link>Properties\AssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\..\DemoGame.cs">
+      <Link>Scripts\ControllerSwitcher.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Scripts\FresnelMaterial.cs">
+      <Link>Scripts\FresnelMaterial.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Scripts\ControllerSwitcher.cs">
+      <Link>Scripts\ControllerSwitcher.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Scripts\AutoRotation.cs">
+      <Link>Scripts\AutoRotation.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Scripts\DemoBehaviour.cs">
+      <Link>Scripts\DemoBehaviour.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Scripts\HexaGridBuilder.cs">
+      <Link>Scripts\HexaGridBuilder.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Scripts\LightMover.cs">
+      <Link>Scripts\LightMover.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Scripts\LightMoverKeys.cs">
+      <Link>Scripts\LightMoverKeys.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Scripts\LightSwitcher.cs">
+      <Link>Scripts\LightSwitcher.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Scripts\MenuBehaviour.cs">
+      <Link>Scripts\MenuBehaviour.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Scripts\RayPickingTester.cs">
+      <Link>Scripts\RayPickingTester.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Scripts\SimplePath.cs">
+      <Link>Scripts\SimplePath.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Scripts\WeightMapViewer.cs">
+      <Link>Scripts\WeightMapViewer.cs</Link>
+    </Compile>
+    <Compile Include="Scenes\RandomTerrain.cs" />
+    <Compile Include="Scenes\HexagonTerrain.cs" />
+    <Compile Include="Scenes\HeightmapTerrain.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\AndroidManifest.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\values\Strings.xml" />
+    <AndroidResource Include="Resources\drawable\Icon.png" />
+    <AndroidResource Include="Resources\values\Styles.xml" />
+    <AndroidResource Include="Resources\drawable\Splash.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\C3DE\C3DE.Android.csproj">
+      <Project>{6F1729B1-27BE-49FA-AD58-AAF2E7CB6916}</Project>
+      <Name>C3DE.Android</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Scenes\" />
+    <Folder Include="Assets\Content\" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\Content\Font\Default.xnb" />
+    <AndroidAsset Include="Assets\Content\Font\SegoeUILight.xnb" />
+    <AndroidAsset Include="Assets\Content\FX\FresnelEffect.xnb" />
+    <AndroidAsset Include="Assets\Content\FX\LavaEffect.xnb" />
+    <AndroidAsset Include="Assets\Content\FX\ReflectionEffect.xnb" />
+    <AndroidAsset Include="Assets\Content\FX\ShadowMapEffect.xnb" />
+    <AndroidAsset Include="Assets\Content\FX\SimpleEffect.xnb" />
+    <AndroidAsset Include="Assets\Content\FX\SkyboxEffect.xnb" />
+    <AndroidAsset Include="Assets\Content\FX\ToonEffect.xnb" />
+    <AndroidAsset Include="Assets\Content\FX\TransparentEffect.xnb" />
+    <AndroidAsset Include="Assets\Content\FX\Android\StandardEffect.xnb" />
+    <AndroidAsset Include="Assets\Content\FX\Android\TerrainEffect.xnb" />
+    <AndroidAsset Include="Assets\Content\FX\Android\WaterEffect.xnb" />
+    <AndroidAsset Include="Assets\Content\FX\PostProcess\AverageColor.xnb" />
+    <AndroidAsset Include="Assets\Content\FX\PostProcess\Blur.xnb" />
+    <AndroidAsset Include="Assets\Content\FX\PostProcess\C64Filter.xnb" />
+    <AndroidAsset Include="Assets\Content\FX\PostProcess\FXAA.xnb" />
+    <AndroidAsset Include="Assets\Content\FX\PostProcess\GreyScale.xnb" />
+    <AndroidAsset Include="Assets\Content\Misc\leftHand.xnb" />
+    <AndroidAsset Include="Assets\Content\Misc\rightHand.xnb" />
+    <AndroidAsset Include="Assets\Content\Models\HexGrid.xnb" />
+    <AndroidAsset Include="Assets\Content\Textures\heightmap.xnb" />
+    <AndroidAsset Include="Assets\Content\Textures\hexa_tex.xnb" />
+    <AndroidAsset Include="Assets\Content\Textures\Kinect_Logo.xnb" />
+    <AndroidAsset Include="Assets\Content\Textures\lava_bump.xnb" />
+    <AndroidAsset Include="Assets\Content\Textures\lava_texture.xnb" />
+    <AndroidAsset Include="Assets\Content\Textures\water.xnb" />
+    <AndroidAsset Include="Assets\Content\Textures\wavesbump.xnb" />
+    <AndroidAsset Include="Assets\Content\Textures\Skybox\bluesky\nx.xnb" />
+    <AndroidAsset Include="Assets\Content\Textures\Skybox\bluesky\ny.xnb" />
+    <AndroidAsset Include="Assets\Content\Textures\Skybox\bluesky\nz.xnb" />
+    <AndroidAsset Include="Assets\Content\Textures\Skybox\bluesky\px.xnb" />
+    <AndroidAsset Include="Assets\Content\Textures\Skybox\bluesky\py.xnb" />
+    <AndroidAsset Include="Assets\Content\Textures\Skybox\bluesky\pz.xnb" />
+    <AndroidAsset Include="Assets\Content\Textures\Skybox\starfield\nx.xnb" />
+    <AndroidAsset Include="Assets\Content\Textures\Skybox\starfield\ny.xnb" />
+    <AndroidAsset Include="Assets\Content\Textures\Skybox\starfield\nz.xnb" />
+    <AndroidAsset Include="Assets\Content\Textures\Skybox\starfield\px.xnb" />
+    <AndroidAsset Include="Assets\Content\Textures\Skybox\starfield\py.xnb" />
+    <AndroidAsset Include="Assets\Content\Textures\Skybox\starfield\pz.xnb" />
+    <AndroidAsset Include="Assets\Content\Textures\Terrain\Grass.xnb" />
+    <AndroidAsset Include="Assets\Content\Textures\Terrain\Rock.xnb" />
+    <AndroidAsset Include="Assets\Content\Textures\Terrain\Sand.xnb" />
+    <AndroidAsset Include="Assets\Content\Textures\Terrain\Snow.xnb" />
+    <AndroidAsset Include="Assets\Content\Textures\UI\grey_box.xnb" />
+    <AndroidAsset Include="Assets\Content\Textures\UI\grey_button00.xnb" />
+    <AndroidAsset Include="Assets\Content\Textures\UI\grey_button01.xnb" />
+    <AndroidAsset Include="Assets\Content\Textures\UI\grey_button02.xnb" />
+    <AndroidAsset Include="Assets\Content\Textures\UI\grey_checkmarkGrey.xnb" />
+    <AndroidAsset Include="Assets\Content\Textures\UI\grey_checkmarkWhite.xnb" />
+    <AndroidAsset Include="Assets\Content\Textures\UI\grey_panel.xnb" />
+  </ItemGroup>
+</Project>

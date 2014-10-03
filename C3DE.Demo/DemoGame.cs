@@ -46,7 +46,7 @@ namespace C3DE.Demo
             return skin;
         }
 
-#if !NETFX_CORE
+#if !NETFX_CORE && !ANDROID
         // Entry point.
         static void Main(string[] args)
         {

@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectTypeGuids>{EFBA0AD7-5A72-4C68-AF49-83D382785DCF};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <ProjectGuid>{6F1729B1-27BE-49FA-AD58-AAF2E7CB6916}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>C3DE</RootNamespace>
+    <MonoAndroidAssetsPrefix>Assets</MonoAndroidAssetsPrefix>
+    <AndroidUseLatestPlatformSdk>True</AndroidUseLatestPlatformSdk>
+    <MonoAndroidResourcePrefix>Resources</MonoAndroidResourcePrefix>
+    <AndroidResgenFile>Resources\Resource.designer.cs</AndroidResgenFile>
+    <AndroidResgenClass>Resource</AndroidResgenClass>
+    <AssemblyName>C3DE</AssemblyName>
+    <TargetFrameworkVersion>v4.4</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;ANDROID</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AndroidLinkMode>None</AndroidLinkMode>
+    <ConsolePause>false</ConsolePause>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>full</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <AndroidUseSharedRuntime>false</AndroidUseSharedRuntime>
+    <DefineConstants>ANDROID</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core" />
+    <Reference Include="Mono.Android" />
+    <Reference Include="MonoGame.Framework">
+      <HintPath>..\Libs\Android\MonoGame.Framework.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Resources\Resource.designer.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Application.cs" />
+    <Compile Include="Components\Behaviour.cs" />
+    <Compile Include="Components\Controllers\Controller.cs" />
+    <Compile Include="Components\Controllers\OrbitController.cs" />
+    <Compile Include="Components\Camera.cs" />
+    <Compile Include="Components\Controllers\FirstPersonController.cs" />
+    <Compile Include="Components\Colliders\BoxCollider.cs" />
+    <Compile Include="Components\Colliders\Collider.cs" />
+    <Compile Include="Components\Colliders\SphereCollider.cs" />
+    <Compile Include="Components\Lights\Light.cs" />
+    <Compile Include="Components\Renderers\BoundingBoxRenderer.cs" />
+    <Compile Include="Components\Renderers\MeshRenderer.cs" />
+    <Compile Include="Input.cs" />
+    <Compile Include="Materials\DummyMaterial.cs" />
+    <Compile Include="Materials\LavaMaterial.cs" />
+    <Compile Include="Materials\TerrainMaterial.cs" />
+    <Compile Include="Materials\ToonMaterial.cs" />
+    <Compile Include="Prefabs\MeshPrefab.cs" />
+    <Compile Include="QuadRenderer.cs" />
+    <Compile Include="Geometries\CubeGeometry.cs" />
+    <Compile Include="Geometries\CylinderGeometry.cs" />
+    <Compile Include="Geometries\Geometry.cs" />
+    <Compile Include="Geometries\PlaneGeometry.cs" />
+    <Compile Include="Geometries\QuadGeometry.cs" />
+    <Compile Include="Geometries\PyramidGeometry.cs" />
+    <Compile Include="Geometries\SphereGeometry.cs" />
+    <Compile Include="Geometries\TerrainGeometry.cs" />
+    <Compile Include="Geometries\TorusGeometry.cs" />
+    <Compile Include="Input\TouchComponent.cs" />
+    <Compile Include="Materials\ReflectiveMaterial.cs" />
+    <Compile Include="Materials\SimpleMaterial.cs" />
+    <Compile Include="Materials\TransparentMaterial.cs" />
+    <Compile Include="PostProcess\BlurPass.cs" />
+    <Compile Include="RenderSettings.cs" />
+    <Compile Include="Resources\ResourcesHelper.cs" />
+    <Compile Include="SceneManager.cs" />
+    <Compile Include="Screen.cs" />
+    <Compile Include="UI\GUISkin.cs" />
+    <Compile Include="UI\GUI.cs" />
+    <Compile Include="Utils\GraphicsHelper.cs" />
+    <Compile Include="Materials\StandardMaterial.cs" />
+    <Compile Include="Materials\WaterMaterial.cs" />
+    <Compile Include="Prefabs\CameraPrefab.cs" />
+    <Compile Include="Components\Component.cs" />
+    <Compile Include="Components\Renderers\ModelRenderer.cs" />
+    <Compile Include="Components\Transform.cs" />
+    <Compile Include="Debug.cs" />
+    <Compile Include="EgineEventArgs.cs" />
+    <Compile Include="Engine.cs" />
+    <Compile Include="Input\GamepadComponent.cs" />
+    <Compile Include="Input\KeyboardComponent.cs" />
+    <Compile Include="Input\MouseComponent.cs" />
+    <Compile Include="Components\Renderers\RenderableComponent.cs" />
+    <Compile Include="Prefabs\LightPrefab.cs" />
+    <Compile Include="Materials\Material.cs" />
+    <Compile Include="PostProcess\PostProcessManager.cs" />
+    <Compile Include="PostProcess\PostProcessPass.cs" />
+    <Compile Include="Prefabs\ModelPrefab.cs" />
+    <Compile Include="Prefabs\TerrainPrefab.cs" />
+    <Compile Include="Prefabs\WaterPrefab.cs" />
+    <Compile Include="Scene.cs" />
+    <Compile Include="SceneObject.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Renderer.cs" />
+    <Compile Include="Components\Lights\ShadowGenerator.cs" />
+    <Compile Include="Skybox.cs" />
+    <Compile Include="Time.cs" />
+    <Compile Include="Utils\MeshHelper.cs" />
+    <Compile Include="Utils\NoiseGenerator.cs" />
+    <Compile Include="Utils\RandomHelper.cs" />
+    <Compile Include="Utils\SmartList.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\values\Strings.xml" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
+</Project>

@@ -1,9 +1,9 @@
 
 #----------------------------- Global Properties ----------------------------#
 
-/outputDir:..\C3DE.Demo\Content
+/outputDir:..\C3DE.Demo\Platforms\Android\Assets\Content
 /intermediateDir:obj
-/platform:Windows
+/platform:Android
 /config:
 /profile:HiDef
 /compress:False
@@ -18,12 +18,6 @@
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
 /build:FX/ShadowMapEffect.fx
-
-#begin FX/StandardEffect.fx
-/importer:EffectImporter
-/processor:EffectProcessor
-/processorParam:DebugMode=Auto
-/build:FX/StandardEffect.fx
 
 #begin FX/SkyboxEffect.fx
 /importer:EffectImporter
@@ -277,12 +271,6 @@
 /processorParam:TextureFormat=Color
 /build:Textures/Skybox/bluesky/pz.jpg
 
-#begin FX/TerrainEffect.fx
-/importer:EffectImporter
-/processor:EffectProcessor
-/processorParam:DebugMode=Auto
-/build:FX/TerrainEffect.fx
-
 #begin Textures/UI/grey_box.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -365,12 +353,6 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:TextureFormat=Color
 /build:Textures/UI/grey_checkmarkWhite.png
-
-#begin FX/WaterEffect.fx
-/importer:EffectImporter
-/processor:EffectProcessor
-/processorParam:DebugMode=Auto
-/build:FX/WaterEffect.fx
 
 #begin Textures/wavesbump.png
 /importer:TextureImporter
@@ -477,4 +459,22 @@
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
 /build:FX/PostProcess/FXAA.fx
+
+#begin FX/Android/WaterEffect.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:FX/Android/WaterEffect.fx
+
+#begin FX/Android/TerrainEffect.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:FX/Android/TerrainEffect.fx
+
+#begin FX/Android/StandardEffect.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:FX/Android/StandardEffect.fx
 
