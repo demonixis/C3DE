@@ -119,8 +119,8 @@ namespace C3DE
                 scene.RenderSettings.Skybox.Draw(graphicsDevice, camera);
             // FIXME !
             // Prepass, Update light, eye position, etc.
-           // for (int i = 0; i < scene.effects.Count; i++)
-             //   scene.Materials[scene.materialsEffectIndex[i]].PrePass();
+            for (int i = 0; i < scene.effects.Count; i++)
+                scene.Materials[scene.materialsEffectIndex[i]].PrePass();
 
             // Pass, Update matrix, material attributes, etc.
             for (int i = 0; i < scene.RenderList.Count; i++)

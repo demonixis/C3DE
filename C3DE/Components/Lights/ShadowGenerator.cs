@@ -118,6 +118,8 @@ namespace C3DE
                 _light.Update(ref _boundingSphere);
             }
 
+            var currentRenderTargets = device.GetRenderTargets();
+
             device.SetRenderTarget(shadowMap);
             device.DepthStencilState = DepthStencilState.Default;
             device.Clear(Color.White);
@@ -135,7 +137,7 @@ namespace C3DE
                 }
             }
 
-            device.SetRenderTarget(null);
+            device.SetRenderTargets(currentRenderTargets);
         }
     }
 }

@@ -12,7 +12,7 @@ namespace C3DE
     {
         protected GraphicsDeviceManager graphics;
         protected SpriteBatch spriteBatch;
-        protected Renderer renderer;
+        protected IRenderer renderer;
         protected SceneManager sceneManager;
 
         public Engine(string title = "C3DE", int width = 1024, int height = 600)
@@ -26,6 +26,7 @@ namespace C3DE
 
             Application.Content = Content;
             Application.GraphicsDevice = GraphicsDevice;
+            Application.GraphicsDeviceManager = graphics;
             Application.Game = this;
             Application.SceneManager = sceneManager;
 
@@ -42,6 +43,11 @@ namespace C3DE
             Screen.Setup(width, height, null, null);
         }
 
+        public void SetRenderer(IRenderer iRenderer)
+        {
+            renderer = iRenderer;
+        }
+
         protected override void Initialize()
         {
             if (Application.GraphicsDevice == null)
@@ -52,7 +58,10 @@ namespace C3DE
 #endif
 
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            renderer = new Renderer(GraphicsDevice);
+            
+            if (renderer == null)
+                renderer = new Renderer(GraphicsDevice);
+
             renderer.LoadContent(Content);
 
             Input.Keys = new KeyboardComponent(this);

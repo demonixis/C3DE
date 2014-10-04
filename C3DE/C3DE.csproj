@@ -54,6 +54,7 @@
     <Compile Include="Materials\LavaMaterial.cs" />
     <Compile Include="Materials\TerrainMaterial.cs" />
     <Compile Include="Materials\ToonMaterial.cs" />
+    <Compile Include="VRRenderer.cs" />
     <Compile Include="Prefabs\MeshPrefab.cs" />
     <Compile Include="QuadRenderer.cs" />
     <Compile Include="Geometries\CubeGeometry.cs" />

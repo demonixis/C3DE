@@ -52,12 +52,14 @@ namespace C3DE.Demo
         {
             using (var game = new Engine("C3DE Game Engine", ScreenWidth, ScreenHeight))
             {
+                game.SetRenderer(new VRRenderer());
+
                 Application.SceneManager.Add(new MenuDemo(), true);
                 Application.SceneManager.Add(new HeightmapDemo());
                 Application.SceneManager.Add(new RandomTerrain());
                 Application.SceneManager.Add(new GridDemo());
                 Application.SceneManager.Add(new HexagonTerrainDemo());
-                Application.LoadLevel(1);
+                Application.LoadLevel(3);
                 game.Run();
             }
         }

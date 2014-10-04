@@ -25,6 +25,8 @@ namespace C3DE
         /// </summary>
         public static GraphicsDevice GraphicsDevice { get; set; }
 
+        public static GraphicsDeviceManager GraphicsDeviceManager { get; set; }
+
         /// <summary>
         /// Gets or sets the scene manager.
         /// </summary>

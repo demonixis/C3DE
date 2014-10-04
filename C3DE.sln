@@ -9,8 +9,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "C3DE.Demo", "C3DE.Demo\C3DE
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "C3DE.Demo .Kinect", "C3DE.Demo\C3DE.Demo .Kinect.csproj", "{CC5397B7-F940-48F0-B46D-0ED9193C7397}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "C3DE.OculusRift", "C3DE.OculusRift\C3DE.OculusRift.csproj", "{BB891790-6748-48D6-A733-514580324111}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,10 +27,6 @@ Global
 		{CC5397B7-F940-48F0-B46D-0ED9193C7397}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CC5397B7-F940-48F0-B46D-0ED9193C7397}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CC5397B7-F940-48F0-B46D-0ED9193C7397}.Release|Any CPU.Build.0 = Release|Any CPU
-		{BB891790-6748-48D6-A733-514580324111}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BB891790-6748-48D6-A733-514580324111}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BB891790-6748-48D6-A733-514580324111}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BB891790-6748-48D6-A733-514580324111}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
