@@ -11,12 +11,14 @@ namespace C3DE.Demo
 
         protected override void Initialize()
         {
+			SetRenderer(new VRRenderer());
+
             GUI.Skin = DemoGame.CreateSkin(Content);
 
             Application.SceneManager.Add(new HeightmapTerrain());
 			Application.SceneManager.Add(new RandomTerrain ());
             Application.SceneManager.Add(new HexagonTerrain());
-            Application.LoadLevel(1);
+            Application.LoadLevel(2);
 
             base.Initialize();
         }

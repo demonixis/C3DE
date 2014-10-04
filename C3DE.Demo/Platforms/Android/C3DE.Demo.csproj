@@ -96,6 +96,7 @@
     <Compile Include="Scenes\RandomTerrain.cs" />
     <Compile Include="Scenes\HexagonTerrain.cs" />
     <Compile Include="Scenes\HeightmapTerrain.cs" />
+    <Compile Include="Scripts\DeviceOrientationController.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Properties\AndroidManifest.xml" />
@@ -169,5 +170,6 @@
     <AndroidAsset Include="Assets\Content\Textures\UI\grey_checkmarkGrey.xnb" />
     <AndroidAsset Include="Assets\Content\Textures\UI\grey_checkmarkWhite.xnb" />
     <AndroidAsset Include="Assets\Content\Textures\UI\grey_panel.xnb" />
+    <AndroidAsset Include="Assets\Content\FX\PostProcess\OculusDistortionCorrection.xnb" />
   </ItemGroup>
 </Project>

@@ -15,6 +15,12 @@ namespace C3DE
         protected IRenderer renderer;
         protected SceneManager sceneManager;
 
+        public IRenderer Renderer
+        {
+            get { return renderer; }
+            set { renderer = value; }
+        }
+
         public Engine(string title = "C3DE", int width = 1024, int height = 600)
         {
             graphics = new GraphicsDeviceManager(this);
@@ -41,11 +47,6 @@ namespace C3DE
             int height = e.GraphicsDeviceInformation.PresentationParameters.BackBufferHeight;
 
             Screen.Setup(width, height, null, null);
-        }
-
-        public void SetRenderer(IRenderer iRenderer)
-        {
-            renderer = iRenderer;
         }
 
         protected override void Initialize()

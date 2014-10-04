@@ -478,12 +478,6 @@
 /processorParam:DebugMode=Auto
 /build:FX/PostProcess/FXAA.fx
 
-#begin FX/PostProcess/OculusRift.fx
-/importer:EffectImporter
-/processor:EffectProcessor
-/processorParam:DebugMode=Auto
-/build:FX/PostProcess/OculusRift.fx
-
 #begin FX/PostProcess/OculusDistortionCorrection.fx
 /importer:EffectImporter
 /processor:EffectProcessor

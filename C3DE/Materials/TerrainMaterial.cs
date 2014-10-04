@@ -8,11 +8,8 @@ namespace C3DE.Materials
     public class TerrainMaterial : Material
     {
         public Texture2D SnowTexture { get; set; }
-
         public Texture2D SandTexture { get; set; }
-
         public Texture2D RockTexture { get; set; }
-
         public Texture2D WeightTexture { get; set; }
 
         public TerrainMaterial(Scene scene)
