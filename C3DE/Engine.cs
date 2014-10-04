@@ -49,6 +49,9 @@ namespace C3DE
 
 #if ANDROID
 			Screen.Setup (GraphicsDevice.Adapter.CurrentDisplayMode.Width, GraphicsDevice.Adapter.CurrentDisplayMode.Height, null, null);
+#elif LINUX
+			Screen.Setup(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight, null, null);
+			GraphicsDevice.Viewport = new Viewport(0, 0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
 #endif
 
             spriteBatch = new SpriteBatch(GraphicsDevice);
