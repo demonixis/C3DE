@@ -66,7 +66,7 @@ namespace C3DE.Demo.Scenes
 
             // And fog
             RenderSettings.FogDensity = 0.01f;
-            RenderSettings.FogMode = FogMode.Exp2;
+            //RenderSettings.FogMode = FogMode.Exp2;
         }
     }
 }

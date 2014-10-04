@@ -30,17 +30,18 @@ namespace C3DE
         private Effect oculusRiftDistortionShader;
         private RenderTarget2D renderTargetLeft;
         private RenderTarget2D renderTargetRight;
-        private Texture2D renderTextureLeft;
-        private Texture2D renderTextureRight;
-        private float scaleImageFactor;
-        private int viewportWidth;
-        private int viewportHeight;
         private Rectangle sideBySideLeftSpriteSize;
         private Rectangle sideBySideRightSpriteSize;
         private Matrix projLeft;
         private Matrix projRight;
         private Matrix viewLeft;
         private Matrix viewRight;
+        private Vector4 HmdWarpParam;
+        private Vector2 Scale;
+        private Vector2 ScaleIn;
+        private Vector2 LensCenterLeft;
+        private Vector2 LensCenterRight;
+        private bool _projectionUpdated;
 
         private SpriteBatch _spriteBatch;
         private PostProcessManager _postProcessManager;
@@ -57,8 +58,6 @@ namespace C3DE
         {
             _postProcessManager = new PostProcessManager();
             _needsBufferUpdate = false;
-
-            scaleImageFactor = 0.71f;
         }
 
         public void LoadContent(ContentManager content)
@@ -74,35 +73,35 @@ namespace C3DE
         {
             _spriteBatch = new SpriteBatch(Application.GraphicsDevice);
 
-            Application.GraphicsDeviceManager.PreferredBackBufferWidth = (int)Math.Ceiling(OculusRiftDK2013_Metric.HResolution * scaleImageFactor);
-            Application.GraphicsDeviceManager.PreferredBackBufferHeight = (int)Math.Ceiling(OculusRiftDK2013_Metric.VResolution * scaleImageFactor);
-            // Application.GraphicsDeviceManager.IsFullScreen = true;
-            Application.GraphicsDeviceManager.ApplyChanges();
+            oculusRiftDistortionShader = Application.Content.Load<Effect>("FX/PostProcess/OculusDistortionCorrection");
 
-            oculusRiftDistortionShader = Application.Content.Load<Effect>("FX/PostProcess/OculusRift");
+            // Left and right RenderTarget
+            renderTargetLeft = new RenderTarget2D(Application.GraphicsDevice, OculusRiftDK2013_Metric.HResolution / 2, OculusRiftDK2013_Metric.VResolution);
+            renderTargetRight = new RenderTarget2D(Application.GraphicsDevice, OculusRiftDK2013_Metric.HResolution / 2, OculusRiftDK2013_Metric.VResolution);
 
-            // Init left and right RenderTarget
-            renderTargetLeft = new RenderTarget2D(Application.GraphicsDevice, Application.GraphicsDeviceManager.PreferredBackBufferWidth / 2, Application.GraphicsDeviceManager.PreferredBackBufferHeight);
-            renderTargetRight = new RenderTarget2D(Application.GraphicsDevice, Application.GraphicsDeviceManager.PreferredBackBufferWidth / 2, Application.GraphicsDeviceManager.PreferredBackBufferHeight);
+            var aspect = (float)renderTargetLeft.Width / (float)renderTargetLeft.Height;
+            Scale = new Vector2(0.5f * (1.0f / OculusRiftDK2013_Metric.PostProcessScaleFactor), 0.5f * (1.0f / OculusRiftDK2013_Metric.PostProcessScaleFactor) * aspect);
+            ScaleIn = new Vector2(2.0f, 2.0f / aspect);
+            LensCenterLeft = new Vector2(0.5f + OculusRiftDK2013_Metric.LensCenterOffset * 0.5f, 0.5f);
+            LensCenterRight = new Vector2(0.5f - OculusRiftDK2013_Metric.LensCenterOffset * 0.5f, 0.5f);
+            HmdWarpParam = new Vector4(OculusRiftDK2013_Metric.DistortionK[0], OculusRiftDK2013_Metric.DistortionK[1], OculusRiftDK2013_Metric.DistortionK[2], OculusRiftDK2013_Metric.DistortionK[3]);
 
             UpdateResolutionAndRenderTargets();
         }
 
-        public void InitializeCamera(Camera camera)
+        public void SetProjection(Camera camera)
         {
             var aspectRatio = (OculusRiftDK2013_Metric.HScreenSize * 0.5f) / OculusRiftDK2013_Metric.VScreenSize;
             var fov_d = OculusRiftDK2013_Metric.EyeToScreenDistance;
-            var fov_x = OculusRiftDK2013_Metric.VScreenSize * scaleImageFactor;
+            var fov_x = OculusRiftDK2013_Metric.VScreenSize * 0.71f;
             var yfov = 2.0f * (float)Math.Atan(fov_x / fov_d);
 
-            // Set ProjectionMatrix
-            camera.projection = Matrix.CreatePerspectiveFieldOfView(yfov, aspectRatio, 1.0f, 100000.0f);
-            _init = true;
+            camera.Aspect = aspectRatio;
+            camera.FieldOfView = yfov;
+            _projectionUpdated = true;
         }
 
-        private bool _init;
-
-        private void SetProjectionOffset(ref Matrix projection, ref Matrix view)
+        private void ComputeViewProjMatrix(ref Matrix projection, ref Matrix view)
         {
             var viewCenter = OculusRiftDK2013_Metric.HScreenSize * 0.212f; // 0.25f
             var eyeProjectionShift = viewCenter - OculusRiftDK2013_Metric.LensSeparationDistance * 0.5f;
@@ -119,13 +118,10 @@ namespace C3DE
 
         private void UpdateResolutionAndRenderTargets()
         {
-            if (viewportWidth != Application.GraphicsDevice.Viewport.Width || viewportHeight != Application.GraphicsDevice.Viewport.Height)
-            {
-                viewportWidth = Application.GraphicsDevice.Viewport.Width;
-                viewportHeight = Application.GraphicsDevice.Viewport.Height;
-                sideBySideLeftSpriteSize = new Rectangle(0, 0, viewportWidth / 2, viewportHeight);
-                sideBySideRightSpriteSize = new Rectangle(viewportWidth / 2, 0, viewportWidth / 2, viewportHeight);
-            }
+            var viewportWidth = Application.GraphicsDeviceManager.PreferredBackBufferWidth;
+            var viewportHeight = Application.GraphicsDeviceManager.PreferredBackBufferHeight;
+            sideBySideLeftSpriteSize = new Rectangle(0, 0, viewportWidth / 2, viewportHeight);
+            sideBySideRightSpriteSize = new Rectangle(viewportWidth / 2, 0, viewportWidth / 2, viewportHeight);
 
             Screen.Setup(sideBySideLeftSpriteSize.Width, sideBySideLeftSpriteSize.Height, null, null);
         }
@@ -177,20 +173,17 @@ namespace C3DE
                         scripts[i].OnGUI(_guiManager);
 
                 _spriteBatch.End();
-
-                Application.GraphicsDevice.BlendState = BlendState.Opaque;
-                Application.GraphicsDevice.SamplerStates[0] = SamplerState.LinearClamp;
-                Application.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
             }
         }
 
-        private void renderPostProcess()
-        {
-
-        }
+        private void renderPostProcess() { }
 
         private void BaseDraw(Scene scene, Camera camera)
         {
+            Application.GraphicsDevice.BlendState = BlendState.Opaque;
+            Application.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
+            Application.GraphicsDevice.SamplerStates[0] = SamplerState.LinearWrap;
+
             for (int i = 0, l = scene.Lights.Count; i < l; i++)
                 if (scene.Lights[i].ShadowGenerator.Enabled)
                     scene.Lights[i].ShadowGenerator.RenderShadows(Application.GraphicsDevice, scene.RenderList);
@@ -206,10 +199,10 @@ namespace C3DE
         /// <param name="camera">The camera to use for render.</param>
         public void render(Scene scene, Camera camera)
         {
-            if (!_init)
-                InitializeCamera(camera);
+            if (!_projectionUpdated)
+                SetProjection(camera);
 
-            SetProjectionOffset(ref camera.projection, ref camera.view);
+            ComputeViewProjMatrix(ref camera.projection, ref camera.view);
 
             Application.GraphicsDevice.SetRenderTarget(renderTargetLeft);
             Application.GraphicsDevice.Clear(Color.Black);
@@ -223,36 +216,31 @@ namespace C3DE
             camera.view = viewRight;
             BaseDraw(scene, camera);
 
-            DrawOculusRenderTargets();
+            DrawOculusRenderTargets(camera);
         }
 
         public void RenderEditor(Scene scene, Camera camera, RenderTarget2D target) { }
 
-        private void DrawOculusRenderTargets()
+        private void DrawOculusRenderTargets(Camera camera)
         {
             // Set RenderTargets
             Application.GraphicsDevice.SetRenderTarget(null);
-            renderTextureLeft = (Texture2D)renderTargetLeft;
-            renderTextureRight = (Texture2D)renderTargetRight;
             Application.GraphicsDevice.Clear(Color.Black);
 
-            //Set the four Distortion params of the oculus
-            oculusRiftDistortionShader.Parameters["distK0"].SetValue(OculusRiftDK2013_Metric.DistortionK[0]);
-            oculusRiftDistortionShader.Parameters["distK1"].SetValue(OculusRiftDK2013_Metric.DistortionK[1]);
-            oculusRiftDistortionShader.Parameters["distK2"].SetValue(OculusRiftDK2013_Metric.DistortionK[2]);
-            oculusRiftDistortionShader.Parameters["distK3"].SetValue(OculusRiftDK2013_Metric.DistortionK[3]);
-            oculusRiftDistortionShader.Parameters["imageScaleFactor"].SetValue(scaleImageFactor);
+            oculusRiftDistortionShader.Parameters["HmdWarpParam"].SetValue(HmdWarpParam);
+            oculusRiftDistortionShader.Parameters["Scale"].SetValue(Scale);
+            oculusRiftDistortionShader.Parameters["ScaleIn"].SetValue(ScaleIn);
 
             // Pass for left lens
-            oculusRiftDistortionShader.Parameters["drawLeftLens"].SetValue(true);
+            oculusRiftDistortionShader.Parameters["LensCenter"].SetValue(LensCenterLeft);
             _spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Opaque, null, null, null, oculusRiftDistortionShader);
-            _spriteBatch.Draw(renderTextureLeft, sideBySideLeftSpriteSize, Color.White);
+            _spriteBatch.Draw(renderTargetLeft, sideBySideLeftSpriteSize, Color.White);
             _spriteBatch.End();
 
             // Pass for right lens
-            oculusRiftDistortionShader.Parameters["drawLeftLens"].SetValue(false);
+            oculusRiftDistortionShader.Parameters["LensCenter"].SetValue(LensCenterRight);
             _spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Opaque, null, null, null, oculusRiftDistortionShader);
-            _spriteBatch.Draw(renderTextureRight, sideBySideRightSpriteSize, Color.White);
+            _spriteBatch.Draw(renderTargetRight, sideBySideRightSpriteSize, Color.White);
             _spriteBatch.End();
         }
     }
