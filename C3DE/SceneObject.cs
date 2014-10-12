@@ -61,6 +61,11 @@ namespace C3DE
             get { return components; }
         }
 
+        public bool Initialized
+        {
+            get { return initialized; }
+        }
+
         #endregion
 
         #region Events

@@ -95,16 +95,31 @@ namespace C3DE
             materialsEffectIndex = new Dictionary<int, int>(5);
             colliders = new List<Collider>(5);
             cameras = new List<Camera>(1);
-            _mainCameraIndex = -1;
             scripts = new List<Behaviour>(5);
             lights = new List<Light>(2);
             _componentsToDestroy = new List<Component>();
             _needRemoveCheck = false;
+            _mainCameraIndex = -1;
             DefaultMaterial = new SimpleMaterial(this);
             RenderSettings = new RenderSettings();
         }
 
         #region Lifecycle
+
+        internal void Reset()
+        {
+            renderList.Clear();
+            materials.Clear();
+            effects.Clear();
+            materialsEffectIndex.Clear();
+            colliders.Clear();
+            cameras.Clear();
+            lights.Clear();
+            scripts.Clear();
+            members.Clear();
+            _componentsToDestroy.Clear();
+            _needRemoveCheck = false;
+        }
 
         /// <summary>
         /// Load content of all components.
