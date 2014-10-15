@@ -97,6 +97,7 @@
     <Compile Include="Scenes\HexagonTerrain.cs" />
     <Compile Include="Scenes\HeightmapTerrain.cs" />
     <Compile Include="Scripts\DeviceOrientationController.cs" />
+    <Compile Include="Scenes\RandomTerrainVR.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Properties\AndroidManifest.xml" />

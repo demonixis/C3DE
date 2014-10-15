@@ -28,11 +28,10 @@ namespace C3DE.Demo.Scenes
 
 			// Camera
 			var camera = new CameraPrefab("camera");
-			camera.AddComponent<DeviceOrientationController> ();
 			camera.Transform.Translate (0, -5, 0);
 			Add(camera);
 
-			//camera.AddComponent<OrbitController>();
+			camera.AddComponent<OrbitController>();
 			camera.AddComponent<DemoBehaviour>();
 
 			// Light

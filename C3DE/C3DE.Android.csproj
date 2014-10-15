@@ -49,7 +49,6 @@
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="IRenderer.cs" />
     <Compile Include="VRRenderer.cs" />
-    <Compile Include="Input\Accelerometer.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Application.cs" />
