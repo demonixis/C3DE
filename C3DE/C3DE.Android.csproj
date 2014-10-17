@@ -50,6 +50,7 @@
     <Compile Include="IRenderer.cs" />
     <Compile Include="VRRenderer.cs" />
     <Compile Include="Extensions\QuaternionExtensions.cs" />
+    <Compile Include="VRMobileRenderer.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Application.cs" />

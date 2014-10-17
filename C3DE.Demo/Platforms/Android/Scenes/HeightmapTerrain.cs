@@ -22,7 +22,7 @@ namespace C3DE.Demo.Scenes
             Add(camera);
 
             camera.Setup(new Vector3(0, 2, -10), new Vector3(0, 0, 0), Vector3.Up);
-            var cc = camera.AddComponent<OrbitController>();
+            var cc = camera.AddComponent<DeviceOrientationController>();
 
             // And a light
             var lightPrefab = new LightPrefab("light", LightType.Directional);

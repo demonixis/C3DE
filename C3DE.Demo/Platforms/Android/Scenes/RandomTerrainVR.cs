@@ -23,10 +23,7 @@ namespace C3DE.Demo.Scenes
         {
             base.Initialize();
 
-            var vrRenderer = new VRRenderer();
-            vrRenderer.LoadContent(Application.Content);
-
-            //(Application.Game as AndroidGame).Renderer = vrRenderer;
+            //(Application.Game as AndroidGame).Renderer = new VRRenderer();
 
             // Skybox
             RenderSettings.Skybox.Generate(Application.GraphicsDevice, Application.Content, DemoGame.BlueSkybox);

@@ -50,8 +50,7 @@ namespace C3DE.Demo.Scripts
 		{
             if (_accelStarted)
             {
-                _accelReading.X = 1.0f - _accelReading.X; Debug.Log(_accelReading.X);
-                transform.Rotation = new Vector3(_accelReading.X, _accelReading.Y, _accelReading.Z);
+                transform.Rotation = new Vector3(_accelReading..X + MathHelper.ToRadians(90), _accelReading.Y, _accelReading.Z);
             } 
 
 			_camera.Target = transform.Position + Vector3.Transform(_camera.Reference, Matrix.CreateFromYawPitchRoll(transform.Rotation.Y, transform.Rotation.X, transform.Rotation.Z));
