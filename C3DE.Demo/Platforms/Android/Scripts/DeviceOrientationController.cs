@@ -12,15 +12,14 @@ namespace C3DE.Demo.Scripts
 		private Camera _camera;
         private Accelerometer _accelSensor;
         private Vector3 _accelReading;
+        private Vector3 _lastAccelReading;
         private bool _accelStarted;
 
 		public override void Start()
 		{
-			_camera = GetComponent<Camera>();
-
             _accelStarted = true;
-
             _accelSensor = new Accelerometer();
+            _camera = GetComponent<Camera>();
 
             try 
             {
@@ -43,15 +42,16 @@ namespace C3DE.Demo.Scripts
 
         private void OnAccelChanged (object sender, SensorReadingEventArgs<AccelerometerReading> e)
         {
+            _lastAccelReading = _accelReading;
             _accelReading = e.SensorReading.Acceleration;
-            Debug.Log(_accelReading);
         }
 
 		public override void Update()
 		{
             if (_accelStarted)
             {
-                transform.Rotation = new Vector3(MathHelper.PiOver2 - _accelReading.X, _accelReading.Y, -_accelReading.Z);
+                _accelReading.X = 1.0f - _accelReading.X; Debug.Log(_accelReading.X);
+                transform.Rotation = new Vector3(_accelReading.X, _accelReading.Y, _accelReading.Z);
             } 
 
 			_camera.Target = transform.Position + Vector3.Transform(_camera.Reference, Matrix.CreateFromYawPitchRoll(transform.Rotation.Y, transform.Rotation.X, transform.Rotation.Z));

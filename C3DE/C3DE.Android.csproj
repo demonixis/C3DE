@@ -49,6 +49,7 @@
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="IRenderer.cs" />
     <Compile Include="VRRenderer.cs" />
+    <Compile Include="Extensions\QuaternionExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Application.cs" />
@@ -127,4 +128,7 @@
     <AndroidResource Include="Resources\values\Strings.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
+  <ItemGroup>
+    <Folder Include="Extensions\" />
+  </ItemGroup>
 </Project>

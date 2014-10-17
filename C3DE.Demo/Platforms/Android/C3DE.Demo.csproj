@@ -98,6 +98,9 @@
     <Compile Include="Scenes\HeightmapTerrain.cs" />
     <Compile Include="Scripts\DeviceOrientationController.cs" />
     <Compile Include="Scenes\RandomTerrainVR.cs" />
+    <Compile Include="..\..\Scenes\MenuDemo.cs">
+      <Link>Scenes\MenuDemo.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Properties\AndroidManifest.xml" />

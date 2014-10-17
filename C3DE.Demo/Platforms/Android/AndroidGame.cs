@@ -13,11 +13,12 @@ namespace C3DE.Demo
         {
             GUI.Skin = DemoGame.CreateSkin(Content);
 
+            Application.SceneManager.Add(new MenuDemo());
             Application.SceneManager.Add(new HeightmapTerrain());
 			Application.SceneManager.Add(new RandomTerrain ());
             Application.SceneManager.Add(new RandomTerrainVR());
             Application.SceneManager.Add(new HexagonTerrain());
-            Application.LoadLevel(3);
+            Application.LoadLevel(1);
 
             base.Initialize();
         }
