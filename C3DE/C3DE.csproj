@@ -45,11 +45,13 @@
     <Compile Include="Components\Renderers\BoundingBoxRenderer.cs" />
     <Compile Include="Components\Renderers\MeshRenderer.cs" />
     <Compile Include="Input.cs" />
+    <Compile Include="IPrefab.cs" />
     <Compile Include="IRenderer.cs" />
     <Compile Include="Materials\DummyMaterial.cs" />
     <Compile Include="Materials\LavaMaterial.cs" />
     <Compile Include="Materials\TerrainMaterial.cs" />
     <Compile Include="Materials\ToonMaterial.cs" />
+    <Compile Include="VRMobileRenderer.cs" />
     <Compile Include="VRRenderer.cs" />
     <Compile Include="Prefabs\MeshPrefab.cs" />
     <Compile Include="QuadRenderer.cs" />
