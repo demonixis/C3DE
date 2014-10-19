@@ -70,6 +70,7 @@
 #begin Font/Default.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
 /build:Font/Default.spritefont
 
 #begin FX/TransparentEffect.fx
@@ -351,6 +352,7 @@
 #begin Font/SegoeUILight.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
 /build:Font/SegoeUILight.spritefont
 
 #begin Textures/UI/grey_checkmarkWhite.png
@@ -475,4 +477,10 @@
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
 /build:FX/PostProcess/FXAA.fx
+
+#begin FX/PostProcess/OculusDistortionCorrection.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:FX/PostProcess/OculusDistortionCorrection.fx
 

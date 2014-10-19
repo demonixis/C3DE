@@ -31,12 +31,13 @@ namespace C3DE.Demo.Scenes
             camera.AddComponent<ControllerSwitcher>();
             camera.AddComponent<DemoBehaviour>();
             camera.AddComponent<RayPickingTester>();
+            camera.AddComponent<VRRendererSwitcher>();
             
             // Light
             var lightPrefab = new LightPrefab("light", LightType.Directional);
             lightPrefab.Transform.Translate(0, 10, 0);
             lightPrefab.Light.Range = 25;
-            lightPrefab.Light.Intensity = 2.0f;
+            lightPrefab.Light.Intensity = 1.0f;
             lightPrefab.Light.FallOf = 5f;
             //lightPrefab.Light.DiffuseColor = Color.LightCoral;
             lightPrefab.Light.Direction = new Vector3(0, 1, -1);
@@ -80,10 +81,6 @@ namespace C3DE.Demo.Scenes
             var cubeSuperMaterial = new FresnelMaterial(scene);
             cubeSuperMaterial.MainTexture = GraphicsHelper.CreateCheckboardTexture(Color.FloralWhite, Color.DodgerBlue); //Content.Load<Texture2D>("Textures/tech_box2");
             cubeSuperMaterial.DiffuseColor = Color.WhiteSmoke;
-            /*cubeSuperMaterial.SpecularColor = new Color(0.8f, 0.8f, 0.8f, 1.0f);
-            cubeSuperMaterial.Shininess = 10;
-            cubeSuperMaterial.EmissiveColor = new Color(0f, 0.0f, 0.1f, 1.0f);
-            */
 
             var cubeScene = new SceneObject();
             cubeScene.Name = "Super Cube";
@@ -100,7 +97,6 @@ namespace C3DE.Demo.Scenes
             cube.Geometry.Generate();
             cube.Material = cubeSuperMaterial;
             cube.AddComponent<BoxCollider>();
-            //cube.AddComponent<BoundingBoxRenderer>();
 
             // Second cube
             var simpleMaterial = new SimpleMaterial(scene);
@@ -123,7 +119,6 @@ namespace C3DE.Demo.Scenes
             cube2.Geometry.Generate();
             cube2.Material = simpleMaterial;
             cube2.AddComponent<BoxCollider>();
-            //cube2.AddComponent<BoundingBoxRenderer>();
 
             var path = cube2.AddComponent<SimplePath>();
             path.Begin();
@@ -153,7 +148,6 @@ namespace C3DE.Demo.Scenes
             cube3.Geometry.Generate();
             cube3.Material = reflectiveMaterial;
             cube3.AddComponent<SphereCollider>();
-            //cube3.AddComponent<BoundingBoxRenderer>();
 
             Screen.ShowCursor = true;
         }

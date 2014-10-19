@@ -109,14 +109,14 @@ namespace C3DE.Components.Controllers
                 distanceVelocity -= MoveSpeed * Time.DeltaTime;
 
             if (Input.Keys.Up)
-                _angle.Y -= RotationSpeed * Time.DeltaTime * 25.0f;
+				angleVelocity.Y -= RotationSpeed * Time.DeltaTime * 25.0f;
             else if (Input.Keys.Down)
-                _angle.Y += RotationSpeed * Time.DeltaTime * 25.0f;
+				angleVelocity.Y += RotationSpeed * Time.DeltaTime * 25.0f;
 
             if (Input.Keys.Left)
-                _angle.X -= RotationSpeed * Time.DeltaTime * 25.0f;
+				angleVelocity.X -= RotationSpeed * Time.DeltaTime * 25.0f;
             else if (Input.Keys.Right)
-                _angle.X += RotationSpeed * Time.DeltaTime * 25.0f;
+				angleVelocity.X += RotationSpeed * Time.DeltaTime * 25.0f;
         }
 
         private void UpdateMouseInput()
@@ -138,7 +138,7 @@ namespace C3DE.Components.Controllers
 
         private void UpdateGamepadInput()
         {
-            _angle += Input.Gamepad.LeftStickValue() * RotationSpeed * Time.DeltaTime * GamepadSensibility * 25.0f;
+			angleVelocity += Input.Gamepad.LeftStickValue() * RotationSpeed * Time.DeltaTime * GamepadSensibility * 25.0f;
 
             positionVelicoty.X += Input.Gamepad.RightStickValue().X * StrafeSpeed * Time.DeltaTime * GamepadSensibility;
             positionVelicoty.Y += Input.Gamepad.RightStickValue().Y * StrafeSpeed * Time.DeltaTime * GamepadSensibility;
@@ -149,7 +149,7 @@ namespace C3DE.Components.Controllers
                 distanceVelocity -= MoveSpeed * Time.DeltaTime * GamepadSensibility;
         }
 
-        public void UpdateTouchInput()
+		private void UpdateTouchInput()
         {
             if (Input.Touch.TouchCount == 1)
                 _angle += Input.Touch.Delta() * RotationSpeed * Time.DeltaTime;

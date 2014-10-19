@@ -81,6 +81,12 @@ namespace C3DE.Utils
             }
         }
 
+        public void Clear()
+        {
+            _items.Clear();
+            _size = 0;
+        }
+
         public int IndexOf(T item)
         {
             return _items.IndexOf(item);

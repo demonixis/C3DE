@@ -8,11 +8,8 @@ namespace C3DE.Materials
     public class TerrainMaterial : Material
     {
         public Texture2D SnowTexture { get; set; }
-
         public Texture2D SandTexture { get; set; }
-
         public Texture2D RockTexture { get; set; }
-
         public Texture2D WeightTexture { get; set; }
 
         public TerrainMaterial(Scene scene)
@@ -24,7 +21,11 @@ namespace C3DE.Materials
 
         public override void LoadContent(ContentManager content)
         {
+#if ANDROID
+            effect = content.Load<Effect>("FX/Android/TerrainEffect");
+#else
             effect = content.Load<Effect>("FX/TerrainEffect");
+#endif
         }
 
         public override void PrePass()
@@ -33,20 +34,22 @@ namespace C3DE.Materials
             effect.Parameters["Projection"].SetValue(scene.MainCamera.projection);
             effect.Parameters["EyePosition"].SetValue(scene.MainCamera.SceneObject.Transform.Position);
 
-            var light0 = scene.lights[0];
-
-            // Update shadow data.
-            effect.Parameters["ShadowData"].SetValue(light0.shadowGenerator.Data);
-            effect.Parameters["ShadowMap"].SetValue(light0.shadowGenerator.ShadowMap);
+            var light0 = scene.lights[0]; 
 
             // Light
             effect.Parameters["LightColor"].SetValue(light0.diffuseColor);
             effect.Parameters["LightDirection"].SetValue(light0.Direction);
             effect.Parameters["LightIntensity"].SetValue(light0.Intensity);
 
+            // Update shadow data.
+            effect.Parameters["ShadowData"].SetValue(light0.shadowGenerator.Data);
+            effect.Parameters["ShadowMap"].SetValue(light0.shadowGenerator.ShadowMap);
+
+#if !ANDROID
             // Fog
             effect.Parameters["FogColor"].SetValue(scene.RenderSettings.fogColor);
             effect.Parameters["FogData"].SetValue(scene.RenderSettings.fogData);
+#endif
         }
 
         public override void Pass(RenderableComponent renderable)

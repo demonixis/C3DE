@@ -11,7 +11,7 @@ namespace C3DE
     /// <summary>
     /// The renderer is responsible to render a scene with a camera view to the screen.
     /// </summary>
-    public class Renderer
+    public class Renderer : IRenderer
     {
         private GraphicsDevice graphicsDevice;
         private RenderTarget2D _sceneRT;

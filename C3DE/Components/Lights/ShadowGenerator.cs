@@ -78,7 +78,7 @@ namespace C3DE
 
         public void Initialize()
         {
-            _shadowEffect = Application.Content.Load<Effect>("fx/ShadowMapEffect");
+            _shadowEffect = Application.Content.Load<Effect>("FX/ShadowMapEffect");
         }
 
         /// <summary>
@@ -87,7 +87,11 @@ namespace C3DE
         /// <param name="size">Desired size, it must a power of two</param>
         public void SetShadowMapSize(GraphicsDevice device, int size)
         {
-            shadowMap = new RenderTarget2D(device, size, size, false, SurfaceFormat.Single, DepthFormat.Depth24, 0, RenderTargetUsage.DiscardContents);
+#if ANDROID
+			shadowMap = new RenderTarget2D (device, size, size);
+#else
+			shadowMap = new RenderTarget2D (device, size, size, false, SurfaceFormat.Single, DepthFormat.Depth24, 0, RenderTargetUsage.DiscardContents);
+#endif
             _shadowMapSize = size;
 
             _shadowData.X = _enabled ? _shadowMapSize : 0;
@@ -114,6 +118,8 @@ namespace C3DE
                 _light.Update(ref _boundingSphere);
             }
 
+            var currentRenderTargets = device.GetRenderTargets();
+
             device.SetRenderTarget(shadowMap);
             device.DepthStencilState = DepthStencilState.Default;
             device.Clear(Color.White);
@@ -131,7 +137,7 @@ namespace C3DE
                 }
             }
 
-            device.SetRenderTarget(null);
+            device.SetRenderTargets(currentRenderTargets);
         }
     }
 }

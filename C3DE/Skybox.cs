@@ -14,6 +14,8 @@ namespace C3DE
         private CubeGeometry _geometry;
         private TextureCube _texture;
         private Effect _effect;
+        private RasterizerState skyboxRS = new RasterizerState() { CullMode = CullMode.None };
+        private RasterizerState currentRS;
 
         public TextureCube Texture
         {
@@ -80,6 +82,9 @@ namespace C3DE
 
         public void Draw(GraphicsDevice device, Camera camera)
         {
+            currentRS = device.RasterizerState;
+            device.RasterizerState = skyboxRS;
+
             _world = Matrix.CreateScale(1) * Matrix.CreateTranslation(camera.SceneObject.Transform.Position);
 
             _effect.Parameters["World"].SetValue(_world);
@@ -92,6 +97,8 @@ namespace C3DE
             device.SetVertexBuffer(_geometry.VertexBuffer);
             device.Indices = _geometry.IndexBuffer;
             device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, _geometry.Vertices.Length, 0, _geometry.Indices.Length / 3);
+
+            device.RasterizerState = currentRS;
         }
     }
 }

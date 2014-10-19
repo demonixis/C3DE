@@ -12,8 +12,29 @@ namespace C3DE
     {
         protected GraphicsDeviceManager graphics;
         protected SpriteBatch spriteBatch;
-        protected Renderer renderer;
+        protected IRenderer renderer;
         protected SceneManager sceneManager;
+        protected bool initialized;
+
+        public IRenderer Renderer
+        {
+            get { return renderer; }
+            set 
+            {
+                renderer = value; 
+
+                if (initialized)
+                {
+#if ANDROID
+                    Screen.Setup (GraphicsDevice.Adapter.CurrentDisplayMode.Width, GraphicsDevice.Adapter.CurrentDisplayMode.Height, null, null);
+#elif LINUX
+                    Screen.Setup(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight, null, null);
+                    GraphicsDevice.Viewport = new Viewport(0, 0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
+#endif
+                    renderer.LoadContent(Content);
+                }
+            }
+        }
 
         public Engine(string title = "C3DE", int width = 1024, int height = 600)
         {
@@ -23,9 +44,11 @@ namespace C3DE
             Window.Title = title;
             Content.RootDirectory = "Content";
             sceneManager = new SceneManager();
+            initialized = false;
 
             Application.Content = Content;
             Application.GraphicsDevice = GraphicsDevice;
+            Application.GraphicsDeviceManager = graphics;
             Application.Game = this;
             Application.SceneManager = sceneManager;
 
@@ -47,8 +70,18 @@ namespace C3DE
             if (Application.GraphicsDevice == null)
                 Application.GraphicsDevice = GraphicsDevice;
 
+#if ANDROID
+			Screen.Setup (GraphicsDevice.Adapter.CurrentDisplayMode.Width, GraphicsDevice.Adapter.CurrentDisplayMode.Height, null, null);
+#elif LINUX
+			Screen.Setup(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight, null, null);
+			GraphicsDevice.Viewport = new Viewport(0, 0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
+#endif
+
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            renderer = new Renderer(GraphicsDevice);
+            
+            if (renderer == null)
+                renderer = new Renderer(GraphicsDevice);
+
             renderer.LoadContent(Content);
 
             Input.Keys = new KeyboardComponent(this);
@@ -61,6 +94,8 @@ namespace C3DE
             Components.Add(Input.Mouse);
             Components.Add(Input.Gamepad);
             Components.Add(Input.Touch);
+
+            initialized = true;
            
             base.Initialize();
         }

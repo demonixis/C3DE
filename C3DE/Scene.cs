@@ -23,6 +23,10 @@ namespace C3DE
     public class Scene : SceneObject
     {
         public readonly Material DefaultMaterial;
+        
+        private int _mainCameraIndex;
+        private List<Component> _componentsToDestroy;
+        private bool _needRemoveCheck;
 
         internal protected SmartList<SceneObject> members;
         internal protected List<RenderableComponent> renderList;
@@ -33,10 +37,8 @@ namespace C3DE
         internal protected List<Camera> cameras;
         internal protected List<Light> lights;
         internal protected List<Behaviour> scripts;
-
-        private int _mainCameraIndex;
-        private List<Component> _componentsToDestroy;
-        private bool _needRemoveCheck;
+        internal protected List<SceneObject> prefabs;
+        protected bool isReady;
 
         public RenderSettings RenderSettings { get; private set; }
 
@@ -79,6 +81,11 @@ namespace C3DE
             get { return scripts; }
         }
 
+        public List<SceneObject> Prefabs
+        {
+            get { return prefabs; }
+        }
+
         /// <summary>
         /// The root scene object which contains all scene objects.
         /// </summary>
@@ -95,16 +102,34 @@ namespace C3DE
             materialsEffectIndex = new Dictionary<int, int>(5);
             colliders = new List<Collider>(5);
             cameras = new List<Camera>(1);
-            _mainCameraIndex = -1;
             scripts = new List<Behaviour>(5);
             lights = new List<Light>(2);
+            prefabs = new List<SceneObject>(0);
             _componentsToDestroy = new List<Component>();
             _needRemoveCheck = false;
+            _mainCameraIndex = -1;
+            isReady = false;
             DefaultMaterial = new SimpleMaterial(this);
             RenderSettings = new RenderSettings();
         }
 
         #region Lifecycle
+
+        internal void Reset()
+        {
+            renderList.Clear();
+            materials.Clear();
+            effects.Clear();
+            materialsEffectIndex.Clear();
+            colliders.Clear();
+            cameras.Clear();
+            lights.Clear();
+            scripts.Clear();
+            members.Clear();
+            prefabs.Clear();
+            _componentsToDestroy.Clear();
+            _needRemoveCheck = false;
+        }
 
         /// <summary>
         /// Load content of all components.
@@ -124,6 +149,11 @@ namespace C3DE
 
             members.CheckRequired = true;
             initialized = true;
+        }
+
+        public virtual void BeforeStarting()
+        {
+            isReady = true;
         }
 
         /// <summary>

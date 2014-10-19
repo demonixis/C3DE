@@ -36,7 +36,11 @@ namespace C3DE.Materials
 
         public override void LoadContent(ContentManager content)
         {
+#if ANDROID
+            effect = content.Load<Effect>("FX/Android/StandardEffect");
+#else
             effect = content.Load<Effect>("FX/StandardEffect");
+#endif
         }
 
         public override void PrePass()
@@ -45,17 +49,22 @@ namespace C3DE.Materials
             effect.Parameters["View"].SetValue(scene.MainCamera.view);
             effect.Parameters["Projection"].SetValue(scene.MainCamera.projection);
             effect.Parameters["EyePosition"].SetValue(scene.MainCamera.SceneObject.Transform.Position);
-            //effect.Parameters["ViewPosition"].SetValue(scene.MainCamera.camView);
 
             var light0 = scene.Lights[0]; // FIXME
 
+#if !ANDROID
             // Update shadow data.
             effect.Parameters["ShadowData"].SetValue(light0.shadowGenerator.Data);
             effect.Parameters["ShadowMap"].SetValue(light0.shadowGenerator.ShadowMap);
 
+            // Fog
+            effect.Parameters["FogColor"].SetValue(scene.RenderSettings.fogColor);
+            effect.Parameters["FogData"].SetValue(scene.RenderSettings.fogData);
+
             // Light
             effect.Parameters["LightView"].SetValue(light0.viewMatrix);
             effect.Parameters["LightProjection"].SetValue(light0.projectionMatrix);
+#endif
             effect.Parameters["LightColor"].SetValue(light0.diffuseColor);
             effect.Parameters["LightDirection"].SetValue(light0.Direction);
             effect.Parameters["LightPosition"].SetValue(light0.SceneObject.Transform.Position);
@@ -63,14 +72,13 @@ namespace C3DE.Materials
             effect.Parameters["LightRange"].SetValue(light0.Range);
             effect.Parameters["LightFallOff"].SetValue((int)light0.FallOf);
             effect.Parameters["LightType"].SetValue((int)light0.Type);
-
-            // Fog
-            effect.Parameters["FogColor"].SetValue(scene.RenderSettings.fogColor);
-            effect.Parameters["FogData"].SetValue(scene.RenderSettings.fogData);
         }
 
         public override void Pass(RenderableComponent renderable)
         {
+#if !ANDROID
+            effect.Parameters["RecieveShadow"].SetValue(renderable.ReceiveShadow);
+#endif
             // Material properties.
             effect.Parameters["AmbientColor"].SetValue(scene.RenderSettings.ambientColor);
             effect.Parameters["DiffuseColor"].SetValue(_diffuseColor);
@@ -81,7 +89,6 @@ namespace C3DE.Materials
             effect.Parameters["TextureOffset"].SetValue(Offset);
 
             effect.Parameters["MainTexture"].SetValue(mainTexture);
-            effect.Parameters["RecieveShadow"].SetValue(renderable.ReceiveShadow);
             effect.Parameters["World"].SetValue(renderable.SceneObject.Transform.world);
             effect.CurrentTechnique.Passes[0].Apply();
         }

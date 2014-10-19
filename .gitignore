@@ -15,6 +15,12 @@ obj/
 [Rr]elease*/
 C3DE.Demo/Content/*
 C3DE.Demo/*/*/Content/*
+C3DE.Demo/Platforms/Android/Assets/Content/*
 Libs/*.dll
+Libs/*.config
+Libs/Android/*.dll
 Libs/Windows8/*.dll
 Libs/WindowsPhone/*.dll
+!C3DE.Demo/Content/README.txt
+!C3DE.Demo/*/*/Content/README.txt
+!C3DE.Demo/Platforms/Android/Assets/Content/README.txt

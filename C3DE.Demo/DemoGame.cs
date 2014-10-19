@@ -8,8 +8,8 @@ namespace C3DE.Demo
 {
     public static class DemoGame
     {
-        public const int ScreenWidth = 640;
-        public const int ScreenHeight = 480;
+        public const int ScreenWidth = 1280;
+        public const int ScreenHeight = 800;
 
         public static string[] BlueSkybox = new string[6] 
         {
@@ -46,7 +46,7 @@ namespace C3DE.Demo
             return skin;
         }
 
-#if !NETFX_CORE
+#if !NETFX_CORE && !ANDROID
         // Entry point.
         static void Main(string[] args)
         {
