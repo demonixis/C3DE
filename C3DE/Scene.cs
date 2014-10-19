@@ -37,7 +37,7 @@ namespace C3DE
         internal protected List<Camera> cameras;
         internal protected List<Light> lights;
         internal protected List<Behaviour> scripts;
-        internal protected List<IPrefab> prefabs;
+        internal protected List<SceneObject> prefabs;
         protected bool isReady;
 
         public RenderSettings RenderSettings { get; private set; }
@@ -81,7 +81,7 @@ namespace C3DE
             get { return scripts; }
         }
 
-        public List<IPrefab> Prefabs
+        public List<SceneObject> Prefabs
         {
             get { return prefabs; }
         }
@@ -104,6 +104,7 @@ namespace C3DE
             cameras = new List<Camera>(1);
             scripts = new List<Behaviour>(5);
             lights = new List<Light>(2);
+            prefabs = new List<SceneObject>();
             _componentsToDestroy = new List<Component>();
             _needRemoveCheck = false;
             _mainCameraIndex = -1;
@@ -456,13 +457,13 @@ namespace C3DE
         /// Add a prefab only before the scene is started.
         /// </summary>
         /// <param name="prefab"></param>
-        protected void Add(IPrefab prefab)
+        protected void AddPrefab(SceneObject prefab)
         {
             if (!prefabs.Contains(prefab) && !isReady)
                 prefabs.Add(prefab);
         }
 
-        protected void Remove(IPrefab prefab)
+        protected void RemovePrefab(SceneObject prefab)
         {
             if (prefabs.Contains(prefab))
                 prefabs.Remove(prefab);

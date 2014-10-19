@@ -45,7 +45,6 @@
     <Compile Include="Components\Renderers\BoundingBoxRenderer.cs" />
     <Compile Include="Components\Renderers\MeshRenderer.cs" />
     <Compile Include="Input.cs" />
-    <Compile Include="IPrefab.cs" />
     <Compile Include="IRenderer.cs" />
     <Compile Include="Materials\DummyMaterial.cs" />
     <Compile Include="Materials\LavaMaterial.cs" />
