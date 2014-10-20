@@ -66,7 +66,6 @@ namespace C3DE
 
             _guiManager = new GUI(_spriteBatch);
             _guiManager.LoadContent(content);
-            _postProcessManager.LoadContent(content);
         }
 
         private void Initialize()

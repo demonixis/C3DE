@@ -39,17 +39,15 @@ namespace C3DE
 
         public void Initialize(ContentManager content)
         {
-            Initialize();
             _device = Application.GraphicsDevice;
             _guiManager = new GUI(_spriteBatch);
             _guiManager.LoadContent(content);
-            _postProcessManager.LoadContent(content);
+            _spriteBatch = new SpriteBatch(_device);
+            SetupRenderTargets();
         }
 
-        private void Initialize()
+        private void SetupRenderTargets()
         {
-            _spriteBatch = new SpriteBatch(_device);
-
             // Left and right RenderTarget
             _renderTargetLeft = new RenderTarget2D(_device, Screen.WidthPerTwo, Screen.Height, false, SurfaceFormat.Color, DepthFormat.Depth24, 0, RenderTargetUsage.DiscardContents);
             _renderTargetRight = new RenderTarget2D(_device, Screen.WidthPerTwo, Screen.Height, false, SurfaceFormat.Color, DepthFormat.Depth24, 0, RenderTargetUsage.DiscardContents);

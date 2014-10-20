@@ -11,8 +11,6 @@ namespace C3DE.Demo.Scenes
         {
             base.Initialize();
 
-            GUI.Skin = DemoGame.CreateSkin(Application.Content);
-
             Add(new C3DE.Prefabs.CameraPrefab("cam"));
 
             var sceneObject = new SceneObject("MenuNode");

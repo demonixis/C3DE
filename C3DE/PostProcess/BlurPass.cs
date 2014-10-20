@@ -12,7 +12,7 @@ namespace C3DE.PostProcess
             BlurDistance = 0;
         }
 
-        public override void LoadContent(ContentManager content)
+        public override void Initialize(ContentManager content)
         {
             effect = content.Load<Effect>("FX/PostProcess/Blur");
         }

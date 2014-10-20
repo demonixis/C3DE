@@ -32,7 +32,7 @@ namespace C3DE.Demo.Scenes
             var camera = new CameraPrefab("camera");
             camera.AddComponent<DeviceOrientationController> ();
             camera.AddComponent<DemoBehaviour>();
-            camera.Transform.Translate (0, -5, 0);
+            camera.Transform.Position = new Vector3 (0, -10, -15);
             Add(camera);
 
             // Light

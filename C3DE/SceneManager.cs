@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using C3DE.Components;
+using System.Collections.Generic;
 
 namespace C3DE
 {
@@ -129,13 +130,15 @@ namespace C3DE
         /// </summary>
         public void Update()
         {
-            if (_activeSceneIndex == -1)
+            if (_activeSceneIndex == -1 && _levelToLoad == -1)
                 return;
 
             if (_levelToLoad > -1)
             {
                 if (_activeSceneIndex > -1)
                     _scenes[_activeSceneIndex].Unload();
+
+                Camera.Main = null;
 
                 _activeSceneIndex = _levelToLoad;
                 _levelToLoad = -1;

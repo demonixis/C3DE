@@ -20,7 +20,7 @@ namespace C3DE.Demo
 			Application.SceneManager.Add(new RandomTerrain ());
             Application.SceneManager.Add(new RandomTerrainVR());
             Application.SceneManager.Add(new HexagonTerrain());
-            Application.LoadLevel(2);
+            Application.LoadLevel(3);
 
             base.Initialize();
         }

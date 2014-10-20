@@ -20,7 +20,7 @@ namespace C3DE.Demo.Scenes
 		public RandomTerrain() : base("Shader demo") { }  
 
 		public override void Initialize()
-		{
+        {
 			base.Initialize();
 
 			// Skybox
