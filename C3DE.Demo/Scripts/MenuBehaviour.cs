@@ -11,7 +11,7 @@ namespace C3DE.Demo.Scripts
     {
         class DemoWidget
         {
-            public const int Width = 150;
+            public const int Width = 180;
             public const int Height = 50;
 
             private Rectangle _rect;
@@ -56,10 +56,10 @@ namespace C3DE.Demo.Scripts
             _titleSize = 3.0f;
             _titleRect = new Vector2(Screen.WidthPerTwo - titleSize.X * _titleSize / 2, titleSize.Y * _titleSize);
 
-            _demos = new DemoWidget[Application.SceneManager.Size - 2];
+            _demos = new DemoWidget[Application.SceneManager.Size - 1];
 
             for (int i = 0; i < _demos.Length; i++)
-                _demos[i] = new DemoWidget(Application.SceneManager[i + 2].Name, i + 2);
+                _demos[i] = new DemoWidget(Application.SceneManager[i + 1].Name, i + 1);
 
             float x = Screen.WidthPerTwo - DemoWidget.Width / 2;
             float y = Screen.HeightPerTwo - ((DemoWidget.Height + _margin) * _demos.Length) / 2;

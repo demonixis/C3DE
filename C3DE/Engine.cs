@@ -11,7 +11,6 @@ namespace C3DE
     public class Engine : Game
     {
         protected GraphicsDeviceManager graphics;
-        protected SpriteBatch spriteBatch;
         protected IRenderer renderer;
         protected SceneManager sceneManager;
         protected bool initialized;
@@ -31,7 +30,7 @@ namespace C3DE
                     Screen.Setup(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight, null, null);
                     GraphicsDevice.Viewport = new Viewport(0, 0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
 #endif
-                    renderer.LoadContent(Content);
+                    renderer.Initialize(Content);
                 }
             }
         }
@@ -39,17 +38,20 @@ namespace C3DE
         public Engine(string title = "C3DE", int width = 1024, int height = 600)
         {
             graphics = new GraphicsDeviceManager(this);
+
+#if !ANDROID || !WINDOWS_PHONE
             graphics.PreferredBackBufferWidth = width;
             graphics.PreferredBackBufferHeight = height;
+#endif
             Window.Title = title;
             Content.RootDirectory = "Content";
             sceneManager = new SceneManager();
             initialized = false;
 
             Application.Content = Content;
+            Application.Game = this;
             Application.GraphicsDevice = GraphicsDevice;
             Application.GraphicsDeviceManager = graphics;
-            Application.Game = this;
             Application.SceneManager = sceneManager;
 
             Screen.Setup(width, height, false, true);
@@ -76,13 +78,11 @@ namespace C3DE
 			Screen.Setup(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight, null, null);
 			GraphicsDevice.Viewport = new Viewport(0, 0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
 #endif
-
-            spriteBatch = new SpriteBatch(GraphicsDevice);
             
             if (renderer == null)
                 renderer = new Renderer(GraphicsDevice);
 
-            renderer.LoadContent(Content);
+            renderer.Initialize(Content);
 
             Input.Keys = new KeyboardComponent(this);
             Input.Mouse = new MouseComponent(this);

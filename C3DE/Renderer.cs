@@ -35,7 +35,7 @@ namespace C3DE
             _needsBufferUpdate = false;
         }
 
-        public void LoadContent(ContentManager content)
+        public void Initialize(ContentManager content)
         {
             _guiManager = new GUI(_spriteBatch);
             _guiManager.LoadContent(content);

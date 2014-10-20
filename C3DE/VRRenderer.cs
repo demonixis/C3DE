@@ -60,7 +60,7 @@ namespace C3DE
             _needsBufferUpdate = false;
         }
 
-        public void LoadContent(ContentManager content)
+        public void Initialize(ContentManager content)
         {
             Initialize();
 

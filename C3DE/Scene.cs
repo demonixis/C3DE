@@ -23,12 +23,12 @@ namespace C3DE
     public class Scene : SceneObject
     {
         public readonly Material DefaultMaterial;
-        
+
         private int _mainCameraIndex;
         private List<Component> _componentsToDestroy;
         private bool _needRemoveCheck;
 
-        internal protected SmartList<SceneObject> members;
+        internal protected SmartList<SceneObject> sceneObjects;
         internal protected List<RenderableComponent> renderList;
         internal protected List<Material> materials;
         internal protected List<Effect> effects;
@@ -45,7 +45,13 @@ namespace C3DE
         public Camera MainCamera
         {
             get { return _mainCameraIndex > -1 ? cameras[_mainCameraIndex] : null; }
-            set { _mainCameraIndex = Add(value); }
+            set
+            {
+                _mainCameraIndex = Add(value);
+
+                if (_mainCameraIndex > -1 && cameras[_mainCameraIndex] != Camera.Main)
+                    Camera.Main = cameras[_mainCameraIndex];
+            }
         }
 
         /// <summary>
@@ -56,31 +62,49 @@ namespace C3DE
             get { return renderList; }
         }
 
+        /// <summary>
+        /// Gets materials.
+        /// </summary>
         public List<Material> Materials
         {
             get { return materials; }
         }
 
+        /// <summary>
+        /// Gets colliders.
+        /// </summary>
         public List<Collider> Colliders
         {
             get { return colliders; }
         }
 
+        /// <summary>
+        /// Gets lights.
+        /// </summary>
         public List<Light> Lights
         {
             get { return lights; }
         }
 
+        /// <summary>
+        /// Gets cameras.
+        /// </summary>
         public List<Camera> Cameras
         {
             get { return cameras; }
         }
 
+        /// <summary>
+        /// Gets scripts.
+        /// </summary>
         public List<Behaviour> Behaviours
         {
             get { return scripts; }
         }
 
+        /// <summary>
+        /// Gets prefabs.
+        /// </summary>
         public List<SceneObject> Prefabs
         {
             get { return prefabs; }
@@ -94,7 +118,7 @@ namespace C3DE
         {
             Name = name;
             transform.Root = transform;
-            members = new SmartList<SceneObject>();
+            sceneObjects = new SmartList<SceneObject>();
             scene = this;
             renderList = new List<RenderableComponent>(10);
             materials = new List<Material>(5);
@@ -115,24 +139,9 @@ namespace C3DE
 
         #region Lifecycle
 
-        internal void Reset()
-        {
-            renderList.Clear();
-            materials.Clear();
-            effects.Clear();
-            materialsEffectIndex.Clear();
-            colliders.Clear();
-            cameras.Clear();
-            lights.Clear();
-            scripts.Clear();
-            members.Clear();
-            prefabs.Clear();
-            _componentsToDestroy.Clear();
-            _needRemoveCheck = false;
-        }
-
         /// <summary>
-        /// Load content of all components.
+        /// Initialize the scene. This method is called whenever the scene is used by
+        /// the SceneManager.
         /// </summary>
         /// <param name="content"></param>
         public override void Initialize()
@@ -144,13 +153,16 @@ namespace C3DE
 
             UpdateEffectMaterialMatching();
 
-            for (int i = 0; i < members.Size; i++)
-                members[i].Initialize();
+            for (int i = 0; i < sceneObjects.Size; i++)
+                sceneObjects[i].Initialize();
 
-            members.CheckRequired = true;
+            sceneObjects.CheckRequired = true;
             initialized = true;
         }
 
+        /// <summary>
+        /// Called just before the scene is started.
+        /// </summary>
         public virtual void BeforeStarting()
         {
             isReady = true;
@@ -179,20 +191,44 @@ namespace C3DE
             }
 
             // Second - Check if we need to remove some SceneObjectlists.
-            members.Check();
+            sceneObjects.Check();
 
             // Third - Safe update
-            for (int i = 0; i < members.Size; i++)
+            for (int i = 0; i < sceneObjects.Size; i++)
             {
-                if (members[i].Enabled)
-                    members[i].Update();
+                if (sceneObjects[i].Enabled)
+                    sceneObjects[i].Update();
             }
         }
 
+        /// <summary>
+        /// Unload the scene.
+        /// </summary>
         public void Unload()
         {
             foreach (Behaviour script in Behaviours)
                 script.OnDestroy();
+
+            Clear();
+        }
+
+        /// <summary>
+        /// Clean the scene.
+        /// </summary>
+        protected void Clear()
+        {
+            renderList.Clear();
+            materials.Clear();
+            effects.Clear();
+            materialsEffectIndex.Clear();
+            colliders.Clear();
+            cameras.Clear();
+            lights.Clear();
+            scripts.Clear();
+            sceneObjects.Clear();
+            prefabs.Clear();
+            _componentsToDestroy.Clear();
+            _needRemoveCheck = false;
         }
 
         #endregion
@@ -204,13 +240,18 @@ namespace C3DE
         /// </summary>
         /// <param name="sceneObject">The scene object.</param>
         /// <param name="type">Type of change.</param>
-        private void CheckComponents(SceneObject sceneObject, ComponentChangeType type)
+        protected void CheckComponents(SceneObject sceneObject, ComponentChangeType type)
         {
             for (int i = 0; i < sceneObject.Components.Count; i++)
                 CheckComponent(sceneObject.Components[i], type);
         }
 
-        public void CheckComponent(Component component, ComponentChangeType type)
+        /// <summary>
+        /// Check a component.
+        /// </summary>
+        /// <param name="component"></param>
+        /// <param name="type"></param>
+        protected void CheckComponent(Component component, ComponentChangeType type)
         {
             if (component is RenderableComponent)
             {
@@ -265,17 +306,6 @@ namespace C3DE
         }
 
         /// <summary>
-        /// Called when a component is added to a registered scene object.
-        /// It's actually used to update the render list.
-        /// </summary>
-        /// <param name="sender">The scene object which as added or removed a component.</param>
-        /// <param name="e">An object which contains the component and a flag to know if it's added or removed.</param>
-        private void sceneObject_ComponentsChanged(object sender, ComponentChangedEventArgs e)
-        {
-            CheckComponent(e.Component, e.ChangeType);
-        }
-
-        /// <summary>
         /// Add a scene object to the scene.
         /// </summary>
         /// <param name="sceneObject">The scene object to add.</param>
@@ -286,25 +316,31 @@ namespace C3DE
 
             if (canAdd)
             {
-                members.Add(sceneObject);
-                sceneObject.Scene = this;
-                sceneObject.Transform.Root = transform;
-
-                if (initialized)
-                    sceneObject.Initialize();
-
-                if (sceneObject.Enabled)
+                if (!sceneObject.IsPrefab)
                 {
-                    CheckComponents(sceneObject, ComponentChangeType.Add);
-                    sceneObject.PropertyChanged += sceneObject_PropertyChanged;
-                    sceneObject.ComponentChanged += sceneObject_ComponentsChanged;
+
+                    sceneObjects.Add(sceneObject);
+                    sceneObject.Scene = this;
+                    sceneObject.Transform.Root = transform;
+
+                    if (initialized)
+                        sceneObject.Initialize();
+
+                    if (sceneObject.Enabled)
+                    {
+                        CheckComponents(sceneObject, ComponentChangeType.Add);
+                        sceneObject.PropertyChanged += OnComponentPropertyChanged;
+                        sceneObject.ComponentChanged += OnComponentChanged;
+                    }
                 }
+                else
+                    AddPrefab(sceneObject);
             }
 
             return canAdd;
         }
 
-        void sceneObject_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void OnComponentPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.Name == "Enabled")
             {
@@ -313,16 +349,27 @@ namespace C3DE
                 if (sceneObject.Enabled)
                 {
                     CheckComponents(sceneObject, ComponentChangeType.Add);
-                    sceneObject.PropertyChanged += sceneObject_PropertyChanged;
-                    sceneObject.ComponentChanged += sceneObject_ComponentsChanged;
+                    sceneObject.PropertyChanged += OnComponentPropertyChanged;
+                    sceneObject.ComponentChanged += OnComponentChanged;
                 }
                 else
                 {
                     CheckComponents(sceneObject, ComponentChangeType.Remove);
-                    sceneObject.PropertyChanged -= sceneObject_PropertyChanged;
-                    sceneObject.ComponentChanged -= sceneObject_ComponentsChanged;
+                    sceneObject.PropertyChanged -= OnComponentPropertyChanged;
+                    sceneObject.ComponentChanged -= OnComponentChanged;
                 }
             }
+        }
+
+        /// <summary>
+        /// Called when a component is added to a registered scene object.
+        /// It's actually used to update the render list.
+        /// </summary>
+        /// <param name="sender">The scene object which as added or removed a component.</param>
+        /// <param name="e">An object which contains the component and a flag to know if it's added or removed.</param>
+        private void OnComponentChanged(object sender, ComponentChangedEventArgs e)
+        {
+            CheckComponent(e.Component, e.ChangeType);
         }
 
         #endregion
@@ -392,7 +439,10 @@ namespace C3DE
             }
 
             if (_mainCameraIndex == -1)
+            {
                 _mainCameraIndex = index;
+                Camera.Main = camera;
+            }
 
             return index;
         }
@@ -471,7 +521,7 @@ namespace C3DE
 
         #region Destroy SceneObjects/Components
 
-        private int GetFirstToRemoveComponentNullIndex()
+        private int GetFirstNullRemovedComponent()
         {
             for (int i = 0, l = _componentsToDestroy.Count; i < l; i++)
             {
@@ -503,12 +553,12 @@ namespace C3DE
             for (int i = 0, l = sceneObject.Components.Count; i < l; i++)
                 this.DestroyComponent(sceneObject.Components[i]);
 
-            members.Remove(sceneObject);
+            sceneObjects.Remove(sceneObject);
         }
 
         public void DestroyComponent(Component component)
         {
-            var index = GetFirstToRemoveComponentNullIndex();
+            var index = GetFirstNullRemovedComponent();
 
             if (index > -1)
                 _componentsToDestroy[index] = component;
@@ -524,10 +574,10 @@ namespace C3DE
 
         public SceneObject Find(string name)
         {
-            for (int i = 0; i < members.Size; i++)
+            for (int i = 0; i < sceneObjects.Size; i++)
             {
-                if (members[i].Name == name)
-                    return members[i];
+                if (sceneObjects[i].Name == name)
+                    return sceneObjects[i];
             }
 
             return null;
@@ -537,11 +587,12 @@ namespace C3DE
         {
             Component component = null;
 
-            for (int i = 0; i < members.Size; i++)
+            for (int i = 0; i < sceneObjects.Size; i++)
             {
-                component = members[i].GetComponent<T>();
+                component = sceneObjects[i].GetComponent<T>();
+
                 if (component != null)
-                    return members[i];
+                    return sceneObjects[i];
             }
 
             return null;

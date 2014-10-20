@@ -10,9 +10,10 @@ namespace C3DE.Components
 
     public class Camera : Component
     {
+        public static Camera Main = null;
+
         protected internal Matrix view;
         protected internal Matrix projection;
-        protected internal Vector3 camView;
         protected Vector3 reference;
         private Vector3 _target;
         private Vector3 _upVector;

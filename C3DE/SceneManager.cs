@@ -37,8 +37,7 @@ namespace C3DE
         {
             _scenes = new List<Scene>(3);
             _levelToLoad = -1;
-            _activeSceneIndex = 0;
-            _scenes.Add(new Scene("DefaultScene"));
+            _activeSceneIndex = -1;
         }
 
         /// <summary>
@@ -110,6 +109,8 @@ namespace C3DE
                 if (_activeSceneIndex == index)
                     _activeSceneIndex = _scenes.Count - 1;
 
+                _scenes[index].Unload();
+
                 _scenes.RemoveAt(index);
             }
         }
@@ -119,7 +120,8 @@ namespace C3DE
         /// </summary>
         public void Initialize()
         {
-            _scenes[_activeSceneIndex].Initialize();
+            if (_activeSceneIndex > -1)
+                _scenes[_activeSceneIndex].Initialize();
         }
 
         /// <summary>
@@ -127,6 +129,9 @@ namespace C3DE
         /// </summary>
         public void Update()
         {
+            if (_activeSceneIndex == -1)
+                return;
+
             if (_levelToLoad > -1)
             {
                 if (_activeSceneIndex > -1)
@@ -134,9 +139,6 @@ namespace C3DE
 
                 _activeSceneIndex = _levelToLoad;
                 _levelToLoad = -1;
-
-                if (_scenes[_activeSceneIndex].Initialized)
-                    _scenes[_activeSceneIndex].Reset();
 
                 _scenes[_activeSceneIndex].Initialize();
             }
