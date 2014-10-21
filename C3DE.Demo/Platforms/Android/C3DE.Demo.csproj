@@ -96,11 +96,10 @@
     <Compile Include="Scenes\RandomTerrain.cs" />
     <Compile Include="Scenes\HexagonTerrain.cs" />
     <Compile Include="Scenes\HeightmapTerrain.cs" />
-    <Compile Include="Scripts\DeviceOrientationController.cs" />
-    <Compile Include="Scenes\RandomTerrainVR.cs" />
     <Compile Include="..\..\Scenes\MenuDemo.cs">
       <Link>Scenes\MenuDemo.cs</Link>
     </Compile>
+    <Compile Include="Scripts\VRModeSwitcher.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Properties\AndroidManifest.xml" />

@@ -11,7 +11,12 @@ namespace C3DE.Demo.Scenes
         {
             base.Initialize();
 
+            GUI.Skin = DemoGame.CreateSkin(Application.Content);
+
             Add(new C3DE.Prefabs.CameraPrefab("cam"));
+
+            MenuBehaviour.ButtonWidth = 250;
+            MenuBehaviour.ButtonHeight = 75;
 
             var sceneObject = new SceneObject("MenuNode");
             sceneObject.AddComponent<MenuBehaviour>();

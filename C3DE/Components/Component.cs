@@ -9,10 +9,9 @@ namespace C3DE.Components
     public abstract class Component : IComparable, ICloneable
     {
         private static int ComponentCounter = 0;
-
+        internal protected bool initialized;
         protected bool enabled;
         protected int order = 1;
-        protected bool initialized;
         protected SceneObject sceneObject;
         protected Transform transform;
 

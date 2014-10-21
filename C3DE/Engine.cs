@@ -10,6 +10,10 @@ namespace C3DE
     /// </summary>
     public class Engine : Game
     {
+        private bool _started;
+        private IRenderer _rendererToChange;
+        private bool _needRendererChange;
+
         protected GraphicsDeviceManager graphics;
         protected IRenderer renderer;
         protected SceneManager sceneManager;
@@ -20,18 +24,8 @@ namespace C3DE
             get { return renderer; }
             set 
             {
-                renderer = value; 
-
-                if (initialized)
-                {
-#if ANDROID
-                    Screen.Setup (GraphicsDevice.Adapter.CurrentDisplayMode.Width, GraphicsDevice.Adapter.CurrentDisplayMode.Height, null, null);
-#elif LINUX
-                    Screen.Setup(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight, null, null);
-                    GraphicsDevice.Viewport = new Viewport(0, 0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
-#endif
-                    renderer.Initialize(Content);
-                }
+                _rendererToChange = value;
+                _needRendererChange = true;
             }
         }
 
@@ -39,7 +33,7 @@ namespace C3DE
         {
             graphics = new GraphicsDeviceManager(this);
 
-#if !ANDROID || !WINDOWS_PHONE
+#if !ANDROID && !WINDOWS_PHONE
             graphics.PreferredBackBufferWidth = width;
             graphics.PreferredBackBufferHeight = height;
 #endif
@@ -57,6 +51,9 @@ namespace C3DE
             Screen.Setup(width, height, false, true);
 
             graphics.PreparingDeviceSettings += OnResize;
+
+            _needRendererChange = false;
+            _started = false;
         }
 
         private void OnResize(object sender, PreparingDeviceSettingsEventArgs e)
@@ -65,6 +62,22 @@ namespace C3DE
             int height = e.GraphicsDeviceInformation.PresentationParameters.BackBufferHeight;
 
             Screen.Setup(width, height, null, null);
+        }
+
+        protected void SetRenderer(IRenderer iRenderer)
+        {
+            renderer = iRenderer;
+
+            if (initialized)
+            {
+#if ANDROID
+                Screen.Setup (GraphicsDevice.Adapter.CurrentDisplayMode.Width, GraphicsDevice.Adapter.CurrentDisplayMode.Height, null, null);
+#elif LINUX
+                Screen.Setup(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight, null, null);
+                GraphicsDevice.Viewport = new Viewport(0, 0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
+#endif
+                renderer.Initialize(Content);
+            }
         }
 
         protected override void Initialize()
@@ -107,12 +120,13 @@ namespace C3DE
 
         protected override void BeginRun()
         {
-            base.BeginRun();
+            _started = true;
         }
 
         protected override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
+
             sceneManager.Update();
         }
 
@@ -129,6 +143,12 @@ namespace C3DE
 
             if (Screen.LockCursor)
                 Mouse.SetPosition(Screen.WidthPerTwo, Screen.HeightPerTwo);
+
+            if (_needRendererChange)
+            {
+                SetRenderer(_rendererToChange);
+                _needRendererChange = false;
+            }
         }
     }
 }

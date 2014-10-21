@@ -41,24 +41,10 @@ namespace C3DE.Components
             set { _position = value; }
         }
 
-        // FIXME
-        public Vector3 LocalPosition
-        {
-            get { return (_parent != null) ? _parent.LocalPosition - _position : _position; }
-            set { _position = value; }
-        }
-
         public Vector3 Rotation
         {
             get { return _rotation; }
             set { _rotation = value; }
-        }
-
-        // FIXME
-        public Vector3 LocalRotation
-        {
-            get;
-            set;
         }
 
         public Vector3 LocalScale

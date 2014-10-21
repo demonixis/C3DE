@@ -23,16 +23,14 @@ namespace C3DE.Demo.Scenes
         {
             base.Initialize();
 
-            //(Application.Game as AndroidGame).Renderer = new VRRenderer();
-
             // Skybox
             RenderSettings.Skybox.Generate(Application.GraphicsDevice, Application.Content, DemoGame.BlueSkybox);
 
             // Camera
             var camera = new CameraPrefab("camera");
-            camera.AddComponent<DeviceOrientationController> ();
+            camera.AddComponent<OrientationController>();
             camera.AddComponent<DemoBehaviour>();
-            camera.Transform.Position = new Vector3 (0, -10, -15);
+            camera.Transform.Position = new Vector3 (0, -10, -15); // FIXME
             Add(camera);
 
             // Light

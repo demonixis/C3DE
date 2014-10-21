@@ -24,9 +24,9 @@ namespace C3DE.Demo.Scenes
 
 			// Camera
 			var camera = new CameraPrefab("camera");
-			Add(camera);
-			camera.AddComponent<OrbitController>();
+            camera.AddComponent<VRModeSwitcher>();
 			camera.AddComponent<DemoBehaviour>();
+            Add(camera);
 
 			// Light
 			var lightPrefab = new LightPrefab("lightPrefab", LightType.Point);

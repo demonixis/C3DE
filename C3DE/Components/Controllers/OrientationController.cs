@@ -5,14 +5,15 @@ using Microsoft.Devices.Sensors;
 using Microsoft.Xna.Framework;
 using System;
 
-namespace C3DE.Demo.Scripts
+namespace C3DE.Components.Controllers
 {
-	public class DeviceOrientationController : FirstPersonController
+    public class OrientationController : Controller
 	{
 		private Camera _camera;
         private Accelerometer _accelSensor;
         private Vector3 _accelReading;
         private Vector3 _lastAccelReading;
+        private Vector3 _delta;
         private bool _accelStarted;
 
 		public override void Start()
@@ -38,7 +39,8 @@ namespace C3DE.Demo.Scripts
 
         public override void OnDestroy()
         {
-            _accelSensor.Stop();
+            if (_accelStarted)
+                _accelSensor.Stop();
         }
 
         private void OnAccelChanged (object sender, SensorReadingEventArgs<AccelerometerReading> e)
@@ -50,6 +52,10 @@ namespace C3DE.Demo.Scripts
             _accelReading.X = Round(e.SensorReading.Acceleration.X);
             _accelReading.Y = Round(e.SensorReading.Acceleration.Y);
             _accelReading.Z = Round(e.SensorReading.Acceleration.Z);
+
+            _delta.X = _accelReading.X - _lastAccelReading.X;
+            _delta.Y = _accelReading.Y - _lastAccelReading.Y;
+            _delta.Z = _accelReading.Z - _lastAccelReading.Z;
         }
 
 		public override void Update()
@@ -58,12 +64,14 @@ namespace C3DE.Demo.Scripts
             {
                 if (_accelReading.Z < 0.0f)
                     _accelReading.X = 1 + (1 - _accelReading.X);
+
+                _accelReading.Z = 0.0f;
               
-                transform.Rotation = Vector3.Lerp(transform.Rotation, new Vector3(_accelReading.X * 1.57f + MathHelper.ToRadians(90), 10.0f * _accelReading.Y, 1.57f * _accelReading.Z), Time.DeltaTime * 16);
+                transform.Rotation = Vector3.Lerp(transform.Rotation, new Vector3(_accelReading.X * MathHelper.PiOver2 + MathHelper.ToRadians(90), MathHelper.TwoPi * _accelReading.Y, MathHelper.PiOver2 * _accelReading.Z), Time.DeltaTime * 16);
             } 
 
 			_camera.Target = transform.Position + Vector3.Transform(_camera.Reference, Matrix.CreateFromYawPitchRoll(transform.Rotation.Y, transform.Rotation.X, transform.Rotation.Z));
-		}
+        }
 
         private float Round(float value, float precision = 100)
         {

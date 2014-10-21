@@ -51,6 +51,7 @@
     <Compile Include="VRRenderer.cs" />
     <Compile Include="Extensions\QuaternionExtensions.cs" />
     <Compile Include="VRMobileRenderer.cs" />
+    <Compile Include="Components\Controllers\OrientationController.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Application.cs" />

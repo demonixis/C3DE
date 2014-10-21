@@ -124,7 +124,7 @@ namespace C3DE.Components
 
         public override void Start()
         {
-            Setup(transform.LocalPosition, Vector3.Zero, Vector3.Up);
+            Setup(transform.Position, Vector3.Zero, Vector3.Up);
         }
 
         public void Setup(Vector3 position, Vector3 camTarget, Vector3 upVector)

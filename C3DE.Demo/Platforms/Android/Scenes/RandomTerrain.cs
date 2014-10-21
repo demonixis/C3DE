@@ -32,6 +32,7 @@ namespace C3DE.Demo.Scenes
 			Add(camera);
 
 			camera.AddComponent<OrbitController>();
+            camera.AddComponent<VRModeSwitcher>();
 			camera.AddComponent<DemoBehaviour>();
 
 			// Light

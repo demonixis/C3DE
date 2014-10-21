@@ -40,9 +40,9 @@ namespace C3DE
         public void Initialize(ContentManager content)
         {
             _device = Application.GraphicsDevice;
+            _spriteBatch = new SpriteBatch(_device);
             _guiManager = new GUI(_spriteBatch);
             _guiManager.LoadContent(content);
-            _spriteBatch = new SpriteBatch(_device);
             SetupRenderTargets();
         }
 

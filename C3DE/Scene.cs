@@ -38,7 +38,6 @@ namespace C3DE
         internal protected List<Light> lights;
         internal protected List<Behaviour> scripts;
         internal protected List<SceneObject> prefabs;
-        protected bool isReady;
 
         public RenderSettings RenderSettings { get; private set; }
 
@@ -132,7 +131,6 @@ namespace C3DE
             _componentsToDestroy = new List<Component>();
             _needRemoveCheck = false;
             _mainCameraIndex = -1;
-            isReady = false;
             DefaultMaterial = new SimpleMaterial(this);
             RenderSettings = new RenderSettings();
         }
@@ -158,14 +156,6 @@ namespace C3DE
 
             sceneObjects.CheckRequired = true;
             initialized = true;
-        }
-
-        /// <summary>
-        /// Called just before the scene is started.
-        /// </summary>
-        public virtual void BeforeStarting()
-        {
-            isReady = true;
         }
 
         /// <summary>
@@ -509,7 +499,7 @@ namespace C3DE
         /// <param name="prefab"></param>
         protected void AddPrefab(SceneObject prefab)
         {
-            if (!prefabs.Contains(prefab) && !isReady)
+            if (!prefabs.Contains(prefab))
                 prefabs.Add(prefab);
         }
 

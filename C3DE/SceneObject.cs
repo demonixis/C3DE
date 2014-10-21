@@ -126,7 +126,10 @@ namespace C3DE
             if (!initialized)
             {
                 for (int i = components.Count - 1; i != 0; i--)
+                {
                     components[i].Start();
+                    components[i].initialized = true;
+                }
 
                 initialized = true;
             }
@@ -214,7 +217,7 @@ namespace C3DE
             components.Add(component);
             components.Sort();
 
-            if (initialized)
+            if (initialized && !component.Initialized)
                 component.Start();
 
             NotifyComponentChanged(component);
