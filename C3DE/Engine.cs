@@ -93,7 +93,7 @@ namespace C3DE
 #endif
             
             if (renderer == null)
-                renderer = new Renderer(GraphicsDevice);
+                renderer = new Renderer();
 
             renderer.Initialize(Content);
 

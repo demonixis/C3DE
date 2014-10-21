@@ -13,6 +13,7 @@ namespace C3DE.Demo
         private VRMobileRenderer _vrMobileRenderer;
         private Rectangle _switchRect;
         private bool _vrEnabled;
+        private Controller _baseController;
         private OrientationController _orientationController;
 
         public override void Start()
@@ -28,7 +29,9 @@ namespace C3DE.Demo
             _vrMobileRenderer = new VRMobileRenderer();
             _vrMobileRenderer.Initialize(Application.Content);
 
+            _baseController = GetComponent<Controller>();
             _orientationController = AddComponent<OrientationController>();
+            _orientationController.Start();
             _orientationController.Enabled = false;
         }
 
@@ -42,18 +45,22 @@ namespace C3DE.Demo
         {
             if (ui.Button(ref _switchRect, _vrEnabled ? "Normal Mode" : "VR Mode"))
             {
+                _vrEnabled = !_vrEnabled;
+
                 if (_vrEnabled)
                     _engine.Renderer = _basicRenderer;
                 else
                     _engine.Renderer = _vrMobileRenderer;
-
-                _orientationController.Enabled = _vrEnabled;
-
-                // FIXME
-                if (!_orientationController.Initialized)
+                    
+                if (_vrEnabled)
                 {
-                    _orientationController.Start();
+                    _orientationController.Enabled = _vrEnabled;
+
+                    if (_baseController != null)
+                        _baseController.Enabled = false; 
                 }
+                else if (_baseController != null)
+                    _baseController.Enabled = true;
             }
         }
     }

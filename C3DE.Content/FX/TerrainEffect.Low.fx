@@ -1,4 +1,4 @@
-#include "../ShadowMap.fxh"
+#include "ShadowMap.fxh"
 
 // Matrix
 float4x4 World;

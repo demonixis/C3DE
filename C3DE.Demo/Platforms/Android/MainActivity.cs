@@ -26,9 +26,10 @@ namespace C3DE.Demo
             Window.SetFlags (WindowManagerFlags.Fullscreen, WindowManagerFlags.Fullscreen);
 
             var g = new AndroidGame();
-            SetContentView((View)g.Services.GetService(typeof(View)));
+            var view = (View)g.Services.GetService(typeof(View));
+            SetContentView(view);
             g.Run();
-        }
+        }  
     }
 }
 
