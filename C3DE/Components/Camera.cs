@@ -10,9 +10,10 @@ namespace C3DE.Components
 
     public class Camera : Component
     {
+        public static Camera Main = null;
+
         protected internal Matrix view;
         protected internal Matrix projection;
-        protected internal Vector3 camView;
         protected Vector3 reference;
         private Vector3 _target;
         private Vector3 _upVector;
@@ -22,8 +23,60 @@ namespace C3DE.Components
         private float _farPlane;
         private CameraProjectionType _projectionType;
         private bool _needUpdate;
-        private Matrix _matrixRotation0;
+        private bool _needProjectionUpdate;
 
+        public float Aspect
+        {
+            get { return _aspectRatio; }
+            set 
+            {
+                if (_aspectRatio != value)
+                {
+                    _aspectRatio = value;
+                    _needProjectionUpdate = true;
+                }
+            }
+        }
+
+        public float FieldOfView
+        {
+            get { return _fieldOfView; }
+            set
+            {
+                if (_fieldOfView != value)
+                {
+                    _fieldOfView = value;
+                    _needProjectionUpdate = true;
+                }
+            }
+        }
+
+        public float Near
+        {
+            get { return _nearPlane; }
+            set
+            {
+                if (_nearPlane != value)
+                {
+                    _nearPlane = value;
+                    _needProjectionUpdate = true;
+                }
+            }
+        }
+
+        public float Far
+        {
+            get { return _farPlane; }
+            set
+            {
+                if (_farPlane != value)
+                {
+                    _farPlane = value;
+                    _needProjectionUpdate = true;
+                }
+            }
+        }
+        
         public Vector3 Reference
         {
             get { return reference; }
@@ -43,8 +96,7 @@ namespace C3DE.Components
                 if (value != _projectionType)
                 {
                     _projectionType = value;
-                    ComputeProjectionMatrix();
-                    _needUpdate = true;
+                    _needProjectionUpdate = true;
                 }
             }
         }
@@ -68,12 +120,11 @@ namespace C3DE.Components
             _farPlane = 500.0f;
             _projectionType = CameraProjectionType.Perspective;
             reference = new Vector3(0.0f, 0.0f, 1.0f);
-            _matrixRotation0 = Matrix.CreateRotationY(0.0f);
         }
 
         public override void Start()
         {
-            Setup(transform.LocalPosition, Vector3.Zero, Vector3.Up);
+            Setup(transform.Position, Vector3.Zero, Vector3.Up);
         }
 
         public void Setup(Vector3 position, Vector3 camTarget, Vector3 upVector)
@@ -81,12 +132,10 @@ namespace C3DE.Components
             transform.Position = position;
             _target = camTarget;
             _upVector = upVector;
-            _needUpdate = true;
 
-            view = Matrix.CreateLookAt(sceneObject.Transform.LocalPosition, _target, Vector3.Up);
+            view = Matrix.CreateLookAt(position, _target, Vector3.Up);
 
             ComputeProjectionMatrix();
-            _needUpdate = true;
         }
 
         public void ComputeProjectionMatrix()
@@ -95,6 +144,8 @@ namespace C3DE.Components
                 projection = Matrix.CreatePerspectiveFieldOfView(_fieldOfView, _aspectRatio, _nearPlane, _farPlane);
             else
                 projection = Matrix.CreateOrthographic(Application.GraphicsDevice.Viewport.Width, Application.GraphicsDevice.Viewport.Height, _nearPlane, _farPlane);
+
+            _needProjectionUpdate = false;
         }
 
         public void ComputeProjectionMatrix(float fov, float aspect, float near, float far)
@@ -109,12 +160,12 @@ namespace C3DE.Components
 
         public override void Update()
         {
+            if (_needProjectionUpdate)
+                ComputeProjectionMatrix();
+
             if (!sceneObject.IsStatic || _needUpdate)
             {
                 view = Matrix.CreateLookAt(transform.Position, _target, _upVector);
-
-                camView = Vector3.Transform(_target - transform.Position, _matrixRotation0);
-                
                 _needUpdate = false;
             }
         }

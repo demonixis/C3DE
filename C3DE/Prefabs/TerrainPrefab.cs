@@ -47,8 +47,8 @@ namespace C3DE.Prefabs
             renderer.Geometry = geometry;
             renderer.CastShadow = false;
 
-            SandLayer = 6;
-            GroundLayer = 12;
+            SandLayer = 9;
+            GroundLayer = 18;
             RockLayer = 23;
             SnowLayer = 50;
         }

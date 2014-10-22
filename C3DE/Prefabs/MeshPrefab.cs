@@ -20,6 +20,8 @@ namespace C3DE.Prefabs.Meshes
             get { return _collider; }
         }
 
+        public MeshPrefab() : this("MeshPrefab", 1.0f) { }
+
         public MeshPrefab(string name, float size = 1.0f)
             : base(name)
         {
@@ -28,6 +30,18 @@ namespace C3DE.Prefabs.Meshes
             _renderer.Geometry.Size = new Vector3(1);
             _renderer.ReceiveShadow = false;
             _renderer.Geometry.Generate();
+            _collider = AddComponent<SphereCollider>();
+        }
+
+        public MeshPrefab(string name, T geometry)
+            : base()
+        {
+            if (!geometry.Constructed)
+                geometry.Generate();
+
+            _renderer = AddComponent<MeshRenderer>();
+            _renderer.Geometry = geometry;
+            _renderer.ReceiveShadow = false;
             _collider = AddComponent<SphereCollider>();
         }
     }

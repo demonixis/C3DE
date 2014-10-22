@@ -1,10 +1,5 @@
 ﻿using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace C3DE.PostProcess
 {
@@ -17,7 +12,7 @@ namespace C3DE.PostProcess
             BlurDistance = 0;
         }
 
-        public override void LoadContent(ContentManager content)
+        public override void Initialize(ContentManager content)
         {
             effect = content.Load<Effect>("FX/PostProcess/Blur");
         }

@@ -23,7 +23,12 @@ namespace C3DE.Editor
             InitializeComponent();
             _separator = new char[1] { '_' };
 
-            editorGameHost.SceneObjectAdded += OnSceneObjectAdded;
+            editorGameHost.SceneObjectAdded += editorGameHost_SceneObjectAdded;
+        }
+
+        void editorGameHost_SceneObjectAdded(object sender, SceneObjectAddedEventArgs e)
+        {
+            //throw new NotImplementedException();
         }
 
         private void OnMenuFileClick(object sender, RoutedEventArgs e)

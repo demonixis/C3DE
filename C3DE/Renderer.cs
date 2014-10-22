@@ -1,5 +1,4 @@
 ﻿using C3DE.Components;
-using C3DE.Materials;
 using C3DE.PostProcess;
 using C3DE.UI;
 using Microsoft.Xna.Framework;
@@ -10,22 +9,16 @@ using System.Collections.Generic;
 namespace C3DE
 {
     /// <summary>
-    /// The renderer will render a scene to the screen according to a camera view.
+    /// The renderer is responsible to render a scene with a camera view to the screen.
     /// </summary>
-    public class Renderer
+    public class Renderer : IRenderer
     {
-        private GraphicsDevice graphicsDevice;
+        private GraphicsDevice _device;
         private RenderTarget2D _sceneRT;
         private SpriteBatch _spriteBatch;
         private PostProcessManager _postProcessManager;
-        private Skybox _skybox;
         private bool _needsBufferUpdate;
         internal GUI _guiManager;
-
-        public Skybox Skybox
-        {
-            get { return _skybox; }
-        }
 
         public bool NeedsBufferUpdate
         {
@@ -33,21 +26,19 @@ namespace C3DE
             set { _needsBufferUpdate = value; }
         }
 
-        public Renderer(GraphicsDevice device)
+        public Renderer()
         {
-            graphicsDevice = device;
-            _spriteBatch = new SpriteBatch(device);
-            _sceneRT = new RenderTarget2D(device, device.Viewport.Width, device.Viewport.Height, false, SurfaceFormat.Color, DepthFormat.Depth24, 0, RenderTargetUsage.DiscardContents);
-            _postProcessManager = new PostProcessManager();
-            _skybox = new Skybox();
             _needsBufferUpdate = false;
         }
 
-        public void LoadContent(ContentManager content)
+        public void Initialize(ContentManager content)
         {
+            _device = Application.GraphicsDevice;
+            _sceneRT = new RenderTarget2D(_device, _device.Viewport.Width, _device.Viewport.Height, false, SurfaceFormat.Color, DepthFormat.Depth24, 0, RenderTargetUsage.DiscardContents);
+            _postProcessManager = new PostProcessManager();
+            _spriteBatch = new SpriteBatch(_device);
             _guiManager = new GUI(_spriteBatch);
             _guiManager.LoadContent(content);
-            _postProcessManager.LoadContent(content);
         }
 
         /// <summary>
@@ -60,12 +51,12 @@ namespace C3DE
             if (scene.Lights.Count == 0)
                 return;
 
-            graphicsDevice.SetRenderTarget(_sceneRT);
-            graphicsDevice.Clear(Color.Black);
-            graphicsDevice.DepthStencilState = DepthStencilState.Default;
+            _device.SetRenderTarget(_sceneRT);
+            _device.Clear(Color.Black);
+            _device.DepthStencilState = DepthStencilState.Default;
 
-            if (_skybox.Enabled)
-                _skybox.Draw(graphicsDevice, camera);
+            if (scene.RenderSettings.Skybox.Enabled)
+                scene.RenderSettings.Skybox.Draw(_device, camera);
 
             // Prepass, Update light, eye position, etc.
             for (int i = 0; i < scene.effects.Count; i++)
@@ -77,14 +68,15 @@ namespace C3DE
                 if (scene.renderList[i].Enabled)
                 {
                     if (scene.RenderList[i].MaterialCount == 0)
-                        scene.RenderList[i].Material = scene.DefaultMaterial;
-
-                    scene.RenderList[i].Material.Pass(scene.RenderList[i]);
-                    scene.RenderList[i].Draw(graphicsDevice);
+                        scene.DefaultMaterial.Pass(scene.renderList[i]);
+                    else
+                        scene.RenderList[i].Material.Pass(scene.RenderList[i]);
+                    
+                    scene.RenderList[i].Draw(_device);
                 }
             }
 
-            graphicsDevice.SetRenderTarget(null);
+            _device.SetRenderTarget(null);
         }
 
         /// <summary>
@@ -127,13 +119,13 @@ namespace C3DE
         {
             if (_needsBufferUpdate)
             {
-                _sceneRT = new RenderTarget2D(graphicsDevice, graphicsDevice.Viewport.Width, graphicsDevice.Viewport.Height, false, SurfaceFormat.Color, DepthFormat.Depth24, 0, RenderTargetUsage.DiscardContents);
+                _sceneRT = new RenderTarget2D(_device, _device.Viewport.Width, _device.Viewport.Height, false, SurfaceFormat.Color, DepthFormat.Depth24, 0, RenderTargetUsage.DiscardContents);
                 _needsBufferUpdate = false;
             }
 
             for (int i = 0, l = scene.Lights.Count; i < l; i++)
                 if (scene.Lights[i].shadowGenerator.Enabled)
-                    scene.Lights[i].shadowGenerator.RenderShadows(graphicsDevice, scene.RenderList);
+                    scene.Lights[i].shadowGenerator.RenderShadows(_device, scene.RenderList);
 
             renderObjects(scene, camera);
 
@@ -146,14 +138,14 @@ namespace C3DE
         {
             if (_needsBufferUpdate)
             {
-                _sceneRT = new RenderTarget2D(graphicsDevice, graphicsDevice.Viewport.Width, graphicsDevice.Viewport.Height, false, SurfaceFormat.Color, DepthFormat.Depth24, 0, RenderTargetUsage.DiscardContents);
+                _sceneRT = new RenderTarget2D(_device, _device.Viewport.Width, _device.Viewport.Height, false, SurfaceFormat.Color, DepthFormat.Depth24, 0, RenderTargetUsage.DiscardContents);
                 _needsBufferUpdate = false;
             }
 
             renderObjects(scene, camera);
             renderBuffers();
 
-            graphicsDevice.SetRenderTarget(target);
+            _device.SetRenderTarget(target);
             _spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Opaque, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone);
             _spriteBatch.Draw(_sceneRT, Vector2.Zero, Color.White);
             _spriteBatch.End();

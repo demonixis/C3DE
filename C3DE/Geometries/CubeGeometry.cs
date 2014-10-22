@@ -92,7 +92,7 @@ namespace C3DE.Geometries
                 new VertexPositionNormalTexture(bottomRightFront,bottomNormal,TbottomLeftFront),
             };
 
-            Indices = new short[] { 
+            Indices = new ushort[] { 
                 0, 1, 2, 2, 1, 3,   
                 4, 5, 6, 6, 5, 7,
                 8, 9, 10, 10, 9, 11, 

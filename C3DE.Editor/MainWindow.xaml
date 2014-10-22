@@ -59,7 +59,7 @@
                 <MenuItem Header="Camera" x:Name="menu_SO_Camera" Click="OnMenuAddSceneObjectClick" />
             </MenuItem>
             <MenuItem Header="Help">
-                <MenuItem Header="About" x:Name="menu_Help_About" Click="OnMenuHelpClick" />
+                <MenuItem Header="About" x:Name="menu_Help_About" />
             </MenuItem>
         </Menu>
         <local:C3DEGameHost 

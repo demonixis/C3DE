@@ -32,7 +32,7 @@ namespace C3DE.Geometries
                 Vertices[i].Normal = Vector3.Forward;
             }
 
-            Indices = new short[] { 0, 1, 2, 0, 2, 3 };
+            Indices = new ushort[] { 0, 1, 2, 0, 2, 3 };
         }
     }
 }

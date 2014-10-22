@@ -6,13 +6,12 @@ namespace C3DE.Components
     /// <summary>
     /// A component is a part of a scene object.
     /// </summary>
-    public abstract class Component : IComparable
+    public abstract class Component : IComparable, ICloneable
     {
         private static int ComponentCounter = 0;
-
+        internal protected bool initialized;
         protected bool enabled;
         protected int order = 1;
-        protected bool initialized;
         protected SceneObject sceneObject;
         protected Transform transform;
 
@@ -51,6 +50,12 @@ namespace C3DE.Components
         {
             get { return sceneObject; }
             internal set { sceneObject = value; }
+        }
+
+        public Transform Transform
+        {
+            get { return transform; }
+            internal set { transform = value; }
         }
 
         public int Order
@@ -119,7 +124,6 @@ namespace C3DE.Components
         {
         }
 
-
         public int CompareTo(object obj)
         {
             var component = obj as Component;
@@ -148,6 +152,11 @@ namespace C3DE.Components
         public T[] GetComponents<T>() where T : Component
         {
             return sceneObject.GetComponents<T>();
+        }
+
+        public virtual object Clone()
+        {
+            return MemberwiseClone();
         }
     }
 }

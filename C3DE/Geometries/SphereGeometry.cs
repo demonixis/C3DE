@@ -44,7 +44,7 @@ namespace C3DE.Geometries
             int indexCount = 0;
 
             Vertices = new VertexPositionNormalTexture[((_tessellationLevel / 2) * (_tessellationLevel - 1)) + 1];
-            Indices = new short[(((_tessellationLevel / 2) - 2) * (_tessellationLevel + 1) * 6) + (6 * (_tessellationLevel + 1))];
+            Indices = new ushort[(((_tessellationLevel / 2) - 2) * (_tessellationLevel + 1) * 6) + (6 * (_tessellationLevel + 1))];
 
             for (int j = 0; j <= _tessellationLevel / 2; j++)
             {
@@ -75,9 +75,9 @@ namespace C3DE.Geometries
                         // bottom cap
                         for (i = 0; i <= _tessellationLevel; i++)
                         {
-                            short i0 = 0;
-                            short i1 = (short)((i % _tessellationLevel) + 1);
-                            short i2 = (short)i;
+                            ushort i0 = 0;
+                            ushort i1 = (ushort)((i % _tessellationLevel) + 1);
+                            ushort i2 = (ushort)i;
 
                             Indices[indexCount++] = i0;
                             Indices[indexCount++] = invertFaces ? i2 : i1;
@@ -87,10 +87,10 @@ namespace C3DE.Geometries
                     else if (j < _tessellationLevel / 2 - 1)
                     {
                         // middle area
-                        short i0 = (short)(vertexCount - 1);
-                        short i1 = (short)vertexCount;
-                        short i2 = (short)(vertexCount + _tessellationLevel);
-                        short i3 = (short)(vertexCount + _tessellationLevel + 1);
+                        ushort i0 = (ushort)(vertexCount - 1);
+                        ushort i1 = (ushort)vertexCount;
+                        ushort i2 = (ushort)(vertexCount + _tessellationLevel);
+                        ushort i3 = (ushort)(vertexCount + _tessellationLevel + 1);
 
                         Indices[indexCount++] = i0;
                         Indices[indexCount++] = invertFaces ? i2 : i1;
@@ -105,9 +105,9 @@ namespace C3DE.Geometries
                         // top cap
                         for (i = 0; i <= _tessellationLevel; i++)
                         {
-                            short i0 = (short)(vertexCount - 1);
-                            short i1 = (short)((vertexCount - 1) - ((i % _tessellationLevel) + 1));
-                            short i2 = (short)((vertexCount - 1) - i);
+                            ushort i0 = (ushort)(vertexCount - 1);
+                            ushort i1 = (ushort)((vertexCount - 1) - ((i % _tessellationLevel) + 1));
+                            ushort i2 = (ushort)((vertexCount - 1) - i);
 
                             Indices[indexCount++] = i0;
                             Indices[indexCount++] = invertFaces ? i2 : i1;

@@ -1,5 +1,4 @@
 ﻿using C3DE.Components;
-using Microsoft.Xna.Framework.Content;
 using System;
 using System.Collections.Generic;
 
@@ -8,7 +7,7 @@ namespace C3DE
     /// <summary>
     /// A scene object is the base object on the scene.
     /// </summary>
-    public class SceneObject
+    public class SceneObject : ICloneable
     {
         #region Private/protected declarations
 
@@ -31,6 +30,8 @@ namespace C3DE
         public string Tag { get; set; }
 
         public bool IsStatic { get; set; }
+
+        public bool IsPrefab { get; set; }
 
         public bool Enabled
         {
@@ -60,6 +61,11 @@ namespace C3DE
         public List<Component> Components
         {
             get { return components; }
+        }
+
+        public bool Initialized
+        {
+            get { return initialized; }
         }
 
         #endregion
@@ -105,8 +111,9 @@ namespace C3DE
 
             enabled = true;
             IsStatic = false;
+            IsPrefab = false;
 
-            Id = SceneObjectCounter + 1;
+            Id = SceneObjectCounter++;
             Name = !string.IsNullOrEmpty(name) ? name : "SceneObject_" + Id;
         }
 
@@ -119,7 +126,10 @@ namespace C3DE
             if (!initialized)
             {
                 for (int i = components.Count - 1; i != 0; i--)
+                {
                     components[i].Start();
+                    components[i].initialized = true;
+                }
 
                 initialized = true;
             }
@@ -193,6 +203,28 @@ namespace C3DE
 
         #region Component collection
 
+        internal Component AddComponent(Component component)
+        {
+            if (component is Transform)
+            {
+                component = null;
+                return transform;
+            }
+
+            component.SceneObject = this;
+            component.Awake();
+
+            components.Add(component);
+            components.Sort();
+
+            if (initialized && !component.Initialized)
+                component.Start();
+
+            NotifyComponentChanged(component);
+
+            return component;
+        }
+
         /// <summary>
         /// Add a component of the specified type. Note that you can't add another Transform component.
         /// </summary>
@@ -202,24 +234,7 @@ namespace C3DE
         {
             var component = new T();
 
-            if (component is Transform)
-            {
-                component = null;
-                return transform as T;
-            }
-
-            component.SceneObject = this;
-            component.Awake();
-
-            components.Add(component);
-            components.Sort();
-
-            if (initialized)
-                component.Start();
-
-            NotifyComponentChanged(component);
-
-            return component;
+            return (T)AddComponent(component);
         }
 
         /// <summary>
@@ -274,5 +289,40 @@ namespace C3DE
         }
 
         #endregion
+
+        public static SceneObject FindById(int id)
+        {
+            for (int i = 0; i < Application.SceneManager.ActiveScene.sceneObjects.Size; i++)
+                if (Application.SceneManager.ActiveScene.sceneObjects[i].Id == id)
+                    return Application.SceneManager.ActiveScene.sceneObjects[i];
+
+            return null;
+        }
+
+        public static SceneObject[] FindSceneObjectsById(int id)
+        {
+            List<SceneObject> sceneObjects = new List<SceneObject>();
+
+            for (int i = 0; i < Application.SceneManager.ActiveScene.sceneObjects.Size; i++)
+                if (Application.SceneManager.ActiveScene.sceneObjects[i].Id == id)
+                    sceneObjects.Add(Application.SceneManager.ActiveScene.sceneObjects[i]);
+
+            return sceneObjects.ToArray();
+        }
+
+        public object Clone()
+        {
+            SceneObject sceneObject = new SceneObject(Name + " (Clone)");
+
+            foreach (Component component in components)
+                sceneObject.AddComponent((Component)component.Clone());
+
+            // Fixme
+            sceneObject.Transform.Position = transform.Position;
+            sceneObject.Transform.Rotation = transform.Rotation;
+            sceneObject.Transform.LocalScale = transform.LocalScale;
+
+            return sceneObject;
+        }
     }
 }

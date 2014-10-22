@@ -10,8 +10,8 @@ namespace C3DE.Resources
     {
         public static Assembly GetAssembly()
         {
-#if WINDOWS_STOREAPP
-            return typeof(ResourceHelper).GetTypeInfo().Assembly;
+#if NETFX_CORE
+            return typeof(ResourcesHelper).GetTypeInfo().Assembly;
 #else
             return Assembly.GetExecutingAssembly();
 #endif
@@ -23,8 +23,7 @@ namespace C3DE.Resources
 #if DIRECTX
             suffix = "dx11";
 #endif
-            var stream = GetAssembly().GetManifestResourceStream(String.Concat("{0}.{1}.{2}.mgfxo", path, name, suffix));
-
+            var stream = GetAssembly().GetManifestResourceStream(String.Format("{0}.{1}.{2}.mgfxo", path, name, suffix));
             byte[] shaderCode;
 
             using (var ms = new MemoryStream())

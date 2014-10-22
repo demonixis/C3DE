@@ -8,11 +8,8 @@ namespace C3DE.Materials
     public class TerrainMaterial : Material
     {
         public Texture2D SnowTexture { get; set; }
-
         public Texture2D SandTexture { get; set; }
-
         public Texture2D RockTexture { get; set; }
-
         public Texture2D WeightTexture { get; set; }
 
         public TerrainMaterial(Scene scene)
@@ -24,7 +21,11 @@ namespace C3DE.Materials
 
         public override void LoadContent(ContentManager content)
         {
-            effect = content.Load<Effect>("FX/TerrainEffect");
+            if (ShaderQuality == ShaderQuality.Low)
+                effect = content.Load<Effect>("FX/TerrainEffect.Low");
+            else
+                effect = content.Load<Effect>("FX/TerrainEffect");
+
         }
 
         public override void PrePass()
@@ -35,18 +36,21 @@ namespace C3DE.Materials
 
             var light0 = scene.lights[0];
 
-            // Update shadow data.
-            effect.Parameters["ShadowData"].SetValue(light0.shadowGenerator.Data);
-            effect.Parameters["ShadowMap"].SetValue(light0.shadowGenerator.ShadowMap);
-
             // Light
             effect.Parameters["LightColor"].SetValue(light0.diffuseColor);
             effect.Parameters["LightDirection"].SetValue(light0.Direction);
             effect.Parameters["LightIntensity"].SetValue(light0.Intensity);
 
-            // Fog
-            effect.Parameters["FogColor"].SetValue(scene.RenderSettings.fogColor);
-            effect.Parameters["FogData"].SetValue(scene.RenderSettings.fogData);
+            // Update shadow data.
+            effect.Parameters["ShadowData"].SetValue(light0.shadowGenerator.Data);
+            effect.Parameters["ShadowMap"].SetValue(light0.shadowGenerator.ShadowMap);
+
+            if (ShaderQuality == ShaderQuality.Normal)
+            {
+                // Fog
+                effect.Parameters["FogColor"].SetValue(scene.RenderSettings.fogColor);
+                effect.Parameters["FogData"].SetValue(scene.RenderSettings.fogData);
+            }
         }
 
         public override void Pass(RenderableComponent renderable)

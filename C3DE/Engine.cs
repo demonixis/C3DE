@@ -1,91 +1,59 @@
 ﻿using C3DE.Inputs;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using System;
 
 namespace C3DE
 {
-    public class Application
-    {
-        internal static Game Game { get; set; }
-        public static ContentManager Content { get; set; }
-        public static GraphicsDevice GraphicsDevice { get; set; }
-        
-        public static void TargetFrameRate(long frameRate)
-        {
-            Game.TargetElapsedTime = new TimeSpan(10000000L / frameRate);
-        }
-
-        public static void Quit()
-        {
-            Game.Exit();
-        }
-    }
-
-    public class Screen
-    {
-        public static int Width { get; internal set; }
-        public static int Height { get; internal set; }
-
-        public static int WidthPerTwo { get; internal set; }
-        public static int HeightPerTwo { get; internal set; }
-
-        public static bool LockCursor { get; set; }
-
-        public static bool ShowCursor
-        {
-            get { return Application.Game.IsMouseVisible; }
-            set { Application.Game.IsMouseVisible = value; }
-        }
-
-        public static void Setup(int width, int height, bool? lockCursor, bool? showCursor)
-        {
-            Width = width;
-            Height = height;
-            WidthPerTwo = width >> 1;
-            HeightPerTwo = height >> 1;
-
-            if (lockCursor.HasValue)
-                LockCursor = lockCursor.Value;
-
-            if (showCursor.HasValue)
-                ShowCursor = showCursor.Value;
-        }
-    }
-
-    public class Input
-    {
-        public static KeyboardComponent Keys { get; set; }
-        public static MouseComponent Mouse { get; set; }
-        public static GamepadComponent Gamepad { get; set; }
-        public static TouchComponent Touch { get; set; }
-    }
-
+    /// <summary>
+    /// The starting point of the engine. Managers, registry objects, etc. are initialized here.
+    /// </summary>
     public class Engine : Game
     {
+        private bool _started;
+        private IRenderer _rendererToChange;
+        private bool _needRendererChange;
+
         protected GraphicsDeviceManager graphics;
-        protected SpriteBatch spriteBatch;
-        protected Renderer renderer;
-        protected Scene scene;
+        protected IRenderer renderer;
+        protected SceneManager sceneManager;
+        protected bool initialized;
+
+        public IRenderer Renderer
+        {
+            get { return renderer; }
+            set 
+            {
+                _rendererToChange = value;
+                _needRendererChange = true;
+            }
+        }
 
         public Engine(string title = "C3DE", int width = 1024, int height = 600)
         {
             graphics = new GraphicsDeviceManager(this);
+
+#if !ANDROID && !WINDOWS_PHONE
             graphics.PreferredBackBufferWidth = width;
             graphics.PreferredBackBufferHeight = height;
+#endif
             Window.Title = title;
             Content.RootDirectory = "Content";
-            scene = new Scene(Content);
+            sceneManager = new SceneManager();
+            initialized = false;
 
             Application.Content = Content;
-            Application.GraphicsDevice = GraphicsDevice;
             Application.Game = this;
+            Application.GraphicsDevice = GraphicsDevice;
+            Application.GraphicsDeviceManager = graphics;
+            Application.SceneManager = sceneManager;
 
             Screen.Setup(width, height, false, true);
 
             graphics.PreparingDeviceSettings += OnResize;
+
+            _needRendererChange = false;
+            _started = false;
         }
 
         private void OnResize(object sender, PreparingDeviceSettingsEventArgs e)
@@ -96,14 +64,38 @@ namespace C3DE
             Screen.Setup(width, height, null, null);
         }
 
+        protected void SetRenderer(IRenderer iRenderer)
+        {
+            renderer = iRenderer;
+
+            if (initialized)
+            {
+#if ANDROID
+                Screen.Setup (GraphicsDevice.Adapter.CurrentDisplayMode.Width, GraphicsDevice.Adapter.CurrentDisplayMode.Height, null, null);
+#elif LINUX
+                Screen.Setup(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight, null, null);
+                GraphicsDevice.Viewport = new Viewport(0, 0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
+#endif
+                renderer.Initialize(Content);
+            }
+        }
+
         protected override void Initialize()
         {
             if (Application.GraphicsDevice == null)
                 Application.GraphicsDevice = GraphicsDevice;
 
-            spriteBatch = new SpriteBatch(GraphicsDevice);
-            renderer = new Renderer(GraphicsDevice);
-            renderer.LoadContent(Content);
+#if ANDROID
+			Screen.Setup (GraphicsDevice.Adapter.CurrentDisplayMode.Width, GraphicsDevice.Adapter.CurrentDisplayMode.Height, null, null);
+#elif LINUX
+			Screen.Setup(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight, null, null);
+			GraphicsDevice.Viewport = new Viewport(0, 0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
+#endif
+            
+            if (renderer == null)
+                renderer = new Renderer();
+
+            renderer.Initialize(Content);
 
             Input.Keys = new KeyboardComponent(this);
             Input.Mouse = new MouseComponent(this);
@@ -115,25 +107,33 @@ namespace C3DE
             Components.Add(Input.Mouse);
             Components.Add(Input.Gamepad);
             Components.Add(Input.Touch);
+
+            initialized = true;
            
             base.Initialize();
         }
 
         protected override void LoadContent()
         {
-            scene.Initialize();
+            sceneManager.Initialize();
+        }
+
+        protected override void BeginRun()
+        {
+            _started = true;
         }
 
         protected override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-            scene.Update();
+
+            sceneManager.Update();
         }
 
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.Black);
-            renderer.render(scene, scene.MainCamera);
+            renderer.render(sceneManager.ActiveScene, sceneManager.ActiveScene.MainCamera);
             base.Draw(gameTime);
         }
 
@@ -143,6 +143,12 @@ namespace C3DE
 
             if (Screen.LockCursor)
                 Mouse.SetPosition(Screen.WidthPerTwo, Screen.HeightPerTwo);
+
+            if (_needRendererChange)
+            {
+                SetRenderer(_rendererToChange);
+                _needRendererChange = false;
+            }
         }
     }
 }

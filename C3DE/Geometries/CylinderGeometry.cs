@@ -48,7 +48,7 @@ namespace C3DE.Geometries
             float invSlices = 1f / (float)_nbSlices;
 
             Vertices = new VertexPositionNormalTexture[((_nbSegments + 1) * (_nbSlices + 1)) + 2];
-            Indices = new short[(_nbSlices + (_nbSlices * _nbSegments)) * 6];
+            Indices = new ushort[(_nbSlices + (_nbSlices * _nbSegments)) * 6];
 
             for (int j = 0; j <= _nbSegments; j++)
             {
@@ -94,9 +94,9 @@ namespace C3DE.Geometries
                         if (j == 0)
                         {   
                             // start cap - i0 is always center point on start cap
-                            short i0 = 0;
-                            short i1 = (short)(vRef + 1);
-                            short i2 = (short)(vRef);
+                            ushort i0 = 0;
+                            ushort i1 = (ushort)(vRef + 1);
+                            ushort i2 = (ushort)(vRef);
 
                             Indices[indexCount++] = i0;
                             Indices[indexCount++] = invertFaces ? i2 : i1;
@@ -105,9 +105,9 @@ namespace C3DE.Geometries
                         if (j == _nbSegments)
                         {   
                             // end cap - i0 is always the center point on end cap
-                            short i0 = (short)((vRef + _nbSlices + 2) - (vRef % (_nbSlices + 1)));
-                            short i1 = (short)(vRef);
-                            short i2 = (short)(vRef + 1);
+                            ushort i0 = (ushort)((vRef + _nbSlices + 2) - (vRef % (_nbSlices + 1)));
+                            ushort i1 = (ushort)(vRef);
+                            ushort i2 = (ushort)(vRef + 1);
 
                             Indices[indexCount++] = i0;
                             Indices[indexCount++] = invertFaces ? i2 : i1;
@@ -117,10 +117,10 @@ namespace C3DE.Geometries
                         if (j < _nbSegments)
                         {   
                             // middle area
-                            short i0 = (short)(vRef);
-                            short i1 = (short)(vRef + 1);
-                            short i2 = (short)(vRef + _nbSlices + 2);
-                            short i3 = (short)(vRef + _nbSlices + 1);
+                            ushort i0 = (ushort)(vRef);
+                            ushort i1 = (ushort)(vRef + 1);
+                            ushort i2 = (ushort)(vRef + _nbSlices + 2);
+                            ushort i3 = (ushort)(vRef + _nbSlices + 1);
 
                             Indices[indexCount++] = i0;
                             Indices[indexCount++] = invertFaces ? i2 : i1;

@@ -20,11 +20,19 @@ namespace C3DE.UI
 
         public void LoadContent(ContentManager content)
         {
-            Skin = new GUISkin();
-            Skin.LoadContent(content);
+            if (Skin == null)
+            {
+                Skin = new GUISkin();
+                Skin.LoadContent(content);
+            }
         }
 
         public void Box(Rectangle rect, string text)
+        {
+            Box(ref rect, text);
+        }
+
+        public void Box(ref Rectangle rect, string text)
         {
             _spriteBatch.Draw(Skin.Box, rect, Color.White);
 
@@ -36,6 +44,11 @@ namespace C3DE.UI
         }
 
         public bool Button(Rectangle rect, string text)
+        {
+            return Button(ref rect, text);
+        }
+
+        public bool Button(ref Rectangle rect, string text)
         {
             var index = 0;
 
@@ -57,6 +70,11 @@ namespace C3DE.UI
         }
 
         public bool Checkbox(Rectangle rect, string text, bool isChecked)
+        {
+            return Checkbox(ref rect, text, isChecked);
+        }
+
+        public bool Checkbox(ref Rectangle rect, string text, bool isChecked)
         {
             var index = isChecked ? 2 : 0;
 
@@ -111,6 +129,11 @@ namespace C3DE.UI
 
         public void Label(Vector2 position, string text, float scale = 1.0f, float rotation = 0.0f)
         {
+            Label(ref position, text, scale, rotation);
+        }
+
+        public void Label(ref Vector2 position, string text, float scale = 1.0f, float rotation = 0.0f)
+        {
             _cacheVec2.X = scale;
             _cacheVec2.Y = scale;
             _spriteBatch.DrawString(Skin.Font, text, position, Skin.TextColor, rotation, Vector2.Zero, _cacheVec2, SpriteEffects.None, 1);
@@ -118,7 +141,22 @@ namespace C3DE.UI
 
         public void DrawTexture(Rectangle rect, Texture2D texture)
         {
-            _spriteBatch.Draw(texture, rect, Color.White);
+            DrawTexture(ref rect, texture, Color.White);
+        }
+
+        public void DrawTexture(ref Rectangle rect, Texture2D texture)
+        {
+            DrawTexture(ref rect, texture, Color.White);
+        }
+
+        public void DrawTexture(ref Rectangle rect, Texture2D texture, Color color)
+        {
+            _spriteBatch.Draw(texture, rect, color);
+        }
+
+        public Vector2 MeasureString(string text)
+        {
+            return Skin.Font.MeasureString(text);
         }
 
         private string WrapText(SpriteFont spriteFont, string text, float maxLineWidth)

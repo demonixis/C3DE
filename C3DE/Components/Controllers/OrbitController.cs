@@ -16,11 +16,11 @@ namespace C3DE.Components.Controllers
         private Vector2 _angle;
         private Vector3 _position;
         private Vector3 _target;
-        private Vector2 _angleVelocity;
-        private Vector3 _positionVelicoty;
         private Vector3 _cacheVec3;
-        private float _distanceVelocity;
-
+        protected Vector2 angleVelocity;
+        protected Vector3 positionVelicoty;
+        protected float distanceVelocity;
+        
         /// <summary>
         /// Gets or sets the min angle on y-axis.
         /// </summary>
@@ -72,14 +72,11 @@ namespace C3DE.Components.Controllers
 
         public override void Update()
         {
-            UpdateKeyboardInput();
-            UpdateMouseInput();
-            UpdateGamepadInput();
-            UpdateTouchInput();
+            UpdateInputs();
 
-            _angle += _angleVelocity;
-            _distance += _distanceVelocity;
-            _target += _positionVelicoty;
+            _angle += angleVelocity;
+            _distance += distanceVelocity;
+            _target += positionVelicoty;
 
             CheckAngle();
             CheckDistance();
@@ -91,60 +88,68 @@ namespace C3DE.Components.Controllers
             transform.Position = _position;
             _camera.Target = _target;
 
-            _angleVelocity *= AngularVelocity;
-            _distanceVelocity *= Velocity;
-            _positionVelicoty *= Velocity;
+            angleVelocity *= AngularVelocity;
+            distanceVelocity *= Velocity;
+            positionVelicoty *= Velocity;
+        }
+
+        protected virtual void UpdateInputs()
+        {
+            UpdateKeyboardInput();
+            UpdateMouseInput();
+            UpdateGamepadInput();
+            UpdateTouchInput();
         }
 
         private void UpdateKeyboardInput()
         {
             if (Input.Keys.Pressed(Keys.PageDown))
-                _distanceVelocity += MoveSpeed * Time.DeltaTime;
+                distanceVelocity += MoveSpeed * Time.DeltaTime;
             else if (Input.Keys.Pressed(Keys.PageUp))
-                _distanceVelocity -= MoveSpeed * Time.DeltaTime;
+                distanceVelocity -= MoveSpeed * Time.DeltaTime;
 
             if (Input.Keys.Up)
-                _angle.Y -= RotationSpeed * Time.DeltaTime * 25.0f;
+				angleVelocity.Y -= RotationSpeed * Time.DeltaTime * 25.0f;
             else if (Input.Keys.Down)
-                _angle.Y += RotationSpeed * Time.DeltaTime * 25.0f;
+				angleVelocity.Y += RotationSpeed * Time.DeltaTime * 25.0f;
 
             if (Input.Keys.Left)
-                _angle.X -= RotationSpeed * Time.DeltaTime * 25.0f;
+				angleVelocity.X -= RotationSpeed * Time.DeltaTime * 25.0f;
             else if (Input.Keys.Right)
-                _angle.X += RotationSpeed * Time.DeltaTime * 25.0f;
+				angleVelocity.X += RotationSpeed * Time.DeltaTime * 25.0f;
         }
 
         private void UpdateMouseInput()
         {
             if (Input.Mouse.Down(Inputs.MouseButton.Left) && Input.Mouse.Drag())
             {
-                _angleVelocity.X -= RotationSpeed * Input.Mouse.Delta.X * Time.DeltaTime;
-                _angleVelocity.Y -= RotationSpeed * Input.Mouse.Delta.Y * Time.DeltaTime;
+                angleVelocity.X -= RotationSpeed * Input.Mouse.Delta.X * Time.DeltaTime;
+                angleVelocity.Y -= RotationSpeed * Input.Mouse.Delta.Y * Time.DeltaTime;
             }
 
             if (Input.Mouse.Down(Inputs.MouseButton.Right))
             {
-                _positionVelicoty.X += StrafeSpeed * Input.Mouse.Delta.X * Time.DeltaTime;
-                _positionVelicoty.Y += StrafeSpeed * Input.Mouse.Delta.Y * Time.DeltaTime;
+                positionVelicoty.X += StrafeSpeed * Input.Mouse.Delta.X * Time.DeltaTime;
+                positionVelicoty.Y += StrafeSpeed * Input.Mouse.Delta.Y * Time.DeltaTime;
             }
 
-            _distanceVelocity -= Input.Mouse.Wheel / 4.0f * MoveSpeed * Time.DeltaTime;
+            distanceVelocity -= Input.Mouse.Wheel * 0.05f * MoveSpeed * Time.DeltaTime;
         }
 
         private void UpdateGamepadInput()
         {
-            _angle += Input.Gamepad.LeftStickValue() * RotationSpeed * Time.DeltaTime * GamepadSensibility * 25.0f;
+			angleVelocity += Input.Gamepad.LeftStickValue() * RotationSpeed * Time.DeltaTime * GamepadSensibility * 25.0f;
 
-            _positionVelicoty.X += Input.Gamepad.RightStickValue().X * StrafeSpeed * Time.DeltaTime * GamepadSensibility;
-            _positionVelicoty.Y += Input.Gamepad.RightStickValue().Y * StrafeSpeed * Time.DeltaTime * GamepadSensibility;
+            positionVelicoty.X += Input.Gamepad.RightStickValue().X * StrafeSpeed * Time.DeltaTime * GamepadSensibility;
+            positionVelicoty.Y += Input.Gamepad.RightStickValue().Y * StrafeSpeed * Time.DeltaTime * GamepadSensibility;
 
             if (Input.Gamepad.LeftShoulder())
-                _distanceVelocity += MoveSpeed * Time.DeltaTime * GamepadSensibility;
+                distanceVelocity += MoveSpeed * Time.DeltaTime * GamepadSensibility;
             else if (Input.Gamepad.RightShoulder())
-                _distanceVelocity -= MoveSpeed * Time.DeltaTime * GamepadSensibility;
+                distanceVelocity -= MoveSpeed * Time.DeltaTime * GamepadSensibility;
         }
 
-        public void UpdateTouchInput()
+		private void UpdateTouchInput()
         {
             if (Input.Touch.TouchCount == 1)
                 _angle += Input.Touch.Delta() * RotationSpeed * Time.DeltaTime;
@@ -153,7 +158,7 @@ namespace C3DE.Components.Controllers
                 _cacheVec3.X = Input.Touch.Delta().X;
                 _cacheVec3.Y = Input.Touch.Delta().Y;
                 _cacheVec3.Z = 0;
-                _positionVelicoty += _cacheVec3 * StrafeSpeed * Time.DeltaTime * 0.5f;
+                positionVelicoty += _cacheVec3 * StrafeSpeed * Time.DeltaTime * 0.5f;
             }
         }
 

@@ -64,7 +64,7 @@ namespace C3DE.Editor.MonoGameBridge
 
             _content = new ContentManager(this);
             _content.RootDirectory = "Content";
-            _scene = new Scene(_content);
+            _scene = new Scene("Root");
 
             Application.Content = _content;
             Application.GraphicsDevice = GraphicsDevice;
@@ -78,8 +78,8 @@ namespace C3DE.Editor.MonoGameBridge
             Screen.Setup((int)ActualWidth, (int)ActualHeight, null, null);
 
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-            _renderer = new Renderer(GraphicsDevice);
-            _renderer.LoadContent(_content);
+            _renderer = new Renderer();
+            _renderer.Initialize(_content);
             _scene.Initialize();
 
             foreach (var component in _gameComponents)
@@ -113,7 +113,7 @@ namespace C3DE.Editor.MonoGameBridge
 
             camera.Transform.Position = new XnaVector3(-terrain.Width >> 1, 2, -terrain.Depth / 2);
 
-            _renderer.Skybox.Generate();
+            _scene.RenderSettings.Skybox.Generate();
         }
 
         protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo)

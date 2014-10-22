@@ -6,6 +6,11 @@ namespace C3DE.Inputs
 {
     public class GamepadComponent : GameComponent
     {
+#if ANDROID
+        private int _gamepadCount = 1;
+#else
+        private int _gamepadCount = 4;
+#endif
         private GamePadState[] _gpState;
         private GamePadState[] _previousGpState;
         private Vector2 _sensibility;
@@ -38,7 +43,7 @@ namespace C3DE.Inputs
             _gpState = new GamePadState[4];
             _previousGpState = new GamePadState[4];
 
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < _gamepadCount; i++)
             {
                 _gpState[i] = GamePad.GetState((PlayerIndex)i);
                 _previousGpState[i] = _gpState[i];
@@ -50,7 +55,7 @@ namespace C3DE.Inputs
 
         public override void Update(GameTime gameTime)
         {
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < _gamepadCount; i++)
             {
                 _previousGpState[i] = _gpState[i];
                 _gpState[i] = GamePad.GetState((PlayerIndex)i);

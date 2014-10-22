@@ -9,7 +9,7 @@ namespace C3DE.PostProcess
         protected Effect effect;
         protected int order;
 
-        public abstract void LoadContent(ContentManager content);
+        public abstract void Initialize(ContentManager content);
         public abstract void Apply(SpriteBatch spriteBatch, RenderTarget2D renderTarget);
 
         public int CompareTo(object obj)

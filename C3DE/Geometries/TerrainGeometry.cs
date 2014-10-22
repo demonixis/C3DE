@@ -68,22 +68,22 @@ namespace C3DE.Geometries
                 }
             }
 
-            Indices = new short[(_width - 1) * (_depth - 1) * 6];
+            Indices = new ushort[(_width - 1) * (_depth - 1) * 6];
 
             int counter = 0;
-            short lowerLeft = 0;
-            short lowerRight = 0;
-            short topLeft = 0;
-            short topRight = 0;
+            ushort lowerLeft = 0;
+            ushort lowerRight = 0;
+            ushort topLeft = 0;
+            ushort topRight = 0;
 
             for (int x = 0; x < _width - 1; x++)
             {
                 for (int y = 0; y < _depth - 1; y++)
                 {
-                    lowerLeft = (short)(x + y * _width);
-                    lowerRight = (short)((x + 1) + y * _width);
-                    topLeft = (short)(x + (y + 1) * _width);
-                    topRight = (short)((x + 1) + (y + 1) * _width);
+                    lowerLeft = (ushort)(x + y * _width);
+                    lowerRight = (ushort)((x + 1) + y * _width);
+                    topLeft = (ushort)(x + (y + 1) * _width);
+                    topRight = (ushort)((x + 1) + (y + 1) * _width);
 
                     Indices[counter++] = topLeft;
                     Indices[counter++] = lowerLeft;
