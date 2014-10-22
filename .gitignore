@@ -24,3 +24,4 @@ Libs/WindowsPhone/*.dll
 !C3DE.Demo/Content/README.txt
 !C3DE.Demo/*/*/Content/README.txt
 !C3DE.Demo/Platforms/Android/Assets/Content/README.txt
+!Libs/Android/MonoGame.Framework.dll
