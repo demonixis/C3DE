@@ -57,8 +57,6 @@ namespace C3DE.Materials
         public Material(Scene mainScene)
         {
             diffuseColor = Color.White.ToVector4();
-            scene = mainScene;
-            scene.Add(this);
             Id = MaterialCounter++;
             Name = "Material_" + Id;
             Tiling = Vector2.One;
@@ -68,6 +66,9 @@ namespace C3DE.Materials
 #if ANDROID
             ShaderQuality = ShaderQuality.Low;
 #endif
+
+            scene = mainScene;
+            scene.Add(this);
         }
 
         public abstract void LoadContent(ContentManager content);

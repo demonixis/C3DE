@@ -31,7 +31,7 @@ namespace C3DE.Utils
             NoiseGenerator.Persistence = iPersistence;
         }
 
-        public static double Noise(int x, int y)
+        public static double Noise(int x, int y, bool limit)
         {
             //returns -1 to 1
             double total = 0.0;
@@ -42,6 +42,10 @@ namespace C3DE.Utils
                 freq *= 2;
                 amp *= NoiseGenerator.Persistence;
             }
+
+            if (!limit)
+                return total;
+
             if (total < -2.4) total = -2.4;
             else if (total > 2.4) total = 2.4;
 

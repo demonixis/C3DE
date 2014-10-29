@@ -22,10 +22,11 @@ namespace C3DE.Demo.Scenes
             base.Initialize();
 
             // Skybox
-            RenderSettings.Skybox.Generate(Application.GraphicsDevice, Application.Content, DemoGame.BlueSkybox);
+            RenderSettings.Skybox.Generate(Application.GraphicsDevice, Application.Content, DemoGame.BlueSkybox, 2500);
 
             // Camera
             var camera = new CameraPrefab("camera");
+            camera.Camera.Far = 5000;
             Add(camera);
 
             camera.AddComponent<ControllerSwitcher>();
@@ -37,34 +38,26 @@ namespace C3DE.Demo.Scenes
             var lightPrefab = new LightPrefab("light", LightType.Directional);
             lightPrefab.Transform.Translate(0, 10, 0);
             lightPrefab.Light.Range = 25;
-            lightPrefab.Light.Intensity = 1.0f;
+            lightPrefab.Light.Intensity = 1.5f;
             lightPrefab.Light.FallOf = 5f;
-            //lightPrefab.Light.DiffuseColor = Color.LightCoral;
+            lightPrefab.Light.DiffuseColor = Color.LightCoral;
             lightPrefab.Light.Direction = new Vector3(0, 1, -1);
             lightPrefab.Light.Angle = MathHelper.PiOver4;
-            lightPrefab.Light.ShadowGenerator.ShadowStrength = 0.6f; // FIXME need to be inverted
+            lightPrefab.Light.ShadowGenerator.ShadowStrength = 1f; // FIXME need to be inverted
             lightPrefab.Light.ShadowGenerator.SetShadowMapSize(Application.GraphicsDevice, 1024);
             lightPrefab.EnableShadows = true;
-            lightPrefab.AddComponent<LightMoverKeys>();
             lightPrefab.AddComponent<LightSwitcher>();
             Add(lightPrefab);
-
-            var lightSphere = lightPrefab.AddComponent<MeshRenderer>();
-            lightSphere.Geometry = new SphereGeometry(1f, 8);
-            lightSphere.Geometry.Generate();
-            lightSphere.CastShadow = false;
-            lightSphere.ReceiveShadow = false;
-            lightSphere.Material = new SimpleMaterial(scene);
-            lightSphere.Material.MainTexture = GraphicsHelper.CreateTexture(Color.Yellow, 1, 1);
 
             // Terrain
             var terrainMaterial = new StandardMaterial(scene);
             terrainMaterial.MainTexture = Application.Content.Load<Texture2D>("Textures/Terrain/Grass");
-            terrainMaterial.Shininess = 500;
-            terrainMaterial.Tiling = new Vector2(16);
+            terrainMaterial.Shininess = 5;
+            terrainMaterial.Tiling = new Vector2(8);
 
             var terrain = new TerrainPrefab("terrain");
-            terrain.Randomize();
+            terrain.Renderer.Geometry.Size = new Vector3(2);
+            terrain.Randomize(4, 12);
             terrain.Renderer.Material = terrainMaterial;
             terrain.Transform.Translate(-terrain.Width >> 1, 0, -terrain.Depth / 2);
             Add(terrain);

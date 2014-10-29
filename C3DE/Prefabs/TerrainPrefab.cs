@@ -20,17 +20,17 @@ namespace C3DE.Prefabs
 
         public int Width
         {
-            get { return geometry.Width; }
+            get { return (int)(geometry.Width * geometry.Size.X); }
         }
 
         public int Height
         {
-            get { return geometry.Height; }
+            get { return (int)(geometry.Height * geometry.Size.Y); }
         }
 
         public int Depth
         {
-            get { return geometry.Depth; }
+            get { return (int)(geometry.Depth * geometry.Size.Z); }
         }
 
         public float SandLayer { get; set; }
@@ -84,7 +84,7 @@ namespace C3DE.Prefabs
         /// <param name="amplitude"></param>
         /// <param name="frequency"></param>
         /// <param name="persistence"></param>
-        public void Randomize(int octaves = 2, int amplitude = 22, double frequency = 0.085, double persistence = 0.3)
+        public void Randomize(int octaves = 2, int amplitude = 22, double frequency = 0.085, double persistence = 0.3, bool limit = false)
         {
             geometry.Data = new float[geometry.Width, geometry.Depth];
 
@@ -93,7 +93,7 @@ namespace C3DE.Prefabs
             for (int x = 0; x < geometry.Width; x++)
             {
                 for (int z = 0; z < geometry.Depth; z++)
-                    geometry.Data[x, z] = (float)NoiseGenerator.Noise(x, z);
+                    geometry.Data[x, z] = (float)NoiseGenerator.Noise(x, z, limit);
             }
 
             Build();

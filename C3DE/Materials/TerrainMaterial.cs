@@ -25,7 +25,6 @@ namespace C3DE.Materials
                 effect = content.Load<Effect>("FX/TerrainEffect.Low");
             else
                 effect = content.Load<Effect>("FX/TerrainEffect");
-
         }
 
         public override void PrePass()

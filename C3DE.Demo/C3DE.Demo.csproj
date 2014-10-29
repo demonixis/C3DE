@@ -52,6 +52,7 @@
   <ItemGroup>
     <Compile Include="DemoGame.cs" />
     <Compile Include="Scenes\HexagonTerrain.cs" />
+    <Compile Include="Scenes\LavaTerrainDemo.cs" />
     <Compile Include="Scenes\MenuDemo.cs" />
     <Compile Include="Scripts\FresnelMaterial.cs" />
     <Compile Include="Scenes\GridDemo.cs" />

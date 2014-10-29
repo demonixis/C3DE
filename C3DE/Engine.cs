@@ -30,6 +30,7 @@ namespace C3DE
         }
 
         public Engine(string title = "C3DE", int width = 1024, int height = 600)
+            : base()
         {
             graphics = new GraphicsDeviceManager(this);
 

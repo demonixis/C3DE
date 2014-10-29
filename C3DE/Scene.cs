@@ -308,7 +308,6 @@ namespace C3DE
             {
                 if (!sceneObject.IsPrefab)
                 {
-
                     sceneObjects.Add(sceneObject);
                     sceneObject.Scene = this;
                     sceneObject.Transform.Root = transform;
