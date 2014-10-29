@@ -15,9 +15,12 @@ namespace C3DE.Demo
         private bool _vrEnabled;
         private Controller _baseController;
         private OrientationController _orientationController;
+        private Point _originalResolution;
 
         public override void Start()
         {
+            _originalResolution = new Point(Screen.Width, Screen.Height);
+
             var bWidth = 200;
             var bHeight = 50;
 
@@ -33,6 +36,8 @@ namespace C3DE.Demo
             _orientationController = AddComponent<OrientationController>();
             _orientationController.Start();
             _orientationController.Enabled = false;
+
+            Screen.Setup(_originalResolution.X, _originalResolution.Y, null, null);
         }
 
         public override void OnDestroy()
@@ -51,6 +56,8 @@ namespace C3DE.Demo
                     _engine.Renderer = _basicRenderer;
                 else
                     _engine.Renderer = _vrMobileRenderer;
+
+                Screen.Setup(_vrEnabled ? _originalResolution.X >> 1 : _originalResolution.X, _originalResolution.Y, null, null);
                     
                 if (_vrEnabled)
                 {
