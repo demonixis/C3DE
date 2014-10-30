@@ -10,7 +10,6 @@ namespace C3DE
     /// </summary>
     public class Engine : Game
     {
-        private bool _started;
         private IRenderer _rendererToChange;
         private bool _needRendererChange;
 
@@ -54,7 +53,6 @@ namespace C3DE
             graphics.PreparingDeviceSettings += OnResize;
 
             _needRendererChange = false;
-            _started = false;
         }
 
         private void OnResize(object sender, PreparingDeviceSettingsEventArgs e)
@@ -117,11 +115,6 @@ namespace C3DE
         protected override void LoadContent()
         {
             sceneManager.Initialize();
-        }
-
-        protected override void BeginRun()
-        {
-            _started = true;
         }
 
         protected override void Update(GameTime gameTime)

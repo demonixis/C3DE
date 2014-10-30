@@ -54,9 +54,9 @@ namespace C3DE.Demo
             {
                 Application.SceneManager.Add(new MenuDemo(), true);
                 Application.SceneManager.Add(new HeightmapDemo());
-                Application.SceneManager.Add(new RandomTerrain());
-                Application.SceneManager.Add(new LavaTerrainDemo());
-                Application.SceneManager.Add(new GridDemo());
+                Application.SceneManager.Add(new ProceduralTerrainWater());
+                Application.SceneManager.Add(new ProceduralTerrainLava());
+                Application.SceneManager.Add(new LightingDemo());
                 Application.SceneManager.Add(new HexagonTerrainDemo());
                 Application.LoadLevel(0);
                 game.Run();

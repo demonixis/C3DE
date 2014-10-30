@@ -13,58 +13,55 @@ using System;
 
 namespace C3DE.Demo.Scenes
 {
-    public class LavaTerrainDemo : Scene
+    public class ProceduralTerrainWater : Scene
     {
-        public LavaTerrainDemo() : base("Lava Shader demo") { }
+        public ProceduralTerrainWater() : base("Procedural Terrain + Water") { }  
 
         public override void Initialize()
         {
             base.Initialize();
 
             // Skybox
-            RenderSettings.Skybox.Generate(Application.GraphicsDevice, Application.Content, DemoGame.StarsSkybox);
+            RenderSettings.Skybox.Generate(Application.GraphicsDevice, Application.Content, DemoGame.BlueSkybox);
 
             // Camera
             var camera = new CameraPrefab("camera");
-            Add(camera);
-
             camera.AddComponent<ControllerSwitcher>();
             camera.AddComponent<DemoBehaviour>();
+            Add(camera);
 
             // Light
             var lightPrefab = new LightPrefab("light", LightType.Directional);
             lightPrefab.Transform.Translate(0, 10, 0);
+            lightPrefab.Light.Range = 25;
+            lightPrefab.Light.Intensity = 1.0f;
+            lightPrefab.Light.FallOf = 5f;
+            
+            lightPrefab.Light.Direction = new Vector3(0, 0.5f, 1);
+            lightPrefab.Light.Angle = MathHelper.PiOver4;
+            lightPrefab.Light.ShadowGenerator.ShadowStrength = 1f;
             lightPrefab.Light.ShadowGenerator.SetShadowMapSize(Application.GraphicsDevice, 1024);
             lightPrefab.EnableShadows = true;
             lightPrefab.AddComponent<LightSwitcher>();
-            lightPrefab.AddComponent<LightMoverKeys>();
             Add(lightPrefab);
 
             // Terrain
             var terrainMaterial = new StandardMaterial(scene);
-            terrainMaterial.MainTexture = Application.Content.Load<Texture2D>("Textures/Terrain/Rock");
-            terrainMaterial.Shininess = 1;
+            terrainMaterial.MainTexture = Application.Content.Load<Texture2D>("Textures/Terrain/Grass");
+            terrainMaterial.Shininess = 50;
             terrainMaterial.Tiling = new Vector2(8);
 
             var terrain = new TerrainPrefab("terrain");
-            terrain.Renderer.Geometry.Size = new Vector3(2);
-            terrain.Renderer.ReceiveShadow = true;
             terrain.Randomize(4, 12);
             terrain.Renderer.Material = terrainMaterial;
             terrain.Transform.Translate(-terrain.Width >> 1, 0, -terrain.Depth / 2);
             Add(terrain);
 
-            // Lava
-            var lavaMaterial = new LavaMaterial(this);
-            lavaMaterial.MainTexture = Application.Content.Load<Texture2D>("Textures/lava_texture");
-            lavaMaterial.NormalMap = Application.Content.Load<Texture2D>("Textures/lava_bump");
-
-            var lava = new WaterPrefab("water");
-            lava.Renderer.Material = lavaMaterial;
-            lava.Renderer.ReceiveShadow = true;
-            lava.Renderer.Geometry.Size = new Vector3(terrain.Width * 0.5f);
-            lava.Renderer.Geometry.Generate();
-            Add(lava);
+            var water = new WaterPrefab("water");
+            Add(water);
+            water.Generate("Textures/water", "Textures/wavesbump", new Vector3(terrain.Width * 0.5f));
+            (water.Renderer.Material as WaterMaterial).ReflectiveMap = scene.RenderSettings.Skybox.Texture;
+            (water.Renderer.Material as WaterMaterial).WaterTransparency = 0.6f;
         }
     }
 }

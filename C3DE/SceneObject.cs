@@ -125,13 +125,13 @@ namespace C3DE
         {
             if (!initialized)
             {
+                initialized = true;
+
                 for (int i = components.Count - 1; i != 0; i--)
                 {
                     components[i].Start();
                     components[i].initialized = true;
                 }
-
-                initialized = true;
             }
         }
 

@@ -9,8 +9,8 @@ namespace C3DE.Demo.Scripts
 {
     public class MenuBehaviour : Behaviour
     {
-        public static int ButtonWidth = 180;
-        public static int ButtonHeight = 50;
+        public static int ButtonWidth = 200;
+        public static int ButtonHeight = 45;
 
         class DemoWidget
         {
@@ -47,7 +47,7 @@ namespace C3DE.Demo.Scripts
 
         public override void Start()
         {
-            _margin = 25;
+            _margin = 15;
 
             _background = GraphicsHelper.CreateGradiantTexture(Color.LightSteelBlue, Color.Linen, Screen.Width, Screen.Height);
             _backgroundRect = new Rectangle(0, 0, Screen.Width, Screen.Height);

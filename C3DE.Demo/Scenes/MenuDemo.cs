@@ -15,8 +15,10 @@ namespace C3DE.Demo.Scenes
 
             Add(new C3DE.Prefabs.CameraPrefab("cam"));
 
+#if ANDROID
             MenuBehaviour.ButtonWidth = 250;
             MenuBehaviour.ButtonHeight = 75;
+#endif
 
             var sceneObject = new SceneObject("MenuNode");
             sceneObject.AddComponent<MenuBehaviour>();

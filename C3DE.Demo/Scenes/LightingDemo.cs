@@ -12,9 +12,9 @@ using System;
 
 namespace C3DE.Demo.Scenes
 {
-    public class GridDemo : Scene
+    public class LightingDemo : Scene
     {
-        public GridDemo() : base("Grid demo") { }
+        public LightingDemo() : base("Lighting demo") { }
 
         public override void Initialize()
         {

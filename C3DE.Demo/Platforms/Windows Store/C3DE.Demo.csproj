@@ -103,45 +103,18 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
-    <Reference Include="MonoGame.Framework">
-      <HintPath>..\..\Libs\Windows8\MonoGame.Framework.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpDX">
-      <HintPath>..\..\Libs\Windows8\SharpDX.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpDX.XInput">
-      <HintPath>..\..\Libs\Windows8\SharpDX.XInput.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpDX.Direct2D1">
-      <HintPath>..\..\Libs\Windows8\SharpDX.Direct2D1.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpDX.Direct3D11">
-      <HintPath>..\..\Libs\Windows8\SharpDX.Direct3D11.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpDX.DXGI">
-      <HintPath>..\..\Libs\Windows8\SharpDX.DXGI.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpDX.MediaFoundation">
-      <HintPath>..\..\Libs\Windows8\SharpDX.MediaFoundation.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpDX.XAudio2">
-      <HintPath>..\..\Libs\Windows8\SharpDX.XAudio2.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="MetroGame.cs" />
     <Compile Include="..\..\Properties\AssemblyInfo.cs">
       <Link>Properties\AssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="..\..\DemoGame.cs">
-      <Link>Scripts\ControllerSwitcher.cs</Link>
+      <Link>Scripts\DemoGame.cs</Link>
     </Compile>
     <Compile Include="..\..\Scripts\FresnelMaterial.cs">
       <Link>Scripts\FresnelMaterial.cs</Link>
     </Compile>
-	<Compile Include="..\..\Scripts\ControllerSwitcher.cs">
+    <Compile Include="..\..\Scripts\ControllerSwitcher.cs">
       <Link>Scripts\ControllerSwitcher.cs</Link>
     </Compile>
     <Compile Include="..\..\Scripts\AutoRotation.cs">
@@ -174,17 +147,20 @@
     <Compile Include="..\..\Scripts\WeightMapViewer.cs">
       <Link>Scripts\WeightMapViewer.cs</Link>
     </Compile>
-    <Compile Include="..\..\Scenes\RandomTerrain.cs">
-      <Link>Scenes\RandomTerrain.cs</Link>
+    <Compile Include="..\..\Scenes\ProceduralTerrainWater.cs">
+      <Link>Scenes\ProceduralTerrainWater.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Scenes\ProceduralTerrainLava.cs">
+      <Link>Scenes\ProceduralTerrainLava.cs</Link>
     </Compile>
     <Compile Include="..\..\Scenes\HeightmapDemo.cs">
       <Link>Scenes\HeightmapDemo.cs</Link>
     </Compile>
-    <Compile Include="..\..\Scenes\GridDemo.cs">
-      <Link>Scenes\GridDemo.cs</Link>
+    <Compile Include="..\..\Scenes\LightingDemo.cs">
+      <Link>Scenes\LightingDemo.cs</Link>
     </Compile>
-    <Compile Include="..\..\Scenes\HexagonTerrain.cs">
-      <Link>Scenes\HexagonTerrain.cs</Link>
+    <Compile Include="..\..\Scenes\HexagonGridTerrain.cs">
+      <Link>Scenes\HexagonGridTerrain.cs</Link>
     </Compile>
     <Compile Include="..\..\Scenes\MenuDemo.cs">
       <Link>Scenes\MenuDemo.cs</Link>
@@ -212,6 +188,32 @@
       <Project>{018191d1-211a-419d-900b-caa70b1478f9}</Project>
       <Name>C3DE.Windows8</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="MonoGame.Framework">
+      <HintPath>..\..\..\Libs\Windows8\MonoGame.Framework.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX">
+      <HintPath>..\..\..\Libs\Windows8\SharpDX.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.Direct2D1">
+      <HintPath>..\..\..\Libs\Windows8\SharpDX.Direct2D1.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.Direct3D11">
+      <HintPath>..\..\..\Libs\Windows8\SharpDX.Direct3D11.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.DXGI">
+      <HintPath>..\..\..\Libs\Windows8\SharpDX.DXGI.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.MediaFoundation">
+      <HintPath>..\..\..\Libs\Windows8\SharpDX.MediaFoundation.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.XAudio2">
+      <HintPath>..\..\..\Libs\Windows8\SharpDX.XAudio2.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.XInput">
+      <HintPath>..\..\..\Libs\Windows8\SharpDX.XInput.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '12.0' ">
     <VisualStudioVersion>12.0</VisualStudioVersion>
