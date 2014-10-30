@@ -502,3 +502,21 @@
 /processorParam:TextureFormat=Color
 /build:Textures/UI/grey_panel.png
 
+#begin FX/PostProcess/BloomCombine.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:FX/PostProcess/BloomCombine.fx
+
+#begin FX/PostProcess/BloomExtract.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:FX/PostProcess/BloomExtract.fx
+
+#begin FX/PostProcess/GaussianBlur.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:FX/PostProcess/GaussianBlur.fx
+
