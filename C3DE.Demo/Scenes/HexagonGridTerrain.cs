@@ -16,7 +16,7 @@ namespace C3DE.Demo.Scenes
 {
     public class HexagonTerrainDemo : Scene
     {
-        public HexagonTerrainDemo() : base("Hexagon Terrain Demo") { }
+        public HexagonTerrainDemo() : base("Hexagonal Grid") { }
 
         public override void Initialize()
         {

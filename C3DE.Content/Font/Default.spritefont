@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <XnaContent xmlns:Graphics="Microsoft.Xna.Framework.Content.Pipeline.Graphics">
   <Asset Type="Graphics:FontDescription">
-    <FontName>Consolas</FontName>
+    <FontName>Segoe UI Light</FontName>
     <Size>12</Size>
     <Spacing>0</Spacing>
     <UseKerning>true</UseKerning>

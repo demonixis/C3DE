@@ -20,8 +20,11 @@ namespace C3DE.UI
 
         public void LoadContent(ContentManager content)
         {
-            Skin = new GUISkin();
-            Skin.LoadContent(content);
+            if (Skin == null)
+            {
+                Skin = new GUISkin();
+                Skin.LoadContent(content);
+            }
         }
 
         public void Box(Rectangle rect, string text)

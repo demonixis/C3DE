@@ -19,7 +19,7 @@ namespace C3DE.Demo.Scripts
             _engine = (Application.Game as Engine);
             _basicRenderer = (Renderer)_engine.Renderer;
             _vrRenderer = new VRRenderer();
-            _vrRenderer.LoadContent(Application.Content);
+            _vrRenderer.Initialize(Application.Content);
             Screen.Setup(Application.GraphicsDeviceManager.PreferredBackBufferWidth, Application.GraphicsDeviceManager.PreferredBackBufferHeight, null, null);
         }
 

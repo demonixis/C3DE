@@ -16,7 +16,7 @@ namespace C3DE.Demo
         , LaunchMode=Android.Content.PM.LaunchMode.SingleInstance
         , ScreenOrientation = ScreenOrientation.Landscape
         , ConfigurationChanges = ConfigChanges.Orientation | ConfigChanges.Keyboard | ConfigChanges.KeyboardHidden | ConfigChanges.ScreenSize)]
-	public class MainActivity : AndroidGameActivity
+    public class MainActivity : AndroidGameActivity
     {
         protected override void OnCreate(Bundle bundle)
         {
@@ -26,9 +26,10 @@ namespace C3DE.Demo
             Window.SetFlags (WindowManagerFlags.Fullscreen, WindowManagerFlags.Fullscreen);
 
             var g = new AndroidGame();
-            SetContentView((View)g.Services.GetService(typeof(View)));
+            var view = (View)g.Services.GetService(typeof(View));
+            SetContentView(view);
             g.Run();
-        }
+        }  
     }
 }
 

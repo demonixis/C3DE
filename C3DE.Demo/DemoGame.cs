@@ -8,8 +8,8 @@ namespace C3DE.Demo
 {
     public static class DemoGame
     {
-        public const int ScreenWidth = 1280;
-        public const int ScreenHeight = 800;
+        public const int ScreenWidth = 1024;
+        public const int ScreenHeight = 600;
 
         public static string[] BlueSkybox = new string[6] 
         {
@@ -54,11 +54,12 @@ namespace C3DE.Demo
             {
                 Application.SceneManager.Add(new MenuDemo(), true);
                 Application.SceneManager.Add(new HeightmapDemo());
-                Application.SceneManager.Add(new RandomTerrain());
-                Application.SceneManager.Add(new GridDemo());
+                Application.SceneManager.Add(new ProceduralTerrainWater());
+                Application.SceneManager.Add(new ProceduralTerrainLava());
+                Application.SceneManager.Add(new LightingDemo());
                 Application.SceneManager.Add(new HexagonTerrainDemo());
                 Application.SceneManager.Add(new NetworkScene());
-                Application.LoadLevel(1);
+                Application.LoadLevel(0);
                 game.Run();
             }
         }

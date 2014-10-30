@@ -31,6 +31,8 @@ namespace C3DE
 
         public bool IsStatic { get; set; }
 
+        public bool IsPrefab { get; set; }
+
         public bool Enabled
         {
             get { return enabled; }
@@ -109,6 +111,7 @@ namespace C3DE
 
             enabled = true;
             IsStatic = false;
+            IsPrefab = false;
 
             Id = SceneObjectCounter++;
             Name = !string.IsNullOrEmpty(name) ? name : "SceneObject_" + Id;
@@ -122,10 +125,13 @@ namespace C3DE
         {
             if (!initialized)
             {
-                for (int i = components.Count - 1; i != 0; i--)
-                    components[i].Start();
-
                 initialized = true;
+
+                for (int i = components.Count - 1; i != 0; i--)
+                {
+                    components[i].Start();
+                    components[i].initialized = true;
+                }
             }
         }
 
@@ -211,7 +217,7 @@ namespace C3DE
             components.Add(component);
             components.Sort();
 
-            if (initialized)
+            if (initialized && !component.Initialized)
                 component.Start();
 
             NotifyComponentChanged(component);
@@ -286,9 +292,9 @@ namespace C3DE
 
         public static SceneObject FindById(int id)
         {
-            for (int i = 0; i < Application.SceneManager.ActiveScene.members.Size; i++)
-                if (Application.SceneManager.ActiveScene.members[i].Id == id)
-                    return Application.SceneManager.ActiveScene.members[i];
+            for (int i = 0; i < Application.SceneManager.ActiveScene.sceneObjects.Size; i++)
+                if (Application.SceneManager.ActiveScene.sceneObjects[i].Id == id)
+                    return Application.SceneManager.ActiveScene.sceneObjects[i];
 
             return null;
         }
@@ -297,9 +303,9 @@ namespace C3DE
         {
             List<SceneObject> sceneObjects = new List<SceneObject>();
 
-            for (int i = 0; i < Application.SceneManager.ActiveScene.members.Size; i++)
-                if (Application.SceneManager.ActiveScene.members[i].Id == id)
-                    sceneObjects.Add(Application.SceneManager.ActiveScene.members[i]);
+            for (int i = 0; i < Application.SceneManager.ActiveScene.sceneObjects.Size; i++)
+                if (Application.SceneManager.ActiveScene.sceneObjects[i].Id == id)
+                    sceneObjects.Add(Application.SceneManager.ActiveScene.sceneObjects[i]);
 
             return sceneObjects.ToArray();
         }

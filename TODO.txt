@@ -1,0 +1,5 @@
+- Use more SmartList
+- Properly renderer switching
+- DeviceOrientedController
+- Material profiles (Low/Mid/Hight) in graphics settings (to be created).
+- Use QuadRenderer instead of SpriteBatch for some operations.

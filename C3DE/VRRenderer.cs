@@ -60,13 +60,12 @@ namespace C3DE
             _needsBufferUpdate = false;
         }
 
-        public void LoadContent(ContentManager content)
+        public void Initialize(ContentManager content)
         {
             Initialize();
 
             _guiManager = new GUI(_spriteBatch);
             _guiManager.LoadContent(content);
-            _postProcessManager.LoadContent(content);
         }
 
         private void Initialize()

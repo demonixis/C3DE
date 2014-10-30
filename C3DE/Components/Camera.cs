@@ -10,9 +10,10 @@ namespace C3DE.Components
 
     public class Camera : Component
     {
+        public static Camera Main = null;
+
         protected internal Matrix view;
         protected internal Matrix projection;
-        protected internal Vector3 camView;
         protected Vector3 reference;
         private Vector3 _target;
         private Vector3 _upVector;
@@ -123,7 +124,7 @@ namespace C3DE.Components
 
         public override void Start()
         {
-            Setup(transform.LocalPosition, Vector3.Zero, Vector3.Up);
+            Setup(transform.Position, Vector3.Zero, Vector3.Up);
         }
 
         public void Setup(Vector3 position, Vector3 camTarget, Vector3 upVector)

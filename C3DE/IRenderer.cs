@@ -9,7 +9,7 @@ namespace C3DE
     {
         bool NeedsBufferUpdate { get; }
 
-        void LoadContent(ContentManager content);
+        void Initialize(ContentManager content);
 
         /// <summary>
         /// Render the scene with the specified camera.

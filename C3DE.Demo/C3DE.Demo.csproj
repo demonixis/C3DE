@@ -58,11 +58,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DemoGame.cs" />
-    <Compile Include="Scenes\HexagonTerrain.cs" />
+    <Compile Include="Scenes\HexagonGridTerrain.cs" />
+    <Compile Include="Scenes\ProceduralTerrainLava.cs" />
     <Compile Include="Scenes\MenuDemo.cs" />
     <Compile Include="Scenes\NetworkScene.cs" />
     <Compile Include="Scripts\FresnelMaterial.cs" />
-    <Compile Include="Scenes\GridDemo.cs" />
+    <Compile Include="Scenes\LightingDemo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Scripts\AutoRotation.cs" />
     <Compile Include="Scripts\ControllerSwitcher.cs" />
@@ -78,7 +79,7 @@
     <Compile Include="Scripts\NetThirdPersonController.cs" />
     <Compile Include="Scripts\VRRendererSwitcher.cs" />
     <Compile Include="Scripts\WeightMapViewer.cs" />
-    <Compile Include="Scenes\RandomTerrain.cs" />
+    <Compile Include="Scenes\ProceduralTerrainWater.cs" />
     <Compile Include="Scenes\HeightmapDemo.cs" />
   </ItemGroup>
   <ItemGroup>

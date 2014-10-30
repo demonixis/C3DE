@@ -5,6 +5,11 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace C3DE.Materials
 {
+    public enum ShaderQuality
+    {
+        Low, Normal
+    }
+
     public abstract class Material
     {
         private static int MaterialCounter = 0;
@@ -47,15 +52,23 @@ namespace C3DE.Materials
 
         public Vector2 Offset { get; set; }
 
+        public ShaderQuality ShaderQuality { get; set; }
+
         public Material(Scene mainScene)
         {
             diffuseColor = Color.White.ToVector4();
-            scene = mainScene;
-            scene.Add(this);
             Id = MaterialCounter++;
             Name = "Material_" + Id;
             Tiling = Vector2.One;
             Offset = Vector2.Zero;
+            ShaderQuality = ShaderQuality.Normal;
+
+#if ANDROID
+            ShaderQuality = ShaderQuality.Low;
+#endif
+
+            scene = mainScene;
+            scene.Add(this);
         }
 
         public abstract void LoadContent(ContentManager content);

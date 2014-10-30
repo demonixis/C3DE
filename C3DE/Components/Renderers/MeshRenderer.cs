@@ -74,7 +74,7 @@ namespace C3DE.Components.Renderers
 
             boundingSphere = new BoundingSphere();
             boundingSphere.Radius = (int)Math.Max(Math.Max(width, height), depth);
-            boundingSphere.Center = sceneObject.Transform.LocalPosition;
+            boundingSphere.Center = sceneObject.Transform.Position;
             boundingSphere.Transform(sceneObject.Transform.world);
 
             UpdateColliders();

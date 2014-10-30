@@ -35,22 +35,20 @@ namespace C3DE.PostProcess
 
         public void Add(PostProcessPass pass)
         {
-            _passes.Add(pass);
-            _size++;
+            if (!_passes.Contains(pass))
+            {
+                _passes.Add(pass);
+                pass.Initialize(Application.Content);
+                _size++;
+            }
         }
 
         public void Remove(PostProcessPass pass)
         {
-            _passes.Remove(pass);
-            _size--;
-        }
-
-        public void LoadContent(ContentManager content)
-        {
-            if (_size > 0)
+            if (_passes.Contains(pass))
             {
-                for (int i = 0; i < _size; i++)
-                    _passes[i].LoadContent(content);
+                _passes.Remove(pass);
+                _size--;
             }
         }
 

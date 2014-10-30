@@ -9,8 +9,13 @@ using System.Collections.Generic;
 
 namespace C3DE
 {
+    /// <summary>
+    /// The VR Mobile Renderer is responsible to render the scene into two render target to be
+    /// compatible with mobile VR headset like Samsung Gear VR, Homido, Dive, Google Cardboard, etc.
+    /// </summary>
     public class VRMobileRenderer : IRenderer
     {
+        private GraphicsDevice _device;
         private RenderTarget2D _renderTargetLeft;
         private RenderTarget2D _renderTargetRight;
         private Rectangle _sideBySideLeftSpriteSize;
@@ -32,31 +37,27 @@ namespace C3DE
             _needsBufferUpdate = false;
         }
 
-        public void LoadContent(ContentManager content)
+        public void Initialize(ContentManager content)
         {
-            Initialize();
-
+            _device = Application.GraphicsDevice;
+            _spriteBatch = new SpriteBatch(_device);
             _guiManager = new GUI(_spriteBatch);
             _guiManager.LoadContent(content);
-            _postProcessManager.LoadContent(content);
+            SetupRenderTargets();
         }
 
-        private void Initialize()
+        private void SetupRenderTargets()
         {
-            _spriteBatch = new SpriteBatch(Application.GraphicsDevice);
-
             // Left and right RenderTarget
-            _renderTargetLeft = new RenderTarget2D(Application.GraphicsDevice, Screen.Width / 2, Screen.Height, false, SurfaceFormat.Color, DepthFormat.Depth24, 0, RenderTargetUsage.DiscardContents);
-            _renderTargetRight = new RenderTarget2D(Application.GraphicsDevice, Screen.Width / 2, Screen.Height, false, SurfaceFormat.Color, DepthFormat.Depth24, 0, RenderTargetUsage.DiscardContents);
-
-            var aspect = (float)_renderTargetLeft.Width / (float)_renderTargetLeft.Height;
+            _renderTargetLeft = new RenderTarget2D(_device, Screen.WidthPerTwo, Screen.Height, false, SurfaceFormat.Color, DepthFormat.Depth24, 0, RenderTargetUsage.DiscardContents);
+            _renderTargetRight = new RenderTarget2D(_device, Screen.WidthPerTwo, Screen.Height, false, SurfaceFormat.Color, DepthFormat.Depth24, 0, RenderTargetUsage.DiscardContents);
 
             UpdateResolutionAndRenderTargets();
         }
 
         public void SetProjection(Camera camera)
         {
-            var aspectRatio = (OculusRiftDK2013_Metric.HScreenSize * 0.5f) / OculusRiftDK2013_Metric.VScreenSize;
+            var aspectRatio = (float)_renderTargetLeft.Width / (float)_renderTargetLeft.Height;
             var fov_d = OculusRiftDK2013_Metric.EyeToScreenDistance;
             var fov_x = OculusRiftDK2013_Metric.VScreenSize * 0.71f;
             var yfov = 2.0f * (float)Math.Atan(fov_x / fov_d);
@@ -90,10 +91,10 @@ namespace C3DE
             if (scene.Lights.Count == 0)
                 return;
 
-            //Application.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
+            _device.DepthStencilState = DepthStencilState.Default;
 
             if (scene.RenderSettings.Skybox.Enabled)
-                scene.RenderSettings.Skybox.Draw(Application.GraphicsDevice, camera);
+                scene.RenderSettings.Skybox.Draw(_device, camera);
 
             // Prepass, Update light, eye position, etc.
             for (int i = 0; i < scene.effects.Count; i++)
@@ -109,7 +110,7 @@ namespace C3DE
                     else
                         scene.RenderList[i].Material.Pass(scene.RenderList[i]);
 
-                    scene.RenderList[i].Draw(Application.GraphicsDevice);
+                    scene.RenderList[i].Draw(_device);
                 }
             }
         }
@@ -136,7 +137,7 @@ namespace C3DE
         {
             for (int i = 0, l = scene.Lights.Count; i < l; i++)
                 if (scene.Lights[i].ShadowGenerator.Enabled)
-                    scene.Lights[i].ShadowGenerator.RenderShadows(Application.GraphicsDevice, scene.RenderList);
+                    scene.Lights[i].ShadowGenerator.RenderShadows(_device, scene.RenderList);
 
             renderObjects(scene, camera);
             renderUI(scene.Behaviours);
@@ -151,12 +152,12 @@ namespace C3DE
         {
             SetProjection(camera);
 
-            Application.GraphicsDevice.SetRenderTarget(_renderTargetLeft);
-            Application.GraphicsDevice.Clear(Color.Black);
+            _device.SetRenderTarget(_renderTargetLeft);
+            _device.Clear(Color.Black);
             BaseDraw(scene, camera);
 
-            Application.GraphicsDevice.SetRenderTarget(_renderTargetRight);
-            Application.GraphicsDevice.Clear(Color.Black);
+            _device.SetRenderTarget(_renderTargetRight);
+            _device.Clear(Color.Black);
             BaseDraw(scene, camera);
 
             DrawRenderTargets(camera);
@@ -167,8 +168,8 @@ namespace C3DE
         private void DrawRenderTargets(Camera camera)
         {
             // Set RenderTargets
-            Application.GraphicsDevice.SetRenderTarget(null);
-            Application.GraphicsDevice.Clear(Color.Black);
+            _device.SetRenderTarget(null);
+            _device.Clear(Color.Black);
 
             // Pass for left lens
             _spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Opaque, null, null, null, null);

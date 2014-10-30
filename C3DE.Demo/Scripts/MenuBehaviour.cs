@@ -9,11 +9,11 @@ namespace C3DE.Demo.Scripts
 {
     public class MenuBehaviour : Behaviour
     {
+        public static int ButtonWidth = 200;
+        public static int ButtonHeight = 45;
+
         class DemoWidget
         {
-            public const int Width = 150;
-            public const int Height = 50;
-
             private Rectangle _rect;
             private string _text;
             private int _index;
@@ -22,7 +22,7 @@ namespace C3DE.Demo.Scripts
             {
                 _text = text;
                 _index = index;
-                _rect = new Rectangle(0, 0, Width, Height);
+                _rect = new Rectangle(0, 0, ButtonWidth, ButtonHeight);
             }
 
             public void SetPosition(float x, float y)
@@ -47,7 +47,7 @@ namespace C3DE.Demo.Scripts
 
         public override void Start()
         {
-            _margin = 25;
+            _margin = 15;
 
             _background = GraphicsHelper.CreateGradiantTexture(Color.LightSteelBlue, Color.Linen, Screen.Width, Screen.Height);
             _backgroundRect = new Rectangle(0, 0, Screen.Width, Screen.Height);
@@ -56,16 +56,16 @@ namespace C3DE.Demo.Scripts
             _titleSize = 3.0f;
             _titleRect = new Vector2(Screen.WidthPerTwo - titleSize.X * _titleSize / 2, titleSize.Y * _titleSize);
 
-            _demos = new DemoWidget[Application.SceneManager.Size - 2];
+            _demos = new DemoWidget[Application.SceneManager.Size - 1];
 
             for (int i = 0; i < _demos.Length; i++)
-                _demos[i] = new DemoWidget(Application.SceneManager[i + 2].Name, i + 2);
+                _demos[i] = new DemoWidget(Application.SceneManager[i + 1].Name, i + 1);
 
-            float x = Screen.WidthPerTwo - DemoWidget.Width / 2;
-            float y = Screen.HeightPerTwo - ((DemoWidget.Height + _margin) * _demos.Length) / 2;
+            float x = Screen.WidthPerTwo - ButtonWidth / 2;
+            float y = Screen.HeightPerTwo - ((ButtonHeight + _margin) * _demos.Length) / 2;
 
             for (int i = 0; i < _demos.Length; i++)
-                _demos[i].SetPosition(x, y + i * (DemoWidget.Height + _margin));
+                _demos[i].SetPosition(x, y + i * (ButtonHeight + _margin));
         }
 
         public override void Update()
