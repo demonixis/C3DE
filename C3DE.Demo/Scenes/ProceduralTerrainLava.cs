@@ -17,6 +17,8 @@ namespace C3DE.Demo.Scenes
     public class ProceduralTerrainLava : Scene
     {
         private SimpleBlurPass _blurPostProcess;
+        private RefractionPass _refractionPostProcess;
+        private BloomPass _bloomPostProcess;
 
         public ProceduralTerrainLava() : base("Procedural Terrain + Lava") { }
 
@@ -69,7 +71,15 @@ namespace C3DE.Demo.Scenes
             Add(lava);
 
             _blurPostProcess = new SimpleBlurPass();
-            Add(_blurPostProcess);
+            //Add(_blurPostProcess);
+
+            _refractionPostProcess = new RefractionPass(Application.Content.Load<Texture2D>("Textures/hexagrid"));
+            _refractionPostProcess.TextureTiling = new Vector2(0.5f);
+            Add(_refractionPostProcess);
+
+            _bloomPostProcess = new BloomPass();
+            _bloomPostProcess.Settings = BloomSettings.PresetSettings[1];
+            //Add(_bloomPostProcess);
         }
 
         public override void Update()
