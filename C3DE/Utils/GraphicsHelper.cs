@@ -102,5 +102,18 @@ namespace C3DE.Utils
 
             return noiseImage;
         }
+
+        public static TextureCube CreateCubeMap(Texture2D texture)
+        {
+            var cubeMap = new TextureCube(Application.GraphicsDevice, texture.Width, false, SurfaceFormat.Color);
+
+            Color[] textureData = new Color[texture.Width * texture.Height];
+            texture.GetData<Color>(textureData);
+
+            for (int i = 0; i < 6; i++)
+                cubeMap.SetData<Color>((CubeMapFace)i, textureData);
+
+            return cubeMap;
+        }
     }
 }
