@@ -4,6 +4,7 @@ using C3DE.Components.Renderers;
 using C3DE.Demo.Scripts;
 using C3DE.Geometries;
 using C3DE.Materials;
+using C3DE.PostProcess;
 using C3DE.Prefabs;
 using C3DE.UI;
 using C3DE.Utils;
@@ -15,6 +16,8 @@ namespace C3DE.Demo.Scenes
 {
     public class ProceduralTerrainLava : Scene
     {
+        private SimpleBlurPass _blurPostProcess;
+
         public ProceduralTerrainLava() : base("Procedural Terrain + Lava") { }
 
         public override void Initialize()
@@ -22,14 +25,13 @@ namespace C3DE.Demo.Scenes
             base.Initialize();
 
             // Skybox
-            RenderSettings.Skybox.Generate(Application.GraphicsDevice, Application.Content, DemoGame.StarsSkybox);
+            RenderSettings.Skybox.Generate(Application.GraphicsDevice, Application.Content, DemoGame.BlueSkybox);
 
             // Camera
             var camera = new CameraPrefab("camera");
-            Add(camera);
-
             camera.AddComponent<ControllerSwitcher>();
             camera.AddComponent<DemoBehaviour>();
+            Add(camera);
 
             // Light
             var lightPrefab = new LightPrefab("light", LightType.Directional);
@@ -43,7 +45,7 @@ namespace C3DE.Demo.Scenes
             // Terrain
             var terrainMaterial = new StandardMaterial(scene);
             terrainMaterial.MainTexture = Application.Content.Load<Texture2D>("Textures/Terrain/Rock");
-            terrainMaterial.Shininess = 1;
+            terrainMaterial.Shininess = 50;
             terrainMaterial.Tiling = new Vector2(8);
 
             var terrain = new TerrainPrefab("terrain");
@@ -65,6 +67,16 @@ namespace C3DE.Demo.Scenes
             lava.Renderer.Geometry.Size = new Vector3(terrain.Width * 0.5f);
             lava.Renderer.Geometry.Generate();
             Add(lava);
+
+            _blurPostProcess = new SimpleBlurPass();
+            Add(_blurPostProcess);
+        }
+
+        public override void Update()
+        {
+            base.Update();
+
+            _blurPostProcess.BlurDistance = Input.Mouse.Down(Inputs.MouseButton.Left) ? Input.Mouse.Delta.X * 0.001f : 0;
         }
     }
 }

@@ -44,7 +44,6 @@ namespace C3DE
         private bool _projectionUpdated;
 
         private SpriteBatch _spriteBatch;
-        private PostProcessManager _postProcessManager;
         private bool _needsBufferUpdate;
         internal GUI _guiManager;
 
@@ -56,7 +55,6 @@ namespace C3DE
 
         public VRRenderer()
         {
-            _postProcessManager = new PostProcessManager();
             _needsBufferUpdate = false;
         }
 

@@ -1,4 +1,4 @@
-float blurDistance;
+float BlurDistance;
 
 texture TargetTexture;
 sampler2D textureSampler = sampler_state
@@ -24,10 +24,10 @@ struct PixelShaderInput
 
 float4 BlurPixelShader(PixelShaderInput input) : COLOR
 {
-	float4 diffuse = tex2D(textureSampler, float2(input.UV.x + blurDistance, input.UV.y + blurDistance));
-	diffuse += tex2D(textureSampler, float2(input.UV.x - blurDistance, input.UV.y - blurDistance));
-	diffuse += tex2D(textureSampler, float2(input.UV.x + blurDistance, input.UV.y - blurDistance));
-	diffuse += tex2D(textureSampler, float2(input.UV.x - blurDistance, input.UV.y + blurDistance));
+	float4 diffuse = tex2D(textureSampler, float2(input.UV.x + BlurDistance, input.UV.y + BlurDistance));
+	diffuse += tex2D(textureSampler, float2(input.UV.x - BlurDistance, input.UV.y - BlurDistance));
+	diffuse += tex2D(textureSampler, float2(input.UV.x + BlurDistance, input.UV.y - BlurDistance));
+	diffuse += tex2D(textureSampler, float2(input.UV.x - BlurDistance, input.UV.y + BlurDistance));
 	return diffuse / 4.0;
 }
 

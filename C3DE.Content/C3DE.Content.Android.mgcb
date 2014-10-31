@@ -472,11 +472,11 @@
 /processorParam:DebugMode=Auto
 /build:FX/PostProcess/AverageColor.fx
 
-#begin FX/PostProcess/Blur.fx
+#begin FX/PostProcess/SimpleBlur.fx
 /importer:EffectImporter
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
-/build:FX/PostProcess/Blur.fx
+/build:FX/PostProcess/SimpleBlur.fx
 
 #begin FX/PostProcess/C64Filter.fx
 /importer:EffectImporter

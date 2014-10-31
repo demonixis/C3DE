@@ -21,7 +21,6 @@ namespace C3DE
         private Rectangle _sideBySideLeftSpriteSize;
         private Rectangle _sideBySideRightSpriteSize;
         private SpriteBatch _spriteBatch;
-        private PostProcessManager _postProcessManager;
         private bool _needsBufferUpdate;
         internal GUI _guiManager;
 
@@ -33,7 +32,6 @@ namespace C3DE
 
         public VRMobileRenderer()
         {
-            _postProcessManager = new PostProcessManager();
             _needsBufferUpdate = false;
         }
 

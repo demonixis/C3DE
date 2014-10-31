@@ -16,7 +16,6 @@ namespace C3DE
         private GraphicsDevice _device;
         private RenderTarget2D _sceneRT;
         private SpriteBatch _spriteBatch;
-        private PostProcessManager _postProcessManager;
         private bool _needsBufferUpdate;
         internal GUI _guiManager;
 
@@ -25,6 +24,8 @@ namespace C3DE
             get { return _needsBufferUpdate; }
             set { _needsBufferUpdate = value; }
         }
+
+
 
         public Renderer()
         {
@@ -35,10 +36,16 @@ namespace C3DE
         {
             _device = Application.GraphicsDevice;
             _sceneRT = new RenderTarget2D(_device, _device.Viewport.Width, _device.Viewport.Height, false, SurfaceFormat.Color, DepthFormat.Depth24, 0, RenderTargetUsage.DiscardContents);
-            _postProcessManager = new PostProcessManager();
             _spriteBatch = new SpriteBatch(_device);
             _guiManager = new GUI(_spriteBatch);
             _guiManager.LoadContent(content);
+        }
+
+        private void renderShadowMaps(Scene scene, Camera camera)
+        {
+            for (int i = 0, l = scene.Lights.Count; i < l; i++)
+                if (scene.Lights[i].shadowGenerator.Enabled)
+                    scene.Lights[i].shadowGenerator.RenderShadows(_device, scene.renderList);
         }
 
         /// <summary>
@@ -71,12 +78,10 @@ namespace C3DE
                         scene.DefaultMaterial.Pass(scene.renderList[i]);
                     else
                         scene.RenderList[i].Material.Pass(scene.RenderList[i]);
-                    
+
                     scene.RenderList[i].Draw(_device);
                 }
             }
-
-            _device.SetRenderTarget(null);
         }
 
         /// <summary>
@@ -84,9 +89,22 @@ namespace C3DE
         /// </summary>
         private void renderBuffers()
         {
+            _device.SetRenderTarget(null);
             _spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Opaque, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone);
             _spriteBatch.Draw(_sceneRT, Vector2.Zero, Color.White);
             _spriteBatch.End();
+        }
+
+        private void renderPostProcess(List<PostProcessPass> passes)
+        {
+            if (passes.Count > 0)
+            {
+                for (int i = 0, l = passes.Count; i < l; i++)
+                {
+                    if (passes[i].Enabled)
+                        passes[i].Apply(_spriteBatch, _sceneRT);
+                }
+            }
         }
 
         private void renderUI(List<Behaviour> scripts)
@@ -105,13 +123,13 @@ namespace C3DE
             }
         }
 
-        private void renderPostProcess()
-        {
-            _postProcessManager.Draw(_spriteBatch, _sceneRT);
-        }
-
         /// <summary>
         /// Render the scene with the specified camera.
+        /// Render order:
+        /// 1 - Shadow maps
+        /// 2 - Objects
+        /// 3 - PostProcesses
+        /// 4 - UI
         /// </summary>
         /// <param name="scene">The scene to render.</param>
         /// <param name="camera">The camera to use for render.</param>
@@ -123,14 +141,10 @@ namespace C3DE
                 _needsBufferUpdate = false;
             }
 
-            for (int i = 0, l = scene.Lights.Count; i < l; i++)
-                if (scene.Lights[i].shadowGenerator.Enabled)
-                    scene.Lights[i].shadowGenerator.RenderShadows(_device, scene.RenderList);
-
+            renderShadowMaps(scene, camera);
             renderObjects(scene, camera);
-
             renderBuffers();
-            //renderPostProcess();
+            renderPostProcess(scene.postProcessPasses);
             renderUI(scene.Behaviours);
         }
 

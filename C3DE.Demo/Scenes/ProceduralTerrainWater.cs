@@ -48,7 +48,7 @@ namespace C3DE.Demo.Scenes
             // Terrain
             var terrainMaterial = new StandardMaterial(scene);
             terrainMaterial.MainTexture = Application.Content.Load<Texture2D>("Textures/Terrain/Grass");
-            terrainMaterial.Shininess = 50;
+            terrainMaterial.Shininess = 150;
             terrainMaterial.Tiling = new Vector2(8);
 
             var terrain = new TerrainPrefab("terrain");
