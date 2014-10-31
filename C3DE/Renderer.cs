@@ -25,8 +25,6 @@ namespace C3DE
             set { _needsBufferUpdate = value; }
         }
 
-
-
         public Renderer()
         {
             _needsBufferUpdate = false;
@@ -111,7 +109,7 @@ namespace C3DE
         {
             var size = scripts.Count;
 
-            if (size > 0)
+            if (size > 0 && GUI.Enabled)
             {
                 _spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone);
 

@@ -11,11 +11,13 @@ namespace C3DE.UI
         private Vector2 _cacheVec2;
         private Rectangle _cacheRect;
 
+        public static bool Enabled { get; set; }
         public static GUISkin Skin { get; set; }
 
         public GUI(SpriteBatch spriteBatch)
         {
             _spriteBatch = spriteBatch;
+            Enabled = true;
         }
 
         public void LoadContent(ContentManager content)
