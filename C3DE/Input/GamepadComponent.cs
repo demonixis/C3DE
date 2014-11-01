@@ -265,7 +265,15 @@ namespace C3DE.Inputs
 
         public Vector2 RightStickValue(PlayerIndex index = PlayerIndex.One)
         {
+#if LINUX
+			var value = ThumbSticks(false, index);
+			var temp = value.X;
+			value.X = -value.Y;
+			value.Y = -temp;
+			return value;
+#else
             return ThumbSticks(false, index);
+#endif
         }
 
         #endregion

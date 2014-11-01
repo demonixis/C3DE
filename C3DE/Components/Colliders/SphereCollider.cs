@@ -41,18 +41,16 @@ namespace C3DE.Components.Colliders
             if (renderable != null)
             {
                 _sphere = renderable.boundingSphere;
-                Min = new Vector3(-_sphere.Radius);
-                Max = new Vector3(_sphere.Radius);
             }
         }
 
         public override bool Collides(Collider other)
         {
             if (other is SphereCollider)
-                return (other as SphereCollider).Sphere.Intersects(_sphere);
+                return _sphere.Intersects((other as SphereCollider).Sphere);
 
             if (other is BoxCollider)
-                return (other as BoxCollider).Box.Intersects(_sphere);
+                return _sphere.Intersects((other as BoxCollider).Box);
 
             return false;
         }

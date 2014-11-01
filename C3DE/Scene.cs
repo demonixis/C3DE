@@ -627,6 +627,21 @@ namespace C3DE
 
         #endregion
 
+        #region Collisions detection
+
+        public Collider Collides(Collider collider)
+        {
+            for (int i = 0, l = colliders.Count; i < l; i++)
+            {
+                if (collider.Collides(colliders[i]))
+                    return colliders[i];
+            }
+
+            return null;
+        }
+
+        #endregion
+
         #region Raycast
 
         private bool Raycast(Ray ray, float distance = 1000.0f)

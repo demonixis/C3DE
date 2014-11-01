@@ -7,37 +7,6 @@ namespace C3DE.Components.Colliders
     /// </summary>
     public abstract class Collider : Component
     {
-        private Vector3 _min;
-        private Vector3 _max;
-        private Vector3 _center;
-
-        /// <summary>
-        /// Gets the min size of the collider.
-        /// </summary>
-        public Vector3 Min
-        {
-            get { return _min; }
-            protected set { _min = value; }
-        }
-
-        /// <summary>
-        /// Gets the max size of the collider.
-        /// </summary>
-        public Vector3 Max 
-        {
-            get { return _max; }
-            protected set { _max = value; }
-        }
-
-        /// <summary>
-        /// Gets the center of the collider.
-        /// </summary>
-        public Vector3 Center 
-        {
-            get { return _center; }
-            protected set { _center = value; } 
-        }
-
         /// <summary>
         /// Allow or not the collider to be picked by a ray cast.
         /// </summary>
@@ -54,9 +23,6 @@ namespace C3DE.Components.Colliders
         public Collider()
             : base()
         {
-            _min = Vector3.Zero;
-            _max = Vector3.Zero;
-            _center = Vector3.Zero;
             IsPickable = true;
             IsTrigger = false;
         }

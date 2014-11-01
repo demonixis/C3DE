@@ -86,13 +86,13 @@ namespace C3DE.Components.Controllers
 
         protected virtual void UpdateKeyboardInput()
         {
-            if (Input.Keys.Up || Input.Keys.Pressed(Keys.Z))
+            if (Input.Keys.Up || Input.Keys.Pressed(Keys.W))
                 translation.Z += MoveSpeed * Time.DeltaTime;
 
             else if (Input.Keys.Pressed(Keys.Down) || Input.Keys.Pressed(Keys.S))
                 translation.Z -= MoveSpeed * Time.DeltaTime;
 
-            if (Input.Keys.Pressed(Keys.Q))
+            if (Input.Keys.Pressed(Keys.A))
                 translation.X += MoveSpeed * Time.DeltaTime / 2.0f;
 
             else if (Input.Keys.Pressed(Keys.D))

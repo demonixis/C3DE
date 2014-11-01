@@ -5,6 +5,11 @@ using System.Collections.Generic;
 
 namespace C3DE.Geometries
 {
+    public enum VertexType
+    {
+        Position = 0, Normal
+    }
+
     public class Geometry
     {
         private VertexPositionNormalTexture[] _vertices;
@@ -129,6 +134,23 @@ namespace C3DE.Geometries
 
             for (int i = 0; i < _vertices.Length; i++)
                 _vertices[i].Normal.Normalize();
+        }
+
+        public Vector3[] GetVertices(VertexType type)
+        {
+            int size = Vertices.Length;
+
+            Vector3[] vertices = new Vector3[size];
+
+            for (int i = 0; i < size ; i++)
+            {
+                if (type == VertexType.Normal)
+                    vertices[i] = Vertices[i].Normal;
+                else
+                    vertices[i] = Vertices[i].Position;
+            }
+
+            return vertices;
         }
     }
 }

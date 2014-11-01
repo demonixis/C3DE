@@ -63,7 +63,7 @@ namespace C3DE.Materials
             Offset = Vector2.Zero;
             ShaderQuality = ShaderQuality.Normal;
 
-#if ANDROID
+#if ANDROID || OPENGL
             ShaderQuality = ShaderQuality.Low;
 #endif
 

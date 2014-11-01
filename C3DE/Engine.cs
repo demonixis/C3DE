@@ -21,7 +21,7 @@ namespace C3DE
         public IRenderer Renderer
         {
             get { return renderer; }
-            set 
+            set
             {
                 _rendererToChange = value;
                 _needRendererChange = true;
@@ -90,7 +90,7 @@ namespace C3DE
 			Screen.Setup(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight, null, null);
 			GraphicsDevice.Viewport = new Viewport(0, 0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
 #endif
-            
+
             if (renderer == null)
                 renderer = new Renderer();
 
@@ -108,7 +108,7 @@ namespace C3DE
             Components.Add(Input.Touch);
 
             initialized = true;
-           
+
             base.Initialize();
         }
 
