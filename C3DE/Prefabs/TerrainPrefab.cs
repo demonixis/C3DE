@@ -111,13 +111,13 @@ namespace C3DE.Prefabs
 
         public void ApplyCollision(Transform tr)
         {
-            var y = (GetTerrainHeight(tr.Position.X, 0, tr.Position.Z) + 15 - tr.Position.Y) * 0.2f;
+            var y = (GetTerrainHeight(tr.Position.X, 0, tr.Position.Z) + 2 * geometry.Size.Y - tr.Position.Y) * 0.2f;
             tr.Translate(0.0f, y, 0.0f);
         }
 
         public void ApplyCollision(ref Vector3 position)
         {
-            var y = (GetTerrainHeight(position) + 2 - position.Y) * 0.2f;
+            var y = (GetTerrainHeight(position) - position.Y) * 0.2f;
             position.Y += y;
         }
 

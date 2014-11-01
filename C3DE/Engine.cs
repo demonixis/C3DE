@@ -133,8 +133,6 @@ namespace C3DE
 
         protected override void EndDraw()
         {
-            base.EndDraw();
-
             if (Screen.LockCursor)
                 Mouse.SetPosition(Screen.WidthPerTwo, Screen.HeightPerTwo);
 
@@ -143,6 +141,8 @@ namespace C3DE
                 SetRenderer(_rendererToChange);
                 _needRendererChange = false;
             }
+
+            base.EndDraw();
         }
     }
 }

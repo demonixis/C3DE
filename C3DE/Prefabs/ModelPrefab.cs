@@ -8,7 +8,7 @@ namespace C3DE.Prefabs
     public class ModelPrefab : SceneObject
     {
         protected ModelRenderer renderer;
-        protected BoxCollider collider;
+        protected Collider collider;
 
         public Model Model
         {
@@ -20,7 +20,7 @@ namespace C3DE.Prefabs
             get { return renderer; }
         }
 
-        public BoxCollider Collider
+        public Collider Collider
         {
             get { return collider; }
         }
@@ -29,60 +29,21 @@ namespace C3DE.Prefabs
             : base(name)
         {
             renderer = AddComponent<ModelRenderer>();
-            collider = AddComponent<BoxCollider>();
+            collider = AddComponent<SphereCollider>();
         }
-
-#if ANDROID
-
-		public void LoadModel(string modelPath)
-		{
-			renderer.Model = Application.Content.Load<Model>(modelPath);
-			BoundingSphere sphere = new BoundingSphere();
-
-			foreach (ModelMesh mesh in renderer.Model.Meshes) 
-				sphere = BoundingSphere.CreateMerged (sphere, mesh.BoundingSphere);
-
-			collider.Box = BoundingBox.CreateFromSphere (sphere);
-		}
-
-#else
 
         public void LoadModel(string modelPath)
         {
             renderer.Model = Application.Content.Load<Model>(modelPath);
 
-            Vector3 transformedPosition;
-            Vector3 min = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
-            Vector3 max = new Vector3(float.MinValue, float.MinValue, float.MinValue);
-            Matrix[] bonesTransforms = new Matrix[renderer.Model.Bones.Count];
-            
-            renderer.Model.CopyAbsoluteBoneTransformsTo(bonesTransforms);
+            BoundingSphere sphere = new BoundingSphere();
 
             foreach (ModelMesh mesh in renderer.Model.Meshes)
-            {
-                foreach (ModelMeshPart meshPart in mesh.MeshParts)
-                {
-                    // Vertex buffer parameters
-                    int vertexStride = meshPart.VertexBuffer.VertexDeclaration.VertexStride;
-                    int vertexBufferSize = meshPart.NumVertices * vertexStride;
+               sphere = BoundingSphere.CreateMerged(sphere, mesh.BoundingSphere);
 
-                    // Get vertex data as float
-                    float[] vertexData = new float[vertexBufferSize / sizeof(float)];
-                    meshPart.VertexBuffer.GetData<float>(vertexData);
+            sphere.Center = transform.Position;
 
-                    // Iterate through vertices (possibly) growing bounding box, all calculations are done in world space
-                    for (int i = 0; i < vertexBufferSize / sizeof(float); i += vertexStride / sizeof(float))
-                    {
-                        transformedPosition = Vector3.Transform(new Vector3(vertexData[i], vertexData[i + 1], vertexData[i + 2]), bonesTransforms[mesh.ParentBone.Index] * transform.world);
-                        min = Vector3.Min(min, transformedPosition);
-                        max = Vector3.Max(max, transformedPosition);
-                    }
-                }
-            }
-
-            collider.Box = new BoundingBox(min, max);
+            (collider as SphereCollider).Sphere = sphere;
         }
-
-#endif
     }
 }

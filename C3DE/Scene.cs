@@ -152,6 +152,8 @@ namespace C3DE
         /// <param name="content"></param>
         public override void Initialize()
         {
+            initialized = true;
+
             DefaultMaterial.MainTexture = GraphicsHelper.CreateTexture(Color.AntiqueWhite, 1, 1);
 
             for (int i = 0, l = materials.Count; i < l; i++)
@@ -163,7 +165,6 @@ namespace C3DE
                 sceneObjects[i].Initialize();
 
             sceneObjects.CheckRequired = true;
-            initialized = true;
         }
 
         /// <summary>
@@ -352,8 +353,6 @@ namespace C3DE
                     Remove(light);
             }
         }
-
-        
 
         private void OnComponentPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
@@ -545,6 +544,16 @@ namespace C3DE
         public static void Destroy(SceneObject sceneObject)
         {
             Application.SceneManager.ActiveScene.Remove(sceneObject);
+        }
+
+        public override bool Remove(SceneObject sceneObject)
+        {
+            bool canRemove = base.Remove(sceneObject);
+
+            if (canRemove)
+                DestroyObject(sceneObject);
+            
+            return canRemove;
         }
 
         public void DestroyObject(SceneObject sceneObject)

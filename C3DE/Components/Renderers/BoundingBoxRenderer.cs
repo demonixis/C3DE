@@ -83,6 +83,7 @@ namespace C3DE.Components.Renderers
             effect.LightingEnabled = false;
             effect.View = sceneObject.Scene.MainCamera.view;
             effect.Projection = sceneObject.Scene.MainCamera.projection;
+            effect.World = Matrix.Identity;
 
             foreach (EffectPass pass in effect.CurrentTechnique.Passes)
             {

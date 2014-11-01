@@ -93,8 +93,16 @@ namespace C3DE.Inputs
             _mouseState = Mouse.GetState();
 
             // Delta
-            _delta.X = (_mouseState.X - _prevState.X) * _sensibility.X;
-            _delta.Y = (_mouseState.Y - _prevState.Y) * _sensibility.Y;
+            if (Screen.LockCursor)
+            {
+                _delta.X = (_mouseState.X - Screen.WidthPerTwo) * _sensibility.X;
+                _delta.Y = (_mouseState.Y - Screen.HeightPerTwo) * _sensibility.Y;
+            }
+            else
+            {
+                _delta.X = (_mouseState.X - _prevState.X) * _sensibility.X;
+                _delta.Y = (_mouseState.Y - _prevState.Y) * _sensibility.Y;
+            }
 
             base.Update(gameTime);
         }

@@ -12,7 +12,7 @@ namespace C3DE.Utils
     {
         private List<T> _items;
         private List<T> _addList;
-        private List<int> _rmList;
+        private List<T> _rmList;
         private int _size;
         private int _addSize;
         private int _rmSize;
@@ -38,7 +38,7 @@ namespace C3DE.Utils
         {
             _items = new List<T>();
             _addList = new List<T>();
-            _rmList = new List<int>();
+            _rmList = new List<T>();
             _size = 0;
             _addSize = 0;
             _rmSize = 0;
@@ -70,7 +70,7 @@ namespace C3DE.Utils
             {
                 if (_checkRequired)
                 {
-                    _rmList.Add(index);
+                    _rmList.Add(item);
                     _rmSize++;
                 }
                 else
@@ -79,6 +79,11 @@ namespace C3DE.Utils
                     _size--;
                 }
             }
+        }
+
+        public bool Contains(T item)
+        {
+            return _items.Contains(item);
         }
 
         public void Clear()
@@ -104,7 +109,7 @@ namespace C3DE.Utils
             if (_rmSize > 0)
             {
                 for (i = 0; i < _rmSize; i++)
-                    _items.RemoveAt(_rmList[i]);
+                    _items.Remove(_rmList[i]);
 
                 _size -= _rmSize;
                 _rmList.Clear();

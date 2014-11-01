@@ -159,7 +159,7 @@ namespace C3DE
             if (!transform.Transforms.Contains(sceneObject.transform) && sceneObject != this)
             {
                 // Add the scene object to the scene if not yet added.
-                if (sceneObject.Scene == null && this != scene)
+                if (this != scene)
                 {
                     if (scene != null)
                         scene.Add(sceneObject);

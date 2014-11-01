@@ -103,6 +103,13 @@ namespace C3DE.Components
             world = Matrix.Identity;
         }
 
+        public void Move(float x, float y, float z)
+        {
+            _position.X = x;
+            _position.Y = y;
+            _position.Z = z;
+        }
+
         public void Translate(float x, float y, float z)
         {
             _position.X += x;

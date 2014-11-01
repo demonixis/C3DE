@@ -37,11 +37,6 @@ namespace C3DE.Inputs
             return _kbState.IsKeyUp(key) && _lastKbState.IsKeyDown(key);
         }
 
-        public bool JustReleased(Keys key)
-        {
-            return _kbState.IsKeyDown(key) && _lastKbState.IsKeyUp(key);
-        }
-
         public bool Up
         {
             get { return this.Pressed(Keys.Up); }
