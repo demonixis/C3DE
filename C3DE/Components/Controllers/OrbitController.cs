@@ -60,6 +60,7 @@ namespace C3DE.Components.Controllers
             GamepadSensibility = 2.5f;
             Velocity = 0.95f;
             AngularVelocity = 0.95f;
+			TouchSensibility = 0.45f;
         }
 
         public override void Start()
@@ -151,8 +152,10 @@ namespace C3DE.Components.Controllers
 
 		private void UpdateTouchInput()
         {
-            if (Input.Touch.TouchCount == 1)
-                _angle += Input.Touch.Delta() * RotationSpeed * Time.DeltaTime;
+			if (Input.Touch.TouchCount == 1)
+				angleVelocity -= Input.Touch.Delta () * RotationSpeed * Time.DeltaTime * TouchSensibility;
+			else if (Input.Touch.TouchCount == 2)
+				distanceVelocity += Input.Touch.Delta ().X * MoveSpeed * Time.DeltaTime;
             else if (Input.Touch.TouchCount == 3)
             {
                 _cacheVec3.X = Input.Touch.Delta().X;

@@ -31,8 +31,7 @@ namespace C3DE.Demo.Scenes
 			camera.Transform.Translate (0, -5, 0);
 			Add(camera);
 
-            camera.AddComponent<FirstPersonController>();
-            camera.AddComponent<VRModeSwitcher>();
+			camera.AddComponent<ControllerSwitcher>();
 			camera.AddComponent<DemoBehaviour>();
 
 			// Light

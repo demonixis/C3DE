@@ -20,8 +20,7 @@ namespace C3DE.Demo.Scenes
             // Add a camera with a FPS controller
             var camera = new CameraPrefab("camera");
             camera.AddComponent<DemoBehaviour>();
-            camera.AddComponent<FirstPersonController>();
-            camera.AddComponent<VRModeSwitcher>();
+			camera.AddComponent<ControllerSwitcher>();
             Add(camera);
 
             camera.Setup(new Vector3(0, 2, -10), new Vector3(0, 0, 0), Vector3.Up);

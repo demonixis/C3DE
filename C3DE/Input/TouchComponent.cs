@@ -179,6 +179,10 @@ namespace C3DE.Inputs
             if (id >= MaxFingerPoints)
                 return Vector2.Zero;
 
+			// For preventing bad delta
+			if (lastTouchCollection.Count < id || lastTouchCollection.Count == 0) 
+				_lastPosition [id] = _position [id];
+
             _cacheVec2 = _position[id] - _lastPosition[id];
             _cacheVec2.X = Math.Abs(_cacheVec2.X);
             _cacheVec2.Y = Math.Abs(_cacheVec2.Y);

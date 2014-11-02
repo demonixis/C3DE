@@ -24,8 +24,7 @@ namespace C3DE.Demo.Scenes
 
 			// Camera
 			var camera = new CameraPrefab("camera");
-            camera.AddComponent<VRModeSwitcher>();
-            camera.AddComponent<FirstPersonController>();
+			camera.AddComponent<ControllerSwitcher>();
 			camera.AddComponent<DemoBehaviour>();
             Add(camera);
 

@@ -63,7 +63,7 @@ namespace C3DE.Components.Controllers
         public VirtualGamepad()
             : base()
         {
-            _enableMouse = true;
+            _enableMouse = false;
             _startPosition = Vector2.Zero;
             _movePosition = Vector2.Zero;
             _limits = Vector2.Zero;
@@ -79,8 +79,8 @@ namespace C3DE.Components.Controllers
         {
             if (_texture == null)
             {
-                var t1 = GraphicsHelper.CreateCircleTexture(Color.Black, 128);
-                var t2 = GraphicsHelper.CreateCircleTexture(Color.GhostWhite, 110);
+                var t1 = GraphicsHelper.CreateCircleTexture(Color.Black, 256);
+                var t2 = GraphicsHelper.CreateCircleTexture(Color.GhostWhite, 210);
                 _texture = GraphicsHelper.Combine(t1, t2);
             }
 
@@ -105,7 +105,7 @@ namespace C3DE.Components.Controllers
                 _tReleased = _tReleased || Mouse.GetState().LeftButton == ButtonState.Released;
             }
 
-            if (!_tReleased)
+			if (!_tReleased)
             {
                 _movePosition.X += _tdx;
                 _movePosition.Y += _tdy;
