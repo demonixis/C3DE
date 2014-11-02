@@ -113,6 +113,8 @@
     <Compile Include="Components\Colliders\BoxCollider.cs" />
     <Compile Include="Components\Colliders\Collider.cs" />
     <Compile Include="Components\Colliders\SphereCollider.cs" />
+    <Compile Include="Components\Controllers\SwipeZone.cs" />
+    <Compile Include="Components\Controllers\VirtualButton.cs" />
     <Compile Include="Components\Controllers\VirtualGamepad.cs" />
     <Compile Include="Components\Lights\Light.cs" />
     <Compile Include="Components\Renderers\MeshRenderer.cs" />
