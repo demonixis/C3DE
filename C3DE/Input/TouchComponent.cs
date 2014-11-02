@@ -180,7 +180,7 @@ namespace C3DE.Inputs
                 return Vector2.Zero;
 
 			// For preventing bad delta
-			if (lastTouchCollection.Count < id || lastTouchCollection.Count == 0) 
+			if (lastTouchCollection.Count - 1 < id || lastTouchCollection.Count == 0) 
 				_lastPosition [id] = _position [id];
 
             _cacheVec2 = _position[id] - _lastPosition[id];

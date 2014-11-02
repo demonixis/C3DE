@@ -18,8 +18,9 @@ namespace C3DE.Components.Controllers
         private Vector2 _position;
         private Texture2D _texture;
         private bool _mustCenter;
-        private bool _enableMouse;
+
         private Vector2 _limits;
+		private Rectangle _borderLimits;
 
         // Cache vars
         private float _scale;
@@ -27,14 +28,15 @@ namespace C3DE.Components.Controllers
         private float _tdy;
         private bool _tTouched;
         private bool _tReleased;
+		private int _i;
+		private bool _exitLoop;
 
         public Color GamepadColor { get; set; }
 
         public float DeadZone { get; set; }
 
-        public int FingerTarget { get; set; }
-
-        public float Scale {
+        public float Scale 
+		{
             get { return _scale; }
             set
             {
@@ -63,15 +65,14 @@ namespace C3DE.Components.Controllers
         public VirtualGamepad()
             : base()
         {
-            _enableMouse = false;
             _startPosition = Vector2.Zero;
             _movePosition = Vector2.Zero;
             _limits = Vector2.Zero;
             _position = Vector2.Zero;
+			_borderLimits = Rectangle.Empty;
             _scale = 1.0f;
             GamepadColor = new Color(1.0f, 1.0f, 1.0f, 0.15f);
             DeadZone = 0.2f;
-            FingerTarget = 0;
             Sensibility = Vector2.One;
         }
 
@@ -87,63 +88,75 @@ namespace C3DE.Components.Controllers
             var x = (_texture.Width * Scale) / 2;
             var y = Screen.Height - (_texture.Height * Scale + (_texture.Height * Scale) / 2);
 
+			_borderLimits = new Rectangle (0, Screen.HeightPerTwo, Screen.WidthPerTwo, Screen.Height);
+
             ShowAt(x, y);
         }
 
         public override void Update()
         {
-            _tdx = Input.Touch.Delta(FingerTarget).X;
-            _tdy = Input.Touch.Delta(FingerTarget).Y;
-            _tTouched = Input.Touch.Pressed(FingerTarget);
-            _tReleased = Input.Touch.Released(FingerTarget);
+			_i = 0;
+			_exitLoop = false;
 
-            if (_enableMouse)
-            {
-                _tdx += Input.Mouse.Delta.X;
-                _tdy += Input.Mouse.Delta.Y;
-                _tTouched = _tTouched || Input.Mouse.Down(MouseButton.Left);
-                _tReleased = _tReleased || Mouse.GetState().LeftButton == ButtonState.Released;
-            }
+			while (_i < Input.Touch.MaxFingerPoints && !_exitLoop) 
+			{
+				if (_borderLimits.Contains (Input.Touch.GetPosition (_i))) 
+				{
+					_tdx = Input.Touch.Delta(_i).X;
+					_tdy = Input.Touch.Delta(_i).Y;
+					_tTouched = Input.Touch.Pressed(_i);
+					_tReleased = Input.Touch.Released(_i);
+					_exitLoop = true; 
+				}
 
+				_i++;
+			}
+				
 			if (!_tReleased)
-            {
-                _movePosition.X += _tdx;
-                _movePosition.Y += _tdy;
-
-                if (_movePosition.X < _startPosition.X - _limits.X)
-                    _movePosition.X = _startPosition.X - _limits.X;
-
-                else if (_movePosition.X > _startPosition.X + _limits.X)
-                    _movePosition.X = _startPosition.X + _limits.X;
-
-                if (_movePosition.Y < _startPosition.Y - _limits.Y)
-                    _movePosition.Y = _startPosition.Y - _limits.Y;
-
-                else if (_movePosition.Y > _startPosition.Y + _limits.Y)
-                    _movePosition.Y = _startPosition.Y + _limits.Y;
-
-                _position.X = Round((_movePosition.X - _startPosition.X) / _limits.X);
-                _position.Y = Round((_movePosition.Y - _startPosition.Y) / _limits.Y);
-
-                _position.X = ((Math.Abs(_position.X) < DeadZone) ? 0.0f : _position.X) * Sensibility.X;
-                _position.Y = ((Math.Abs(_position.Y) < DeadZone) ? 0.0f : _position.Y) * Sensibility.Y;
-
-                _mustCenter = true;
-            }
-            else if (_mustCenter)
-            {
-                _movePosition.X = _startPosition.X;
-                _movePosition.Y = _startPosition.Y;
-                _position.X = 0;
-                _position.Y = 0;
-                _mustCenter = false;
-            }
+				UpdateStickPosition ();
+			else if (_mustCenter)
+				Reset ();
         }
 
         public override void OnGUI(GUI ui)
         {
             ui.DrawTexture(_movePosition, _texture, GamepadColor);
         }
+
+		private void Reset()
+		{
+			_movePosition.X = _startPosition.X;
+			_movePosition.Y = _startPosition.Y;
+			_position.X = 0;
+			_position.Y = 0;
+			_mustCenter = false;
+		}
+
+		private void UpdateStickPosition()
+		{
+			_movePosition.X += _tdx;
+			_movePosition.Y += _tdy;
+
+			if (_movePosition.X < _startPosition.X - _limits.X)
+				_movePosition.X = _startPosition.X - _limits.X;
+
+			else if (_movePosition.X > _startPosition.X + _limits.X)
+				_movePosition.X = _startPosition.X + _limits.X;
+
+			if (_movePosition.Y < _startPosition.Y - _limits.Y)
+				_movePosition.Y = _startPosition.Y - _limits.Y;
+
+			else if (_movePosition.Y > _startPosition.Y + _limits.Y)
+				_movePosition.Y = _startPosition.Y + _limits.Y;
+
+			_position.X = Round((_movePosition.X - _startPosition.X) / _limits.X);
+			_position.Y = Round((_movePosition.Y - _startPosition.Y) / _limits.Y);
+
+			_position.X = ((Math.Abs(_position.X) < DeadZone) ? 0.0f : _position.X) * Sensibility.X;
+			_position.Y = ((Math.Abs(_position.Y) < DeadZone) ? 0.0f : _position.Y) * Sensibility.Y;
+
+			_mustCenter = true;
+		}
 
         public void ShowAt(float x, float y)
         {

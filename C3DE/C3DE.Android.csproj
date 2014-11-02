@@ -60,6 +60,8 @@
     <Compile Include="PostProcess\GreyScalePass.cs" />
     <Compile Include="PostProcess\RefractionPass.cs" />
     <Compile Include="PostProcess\SimpleBlurPass.cs" />
+    <Compile Include="Components\Controllers\SwipeZone.cs" />
+    <Compile Include="Components\Controllers\VirtualButton.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Application.cs" />
