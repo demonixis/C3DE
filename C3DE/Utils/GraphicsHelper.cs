@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 
 namespace C3DE.Utils
 {
@@ -43,6 +44,37 @@ namespace C3DE.Utils
             }
 
             texture.SetData<Color>(colors);
+
+            return texture;
+        }
+
+        public static Texture2D CreateCircleTexture(Color circleColor, int radius)
+        {
+            Texture2D texture = new Texture2D(Application.GraphicsDevice, radius, radius);
+            Color[] colors = new Color[radius * radius];
+
+            // Use the parametric definition of a circle: http://en.wikipedia.org/wiki/Circle#Cartesian_coordinates
+            float diam = radius / 2f;
+            float diamsq = diam * diam;
+            int index = 0;
+            Vector2 pos = Vector2.Zero;
+
+            for (int x = 0; x < radius; x++)
+            {
+                for (int y = 0; y < radius; y++)
+                {
+                    index = x * radius + y;
+                    pos.X = x - diam;
+                    pos.Y = y - diam;
+
+                    if (pos.LengthSquared() <= diamsq)
+                        colors[index] = circleColor;
+                    else
+                        colors[index] = Color.Transparent;
+                }
+            }
+
+            texture.SetData(colors);
 
             return texture;
         }
@@ -114,6 +146,34 @@ namespace C3DE.Utils
                 cubeMap.SetData<Color>((CubeMapFace)i, textureData);
 
             return cubeMap;
+        }
+
+        /// <summary>
+        /// Combine two texture into one.
+        /// </summary>
+        /// <param name="texture1"></param>
+        /// <param name="texture2"></param>
+        /// <returns></returns>
+        public static Texture2D Combine(Texture2D texture1, Texture2D texture2)
+        {
+            var renderTarget = new RenderTarget2D(Application.GraphicsDevice, texture1.Width, texture1.Height);
+            var tex2Position = new Vector2(texture1.Width / 2 - texture2.Width / 2, texture1.Height / 2 - texture2.Height / 2);
+            var spriteBatch = new SpriteBatch(Application.GraphicsDevice);
+            var previousRTs = Application.GraphicsDevice.GetRenderTargets();
+
+            Application.GraphicsDevice.SetRenderTarget(renderTarget);
+            Application.GraphicsDevice.Clear(Color.Transparent);
+
+            spriteBatch.Begin();
+            spriteBatch.Draw(texture1, Vector2.Zero, Color.White);
+            spriteBatch.Draw(texture2, tex2Position, Color.White);
+            spriteBatch.End();
+
+            Application.GraphicsDevice.SetRenderTargets(previousRTs);
+
+            spriteBatch.Dispose();
+
+            return (Texture2D)renderTarget;
         }
     }
 }

@@ -113,8 +113,8 @@
     <Compile Include="Components\Colliders\BoxCollider.cs" />
     <Compile Include="Components\Colliders\Collider.cs" />
     <Compile Include="Components\Colliders\SphereCollider.cs" />
+    <Compile Include="Components\Controllers\VirtualGamepad.cs" />
     <Compile Include="Components\Lights\Light.cs" />
-    <Compile Include="Components\Renderers\BoundingBoxRenderer.cs" />
     <Compile Include="Components\Renderers\MeshRenderer.cs" />
     <Compile Include="ICloneable.cs" />
     <Compile Include="Input.cs" />
@@ -123,6 +123,13 @@
     <Compile Include="Materials\LavaMaterial.cs" />
     <Compile Include="Materials\TerrainMaterial.cs" />
     <Compile Include="Materials\ToonMaterial.cs" />
+    <Compile Include="PostProcess\BloomPass.cs" />
+    <Compile Include="PostProcess\BloomSettings.cs" />
+    <Compile Include="PostProcess\C64FilterPass.cs" />
+    <Compile Include="PostProcess\FXAAPass.cs" />
+    <Compile Include="PostProcess\GreyScalePass.cs" />
+    <Compile Include="PostProcess\RefractionPass.cs" />
+    <Compile Include="PostProcess\SimpleBlurPass.cs" />
     <Compile Include="Prefabs\MeshPrefab.cs" />
     <Compile Include="QuadRenderer.cs" />
     <Compile Include="Geometries\CubeGeometry.cs" />
@@ -138,7 +145,6 @@
     <Compile Include="Materials\ReflectiveMaterial.cs" />
     <Compile Include="Materials\SimpleMaterial.cs" />
     <Compile Include="Materials\TransparentMaterial.cs" />
-    <Compile Include="PostProcess\BlurPass.cs" />
     <Compile Include="RenderSettings.cs" />
     <Compile Include="Resources\ResourcesHelper.cs" />
     <Compile Include="SceneManager.cs" />
@@ -161,7 +167,6 @@
     <Compile Include="Components\Renderers\RenderableComponent.cs" />
     <Compile Include="Prefabs\LightPrefab.cs" />
     <Compile Include="Materials\Material.cs" />
-    <Compile Include="PostProcess\PostProcessManager.cs" />
     <Compile Include="PostProcess\PostProcessPass.cs" />
     <Compile Include="Prefabs\ModelPrefab.cs" />
     <Compile Include="Prefabs\TerrainPrefab.cs" />

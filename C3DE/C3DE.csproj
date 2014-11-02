@@ -41,6 +41,7 @@
     <Compile Include="Components\Colliders\BoxCollider.cs" />
     <Compile Include="Components\Colliders\Collider.cs" />
     <Compile Include="Components\Colliders\SphereCollider.cs" />
+    <Compile Include="Components\Controllers\VirtualGamepad.cs" />
     <Compile Include="Components\Lights\Light.cs" />
     <Compile Include="Components\Renderers\MeshRenderer.cs" />
     <Compile Include="Input.cs" />
@@ -52,6 +53,7 @@
     <Compile Include="PostProcess\BloomPass.cs" />
     <Compile Include="PostProcess\BloomSettings.cs" />
     <Compile Include="PostProcess\C64FilterPass.cs" />
+    <Compile Include="PostProcess\FXAAPass.cs" />
     <Compile Include="PostProcess\GreyScalePass.cs" />
     <Compile Include="PostProcess\RefractionPass.cs" />
     <Compile Include="VRMobileRenderer.cs" />

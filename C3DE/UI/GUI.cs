@@ -155,6 +155,11 @@ namespace C3DE.UI
         {
             _spriteBatch.Draw(texture, rect, color);
         }
+		
+		public void DrawTexture(Vector2 position, Texture2D texture, Color color)
+		{
+            _spriteBatch.Draw(texture, position, null, color);
+		}
 
         public Vector2 MeasureString(string text)
         {

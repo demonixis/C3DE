@@ -1,4 +1,6 @@
-﻿using C3DE.Demo.Scripts;
+﻿using C3DE.Components.Controllers;
+using C3DE.Demo.Scripts;
+using C3DE.Prefabs;
 using C3DE.UI;
 
 namespace C3DE.Demo.Scenes
@@ -11,17 +13,19 @@ namespace C3DE.Demo.Scenes
         {
             base.Initialize();
 
-            GUI.Skin = DemoGame.CreateSkin(Application.Content);
-
-            Add(new C3DE.Prefabs.CameraPrefab("cam"));
-
 #if ANDROID
             MenuBehaviour.ButtonWidth = 250;
             MenuBehaviour.ButtonHeight = 75;
 #endif
 
+            GUI.Skin = DemoGame.CreateSkin(Application.Content);
+
+            var camera = new CameraPrefab("cam");
+            Add(camera);
+
             var sceneObject = new SceneObject("MenuNode");
             sceneObject.AddComponent<MenuBehaviour>();
+            sceneObject.AddComponent<VirtualGamepad>();
             Add(sceneObject);
         }
     }
