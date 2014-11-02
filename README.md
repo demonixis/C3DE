@@ -18,35 +18,34 @@ C3DE is a research project to create a small but powerfull 3D engine powered by 
 - Shadow mapping
 - Input management: Keyboard, Mouse, Gamepad 
 - Procedural texture generation
+- PostProcess
 
 ### Sample
 
 ```C#
-public class SuperCoolGame : Engine
+public class SuperCoolGame : Scene
 {
-	public SuperCoolGame()
-	    : base()
-	{
-	}
-
 	protected override void Initialize()
     {
         base.Initialize();
 
         // Create a camera node with an orbit controller.
-        var camera = new CameraPrefab("camera", scene);
+        var camera = new CameraPrefab("camera");
         camera.AddComponent<OrbitController>();
+		Add(camera);
 
         // Add a light with shadows
-        var lightPrefab = new LightPrefab("light", LightType.Directional, scene);
+        var lightPrefab = new LightPrefab("light", LightType.Directional);
         lightPrefab.EnableShadows = true;
+		Add(lightPrefab);
 
         // Add a terrain generated with Pelrin Noise.
-        var terrain = new TerrainPrefab("terrain", scene);
+        var terrain = new TerrainPrefab("terrain");
         terrain.TextureRepeat = new Vector2(16);
         terrain.Randomize();
-        terrain.Renderer.Material = new StandardMaterial(scene);
+        terrain.Renderer.Material = new StandardMaterial(this);
         terrain.Renderer.Material.MainTexture = Content.Load<Texture2D>("Textures/terrain");
+		Add(terrain);
     }
 }
 ```
@@ -60,6 +59,6 @@ public class SuperCoolGame : Engine
 - Editor
 
 ### Requirement
-You need a fresh copy of MonoGame assembly (OpenGL or DirectX).
+You need a fresh copy of the MonoGame assembly (OpenGL or DirectX).
 
 MIT License
