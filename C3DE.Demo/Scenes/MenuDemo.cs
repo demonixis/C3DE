@@ -25,7 +25,6 @@ namespace C3DE.Demo.Scenes
 
             var sceneObject = new SceneObject("MenuNode");
             sceneObject.AddComponent<MenuBehaviour>();
-            sceneObject.AddComponent<VirtualGamepad>();
             Add(sceneObject);
         }
     }

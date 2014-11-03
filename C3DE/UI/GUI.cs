@@ -29,6 +29,8 @@ namespace C3DE.UI
             }
         }
 
+        #region Box Widget
+
         public void Box(Rectangle rect, string text)
         {
             Box(ref rect, text);
@@ -44,6 +46,10 @@ namespace C3DE.UI
 
             Label(_cacheVec2, text);
         }
+
+        #endregion
+
+        #region Button Widget
 
         public bool Button(Rectangle rect, string text)
         {
@@ -70,6 +76,10 @@ namespace C3DE.UI
 
             return index == 2;
         }
+
+        #endregion
+
+        #region Checkbox Widget
 
         public bool Checkbox(Rectangle rect, string text, bool isChecked)
         {
@@ -129,6 +139,10 @@ namespace C3DE.UI
             return index == 2;
         }
 
+        #endregion
+
+        #region Label Widget
+
         public void Label(Vector2 position, string text, float scale = 1.0f, float rotation = 0.0f)
         {
             Label(ref position, text, scale, rotation);
@@ -140,6 +154,10 @@ namespace C3DE.UI
             _cacheVec2.Y = scale;
             _spriteBatch.DrawString(Skin.Font, text, position, Skin.TextColor, rotation, Vector2.Zero, _cacheVec2, SpriteEffects.None, 1);
         }
+
+        #endregion
+
+        #region Texture Widget
 
         public void DrawTexture(Rectangle rect, Texture2D texture)
         {
@@ -155,11 +173,20 @@ namespace C3DE.UI
         {
             _spriteBatch.Draw(texture, rect, color);
         }
+
+        public void DrawTexture(ref Vector2 position, Texture2D texture, Color color)
+        {
+            _spriteBatch.Draw(texture, position, null, color);
+        }
 		
 		public void DrawTexture(Vector2 position, Texture2D texture, Color color)
 		{
-            _spriteBatch.Draw(texture, position, null, color);
+            DrawTexture(ref position, texture, color);
 		}
+
+        #endregion
+
+        #region Font utilities
 
         public Vector2 MeasureString(string text)
         {
@@ -194,5 +221,7 @@ namespace C3DE.UI
 
             return sb.ToString();
         }
+
+        #endregion
     }
 }
