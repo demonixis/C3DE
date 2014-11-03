@@ -52,10 +52,6 @@ namespace C3DE
         /// <param name="camera">The camera to use.</param>
         private void renderObjects(Scene scene, Camera camera)
         {
-            // FIXME ...
-            if (scene.Lights.Count == 0)
-                return;
-
             _device.SetRenderTarget(_sceneRT);
             _device.Clear(Color.Black);
             _device.DepthStencilState = DepthStencilState.Default;

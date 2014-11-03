@@ -1,4 +1,6 @@
-﻿namespace C3DE
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+namespace C3DE
 {
     /// <summary>
     /// A static class to gets informations about the screen.
@@ -31,6 +33,21 @@
         public static bool LockCursor { get; set; }
 
         /// <summary>
+        /// Gets the rectangle that represent the screen size
+        /// </summary>
+        public static Rectangle ScreenRect { get; internal set; }
+
+        /// <summary>
+        /// Base reference width for scaling
+        /// </summary>
+        public static int ReferenceWidth { get; set; }
+
+        /// <summary>
+        /// Base reference height for scaling
+        /// </summary>
+        public static int ReferenceHeight { get; set; }
+
+        /// <summary>
         /// Show or hide the mouse cursor.
         /// </summary>
         public static bool ShowCursor
@@ -58,6 +75,82 @@
 
             if (showCursor.HasValue)
                 ShowCursor = showCursor.Value;
+
+            ScreenRect = new Rectangle(0, 0, Width, Height);
+
+            if (ReferenceWidth == 0)
+                ReferenceWidth = Width;
+
+            if (ReferenceHeight == 0)
+                ReferenceHeight = Height;
+        }
+
+        /// <summary>
+        /// Get the scaled X coordinate relative to the reference width
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static float GetScaleX(float value)
+        {
+            return (((float)Width * value) / (float)ReferenceWidth);
+        }
+
+        /// <summary>
+        /// Get the scaled Y coordinate relative to the reference height
+        /// </summary>
+        /// <param name="value">The default Y coordinate used with the reference height</param>
+        /// <returns>A scaled Y coordinate</returns>
+        public static float GetScaleY(float value)
+        {
+            return (((float)Height * value) / (float)ReferenceHeight);
+        }
+
+        /// <summary>
+        /// Gets the scale relative to the reference width and height
+        /// </summary>
+        /// <returns>The scale difference between the current resolution and the reference resolution of the screen</returns>
+        public static Vector2 GetScale()
+        {
+            return new Vector2(
+                (float)((float)Width / (float)ReferenceWidth),
+                (float)((float)Height / (float)ReferenceHeight));
+        }
+
+        /// <summary>
+        /// Determines the max resolution.
+        /// </summary>
+        /// <returns>A collection of supported display mode.</returns>
+        /// <param name="fullscreen">If set to <c>true</c> fullscreen.</param>
+        public static DisplayModeCollection DetermineBestResolution(bool fullscreen)
+        {
+            var modes = Application.GraphicsDevice.Adapter.SupportedDisplayModes;
+            var width = 800;
+            var height = 480;
+
+            foreach (DisplayMode mode in modes)
+            {
+                width = (mode.Width > width) ? mode.Width : width;
+                height = (mode.Height > height) ? mode.Height : height;
+            }
+
+            Application.GraphicsDeviceManager.PreferredBackBufferWidth = width;
+            Application.GraphicsDeviceManager.PreferredBackBufferHeight = height;
+            Application.GraphicsDeviceManager.ApplyChanges();
+
+            Setup(width, height, null, null);
+
+            if (Application.GraphicsDeviceManager.IsFullScreen && fullscreen)
+                Application.GraphicsDeviceManager.ToggleFullScreen();
+
+            return modes;
+        }
+
+        /// <summary>
+        /// Toggles fullscreen/windowed mode.
+        /// </summary>
+        public static void ToggleFullscreen()
+        {
+            Application.GraphicsDeviceManager.ToggleFullScreen();
         }
     }
 }

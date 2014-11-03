@@ -12,7 +12,8 @@ namespace C3DE
     {
         private IRenderer _rendererToChange;
         private bool _needRendererChange;
-
+        private bool _autoDetectResolution;
+        private bool _requestFullscreen;
         protected GraphicsDeviceManager graphics;
         protected IRenderer renderer;
         protected SceneManager sceneManager;
@@ -28,19 +29,27 @@ namespace C3DE
             }
         }
 
-        public Engine(string title = "C3DE", int width = 1024, int height = 600)
+        /// <summary>
+        /// Create the game by initializing graphics, input and other managers.
+        /// The default configuration use the best resolution and toggle in fullscreen mode.
+        /// </summary>
+        /// <param name="title">The title of the game.</param>
+        /// <param name="width">Desired screen width.</param>
+        /// <param name="height">Desired screen height.</param>
+        /// <param name="fullscreen">Sets to true to use the fullscreen mode.</param>
+        public Engine(string title = "C3DE Game Demo", int width = 0, int height = 0, bool fullscreen = false)
             : base()
         {
             graphics = new GraphicsDeviceManager(this);
+            graphics.PreparingDeviceSettings += OnResize;
 
-#if !ANDROID && !WINDOWS_PHONE
-            graphics.PreferredBackBufferWidth = width;
-            graphics.PreferredBackBufferHeight = height;
-#endif
             Window.Title = title;
             Content.RootDirectory = "Content";
             sceneManager = new SceneManager();
             initialized = false;
+            _autoDetectResolution = false;
+            _requestFullscreen = false;
+            _needRendererChange = false;
 
             Application.Content = Content;
             Application.Game = this;
@@ -48,11 +57,18 @@ namespace C3DE
             Application.GraphicsDeviceManager = graphics;
             Application.SceneManager = sceneManager;
 
-            Screen.Setup(width, height, false, true);
 
-            graphics.PreparingDeviceSettings += OnResize;
+#if !ANDROID && !WINDOWS_PHONE
+            _autoDetectResolution = width == 0 || height == 0;
 
-            _needRendererChange = false;
+            if (!_autoDetectResolution)
+            {
+                graphics.PreferredBackBufferWidth = width;
+                graphics.PreferredBackBufferHeight = height;
+            }
+#endif
+
+            Screen.Setup(width, height, false, true); 
         }
 
         private void OnResize(object sender, PreparingDeviceSettingsEventArgs e)
@@ -90,6 +106,9 @@ namespace C3DE
 			Screen.Setup(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight, null, null);
 			GraphicsDevice.Viewport = new Viewport(0, 0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
 #endif
+
+            if (_autoDetectResolution)
+                Screen.DetermineBestResolution(_requestFullscreen);
 
             if (renderer == null)
                 renderer = new Renderer();

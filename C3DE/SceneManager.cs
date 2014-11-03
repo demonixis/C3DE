@@ -1,4 +1,5 @@
 ﻿using C3DE.Components;
+using C3DE.UI;
 using System.Collections.Generic;
 
 namespace C3DE
@@ -139,10 +140,11 @@ namespace C3DE
                     _scenes[_activeSceneIndex].Unload();
 
                 Camera.Main = null;
+                GUI.Enabled = true;
 
                 _activeSceneIndex = _levelToLoad;
                 _levelToLoad = -1;
-
+ 
                 _scenes[_activeSceneIndex].Initialize();
             }
 

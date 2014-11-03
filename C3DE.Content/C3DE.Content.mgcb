@@ -581,3 +581,9 @@
 /processorParam:TextureFormat=DxtCompressed
 /build:Models/HexGrid.FBX
 
+#begin FX/PostProcess/Convolution.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:FX/PostProcess/Convolution.fx
+
