@@ -103,11 +103,11 @@ namespace C3DE.Components
             world = Matrix.Identity;
         }
 
-        public void Move(float x, float y, float z)
+        public void Move(float? x, float? y, float? z)
         {
-            _position.X = x;
-            _position.Y = y;
-            _position.Z = z;
+            _position.X = x.HasValue ? x.Value : _position.X;
+            _position.Y = y.HasValue ? y.Value : _position.Y;
+            _position.Z = z.HasValue ? z.Value : _position.Z;
         }
 
         public void Translate(float x, float y, float z)
