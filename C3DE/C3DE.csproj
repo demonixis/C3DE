@@ -86,6 +86,7 @@
     <Compile Include="Input.cs" />
     <Compile Include="IRenderer.cs" />
     <Compile Include="Materials\DummyMaterial.cs" />
+    <Compile Include="Materials\FresnelMaterial.cs" />
     <Compile Include="Materials\LavaMaterial.cs" />
     <Compile Include="Materials\TerrainMaterial.cs" />
     <Compile Include="Materials\ToonMaterial.cs" />
