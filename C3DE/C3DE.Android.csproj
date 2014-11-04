@@ -62,6 +62,7 @@
     <Compile Include="PostProcess\SimpleBlurPass.cs" />
     <Compile Include="Components\Controllers\SwipeZone.cs" />
     <Compile Include="Components\Controllers\VirtualButton.cs" />
+    <Compile Include="PostProcess\ConvolutionPass.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Application.cs" />

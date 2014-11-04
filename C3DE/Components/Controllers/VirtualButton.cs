@@ -65,7 +65,7 @@ namespace C3DE.Components.Controllers
 				}
 			}
 
-			JustPressed = _lastState && !Pressed;
+			JustPressed = !_lastState && Pressed;
 		}
 
 		public override void OnGUI(GUI ui)
