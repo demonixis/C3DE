@@ -52,7 +52,7 @@ namespace C3DE
             _needRendererChange = false;
 
             Application.Content = Content;
-            Application.Game = this;
+            Application.Engine = this;
             Application.GraphicsDevice = GraphicsDevice;
             Application.GraphicsDeviceManager = graphics;
             Application.SceneManager = sceneManager;
@@ -139,7 +139,6 @@ namespace C3DE
         protected override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-
             sceneManager.Update();
         }
 
@@ -162,6 +161,14 @@ namespace C3DE
             }
 
             base.EndDraw();
+        }
+
+        public void SetUIScaling(ref Vector2 scaling)
+        {
+            var stdRenderer = renderer as Renderer;
+
+            if (stdRenderer != null)
+                stdRenderer.uiManager.Scale = scaling;
         }
     }
 }

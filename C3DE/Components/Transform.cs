@@ -62,7 +62,7 @@ namespace C3DE.Components
 		{
 			get
 			{	
-				return getTransformedVector(Vector3.Up);
+				return getTransformedVector(Vector3.Forward);
 			}
 		}
 
@@ -103,13 +103,6 @@ namespace C3DE.Components
             world = Matrix.Identity;
         }
 
-        public void Move(float? x, float? y, float? z)
-        {
-            _position.X = x.HasValue ? x.Value : _position.X;
-            _position.Y = y.HasValue ? y.Value : _position.Y;
-            _position.Z = z.HasValue ? z.Value : _position.Z;
-        }
-
         public void Translate(float x, float y, float z)
         {
             _position.X += x;
@@ -142,6 +135,20 @@ namespace C3DE.Components
         public void Rotate(Vector3 rotation)
         {
             Rotate(ref rotation);
+        }
+
+        public void SetPosition(float? x, float? y, float? z)
+        {
+            _position.X = x.HasValue ? x.Value : _position.X;
+            _position.Y = y.HasValue ? y.Value : _position.Y;
+            _position.Z = z.HasValue ? z.Value : _position.Z;
+        }
+
+        public void SetRotation(float? x, float? y, float ?z)
+        {
+            _rotation.X = x.HasValue ? x.Value : _rotation.X;
+            _rotation.Y = y.HasValue ? y.Value : _rotation.Y;
+            _rotation.Z = z.HasValue ? z.Value : _rotation.Z;
         }
 
         public override void Update()

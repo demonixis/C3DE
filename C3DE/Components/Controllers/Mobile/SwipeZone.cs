@@ -1,10 +1,9 @@
-﻿using System;
-using Microsoft.Xna.Framework;
-using C3DE.UI;
-using Microsoft.Xna.Framework.Graphics;
+﻿using C3DE.UI;
 using C3DE.Utils;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
-namespace C3DE.Components.Controllers
+namespace C3DE.Components.Controllers.Mobile
 {
 	public class SwipeZone : Behaviour
 	{

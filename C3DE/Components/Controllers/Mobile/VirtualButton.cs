@@ -1,10 +1,8 @@
-﻿using System;
+﻿using C3DE.UI;
 using Microsoft.Xna.Framework;
-using C3DE.UI;
 using Microsoft.Xna.Framework.Graphics;
-using C3DE.Utils;
 
-namespace C3DE.Components.Controllers
+namespace C3DE.Components.Controllers.Mobile
 {
 	public class VirtualButton : Behaviour
 	{

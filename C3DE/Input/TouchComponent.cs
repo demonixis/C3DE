@@ -120,7 +120,7 @@ namespace C3DE.Inputs
 
             _pressed[index] = touchCollection[index].State == TouchLocationState.Pressed;
             _moved[index] = touchCollection[index].State == TouchLocationState.Moved;
-            _released[index] = touchCollection[index].State == TouchLocationState.Released;
+            _released[index] = touchCollection[index].State == TouchLocationState.Released || touchCollection[index].State == TouchLocationState.Invalid;
 
             _pressure[index] = touchCollection[index].Pressure;
 

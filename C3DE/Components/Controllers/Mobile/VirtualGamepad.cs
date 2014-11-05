@@ -1,15 +1,10 @@
-﻿using C3DE.Resources;
-using C3DE.Inputs;
-using C3DE.UI;
+﻿using C3DE.UI;
 using C3DE.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using System;
-using System.Collections.Generic;
 
-
-namespace C3DE.Components.Controllers
+namespace C3DE.Components.Controllers.Mobile
 {
     public class VirtualGamepad : Behaviour
     {

@@ -17,7 +17,7 @@ namespace C3DE
         private RenderTarget2D _sceneRT;
         private SpriteBatch _spriteBatch;
         private bool _needsBufferUpdate;
-        internal GUI _guiManager;
+        internal GUI uiManager;
 
         public bool NeedsBufferUpdate
         {
@@ -35,8 +35,8 @@ namespace C3DE
             _device = Application.GraphicsDevice;
             _sceneRT = new RenderTarget2D(_device, _device.Viewport.Width, _device.Viewport.Height, false, SurfaceFormat.Color, DepthFormat.Depth24, 0, RenderTargetUsage.DiscardContents);
             _spriteBatch = new SpriteBatch(_device);
-            _guiManager = new GUI(_spriteBatch);
-            _guiManager.LoadContent(content);
+            uiManager = new GUI(_spriteBatch);
+            uiManager.LoadContent(content);
         }
 
         private void renderShadowMaps(Scene scene, Camera camera)
@@ -107,11 +107,11 @@ namespace C3DE
 
             if (size > 0 && GUI.Enabled)
             {
-                _spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone);
+                _spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone, null, uiManager.scale);
 
                 for (int i = 0; i < size; i++)
                     if (scripts[i].Enabled)
-                        scripts[i].OnGUI(_guiManager);
+                        scripts[i].OnGUI(uiManager);
 
                 _spriteBatch.End();
             }

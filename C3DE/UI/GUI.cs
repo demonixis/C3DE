@@ -7,25 +7,59 @@ namespace C3DE.UI
 {
     public class GUI
     {
+        internal Matrix scale;
         private SpriteBatch _spriteBatch;
+        private bool _loaded;
         private Vector2 _cacheVec2;
         private Rectangle _cacheRect;
 
+        /// <summary>
+        /// Enable or disable the UI rendering.
+        /// </summary>
         public static bool Enabled { get; set; }
+
+        /// <summary>
+        /// Gets or sets the Skin used to draw the UI.
+        /// </summary>
         public static GUISkin Skin { get; set; }
+
+        /// <summary>
+        /// Gets or sets the scaling that must used to render the UI. Default is (1.0f, 1.0f).
+        /// </summary>
+        public Vector2 Scale
+        {
+            get { return new Vector2(scale[0], scale[5]); }
+            set
+            {
+                scale.M11 = value.X;
+                scale.M22 = value.Y;
+                scale.M33 = 1.0f;
+            }
+        }
 
         public GUI(SpriteBatch spriteBatch)
         {
             _spriteBatch = spriteBatch;
+            _loaded = false;
+            _cacheRect = Rectangle.Empty;
+            _cacheVec2 = Vector2.Zero;
+            scale = Matrix.CreateScale(1.0f);
             Enabled = true;
         }
 
         public void LoadContent(ContentManager content)
         {
-            if (Skin == null)
+            if (!_loaded)
             {
-                Skin = new GUISkin();
-                Skin.LoadContent(content);
+                _loaded = true;
+
+                if (Skin == null)
+                {
+                    Skin = new GUISkin();
+                    Skin.LoadContent(content);
+                }
+                else
+                    Skin.LoadContent(content);
             }
         }
 
@@ -56,7 +90,7 @@ namespace C3DE.UI
             return Button(ref rect, text);
         }
 
-        public bool Button(ref Rectangle rect, string text)
+        public bool Button(ref Rectangle rect, string text, float labelScale = 1.0f)
         {
             var index = 0;
 
@@ -69,10 +103,10 @@ namespace C3DE.UI
 
             _spriteBatch.Draw(Skin.Buttons[index], rect, Color.White);
 
-            _cacheVec2 = Skin.Font.MeasureString(text);
+            _cacheVec2 = Skin.Font.MeasureString(text) * labelScale;
             _cacheVec2.X = (rect.X + rect.Width / 2) - (_cacheVec2.X / 2);
             _cacheVec2.Y = (rect.Y + rect.Height / 2) - (_cacheVec2.Y / 2);
-            Label(_cacheVec2, text);
+            Label(_cacheVec2, text, labelScale, 0.0f);
 
             return index == 2;
         }
@@ -178,11 +212,11 @@ namespace C3DE.UI
         {
             _spriteBatch.Draw(texture, position, null, color);
         }
-		
-		public void DrawTexture(Vector2 position, Texture2D texture, Color color)
-		{
+
+        public void DrawTexture(Vector2 position, Texture2D texture, Color color)
+        {
             DrawTexture(ref position, texture, color);
-		}
+        }
 
         #endregion
 

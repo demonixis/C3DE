@@ -40,20 +40,20 @@ namespace C3DE
         /// <summary>
         /// Base reference width for scaling
         /// </summary>
-        public static int ReferenceWidth { get; set; }
+        public static int VirtualWidth { get; set; }
 
         /// <summary>
         /// Base reference height for scaling
         /// </summary>
-        public static int ReferenceHeight { get; set; }
+        public static int VirtualHeight { get; set; }
 
         /// <summary>
         /// Show or hide the mouse cursor.
         /// </summary>
         public static bool ShowCursor
         {
-            get { return Application.Game.IsMouseVisible; }
-            set { Application.Game.IsMouseVisible = value; }
+            get { return Application.Engine.IsMouseVisible; }
+            set { Application.Engine.IsMouseVisible = value; }
         }
 
         /// <summary>
@@ -78,11 +78,11 @@ namespace C3DE
 
             ScreenRect = new Rectangle(0, 0, Width, Height);
 
-            if (ReferenceWidth == 0)
-                ReferenceWidth = Width;
+            if (VirtualWidth == 0)
+                VirtualWidth = Width;
 
-            if (ReferenceHeight == 0)
-                ReferenceHeight = Height;
+            if (VirtualHeight == 0)
+                VirtualHeight = Height;
         }
 
         /// <summary>
@@ -92,7 +92,7 @@ namespace C3DE
         /// <returns></returns>
         public static float GetScaleX(float value)
         {
-            return (((float)Width * value) / (float)ReferenceWidth);
+            return (((float)Width * value) / (float)VirtualWidth);
         }
 
         /// <summary>
@@ -102,7 +102,7 @@ namespace C3DE
         /// <returns>A scaled Y coordinate</returns>
         public static float GetScaleY(float value)
         {
-            return (((float)Height * value) / (float)ReferenceHeight);
+            return (((float)Height * value) / (float)VirtualHeight);
         }
 
         /// <summary>
@@ -112,8 +112,8 @@ namespace C3DE
         public static Vector2 GetScale()
         {
             return new Vector2(
-                (float)((float)Width / (float)ReferenceWidth),
-                (float)((float)Height / (float)ReferenceHeight));
+                (float)((float)Width / (float)VirtualWidth),
+                (float)((float)Height / (float)VirtualHeight));
         }
 
         /// <summary>

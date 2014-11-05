@@ -39,10 +39,10 @@ namespace C3DE.Components.Controllers
         public FirstPersonController()
             : base()
         {
-            Velocity = 0.95f;
-            AngularVelocity = 0.95f;
-            MoveSpeed = 1.0f;
-            RotationSpeed = 0.1f;
+            Velocity = 0.92f;
+            AngularVelocity = 0.85f;
+            MoveSpeed = 1.5f;
+            RotationSpeed = 0.15f;
             LookSpeed = 0.15f;
             StrafeSpeed = 0.75f;
             MouseSensibility = new Vector2(0.15f);
@@ -61,6 +61,18 @@ namespace C3DE.Components.Controllers
         public override void Update()
         {
             UpdateInputs();
+
+            // Limits on X axis
+            if (transform.Rotation.X <= -MathHelper.PiOver2)
+            {
+                transform.SetRotation(-MathHelper.PiOver2 + 0.001f, null, null);
+                rotation = Vector3.Zero;
+            }
+            else if (transform.Rotation.X >= MathHelper.PiOver2)
+            {
+                transform.SetRotation(MathHelper.PiOver2 - 0.001f, null, null);
+                rotation = Vector3.Zero;
+            }
 
             _rotationMatrix = Matrix.CreateFromYawPitchRoll(transform.Rotation.Y, transform.Rotation.X, 0.0f);
 
@@ -130,7 +142,7 @@ namespace C3DE.Components.Controllers
             else if (_lockCursor)
             {
                 rotation.Y -= Input.Mouse.Delta.X * RotationSpeed * MouseSensibility.Y * Time.DeltaTime;
-                rotation.X += Input.Mouse.Delta.Y * RotationSpeed * MouseSensibility.X * Time.DeltaTime;
+                rotation.X += Input.Mouse.Delta.Y * LookSpeed * MouseSensibility.X * Time.DeltaTime;
             }
 
             if (Input.Mouse.Drag(Inputs.MouseButton.Middle))
