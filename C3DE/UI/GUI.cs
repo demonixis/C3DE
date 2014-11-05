@@ -7,7 +7,7 @@ namespace C3DE.UI
 {
     public class GUI
     {
-        internal Matrix scale;
+        internal static Matrix scale;
         private SpriteBatch _spriteBatch;
         private bool _loaded;
         private Vector2 _cacheVec2;
@@ -26,7 +26,7 @@ namespace C3DE.UI
         /// <summary>
         /// Gets or sets the scaling that must used to render the UI. Default is (1.0f, 1.0f).
         /// </summary>
-        public Vector2 Scale
+        public static Vector2 Scale
         {
             get { return new Vector2(scale[0], scale[5]); }
             set
@@ -34,6 +34,7 @@ namespace C3DE.UI
                 scale.M11 = value.X;
                 scale.M22 = value.Y;
                 scale.M33 = 1.0f;
+
             }
         }
 
@@ -54,13 +55,18 @@ namespace C3DE.UI
                 _loaded = true;
 
                 if (Skin == null)
-                {
                     Skin = new GUISkin();
-                    Skin.LoadContent(content);
-                }
-                else
-                    Skin.LoadContent(content);
+
+                Skin.LoadContent(content);
             }
+        }
+
+        private void GetPointerPosition(ref Vector2 position)
+        {
+            position = Input.Mouse.Position / Scale;
+
+            if (Input.Touch.TouchCount > 0)
+                position = Input.Touch.GetPosition() / Scale;
         }
 
         #region Box Widget
@@ -94,7 +100,9 @@ namespace C3DE.UI
         {
             var index = 0;
 
-            if (rect.Contains(Input.Mouse.Position) || rect.Contains(Input.Touch.GetPosition()))
+            GetPointerPosition(ref _cacheVec2);
+
+            if (rect.Contains(_cacheVec2))
             {
                 index = 1;
                 if (Input.Mouse.Clicked() || Input.Touch.JustPressed())
@@ -151,7 +159,9 @@ namespace C3DE.UI
                 _spriteBatch.Draw(Skin.Checkbox[2], _cacheRect, Color.White);
             }
 
-            if (rect.Contains(Input.Mouse.Position) || rect.Contains(Input.Touch.GetPosition()))
+            GetPointerPosition(ref _cacheVec2);
+
+            if (rect.Contains(_cacheVec2))
             {
                 index = 1;
 

@@ -63,6 +63,7 @@
     <Compile Include="Components\Controllers\Mobile\SwipeZone.cs" />
     <Compile Include="Components\Controllers\Mobile\VirtualButton.cs" />
     <Compile Include="Components\Controllers\Mobile\VirtualGamepad.cs" />
+    <Compile Include="AudioManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Application.cs" />

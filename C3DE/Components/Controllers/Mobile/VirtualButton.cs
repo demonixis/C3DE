@@ -54,7 +54,7 @@ namespace C3DE.Components.Controllers.Mobile
 
 				while (_i < Input.Touch.MaxFingerPoints && !_exitLoop) 
 				{
-					if (_buttonRect.Contains (Input.Touch.GetPosition (_i))) 
+                    if (_buttonRect.Contains (Input.Touch.GetPosition (_i) / GUI.Scale)) 
 					{
 						Pressed = true;
 						_exitLoop = true;

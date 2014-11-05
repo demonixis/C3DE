@@ -75,15 +75,15 @@ namespace C3DE.Components.Controllers.Mobile
         {
             if (_texture == null)
             {
-                var t1 = GraphicsHelper.CreateCircleTexture(Color.Black, 256);
-                var t2 = GraphicsHelper.CreateCircleTexture(Color.GhostWhite, 210);
+                var t1 = GraphicsHelper.CreateCircleTexture(Color.TransparentBlack, 150);
+                var t2 = GraphicsHelper.CreateCircleTexture(Color.GhostWhite, 140);
                 _texture = GraphicsHelper.Combine(t1, t2);
             }
 
             var x = (_texture.Width * Scale) / 2;
-            var y = Screen.Height - (_texture.Height * Scale + (_texture.Height * Scale) / 2);
+            var y = Screen.VirtualHeight - (_texture.Height * Scale + (_texture.Height * Scale) / 2);
 
-			_borderLimits = new Rectangle (0, Screen.HeightPerTwo, Screen.WidthPerTwo, Screen.Height);
+			_borderLimits = new Rectangle (0, Screen.VirtualHeightPerTwo, Screen.VirtualWidthPerTwo, Screen.Height);
 
             ShowAt(x, y);
         }

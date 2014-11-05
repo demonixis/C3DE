@@ -57,7 +57,6 @@ namespace C3DE
             Application.GraphicsDeviceManager = graphics;
             Application.SceneManager = sceneManager;
 
-
 #if !ANDROID && !WINDOWS_PHONE
             _autoDetectResolution = width == 0 || height == 0;
 
@@ -108,7 +107,7 @@ namespace C3DE
 #endif
 
             if (_autoDetectResolution)
-                Screen.DetermineBestResolution(_requestFullscreen);
+                Screen.SetBestResolution(_requestFullscreen);
 
             if (renderer == null)
                 renderer = new Renderer();
@@ -161,14 +160,6 @@ namespace C3DE
             }
 
             base.EndDraw();
-        }
-
-        public void SetUIScaling(ref Vector2 scaling)
-        {
-            var stdRenderer = renderer as Renderer;
-
-            if (stdRenderer != null)
-                stdRenderer.uiManager.Scale = scaling;
         }
     }
 }

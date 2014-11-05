@@ -4,26 +4,26 @@ using System;
 
 namespace C3DE
 {
-    public class AudioManager
+    public static class AudioManager
     {
-        private bool _soundEnabled;
-        private bool _musicEnabled;
-        private float _maxSoundVolume;
-        private float _maxMusicVolume;
+        private static bool _soundEnabled = true;
+        private static bool _musicEnabled = true;
+        private static float _maxSoundVolume = 1.0f;
+        private static float _maxMusicVolume = 1.0f;
 
-        public bool SoundEnabled
+        public static bool SoundEnabled
         {
             get { return _soundEnabled; }
             set { _soundEnabled = value; }
         }
 
-        public float SoundVolume
+        public static float SoundVolume
         {
             get { return _maxSoundVolume; }
             set { _maxSoundVolume = value; }
         }
 
-        public bool MusicEnabled
+        public static bool MusicEnabled
         {
             get { return _musicEnabled; }
             set
@@ -35,7 +35,7 @@ namespace C3DE
             }
         }
 
-        public float MusicVolume
+        public static float MusicVolume
         {
             get { return _maxMusicVolume; }
             set 
@@ -45,21 +45,13 @@ namespace C3DE
             }
         }
 
-        public AudioManager()
-        {
-            _soundEnabled = true;
-            _musicEnabled = true;
-            _maxSoundVolume = 1.0f;
-            _maxMusicVolume = 1.0f;
-        }
-
-        public void PlayOneShot(SoundEffect sound, float volume = 1.0f, float pitch = 1.0f, float pan = 0.0f)
+        public static void PlayOneShot(SoundEffect sound, float volume = 1.0f, float pitch = 1.0f, float pan = 0.0f)
         {
             if (_soundEnabled)
                 sound.Play(Math.Min(volume, _maxSoundVolume), pitch, pan);
         }
 
-        public void Play(Song music, float volume = 1.0f, bool repeat = true)
+        public static void Play(Song music, float volume = 1.0f, bool repeat = true)
         {
             if (_musicEnabled)
             {
@@ -70,19 +62,19 @@ namespace C3DE
             }
         }
 
-        public void Stop()
+        public static void Stop()
         {
              if (MediaPlayer.State != MediaState.Stopped)
                 MediaPlayer.Stop();
         }
 
-        public void Pause()
+        public static void Pause()
         {
             if (MediaPlayer.State == MediaState.Playing)
                 MediaPlayer.Pause();
         }
 
-        public void Resume()
+        public static void Resume()
         {
             if (_musicEnabled && MediaPlayer.State == MediaState.Playing)
                 MediaPlayer.Resume();

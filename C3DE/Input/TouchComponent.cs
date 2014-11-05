@@ -102,11 +102,16 @@ namespace C3DE.Inputs
 
                 for (int i = 0; i < MaxFingerPoints; i++)
                 {
-                    if (i < touchCount)
+                    if (i + 1 <= touchCount)
                         UpdateTouchState(i);
                     else
                         RestoreTouchState(i);
                 }
+            }
+            else if (MaxFingerPoints > 0 && touchCollection.Count == 0)
+            {
+                for (int i = 0; i < MaxFingerPoints; i++)
+                    RestoreTouchState(i);
             }
         }
 
