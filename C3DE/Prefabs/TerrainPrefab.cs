@@ -46,6 +46,7 @@ namespace C3DE.Prefabs
             renderer = AddComponent<MeshRenderer>();
             renderer.Geometry = geometry;
             renderer.CastShadow = false;
+            renderer.ReceiveShadow = false;
 
             SandLayer = 9;
             GroundLayer = 18;

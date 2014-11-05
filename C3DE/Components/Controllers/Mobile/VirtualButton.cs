@@ -71,6 +71,15 @@ namespace C3DE.Components.Controllers.Mobile
 			if (_enabled)
 				ui.DrawTexture (ref _buttonRect, _buttonTexture);
 		}
+
+        public override void Dispose()
+        {
+            if (_buttonTexture != null)
+            {
+                _buttonTexture.Dispose();
+                _buttonTexture = null;
+            }
+        }
 	}
 }
 

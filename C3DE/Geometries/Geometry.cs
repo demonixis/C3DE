@@ -10,14 +10,13 @@ namespace C3DE.Geometries
         Position = 0, Normal
     }
 
-    public class Geometry
+    public class Geometry : IDisposable
     {
         private VertexPositionNormalTexture[] _vertices;
         private ushort[] _indices;
         private VertexBuffer _vertexBuffer;
         private IndexBuffer _indexBuffer;
         private bool _constructed;
-
         protected Vector3 size = Vector3.One;
         protected Vector2 repeatTexture = Vector2.One;
         protected bool invertFaces = false;
@@ -151,6 +150,15 @@ namespace C3DE.Geometries
             }
 
             return vertices;
+        }
+
+        public void Dispose()
+        {
+            if (Constructed)
+            {
+                _vertexBuffer.Dispose();
+                _indexBuffer.Dispose();
+            }
         }
     }
 }

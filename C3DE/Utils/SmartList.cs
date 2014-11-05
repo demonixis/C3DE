@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 
 namespace C3DE.Utils
 {
@@ -125,6 +126,12 @@ namespace C3DE.Utils
                 _addList.Clear();
                 _addSize = 0;
             }
+        }
+
+        public IEnumerator GetEnumerator()
+        {
+            foreach (T item in _items)
+                yield return item;
         }
     }
 }

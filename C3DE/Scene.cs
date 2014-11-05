@@ -208,6 +208,12 @@ namespace C3DE
             foreach (Behaviour script in Behaviours)
                 script.OnDestroy();
 
+            foreach (SceneObject sceneObject in sceneObjects)
+                sceneObject.Dispose();
+
+            foreach (Material material in materials)
+                material.Dispose();
+
             Clear();
         }
 

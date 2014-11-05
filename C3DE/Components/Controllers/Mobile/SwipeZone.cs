@@ -58,6 +58,15 @@ namespace C3DE.Components.Controllers.Mobile
 			if (ShowBordersLimit)
 				ui.DrawTexture (ref _borderZone, _borderTexture);
 		}
+
+        public override void Dispose()
+        {
+            if (_borderTexture != null)
+            {
+                _borderTexture.Dispose();
+                _borderTexture = null;
+            }
+        }
 	}
 }
 

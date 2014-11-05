@@ -7,7 +7,7 @@ namespace C3DE
     /// <summary>
     /// A scene object is the base object on the scene.
     /// </summary>
-    public class SceneObject : ICloneable
+    public class SceneObject : ICloneable, IDisposable
     {
         #region Private/protected declarations
 
@@ -323,6 +323,12 @@ namespace C3DE
             sceneObject.Transform.LocalScale = transform.LocalScale;
 
             return sceneObject;
+        }
+
+        public void Dispose()
+        {
+            foreach (Component component in components)
+                component.Dispose();
         }
     }
 }

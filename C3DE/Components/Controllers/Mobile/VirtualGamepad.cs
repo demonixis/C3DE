@@ -174,5 +174,14 @@ namespace C3DE.Components.Controllers.Mobile
         {
             return (float)Math.Round(value * 1000.0f) / 1000.0f;
         }
+
+        public override void Dispose()
+        {
+            if (_texture != null)
+            {
+                _texture.Dispose();
+                _texture = null;
+            }
+        }
     }
 }

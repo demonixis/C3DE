@@ -59,5 +59,14 @@ namespace C3DE.Components.Renderers
             device.Indices = geometry.IndexBuffer;
             device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, geometry.Vertices.Length, 0, geometry.Indices.Length / 3);
         }
+
+        public override void Dispose()
+        {
+            if (geometry != null)
+            {
+                geometry.Dispose();
+                geometry = null;
+            }
+        }
     }
 }

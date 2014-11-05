@@ -6,7 +6,7 @@ namespace C3DE.Components
     /// <summary>
     /// A component is a part of a scene object.
     /// </summary>
-    public abstract class Component : IComparable, ICloneable
+    public abstract class Component : IComparable, ICloneable, IDisposable
     {
         private static int ComponentCounter = 0;
         internal protected bool initialized;
@@ -157,6 +157,10 @@ namespace C3DE.Components
         public virtual object Clone()
         {
             return MemberwiseClone();
+        }
+
+        public virtual void Dispose()
+        {
         }
     }
 }
