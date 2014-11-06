@@ -41,7 +41,7 @@ namespace C3DE
         public override void Update(GameTime gameTime)
         {
             __deltaTime = gameTime.ElapsedGameTime.Milliseconds;
-            __time = gameTime.TotalGameTime.Milliseconds;
+            __time = (float)gameTime.TotalGameTime.TotalMilliseconds;
         }
     }
 }

@@ -11,12 +11,15 @@ namespace C3DE.Demo
 
         protected override void Initialize()
         {
+            Screen.SetVirtualResolution(1024, 600);
             GUI.Skin = DemoGame.CreateSkin(Content);
 
-            Application.SceneManager.Add(new MenuDemo());
-            Application.SceneManager.Add(new HeightmapTerrain());
-			Application.SceneManager.Add(new RandomTerrain ());
-            Application.SceneManager.Add(new HexagonTerrain());
+            Application.SceneManager.Add(new MenuDemo(), true);
+            Application.SceneManager.Add(new HeightmapDemo());
+            Application.SceneManager.Add(new ProceduralTerrainWater());
+            Application.SceneManager.Add(new ProceduralTerrainLava());
+            Application.SceneManager.Add(new HalloweenDemo());
+            Application.SceneManager.Add(new HexagonTerrainDemo());
             Application.LoadLevel(0);
 
             base.Initialize();

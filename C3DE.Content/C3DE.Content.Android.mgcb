@@ -490,12 +490,6 @@
 /processorParam:DebugMode=Auto
 /build:FX/PostProcess/FXAA.fx
 
-#begin FX/PostProcess/GreyScale.fx
-/importer:EffectImporter
-/processor:EffectProcessor
-/processorParam:DebugMode=Auto
-/build:FX/PostProcess/GreyScale.fx
-
 #begin FX/PostProcess/OculusDistortionCorrection.fx
 /importer:EffectImporter
 /processor:EffectProcessor
@@ -566,4 +560,22 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:TextureFormat=Color
 /build:Models/Jack/PumpkinColor.bmp
+
+#begin FX/PostProcess/Film.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:FX/PostProcess/Film.fx
+
+#begin FX/PostProcess/GrayScale.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:FX/PostProcess/GrayScale.fx
+
+#begin FX/PostProcess/Convolution.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:FX/PostProcess/Convolution.fx
 

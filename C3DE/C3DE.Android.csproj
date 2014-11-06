@@ -56,7 +56,6 @@
     <Compile Include="PostProcess\BloomSettings.cs" />
     <Compile Include="PostProcess\C64FilterPass.cs" />
     <Compile Include="PostProcess\FXAAPass.cs" />
-    <Compile Include="PostProcess\GreyScalePass.cs" />
     <Compile Include="PostProcess\RefractionPass.cs" />
     <Compile Include="PostProcess\SimpleBlurPass.cs" />
     <Compile Include="PostProcess\ConvolutionPass.cs" />
@@ -64,6 +63,8 @@
     <Compile Include="Components\Controllers\Mobile\VirtualButton.cs" />
     <Compile Include="Components\Controllers\Mobile\VirtualGamepad.cs" />
     <Compile Include="AudioManager.cs" />
+    <Compile Include="PostProcess\FilmPass.cs" />
+    <Compile Include="PostProcess\GrayScalePass.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Application.cs" />

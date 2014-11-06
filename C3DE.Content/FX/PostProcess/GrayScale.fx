@@ -20,7 +20,7 @@ struct PixelShaderInput
 	float2 UV : TEXCOORD0;
 };
 
-float4 GreyScaleIntensityPixelShader(PixelShaderInput input) : COLOR
+float4 GrayScaleIntensityPixelShader(PixelShaderInput input) : COLOR
 {
 	float4 diffuse = tex2D(textureSampler, input.UV);
 	diffuse.rgb = dot(diffuse.rgb, float3(0.3, 0.59, 0.11));
@@ -33,9 +33,9 @@ technique Technique1
 	pass GreyScaleIntensity
 	{
 #if SM4
-		PixelShader = compile ps_4_0_level_9_1 GreyScaleIntensityPixelShader();
+		PixelShader = compile ps_4_0_level_9_1 GrayScaleIntensityPixelShader();
 #else
-		PixelShader = compile ps_3_0 GreyScaleIntensityPixelShader();
+		PixelShader = compile ps_3_0 GrayScaleIntensityPixelShader();
 #endif
 	}
 }

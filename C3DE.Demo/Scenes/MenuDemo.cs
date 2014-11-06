@@ -14,8 +14,8 @@ namespace C3DE.Demo.Scenes
             base.Initialize();
 
 #if ANDROID
-            MenuBehaviour.ButtonWidth = 250;
-            MenuBehaviour.ButtonHeight = 75;
+            //MenuBehaviour.ButtonWidth = 250;
+            //MenuBehaviour.ButtonHeight = 75;
 #endif
 
             GUI.Skin = DemoGame.CreateSkin(Application.Content);

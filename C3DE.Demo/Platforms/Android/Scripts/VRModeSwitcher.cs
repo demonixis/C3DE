@@ -8,7 +8,6 @@ namespace C3DE.Demo
 {
     public class VRModeSwitcher : Behaviour
     {
-        private Engine _engine;
         private Renderer _basicRenderer;
         private VRMobileRenderer _vrMobileRenderer;
         private Rectangle _switchRect;
@@ -27,8 +26,7 @@ namespace C3DE.Demo
             _switchRect = new Rectangle(Screen.WidthPerTwo - bWidth / 2, Screen.Height - bHeight * 2, bWidth, bHeight);
             _vrEnabled = false;
 
-            _engine = Application.Game as Engine;
-            _basicRenderer = _engine.Renderer as Renderer;
+            _basicRenderer = Application.Engine.Renderer as Renderer;
             _vrMobileRenderer = new VRMobileRenderer();
             _vrMobileRenderer.Initialize(Application.Content);
 
@@ -43,7 +41,7 @@ namespace C3DE.Demo
         public override void OnDestroy()
         {
             if (_vrEnabled)
-                _engine.Renderer = _basicRenderer;
+                Application.Engine.Renderer = _basicRenderer;
         }
 
         public override void OnGUI(GUI ui)
@@ -53,9 +51,9 @@ namespace C3DE.Demo
                 _vrEnabled = !_vrEnabled;
 
                 if (_vrEnabled)
-                    _engine.Renderer = _basicRenderer;
+                    Application.Engine.Renderer = _basicRenderer;
                 else
-                    _engine.Renderer = _vrMobileRenderer;
+                    Application.Engine.Renderer = _vrMobileRenderer;
 
                 Screen.Setup(_vrEnabled ? _originalResolution.X >> 1 : _originalResolution.X, _originalResolution.Y, null, null);
                     
