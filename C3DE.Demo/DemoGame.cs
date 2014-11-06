@@ -33,6 +33,8 @@ namespace C3DE.Demo
 
         public static GUISkin CreateSkin(ContentManager content)
         {
+            GUI.Scale = Screen.GetScale();
+
             GUISkin skin = new GUISkin();
             skin.Box = content.Load<Texture2D>("Textures/UI/grey_panel");
             skin.Buttons[0] = content.Load<Texture2D>("Textures/UI/grey_button00");
@@ -52,6 +54,7 @@ namespace C3DE.Demo
         {
             using (var game = new Engine("C3DE Game Engine", ScreenWidth, ScreenHeight))
             {
+                Screen.SetVirtualResolution(1024, 600);
                 Application.SceneManager.Add(new MenuDemo(), true);
                 Application.SceneManager.Add(new HeightmapDemo());
                 Application.SceneManager.Add(new ProceduralTerrainWater());

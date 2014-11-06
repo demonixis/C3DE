@@ -21,7 +21,7 @@ namespace C3DE.UI
             _fontName = fontName;
             Buttons = new Texture2D[3];
             Checkbox = new Texture2D[3];
-
+            Margin = 6.0f;
         }
 
         public void LoadContent(ContentManager content)
@@ -39,8 +39,6 @@ namespace C3DE.UI
             Checkbox[2] = GraphicsHelper.CreateTexture(Color.White, 1, 1);                           
 
             TextColor = Color.White;
-
-            Margin = 5.0f;
 
             if (!string.IsNullOrEmpty(_fontName))
                 Font = content.Load<SpriteFont>(_fontName);

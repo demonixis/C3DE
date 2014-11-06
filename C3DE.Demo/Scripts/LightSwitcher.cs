@@ -16,7 +16,7 @@ namespace C3DE.Demo.Scripts
 
         public override void Start()
         {
-            _box = new Rectangle(Screen.Width - 150, 10, 140, 150);
+            _box = new Rectangle(Screen.VirtualWidth - 150, 10, 140, 150);
             _btn1 = new Rectangle(_box.X + 10, _box.Y + 30, _box.Width - 20, 30);
             _btn2 = new Rectangle(_box.X + 10, _btn1.Y + 40, _box.Width - 20, 30);
             _btn3 = new Rectangle(_box.X + 10, _btn2.Y + 40, _box.Width - 20, 30);

@@ -1,4 +1,5 @@
 ﻿using C3DE.Components.Colliders;
+using C3DE.Components.Controllers;
 using C3DE.Components.Lights;
 using C3DE.Components.Renderers;
 using C3DE.Demo.Scripts;
@@ -26,8 +27,9 @@ namespace C3DE.Demo.Scenes
 
             // Camera
             var camera = new CameraPrefab("camera");
-            camera.AddComponent<ControllerSwitcher>();
+            camera.AddComponent<OrbitController>();
             camera.AddComponent<DemoBehaviour>();
+            camera.AddComponent<PostProcessSwitcher>();
             Add(camera);
 
             // Light
@@ -38,9 +40,6 @@ namespace C3DE.Demo.Scenes
             lightPrefab.EnableShadows = true;
             lightPrefab.Light.Intensity = 0.5f;
             lightPrefab.Light.FallOf = 5.0f;
-            lightPrefab.AddComponent<LightSwitcher>();
-            lightPrefab.AddComponent<LightMoverKeys>();
-            lightPrefab.AddComponent<LightMover>();
             Add(lightPrefab);
 
             // Terrain
@@ -79,14 +78,6 @@ namespace C3DE.Demo.Scenes
             jackMaterial.MainTexture = Application.Content.Load<Texture2D>("Models/Jack/PumpkinColor");
             jack.Renderer.MainMaterial = jackMaterial;
             Add(jack);
-
-            var settings = new BloomSettings("cool", 0.15f, 1f, 4.0f, 1.0f, 1f, 1f);
-
-            var bloomPostProcess = new BloomPass();
-            bloomPostProcess.Settings = settings;
-            Add(bloomPostProcess);
-
-            GUI.Enabled = false;
         }
     }
 }

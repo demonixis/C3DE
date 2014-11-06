@@ -28,7 +28,7 @@ namespace C3DE.Demo.Scripts
             int width = 140;
             int height = 190;
 
-            _box = new Rectangle(Screen.Width - width - 10, Screen.Height - height - 10, width, height);
+            _box = new Rectangle(Screen.VirtualWidth - width - 10, Screen.VirtualHeight - height - 10, width, height);
             _btn1 = new Rectangle(_box.X + 10, _box.Y + 30, _box.Width - 20, 30);
             _btn2 = new Rectangle(_box.X + 10, _btn1.Y + 40, _box.Width - 20, 30);
             _checkRect = new Rectangle(_box.X + 10, _btn2.Y + 40, _box.Width - 20, 30);

@@ -3,11 +3,6 @@ using C3DE.Materials;
 using C3DE.Prefabs;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace C3DE.Demo.Scripts
 {
