@@ -7,7 +7,8 @@ namespace C3DE.UI
 {
     public class GUI
     {
-        internal static Matrix scale;
+        internal static Effect uiEffect;
+        internal static Matrix uiMatrix;
         private SpriteBatch _spriteBatch;
         private bool _loaded;
         private Vector2 _cacheVec2;
@@ -28,14 +29,25 @@ namespace C3DE.UI
         /// </summary>
         public static Vector2 Scale
         {
-            get { return new Vector2(scale[0], scale[5]); }
+            get { return new Vector2(uiMatrix[0], uiMatrix[5]); }
             set
             {
-                scale.M11 = value.X;
-                scale.M22 = value.Y;
-                scale.M33 = 1.0f;
-
+                uiMatrix.M11 = value.X;
+                uiMatrix.M22 = value.Y;
+                uiMatrix.M33 = 1.0f;
             }
+        }
+
+        public static Effect Effect
+        {
+            get { return uiEffect; }
+            set { uiEffect = value; }
+        }
+
+        public static Matrix Matrix
+        {
+            get { return uiMatrix; }
+            set { uiMatrix = value; }
         }
 
         public GUI(SpriteBatch spriteBatch)
@@ -44,7 +56,8 @@ namespace C3DE.UI
             _loaded = false;
             _cacheRect = Rectangle.Empty;
             _cacheVec2 = Vector2.Zero;
-            scale = Matrix.CreateScale(1.0f);
+            uiMatrix = Matrix.CreateScale(1.0f);
+            uiEffect = null;
             Enabled = true;
         }
 

@@ -52,7 +52,7 @@ namespace C3DE.Components.Controllers.Mobile
             }
         }
 
-        public Vector2 Position
+        public Vector2 StickValue
         {
             get { return _position; }
         }

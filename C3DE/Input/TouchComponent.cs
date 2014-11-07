@@ -17,31 +17,51 @@ namespace C3DE.Inputs
         private int _maxFingerPoints;
         private bool _needUpdate;
         private Vector2 _cacheVec2;
+        private bool _needReset;
 
+        /// <summary>
+        /// Determine whether the touch input is available.
+        /// </summary>
+        public bool Available
+        {
+            get { return TouchPanel.IsGestureAvailable; }
+        }
+
+        /// <summary>
+        /// Gets or sets the dead zone.
+        /// </summary>
         public float DeadZone { get; set; }
-        public float MaxDelta { get; set; }
 
         public int MaxFingerPoints
         {
             get { return _maxFingerPoints; }
             set
             {
-                _maxFingerPoints = Math.Min(Math.Max(0, value), TouchPanel.GetCapabilities().MaximumTouchCount);
-                _needUpdate = true;
+                if (_maxFingerPoints != value)
+                {
+                    _maxFingerPoints = Math.Min(Math.Max(0, value), TouchPanel.GetCapabilities().MaximumTouchCount);
+                    _needUpdate = true;
+                }
             }
         }
 
+        /// <summary>
+        /// Gets or sets the maximum values for the delta.
+        /// </summary>
+        public float MaxDelta { get; set; }
+
+        /// <summary>
+        /// Gets or sets the sensibility of the delta.
+        /// </summary>
+        public Vector2 Sensitivity { get; set; }
+
+        /// <summary>
+        /// Gets the number of finger on the screen.
+        /// </summary>
         public int TouchCount
         {
             get { return touchCollection.Count; }
         }
-
-        public bool Available
-        {
-            get { return TouchPanel.IsGestureAvailable; }
-        }
-
-        public Vector2 Sensitivity { get; set; }
 
         public TouchComponent(Game game)
             : base(game)
@@ -57,7 +77,8 @@ namespace C3DE.Inputs
             Sensitivity = Vector2.One;
             MaxDelta = 100;
             DeadZone = 1;
-            _needUpdate = true;
+            _needUpdate = false;
+            _needReset = false;
         }
 
         public override void Initialize()
@@ -66,7 +87,6 @@ namespace C3DE.Inputs
 
             _position = new Vector2[MaxFingerPoints];
             _lastPosition = new Vector2[MaxFingerPoints];
-
             _pressed = new bool[MaxFingerPoints];
             _moved = new bool[MaxFingerPoints];
             _released = new bool[MaxFingerPoints];
@@ -107,11 +127,15 @@ namespace C3DE.Inputs
                     else
                         RestoreTouchState(i);
                 }
+
+                _needReset = true;
             }
-            else if (MaxFingerPoints > 0 && touchCollection.Count == 0)
+            else if (_needReset && MaxFingerPoints > 0 && touchCollection.Count == 0)
             {
                 for (int i = 0; i < MaxFingerPoints; i++)
                     RestoreTouchState(i);
+
+                _needReset = false;
             }
         }
 
@@ -119,39 +143,25 @@ namespace C3DE.Inputs
         {
             _lastPosition[index].X = _position[index].X;
             _lastPosition[index].Y = _position[index].Y;
-
             _position[index].X = touchCollection[index].Position.X;
             _position[index].Y = touchCollection[index].Position.Y;
 
             _pressed[index] = touchCollection[index].State == TouchLocationState.Pressed;
             _moved[index] = touchCollection[index].State == TouchLocationState.Moved;
             _released[index] = touchCollection[index].State == TouchLocationState.Released || touchCollection[index].State == TouchLocationState.Invalid;
-
             _pressure[index] = touchCollection[index].Pressure;
-
-            // For a proper delta value.
-            if (lastTouchCollection.Count > index)
-            {
-                if (lastTouchCollection[index].State != TouchLocationState.Moved)
-                {
-                    _lastPosition[index].X = _position[index].X;
-                    _lastPosition[index].Y = _position[index].Y;
-                }
-            }
         }
 
         public void RestoreTouchState(int index = 0)
         {
             _lastPosition[index].X = 0;
             _lastPosition[index].Y = 0;
-
             _position[index].X = 0;
             _position[index].Y = 0;
 
             _pressed[index] = false;
             _moved[index] = false;
             _released[index] = false;
-
             _pressure[index] = 0.0f;
         }
 
@@ -177,6 +187,14 @@ namespace C3DE.Inputs
                 return false;
 
             return _moved[id];
+        }
+
+        public float Pressure(int id = 0)
+        {
+            if (id >= MaxFingerPoints)
+                return 0.0f;
+
+            return _pressure[id];
         }
 
         public Vector2 Delta(int id = 0)
@@ -231,14 +249,6 @@ namespace C3DE.Inputs
                 return false;
 
             return touchCollection[id].State == TouchLocationState.Released && (lastTouchCollection[id].State == TouchLocationState.Pressed || lastTouchCollection[id].State == TouchLocationState.Moved);
-        }
-
-        public float GetPressureLevel(int id = 0)
-        {
-            if (id >= MaxFingerPoints)
-                return 0.0f;
-
-            return _pressure[id];
         }
     }
 }

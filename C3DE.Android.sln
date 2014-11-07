@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "C3DE.Android", "C3DE\C3DE.Android.csproj", "{6F1729B1-27BE-49FA-AD58-AAF2E7CB6916}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "C3DE.Demo", "C3DE.Demo\Platforms\Android\C3DE.Demo.csproj", "{0C5C051E-7DB3-424A-A4C9-5F73FAB3B983}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "C3DE.Demos", "C3DE.Demo\Platforms\Android\C3DE.Demos.csproj", "{0C5C051E-7DB3-424A-A4C9-5F73FAB3B983}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +21,6 @@ Global
 		{6F1729B1-27BE-49FA-AD58-AAF2E7CB6916}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
-		StartupItem = C3DE.Demo\Platforms\Android\C3DE.Demo.csproj
+		StartupItem = C3DE.Demo\Platforms\Android\C3DE.Demos.csproj
 	EndGlobalSection
 EndGlobal

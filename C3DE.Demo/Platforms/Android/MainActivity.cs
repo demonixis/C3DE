@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework;
 
 namespace C3DE.Demo
 {
-    [Activity(Label = "C3DE.Demo"
+    [Activity(Label = "C3DE Demos"
         , MainLauncher = true
         , Icon = "@drawable/icon"
         , Theme = "@style/Theme.Splash"

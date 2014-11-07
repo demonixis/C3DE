@@ -107,7 +107,7 @@ namespace C3DE
 
             if (size > 0 && GUI.Enabled)
             {
-                _spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone, null, GUI.scale);
+                _spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone, GUI.uiEffect, GUI.uiMatrix);
 
                 for (int i = 0; i < size; i++)
                     if (scripts[i].Enabled)

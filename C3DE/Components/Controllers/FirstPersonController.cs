@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using C3DE.Components.Controllers.Mobile;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Input;
 using System;
@@ -14,13 +15,25 @@ namespace C3DE.Components.Controllers
         private Matrix _rotationMatrix;
         private Vector3 _transformedReference;
         private bool _lockCursor;
+        private bool _virtualInputEnabled;
         protected Vector3 translation = Vector3.Zero;
         protected Vector3 rotation = Vector3.Zero;
+        protected VirtualGamepad leftVirtaulStick;
+        protected SwipeZone rightSwipeZone;
 
         /// <summary>
         /// Enable or disable the flying mode. Default is false.
         /// </summary>
         public bool Fly { get; set; }
+
+        public bool VirtualInputEnabled
+        {
+            get { return _virtualInputEnabled; }
+            set
+            {
+                SetVirtualInputSupport(value);
+            }
+        }
 
         public bool LockCursor
         {
@@ -47,7 +60,26 @@ namespace C3DE.Components.Controllers
             StrafeSpeed = 0.75f;
             MouseSensibility = new Vector2(0.15f);
             Fly = false;
+            _virtualInputEnabled = false;
             _lockCursor = false;
+        }
+
+        public override void OnDisabled()
+        {
+            if (_virtualInputEnabled)
+            {
+                leftVirtaulStick.Enabled = false;
+                rightSwipeZone.Enabled = false;
+            }
+        }
+
+        public override void OnEnabled()
+        {
+            if (_virtualInputEnabled)
+            {
+                leftVirtaulStick.Enabled = true;
+                rightSwipeZone.Enabled = true;
+            }
         }
 
         public override void Start()
@@ -56,6 +88,10 @@ namespace C3DE.Components.Controllers
 
             if (_camera == null)
                 throw new Exception("No camera attached to this scene object.");
+
+#if ANDROID
+                VirtualInputEnabled = true;
+#endif
         }
 
         public override void Update()
@@ -89,14 +125,15 @@ namespace C3DE.Components.Controllers
             rotation *= AngularVelocity;
         }
 
-        protected virtual void UpdateInputs()
+        protected override void UpdateInputs()
         {
             UpdateMouseInput();
             UpdateKeyboardInput();
             UpdateGamepadInput();
+            UpdateTouchInput();
         }
 
-        protected virtual void UpdateKeyboardInput()
+        protected override void UpdateKeyboardInput()
         {
             if (Input.Keys.Up || Input.Keys.Pressed(Keys.W))
                 translation.Z += MoveSpeed * Time.DeltaTime;
@@ -132,7 +169,7 @@ namespace C3DE.Components.Controllers
                 Fly = !Fly;
         }
 
-        protected virtual void UpdateMouseInput()
+        protected override void UpdateMouseInput()
         {
             if (!_lockCursor && Input.Mouse.Drag())
             {
@@ -152,7 +189,7 @@ namespace C3DE.Components.Controllers
             }
         }
 
-        protected virtual void UpdateGamepadInput()
+        protected override void UpdateGamepadInput()
         {
             translation.Z += Input.Gamepad.LeftStickValue().Y * MoveSpeed * Time.DeltaTime;
             translation.X -= Input.Gamepad.LeftStickValue().X * StrafeSpeed * Time.DeltaTime;
@@ -164,6 +201,34 @@ namespace C3DE.Components.Controllers
                 translation.Y -= MoveSpeed / 2 * Time.DeltaTime;
             else if (Input.Gamepad.RightShoulder())
                 translation.Y += MoveSpeed / 2 * Time.DeltaTime;
+        }
+
+        protected override void UpdateTouchInput()
+        {
+            if (_virtualInputEnabled)
+            {
+                translation.Z -= leftVirtaulStick.StickValue.Y * MoveSpeed * Time.DeltaTime;
+                translation.X -= leftVirtaulStick.StickValue.X * StrafeSpeed * Time.DeltaTime;
+
+                rotation.X += rightSwipeZone.Delta.Y * LookSpeed * Time.DeltaTime * 0.5f;
+                rotation.Y -= rightSwipeZone.Delta.X * RotationSpeed * Time.DeltaTime * 0.5f;
+            }
+        }
+
+        protected virtual void SetVirtualInputSupport(bool active)
+        {
+            if (active && leftVirtaulStick == null && rightSwipeZone == null)
+            {
+                leftVirtaulStick = sceneObject.AddComponent<VirtualGamepad>();
+                rightSwipeZone = sceneObject.AddComponent<SwipeZone>();
+            }
+            else if (!active && leftVirtaulStick != null && rightSwipeZone != null)
+            {
+                sceneObject.RemoveComponent(leftVirtaulStick);
+                sceneObject.RemoveComponent(rightSwipeZone);
+            }
+
+            _virtualInputEnabled = leftVirtaulStick != null && rightSwipeZone != null;
         }
     }
 }

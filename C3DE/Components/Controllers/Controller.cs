@@ -2,8 +2,13 @@
 
 namespace C3DE.Components.Controllers
 {
-    public class Controller : Behaviour
+    /// <summary>
+    /// An abstract class to create a camera controller.
+    /// </summary>
+    public abstract class Controller : Behaviour
     {
+        #region Fields
+
         /// <summary>
         /// Gets or sets the velocity factor. Default is 0.95f.
         /// </summary>
@@ -44,6 +49,40 @@ namespace C3DE.Components.Controllers
         /// </summary>
         public float GamepadSensibility { get; set; }
 
+        /// <summary>
+        /// Gets or sets the touch sensibility. Default is [1.0f, 1.0f].
+        /// </summary>
 		public float TouchSensibility { get; set; }
+
+        #endregion
+
+        #region Input
+
+        /// <summary>
+        /// Method which call UpdateKeyboard/Mouse/GamepadTouch
+        /// </summary>
+        protected abstract void UpdateInputs();
+
+        /// <summary>
+        /// Update the keyboard input.
+        /// </summary>
+        protected abstract void UpdateKeyboardInput();
+
+        /// <summary>
+        /// Update the mouse input.
+        /// </summary>
+        protected abstract void UpdateMouseInput();
+
+        /// <summary>
+        /// Update the gamepad input.
+        /// </summary>
+        protected abstract void UpdateGamepadInput();
+
+        /// <summary>
+        /// Update the touch input.
+        /// </summary>
+        protected abstract void UpdateTouchInput();
+
+        #endregion
     }
 }

@@ -30,7 +30,7 @@ namespace C3DE.Components.Controllers.Mobile
 			{ 
 				for (int i = 0, l = Input.Touch.MaxFingerPoints; i < l; i++) 
 				{
-					if (Zone.Contains (Input.Touch.GetPosition (i)))
+                    if (Zone.Contains (Input.Touch.GetPosition (i) / GUI.Scale))
 						return Input.Touch.Delta (i);
 				}
 
@@ -47,7 +47,7 @@ namespace C3DE.Components.Controllers.Mobile
 		public override void Start()
 		{
 			if (_borderZone == Rectangle.Empty)
-				_borderZone = new Rectangle (Screen.WidthPerTwo, 150, Screen.WidthPerTwo - 50, Screen.Height - Screen.Height / 3);
+				_borderZone = new Rectangle (Screen.VirtualWidthPerTwo, 150, Screen.VirtualWidthPerTwo - 50, Screen.VirtualHeight - Screen.VirtualHeight / 3);
 
 			if (_borderTexture == null)
 				_borderTexture = GraphicsHelper.CreateBorderTexture (new Color(0.3f, 0.3f, 0.3f, 0.6f), Color.Transparent, _borderZone.Width, _borderZone.Height, 2);

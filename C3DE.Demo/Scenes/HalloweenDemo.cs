@@ -16,7 +16,7 @@ namespace C3DE.Demo.Scenes
 {
     public class HalloweenDemo : Scene
     {
-        public HalloweenDemo() : base("Halloween Demo") { }
+        public HalloweenDemo() : base("Post Process Demo") { }
 
         public override void Initialize()
         {
@@ -27,14 +27,15 @@ namespace C3DE.Demo.Scenes
 
             // Camera
             var camera = new CameraPrefab("camera");
-            camera.AddComponent<OrbitController>();
+            camera.Transform.Translate(0, 25, 0);
             camera.AddComponent<DemoBehaviour>();
             camera.AddComponent<PostProcessSwitcher>();
             Add(camera);
 
+            var orbitController = camera.AddComponent<OrbitController>();
+
             // Light
-            var lightPrefab = new LightPrefab("light", LightType.Point);
-            lightPrefab.Transform.Translate(0, 10, 0);
+            var lightPrefab = new LightPrefab("light", LightType.Directional);
             lightPrefab.Light.Direction = new Vector3(0, 1, -1);
             lightPrefab.Light.ShadowGenerator.SetShadowMapSize(Application.GraphicsDevice, 1024);
             lightPrefab.EnableShadows = true;
@@ -70,14 +71,16 @@ namespace C3DE.Demo.Scenes
 
             var jack = new ModelPrefab("Jack");
             jack.Transform.Rotate(-MathHelper.PiOver2, MathHelper.Pi, 0);
-            jack.Transform.Translate(0, -12, 0);
+            jack.Transform.Translate(0, 35, -45);
             jack.Transform.LocalScale = new Vector3(4);
             jack.LoadModel("Models/Jack/JackOLantern");
             var jackMaterial = new StandardMaterial(this);
-            jackMaterial.EmissiveColor = new Color(0.1f, 0.005f, 0);
+            jackMaterial.EmissiveColor = new Color(0.2f, 0.005f, 0);
             jackMaterial.MainTexture = Application.Content.Load<Texture2D>("Models/Jack/PumpkinColor");
             jack.Renderer.MainMaterial = jackMaterial;
             Add(jack);
+
+            orbitController.SetTarget(jack.Transform);
         }
     }
 }
