@@ -25,8 +25,8 @@ namespace C3DE.Demo.Scripts
             _fpController = AddComponent<FirstPersonController>();
             _fpController.Enabled = false;
 
-            int width = 140;
-            int height = 190;
+            int width = 180;
+            int height = 200;
 
             _box = new Rectangle(Screen.VirtualWidth - width - 10, Screen.VirtualHeight - height - 10, width, height);
             _btn1 = new Rectangle(_box.X + 10, _box.Y + 30, _box.Width - 20, 30);

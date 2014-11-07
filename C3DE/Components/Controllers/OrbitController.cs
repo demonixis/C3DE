@@ -41,6 +41,12 @@ namespace C3DE.Components.Controllers
         /// </summary>
         public float MaxDistance { get; set; }
 
+        public float Distance
+        {
+            get { return _distance; }
+            set { _distance = Math.Max(Math.Min(value, MaxDistance), MinDistance); }
+        }
+
         /// <summary>
         /// Create an orbit controller with default values.
         /// </summary>
@@ -94,7 +100,7 @@ namespace C3DE.Components.Controllers
             positionVelicoty *= Velocity;
         }
 
-        public void SetTarget(Transform transform)
+        public void LookAt(Transform transform)
         {
             _target = transform.Position;
         }

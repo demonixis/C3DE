@@ -207,11 +207,11 @@ namespace C3DE.Components.Controllers
         {
             if (_virtualInputEnabled)
             {
-                translation.Z -= leftVirtaulStick.StickValue.Y * MoveSpeed * Time.DeltaTime;
-                translation.X -= leftVirtaulStick.StickValue.X * StrafeSpeed * Time.DeltaTime;
+                translation.Z -= leftVirtaulStick.StickValue.Y * MoveSpeed * Time.DeltaTime * 0.75f;
+                translation.X -= leftVirtaulStick.StickValue.X * StrafeSpeed * Time.DeltaTime * 0.75f;
 
-                rotation.X += rightSwipeZone.Delta.Y * LookSpeed * Time.DeltaTime * 0.5f;
-                rotation.Y -= rightSwipeZone.Delta.X * RotationSpeed * Time.DeltaTime * 0.5f;
+                rotation.X += rightSwipeZone.Delta.Y * LookSpeed * Time.DeltaTime * 0.35f;
+                rotation.Y -= rightSwipeZone.Delta.X * RotationSpeed * Time.DeltaTime * 0.35f;
             }
         }
 

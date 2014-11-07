@@ -71,7 +71,7 @@ namespace C3DE.Demo.Scenes
 
             var jack = new ModelPrefab("Jack");
             jack.Transform.Rotate(-MathHelper.PiOver2, MathHelper.Pi, 0);
-            jack.Transform.Translate(0, 35, -45);
+            jack.Transform.Translate(0, 35, 0);
             jack.Transform.LocalScale = new Vector3(4);
             jack.LoadModel("Models/Jack/JackOLantern");
             var jackMaterial = new StandardMaterial(this);
@@ -80,7 +80,8 @@ namespace C3DE.Demo.Scenes
             jack.Renderer.MainMaterial = jackMaterial;
             Add(jack);
 
-            orbitController.SetTarget(jack.Transform);
+            orbitController.LookAt(jack.Transform);
+            orbitController.Distance = 150.0f;
         }
     }
 }

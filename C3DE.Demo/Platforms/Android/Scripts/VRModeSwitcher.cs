@@ -1,8 +1,8 @@
 ﻿using System;
 using C3DE.UI;
 using Microsoft.Xna.Framework;
-using C3DE.Components.Controllers;
 using C3DE.Components;
+using C3DE.Components.Controllers;
 
 namespace C3DE.Demo
 {

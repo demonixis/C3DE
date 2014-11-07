@@ -48,6 +48,7 @@ namespace C3DE.Demo.Scripts
 
             var refractionPass = new RefractionPass();
             refractionPass.RefractionTexture = Application.Content.Load<Texture2D>("Textures/hexagrid");
+            refractionPass.TextureTiling = new Vector2(0.5f);
             AddPass(refractionPass);
 
             _simpleBlurPass = new SimpleBlurPass();
@@ -57,7 +58,7 @@ namespace C3DE.Demo.Scripts
             var elementsCount = _passes.Length + 1;
             var titles = new string[] { "None", "Bloom", "C64 Filter", "Convolution", "Film", "FXAA", "GrayScale", "Refraction", "Simple Blur" };
 
-            _boxRect = new Rectangle(Screen.VirtualWidth - 170, 10, 160, 45 * (_passes.Length + 1));
+            _boxRect = new Rectangle(Screen.VirtualWidth - 190, 10, 180, 45 * (_passes.Length + 1));
 
             _widgets = new Widget[elementsCount];
 
@@ -84,7 +85,7 @@ namespace C3DE.Demo.Scripts
                 if (Input.Mouse.Drag())
                     targetValue = Input.Mouse.Delta.X * Time.DeltaTime * 0.05f;
 
-                if (Input.Touch.Pressed())
+                if (Input.Touch.Delta().X != 0)
                     targetValue = Input.Touch.Delta().X * Time.DeltaTime * 0.05f;
 
                 _simpleBlurPass.BlurDistance = MathHelper.Lerp(_simpleBlurPass.BlurDistance, targetValue, Time.DeltaTime * 5.0f);

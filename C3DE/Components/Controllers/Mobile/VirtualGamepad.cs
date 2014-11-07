@@ -75,8 +75,8 @@ namespace C3DE.Components.Controllers.Mobile
         {
             if (_texture == null)
             {
-                var t1 = GraphicsHelper.CreateCircleTexture(Color.TransparentBlack, 150);
-                var t2 = GraphicsHelper.CreateCircleTexture(Color.GhostWhite, 140);
+                var t1 = GraphicsHelper.CreateCircleTexture(Color.Black, 150);
+                var t2 = GraphicsHelper.CreateCircleTexture(Color.GhostWhite, 135);
                 _texture = GraphicsHelper.Combine(t1, t2);
             }
 

@@ -9,8 +9,8 @@ namespace C3DE.Demo.Scripts
 {
     public class MenuBehaviour : Behaviour
     {
-        public static int ButtonWidth = 200;
-        public static int ButtonHeight = 45;
+        public static int ButtonWidth = 240;
+        public static int ButtonHeight = 55;
 
         class DemoWidget
         {
@@ -41,6 +41,7 @@ namespace C3DE.Demo.Scripts
         private Rectangle _backgroundRect;
         private Texture2D _background;
         private Vector2 _titleRect;
+        private Vector2 _footerRect;
         private float _titleSize;
         private float _margin;
         private DemoWidget[] _demos;
@@ -52,9 +53,12 @@ namespace C3DE.Demo.Scripts
             _background = GraphicsHelper.CreateGradiantTexture(Color.LightSteelBlue, Color.Linen, Screen.VirtualWidth, Screen.VirtualHeight);
             _backgroundRect = new Rectangle(0, 0, Screen.VirtualWidth, Screen.VirtualHeight);
 
-            var titleSize = GUI.Skin.Font.MeasureString("C3DE Demos");
-            _titleSize = 3.0f;
-            _titleRect = new Vector2(Screen.VirtualWidthPerTwo - titleSize.X * _titleSize / 2, titleSize.Y * _titleSize);
+            var tempVec2 = GUI.Skin.Font.MeasureString("C3DE Demos");
+            _titleSize = 2.0f;
+            _titleRect = new Vector2(Screen.VirtualWidthPerTwo - tempVec2.X * _titleSize / 2, tempVec2.Y);
+
+            tempVec2 = GUI.Skin.Font.MeasureString("Gets the source : https://github.com/demonixis/C3DE");
+            _footerRect = new Vector2(Screen.VirtualWidthPerTwo - tempVec2.X / 2, Screen.VirtualHeight - tempVec2.Y - 5);
 
             _demos = new DemoWidget[Application.SceneManager.Size - 1];
 
@@ -81,6 +85,8 @@ namespace C3DE.Demo.Scripts
 
             for (int i = 0, l = _demos.Length; i < l; i++)
                 _demos[i].Draw(gui);
+
+            gui.Label(ref _footerRect, "Gets the source : https://github.com/demonixis/C3DE");
         }
     }
 }

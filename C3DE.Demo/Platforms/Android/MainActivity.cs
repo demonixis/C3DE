@@ -11,7 +11,7 @@ namespace C3DE.Demo
     [Activity(Label = "C3DE Demos"
         , MainLauncher = true
         , Icon = "@drawable/icon"
-        , Theme = "@style/Theme.Splash"
+        , Theme = "@android:style/Theme.NoTitleBar.Fullscreen"
         , AlwaysRetainTaskState=true
         , LaunchMode=Android.Content.PM.LaunchMode.SingleInstance
         , ScreenOrientation = ScreenOrientation.Landscape

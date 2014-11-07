@@ -127,7 +127,7 @@ namespace C3DE
             {
                 initialized = true;
 
-                for (int i = components.Count - 1; i != 0; i--)
+                for (int i = 0; i < components.Count; i++)
                 {
                     components[i].Start();
                     components[i].initialized = true;
