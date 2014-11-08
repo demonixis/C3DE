@@ -1,5 +1,6 @@
 ﻿using C3DE.Components;
 using C3DE.UI;
+using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 
 namespace C3DE
@@ -141,6 +142,8 @@ namespace C3DE
 
                 Camera.Main = null;
                 GUI.Enabled = true;
+                GUI.Effect = null;
+                GUI.Matrix = Matrix.Identity;
 
                 _activeSceneIndex = _levelToLoad;
                 _levelToLoad = -1;

@@ -84,9 +84,22 @@ namespace C3DE.Inputs
             return _gpState[(int)index].IsButtonUp(button) && _previousGpState[(int)index].IsButtonDown(button);
         }
 
-        public bool JustReleased(Buttons button, PlayerIndex index = PlayerIndex.One)
+        public Vector2 GetAxis(Buttons button, PlayerIndex index = PlayerIndex.One)
         {
-            return _gpState[(int)index].IsButtonDown(button) && _previousGpState[(int)index].IsButtonUp(button);
+
+            if (button == Buttons.LeftTrigger || button == Buttons.RightTrigger)
+            {
+                _tmpVector.X = _gpState[(int)index].Triggers.Left;
+                _tmpVector.Y = _gpState[(int)index].Triggers.Right;
+            }
+
+            else if (button == Buttons.LeftStick)
+                _tmpVector = ThumbSticks(true, index);
+            
+            else if (button == Buttons.RightStick)
+                _tmpVector = ThumbSticks(false, index);
+
+            return _tmpVector;
         }
 
         public float Triggers(bool left = true, PlayerIndex index = PlayerIndex.One)
