@@ -5,6 +5,7 @@ using C3DE.Prefabs;
 using C3DE.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
 namespace C3DE.Demo.Scripts
 {
@@ -90,6 +91,9 @@ namespace C3DE.Demo.Scripts
 
                 _simpleBlurPass.BlurDistance = MathHelper.Lerp(_simpleBlurPass.BlurDistance, targetValue, Time.DeltaTime * 5.0f);
             }
+
+            if (Input.Keys.JustPressed(Keys.U) || Input.Gamepad.JustPressed(Buttons.Start) || Input.Touch.JustPressed(4))
+                GUI.Enabled = !GUI.Enabled;
         }
 
         public override void OnGUI(GUI ui)

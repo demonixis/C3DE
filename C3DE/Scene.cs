@@ -23,6 +23,8 @@ namespace C3DE
     /// </summary>
     public class Scene : SceneObject
     {
+        public static Scene Main { get; internal set; }
+
         public readonly Material DefaultMaterial;
 
         private int _mainCameraIndex;
@@ -257,8 +259,10 @@ namespace C3DE
                     sceneObject.Scene = this;
                     sceneObject.Transform.Root = transform;
 
-                    if (initialized)
-                        sceneObject.Initialize();
+					if (initialized && !sceneObject.Initialized) 
+					{
+						sceneObject.Initialize ();
+					}
 
                     if (sceneObject.Enabled)
                     {
@@ -534,6 +538,11 @@ namespace C3DE
             }
 
             return -1;
+        }
+
+        public static SceneObject Instanciate(SceneObject sceneObject)
+        {
+            return Instanciate(sceneObject, sceneObject.Transform.Position, sceneObject.Transform.Rotation);
         }
 
         public static SceneObject Instanciate(SceneObject sceneObject, Vector3 position, Vector3 rotation)

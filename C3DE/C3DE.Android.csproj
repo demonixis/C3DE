@@ -27,7 +27,6 @@
     <ConsolePause>false</ConsolePause>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>full</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release</OutputPath>
     <ErrorReport>prompt</ErrorReport>
@@ -65,8 +64,6 @@
     <Compile Include="AudioManager.cs" />
     <Compile Include="PostProcess\FilmPass.cs" />
     <Compile Include="PostProcess\GrayScalePass.cs" />
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="Application.cs" />
     <Compile Include="Components\Behaviour.cs" />
     <Compile Include="Components\Controllers\Controller.cs" />

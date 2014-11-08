@@ -30,7 +30,7 @@ namespace C3DE
         }
 
         /// <summary>
-        /// Create the game by initializing graphics, input and other managers.
+        /// Creates the game by initializing graphics, input and other managers.
         /// The default configuration use the best resolution and toggle in fullscreen mode.
         /// </summary>
         /// <param name="title">The title of the game.</param>
@@ -57,7 +57,7 @@ namespace C3DE
             Application.GraphicsDeviceManager = graphics;
             Application.SceneManager = sceneManager;
 
-#if !ANDROID && !WINDOWS_PHONE
+#if !ANDROID && !WINDOWS_APP
             _autoDetectResolution = width == 0 || height == 0;
 
             if (!_autoDetectResolution)

@@ -95,7 +95,6 @@
     <Compile Include="..\..\Scenes\MenuDemo.cs">
       <Link>Scenes\MenuDemo.cs</Link>
     </Compile>
-    <Compile Include="Scripts\VRModeSwitcher.cs" />
     <Compile Include="..\..\Scenes\HalloweenDemo.cs">
       <Link>Scenes\HalloweenDemo.cs</Link>
     </Compile>
@@ -136,9 +135,11 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Scenes\" />
+    <Folder Include="Assets\" />
     <Folder Include="Assets\Content\" />
   </ItemGroup>
   <ItemGroup>
+    <AndroidAsset Include="Assets\Content\README.txt" />
     <AndroidAsset Include="Assets\Content\Font\Default.xnb" />
     <AndroidAsset Include="Assets\Content\Font\SegoeUILight.xnb" />
     <AndroidAsset Include="Assets\Content\FX\FresnelEffect.xnb" />
@@ -156,13 +157,30 @@
     <AndroidAsset Include="Assets\Content\FX\WaterEffect.Low.xnb" />
     <AndroidAsset Include="Assets\Content\FX\WaterEffect.xnb" />
     <AndroidAsset Include="Assets\Content\FX\PostProcess\AverageColor.xnb" />
+    <AndroidAsset Include="Assets\Content\FX\PostProcess\BloomCombine.xnb" />
+    <AndroidAsset Include="Assets\Content\FX\PostProcess\BloomExtract.xnb" />
+    <AndroidAsset Include="Assets\Content\FX\PostProcess\Blur.xnb" />
     <AndroidAsset Include="Assets\Content\FX\PostProcess\C64Filter.xnb" />
+    <AndroidAsset Include="Assets\Content\FX\PostProcess\Convolution.xnb" />
+    <AndroidAsset Include="Assets\Content\FX\PostProcess\Film.xnb" />
     <AndroidAsset Include="Assets\Content\FX\PostProcess\FXAA.xnb" />
+    <AndroidAsset Include="Assets\Content\FX\PostProcess\GaussianBlur.xnb" />
+    <AndroidAsset Include="Assets\Content\FX\PostProcess\GrayScale.xnb" />
     <AndroidAsset Include="Assets\Content\FX\PostProcess\OculusDistortionCorrection.xnb" />
+    <AndroidAsset Include="Assets\Content\FX\PostProcess\Refraction.xnb" />
+    <AndroidAsset Include="Assets\Content\FX\PostProcess\SimpleBlur.xnb" />
     <AndroidAsset Include="Assets\Content\Misc\leftHand.xnb" />
     <AndroidAsset Include="Assets\Content\Misc\rightHand.xnb" />
+    <AndroidAsset Include="Assets\Content\Models\hexagone.xnb" />
+    <AndroidAsset Include="Assets\Content\Models\hexagone_basic.xnb" />
+    <AndroidAsset Include="Assets\Content\Models\hexagone_basic_0.xnb" />
+    <AndroidAsset Include="Assets\Content\Models\hexagone_brown.xnb" />
+    <AndroidAsset Include="Assets\Content\Models\hexagone_green.xnb" />
     <AndroidAsset Include="Assets\Content\Models\HexGrid.xnb" />
+    <AndroidAsset Include="Assets\Content\Models\Jack\JackOLantern.xnb" />
+    <AndroidAsset Include="Assets\Content\Models\Jack\PumpkinColor.xnb" />
     <AndroidAsset Include="Assets\Content\Textures\heightmap.xnb" />
+    <AndroidAsset Include="Assets\Content\Textures\hexagrid.xnb" />
     <AndroidAsset Include="Assets\Content\Textures\hexa_tex.xnb" />
     <AndroidAsset Include="Assets\Content\Textures\Kinect_Logo.xnb" />
     <AndroidAsset Include="Assets\Content\Textures\lava_bump.xnb" />
@@ -192,17 +210,5 @@
     <AndroidAsset Include="Assets\Content\Textures\UI\grey_checkmarkGrey.xnb" />
     <AndroidAsset Include="Assets\Content\Textures\UI\grey_checkmarkWhite.xnb" />
     <AndroidAsset Include="Assets\Content\Textures\UI\grey_panel.xnb" />
-    <AndroidAsset Include="Assets\Content\FX\PostProcess\BloomCombine.xnb" />
-    <AndroidAsset Include="Assets\Content\FX\PostProcess\BloomExtract.xnb" />
-    <AndroidAsset Include="Assets\Content\FX\PostProcess\Film.xnb" />
-    <AndroidAsset Include="Assets\Content\FX\PostProcess\GaussianBlur.xnb" />
-    <AndroidAsset Include="Assets\Content\FX\PostProcess\GrayScale.xnb" />
-    <AndroidAsset Include="Assets\Content\FX\PostProcess\Refraction.xnb" />
-    <AndroidAsset Include="Assets\Content\FX\PostProcess\SimpleBlur.xnb" />
-    <AndroidAsset Include="Assets\Content\FX\PostProcess\Convolution.xnb" />
-    <AndroidAsset Include="Assets\Content\Textures\hexagrid.xnb" />
-    <AndroidAsset Include="Assets\Content\README.txt" />
-    <AndroidAsset Include="Assets\Content\Models\Jack\JackOLantern.xnb" />
-    <AndroidAsset Include="Assets\Content\Models\Jack\PumpkinColor.xnb" />
   </ItemGroup>
 </Project>

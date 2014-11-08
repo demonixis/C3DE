@@ -24,12 +24,13 @@ namespace C3DE.Demo.Scenes
 
             // Camera
             var camera = new CameraPrefab("camera");
-            Add(camera);
             camera.AddComponent<OrbitController>();
             camera.AddComponent<DemoBehaviour>();
+            camera.AddComponent<PostProcessSwitcher>();
+            Add(camera);
 
             // Light
-            var lightPrefab = new LightPrefab("lightPrefab", LightType.Point);
+            var lightPrefab = new LightPrefab("lightPrefab", LightType.Directional);
             Add(lightPrefab);
 
             var sceneObject = new SceneObject("HexaGrid");

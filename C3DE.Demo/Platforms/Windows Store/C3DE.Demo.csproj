@@ -109,10 +109,7 @@
       <Link>Properties\AssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="..\..\DemoGame.cs">
-      <Link>Scripts\DemoGame.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Scripts\FresnelMaterial.cs">
-      <Link>Scripts\FresnelMaterial.cs</Link>
+      <Link>DemoGame.cs</Link>
     </Compile>
     <Compile Include="..\..\Scripts\ControllerSwitcher.cs">
       <Link>Scripts\ControllerSwitcher.cs</Link>
@@ -147,23 +144,29 @@
     <Compile Include="..\..\Scripts\WeightMapViewer.cs">
       <Link>Scripts\WeightMapViewer.cs</Link>
     </Compile>
-    <Compile Include="..\..\Scenes\ProceduralTerrainWater.cs">
-      <Link>Scenes\ProceduralTerrainWater.cs</Link>
+    <Compile Include="..\..\Scenes\MenuDemo.cs">
+      <Link>Scenes\MenuDemo.cs</Link>
     </Compile>
-    <Compile Include="..\..\Scenes\ProceduralTerrainLava.cs">
-      <Link>Scenes\ProceduralTerrainLava.cs</Link>
+    <Compile Include="..\..\Scenes\HalloweenDemo.cs">
+      <Link>Scenes\HalloweenDemo.cs</Link>
     </Compile>
     <Compile Include="..\..\Scenes\HeightmapDemo.cs">
       <Link>Scenes\HeightmapDemo.cs</Link>
     </Compile>
-    <Compile Include="..\..\Scenes\LightingDemo.cs">
-      <Link>Scenes\LightingDemo.cs</Link>
+    <Compile Include="..\..\Scenes\ProceduralTerrainLava.cs">
+      <Link>Scenes\ProceduralTerrainLava.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Scenes\ProceduralTerrainWater.cs">
+      <Link>Scenes\ProceduralTerrainWater.cs</Link>
     </Compile>
     <Compile Include="..\..\Scenes\HexagonGridTerrain.cs">
       <Link>Scenes\HexagonGridTerrain.cs</Link>
     </Compile>
-    <Compile Include="..\..\Scenes\MenuDemo.cs">
-      <Link>Scenes\MenuDemo.cs</Link>
+    <Compile Include="..\..\Scripts\PostProcessSwitcher.cs">
+      <Link>Scripts\PostProcessSwitcher.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Scripts\VRRendererSwitcher.cs">
+      <Link>Scripts\VRRendererSwitcher.cs</Link>
     </Compile>
   </ItemGroup>
   <ItemGroup>

@@ -105,6 +105,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Application.cs" />
+    <Compile Include="AudioManager.cs" />
     <Compile Include="Components\Behaviour.cs" />
     <Compile Include="Components\Controllers\Controller.cs" />
     <Compile Include="Components\Controllers\OrbitController.cs" />
@@ -113,25 +114,29 @@
     <Compile Include="Components\Colliders\BoxCollider.cs" />
     <Compile Include="Components\Colliders\Collider.cs" />
     <Compile Include="Components\Colliders\SphereCollider.cs" />
-    <Compile Include="Components\Controllers\SwipeZone.cs" />
-    <Compile Include="Components\Controllers\VirtualButton.cs" />
-    <Compile Include="Components\Controllers\VirtualGamepad.cs" />
+    <Compile Include="Components\Controllers\Mobile\SwipeZone.cs" />
+    <Compile Include="Components\Controllers\Mobile\VirtualButton.cs" />
+    <Compile Include="Components\Controllers\Mobile\VirtualGamepad.cs" />
     <Compile Include="Components\Lights\Light.cs" />
     <Compile Include="Components\Renderers\MeshRenderer.cs" />
     <Compile Include="ICloneable.cs" />
     <Compile Include="Input.cs" />
     <Compile Include="IRenderer.cs" />
     <Compile Include="Materials\DummyMaterial.cs" />
+    <Compile Include="Materials\FresnelMaterial.cs" />
     <Compile Include="Materials\LavaMaterial.cs" />
     <Compile Include="Materials\TerrainMaterial.cs" />
     <Compile Include="Materials\ToonMaterial.cs" />
     <Compile Include="PostProcess\BloomPass.cs" />
     <Compile Include="PostProcess\BloomSettings.cs" />
     <Compile Include="PostProcess\C64FilterPass.cs" />
+    <Compile Include="PostProcess\ConvolutionPass.cs" />
+    <Compile Include="PostProcess\FilmPass.cs" />
     <Compile Include="PostProcess\FXAAPass.cs" />
-    <Compile Include="PostProcess\GreyScalePass.cs" />
+    <Compile Include="PostProcess\GrayScalePass.cs" />
     <Compile Include="PostProcess\RefractionPass.cs" />
-    <Compile Include="PostProcess\SimpleBlurPass.cs" />
+    <Compile Include="VRMobileRenderer.cs" />
+    <Compile Include="VRRenderer.cs" />
     <Compile Include="Prefabs\MeshPrefab.cs" />
     <Compile Include="QuadRenderer.cs" />
     <Compile Include="Geometries\CubeGeometry.cs" />
@@ -147,6 +152,7 @@
     <Compile Include="Materials\ReflectiveMaterial.cs" />
     <Compile Include="Materials\SimpleMaterial.cs" />
     <Compile Include="Materials\TransparentMaterial.cs" />
+    <Compile Include="PostProcess\SimpleBlurPass.cs" />
     <Compile Include="RenderSettings.cs" />
     <Compile Include="Resources\ResourcesHelper.cs" />
     <Compile Include="SceneManager.cs" />

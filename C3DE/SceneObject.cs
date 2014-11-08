@@ -110,6 +110,7 @@ namespace C3DE
             transform.Awake();
 
             enabled = true;
+            initialized = false;
             IsStatic = false;
             IsPrefab = false;
 
@@ -127,10 +128,13 @@ namespace C3DE
             {
                 initialized = true;
 
+                // Sort component now then initialize it.
+                components.Sort();
+
                 for (int i = 0; i < components.Count; i++)
                 {
+					components[i].initialized = true;
                     components[i].Start();
-                    components[i].initialized = true;
                 }
             }
         }
@@ -215,10 +219,15 @@ namespace C3DE
             component.Awake();
 
             components.Add(component);
-            components.Sort();
 
-            if (initialized && !component.Initialized)
-                component.Start();
+			if (initialized && !component.Initialized) 
+			{
+				component.initialized = true;
+				component.Start ();
+
+                // Sort components here only if the SceneObject is already initialized.
+                components.Sort();
+			}
 
             NotifyComponentChanged(component);
 

@@ -104,9 +104,11 @@ namespace C3DE.Components
                     OnEnabled();
                 else
                     OnDisabled();
+
+				return true;
             }
 
-            return value != enabled;
+			return false;
         }
 
         public virtual void Awake()

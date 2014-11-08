@@ -13,7 +13,6 @@ namespace C3DE.Components.Controllers.Mobile
         private Vector2 _position;
         private Texture2D _texture;
         private bool _mustCenter;
-
         private Vector2 _limits;
 		private Rectangle _borderLimits;
 
@@ -92,6 +91,7 @@ namespace C3DE.Components.Controllers.Mobile
         {
 			_i = 0;
 			_exitLoop = false;
+            _tReleased = true;
 
 			while (_i < Input.Touch.MaxFingerPoints && !_exitLoop) 
 			{

@@ -6,8 +6,8 @@ namespace C3DE.Inputs
 {
     public class TouchComponent : GameComponent
     {
-        private TouchCollection touchCollection;
-        private TouchCollection lastTouchCollection;
+        private TouchCollection _touchState;
+        private TouchCollection _lastTouchState;
         private Vector2[] _position;
         private Vector2[] _lastPosition;
         private bool[] _pressed;
@@ -60,14 +60,14 @@ namespace C3DE.Inputs
         /// </summary>
         public int TouchCount
         {
-            get { return touchCollection.Count; }
+            get { return _touchState.Count; }
         }
 
         public TouchComponent(Game game)
             : base(game)
         {
-            touchCollection = TouchPanel.GetState();
-            lastTouchCollection = touchCollection;
+            _touchState = TouchPanel.GetState();
+            _lastTouchState = _touchState;
 
             if (TouchPanel.GetCapabilities().IsConnected)
                 _maxFingerPoints = TouchPanel.GetCapabilities().MaximumTouchCount;
@@ -113,16 +113,16 @@ namespace C3DE.Inputs
                 _needUpdate = false;
             }
 
-            lastTouchCollection = touchCollection;
-            touchCollection = TouchPanel.GetState();
-
-            if (MaxFingerPoints > 0 && touchCollection.Count > 0)
+            _lastTouchState = _touchState;
+            _touchState = TouchPanel.GetState();
+       
+            if (MaxFingerPoints > 0 && _touchState.Count > 0)
             {
-                int touchCount = touchCollection.Count;
+                int touchCount = _touchState.Count;
 
                 for (int i = 0; i < MaxFingerPoints; i++)
                 {
-                    if (i + 1 <= touchCount)
+                    if (i < touchCount)
                         UpdateTouchState(i);
                     else
                         RestoreTouchState(i);
@@ -130,7 +130,7 @@ namespace C3DE.Inputs
 
                 _needReset = true;
             }
-            else if (_needReset && MaxFingerPoints > 0 && touchCollection.Count == 0)
+            else if (_needReset)
             {
                 for (int i = 0; i < MaxFingerPoints; i++)
                     RestoreTouchState(i);
@@ -143,13 +143,13 @@ namespace C3DE.Inputs
         {
             _lastPosition[index].X = _position[index].X;
             _lastPosition[index].Y = _position[index].Y;
-            _position[index].X = touchCollection[index].Position.X;
-            _position[index].Y = touchCollection[index].Position.Y;
+            _position[index].X = _touchState[index].Position.X;
+            _position[index].Y = _touchState[index].Position.Y;
 
-            _pressed[index] = touchCollection[index].State == TouchLocationState.Pressed;
-            _moved[index] = touchCollection[index].State == TouchLocationState.Moved;
-            _released[index] = touchCollection[index].State == TouchLocationState.Released || touchCollection[index].State == TouchLocationState.Invalid;
-            _pressure[index] = touchCollection[index].Pressure;
+            _pressed[index] = _touchState[index].State == TouchLocationState.Pressed;
+            _moved[index] = _touchState[index].State == TouchLocationState.Moved;
+            _released[index] = _touchState[index].State == TouchLocationState.Released || _touchState[index].State == TouchLocationState.Invalid;
+            _pressure[index] = _touchState[index].Pressure;
         }
 
         public void RestoreTouchState(int index = 0)
@@ -203,7 +203,7 @@ namespace C3DE.Inputs
                 return Vector2.Zero;
 
 			// For preventing bad delta
-			if (lastTouchCollection.Count - 1 < id || lastTouchCollection.Count == 0) 
+			if (_lastTouchState.Count - 1 < id || _lastTouchState.Count == 0) 
 				_lastPosition [id] = _position [id];
 
             _cacheVec2 = _position[id] - _lastPosition[id];
@@ -237,18 +237,10 @@ namespace C3DE.Inputs
 
         public bool JustPressed(int id = 0)
         {
-            if (id >= lastTouchCollection.Count)
+            if (id >= _lastTouchState.Count)
                 return false;
 
-            return (lastTouchCollection[id].State == TouchLocationState.Pressed || lastTouchCollection[id].State == TouchLocationState.Moved) && touchCollection[id].State == TouchLocationState.Released;
-        }
-
-        public bool JustReleased(int id = 0)
-        {
-            if (id >= lastTouchCollection.Count)
-                return false;
-
-            return touchCollection[id].State == TouchLocationState.Released && (lastTouchCollection[id].State == TouchLocationState.Pressed || lastTouchCollection[id].State == TouchLocationState.Moved);
+            return (_lastTouchState[id].State == TouchLocationState.Pressed || _lastTouchState[id].State == TouchLocationState.Moved) && (_touchState[id].State == TouchLocationState.Released);
         }
     }
 }

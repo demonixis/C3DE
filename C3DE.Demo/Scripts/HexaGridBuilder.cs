@@ -1,6 +1,8 @@
 ﻿using C3DE.Components;
+using C3DE.Components.Renderers;
 using C3DE.Materials;
 using C3DE.Prefabs;
+using C3DE.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -14,23 +16,26 @@ namespace C3DE.Demo.Scripts
 
         public int GridWidth { get; set; }
         public int GridDepth { get; set; }
+        public float TileScale { get; set; }
         public float Margin { get; set; }
 
         public HexaGridBuilder()
             : base()
         {
-            GridWidth = 25;
-            GridDepth = 25;
-            Margin = 1.1f;
+            GridWidth = 10;
+            GridDepth = 10;
+            Margin = 1.05f;
+            TileScale = 0.5f;
         }
 
         public override void Start()
         {
             _gridPrefab = new ModelPrefab("Hexa Tile");
-            _gridPrefab.Transform.LocalScale = new Vector3(5);
-            _gridPrefab.LoadModel("Models/HexGrid");
+            _gridPrefab.Transform.LocalScale = new Vector3(TileScale, 0.5f * TileScale, TileScale);
+            _gridPrefab.Transform.Rotation = new Vector3(0, MathHelper.Pi / 6, 0);
+            _gridPrefab.LoadModel("Models/hexagone");
             _gridPrefab.Renderer.MainMaterial = new SimpleMaterial(sceneObject.Scene);
-            _gridPrefab.Renderer.MainMaterial.MainTexture = Application.Content.Load<Texture2D>("Textures/hexa_tex");
+            _gridPrefab.Renderer.MainMaterial.MainTexture = Application.Content.Load<Texture2D>("Models/hexagone_basic");
             _gridPrefab.Enabled = false;
             sceneObject.Scene.Add(_gridPrefab);
 
@@ -68,12 +73,42 @@ namespace C3DE.Demo.Scripts
         {
             SceneObject cache = null;
 
+            var waterMaterial = _gridPrefab.Renderer.MainMaterial;
+            
+            var groundMaterial = new StandardMaterial(Scene.Main);
+            groundMaterial.MainTexture = Application.Content.Load<Texture2D>("Models/hexagone_green");
+
+            var montainMaterial = new StandardMaterial(Scene.Main);
+            montainMaterial.MainTexture = Application.Content.Load<Texture2D>("Models/hexagone_brown");
+            montainMaterial.DiffuseColor = Color.Red;
+
+            int rand = 0;
+            ModelRenderer mRenderer = null;
+
             for (int z = 0; z < GridDepth; z++)
             {
                 for (int x = 0; x < GridWidth; x++)
                 {
-                    cache = Scene.Instanciate(_gridPrefab, GetWorldCoordinate(x, z), Vector3.Zero);
+                    rand = RandomHelper.Range(0, 10);
+
+                    cache = Scene.Instanciate(_gridPrefab);
+                    cache.Transform.Position = GetWorldCoordinate(x, z);
                     cache.Transform.Parent = transform;
+
+                    mRenderer = cache.GetComponent<ModelRenderer>();
+
+                    if (rand % 2 == 0)
+                    {
+                        mRenderer.MainMaterial = groundMaterial;
+                        cache.Transform.LocalScale  += new Vector3(0, 0.5f, 0);
+                    }
+                    else if (rand % 5 == 0)
+                    {
+                        mRenderer.MainMaterial = montainMaterial;
+                        cache.Transform.LocalScale += new Vector3(0.0f, 1.5f, 0.0f);
+                    }
+
+                    cache.Transform.SetPosition(null, _gridPrefab.Renderer.BoundingSphere.Radius * cache.Transform.LocalScale.Y / 2, null);
                 }
             }
         }

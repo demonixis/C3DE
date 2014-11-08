@@ -144,6 +144,8 @@ namespace C3DE
 
                 _activeSceneIndex = _levelToLoad;
                 _levelToLoad = -1;
+
+                Scene.Main = _scenes[_activeSceneIndex];
  
                 _scenes[_activeSceneIndex].Initialize();
             }
