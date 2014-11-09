@@ -16,9 +16,10 @@ C3DE is a research project to create a small but powerfull 3D engine powered by 
 - Terrain: Flat, Random, Heightmap, multi textured
 - Materials: Standard, Simple, Reflective, Water, Lava, Custom
 - Shadow mapping
-- Input management: Keyboard, Mouse, Gamepad 
+- Input management: Keyboard, Mouse, Gamepad, Touch
 - Procedural texture generation
-- PostProcess
+- Post Processing support
+- UI management (Button, Checkbox, Label, Slider, Texture) 
 
 ### Sample
 
@@ -46,19 +47,37 @@ public class SuperCoolGame : Scene
         terrain.Renderer.Material = new StandardMaterial(this);
         terrain.Renderer.Material.MainTexture = Content.Load<Texture2D>("Textures/terrain");
 		Add(terrain);
+		
+		// Bloom Post Process
+		var bloomPass = new BloomPass();
+		bloomPass.Settings = new BloomSettings("Bloom Custom", 0.15f, 1f, 4.0f, 1.0f, 1f, 1f);
+		Add(bloomPass);
     }
 }
 ```
 
 ### What's next ?
-- Post processing
+- Post processing (manager to allow chaining)
 - More light types (Spot, Area)
 - Multipass lighting
-- Instancing
+- Multipass material
 - Collision management
-- Editor
+- Network (There are a branch for that)
+- Editor (Here too)
+
+### Supported Platforms
+- Android*
+- Windows (DirectX, OpenGL**)
+- Windows Store Apps
+- Linux**
+
+* Android development require a Xamarin license for deploy to your device.
+** It's working but there are no "official" support at this time.
+
 
 ### Requirement
-You need a fresh copy of the MonoGame assembly (OpenGL or DirectX).
+You need a fresh copy of the MonoGame assembly.
 
-MIT License
+### Licence
+
+C3DE use licenced under the MIT License, please take your time to read the LICENSE file for more informations.
