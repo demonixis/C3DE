@@ -36,13 +36,13 @@ namespace C3DE.Geometries
         public VertexBuffer VertexBuffer
         {
             get { return _vertexBuffer; }
-            protected set { _vertexBuffer = value; }
+            internal protected set { _vertexBuffer = value; }
         }
 
         public IndexBuffer IndexBuffer
         {
             get { return _indexBuffer; }
-            protected set { _indexBuffer = value; }
+            internal protected set { _indexBuffer = value; }
         }
 
         public Vector3 Size
@@ -60,9 +60,9 @@ namespace C3DE.Geometries
         public bool Constructed
         {
             get { return _constructed; }
-            protected set
+            internal protected set
             {
-                _constructed = true;
+                _constructed = value;
                 NotifyConstructionDone();
             }
         }

@@ -8,10 +8,10 @@ using System;
 
 namespace C3DE.Prefabs
 {
-    public class WaterPrefab : SceneObject
+    public class LavaPrefab : SceneObject
     {
         protected MeshRenderer renderer;
-        protected WaterMaterial material;
+        protected LavaMaterial material;
         protected BoxCollider collider;
 
         public MeshRenderer Renderer
@@ -19,7 +19,7 @@ namespace C3DE.Prefabs
             get { return renderer; }
         }
 
-        public WaterMaterial Material
+        public LavaMaterial Material
         {
             get { return material; }
         }
@@ -29,26 +29,26 @@ namespace C3DE.Prefabs
             get { return collider; }
         }
 
-        public WaterPrefab(string name)
+        public LavaPrefab(string name)
             : base(name)
         {
             renderer = AddComponent<MeshRenderer>();
             renderer.CastShadow = false;
-            renderer.ReceiveShadow = false;
+            renderer.ReceiveShadow = true;
             renderer.Geometry = new PlaneGeometry();
             collider = AddComponent<BoxCollider>();
             collider.IsPickable = false;
         }
 
-        public void Generate(string waterTexture, string bumpTexture, Vector3 size)
+        public void Generate(string lavaTexture, string bumpTexture, Vector3 size)
         {
             if (scene == null)
                 throw new Exception("You need to attach this prefab to the scene.");
 
-            material = new WaterMaterial(scene);
+            material = new LavaMaterial(scene);
 
-            if (!string.IsNullOrEmpty(waterTexture))
-                material.MainTexture = Application.Content.Load<Texture2D>(waterTexture);
+            if (!string.IsNullOrEmpty(lavaTexture))
+                material.MainTexture = Application.Content.Load<Texture2D>(lavaTexture);
 
             if (!string.IsNullOrEmpty(bumpTexture))
                 material.NormalMap = Application.Content.Load<Texture2D>(bumpTexture);

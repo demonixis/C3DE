@@ -148,7 +148,7 @@ namespace C3DE.Inputs
 
             _pressed[index] = _touchState[index].State == TouchLocationState.Pressed;
             _moved[index] = _touchState[index].State == TouchLocationState.Moved;
-            _released[index] = _touchState[index].State == TouchLocationState.Released || _touchState[index].State == TouchLocationState.Invalid;
+            _released[index] = _touchState[index].State == TouchLocationState.Released;
             _pressure[index] = _touchState[index].Pressure;
         }
 

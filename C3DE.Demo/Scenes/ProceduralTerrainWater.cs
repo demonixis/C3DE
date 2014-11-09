@@ -46,9 +46,7 @@ namespace C3DE.Demo.Scenes
             terrain.Transform.Translate(-terrain.Width >> 1, 0, -terrain.Depth / 2);
             Add(terrain);
 
-            terrain.SandLayer = 0.5f;
-            terrain.GroundLayer = 4;
-            terrain.RockLayer = 15;
+            terrain.SetWeightData(0.5f, 4, 15, 30);
 
             terrainMat.MainTexture = Application.Content.Load<Texture2D>("Textures/Terrain/Grass");
             terrainMat.SandTexture = Application.Content.Load<Texture2D>("Textures/Terrain/Sand");

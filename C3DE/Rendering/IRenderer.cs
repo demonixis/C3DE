@@ -1,9 +1,8 @@
 ﻿using C3DE.Components;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using System.Collections.Generic;
 
-namespace C3DE
+namespace C3DE.Rendering
 {
     public interface IRenderer
     {

@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 
-namespace C3DE
+namespace C3DE.Rendering
 {
     /// <summary>
     /// The renderer is responsible to render a scene with a camera view to the screen.

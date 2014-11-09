@@ -168,6 +168,12 @@
     <Compile Include="..\..\Scripts\VRRendererSwitcher.cs">
       <Link>Scripts\VRRendererSwitcher.cs</Link>
     </Compile>
+	<Compile Include="..\..\Scripts\UIWidgetDemo.cs">
+      <Link>Scripts\UIWidgetDemo.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Scenes\GUIDemo.cs">
+      <Link>Scenes\GUIDemo.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">

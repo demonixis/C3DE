@@ -1,5 +1,4 @@
 ﻿using C3DE.Components;
-using C3DE.PostProcess;
 using C3DE.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
@@ -7,7 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 
-namespace C3DE
+namespace C3DE.Rendering
 {
     public sealed class OculusRiftDK2013_Metric
     {

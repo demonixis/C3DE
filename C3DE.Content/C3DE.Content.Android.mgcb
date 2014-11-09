@@ -2,7 +2,7 @@
 #----------------------------- Global Properties ----------------------------#
 
 /outputDir:..\C3DE.Demo\Platforms\Android\Assets\Content
-/intermediateDir:obj
+/intermediateDir:obj\Android
 /platform:Android
 /config:
 /profile:HiDef
@@ -630,4 +630,10 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:TextureFormat=Color
 /build:Models/hexagone_green.png
+
+#begin FX/PostProcess/CGAFilter.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:FX/PostProcess/CGAFilter.fx
 

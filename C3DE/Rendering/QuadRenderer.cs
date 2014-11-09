@@ -1,8 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
 
-namespace C3DE
+namespace C3DE.Rendering
 {
     public class QuadRenderer
     {

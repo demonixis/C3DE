@@ -20,6 +20,8 @@ namespace C3DE.Demo
             Application.SceneManager.Add(new ProceduralTerrainLava());
             Application.SceneManager.Add(new HalloweenDemo());
             Application.SceneManager.Add(new HexagonTerrainDemo());
+            Application.SceneManager.Add(new GUIDemo());
+            Application.LoadLevel(0);
             Application.LoadLevel(0);
 
             base.Initialize();

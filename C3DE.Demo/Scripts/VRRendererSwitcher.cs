@@ -1,10 +1,6 @@
 ﻿using C3DE.Components;
+using C3DE.Rendering;
 using Microsoft.Xna.Framework.Input;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace C3DE.Demo.Scripts
 {

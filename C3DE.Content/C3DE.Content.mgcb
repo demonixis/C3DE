@@ -2,7 +2,7 @@
 #----------------------------- Global Properties ----------------------------#
 
 /outputDir:..\C3DE.Demo\Content
-/intermediateDir:obj
+/intermediateDir:obj\Windows
 /platform:Windows
 /config:
 /profile:HiDef

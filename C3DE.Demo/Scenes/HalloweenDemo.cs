@@ -52,16 +52,10 @@ namespace C3DE.Demo.Scenes
             Add(terrain);
 
             // Lava
-            var lavaMaterial = new LavaMaterial(this);
-            lavaMaterial.MainTexture = Application.Content.Load<Texture2D>("Textures/lava_texture");
-            lavaMaterial.NormalMap = Application.Content.Load<Texture2D>("Textures/lava_bump");
-
-            var lava = new WaterPrefab("water");
-            lava.Renderer.Material = lavaMaterial;
-            lava.Renderer.ReceiveShadow = true;
-            lava.Renderer.Geometry.Size = new Vector3(terrain.Width * 0.5f);
-            lava.Renderer.Geometry.Generate();
+            var lava = new LavaPrefab("water");
             Add(lava);
+
+            lava.Generate("Textures/lava_texture", "Textures/lava_bump", new Vector3(terrain.Width * 0.5f));
 
             var jack = new ModelPrefab("Jack");
             jack.Transform.Rotate(-MathHelper.PiOver2, MathHelper.Pi, 0);

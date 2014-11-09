@@ -199,9 +199,19 @@ namespace C3DE.UI
 
         #endregion
 
-        #region Horizontal Slider Widget
+        #region Horizontal and Vertical Slider Widget
 
         public float HorizontalSlider(ref Rectangle rect, float value, float leftValue = 0.0f, float rightValue = 1.0f)
+        {
+            return Slider(ref rect, value, leftValue, rightValue, true);
+        }
+
+        public float VerticalSlider(ref Rectangle rect, float value, float leftValue = 0.0f, float rightValue = 1.0f)
+        {
+            return Slider(ref rect, value, leftValue, rightValue, false);
+        }
+
+        private float Slider(ref Rectangle rect, float value, float leftValue, float rightValue, bool horizontal)
         {
             // Transform into the correct coordinates.
             value = value / (rightValue + leftValue);
@@ -209,8 +219,8 @@ namespace C3DE.UI
             // Compute the movable slider position.
             _cacheRect.X = rect.X + 4;
             _cacheRect.Y = rect.Y + 4;
-            _cacheRect.Width = (int)(rect.Width * value) - 8;
-            _cacheRect.Height = rect.Height - 8;
+            _cacheRect.Width = horizontal ? (int)(rect.Width * value) - 8 : rect.Width - 8;
+            _cacheRect.Height = !horizontal ? (int)(rect.Height * value) - 8 : rect.Height - 8;
 
             GetPointerPosition(ref _cacheVec2);
 
@@ -221,7 +231,12 @@ namespace C3DE.UI
             if (rect.Contains(_cacheVec2))
             {
                 if (Input.Mouse.Drag() || Input.Touch.Pressed())
-                    value = 1 - (rect.Right - _cacheVec2.X) / rect.Width;
+                {
+                    if (horizontal)
+                        value = 1 - (rect.Right - _cacheVec2.X) / rect.Width;
+                    else
+                        value = 1 - (rect.Bottom - _cacheVec2.Y) / rect.Height;
+                }
             }
 
             return (value * rightValue) + (value * leftValue); // Not good
@@ -267,7 +282,12 @@ namespace C3DE.UI
             _spriteBatch.Draw(texture, position, null, color);
         }
 
-        public void DrawTexture(ref Vector2 position, Texture2D texture, Rectangle? sourceRectangle, Color color, float rotation, ref Vector2 origin, ref Vector2 scale, SpriteEffects effect, float depth)
+        public void DrawTexture(Vector2 position, Texture2D texture, Rectangle? sourceRectangle, Color color, float rotation, Vector2 origin, Vector2 scale, SpriteEffects effect, float depth)
+        {
+            DrawTexture(texture, ref position, sourceRectangle, color, rotation, ref origin, ref scale, effect, depth);
+        }
+
+        public void DrawTexture(Texture2D texture, ref Vector2 position, Rectangle? sourceRectangle, Color color, float rotation, ref Vector2 origin, ref Vector2 scale, SpriteEffects effect, float depth)
         {
             _spriteBatch.Draw(texture, position, sourceRectangle, color, rotation, origin, scale, effect, depth);
         }

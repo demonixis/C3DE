@@ -148,6 +148,39 @@ namespace C3DE.Utils
             return cubeMap;
         }
 
+        public static Texture2D CreateTriangleTexture(Color first, Color second, int width = 128, int height = 128)
+        {
+            Texture2D texture = new Texture2D(Application.GraphicsDevice, width, height);
+            Color[] colors = new Color[width * height];
+
+            var triangle = new Point[3]
+            {
+                new Point(0, 0),
+                new Point(0, height),
+                new Point(width, height)
+            };
+
+            Point p;
+
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    p.X = x;
+                    p.Y = y;
+
+                    if (IsPointInsideTriangle(ref triangle, ref p))
+                        colors[x + y * width] = first;
+                    else
+                        colors[x + y * width] = second;
+                }
+            }
+
+            texture.SetData<Color>(colors);
+
+            return texture;
+        }
+
         /// <summary>
         /// Combine two texture into one.
         /// </summary>
@@ -174,6 +207,20 @@ namespace C3DE.Utils
             spriteBatch.Dispose();
 
             return (Texture2D)renderTarget;
+        }
+
+        private static float ComputeZCoordinate(ref Point p1, ref Point p2, ref Point p3)
+        {
+            return p1.X * (p2.Y - p3.Y) + p2.X * (p3.Y - p1.Y) + p3.X * (p1.Y - p2.Y);
+        }
+
+        public static bool IsPointInsideTriangle(ref Point[] triangle, ref Point point)
+        {
+            float z1 = ComputeZCoordinate(ref triangle[0], ref triangle[1], ref point);
+            float z2 = ComputeZCoordinate(ref triangle[1], ref triangle[2], ref point);
+            float z3 = ComputeZCoordinate(ref triangle[2], ref triangle[0], ref point);
+
+            return (z1 > 0 && z2 > 0 && z3 > 0) || (z1 < 0 && z2 < 0 && z3 < 0);
         }
     }
 }

@@ -24,5 +24,15 @@ namespace C3DE.Prefabs
         {
             camera.Setup(position, target, upVector);
         }
+
+        public void LookAt(Transform transform)
+        {
+            camera.Target = transform.Position;
+        }
+
+        public void LookAt(Vector3 position)
+        {
+            camera.Target = position;
+        }
     }
 }

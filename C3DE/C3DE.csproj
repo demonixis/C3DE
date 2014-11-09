@@ -86,7 +86,8 @@
     <Compile Include="Input.cs" />
     <Compile Include="Inputs\InputManager.cs" />
     <Compile Include="Inputs\InputProfile.cs" />
-    <Compile Include="IRenderer.cs" />
+    <Compile Include="Prefabs\LavaPrefab.cs" />
+    <Compile Include="Rendering\IRenderer.cs" />
     <Compile Include="Materials\DummyMaterial.cs" />
     <Compile Include="Materials\FresnelMaterial.cs" />
     <Compile Include="Materials\LavaMaterial.cs" />
@@ -101,10 +102,10 @@
     <Compile Include="PostProcess\FXAAPass.cs" />
     <Compile Include="PostProcess\GrayScalePass.cs" />
     <Compile Include="PostProcess\RefractionPass.cs" />
-    <Compile Include="VRMobileRenderer.cs" />
-    <Compile Include="VRRenderer.cs" />
+    <Compile Include="Rendering\VRMobileRenderer.cs" />
+    <Compile Include="Rendering\VRRenderer.cs" />
     <Compile Include="Prefabs\MeshPrefab.cs" />
-    <Compile Include="QuadRenderer.cs" />
+    <Compile Include="Rendering\QuadRenderer.cs" />
     <Compile Include="Geometries\CubeGeometry.cs" />
     <Compile Include="Geometries\CylinderGeometry.cs" />
     <Compile Include="Geometries\Geometry.cs" />
@@ -148,11 +149,10 @@
     <Compile Include="Scene.cs" />
     <Compile Include="SceneObject.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Renderer.cs" />
+    <Compile Include="Rendering\Renderer.cs" />
     <Compile Include="Components\Lights\ShadowGenerator.cs" />
     <Compile Include="Skybox.cs" />
     <Compile Include="Time.cs" />
-    <Compile Include="Utils\MeshHelper.cs" />
     <Compile Include="Utils\NoiseGenerator.cs" />
     <Compile Include="Utils\RandomHelper.cs" />
     <Compile Include="Utils\SmartList.cs" />

@@ -116,6 +116,12 @@
     <Compile Include="..\..\Scripts\VRRendererSwitcher.cs">
       <Link>Scripts\VRRendererSwitcher.cs</Link>
     </Compile>
+    <Compile Include="..\..\Scripts\UIWidgetDemo.cs">
+      <Link>Scripts\UIWidgetDemo.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Scenes\GUIDemo.cs">
+      <Link>Scenes\GUIDemo.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Properties\AndroidManifest.xml" />
@@ -210,5 +216,6 @@
     <AndroidAsset Include="Assets\Content\Textures\UI\grey_checkmarkGrey.xnb" />
     <AndroidAsset Include="Assets\Content\Textures\UI\grey_checkmarkWhite.xnb" />
     <AndroidAsset Include="Assets\Content\Textures\UI\grey_panel.xnb" />
+    <AndroidAsset Include="Assets\Content\FX\PostProcess\CGAFilter.xnb" />
   </ItemGroup>
 </Project>

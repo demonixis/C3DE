@@ -17,6 +17,7 @@ namespace C3DE.Demo.Scripts
         private Rectangle _check2Rect;
         private Rectangle _slider1Rect;
         private Rectangle _slider2Rect;
+        private Rectangle _slider3Rect;
         private Vector2 _text3Position;
         private Vector2 _text4Position;
         private Rectangle _btn1Rect;
@@ -27,6 +28,7 @@ namespace C3DE.Demo.Scripts
         private bool _check2Result;
         private float _slider1Value;
         private float _slider2Value;
+        private float _slider3Value;
         private string _text1Value;
         private string _text2Value;
 
@@ -39,6 +41,7 @@ namespace C3DE.Demo.Scripts
 
             _slider1Value = 20;
             _slider2Value = 0.8f;
+            _slider3Value = 0.45f;
 
             _text1Value = "Welcome to the Graphics User Interface module";
             _text2Value = "This is a label which you can use to display informations.\nIt's multiline you just have to use the '\\n' character.";
@@ -49,7 +52,7 @@ namespace C3DE.Demo.Scripts
             var width = 600;
             var height = 390;
 
-            _boxRect = new Rectangle(Screen.VirtualWidthPerTwo - width / 2, Screen.VirtualHeightPerTwo - height / 2, width, height);
+            _boxRect = new Rectangle(Screen.VirtualWidthPerTwo - width / 2, Screen.VirtualHeightPerTwo - (height >> 1), width, height);
 
             var temp1 = GUI.Skin.Font.MeasureString(_text1Value);
             var temp2 = GUI.Skin.Font.MeasureString(_text2Value);
@@ -68,8 +71,10 @@ namespace C3DE.Demo.Scripts
             _text3Position = new Vector2(_slider1Rect.Right + 10, _slider1Rect.Y);
             _text4Position = new Vector2(_slider2Rect.Right + 10, _slider2Rect.Y);
 
+            _slider3Rect = new Rectangle(_boxRect.Right - 35, _boxRect.Y + (_boxRect.Height >> 1) - (350 >> 1), 30, 350);
+
             _btn1Rect = new Rectangle(_boxRect.X, _boxRect.Bottom + 10, 150, 45);
-            _btn2Rect = new Rectangle(_boxRect.Right - 150 - 10, _boxRect.Bottom + 10, 150, 40);
+            _btn2Rect = new Rectangle(_boxRect.Right - 150, _boxRect.Bottom + 10, 150, 45);
         }
 
         public override void OnGUI(GUI ui)
@@ -87,6 +92,8 @@ namespace C3DE.Demo.Scripts
 
             ui.Label(ref _text3Position, _slider1Value.ToString());
             ui.Label(ref _text4Position, _slider2Value.ToString());
+
+            _slider3Value = ui.VerticalSlider(ref _slider3Rect, _slider3Value);
 
             if (ui.Button(ref _btn1Rect, "Ok"))
                 _text2Value = "You've clicked on the OK button";
