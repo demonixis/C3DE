@@ -35,8 +35,7 @@ namespace C3DE.Demo.Scenes
             lightPrefab.Transform.Translate(0, 10, 0);
             lightPrefab.Light.ShadowGenerator.SetShadowMapSize(Application.GraphicsDevice, 1024);
             lightPrefab.EnableShadows = true;
-            lightPrefab.AddComponent<LightSwitcher>();
-            lightPrefab.AddComponent<LightMoverKeys>();
+            lightPrefab.AddComponent<PostProcessSwitcher>();
             Add(lightPrefab);
 
             // A terrain with its material.

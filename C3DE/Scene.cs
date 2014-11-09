@@ -216,6 +216,9 @@ namespace C3DE
             foreach (Material material in materials)
                 material.Dispose();
 
+            foreach (PostProcessPass pass in postProcessPasses)
+                pass.Dispose();
+
             Clear();
         }
 
@@ -234,6 +237,7 @@ namespace C3DE
             scripts.Clear();
             sceneObjects.Clear();
             prefabs.Clear();
+            postProcessPasses.Clear();
             _componentsToDestroy.Clear();
             _needRemoveCheck = false;
         }

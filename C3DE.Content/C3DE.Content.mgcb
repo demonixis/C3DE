@@ -645,3 +645,9 @@
 /processorParam:TextureFormat=Color
 /build:Models/hexagone_green.png
 
+#begin FX/PostProcess/CGAFilter.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:FX/PostProcess/CGAFilter.fx
+

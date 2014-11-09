@@ -95,6 +95,7 @@
     <Compile Include="PostProcess\BloomPass.cs" />
     <Compile Include="PostProcess\BloomSettings.cs" />
     <Compile Include="PostProcess\C64FilterPass.cs" />
+    <Compile Include="PostProcess\CGAFilterPass.cs" />
     <Compile Include="PostProcess\ConvolutionPass.cs" />
     <Compile Include="PostProcess\FilmPass.cs" />
     <Compile Include="PostProcess\FXAAPass.cs" />

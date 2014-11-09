@@ -8,8 +8,8 @@ namespace C3DE.Demo
 {
     public static class DemoGame
     {
-        public const int ScreenWidth = 1440;
-        public const int ScreenHeight = 900;
+        public const int ScreenWidth = 1024;
+        public const int ScreenHeight = 600;
 
         public static string[] BlueSkybox = new string[6] 
         {
@@ -43,7 +43,7 @@ namespace C3DE.Demo
             skin.Checkbox[0] = content.Load<Texture2D>("Textures/UI/grey_box");
             skin.Checkbox[1] = content.Load<Texture2D>("Textures/UI/grey_checkmarkWhite");
             skin.Checkbox[2] = content.Load<Texture2D>("Textures/UI/grey_checkmarkGrey");
-            skin.Font = content.Load<SpriteFont>("Font/SegoeUILight");
+            skin.Font = content.Load<SpriteFont>("Font/Default");
             skin.TextColor = Color.Black;
             return skin;
         }
@@ -54,7 +54,7 @@ namespace C3DE.Demo
         {
             using (var game = new Engine("C3DE Game Engine", ScreenWidth, ScreenHeight))
             {
-                //Screen.SetVirtualResolution(1280, 800);
+                Screen.SetVirtualResolution(1024, 600);
                 Application.SceneManager.Add(new MenuDemo(), true);
                 Application.SceneManager.Add(new HeightmapDemo());
                 Application.SceneManager.Add(new ProceduralTerrainWater());

@@ -26,7 +26,7 @@ namespace C3DE.Demo.Scripts
 
         public override void Start()
         {
-            _passes = new PostProcessPass[8];
+            _passes = new PostProcessPass[9];
             _passCounter = 0;
 
             // Setup PostProcess.
@@ -35,6 +35,10 @@ namespace C3DE.Demo.Scripts
             AddPass(bloomPass);
 
             AddPass(new C64FilterPass());
+
+            var cgaPass = new CGAFilterPass();
+            cgaPass.SetPalette(cgaPass.Palette2LI);
+            AddPass(cgaPass);
 
             var convolutionPass = new ConvolutionPass();
             AddPass(convolutionPass);
@@ -57,7 +61,7 @@ namespace C3DE.Demo.Scripts
 
             // Setup UI
             var elementsCount = _passes.Length + 1;
-            var titles = new string[] { "None", "Bloom", "C64 Filter", "Convolution", "Film", "FXAA", "GrayScale", "Refraction", "Simple Blur" };
+            var titles = new string[] { "None", "Bloom", "C64 Filter", "CGA Filter", "Convolution", "Film", "FXAA", "GrayScale", "Refraction", "Simple Blur" };
 
             _boxRect = new Rectangle(Screen.VirtualWidth - 190, 10, 180, 45 * (_passes.Length + 1));
 
