@@ -1,17 +1,11 @@
-﻿using C3DE.Components.Colliders;
-using C3DE.Components.Controllers;
+﻿using C3DE.Components.Controllers;
 using C3DE.Components.Lights;
-using C3DE.Components.Renderers;
 using C3DE.Demo.Scripts;
-using C3DE.Geometries;
 using C3DE.Materials;
-using C3DE.PostProcess;
 using C3DE.Prefabs;
-using C3DE.UI;
-using C3DE.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
+
 namespace C3DE.Demo.Scenes
 {
     public class HalloweenDemo : Scene

@@ -143,7 +143,6 @@ namespace C3DE
                 Camera.Main = null;
                 GUI.Enabled = true;
                 GUI.Effect = null;
-                GUI.Matrix = Matrix.Identity;
 
                 _activeSceneIndex = _levelToLoad;
                 _levelToLoad = -1;

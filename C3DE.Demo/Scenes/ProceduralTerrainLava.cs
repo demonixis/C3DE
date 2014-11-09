@@ -1,15 +1,9 @@
-﻿using C3DE.Components.Colliders;
-using C3DE.Components.Lights;
-using C3DE.Components.Renderers;
+﻿using C3DE.Components.Lights;
 using C3DE.Demo.Scripts;
-using C3DE.Geometries;
 using C3DE.Materials;
 using C3DE.Prefabs;
-using C3DE.UI;
-using C3DE.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
 
 namespace C3DE.Demo.Scenes
 {
@@ -35,7 +29,6 @@ namespace C3DE.Demo.Scenes
             lightPrefab.Transform.Translate(0, 10, 0);
             lightPrefab.Light.ShadowGenerator.SetShadowMapSize(Application.GraphicsDevice, 1024);
             lightPrefab.EnableShadows = true;
-            lightPrefab.AddComponent<PostProcessSwitcher>();
             Add(lightPrefab);
 
             // A terrain with its material.

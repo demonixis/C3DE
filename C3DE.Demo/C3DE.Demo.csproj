@@ -70,6 +70,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DemoGame.cs" />
+    <Compile Include="Scenes\GUIDemo.cs" />
     <Compile Include="Scenes\HalloweenDemo.cs" />
     <Compile Include="Scenes\HexagonGridTerrain.cs" />
     <Compile Include="Scenes\ProceduralTerrainLava.cs" />
@@ -87,6 +88,7 @@
     <Compile Include="Scripts\PostProcessSwitcher.cs" />
     <Compile Include="Scripts\RayPickingTester.cs" />
     <Compile Include="Scripts\SimplePath.cs" />
+    <Compile Include="Scripts\UIWidgetDemo.cs" />
     <Compile Include="Scripts\VRRendererSwitcher.cs" />
     <Compile Include="Scripts\WeightMapViewer.cs" />
     <Compile Include="Scenes\ProceduralTerrainWater.cs" />

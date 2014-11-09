@@ -95,7 +95,7 @@ namespace C3DE.UI
 
             _cacheVec2 = Skin.Font.MeasureString(text);
             _cacheVec2.X = (rect.X + rect.Width / 2) - (_cacheVec2.X / 2);
-            _cacheVec2.Y = rect.Y + Skin.Margin;
+            _cacheVec2.Y = rect.Y + Skin.TextMargin;
 
             Label(_cacheVec2, text);
         }
@@ -156,7 +156,7 @@ namespace C3DE.UI
             // Draw the text
             text = WrapText(Skin.Font, text, rect.Width);
             _cacheVec2 = Skin.Font.MeasureString(text);
-            _cacheVec2.X = rect.X + rect.Height + Skin.Margin;
+            _cacheVec2.X = rect.X + rect.Height + Skin.SliderMargin;
             _cacheVec2.Y = rect.Y + rect.Height / 2 - _cacheVec2.Y / 2;
 
             Label(_cacheVec2, text);
@@ -186,7 +186,8 @@ namespace C3DE.UI
                 _cacheRect.Width = rect.Height - 8;
                 _cacheRect.Height = rect.Height - 8; ;
 
-                _spriteBatch.Draw(Skin.Checkbox[index], _cacheRect, Color.White);
+                if (!isChecked)
+                    _spriteBatch.Draw(Skin.Checkbox[index], _cacheRect, Color.White);
 
                 // Restore previous state if not clicked
                 if (isChecked && index > 0)
@@ -194,6 +195,36 @@ namespace C3DE.UI
             }
 
             return index == 2;
+        }
+
+        #endregion
+
+        #region Horizontal Slider Widget
+
+        public float HorizontalSlider(ref Rectangle rect, float value, float leftValue = 0.0f, float rightValue = 1.0f)
+        {
+            // Transform into the correct coordinates.
+            value = value / (rightValue + leftValue);
+
+            // Compute the movable slider position.
+            _cacheRect.X = rect.X + 4;
+            _cacheRect.Y = rect.Y + 4;
+            _cacheRect.Width = (int)(rect.Width * value) - 8;
+            _cacheRect.Height = rect.Height - 8;
+
+            GetPointerPosition(ref _cacheVec2);
+
+            _spriteBatch.Draw(Skin.Sliders[0], rect, Color.White);
+            _spriteBatch.Draw(Skin.Sliders[1], _cacheRect, Color.White);
+
+            // Update the position.
+            if (rect.Contains(_cacheVec2))
+            {
+                if (Input.Mouse.Drag() || Input.Touch.Pressed())
+                    value = 1 - (rect.Right - _cacheVec2.X) / rect.Width;
+            }
+
+            return (value * rightValue) + (value * leftValue); // Not good
         }
 
         #endregion
@@ -236,9 +267,9 @@ namespace C3DE.UI
             _spriteBatch.Draw(texture, position, null, color);
         }
 
-        public void DrawTexture(Vector2 position, Texture2D texture, Color color)
+        public void DrawTexture(ref Vector2 position, Texture2D texture, Rectangle? sourceRectangle, Color color, float rotation, ref Vector2 origin, ref Vector2 scale, SpriteEffects effect, float depth)
         {
-            DrawTexture(ref position, texture, color);
+            _spriteBatch.Draw(texture, position, sourceRectangle, color, rotation, origin, scale, effect, depth);
         }
 
         #endregion

@@ -8,8 +8,8 @@ namespace C3DE.Demo
 {
     public static class DemoGame
     {
-        public const int ScreenWidth = 1024;
-        public const int ScreenHeight = 600;
+        public const int ScreenWidth = 1280;
+        public const int ScreenHeight = 800;
 
         public static string[] BlueSkybox = new string[6] 
         {
@@ -31,20 +31,27 @@ namespace C3DE.Demo
             "Textures/Skybox/starfield/nz"
         };
 
-        public static GUISkin CreateSkin(ContentManager content)
+        public static GUISkin CreateSkin(ContentManager content, bool customSkin = true)
         {
+            GUISkin skin = new GUISkin("Font/Default");
+            skin.LoadContent(Application.Content);
+
+            if (customSkin)
+            {
+                skin.Box = content.Load<Texture2D>("Textures/UI/grey_panel");
+                skin.Buttons[0] = content.Load<Texture2D>("Textures/UI/grey_button00");
+                skin.Buttons[1] = content.Load<Texture2D>("Textures/UI/grey_button01");
+                skin.Buttons[2] = content.Load<Texture2D>("Textures/UI/grey_button02");
+                skin.Checkbox[0] = content.Load<Texture2D>("Textures/UI/grey_box");
+                skin.Checkbox[1] = content.Load<Texture2D>("Textures/UI/grey_checkmarkWhite");
+                skin.Checkbox[2] = content.Load<Texture2D>("Textures/UI/grey_checkmarkGrey");
+                skin.Sliders[0] = content.Load<Texture2D>("Textures/UI/grey_button02");
+                skin.Sliders[1] = content.Load<Texture2D>("Textures/UI/grey_button00");
+                skin.TextColor = Color.Black;
+            }
+
             GUI.Scale = Screen.GetScale();
 
-            GUISkin skin = new GUISkin();
-            skin.Box = content.Load<Texture2D>("Textures/UI/grey_panel");
-            skin.Buttons[0] = content.Load<Texture2D>("Textures/UI/grey_button00");
-            skin.Buttons[1] = content.Load<Texture2D>("Textures/UI/grey_button01");
-            skin.Buttons[2] = content.Load<Texture2D>("Textures/UI/grey_button02");
-            skin.Checkbox[0] = content.Load<Texture2D>("Textures/UI/grey_box");
-            skin.Checkbox[1] = content.Load<Texture2D>("Textures/UI/grey_checkmarkWhite");
-            skin.Checkbox[2] = content.Load<Texture2D>("Textures/UI/grey_checkmarkGrey");
-            skin.Font = content.Load<SpriteFont>("Font/Default");
-            skin.TextColor = Color.Black;
             return skin;
         }
 
@@ -62,6 +69,7 @@ namespace C3DE.Demo
                 Application.SceneManager.Add(new HalloweenDemo());
                 Application.SceneManager.Add(new LightingDemo());
                 Application.SceneManager.Add(new HexagonTerrainDemo());
+                Application.SceneManager.Add(new GUIDemo());
                 Application.LoadLevel(0);
                 Application.GraphicsDeviceManager.ToggleFullScreen();
                 game.Run();

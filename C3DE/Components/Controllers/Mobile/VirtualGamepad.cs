@@ -115,7 +115,7 @@ namespace C3DE.Components.Controllers.Mobile
 
         public override void OnGUI(GUI ui)
         {
-            ui.DrawTexture(_movePosition, _texture, GamepadColor);
+            ui.DrawTexture(ref _movePosition, _texture, GamepadColor);
         }
 
         private void Reset()
