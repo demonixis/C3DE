@@ -70,6 +70,7 @@
   <ItemGroup>
     <Compile Include="Application.cs" />
     <Compile Include="AudioManager.cs" />
+    <Compile Include="CollisionSystem.cs" />
     <Compile Include="Components\Behaviour.cs" />
     <Compile Include="Components\Controllers\Controller.cs" />
     <Compile Include="Components\Controllers\OrbitController.cs" />

@@ -9,6 +9,7 @@ namespace C3DE.Components
     public class Transform : Component
     {
         internal Matrix world;
+        internal Vector3 lastPosition;
         private Vector3 _rotation;
         private Vector3 _position;
         private Vector3 _scale;
@@ -155,6 +156,8 @@ namespace C3DE.Components
         {
             if (!sceneObject.IsStatic || _dirty)
             {
+                lastPosition = Position;
+
                 world = Matrix.Identity;
                 world *= Matrix.CreateScale(_scale);
                 world *= Matrix.CreateFromYawPitchRoll(_rotation.Y, _rotation.X, _rotation.Z);

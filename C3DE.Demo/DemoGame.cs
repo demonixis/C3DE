@@ -56,12 +56,13 @@ namespace C3DE.Demo
         }
 
 #if !NETFX_CORE && !ANDROID
+
         // Entry point.
         static void Main(string[] args)
         {
             using (var game = new Engine("C3DE Game Engine", ScreenWidth, ScreenHeight))
             {
-                Screen.SetVirtualResolution(1024, 600);
+                Screen.SetVirtualResolution(1280, 800);
                 Application.SceneManager.Add(new MenuDemo(), true);
                 Application.SceneManager.Add(new HeightmapDemo());
                 Application.SceneManager.Add(new ProceduralTerrainWater());
@@ -75,6 +76,7 @@ namespace C3DE.Demo
                 game.Run();
             }
         }
+
 #endif
     }
 }
