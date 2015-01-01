@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using C3DE.UI;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 namespace C3DE
 {
@@ -54,7 +55,7 @@ namespace C3DE
         /// <summary>
         /// The virtual height of the screen.
         /// </summary>
-        public static int VirtualHeight 
+        public static int VirtualHeight
         {
             get { return VirtualScreenRect.Height; }
         }
@@ -104,14 +105,17 @@ namespace C3DE
                 LockCursor = lockCursor.Value;
 
             if (showCursor.HasValue)
-                ShowCursor = showCursor.Value; 
+                ShowCursor = showCursor.Value;
         }
 
-        public static void SetVirtualResolution(int width, int height)
+        public static void SetVirtualResolution(int width, int height, bool applyToGUI = true)
         {
             VirtualScreenRect = new Rectangle(0, 0, width, height);
             VirtualWidthPerTwo = width >> 1;
             VirtualHeightPerTwo = height >> 1;
+
+            if (applyToGUI)
+                GUI.Scale = GetScale();
         }
 
         /// <summary>

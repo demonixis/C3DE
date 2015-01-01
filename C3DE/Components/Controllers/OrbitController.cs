@@ -63,7 +63,8 @@ namespace C3DE.Components.Controllers
             RotationSpeed = 0.05f;
             MoveSpeed = 2.0f;
             StrafeSpeed = 1.75f;
-            GamepadSensibility = 2.5f;
+            GamepadSensibility = new Vector2(2.5f);
+            MouseSensibility = new Vector2(1.0f);
             Velocity = 0.95f;
             AngularVelocity = 0.95f;
 			TouchSensibility = 0.45f;
@@ -135,14 +136,14 @@ namespace C3DE.Components.Controllers
         {
             if (Input.Mouse.Down(Inputs.MouseButton.Left) && Input.Mouse.Drag())
             {
-                angleVelocity.X -= RotationSpeed * Input.Mouse.Delta.X * Time.DeltaTime;
-                angleVelocity.Y -= RotationSpeed * Input.Mouse.Delta.Y * Time.DeltaTime;
+                angleVelocity.X -= RotationSpeed * Input.Mouse.Delta.X * MouseSensibility.X * Time.DeltaTime;
+                angleVelocity.Y -= RotationSpeed * Input.Mouse.Delta.Y * MouseSensibility.Y * Time.DeltaTime;
             }
 
             if (Input.Mouse.Down(Inputs.MouseButton.Right))
             {
-                positionVelicoty.X += StrafeSpeed * Input.Mouse.Delta.X * Time.DeltaTime;
-                positionVelicoty.Y += StrafeSpeed * Input.Mouse.Delta.Y * Time.DeltaTime;
+                positionVelicoty.X += StrafeSpeed * Input.Mouse.Delta.X * MouseSensibility.X * Time.DeltaTime;
+                positionVelicoty.Y += StrafeSpeed * Input.Mouse.Delta.Y * MouseSensibility.Y * Time.DeltaTime;
             }
 
             distanceVelocity -= Input.Mouse.Wheel * 0.05f * MoveSpeed * Time.DeltaTime;
@@ -152,13 +153,13 @@ namespace C3DE.Components.Controllers
         {
 			angleVelocity += Input.Gamepad.LeftStickValue() * RotationSpeed * Time.DeltaTime * GamepadSensibility * 25.0f;
 
-            positionVelicoty.X += Input.Gamepad.RightStickValue().X * StrafeSpeed * Time.DeltaTime * GamepadSensibility;
-            positionVelicoty.Y += Input.Gamepad.RightStickValue().Y * StrafeSpeed * Time.DeltaTime * GamepadSensibility;
+            positionVelicoty.X += Input.Gamepad.RightStickValue().X * StrafeSpeed * Time.DeltaTime * GamepadSensibility.X;
+            positionVelicoty.Y += Input.Gamepad.RightStickValue().Y * StrafeSpeed * Time.DeltaTime * GamepadSensibility.Y;
 
             if (Input.Gamepad.LeftShoulder())
-                distanceVelocity += MoveSpeed * Time.DeltaTime * GamepadSensibility;
+                distanceVelocity += MoveSpeed * Time.DeltaTime * GamepadSensibility.X;
             else if (Input.Gamepad.RightShoulder())
-                distanceVelocity -= MoveSpeed * Time.DeltaTime * GamepadSensibility;
+                distanceVelocity -= MoveSpeed * Time.DeltaTime * GamepadSensibility.X;
         }
 
 		protected override void UpdateTouchInput()

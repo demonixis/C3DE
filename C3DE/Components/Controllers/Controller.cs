@@ -47,7 +47,7 @@ namespace C3DE.Components.Controllers
         /// <summary>
         /// Gets or sets the gamepad sensibility. Default is [0.15f, 0.15f].
         /// </summary>
-        public float GamepadSensibility { get; set; }
+        public Vector2 GamepadSensibility { get; set; }
 
         /// <summary>
         /// Gets or sets the touch sensibility. Default is [1.0f, 1.0f].

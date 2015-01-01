@@ -13,7 +13,6 @@ namespace C3DE.Inputs
         private MouseState _mouseState;
         private MouseState _prevState;
         protected Vector2 _delta;
-        protected Vector2 _sensibility;
 
         #region Fields
 
@@ -40,16 +39,6 @@ namespace C3DE.Inputs
         public Vector2 Delta
         {
             get { return _delta; }
-        }
-
-        public Vector2 Sensitivity
-        {
-            get { return _sensibility; }
-            set
-            {
-                if (value.X >= 0.0f && value.Y >= 0.0f)
-                    _sensibility = value;
-            }
         }
 
         /// <summary>
@@ -83,7 +72,6 @@ namespace C3DE.Inputs
             _mouseState = Mouse.GetState();
             _prevState = _mouseState;
             _delta = Vector2.Zero;
-            _sensibility = Vector2.One;
         }
 
         public override void Update(GameTime gameTime)
@@ -95,13 +83,13 @@ namespace C3DE.Inputs
             // Delta
             if (Screen.LockCursor)
             {
-                _delta.X = (_mouseState.X - Screen.WidthPerTwo) * _sensibility.X;
-                _delta.Y = (_mouseState.Y - Screen.HeightPerTwo) * _sensibility.Y;
+                _delta.X = (_mouseState.X - Screen.WidthPerTwo);
+                _delta.Y = (_mouseState.Y - Screen.HeightPerTwo);
             }
             else
             {
-                _delta.X = (_mouseState.X - _prevState.X) * _sensibility.X;
-                _delta.Y = (_mouseState.Y - _prevState.Y) * _sensibility.Y;
+                _delta.X = (_mouseState.X - _prevState.X);
+                _delta.Y = (_mouseState.Y - _prevState.Y);
             }
 
             base.Update(gameTime);

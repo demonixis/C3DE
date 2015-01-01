@@ -13,19 +13,8 @@ namespace C3DE.Inputs
 #endif
         private GamePadState[] _gpState;
         private GamePadState[] _previousGpState;
-        private Vector2 _sensibility;
         private Vector2 _deadZone;
         private Vector2 _tmpVector;
-
-        public Vector2 Sensitivity
-        {
-            get { return _sensibility; }
-            set
-            {
-                if (value.X >= 0.0f && value.Y >= 0.0f)
-                    _sensibility = value;
-            }
-        }
 
         public Vector2 DeadZone
         {
@@ -50,7 +39,6 @@ namespace C3DE.Inputs
             }
 
             _deadZone = new Vector2(0.4f);
-            _sensibility = Vector2.One;
         }
 
         public override void Update(GameTime gameTime)
@@ -113,9 +101,9 @@ namespace C3DE.Inputs
         public Vector2 ThumbSticks(bool left = true, PlayerIndex index = PlayerIndex.One)
         {
             if (left)
-                return CheckDeadZone(_gpState[(int)index].ThumbSticks.Left) * _sensibility;
+                return CheckDeadZone(_gpState[(int)index].ThumbSticks.Left);
             else
-                return CheckDeadZone(_gpState[(int)index].ThumbSticks.Right) * _sensibility;
+                return CheckDeadZone(_gpState[(int)index].ThumbSticks.Right);
         }
 
         #region Digital pad

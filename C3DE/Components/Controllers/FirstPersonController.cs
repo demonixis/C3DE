@@ -59,6 +59,7 @@ namespace C3DE.Components.Controllers
             LookSpeed = 0.15f;
             StrafeSpeed = 0.75f;
             MouseSensibility = new Vector2(0.15f);
+            GamepadSensibility = new Vector2(2.5f);
             Fly = false;
             _virtualInputEnabled = false;
             _lockCursor = false;
@@ -191,11 +192,11 @@ namespace C3DE.Components.Controllers
 
         protected override void UpdateGamepadInput()
         {
-            translation.Z += Input.Gamepad.LeftStickValue().Y * MoveSpeed * Time.DeltaTime;
-            translation.X -= Input.Gamepad.LeftStickValue().X * StrafeSpeed * Time.DeltaTime;
+            translation.Z += Input.Gamepad.LeftStickValue().Y * GamepadSensibility.X * MoveSpeed * Time.DeltaTime;
+            translation.X -= Input.Gamepad.LeftStickValue().X * GamepadSensibility.Y * StrafeSpeed * Time.DeltaTime;
 
-            rotation.X -= Input.Gamepad.RightStickValue().Y * LookSpeed * Time.DeltaTime;
-            rotation.Y -= Input.Gamepad.RightStickValue().X * RotationSpeed * Time.DeltaTime;
+            rotation.X -= Input.Gamepad.RightStickValue().Y * GamepadSensibility.Y * LookSpeed * Time.DeltaTime;
+            rotation.Y -= Input.Gamepad.RightStickValue().X * GamepadSensibility.X * RotationSpeed * Time.DeltaTime;
 
             if (Input.Gamepad.LeftShoulder())
                 translation.Y -= MoveSpeed / 2 * Time.DeltaTime;

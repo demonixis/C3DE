@@ -53,7 +53,6 @@ namespace C3DE.Demo.Scenes
             scene.Add(water);
             water.Generate("Textures/water", "Textures/wavesbump", new Vector3(terrain.Width * 0.5f));
 
-            Input.Gamepad.Sensitivity = new Vector2(1, 0.75f);
             Screen.ShowCursor = true;
 
             // Don't miss the Skybox ;)
