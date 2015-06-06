@@ -12,6 +12,16 @@ namespace C3DE
         /// </summary>
         public static Rectangle ScreenRect { get; internal set; }
 
+        public static bool Fullscreen
+        {
+            get { return Application.GraphicsDeviceManager.IsFullScreen; }
+            set
+            {
+                if (Application.GraphicsDeviceManager.IsFullScreen != value)
+                    ToggleFullscreen();
+            }
+        }
+
         /// <summary>
         /// Gets the height of the screen (this value is cached so you can use it safely).
         /// </summary>
