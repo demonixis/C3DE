@@ -72,7 +72,7 @@ namespace C3DE.Demo
                 Application.SceneManager.Add(new HexagonTerrainDemo());
                 Application.SceneManager.Add(new GUIDemo());
                 Application.LoadLevel(0);
-                Application.GraphicsDeviceManager.ToggleFullScreen();
+                //Screen.Fullscreen = true;
                 game.Run();
             }
         }
