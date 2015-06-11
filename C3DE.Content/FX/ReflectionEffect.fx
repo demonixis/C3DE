@@ -2,7 +2,7 @@ float4x4 World;
 float4x4 View;
 float4x4 Projection;
 
-float3 ReflectionColor = float4(1.0, 1.0, 1.0);
+float3 ReflectionColor = float3(1.0, 1.0, 1.0);
 float3 EyePosition = float3(0, 0, 1);
 bool MainTextureEnabled = false;
 
@@ -68,13 +68,13 @@ VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
 
 float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 {
-	float4 baseColor = float4(1.0, 1.0, 1.0, 1.0);
-	float4 reflectColor = ReflectionColor * texCUBE(reflectiveSampler, normalize(input.Reflection));
+	float3 baseColor = float3(1.0, 1.0, 1.0);
+	float3 reflectColor = ReflectionColor * texCUBE(reflectiveSampler, normalize(input.Reflection));
 	
 	if (MainTextureEnabled == true)
 		baseColor = tex2D(mainTextureSampler, (input.UV + TextureOffset) * TextureTiling);
 		
-	return baseColor * reflectColor;
+	return float4(baseColor * reflectColor, 1.0);
 }
 
 technique ReflectionTexture

@@ -53,7 +53,7 @@ namespace C3DE.Rendering
         private void renderObjects(Scene scene, Camera camera)
         {
             _device.SetRenderTarget(_sceneRT);
-            _device.Clear(Color.Black);
+            _device.Clear(camera.clearColor);
             _device.DepthStencilState = DepthStencilState.Default;
 
             if (scene.RenderSettings.Skybox.Enabled)

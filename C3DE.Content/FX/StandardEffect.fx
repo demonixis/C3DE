@@ -7,10 +7,10 @@ float4x4 View;
 float4x4 Projection;
 
 // Material
-float3 AmbientColor = float4(0.1, 0.1, 0.1);
-float3 DiffuseColor = float4(1.0, 1.0, 1.0);
-float3 EmissiveColor = float4(0.0, 0.0, 0.0);
-float3 SpecularColor = float4(0.8, 0.8, 0.8);
+float3 AmbientColor = float3(0.1, 0.1, 0.1);
+float3 DiffuseColor = float3(1.0, 1.0, 1.0);
+float3 EmissiveColor = float3(0.0, 0.0, 0.0);
+float3 SpecularColor = float3(0.8, 0.8, 0.8);
 float Shininess = 200.0;
 
 // Lighting
@@ -72,7 +72,7 @@ float4 CalcSpotLightColor(float3 normal, float4 worldPosition)
 	return float4(diffuse * attenuation * LightColor * LightIntensity, 1.0);
 }
 
-float4 CalcSpecularColor(float3 normal, float4 worldPosition, float4 color, int type)
+float3 CalcSpecularColor(float3 normal, float4 worldPosition, float3 color, int type)
 {
 	if (type == 0)
 		return float4(0, 0, 0, 1);
@@ -125,8 +125,8 @@ VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
 
 float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 {
-	float4 baseDiffuse = DiffuseColor * tex2D(textureSampler, (input.UV + TextureOffset) * TextureTiling);
-	float4 lightFactor = float4(1, 1, 1, 1);
+	float3 baseDiffuse = DiffuseColor * tex2D(textureSampler, (input.UV + TextureOffset) * TextureTiling);
+	float3 lightFactor = float3(1, 1, 1);
 	float3 normal = normalize(input.Normal);
 	float shadowTerm = CalcShadow(input.WorldPosition);
 
@@ -138,9 +138,9 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 	else if (LightType == 3)
 		lightFactor = CalcSpotLightColor(normal, input.WorldPosition);
 
-	float4 finalDiffuse = baseDiffuse * lightFactor * shadowTerm;
-	float4 finalSpecular = CalcSpecularColor(normal, input.WorldPosition, finalDiffuse, LightType);
-	float4 finalCompose = AmbientColor + finalDiffuse + finalSpecular + EmissiveColor;
+	float3 finalDiffuse = baseDiffuse * lightFactor * shadowTerm;
+	float3 finalSpecular = CalcSpecularColor(normal, input.WorldPosition, finalDiffuse, LightType);
+	float4 finalCompose = float4(AmbientColor + finalDiffuse + finalSpecular + EmissiveColor, 1.0);
 	
 	return ApplyFog(finalCompose, input.FogDistance);
 }

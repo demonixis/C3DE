@@ -7,9 +7,9 @@ float4x4 View;
 float4x4 Projection;
 
 // Material
-float3 AmbientColor = float4(0.1, 0.1, 0.1);
-float3 DiffuseColor = float4(1.0, 1.0, 1.0);
-float3 EmissiveColor = float4(0.0, 0.0, 0.0);
+float3 AmbientColor = float3(0.1, 0.1, 0.1);
+float3 DiffuseColor = float3(1.0, 1.0, 1.0);
+float3 EmissiveColor = float3(0.0, 0.0, 0.0);
 
 // Misc
 float2 TextureTiling = float2(1, 1);
@@ -62,7 +62,7 @@ VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
 
 float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 {
-	float4 color = (DiffuseColor * tex2D(textureSampler, (input.UV + TextureOffset) * TextureTiling));
+	float3 color = (DiffuseColor * tex2D(textureSampler, (input.UV + TextureOffset) * TextureTiling));
 	
 	float diffuse = saturate(dot(input.Normal, LightDirection));
 	
@@ -77,7 +77,7 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 	else
 		color *= ToonBrightnessLevels[4];
 	
-	return AmbientColor + color + EmissiveColor;
+	return float4(AmbientColor + color + EmissiveColor, 1.0);
 }
 
 technique Toon

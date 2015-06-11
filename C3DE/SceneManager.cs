@@ -23,7 +23,7 @@ namespace C3DE
             set { LoadLevel(value); }
         }
 
-        public int Size
+        public int Count
         {
             get { return _scenes.Count; }
         }

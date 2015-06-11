@@ -4,9 +4,9 @@ float4x4 View;
 float4x4 Projection;
 
 // Material
-float3 AmbientColor = float4(0.0, 0.0, 0.0);
-float3 DiffuseColor = float4(1.0, 1.0, 1.0);
-float3 EmissiveColor = float4(0.0, 0.0, 0.0);
+float3 AmbientColor = float3(0.0, 0.0, 0.0);
+float4 DiffuseColor = float4(1.0, 1.0, 1.0, 1.0);
+float3 EmissiveColor = float3(0.0, 0.0, 0.0);
 
 // Mist
 float2 TextureTiling = float2(1, 1);
@@ -54,7 +54,7 @@ VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
 float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 {
 	float4 diffuse = tex2D(textureSampler, (input.UV + TextureOffset) * TextureTiling);
-	float4 finalColor = AmbientColor + DiffuseColor * diffuse + EmissiveColor;
+	float4 finalColor = float4(AmbientColor + DiffuseColor * diffuse + EmissiveColor, 1.0);
 	
 	clip(diffuse.a < 0.1f ? -1 : 1);
 

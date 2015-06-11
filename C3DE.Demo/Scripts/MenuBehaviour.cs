@@ -60,7 +60,7 @@ namespace C3DE.Demo.Scripts
             tempVec2 = GUI.Skin.Font.MeasureString("Gets the source : https://github.com/demonixis/C3DE");
             _footerRect = new Vector2(Screen.VirtualWidthPerTwo - tempVec2.X / 2, Screen.VirtualHeight - tempVec2.Y - 5);
 
-            _demos = new DemoWidget[Application.SceneManager.Size - 1];
+            _demos = new DemoWidget[Application.SceneManager.Count - 1];
 
             for (int i = 0; i < _demos.Length; i++)
                 _demos[i] = new DemoWidget(Application.SceneManager[i + 1].Name, i + 1);

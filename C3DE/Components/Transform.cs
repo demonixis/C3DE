@@ -10,9 +10,9 @@ namespace C3DE.Components
     {
         internal Matrix world;
         internal Vector3 lastPosition;
-        private Vector3 _rotation;
-        private Vector3 _position;
-        private Vector3 _scale;
+        private Vector3 _localRotation;
+        private Vector3 _localPosition;
+        private Vector3 _localScale;
         private Transform _parent;
         private Transform _root;
         private bool _dirty;
@@ -38,65 +38,63 @@ namespace C3DE.Components
 
         public Vector3 Position
         {
-            get { return _position; }
-            set { _position = value; }
+            get { return _localPosition; }
+            set { _localPosition = value; }
         }
 
         public Vector3 Rotation
         {
-            get { return _rotation; }
-            set { _rotation = value; }
+            get { return _localRotation; }
+            set { _localRotation = value; }
         }
 
         public Vector3 LocalScale
         {
-            get { return _scale; }
-            set { _scale = value; }
+            get { return _localScale; }
+            set { _localScale = value; }
         }
 
         public Matrix WorldMatrix
         {
             get { return world; }
         }
-		
-		public Vector3 Forward
-		{
-			get
-			{	
-				return getTransformedVector(Vector3.Forward);
-			}
-		}
 
-		public Vector3 Backward
-		{
-			get
-			{	
-				return getTransformedVector(Vector3.Backward);
-			}
-		}
+        public Vector3 Forward
+        {
+            get { return GetTransformedVector(Vector3.Forward); }
+        }
 
-		public Vector3 Right
-		{
-			get
-			{	
-				return getTransformedVector(Vector3.Right);
-			}
-		}
+        public Vector3 Backward
+        {
+            get { return GetTransformedVector(Vector3.Backward); }
+        }
 
-		public Vector3 Left
-		{
-			get
-			{	
-				return getTransformedVector(Vector3.Left);
-			}
-		}
+        public Vector3 Right
+        {
+            get { return GetTransformedVector(Vector3.Right); }
+        }
+
+        public Vector3 Left
+        {
+            get { return GetTransformedVector(Vector3.Left); }
+        }
+
+        public Vector3 Up
+        {
+            get { return GetTransformedVector(Vector3.Up); }
+        }
+
+        public Vector3 Down
+        {
+            get { return GetTransformedVector(Vector3.Down); }
+        }
 
         public Transform()
-            : base ()
+            : base()
         {
-            _position = Vector3.Zero;
-            _rotation = Vector3.Zero;
-            _scale = Vector3.One;
+            _localPosition = Vector3.Zero;
+            _localRotation = Vector3.Zero;
+            _localScale = Vector3.One;
             _parent = null;
             _root = null;
             _transforms = new List<Transform>();
@@ -106,9 +104,9 @@ namespace C3DE.Components
 
         public void Translate(float x, float y, float z)
         {
-            _position.X += x;
-            _position.Y += y;
-            _position.Z += z;
+            _localPosition.X += x;
+            _localPosition.Y += y;
+            _localPosition.Z += z;
         }
 
         public void Translate(ref Vector3 translation)
@@ -123,9 +121,9 @@ namespace C3DE.Components
 
         public void Rotate(float rx, float ry, float rz)
         {
-            _rotation.X += rx;
-            _rotation.Y += ry;
-            _rotation.Z += rz;
+            _localRotation.X += rx;
+            _localRotation.Y += ry;
+            _localRotation.Z += rz;
         }
 
         public void Rotate(ref Vector3 rotation)
@@ -140,16 +138,16 @@ namespace C3DE.Components
 
         public void SetPosition(float? x, float? y, float? z)
         {
-            _position.X = x.HasValue ? x.Value : _position.X;
-            _position.Y = y.HasValue ? y.Value : _position.Y;
-            _position.Z = z.HasValue ? z.Value : _position.Z;
+            _localPosition.X = x.HasValue ? x.Value : _localPosition.X;
+            _localPosition.Y = y.HasValue ? y.Value : _localPosition.Y;
+            _localPosition.Z = z.HasValue ? z.Value : _localPosition.Z;
         }
 
-        public void SetRotation(float? x, float? y, float ?z)
+        public void SetRotation(float? x, float? y, float? z)
         {
-            _rotation.X = x.HasValue ? x.Value : _rotation.X;
-            _rotation.Y = y.HasValue ? y.Value : _rotation.Y;
-            _rotation.Z = z.HasValue ? z.Value : _rotation.Z;
+            _localRotation.X = x.HasValue ? x.Value : _localRotation.X;
+            _localRotation.Y = y.HasValue ? y.Value : _localRotation.Y;
+            _localRotation.Z = z.HasValue ? z.Value : _localRotation.Z;
         }
 
         public override void Update()
@@ -159,9 +157,9 @@ namespace C3DE.Components
                 lastPosition = Position;
 
                 world = Matrix.Identity;
-                world *= Matrix.CreateScale(_scale);
-                world *= Matrix.CreateFromYawPitchRoll(_rotation.Y, _rotation.X, _rotation.Z);
-                world *= Matrix.CreateTranslation(_position);
+                world *= Matrix.CreateScale(_localScale);
+                world *= Matrix.CreateFromYawPitchRoll(_localRotation.Y, _localRotation.X, _localRotation.Z);
+                world *= Matrix.CreateTranslation(_localPosition);
 
                 if (_parent != null)
                     world *= _parent.world;
@@ -169,10 +167,10 @@ namespace C3DE.Components
                 _dirty = false;
             }
         }
-		
-		private Vector3 getTransformedVector(Vector3 direction)
-		{
-			return Vector3.Transform(direction, Matrix.CreateFromYawPitchRoll(_rotation.Y, _rotation.X, _rotation.Z));
-		}
+
+        private Vector3 GetTransformedVector(Vector3 direction)
+        {
+            return Vector3.Transform(direction, Matrix.CreateFromYawPitchRoll(_localRotation.Y, _localRotation.X, _localRotation.Z));
+        }
     }
 }
