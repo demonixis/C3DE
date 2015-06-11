@@ -9,6 +9,7 @@ namespace C3DE
     {
         private static float __deltaTime = 1.0f;
         private static float __timeScale = 1.0f;
+        private static float __time = 1.0f;
 
         /// <summary>
         /// Gets the elapsed time since the last frame.
@@ -26,6 +27,11 @@ namespace C3DE
             get { return __timeScale; }
             set { __timeScale = value; }
         }
+
+        public static float TotalTime
+        {
+            get { return __time / 1000.0f; }
+        }
         
         public Time(Game game)
             : base (game)
@@ -35,6 +41,7 @@ namespace C3DE
         public override void Update(GameTime gameTime)
         {
             __deltaTime = gameTime.ElapsedGameTime.Milliseconds;
+            __time = (float)gameTime.TotalGameTime.TotalMilliseconds;
         }
     }
 }

@@ -21,6 +21,7 @@ namespace C3DE.Editor.Components
         private int _lastMouseWheel;
         private bool _needsUpdate;
         private Timer _clickTimer;
+        private Vector2 _sensibility;
         
         #region Fields
 

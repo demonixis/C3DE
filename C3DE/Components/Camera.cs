@@ -10,7 +10,7 @@ namespace C3DE.Components
 
     public class Camera : Component
     {
-        public static Camera Main = null;
+        public static Camera Main { get; internal set; }
 
         protected internal Matrix view;
         protected internal Matrix projection;

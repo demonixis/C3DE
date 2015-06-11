@@ -9,6 +9,7 @@ namespace C3DE.Components
     public class Transform : Component
     {
         internal Matrix world;
+        internal Vector3 lastPosition;
         private Vector3 _rotation;
         private Vector3 _position;
         private Vector3 _scale;
@@ -62,7 +63,7 @@ namespace C3DE.Components
 		{
 			get
 			{	
-				return getTransformedVector(Vector3.Up);
+				return getTransformedVector(Vector3.Forward);
 			}
 		}
 
@@ -137,10 +138,26 @@ namespace C3DE.Components
             Rotate(ref rotation);
         }
 
+        public void SetPosition(float? x, float? y, float? z)
+        {
+            _position.X = x.HasValue ? x.Value : _position.X;
+            _position.Y = y.HasValue ? y.Value : _position.Y;
+            _position.Z = z.HasValue ? z.Value : _position.Z;
+        }
+
+        public void SetRotation(float? x, float? y, float ?z)
+        {
+            _rotation.X = x.HasValue ? x.Value : _rotation.X;
+            _rotation.Y = y.HasValue ? y.Value : _rotation.Y;
+            _rotation.Z = z.HasValue ? z.Value : _rotation.Z;
+        }
+
         public override void Update()
         {
             if (!sceneObject.IsStatic || _dirty)
             {
+                lastPosition = Position;
+
                 world = Matrix.Identity;
                 world *= Matrix.CreateScale(_scale);
                 world *= Matrix.CreateFromYawPitchRoll(_rotation.Y, _rotation.X, _rotation.Z);

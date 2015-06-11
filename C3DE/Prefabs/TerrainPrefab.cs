@@ -7,10 +7,19 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace C3DE.Prefabs
 {
+    public struct TerrainWeightData
+    {
+        public float SandLayer { get; set; }
+        public float GroundLayer { get; set; }
+        public float RockLayer { get; set; }
+        public float SnowLayer { get; set; }
+    }
+
     public class TerrainPrefab : SceneObject
     {
         protected MeshRenderer renderer;
         protected TerrainGeometry geometry;
+        protected TerrainWeightData weightData;
         // protected TerrainCollider collider;
 
         public MeshRenderer Renderer
@@ -18,25 +27,25 @@ namespace C3DE.Prefabs
             get { return renderer; }
         }
 
+        public TerrainWeightData WeightData 
+        {
+            get { return weightData; }
+        }
+
         public int Width
         {
-            get { return geometry.Width; }
+            get { return (int)(geometry.Width * geometry.Size.X); }
         }
 
         public int Height
         {
-            get { return geometry.Height; }
+            get { return (int)(geometry.Height * geometry.Size.Y); }
         }
 
         public int Depth
         {
-            get { return geometry.Depth; }
+            get { return (int)(geometry.Depth * geometry.Size.Z); }
         }
-
-        public float SandLayer { get; set; }
-        public float GroundLayer { get; set; }
-        public float RockLayer { get; set; }
-        public float SnowLayer { get; set; }
 
         public TerrainPrefab(string name)
             : base(name)
@@ -46,11 +55,15 @@ namespace C3DE.Prefabs
             renderer = AddComponent<MeshRenderer>();
             renderer.Geometry = geometry;
             renderer.CastShadow = false;
+            renderer.ReceiveShadow = true;
 
-            SandLayer = 9;
-            GroundLayer = 18;
-            RockLayer = 23;
-            SnowLayer = 50;
+            weightData = new TerrainWeightData()
+            {
+                SandLayer = 9,
+                GroundLayer = 18,
+                RockLayer = 23,
+                SnowLayer = 27
+            };
         }
 
         /// <summary>
@@ -84,7 +97,7 @@ namespace C3DE.Prefabs
         /// <param name="amplitude"></param>
         /// <param name="frequency"></param>
         /// <param name="persistence"></param>
-        public void Randomize(int octaves = 2, int amplitude = 22, double frequency = 0.085, double persistence = 0.3)
+        public void Randomize(int octaves = 2, int amplitude = 22, double frequency = 0.085, double persistence = 0.3, bool limit = false)
         {
             geometry.Data = new float[geometry.Width, geometry.Depth];
 
@@ -93,7 +106,7 @@ namespace C3DE.Prefabs
             for (int x = 0; x < geometry.Width; x++)
             {
                 for (int z = 0; z < geometry.Depth; z++)
-                    geometry.Data[x, z] = (float)NoiseGenerator.Noise(x, z);
+                    geometry.Data[x, z] = (float)NoiseGenerator.Noise(x, z, limit);
             }
 
             Build();
@@ -111,13 +124,13 @@ namespace C3DE.Prefabs
 
         public void ApplyCollision(Transform tr)
         {
-            var y = (GetTerrainHeight(tr.Position.X, 0, tr.Position.Z) + 15 - tr.Position.Y) * 0.2f;
+            var y = (GetTerrainHeight(tr.Position.X, 0, tr.Position.Z) + 2 * geometry.Size.Y - tr.Position.Y) * 0.2f;
             tr.Translate(0.0f, y, 0.0f);
         }
 
         public void ApplyCollision(ref Vector3 position)
         {
-            var y = (GetTerrainHeight(position) + 2 - position.Y) * 0.2f;
+            var y = (GetTerrainHeight(position) - position.Y) * 0.2f;
             position.Y += y;
         }
 
@@ -173,6 +186,14 @@ namespace C3DE.Prefabs
             return (terrainHeigth * geometry.Size.Y * transform.LocalScale.Y);
         }
 
+        public void SetWeightData(float sand, float ground, float rock, float snow)
+        {
+            weightData.SandLayer = sand;
+            weightData.GroundLayer = ground;
+            weightData.RockLayer = rock;
+            weightData.SnowLayer = snow;
+        }
+
         public Texture2D GenerateWeightMap()
         {
             var width = geometry.Width;
@@ -188,13 +209,13 @@ namespace C3DE.Prefabs
                 {
                     data = geometry.Data[x, z];
 
-                    if (data < SandLayer)
+                    if (data < weightData.SandLayer)
                         colors[x + z * width] = Color.Red;
 
-                    else if (data >= SandLayer && data < GroundLayer)
+                    else if (data >= weightData.SandLayer && data < weightData.GroundLayer)
                         colors[x + z * width] = Color.Black;
 
-                    else if (data >= GroundLayer && data < RockLayer)
+                    else if (data >= weightData.GroundLayer && data < weightData.RockLayer)
                         colors[x + z * width] = Color.Green;
 
                     else

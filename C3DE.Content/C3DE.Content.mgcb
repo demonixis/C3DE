@@ -2,7 +2,7 @@
 #----------------------------- Global Properties ----------------------------#
 
 /outputDir:..\C3DE.Demo\Content
-/intermediateDir:obj
+/intermediateDir:obj\Windows
 /platform:Windows
 /config:
 /profile:HiDef
@@ -103,12 +103,6 @@
 /processorParam:DebugMode=Auto
 /build:FX/PostProcess/AverageColor.fx
 
-#begin FX/PostProcess/Blur.fx
-/importer:EffectImporter
-/processor:EffectProcessor
-/processorParam:DebugMode=Auto
-/build:FX/PostProcess/Blur.fx
-
 #begin FX/PostProcess/C64Filter.fx
 /importer:EffectImporter
 /processor:EffectProcessor
@@ -120,12 +114,6 @@
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
 /build:FX/PostProcess/FXAA.fx
-
-#begin FX/PostProcess/GreyScale.fx
-/importer:EffectImporter
-/processor:EffectProcessor
-/processorParam:DebugMode=Auto
-/build:FX/PostProcess/GreyScale.fx
 
 #begin FX/PostProcess/OculusDistortionCorrection.fx
 /importer:EffectImporter
@@ -166,11 +154,6 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:TextureFormat=Color
 /build:Misc/rightHand.png
-
-#begin Models/HexGrid.FBX
-/importer:
-/processor:
-/build:Models/HexGrid.FBX
 
 #begin Textures/heightmap.jpg
 /importer:TextureImporter
@@ -501,4 +484,170 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:TextureFormat=Color
 /build:Textures/UI/grey_panel.png
+
+#begin FX/PostProcess/BloomCombine.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:FX/PostProcess/BloomCombine.fx
+
+#begin FX/PostProcess/BloomExtract.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:FX/PostProcess/BloomExtract.fx
+
+#begin FX/PostProcess/GaussianBlur.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:FX/PostProcess/GaussianBlur.fx
+
+#begin FX/PostProcess/SimpleBlur.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:FX/PostProcess/SimpleBlur.fx
+
+#begin FX/PostProcess/Refraction.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:FX/PostProcess/Refraction.fx
+
+#begin Textures/hexagrid.jpg
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:TextureFormat=Color
+/build:Textures/hexagrid.jpg
+
+#begin Models/Jack/JackOLantern.fbx
+/importer:FbxImporter
+/processor:ModelProcessor
+/processorParam:ColorKeyColor=0,0,0,0
+/processorParam:ColorKeyEnabled=True
+/processorParam:DefaultEffect=BasicEffect
+/processorParam:GenerateMipmaps=True
+/processorParam:GenerateTangentFrames=False
+/processorParam:PremultiplyTextureAlpha=True
+/processorParam:PremultiplyVertexColors=True
+/processorParam:ResizeTexturesToPowerOfTwo=False
+/processorParam:RotationX=0
+/processorParam:RotationY=0
+/processorParam:RotationZ=0
+/processorParam:Scale=1
+/processorParam:SwapWindingOrder=False
+/processorParam:TextureFormat=DxtCompressed
+/build:Models/Jack/JackOLantern.fbx
+
+#begin Models/Jack/PumpkinColor.bmp
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:TextureFormat=Color
+/build:Models/Jack/PumpkinColor.bmp
+
+#begin Models/HexGrid.FBX
+/importer:FbxImporter
+/processor:ModelProcessor
+/processorParam:ColorKeyColor=0,0,0,0
+/processorParam:ColorKeyEnabled=True
+/processorParam:DefaultEffect=BasicEffect
+/processorParam:GenerateMipmaps=True
+/processorParam:GenerateTangentFrames=False
+/processorParam:PremultiplyTextureAlpha=True
+/processorParam:PremultiplyVertexColors=True
+/processorParam:ResizeTexturesToPowerOfTwo=False
+/processorParam:RotationX=0
+/processorParam:RotationY=0
+/processorParam:RotationZ=0
+/processorParam:Scale=1
+/processorParam:SwapWindingOrder=False
+/processorParam:TextureFormat=DxtCompressed
+/build:Models/HexGrid.FBX
+
+#begin FX/PostProcess/Convolution.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:FX/PostProcess/Convolution.fx
+
+#begin FX/PostProcess/Film.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:FX/PostProcess/Film.fx
+
+#begin FX/PostProcess/GrayScale.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:FX/PostProcess/GrayScale.fx
+
+#begin Models/hexagone.fbx
+/importer:FbxImporter
+/processor:ModelProcessor
+/processorParam:ColorKeyColor=0,0,0,0
+/processorParam:ColorKeyEnabled=True
+/processorParam:DefaultEffect=BasicEffect
+/processorParam:GenerateMipmaps=True
+/processorParam:GenerateTangentFrames=False
+/processorParam:PremultiplyTextureAlpha=True
+/processorParam:PremultiplyVertexColors=True
+/processorParam:ResizeTexturesToPowerOfTwo=False
+/processorParam:RotationX=0
+/processorParam:RotationY=0
+/processorParam:RotationZ=0
+/processorParam:Scale=1
+/processorParam:SwapWindingOrder=False
+/processorParam:TextureFormat=DxtCompressed
+/build:Models/hexagone.fbx
+
+#begin Models/hexagone_basic.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:TextureFormat=Color
+/build:Models/hexagone_basic.png
+
+#begin Models/hexagone_brown.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:TextureFormat=Color
+/build:Models/hexagone_brown.png
+
+#begin Models/hexagone_green.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:TextureFormat=Color
+/build:Models/hexagone_green.png
+
+#begin FX/PostProcess/CGAFilter.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:FX/PostProcess/CGAFilter.fx
 

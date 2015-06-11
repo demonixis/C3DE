@@ -3,6 +3,8 @@ using C3DE.Components.Colliders;
 using C3DE.Components.Lights;
 using C3DE.Components.Renderers;
 using C3DE.Materials;
+using C3DE.PostProcess;
+using C3DE.Rendering;
 using C3DE.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -22,6 +24,8 @@ namespace C3DE
     /// </summary>
     public class Scene : SceneObject
     {
+        public static Scene Main { get; internal set; }
+
         public readonly Material DefaultMaterial;
 
         private int _mainCameraIndex;
@@ -38,6 +42,7 @@ namespace C3DE
         internal protected List<Light> lights;
         internal protected List<Behaviour> scripts;
         internal protected List<SceneObject> prefabs;
+        internal protected List<PostProcessPass> postProcessPasses;
 
         public RenderSettings RenderSettings { get; private set; }
 
@@ -109,6 +114,11 @@ namespace C3DE
             get { return prefabs; }
         }
 
+        public List<PostProcessPass> PostProcessPasses
+        {
+            get { return postProcessPasses; }
+        }
+
         /// <summary>
         /// The root scene object which contains all scene objects.
         /// </summary>
@@ -128,6 +138,7 @@ namespace C3DE
             scripts = new List<Behaviour>(5);
             lights = new List<Light>(2);
             prefabs = new List<SceneObject>();
+            postProcessPasses = new List<PostProcessPass>();
             _componentsToDestroy = new List<Component>();
             _needRemoveCheck = false;
             _mainCameraIndex = -1;
@@ -144,6 +155,8 @@ namespace C3DE
         /// <param name="content"></param>
         public override void Initialize()
         {
+            initialized = true;
+
             DefaultMaterial.MainTexture = GraphicsHelper.CreateTexture(Color.AntiqueWhite, 1, 1);
 
             for (int i = 0, l = materials.Count; i < l; i++)
@@ -155,7 +168,6 @@ namespace C3DE
                 sceneObjects[i].Initialize();
 
             sceneObjects.CheckRequired = true;
-            initialized = true;
         }
 
         /// <summary>
@@ -199,6 +211,15 @@ namespace C3DE
             foreach (Behaviour script in Behaviours)
                 script.OnDestroy();
 
+            foreach (SceneObject sceneObject in sceneObjects)
+                sceneObject.Dispose();
+
+            foreach (Material material in materials)
+                material.Dispose();
+
+            foreach (PostProcessPass pass in postProcessPasses)
+                pass.Dispose();
+
             Clear();
         }
 
@@ -217,6 +238,7 @@ namespace C3DE
             scripts.Clear();
             sceneObjects.Clear();
             prefabs.Clear();
+            postProcessPasses.Clear();
             _componentsToDestroy.Clear();
             _needRemoveCheck = false;
         }
@@ -224,6 +246,58 @@ namespace C3DE
         #endregion
 
         #region SceneObjects/Components management
+
+        /// <summary>
+        /// Add a scene object to the scene.
+        /// </summary>
+        /// <param name="sceneObject">The scene object to add.</param>
+        /// <returns>Return true if the scene object is added, otherwise return false.</returns>
+        public override bool Add(SceneObject sceneObject)
+        {
+            bool canAdd = base.Add(sceneObject);
+
+            if (canAdd)
+            {
+                if (!sceneObject.IsPrefab)
+                {
+                    sceneObjects.Add(sceneObject);
+                    sceneObject.Scene = this;
+                    sceneObject.Transform.Root = transform;
+
+					if (initialized && !sceneObject.Initialized) 
+					{
+						sceneObject.Initialize ();
+					}
+
+                    if (sceneObject.Enabled)
+                    {
+                        CheckComponents(sceneObject, ComponentChangeType.Add);
+                        sceneObject.PropertyChanged += OnComponentPropertyChanged;
+                        sceneObject.ComponentChanged += OnComponentChanged;
+                    }
+                }
+                else
+                    AddPrefab(sceneObject);
+            }
+
+            return canAdd;
+        }
+
+        /// <summary>
+        /// Add a prefab only before the scene is started.
+        /// </summary>
+        /// <param name="prefab"></param>
+        protected void AddPrefab(SceneObject prefab)
+        {
+            if (!prefabs.Contains(prefab))
+                prefabs.Add(prefab);
+        }
+
+        protected void RemovePrefab(SceneObject prefab)
+        {
+            if (prefabs.Contains(prefab))
+                prefabs.Remove(prefab);
+        }
 
         /// <summary>
         /// Check all components of a scene object to update all list of the scene.
@@ -293,41 +367,6 @@ namespace C3DE
                 else if (type == ComponentChangeType.Remove)
                     Remove(light);
             }
-        }
-
-        /// <summary>
-        /// Add a scene object to the scene.
-        /// </summary>
-        /// <param name="sceneObject">The scene object to add.</param>
-        /// <returns>Return true if the scene object is added, otherwise return false.</returns>
-        public override bool Add(SceneObject sceneObject)
-        {
-            bool canAdd = base.Add(sceneObject);
-
-            if (canAdd)
-            {
-                if (!sceneObject.IsPrefab)
-                {
-
-                    sceneObjects.Add(sceneObject);
-                    sceneObject.Scene = this;
-                    sceneObject.Transform.Root = transform;
-
-                    if (initialized)
-                        sceneObject.Initialize();
-
-                    if (sceneObject.Enabled)
-                    {
-                        CheckComponents(sceneObject, ComponentChangeType.Add);
-                        sceneObject.PropertyChanged += OnComponentPropertyChanged;
-                        sceneObject.ComponentChanged += OnComponentChanged;
-                    }
-                }
-                else
-                    AddPrefab(sceneObject);
-            }
-
-            return canAdd;
         }
 
         private void OnComponentPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -493,22 +532,6 @@ namespace C3DE
 
         #endregion
 
-        /// <summary>
-        /// Add a prefab only before the scene is started.
-        /// </summary>
-        /// <param name="prefab"></param>
-        protected void AddPrefab(SceneObject prefab)
-        {
-            if (!prefabs.Contains(prefab))
-                prefabs.Add(prefab);
-        }
-
-        protected void RemovePrefab(SceneObject prefab)
-        {
-            if (prefabs.Contains(prefab))
-                prefabs.Remove(prefab);
-        }
-
         #region Destroy SceneObjects/Components
 
         private int GetFirstNullRemovedComponent()
@@ -520,6 +543,11 @@ namespace C3DE
             }
 
             return -1;
+        }
+
+        public static SceneObject Instanciate(SceneObject sceneObject)
+        {
+            return Instanciate(sceneObject, sceneObject.Transform.Position, sceneObject.Transform.Rotation);
         }
 
         public static SceneObject Instanciate(SceneObject sceneObject, Vector3 position, Vector3 rotation)
@@ -536,6 +564,16 @@ namespace C3DE
         public static void Destroy(SceneObject sceneObject)
         {
             Application.SceneManager.ActiveScene.Remove(sceneObject);
+        }
+
+        public override bool Remove(SceneObject sceneObject)
+        {
+            bool canRemove = base.Remove(sceneObject);
+
+            if (canRemove)
+                DestroyObject(sceneObject);
+            
+            return canRemove;
         }
 
         public void DestroyObject(SceneObject sceneObject)
@@ -556,6 +594,25 @@ namespace C3DE
                 _componentsToDestroy.Add(component);
 
             _needRemoveCheck = true;
+        }
+
+        #endregion
+
+        #region Add/Remove PostProcess
+            
+        public void Add(PostProcessPass pass)
+        {
+            if (!postProcessPasses.Contains(pass))
+            {
+                postProcessPasses.Add(pass);
+                pass.Initialize(Application.Content);
+            }
+        }
+
+        public void Remove(PostProcessPass pass)
+        {
+            if (postProcessPasses.Contains(pass))
+                postProcessPasses.Remove(pass);
         }
 
         #endregion
@@ -583,6 +640,21 @@ namespace C3DE
 
                 if (component != null)
                     return sceneObjects[i];
+            }
+
+            return null;
+        }
+
+        #endregion
+
+        #region Collisions detection
+
+        public Collider Collides(Collider collider)
+        {
+            for (int i = 0, l = colliders.Count; i < l; i++)
+            {
+                if (collider.Collides(colliders[i]))
+                    return colliders[i];
             }
 
             return null;

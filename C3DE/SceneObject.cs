@@ -7,7 +7,7 @@ namespace C3DE
     /// <summary>
     /// A scene object is the base object on the scene.
     /// </summary>
-    public class SceneObject : ICloneable
+    public class SceneObject : ICloneable, IDisposable
     {
         #region Private/protected declarations
 
@@ -110,6 +110,7 @@ namespace C3DE
             transform.Awake();
 
             enabled = true;
+            initialized = false;
             IsStatic = false;
             IsPrefab = false;
 
@@ -125,13 +126,16 @@ namespace C3DE
         {
             if (!initialized)
             {
-                for (int i = components.Count - 1; i != 0; i--)
-                {
-                    components[i].Start();
-                    components[i].initialized = true;
-                }
-
                 initialized = true;
+
+                // Sort component now then initialize it.
+                components.Sort();
+
+                for (int i = 0; i < components.Count; i++)
+                {
+					components[i].initialized = true;
+                    components[i].Start();
+                }
             }
         }
 
@@ -159,7 +163,7 @@ namespace C3DE
             if (!transform.Transforms.Contains(sceneObject.transform) && sceneObject != this)
             {
                 // Add the scene object to the scene if not yet added.
-                if (sceneObject.Scene == null && this != scene)
+                if (this != scene)
                 {
                     if (scene != null)
                         scene.Add(sceneObject);
@@ -215,10 +219,15 @@ namespace C3DE
             component.Awake();
 
             components.Add(component);
-            components.Sort();
 
-            if (initialized && !component.Initialized)
-                component.Start();
+			if (initialized && !component.Initialized) 
+			{
+				component.initialized = true;
+				component.Start ();
+
+                // Sort components here only if the SceneObject is already initialized.
+                components.Sort();
+			}
 
             NotifyComponentChanged(component);
 
@@ -323,6 +332,12 @@ namespace C3DE
             sceneObject.Transform.LocalScale = transform.LocalScale;
 
             return sceneObject;
+        }
+
+        public void Dispose()
+        {
+            foreach (Component component in components)
+                component.Dispose();
         }
     }
 }

@@ -102,6 +102,31 @@ namespace C3DE.Editor.Components
             else if (_distance < MinDistance)
                 _distance = MinDistance;
         }
+
+        protected override void UpdateInputs()
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override void UpdateKeyboardInput()
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override void UpdateMouseInput()
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override void UpdateGamepadInput()
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override void UpdateTouchInput()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
 

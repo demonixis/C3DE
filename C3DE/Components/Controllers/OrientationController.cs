@@ -77,5 +77,15 @@ namespace C3DE.Components.Controllers
         {
             return (float)(Math.Round(value * precision) / precision);
         }
+
+        protected override void UpdateGamepadInput() { }
+            
+        protected override void UpdateInputs() { }
+       
+        protected override void UpdateKeyboardInput() { }
+
+        protected override void UpdateMouseInput() { }
+
+        protected override void UpdateTouchInput() { }
 	}
 }

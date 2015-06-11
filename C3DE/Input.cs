@@ -5,7 +5,7 @@ namespace C3DE
     /// <summary>
     /// A static class to use inputs.
     /// </summary>
-    public class Input
+    public static class Input
     {
         /// <summary>
         /// Gets or sets keyboard inputs

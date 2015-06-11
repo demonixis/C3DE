@@ -1,4 +1,6 @@
 ﻿using C3DE.Components;
+using C3DE.UI;
+using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 
 namespace C3DE
@@ -105,7 +107,7 @@ namespace C3DE
         {
             var index = _scenes.IndexOf(scene);
 
-            if (index > 0) // Excluse the default scene
+            if (index > 0) // Exclude the default scene
             {
                 if (_activeSceneIndex == index)
                     _activeSceneIndex = _scenes.Count - 1;
@@ -139,10 +141,14 @@ namespace C3DE
                     _scenes[_activeSceneIndex].Unload();
 
                 Camera.Main = null;
+                GUI.Enabled = true;
+                GUI.Effect = null;
 
                 _activeSceneIndex = _levelToLoad;
                 _levelToLoad = -1;
 
+                Scene.Main = _scenes[_activeSceneIndex];
+ 
                 _scenes[_activeSceneIndex].Initialize();
             }
 

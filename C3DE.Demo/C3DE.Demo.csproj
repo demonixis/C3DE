@@ -37,11 +37,31 @@
   <PropertyGroup>
     <ApplicationIcon>Game.ico</ApplicationIcon>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug Linux|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug Linux\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>ManagedMinimumRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release Linux|AnyCPU'">
+    <OutputPath>bin\Release Linux\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug WindowsGL|AnyCPU'">
+    <OutputPath>bin\Debug WindowsGL\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release WindowsGL|AnyCPU'">
+    <OutputPath>bin\Release WindowsGL\</OutputPath>
+  </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="MonoGame.Framework">
+    <Reference Include="MonoGame.Framework, Version=3.5.0.246, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Libs\MonoGame.Framework.dll</HintPath>
     </Reference>
+    <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\C3DE\C3DE.csproj">
@@ -51,10 +71,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DemoGame.cs" />
-    <Compile Include="Scenes\HexagonTerrain.cs" />
+    <Compile Include="Scenes\GUIDemo.cs" />
+    <Compile Include="Scenes\HalloweenDemo.cs" />
+    <Compile Include="Scenes\HexagonGridTerrain.cs" />
+    <Compile Include="Scenes\ProceduralTerrainLava.cs" />
     <Compile Include="Scenes\MenuDemo.cs" />
-    <Compile Include="Scripts\FresnelMaterial.cs" />
-    <Compile Include="Scenes\GridDemo.cs" />
+    <Compile Include="Scenes\LightingDemo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Scripts\AutoRotation.cs" />
     <Compile Include="Scripts\ControllerSwitcher.cs" />
@@ -64,11 +86,13 @@
     <Compile Include="Scripts\LightMoverKeys.cs" />
     <Compile Include="Scripts\LightSwitcher.cs" />
     <Compile Include="Scripts\MenuBehaviour.cs" />
+    <Compile Include="Scripts\PostProcessSwitcher.cs" />
     <Compile Include="Scripts\RayPickingTester.cs" />
     <Compile Include="Scripts\SimplePath.cs" />
+    <Compile Include="Scripts\UIWidgetDemo.cs" />
     <Compile Include="Scripts\VRRendererSwitcher.cs" />
     <Compile Include="Scripts\WeightMapViewer.cs" />
-    <Compile Include="Scenes\RandomTerrain.cs" />
+    <Compile Include="Scenes\ProceduralTerrainWater.cs" />
     <Compile Include="Scenes\HeightmapDemo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -112,5 +112,10 @@ namespace C3DE.Components.Lights
             sb.Draw(shadowGenerator.ShadowMap, new Rectangle(0, 0, 100, 100), Color.White);
             sb.End();
         }
+
+        public override void Dispose()
+        {
+            shadowGenerator.Dispose();
+        }
     }
 }

@@ -9,8 +9,8 @@ namespace C3DE.Demo.Scripts
 {
     public class MenuBehaviour : Behaviour
     {
-        public static int ButtonWidth = 180;
-        public static int ButtonHeight = 50;
+        public static int ButtonWidth = 240;
+        public static int ButtonHeight = 55;
 
         class DemoWidget
         {
@@ -41,28 +41,32 @@ namespace C3DE.Demo.Scripts
         private Rectangle _backgroundRect;
         private Texture2D _background;
         private Vector2 _titleRect;
+        private Vector2 _footerRect;
         private float _titleSize;
         private float _margin;
         private DemoWidget[] _demos;
 
         public override void Start()
         {
-            _margin = 25;
+            _margin = 15;
 
-            _background = GraphicsHelper.CreateGradiantTexture(Color.LightSteelBlue, Color.Linen, Screen.Width, Screen.Height);
-            _backgroundRect = new Rectangle(0, 0, Screen.Width, Screen.Height);
+            _background = GraphicsHelper.CreateGradiantTexture(Color.LightSteelBlue, Color.Linen, Screen.VirtualWidth, Screen.VirtualHeight);
+            _backgroundRect = new Rectangle(0, 0, Screen.VirtualWidth, Screen.VirtualHeight);
 
-            var titleSize = GUI.Skin.Font.MeasureString("C3DE Demos");
-            _titleSize = 3.0f;
-            _titleRect = new Vector2(Screen.WidthPerTwo - titleSize.X * _titleSize / 2, titleSize.Y * _titleSize);
+            var tempVec2 = GUI.Skin.Font.MeasureString("C3DE Demos");
+            _titleSize = 2.0f;
+            _titleRect = new Vector2(Screen.VirtualWidthPerTwo - tempVec2.X * _titleSize / 2, tempVec2.Y);
+
+            tempVec2 = GUI.Skin.Font.MeasureString("Gets the source : https://github.com/demonixis/C3DE");
+            _footerRect = new Vector2(Screen.VirtualWidthPerTwo - tempVec2.X / 2, Screen.VirtualHeight - tempVec2.Y - 5);
 
             _demos = new DemoWidget[Application.SceneManager.Size - 1];
 
             for (int i = 0; i < _demos.Length; i++)
                 _demos[i] = new DemoWidget(Application.SceneManager[i + 1].Name, i + 1);
 
-            float x = Screen.WidthPerTwo - ButtonWidth / 2;
-            float y = Screen.HeightPerTwo - ((ButtonHeight + _margin) * _demos.Length) / 2;
+            float x = Screen.VirtualWidthPerTwo - ButtonWidth / 2;
+            float y = Screen.VirtualHeightPerTwo - ((ButtonHeight + _margin) * _demos.Length) / 2;
 
             for (int i = 0; i < _demos.Length; i++)
                 _demos[i].SetPosition(x, y + i * (ButtonHeight + _margin));
@@ -81,6 +85,8 @@ namespace C3DE.Demo.Scripts
 
             for (int i = 0, l = _demos.Length; i < l; i++)
                 _demos[i].Draw(gui);
+
+            gui.Label(ref _footerRect, "Gets the source : https://github.com/demonixis/C3DE");
         }
     }
 }

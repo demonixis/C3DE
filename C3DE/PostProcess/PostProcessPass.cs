@@ -4,10 +4,16 @@ using System;
 
 namespace C3DE.PostProcess
 {
-    public abstract class PostProcessPass : IComparable
+    public abstract class PostProcessPass : IComparable, IDisposable
     {
-        protected Effect effect;
+        public bool Enabled { get; set; }
+
         protected int order;
+
+        public PostProcessPass()
+        {
+            Enabled = true;
+        }
 
         public abstract void Initialize(ContentManager content);
         public abstract void Apply(SpriteBatch spriteBatch, RenderTarget2D renderTarget);
@@ -25,6 +31,10 @@ namespace C3DE.PostProcess
                 return 1;
             else
                 return -1;
+        }
+
+        public virtual void Dispose()
+        {
         }
     }
 }

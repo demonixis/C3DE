@@ -19,6 +19,7 @@ namespace C3DE.Editor.MonoGameBridge
     using C3DE.Components.Renderers;
     using C3DE.Geometries;
     using C3DE.Prefabs.Meshes;
+    using C3DE.Rendering;
     using XnaColor = Microsoft.Xna.Framework.Color;
     using XnaVector2 = Microsoft.Xna.Framework.Vector2;
     using XnaVector3 = Microsoft.Xna.Framework.Vector3;
@@ -163,12 +164,12 @@ namespace C3DE.Editor.MonoGameBridge
 
                     _selectedObject = info.Collider.SceneObject;
 
-                    var boxRenderer = _selectedObject.GetComponent<BoundingBoxRenderer>();
+                    /*var boxRenderer = _selectedObject.GetComponent<BoundingBoxRenderer>();
 
                     if (boxRenderer == null)
                         boxRenderer = _selectedObject.AddComponent<BoundingBoxRenderer>();
 
-                    boxRenderer.Enabled = true;
+                    boxRenderer.Enabled = true;*/
                 }
             }
 
@@ -185,7 +186,7 @@ namespace C3DE.Editor.MonoGameBridge
         {
             if (_selectedObject != null)
             {
-                _selectedObject.GetComponent<BoundingBoxRenderer>().Enabled = false;
+                //_selectedObject.GetComponent<BoundingBoxRenderer>().Enabled = false;
             }
         }
 

@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using C3DE.Components.Controllers.Mobile;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Input;
 using System;
@@ -13,13 +14,37 @@ namespace C3DE.Components.Controllers
         private Camera _camera;
         private Matrix _rotationMatrix;
         private Vector3 _transformedReference;
-        private Vector3 _translation = Vector3.Zero;
-        private Vector3 _rotation = Vector3.Zero;
+        private bool _lockCursor;
+        private bool _virtualInputEnabled;
+        protected Vector3 translation = Vector3.Zero;
+        protected Vector3 rotation = Vector3.Zero;
+        protected VirtualGamepad leftVirtaulStick;
+        protected SwipeZone rightSwipeZone;
 
         /// <summary>
         /// Enable or disable the flying mode. Default is false.
         /// </summary>
         public bool Fly { get; set; }
+
+        public bool VirtualInputEnabled
+        {
+            get { return _virtualInputEnabled; }
+            set
+            {
+                SetVirtualInputSupport(value);
+            }
+        }
+
+        public bool LockCursor
+        {
+            get { return _lockCursor; }
+            set
+            {
+                _lockCursor = value;
+                Screen.ShowCursor = !_lockCursor;
+                Screen.LockCursor = _lockCursor;
+            }
+        }
 
         /// <summary>
         /// Create a first person controller with default values.
@@ -27,14 +52,35 @@ namespace C3DE.Components.Controllers
         public FirstPersonController()
             : base()
         {
-            Velocity = 0.95f;
-            AngularVelocity = 0.95f;
-            MoveSpeed = 1.0f;
-            RotationSpeed = 0.1f;
+            Velocity = 0.92f;
+            AngularVelocity = 0.85f;
+            MoveSpeed = 1.5f;
+            RotationSpeed = 0.15f;
             LookSpeed = 0.15f;
             StrafeSpeed = 0.75f;
             MouseSensibility = new Vector2(0.15f);
+            GamepadSensibility = new Vector2(2.5f);
             Fly = false;
+            _virtualInputEnabled = false;
+            _lockCursor = false;
+        }
+
+        public override void OnDisabled()
+        {
+            if (_virtualInputEnabled)
+            {
+                leftVirtaulStick.Enabled = false;
+                rightSwipeZone.Enabled = false;
+            }
+        }
+
+        public override void OnEnabled()
+        {
+            if (_virtualInputEnabled)
+            {
+                leftVirtaulStick.Enabled = true;
+                rightSwipeZone.Enabled = true;
+            }
         }
 
         public override void Start()
@@ -43,92 +89,147 @@ namespace C3DE.Components.Controllers
 
             if (_camera == null)
                 throw new Exception("No camera attached to this scene object.");
+
+#if ANDROID
+                VirtualInputEnabled = true;
+#endif
         }
 
         public override void Update()
         {
-            UpdateMouseInput();
-            UpdateKeyboardInput();
-            UpdateGamepadInput();
+            UpdateInputs();
+
+            // Limits on X axis
+            if (transform.Rotation.X <= -MathHelper.PiOver2)
+            {
+                transform.SetRotation(-MathHelper.PiOver2 + 0.001f, null, null);
+                rotation = Vector3.Zero;
+            }
+            else if (transform.Rotation.X >= MathHelper.PiOver2)
+            {
+                transform.SetRotation(MathHelper.PiOver2 - 0.001f, null, null);
+                rotation = Vector3.Zero;
+            }
 
             _rotationMatrix = Matrix.CreateFromYawPitchRoll(transform.Rotation.Y, transform.Rotation.X, 0.0f);
 
-            _transformedReference = Vector3.Transform(_translation, !Fly ? Matrix.CreateRotationY(transform.Rotation.Y) : _rotationMatrix);
+            _transformedReference = Vector3.Transform(translation, !Fly ? Matrix.CreateRotationY(transform.Rotation.Y) : _rotationMatrix);
 
             // Translate and rotate
             transform.Translate(ref _transformedReference);
-            transform.Rotate(ref _rotation);
+            transform.Rotate(ref rotation);
 
             // Update target
             _camera.Target = transform.Position + Vector3.Transform(_camera.Reference, _rotationMatrix);
 
-            _translation *= Velocity;
-            _rotation *= AngularVelocity;
+            translation *= Velocity;
+            rotation *= AngularVelocity;
         }
 
-        private void UpdateKeyboardInput()
+        protected override void UpdateInputs()
+        {
+            UpdateMouseInput();
+            UpdateKeyboardInput();
+            UpdateGamepadInput();
+            UpdateTouchInput();
+        }
+
+        protected override void UpdateKeyboardInput()
         {
             if (Input.Keys.Up || Input.Keys.Pressed(Keys.W))
-                _translation.Z += MoveSpeed * Time.DeltaTime;
+                translation.Z += MoveSpeed * Time.DeltaTime;
 
             else if (Input.Keys.Pressed(Keys.Down) || Input.Keys.Pressed(Keys.S))
-                _translation.Z -= MoveSpeed * Time.DeltaTime;
+                translation.Z -= MoveSpeed * Time.DeltaTime;
 
             if (Input.Keys.Pressed(Keys.A))
-                _translation.X += MoveSpeed * Time.DeltaTime / 2.0f;
+                translation.X += MoveSpeed * Time.DeltaTime / 2.0f;
 
             else if (Input.Keys.Pressed(Keys.D))
-                _translation.X -= MoveSpeed * Time.DeltaTime / 2.0f;
+                translation.X -= MoveSpeed * Time.DeltaTime / 2.0f;
 
-            if (Input.Keys.Pressed(Keys.Q))
-                _translation.Y += StrafeSpeed * Time.DeltaTime;
+            if (Input.Keys.Pressed(Keys.A))
+                translation.Y += StrafeSpeed * Time.DeltaTime;
 
             else if (Input.Keys.Pressed(Keys.E))
-                _translation.Y -= StrafeSpeed * Time.DeltaTime;
+                translation.Y -= StrafeSpeed * Time.DeltaTime;
 
             if (Input.Keys.Pressed(Keys.PageUp))
-                _rotation.X -= LookSpeed * Time.DeltaTime;
+                rotation.X -= LookSpeed * Time.DeltaTime;
 
             else if (Input.Keys.Pressed(Keys.PageDown))
-                _rotation.X += LookSpeed * Time.DeltaTime;
+                rotation.X += LookSpeed * Time.DeltaTime;
 
             if (Input.Keys.Pressed(Keys.Left))
-                _rotation.Y += RotationSpeed * Time.DeltaTime;
+                rotation.Y += RotationSpeed * Time.DeltaTime;
 
             else if (Input.Keys.Pressed(Keys.Right))
-                _rotation.Y -= RotationSpeed * Time.DeltaTime;
+                rotation.Y -= RotationSpeed * Time.DeltaTime;
 
             if (Input.Keys.JustPressed(Keys.Tab))
                 Fly = !Fly;
         }
 
-        private void UpdateMouseInput()
+        protected override void UpdateMouseInput()
         {
-            if (Input.Mouse.Drag())
+            if (!_lockCursor && Input.Mouse.Drag())
             {
-                _rotation.Y -= Input.Mouse.Delta.X * RotationSpeed * MouseSensibility.Y * Time.DeltaTime;
-                _rotation.X += Input.Mouse.Delta.Y * RotationSpeed * MouseSensibility.X * Time.DeltaTime;
+                rotation.Y -= Input.Mouse.Delta.X * RotationSpeed * MouseSensibility.Y * Time.DeltaTime;
+                rotation.X += Input.Mouse.Delta.Y * RotationSpeed * MouseSensibility.X * Time.DeltaTime;
+            }
+            else if (_lockCursor)
+            {
+                rotation.Y -= Input.Mouse.Delta.X * RotationSpeed * MouseSensibility.Y * Time.DeltaTime;
+                rotation.X += Input.Mouse.Delta.Y * LookSpeed * MouseSensibility.X * Time.DeltaTime;
             }
 
             if (Input.Mouse.Drag(Inputs.MouseButton.Middle))
             {
-                _translation.Y += Input.Mouse.Delta.Y * MoveSpeed * MouseSensibility.Y * Time.DeltaTime;
-                _translation.X += Input.Mouse.Delta.X * StrafeSpeed * MouseSensibility.X * Time.DeltaTime;
+                translation.Y += Input.Mouse.Delta.Y * MoveSpeed * MouseSensibility.Y * Time.DeltaTime;
+                translation.X += Input.Mouse.Delta.X * StrafeSpeed * MouseSensibility.X * Time.DeltaTime;
             }
         }
 
-        private void UpdateGamepadInput()
+        protected override void UpdateGamepadInput()
         {
-            _translation.Z += Input.Gamepad.LeftStickValue().Y * MoveSpeed * Time.DeltaTime;
-            _translation.X -= Input.Gamepad.LeftStickValue().X * StrafeSpeed * Time.DeltaTime;
+            translation.Z += Input.Gamepad.LeftStickValue().Y * GamepadSensibility.X * MoveSpeed * Time.DeltaTime;
+            translation.X -= Input.Gamepad.LeftStickValue().X * GamepadSensibility.Y * StrafeSpeed * Time.DeltaTime;
 
-            _rotation.X -= Input.Gamepad.RightStickValue().Y * LookSpeed * Time.DeltaTime;
-            _rotation.Y -= Input.Gamepad.RightStickValue().X * RotationSpeed * Time.DeltaTime;
+            rotation.X -= Input.Gamepad.RightStickValue().Y * GamepadSensibility.Y * LookSpeed * Time.DeltaTime;
+            rotation.Y -= Input.Gamepad.RightStickValue().X * GamepadSensibility.X * RotationSpeed * Time.DeltaTime;
 
             if (Input.Gamepad.LeftShoulder())
-                _translation.Y -= MoveSpeed / 2 * Time.DeltaTime;
+                translation.Y -= MoveSpeed / 2 * Time.DeltaTime;
             else if (Input.Gamepad.RightShoulder())
-                _translation.Y += MoveSpeed / 2 * Time.DeltaTime;
+                translation.Y += MoveSpeed / 2 * Time.DeltaTime;
+        }
+
+        protected override void UpdateTouchInput()
+        {
+            if (_virtualInputEnabled)
+            {
+                translation.Z -= leftVirtaulStick.StickValue.Y * MoveSpeed * Time.DeltaTime * 0.75f;
+                translation.X -= leftVirtaulStick.StickValue.X * StrafeSpeed * Time.DeltaTime * 0.75f;
+
+                rotation.X += rightSwipeZone.Delta.Y * LookSpeed * Time.DeltaTime * 0.35f;
+                rotation.Y -= rightSwipeZone.Delta.X * RotationSpeed * Time.DeltaTime * 0.35f;
+            }
+        }
+
+        protected virtual void SetVirtualInputSupport(bool active)
+        {
+            if (active && leftVirtaulStick == null && rightSwipeZone == null)
+            {
+                leftVirtaulStick = sceneObject.AddComponent<VirtualGamepad>();
+                rightSwipeZone = sceneObject.AddComponent<SwipeZone>();
+            }
+            else if (!active && leftVirtaulStick != null && rightSwipeZone != null)
+            {
+                sceneObject.RemoveComponent(leftVirtaulStick);
+                sceneObject.RemoveComponent(rightSwipeZone);
+            }
+
+            _virtualInputEnabled = leftVirtaulStick != null && rightSwipeZone != null;
         }
     }
 }
