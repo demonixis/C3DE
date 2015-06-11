@@ -13,5 +13,9 @@ namespace C3DE.Components
         public virtual void OnServerInitialized() { }
 
         public virtual void OnConnectedToServer() { }
+
+        public virtual void OnCollisionEnter() { }
+
+        public virtual void OnTriggerEnter() { }
     }
 }

@@ -2,7 +2,7 @@ float4x4 World;
 float4x4 View;
 float4x4 Projection;
 
-float4 ReflectionColor = float4(1.0, 1.0, 1.0, 1.0);
+float3 ReflectionColor = float4(1.0, 1.0, 1.0);
 float3 EyePosition = float3(0, 0, 1);
 bool MainTextureEnabled = false;
 

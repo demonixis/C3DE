@@ -11,8 +11,8 @@ namespace C3DE.Materials
         private TextureCube _reflectiveMap;
         private bool _normalMapEnabled;
         private bool _reflectiveMapEnabled;
-        private Vector4 _reflectionColor;
-        private Vector4 _specularColor;
+        private Vector3 _reflectionColor;
+        private Vector3 _specularColor;
         private float _totalTime;
 
         public TextureCube ReflectiveMap
@@ -38,13 +38,13 @@ namespace C3DE.Materials
         public Color ReflectionColor
         {
             get { return new Color(_reflectionColor); }
-            set { _reflectionColor = value.ToVector4(); }
+            set { _reflectionColor = value.ToVector3(); }
         }
 
         public Color SpecularColor
         {
             get { return new Color(_specularColor); }
-            set { _specularColor = value.ToVector4(); }
+            set { _specularColor = value.ToVector3(); }
         }
 
         public float WaterTransparency { get; set; }
@@ -56,8 +56,8 @@ namespace C3DE.Materials
             WaterTransparency = 0.45f;
             DiffuseColor = Color.White;
             Shininess = 250.0f;
-            _specularColor = new Vector4(0.6f, 0.6f, 0.6f, 1.0f);
-            _reflectionColor = new Vector4(1.0f);
+            _specularColor = new Vector3(0.6f, 0.6f, 0.6f);
+            _reflectionColor = new Vector3(1.0f);
             _normalMapEnabled = false;
             _reflectiveMapEnabled = false;
             _totalTime = 0.0f;

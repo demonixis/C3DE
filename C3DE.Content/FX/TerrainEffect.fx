@@ -7,13 +7,13 @@ float4x4 View;
 float4x4 Projection;
 
 // Material
-float4 AmbientColor = float4(1.0, 1.0, 1.0, 1.0);
-float4 DiffuseColor = float4(1.0, 1.0, 1.0, 1.0);
+float3 AmbientColor = float4(1.0, 1.0, 1.0, 1.0);
+float3 DiffuseColor = float4(1.0, 1.0, 1.0, 1.0);
 
 // Light
 float3 LightDirection = float3(1.0, 1.0, 0.0);
 float LightIntensity = 1.0;
-float4 LightColor = float4(1, 1, 1, 1);
+float3 LightColor = float4(1, 1, 1);
 
 // Misc
 float2 TextureTiling = float2(1, 1);

@@ -8,7 +8,7 @@ namespace C3DE.Materials
     public class ReflectiveMaterial : Material
     {
         private bool _mainTextureEnabled;
-        private Vector4 _reflectionColor;
+        private Vector3 _reflectionColor;
 
         public new Texture2D MainTexture
         {
@@ -25,7 +25,7 @@ namespace C3DE.Materials
         public Color ReflectionColor
         {
             get { return new Color(_reflectionColor); }
-            set { _reflectionColor = value.ToVector4(); }
+            set { _reflectionColor = value.ToVector3(); }
         }
 
 

@@ -7,20 +7,20 @@ namespace C3DE.Materials
 {
     public class StandardMaterial : Material
     {
-        private Vector4 _diffuseColor;
-        private Vector4 _emissiveColor;
-        private Vector4 _specularColor;
+        private Vector3 _diffuseColor;
+        private Vector3 _emissiveColor;
+        private Vector3 _specularColor;
 
         public Color EmissiveColor
         {
             get { return new Color(_emissiveColor); }
-            set { _emissiveColor = value.ToVector4(); }
+            set { _emissiveColor = value.ToVector3(); }
         }
 
         public Color SpecularColor
         {
             get { return new Color(_specularColor); }
-            set { _specularColor = value.ToVector4(); }
+            set { _specularColor = value.ToVector3(); }
         }
 
         public float Shininess { get; set; }
@@ -28,9 +28,9 @@ namespace C3DE.Materials
         public StandardMaterial(Scene scene)
             : base(scene)
         {
-            _diffuseColor = new Vector4(1.0f, 1.0f, 1.0f, 1.0f);
-            _emissiveColor = new Vector4(0.0f, 0.0f, 0.0f, 1.0f);
-            _specularColor = new Vector4(0.6f, 0.6f, 0.6f, 1.0f);
+            _diffuseColor = new Vector3(1.0f, 1.0f, 1.0f);
+            _emissiveColor = new Vector3(0.0f, 0.0f, 0.0f);
+            _specularColor = new Vector3(0.6f, 0.6f, 0.6f);
             Shininess = 250.0f;
         }
 

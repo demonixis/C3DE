@@ -10,7 +10,7 @@ namespace C3DE.Materials
         public FresnelMaterial(Scene scene)
             : base(scene)
         {
-            diffuseColor = new Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+            diffuseColor = new Vector3(1.0f, 1.0f, 1.0f);
         }
 
         public override void LoadContent(ContentManager content)

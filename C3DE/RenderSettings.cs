@@ -12,8 +12,8 @@ namespace C3DE
     /// </summary>
     public class RenderSettings
     {
-        internal Vector4 fogColor;
-        internal Vector4 ambientColor;
+        internal Vector3 fogColor;
+        internal Vector3 ambientColor;
         internal Vector4 fogData;
         internal Skybox skybox;
 
@@ -23,7 +23,7 @@ namespace C3DE
         public Color AmbientColor
         {
             get { return new Color(ambientColor); }
-            set { ambientColor = value.ToVector4(); }
+            set { ambientColor = value.ToVector3(); }
         }
 
         /// <summary>
@@ -32,7 +32,7 @@ namespace C3DE
         public Color FogColor
         {
             get { return new Color(fogColor); }
-            set { fogColor = value.ToVector4(); }
+            set { fogColor = value.ToVector3(); }
         }
 
         /// <summary>
@@ -86,14 +86,14 @@ namespace C3DE
         /// </summary>
         public RenderSettings()
         {
-            ambientColor = new Vector4(0.1f, 0.1f, 0.1f, 1.0f);
+            ambientColor = new Vector3(0.1f, 0.1f, 0.1f);
             fogData = Vector4.Zero;
             FogEnabled = false;
             FogMode = FogMode.None;
             FogDensity = 0.01f;
             FogStart = 20.0f;
             FogEnd = 150.0f;
-            fogColor = Vector4.One;
+            fogColor = Vector3.One;
             skybox = new Skybox();
         }
     }

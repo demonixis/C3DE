@@ -16,7 +16,7 @@ namespace C3DE.Materials
         private static int MaterialCounter = 0;
 
         protected internal Scene scene;
-        protected Vector4 diffuseColor;
+        protected Vector3 diffuseColor;
         protected Texture2D mainTexture;
         protected internal Effect effect;
 
@@ -40,7 +40,7 @@ namespace C3DE.Materials
         public Color DiffuseColor
         {
             get { return new Color(diffuseColor); }
-            set { diffuseColor = value.ToVector4(); }
+            set { diffuseColor = value.ToVector3(); }
         }
 
         public Texture2D MainTexture
@@ -57,7 +57,7 @@ namespace C3DE.Materials
 
         public Material(Scene mainScene)
         {
-            diffuseColor = Color.White.ToVector4();
+            diffuseColor = Color.White.ToVector3();
             Id = MaterialCounter++;
             Name = "Material_" + Id;
             Tiling = Vector2.One;

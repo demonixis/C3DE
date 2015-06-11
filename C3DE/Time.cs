@@ -19,6 +19,11 @@ namespace C3DE
             get { return __deltaTime * __timeScale / 1000.0f; }
         }
 
+        public static float UnscaledDeltaTime
+        {
+            get { return __deltaTime / 1000.0f; }
+        }
+
         /// <summary>
         /// Gets the time scale.
         /// </summary>

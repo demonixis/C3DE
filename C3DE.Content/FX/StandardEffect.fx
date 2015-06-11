@@ -7,10 +7,10 @@ float4x4 View;
 float4x4 Projection;
 
 // Material
-float4 AmbientColor = float4(0.1, 0.1, 0.1, 1.0);
-float4 DiffuseColor = float4(1.0, 1.0, 1.0, 1.0);
-float4 EmissiveColor = float4(0.0, 0.0, 0.0, 1.0);
-float4 SpecularColor = float4(0.8, 0.8, 0.8, 1.0);
+float3 AmbientColor = float4(0.1, 0.1, 0.1);
+float3 DiffuseColor = float4(1.0, 1.0, 1.0);
+float3 EmissiveColor = float4(0.0, 0.0, 0.0);
+float3 SpecularColor = float4(0.8, 0.8, 0.8);
 float Shininess = 200.0;
 
 // Lighting

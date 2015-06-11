@@ -7,19 +7,19 @@ namespace C3DE.Materials
 {
     public class TransparentMaterial : Material
     {
-        private Vector4 _emissiveColor;
+        private Vector3 _emissiveColor;
 
         public Color EmissiveColor
         {
             get { return new Color(_emissiveColor); }
-            set { _emissiveColor = value.ToVector4(); }
+            set { _emissiveColor = value.ToVector3(); }
         }
 
         public TransparentMaterial(Scene scene)
             : base(scene)
         {
-            diffuseColor = new Vector4(1.0f, 1.0f, 1.0f, 1.0f);
-            _emissiveColor = new Vector4(0.0f, 0.0f, 0.0f, 1.0f);
+            diffuseColor = new Vector3(1.0f, 1.0f, 1.0f);
+            _emissiveColor = new Vector3(0.0f, 0.0f, 0.0f);
         }
 
         public override void LoadContent(ContentManager content)
