@@ -107,7 +107,7 @@ namespace C3DE
         {
             var index = _scenes.IndexOf(scene);
 
-            if (index > 0) // Excluse the default scene
+            if (index > 0) // Exclude the default scene
             {
                 if (_activeSceneIndex == index)
                     _activeSceneIndex = _scenes.Count - 1;
