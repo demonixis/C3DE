@@ -1,15 +1,9 @@
-﻿using C3DE.Components.Colliders;
-using C3DE.Components.Lights;
-using C3DE.Components.Renderers;
+﻿using C3DE.Components.Lights;
 using C3DE.Demo.Scripts;
-using C3DE.Geometries;
 using C3DE.Materials;
 using C3DE.Prefabs;
-using C3DE.UI;
-using C3DE.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
 
 namespace C3DE.Demo.Scenes
 {
@@ -21,29 +15,26 @@ namespace C3DE.Demo.Scenes
         {
             base.Initialize();
 
-            // Skybox
+            // First we add a Skybox
             RenderSettings.Skybox.Generate(Application.GraphicsDevice, Application.Content, DemoGame.StarsSkybox);
 
-            // Camera
+            // And a camera with some components
             var camera = new CameraPrefab("camera");
-            Add(camera);
-
             camera.AddComponent<ControllerSwitcher>();
             camera.AddComponent<DemoBehaviour>();
+            Add(camera);
 
-            // Light
+            // A light is required to illuminate objects.
             var lightPrefab = new LightPrefab("light", LightType.Directional);
             lightPrefab.Transform.Translate(0, 10, 0);
             lightPrefab.Light.ShadowGenerator.SetShadowMapSize(Application.GraphicsDevice, 1024);
             lightPrefab.EnableShadows = true;
-            lightPrefab.AddComponent<LightSwitcher>();
-            lightPrefab.AddComponent<LightMoverKeys>();
             Add(lightPrefab);
 
-            // Terrain
+            // A terrain with its material.
             var terrainMaterial = new StandardMaterial(scene);
             terrainMaterial.MainTexture = Application.Content.Load<Texture2D>("Textures/Terrain/Rock");
-            terrainMaterial.Shininess = 1;
+            terrainMaterial.Shininess = 150;
             terrainMaterial.Tiling = new Vector2(8);
 
             var terrain = new TerrainPrefab("terrain");
@@ -54,7 +45,7 @@ namespace C3DE.Demo.Scenes
             terrain.Transform.Translate(-terrain.Width >> 1, 0, -terrain.Depth / 2);
             Add(terrain);
 
-            // Lava
+            // Lava !
             var lavaMaterial = new LavaMaterial(this);
             lavaMaterial.MainTexture = Application.Content.Load<Texture2D>("Textures/lava_texture");
             lavaMaterial.NormalMap = Application.Content.Load<Texture2D>("Textures/lava_bump");

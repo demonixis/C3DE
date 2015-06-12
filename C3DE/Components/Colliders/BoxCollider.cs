@@ -32,8 +32,7 @@ namespace C3DE.Components.Colliders
         {
             if (!sceneObject.IsStatic)
             {
-                _box.Min = Min + transform.Position;
-                _box.Max = transform.Position + Max * transform.LocalScale;
+
             }
         }
 
@@ -42,20 +41,16 @@ namespace C3DE.Components.Colliders
             var renderable = GetComponent<RenderableComponent>();
 
             if (renderable != null)
-            {
                 _box = new BoundingBox(Vector3.Zero, new Vector3(renderable.boundingSphere.Radius));
-                Min = _box.Min;
-                Max = _box.Max;
-            }
         }
 
         public override bool Collides(Collider other)
         {
             if (other is SphereCollider)
-                return (other as SphereCollider).Sphere.Intersects(_box);
+                return _box.Intersects((other as SphereCollider).Sphere);
 
             if (other is BoxCollider)
-                return (other as BoxCollider).Box.Intersects(_box);
+                return _box.Intersects((other as BoxCollider).Box);
 
             return false;
         }

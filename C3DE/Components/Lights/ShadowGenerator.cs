@@ -10,7 +10,7 @@ namespace C3DE
     /// <summary>
     /// A generator of shadow for a specified light.
     /// </summary>
-    public class ShadowGenerator
+    public class ShadowGenerator : IDisposable
     {
         private Light _light;
         private RenderTarget2D shadowMap;
@@ -138,6 +138,12 @@ namespace C3DE
             }
 
             device.SetRenderTargets(currentRenderTargets);
+        }
+
+        public void Dispose()
+        {
+            if (shadowMap != null)
+                shadowMap.Dispose();
         }
     }
 }

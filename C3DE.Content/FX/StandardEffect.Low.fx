@@ -4,10 +4,10 @@ float4x4 View;
 float4x4 Projection;
 
 // Material
-float4 AmbientColor = float4(0.1, 0.1, 0.1, 1.0);
-float4 DiffuseColor = float4(1.0, 1.0, 1.0, 1.0);
-float4 EmissiveColor = float4(0.0, 0.0, 0.0, 1.0);
-float4 SpecularColor = float4(0.8, 0.8, 0.8, 1.0);
+float3 AmbientColor = float3(0.1, 0.1, 0.1);
+float3 DiffuseColor = float3(1.0, 1.0, 1.0);
+float3 EmissiveColor = float3(0.0, 0.0, 0.0);
+float3 SpecularColor = float3(0.8, 0.8, 0.8);
 float Shininess = 200.0;
 
 // Lighting
@@ -37,23 +37,23 @@ sampler2D textureSampler = sampler_state
 	AddressV = Wrap;
 };
 
-float4 CalcDirectionalLightColor(float3 normal, float4 worldPosition)
+float3 CalcDirectionalLightColor(float3 normal, float4 worldPosition)
 {
 	float3 diffuse = saturate(dot(normal, LightDirection));
-	return float4(diffuse * LightColor * LightIntensity, 1.0);
+	return diffuse * LightColor * LightIntensity;
 }
 
-float4 CalcPointLightColor(float3 normal, float4 worldPosition)
+float3 CalcPointLightColor(float3 normal, float4 worldPosition)
 {
 	float3 lightDirection = normalize(LightPosition - worldPosition);
 	float diffuse = saturate(dot(normal, lightDirection));
 	float d = distance(LightPosition, worldPosition);
 	float attenuation = 1 - pow(clamp(d / LightRange, 0, 1), LightFallOff);
 
-	return float4(diffuse * attenuation * LightColor * LightIntensity, 1.0);
+	return diffuse * attenuation * LightColor * LightIntensity;
 }
 
-float4 CalcSpotLightColor(float3 normal, float4 worldPosition)
+float3 CalcSpotLightColor(float3 normal, float4 worldPosition)
 {
 	float3 lightDirection = normalize(LightPosition - worldPosition);
 	float3 diffuse = saturate(dot(normal, lightDirection));
@@ -66,13 +66,13 @@ float4 CalcSpotLightColor(float3 normal, float4 worldPosition)
 	if (a < d)
 		attenuation = 1 - pow(clamp(a / d, 0, 1), LightFallOff);
 
-	return float4(diffuse * attenuation * LightColor * LightIntensity, 1.0);
+	return diffuse * attenuation * LightColor * LightIntensity;
 }
 
-float4 CalcSpecularColor(float3 normal, float4 worldPosition, float4 color, int type)
+float3 CalcSpecularColor(float3 normal, float4 worldPosition, float3 color, int type)
 {
 	if (type == 0)
-		return float4(0, 0, 0, 1);
+		return float3(0, 0, 0);
 
 	float3 lightDirection = LightDirection;
 
@@ -122,8 +122,8 @@ VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
 
 float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 {
-	float4 baseDiffuse = DiffuseColor * tex2D(textureSampler, (input.UV + TextureOffset) * TextureTiling);
-	float4 lightFactor = float4(1, 1, 1, 1);
+	float3 baseDiffuse = DiffuseColor * tex2D(textureSampler, (input.UV + TextureOffset) * TextureTiling);
+	float3 lightFactor = float3(1, 1, 1);
 	float3 normal = normalize(input.Normal);
 
 	// Apply a light influence.
@@ -134,11 +134,11 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 	else if (LightType == 3)
 		lightFactor = CalcSpotLightColor(normal, input.WorldPosition);
 
-	float4 finalDiffuse = baseDiffuse * lightFactor;
-	float4 finalSpecular = CalcSpecularColor(normal, input.WorldPosition, finalDiffuse, LightType);
-	float4 finalCompose = AmbientColor + finalDiffuse + finalSpecular + EmissiveColor;
+	float3 finalDiffuse = baseDiffuse * lightFactor;
+	float3 finalSpecular = CalcSpecularColor(normal, input.WorldPosition, finalDiffuse, LightType);
+	float3 finalCompose = AmbientColor + finalDiffuse + finalSpecular + EmissiveColor;
 	
-	return finalCompose;
+	return float4(finalCompose, 1.0);
 }
 
 technique Textured

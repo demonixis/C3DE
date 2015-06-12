@@ -17,7 +17,7 @@ namespace C3DE.Demo.Scripts
 
         public override void Start()
         {
-            Application.Game.Components.Add(new Network(Application.Game));
+            Application.Engine.Components.Add(new Network(Application.Engine));
             _netView = AddComponent<NetworkView>();
 
             _player = new MeshPrefab<CubeGeometry>("Player");

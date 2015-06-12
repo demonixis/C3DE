@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 
 namespace C3DE.Materials
 {
@@ -10,12 +11,12 @@ namespace C3DE.Materials
         Low, Normal
     }
 
-    public abstract class Material
+    public abstract class Material : IDisposable
     {
         private static int MaterialCounter = 0;
 
         protected internal Scene scene;
-        protected Vector4 diffuseColor;
+        protected Vector3 diffuseColor;
         protected Texture2D mainTexture;
         protected internal Effect effect;
 
@@ -39,7 +40,7 @@ namespace C3DE.Materials
         public Color DiffuseColor
         {
             get { return new Color(diffuseColor); }
-            set { diffuseColor = value.ToVector4(); }
+            set { diffuseColor = value.ToVector3(); }
         }
 
         public Texture2D MainTexture
@@ -56,14 +57,14 @@ namespace C3DE.Materials
 
         public Material(Scene mainScene)
         {
-            diffuseColor = Color.White.ToVector4();
+            diffuseColor = Color.White.ToVector3();
             Id = MaterialCounter++;
             Name = "Material_" + Id;
             Tiling = Vector2.One;
             Offset = Vector2.Zero;
             ShaderQuality = ShaderQuality.Normal;
 
-#if ANDROID
+#if ANDROID || OPENGL
             ShaderQuality = ShaderQuality.Low;
 #endif
 
@@ -77,11 +78,8 @@ namespace C3DE.Materials
 
         public abstract void Pass(RenderableComponent renderable);
 
-        public void Dispose()
+        public virtual void Dispose()
         {
-            scene = null;
-            mainTexture.Dispose();
-            effect.Dispose();
         }
     }
 }

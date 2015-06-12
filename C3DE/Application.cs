@@ -13,7 +13,7 @@ namespace C3DE
         /// <summary>
         /// Gets or sets the Game instance.
         /// </summary>
-        public static Game Game { get; set; }
+        public static Engine Engine { get; set; }
 
         /// <summary>
         /// Gets or sets the content manager.
@@ -38,7 +38,7 @@ namespace C3DE
         /// <param name="frameRate"></param>
         public static void TargetFrameRate(long frameRate)
         {
-            Game.TargetElapsedTime = new TimeSpan(10000000L / frameRate);
+            Engine.TargetElapsedTime = new TimeSpan(10000000L / frameRate);
         }
 
         /// <summary>
@@ -65,7 +65,7 @@ namespace C3DE
         public static void Quit()
         {
 #if !NETFX_CORE
-            Game.Exit();
+            Engine.Exit();
 #endif
         }
     }

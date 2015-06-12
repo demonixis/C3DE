@@ -47,7 +47,7 @@ namespace C3DE.Components.Controllers
             }
         }
 
-        private void UpdateKeyboardInput()
+        protected override void UpdateKeyboardInput()
         {
             if (Input.Keys.Up || Input.Keys.Pressed(Keys.W))
                 _translation.Z -= MoveSpeed * Time.DeltaTime;
@@ -68,13 +68,28 @@ namespace C3DE.Components.Controllers
                 _rotation.Y -= RotationSpeed * Time.DeltaTime;
         }
 
-        private void UpdateGamepadInput()
+        protected override void UpdateGamepadInput()
         {
             _translation.Z -= Input.Gamepad.LeftStickValue().Y * MoveSpeed * Time.DeltaTime;
             _translation.X -= Input.Gamepad.LeftStickValue().X * StrafeSpeed * Time.DeltaTime;
 
             _rotation.X -= Input.Gamepad.RightStickValue().Y * LookSpeed * Time.DeltaTime;
             _rotation.Y -= Input.Gamepad.RightStickValue().X * RotationSpeed * Time.DeltaTime;
+        }
+
+        protected override void UpdateInputs()
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override void UpdateMouseInput()
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override void UpdateTouchInput()
+        {
+            throw new NotImplementedException();
         }
     }
 }

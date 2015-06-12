@@ -15,7 +15,7 @@ namespace C3DE.Materials
         public TerrainMaterial(Scene scene)
             : base(scene)
         {
-            diffuseColor = new Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+            diffuseColor = new Vector3(1.0f, 1.0f, 1.0f);
             Tiling = Vector2.One;
         }
 

@@ -4,9 +4,9 @@ float4x4 View;
 float4x4 Projection;
 
 // Material
-float4 AmbientColor = float4(0.1, 0.1, 0.1, 1.0);
-float4 DiffuseColor = float4(1.0, 1.0, 1.0, 1.0);
-float4 EmissiveColor = float4(0.0, 0.0, 0.0, 1.0);
+float3 AmbientColor = float3(0.1, 0.1, 0.1);
+float3 DiffuseColor = float3(1.0, 1.0, 1.0);
+float3 EmissiveColor = float3(0.0, 0.0, 0.0);
 float Alpha = 1.0;
 
 // Misc
@@ -54,7 +54,7 @@ VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
 
 float4 PixelShaderFunctionNoAlpha(VertexShaderOutput input) : COLOR0
 {
-	return AmbientColor + (DiffuseColor * tex2D(textureSampler, (input.UV + TextureOffset) * TextureTiling)) + EmissiveColor;
+	return float4(AmbientColor + (DiffuseColor * tex2D(textureSampler, (input.UV + TextureOffset) * TextureTiling)) + EmissiveColor, 1.0);
 }
 
 float4 PixelShaderFunctionAlpha(VertexShaderOutput input) : COLOR0

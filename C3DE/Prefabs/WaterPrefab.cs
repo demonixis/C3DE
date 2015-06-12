@@ -19,6 +19,11 @@ namespace C3DE.Prefabs
             get { return renderer; }
         }
 
+        public WaterMaterial Material
+        {
+            get { return material; }
+        }
+
         public BoxCollider Collider
         {
             get { return collider; }

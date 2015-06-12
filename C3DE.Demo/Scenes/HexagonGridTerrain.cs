@@ -1,16 +1,7 @@
-﻿using C3DE.Components.Colliders;
-using C3DE.Components.Controllers;
+﻿using C3DE.Components.Controllers;
 using C3DE.Components.Lights;
-using C3DE.Components.Renderers;
 using C3DE.Demo.Scripts;
-using C3DE.Geometries;
-using C3DE.Materials;
 using C3DE.Prefabs;
-using C3DE.Prefabs.Meshes;
-using C3DE.Utils;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using System;
 
 namespace C3DE.Demo.Scenes
 {
@@ -24,12 +15,12 @@ namespace C3DE.Demo.Scenes
 
             // Camera
             var camera = new CameraPrefab("camera");
-            Add(camera);
             camera.AddComponent<OrbitController>();
             camera.AddComponent<DemoBehaviour>();
+            Add(camera);
 
             // Light
-            var lightPrefab = new LightPrefab("lightPrefab", LightType.Point);
+            var lightPrefab = new LightPrefab("lightPrefab", LightType.Directional);
             Add(lightPrefab);
 
             var sceneObject = new SceneObject("HexaGrid");

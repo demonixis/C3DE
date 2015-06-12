@@ -2,7 +2,6 @@
 using C3DE.Demo.Scripts;
 using C3DE.Materials;
 using C3DE.Prefabs;
-using C3DE.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -18,11 +17,9 @@ namespace C3DE.Demo.Scenes
 
             // Add a camera with a FPS controller
             var camera = new CameraPrefab("camera");
-            Add(camera);
-
             camera.Setup(new Vector3(0, 2, -10), new Vector3(0, 0, 0), Vector3.Up);
-            var cc = camera.AddComponent<ControllerSwitcher>();
-            cc.SetControllerActive(1);
+            camera.AddComponent<ControllerSwitcher>();
+            Add(camera);
 
             // And a light
             var lightPrefab = new LightPrefab("light", LightType.Directional);
@@ -30,8 +27,6 @@ namespace C3DE.Demo.Scenes
             lightPrefab.Light.Direction = new Vector3(1, 1, 0);
             lightPrefab.Light.DiffuseColor = Color.LightSkyBlue;
             lightPrefab.Light.Intensity = 1.5f;
-            lightPrefab.AddComponent<LightMoverKeys>();
-            lightPrefab.AddComponent<LightSwitcher>();
             lightPrefab.AddComponent<DemoBehaviour>();
             lightPrefab.EnableShadows = true;
 
@@ -58,14 +53,13 @@ namespace C3DE.Demo.Scenes
             scene.Add(water);
             water.Generate("Textures/water", "Textures/wavesbump", new Vector3(terrain.Width * 0.5f));
 
-            Input.Gamepad.Sensitivity = new Vector2(1, 0.75f);
             Screen.ShowCursor = true;
 
             // Don't miss the Skybox ;)
             RenderSettings.Skybox.Generate(Application.GraphicsDevice, Application.Content, DemoGame.BlueSkybox);
 
             // And fog
-            RenderSettings.FogDensity = 0.01f;
+            RenderSettings.FogDensity = 0.0085f;
             RenderSettings.FogMode = FogMode.Exp2;
         }
     }

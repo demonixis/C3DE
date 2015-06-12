@@ -1,0 +1,89 @@
+﻿<Window x:Class="C3DE.Editor.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:C3DE.Editor.MonoGameBridge"
+        xmlns:component="clr-namespace:C3DE.Editor.Views.Components"
+        Title="C3DE Editor" Height="600" Width="1280" Icon="Game.ico">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="250" />
+        </Grid.ColumnDefinitions>
+        <Menu Grid.Row="0" Grid.ColumnSpan="2">
+            <MenuItem Header="File">
+                <MenuItem Header="New Scene" x:Name="Menu_File_NewP" Click="OnMenuFileClick" />
+                <MenuItem Header="Load Scene" x:Name="Menu_File_LoadP" Click="OnMenuFileClick" />
+                <MenuItem Header="Save Scene" x:Name="Menu_File_SaveP" Click="OnMenuFileClick" />
+                <Separator />
+                <MenuItem Header="New Project" />
+                <MenuItem Header="Load Project" />
+                <MenuItem Header="Save Project" />
+                <Separator />
+                <MenuItem Header="Exit" x:Name="Menu_File_Exit" Click="OnMenuFileClick" />
+            </MenuItem>
+            <MenuItem Header="Assets">
+                <MenuItem Header="Add">
+                    <MenuItem Header="Texture" />
+                    <MenuItem Header="Font" />
+                    <MenuItem Header="Model" />
+                    <Separator />
+                    <MenuItem Header="Material" />
+                    <MenuItem Header="Shader" />
+                </MenuItem>
+            </MenuItem>
+            <MenuItem Header="Scene">
+                <MenuItem Header="Empty" />
+                <Separator />
+                <MenuItem Header="3D Object">
+                    <MenuItem Header="Cube" x:Name="menu_SO_Cube" Click="OnMenuAddSceneObjectClick" />
+                    <MenuItem Header="Cylinder" x:Name="menu_SO_Cylinder" Click="OnMenuAddSceneObjectClick" />
+                    <MenuItem Header="Quad" x:Name="menu_SO_Quad" Click="OnMenuAddSceneObjectClick" />
+                    <MenuItem Header="Plane" x:Name="menu_SO_Plane" Click="OnMenuAddSceneObjectClick" />
+                    <MenuItem Header="Pyramid" x:Name="menu_SO_Pyramid" Click="OnMenuAddSceneObjectClick" />
+                    <MenuItem Header="Sphere" x:Name="menu_SO_Sphere" Click="OnMenuAddSceneObjectClick" />
+                    <MenuItem Header="Torus" x:Name="menu_SO_Torus" Click="OnMenuAddSceneObjectClick" />
+                </MenuItem>
+                <MenuItem Header="Terrain">
+                    <MenuItem Header="Terrain" x:Name="menu_SO_Terrain" Click="OnMenuAddSceneObjectClick" />
+                    <MenuItem Header="Water" x:Name="menu_SO_Water" Click="OnMenuAddSceneObjectClick" />
+                </MenuItem>
+                <MenuItem Header="Light">
+                    <MenuItem Header="Directional Light" x:Name="menu_Light_Directional" Click="OnMenuAddSceneObjectClick" />
+                    <MenuItem Header="Point Light" x:Name="menu_Light_Point" Click="OnMenuAddSceneObjectClick" />
+                    <MenuItem Header="Spot Light" x:Name="menu_Light_Spot" Click="OnMenuAddSceneObjectClick" />
+                </MenuItem>
+                <MenuItem Header="Camera" x:Name="menu_SO_Camera" Click="OnMenuAddSceneObjectClick" />
+            </MenuItem>
+            <MenuItem Header="Help">
+                <MenuItem Header="About" x:Name="menu_Help_About" />
+            </MenuItem>
+        </Menu>
+        <local:C3DEGameHost 
+            x:Name="editorGameHost" 
+            Grid.Row="1" 
+            Grid.Column="0" 
+            Margin="0" 
+            SnapsToDevicePixels="True" 
+            Stretch="Fill" />
+
+        <StackPanel Grid.Row="1" Grid.Column="1">
+            <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+                <StackPanel Orientation="Vertical" x:Name="componentContainer">
+                    <component:SceneObjectControl x:Name="sceneObjectComponent" />
+                    <component:TransformControl x:Name="transformComponent" />
+                    <component:ColliderControl x:Name="colliderComponent" />
+                </StackPanel>
+            </ScrollViewer>
+            <Label Content="Scene" />
+  
+            <TreeView x:Name="sceneTreeView" AllowDrop="True">
+                <TreeViewItem Header="Main Camera" Tag="0" />
+                <TreeViewItem Header="Ambient Light" Tag="1" />
+            </TreeView>
+        </StackPanel>
+    </Grid>
+</Window>

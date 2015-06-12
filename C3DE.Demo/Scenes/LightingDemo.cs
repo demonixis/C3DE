@@ -22,15 +22,15 @@ namespace C3DE.Demo.Scenes
 
             // Camera
             var camera = new CameraPrefab("camera");
-            Add(camera);
             camera.AddComponent<OrbitController>();
             camera.AddComponent<RayPickingTester>();
+            Add(camera);
             
             // Light
             var lightPrefab = new LightPrefab("lightPrefab", LightType.Point);
             Add(lightPrefab);
             lightPrefab.Transform.Position = new Vector3(0, 15, 15);
-            lightPrefab.Light.Range = 25;
+            lightPrefab.Light.Range = 105;
             lightPrefab.Light.Intensity = 2.0f;
             lightPrefab.Light.FallOf = 5f;
             lightPrefab.Light.DiffuseColor = Color.Violet;
@@ -65,7 +65,7 @@ namespace C3DE.Demo.Scenes
 
             // Cube
             var cubeSuperMaterial = new StandardMaterial(scene);
-            cubeSuperMaterial.MainTexture = GraphicsHelper.CreateCheckboardTexture(Color.FloralWhite, Color.DodgerBlue); //Content.Load<Texture2D>("Textures/tech_box2");
+            cubeSuperMaterial.MainTexture = GraphicsHelper.CreateTriangleTexture(Color.Red, Color.White);  //GraphicsHelper.CreateCheckboardTexture(Color.FloralWhite, Color.DodgerBlue); //Content.Load<Texture2D>("Textures/tech_box2");
             cubeSuperMaterial.DiffuseColor = Color.WhiteSmoke;
             cubeSuperMaterial.SpecularColor = new Color(0.8f, 0.8f, 0.8f, 1.0f);
             cubeSuperMaterial.Shininess = 10;

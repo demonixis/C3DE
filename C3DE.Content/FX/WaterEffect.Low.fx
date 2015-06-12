@@ -4,15 +4,15 @@ float4x4 View;
 float4x4 Projection;
 
 // Material
-float4 AmbientColor = float4(1.0, 1.0, 1.0, 1.0);
-float4 DiffuseColor = float4(1.0, 1.0, 1.0, 1.0);
-float4 SpecularColor = float4(0.8, 0.8, 0.8, 1.0);
+float3 AmbientColor = float3(1.0, 1.0, 1.0);
+float3 DiffuseColor = float3(1.0, 1.0, 1.0);
+float3 SpecularColor = float3(0.8, 0.8, 0.8);
 float Shininess = 250.0;
 
 // Light
 float3 LightDirection = float3(1.0, 1.0, 0.0);
 float LightIntensity = 1.0;
-float4 LightColor = float4(1, 1, 1, 1);
+float3 LightColor = float3(1, 1, 1);
 
 // Misc
 float2 TextureTiling = float2(1, 1);
@@ -73,16 +73,15 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 	input.UV.x = input.UV.x * 20.0 + sin(TotalTime * 3.0 + 10.0) / 256.0;
 	input.UV.y = input.UV.y * 20.0;
 
-	float4 baseColor = tex2D(WaterMapSampler, (input.UV + TextureOffset) * TextureTiling);
-	float4 normal = float4(input.Normal, 1.0);
-	float4 reflectColor = float4(1, 1, 1, 1);
+	float3 baseColor = tex2D(WaterMapSampler, (input.UV + TextureOffset) * TextureTiling);
+	float3 normal = input.Normal;
+	float3 reflectColor = float3(1, 1, 1);
 
-	float4 diffuse = saturate(dot(LightDirection, normal)) * LightColor * LightIntensity;
+	float3 diffuse = saturate(dot(LightDirection, normal)) * LightColor * LightIntensity;
 	float3 R = normalize(2 * diffuse.xyz * normal - float4(LightDirection, 1.0));
-	float4 specular = SpecularColor * pow(saturate(dot(R, LightDirection)), Shininess);
+	float3 specular = SpecularColor * pow(saturate(dot(R, LightDirection)), Shininess);
 	
-	float4 finalColor = AmbientColor + (baseColor * DiffuseColor * diffuse * reflectColor) + specular;
-	finalColor.a = Alpha;
+	float4 finalColor = float4(AmbientColor + (baseColor * DiffuseColor * diffuse * reflectColor) + specular, Alpha);
 
 	return finalColor;
 }

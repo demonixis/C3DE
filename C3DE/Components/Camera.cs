@@ -10,10 +10,11 @@ namespace C3DE.Components
 
     public class Camera : Component
     {
-        public static Camera Main = null;
+        public static Camera Main { get; internal set; }
 
         protected internal Matrix view;
         protected internal Matrix projection;
+        protected internal Color clearColor;
         protected Vector3 reference;
         private Vector3 _target;
         private Vector3 _upVector;
@@ -28,7 +29,7 @@ namespace C3DE.Components
         public float Aspect
         {
             get { return _aspectRatio; }
-            set 
+            set
             {
                 if (_aspectRatio != value)
                 {
@@ -36,6 +37,12 @@ namespace C3DE.Components
                     _needProjectionUpdate = true;
                 }
             }
+        }
+
+        public Color ClearColor
+        {
+            get { return clearColor; }
+            set { clearColor = value; }
         }
 
         public float FieldOfView
@@ -76,7 +83,7 @@ namespace C3DE.Components
                 }
             }
         }
-        
+
         public Vector3 Reference
         {
             get { return reference; }
@@ -119,6 +126,7 @@ namespace C3DE.Components
             _nearPlane = 1.0f;
             _farPlane = 500.0f;
             _projectionType = CameraProjectionType.Perspective;
+            clearColor = Color.Black;
             reference = new Vector3(0.0f, 0.0f, 1.0f);
         }
 

@@ -1,14 +1,19 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
+<<<<<<< HEAD
 # Visual Studio Express 2013 for Windows Desktop
 VisualStudioVersion = 12.0.30723.0
+=======
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "C3DE", "C3DE\C3DE.csproj", "{706F6462-A341-44A2-9F16-E8ECB53F5DFB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "C3DE.Demo", "C3DE.Demo\C3DE.Demo.csproj", "{4D1793CC-8192-4CD9-A099-AA5E639352E1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "C3DE.Demo .Kinect", "C3DE.Demo\C3DE.Demo .Kinect.csproj", "{CC5397B7-F940-48F0-B46D-0ED9193C7397}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "C3DE.Net", "C3DE.Net\C3DE.Net.csproj", "{97980242-FD4C-466D-B7DD-4D0F7275CB06}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "C3DE.Editor", "C3DE.Editor\C3DE.Editor.csproj", "{BDFCE17A-2E64-4D11-9AFA-E7C2A97AAE9B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -24,16 +29,20 @@ Global
 		{4D1793CC-8192-4CD9-A099-AA5E639352E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4D1793CC-8192-4CD9-A099-AA5E639352E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4D1793CC-8192-4CD9-A099-AA5E639352E1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CC5397B7-F940-48F0-B46D-0ED9193C7397}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CC5397B7-F940-48F0-B46D-0ED9193C7397}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CC5397B7-F940-48F0-B46D-0ED9193C7397}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CC5397B7-F940-48F0-B46D-0ED9193C7397}.Release|Any CPU.Build.0 = Release|Any CPU
 		{97980242-FD4C-466D-B7DD-4D0F7275CB06}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{97980242-FD4C-466D-B7DD-4D0F7275CB06}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{97980242-FD4C-466D-B7DD-4D0F7275CB06}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{97980242-FD4C-466D-B7DD-4D0F7275CB06}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BDFCE17A-2E64-4D11-9AFA-E7C2A97AAE9B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BDFCE17A-2E64-4D11-9AFA-E7C2A97AAE9B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BDFCE17A-2E64-4D11-9AFA-E7C2A97AAE9B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BDFCE17A-2E64-4D11-9AFA-E7C2A97AAE9B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = C3DE.Demo\C3DE.Demo.csproj
+	EndGlobalSection
+>>>>>>> develop
 EndGlobal

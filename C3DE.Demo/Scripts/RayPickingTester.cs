@@ -8,7 +8,6 @@ namespace C3DE.Demo.Scripts
         private Scene scene;
         private Camera camera;
         private string _hit;
-        private RaycastInfo[] _raycastInfo;
 
         public override void Start()
         {
@@ -23,8 +22,10 @@ namespace C3DE.Demo.Scripts
 
             if (Input.Mouse.Clicked())
             {
-                if (scene.RaycastAll(camera.GetRay(Input.Mouse.Position), 250, out _raycastInfo))
-                    _hit = _raycastInfo[0].Collider.SceneObject.Name;
+                //FIXME
+                var raycastInfo = new RaycastInfo[0];
+                if (scene.RaycastAll(camera.GetRay(Input.Mouse.Position), 250, out raycastInfo))
+                    _hit = raycastInfo[0].Collider.SceneObject.Name;
                 else
                     _hit = "Nothing";
             }

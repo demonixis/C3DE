@@ -5,14 +5,18 @@ using System.Collections.Generic;
 
 namespace C3DE.Geometries
 {
-    public class Geometry
+    public enum VertexType
+    {
+        Position = 0, Normal
+    }
+
+    public class Geometry : IDisposable
     {
         private VertexPositionNormalTexture[] _vertices;
         private ushort[] _indices;
         private VertexBuffer _vertexBuffer;
         private IndexBuffer _indexBuffer;
         private bool _constructed;
-
         protected Vector3 size = Vector3.One;
         protected Vector2 repeatTexture = Vector2.One;
         protected bool invertFaces = false;
@@ -32,13 +36,13 @@ namespace C3DE.Geometries
         public VertexBuffer VertexBuffer
         {
             get { return _vertexBuffer; }
-            protected set { _vertexBuffer = value; }
+            internal protected set { _vertexBuffer = value; }
         }
 
         public IndexBuffer IndexBuffer
         {
             get { return _indexBuffer; }
-            protected set { _indexBuffer = value; }
+            internal protected set { _indexBuffer = value; }
         }
 
         public Vector3 Size
@@ -56,9 +60,9 @@ namespace C3DE.Geometries
         public bool Constructed
         {
             get { return _constructed; }
-            protected set
+            internal protected set
             {
-                _constructed = true;
+                _constructed = value;
                 NotifyConstructionDone();
             }
         }
@@ -129,6 +133,32 @@ namespace C3DE.Geometries
 
             for (int i = 0; i < _vertices.Length; i++)
                 _vertices[i].Normal.Normalize();
+        }
+
+        public Vector3[] GetVertices(VertexType type)
+        {
+            int size = Vertices.Length;
+
+            Vector3[] vertices = new Vector3[size];
+
+            for (int i = 0; i < size ; i++)
+            {
+                if (type == VertexType.Normal)
+                    vertices[i] = Vertices[i].Normal;
+                else
+                    vertices[i] = Vertices[i].Position;
+            }
+
+            return vertices;
+        }
+
+        public void Dispose()
+        {
+            if (Constructed)
+            {
+                _vertexBuffer.Dispose();
+                _indexBuffer.Dispose();
+            }
         }
     }
 }

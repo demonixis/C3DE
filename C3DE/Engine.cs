@@ -1,4 +1,5 @@
 ﻿using C3DE.Inputs;
+using C3DE.Rendering;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -12,7 +13,8 @@ namespace C3DE
     {
         private IRenderer _rendererToChange;
         private bool _needRendererChange;
-
+        private bool _autoDetectResolution;
+        private bool _requestFullscreen;
         protected GraphicsDeviceManager graphics;
         protected IRenderer renderer;
         protected SceneManager sceneManager;
@@ -21,38 +23,52 @@ namespace C3DE
         public IRenderer Renderer
         {
             get { return renderer; }
-            set 
+            set
             {
                 _rendererToChange = value;
                 _needRendererChange = true;
             }
         }
 
-        public Engine(string title = "C3DE", int width = 1024, int height = 600)
+        /// <summary>
+        /// Creates the game by initializing graphics, input and other managers.
+        /// The default configuration use the best resolution and toggle in fullscreen mode.
+        /// </summary>
+        /// <param name="title">The title of the game.</param>
+        /// <param name="width">Desired screen width.</param>
+        /// <param name="height">Desired screen height.</param>
+        /// <param name="fullscreen">Sets to true to use the fullscreen mode.</param>
+        public Engine(string title = "C3DE Game Demo", int width = 0, int height = 0, bool fullscreen = false)
             : base()
         {
             graphics = new GraphicsDeviceManager(this);
+            graphics.PreparingDeviceSettings += OnResize;
 
-#if !ANDROID && !WINDOWS_PHONE
-            graphics.PreferredBackBufferWidth = width;
-            graphics.PreferredBackBufferHeight = height;
-#endif
             Window.Title = title;
             Content.RootDirectory = "Content";
             sceneManager = new SceneManager();
             initialized = false;
+            _autoDetectResolution = false;
+            _requestFullscreen = false;
+            _needRendererChange = false;
 
             Application.Content = Content;
-            Application.Game = this;
+            Application.Engine = this;
             Application.GraphicsDevice = GraphicsDevice;
             Application.GraphicsDeviceManager = graphics;
             Application.SceneManager = sceneManager;
 
-            Screen.Setup(width, height, false, true);
+#if !ANDROID && !WINDOWS_APP
+            _autoDetectResolution = width == 0 || height == 0;
 
-            graphics.PreparingDeviceSettings += OnResize;
+            if (!_autoDetectResolution)
+            {
+                graphics.PreferredBackBufferWidth = width;
+                graphics.PreferredBackBufferHeight = height;
+            }
+#endif
 
-            _needRendererChange = false;
+            Screen.Setup(width, height, false, true); 
         }
 
         private void OnResize(object sender, PreparingDeviceSettingsEventArgs e)
@@ -90,7 +106,10 @@ namespace C3DE
 			Screen.Setup(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight, null, null);
 			GraphicsDevice.Viewport = new Viewport(0, 0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
 #endif
-            
+
+            if (_autoDetectResolution)
+                Screen.SetBestResolution(_requestFullscreen);
+
             if (renderer == null)
                 renderer = new Renderer();
 
@@ -108,7 +127,7 @@ namespace C3DE
             Components.Add(Input.Touch);
 
             initialized = true;
-           
+
             base.Initialize();
         }
 
@@ -120,7 +139,6 @@ namespace C3DE
         protected override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-
             sceneManager.Update();
         }
 
@@ -133,8 +151,6 @@ namespace C3DE
 
         protected override void EndDraw()
         {
-            base.EndDraw();
-
             if (Screen.LockCursor)
                 Mouse.SetPosition(Screen.WidthPerTwo, Screen.HeightPerTwo);
 
@@ -143,6 +159,8 @@ namespace C3DE
                 SetRenderer(_rendererToChange);
                 _needRendererChange = false;
             }
+
+            base.EndDraw();
         }
     }
 }
