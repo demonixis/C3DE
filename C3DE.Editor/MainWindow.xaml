@@ -2,8 +2,8 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:C3DE.Editor.MonoGameBridge"
-        xmlns:component="clr-namespace:C3DE.Editor.Views.Components"
-        Title="C3DE Editor" Height="600" Width="1280" Icon="Game.ico">
+        xmlns:components="clr-namespace:C3DE.Editor.Views.Controls"
+        Title="C3DE Editor" Height="600" Width="1280" Icon="Game.ico" WindowState="Maximized">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="20" />
@@ -62,24 +62,31 @@
                 <MenuItem Header="About" x:Name="menu_Help_About" />
             </MenuItem>
         </Menu>
-        <local:C3DEGameHost 
-            x:Name="editorGameHost" 
-            Grid.Row="1" 
-            Grid.Column="0" 
-            Margin="0" 
-            SnapsToDevicePixels="True" 
-            Stretch="Fill" />
 
+        <Grid Grid.Row="1" Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <local:C3DEGameHost Grid.Row="0" Grid.Column="0" x:Name="editorGameHost" Margin="0" SnapsToDevicePixels="True" Stretch="Fill" />
+            <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal" Height="100">
+                
+                <Label Content="Assets"></Label>
+            </StackPanel>
+        </Grid>
+        
         <StackPanel Grid.Row="1" Grid.Column="1">
             <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
                 <StackPanel Orientation="Vertical" x:Name="componentContainer">
-                    <component:SceneObjectControl x:Name="sceneObjectComponent" />
-                    <component:TransformControl x:Name="transformComponent" />
-                    <component:ColliderControl x:Name="colliderComponent" />
+                    <components:SceneObjectControl x:Name="sceneObjectComponent" />
+                    <components:TransformControl x:Name="transformComponent" />
                 </StackPanel>
             </ScrollViewer>
+            
             <Label Content="Scene" />
-  
             <TreeView x:Name="sceneTreeView" AllowDrop="True">
                 <TreeViewItem Header="Main Camera" Tag="0" />
                 <TreeViewItem Header="Ambient Light" Tag="1" />

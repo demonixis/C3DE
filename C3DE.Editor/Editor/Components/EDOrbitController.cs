@@ -12,7 +12,7 @@ namespace C3DE.Editor.Components
     /// An orbit controller component.
     /// It allows user to move and rotate the camera around a point.
     /// </summary>
-    public class EditorOrbitController : Controller
+    public class EDOrbitController : Controller
     {
         private Camera _camera;
         private float _distance;
@@ -43,7 +43,7 @@ namespace C3DE.Editor.Components
         /// <summary>
         /// Create an orbit controller with default values.
         /// </summary>
-        public EditorOrbitController()
+        public EDOrbitController()
             : base()
         {
             _angle = new Vector2(0.0f, -MathHelper.Pi / 6.0f);
@@ -74,7 +74,7 @@ namespace C3DE.Editor.Components
             if (Input.Mouse.Down(MouseButton.Middle))
                 _target.Y += StrafeSpeed * Input.Mouse.Delta.Y * Time.DeltaTime;
             
-            _distance -= (Input.Mouse as EditorMouseComponent).Wheel * 0.01f * MoveSpeed * Time.DeltaTime;
+            _distance -= (Input.Mouse as EDMouseComponent).Wheel * 0.01f * MoveSpeed * Time.DeltaTime;
 
             CheckAngle();
             CheckDistance();

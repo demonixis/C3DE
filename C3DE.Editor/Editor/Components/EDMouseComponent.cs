@@ -14,7 +14,7 @@ namespace C3DE.Editor.Components
     using System.Windows;
     using System.Timers;
 
-    public class EditorMouseComponent : MouseComponent
+    public class EDMouseComponent : MouseComponent
     {
         private UIElement _uiElement;
         private int _mouseWheel;
@@ -55,7 +55,7 @@ namespace C3DE.Editor.Components
 
         #endregion
 
-        public EditorMouseComponent(Game game, UIElement uiElement)
+        public EDMouseComponent(Game game, UIElement uiElement)
             : base(game)
         {
             MouseButtons = new bool[3];

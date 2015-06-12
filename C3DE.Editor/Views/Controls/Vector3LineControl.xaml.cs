@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace C3DE.Editor.Views.Components
+namespace C3DE.Editor.Views.Controls
 {
     using System.ComponentModel;
     using System.Runtime.CompilerServices;

@@ -39,7 +39,7 @@ namespace C3DE.Editor.MonoGameBridge
         private GameTime _gameTime;
         private GameServiceContainer _services;
         private List<GameComponent> _gameComponents;
-        private EditorMouseComponent _mouse;
+        private EDMouseComponent _mouse;
         private SpriteBatch _spriteBatch;
         private Renderer _renderer;
         private ContentManager _content;
@@ -70,7 +70,7 @@ namespace C3DE.Editor.MonoGameBridge
             Application.Content = _content;
             Application.GraphicsDevice = GraphicsDevice;
 
-            _mouse = new EditorMouseComponent(null, this);
+            _mouse = new EDMouseComponent(null, this);
             Input.Mouse = _mouse;
 
             _gameComponents.Add(new Time(null));
@@ -95,7 +95,7 @@ namespace C3DE.Editor.MonoGameBridge
 
             var camera = new CameraPrefab("Editor_MainCamera");
             _scene.Add(camera);
-            camera.AddComponent<EditorOrbitController>();
+            camera.AddComponent<EDOrbitController>();
             _mainCamera = camera.Camera;
 
             var lightPrefab = new LightPrefab("Editor_MainLight", LightType.Directional);
@@ -151,7 +151,7 @@ namespace C3DE.Editor.MonoGameBridge
 
             if (Input.Mouse.Clicked(MouseButton.Left))
             {
-                var ray = _mainCamera.GetRay((Input.Mouse as EditorMouseComponent).Position);
+                var ray = _mainCamera.GetRay((Input.Mouse as EDMouseComponent).Position);
                 RaycastInfo info;
 
                 if (_scene.Raycast(ray, 100, out info))

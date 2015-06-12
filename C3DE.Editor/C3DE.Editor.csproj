@@ -91,31 +91,31 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Components\EditorOrbitController.cs" />
-    <Compile Include="Components\EditorMouseComponent.cs" />
+    <Compile Include="Editor\Components\EDOrbitController.cs" />
+    <Compile Include="Editor\Components\EDMouseComponent.cs" />
     <Compile Include="MonoGameBridge\C3DEGameHost.cs" />
     <Compile Include="MonoGameBridge\GraphicsDeviceService.cs" />
-    <Compile Include="Views\Components\ColliderControl.xaml.cs">
+    <Compile Include="Views\Controls\ColliderControl.xaml.cs">
       <DependentUpon>ColliderControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Components\SceneObjectControl.xaml.cs">
+    <Compile Include="Views\Controls\SceneObjectControl.xaml.cs">
       <DependentUpon>SceneObjectControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Components\Vector3LineControl.xaml.cs">
+    <Compile Include="Views\Controls\Vector3LineControl.xaml.cs">
       <DependentUpon>Vector3LineControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\SceneSettingsWindow.xaml.cs">
       <DependentUpon>SceneSettingsWindow.xaml</DependentUpon>
     </Compile>
-    <Page Include="Views\Components\ColliderControl.xaml">
+    <Page Include="Views\Controls\ColliderControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Components\SceneObjectControl.xaml">
+    <Page Include="Views\Controls\SceneObjectControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Components\TransformControl.xaml">
+    <Page Include="Views\Controls\TransformControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -127,14 +127,14 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Views\Components\TransformControl.xaml.cs">
+    <Compile Include="Views\Controls\TransformControl.xaml.cs">
       <DependentUpon>TransformControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Views\Components\Vector3LineControl.xaml">
+    <Page Include="Views\Controls\Vector3LineControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
