@@ -32,7 +32,7 @@ namespace C3DE.Demo.Scenes
             lightPrefab.Light.FallOf = 5f;
             lightPrefab.Light.Direction = new Vector3(0, 0.5f, 1);
             lightPrefab.Light.Angle = MathHelper.PiOver4;
-            lightPrefab.Light.ShadowGenerator.ShadowStrength = 1f;
+            lightPrefab.Light.ShadowGenerator.ShadowStrength = 0.6f;
             lightPrefab.Light.ShadowGenerator.SetShadowMapSize(Application.GraphicsDevice, 1024);
             lightPrefab.EnableShadows = true;
             Add(lightPrefab);
@@ -59,8 +59,10 @@ namespace C3DE.Demo.Scenes
             var water = new WaterPrefab("water");
             Add(water);
             water.Generate("Textures/water", "Textures/wavesbump", new Vector3(terrain.Width * 0.5f));
-            (water.Renderer.Material as WaterMaterial).ReflectiveMap = scene.RenderSettings.Skybox.Texture;
-            (water.Renderer.Material as WaterMaterial).WaterTransparency = 0.6f;
+
+            var waterMat = water.Renderer.Material as WaterMaterial;
+            waterMat.ReflectiveMap = scene.RenderSettings.Skybox.Texture;
+            waterMat.WaterTransparency = 0.6f;
         }
     }
 }

@@ -65,7 +65,6 @@ VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
 
 float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 {
-	float3 fogColor = float3(0.0, 0.0, 0.0);
 	float3 noise = tex2D(bumpSampler, (input.UV + TextureOffset) * TextureTiling);
 	float2 T1 = input.UV + float2(1.5, -1.5) * Time * 0.02;
 	float2 T2 = input.UV + float2(-0.5, 2.0) * Time * 0.01;

@@ -301,9 +301,9 @@ namespace C3DE
 
         public static SceneObject FindById(int id)
         {
-            for (int i = 0; i < Application.SceneManager.ActiveScene.sceneObjects.Size; i++)
-                if (Application.SceneManager.ActiveScene.sceneObjects[i].Id == id)
-                    return Application.SceneManager.ActiveScene.sceneObjects[i];
+            for (int i = 0; i < Scene.current.sceneObjects.Size; i++)
+                if (Scene.current.sceneObjects[i].Id == id)
+                    return Scene.current.sceneObjects[i];
 
             return null;
         }
@@ -312,9 +312,9 @@ namespace C3DE
         {
             List<SceneObject> sceneObjects = new List<SceneObject>();
 
-            for (int i = 0; i < Application.SceneManager.ActiveScene.sceneObjects.Size; i++)
-                if (Application.SceneManager.ActiveScene.sceneObjects[i].Id == id)
-                    sceneObjects.Add(Application.SceneManager.ActiveScene.sceneObjects[i]);
+            for (int i = 0; i < Scene.current.sceneObjects.Size; i++)
+                if (Scene.current.sceneObjects[i].Id == id)
+                    sceneObjects.Add(Scene.current.sceneObjects[i]);
 
             return sceneObjects.ToArray();
         }

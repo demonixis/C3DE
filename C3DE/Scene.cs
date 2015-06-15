@@ -24,8 +24,7 @@ namespace C3DE
     /// </summary>
     public class Scene : SceneObject
     {
-        public static Scene Main { get; internal set; }
-
+        public static Scene current { get; internal set; }
         public readonly Material DefaultMaterial;
 
         private int _mainCameraIndex;
@@ -48,7 +47,7 @@ namespace C3DE
 
         public Camera MainCamera
         {
-            get { return _mainCameraIndex > -1 ? cameras[_mainCameraIndex] : null; }
+            get { return cameras[_mainCameraIndex]; }
             set
             {
                 _mainCameraIndex = Add(value);
@@ -264,17 +263,15 @@ namespace C3DE
                     sceneObject.Scene = this;
                     sceneObject.Transform.Root = transform;
 
-					if (initialized && !sceneObject.Initialized) 
-					{
-						sceneObject.Initialize ();
-					}
-
                     if (sceneObject.Enabled)
                     {
                         CheckComponents(sceneObject, ComponentChangeType.Add);
                         sceneObject.PropertyChanged += OnComponentPropertyChanged;
                         sceneObject.ComponentChanged += OnComponentChanged;
                     }
+
+                    if (initialized && !sceneObject.Initialized)
+                        sceneObject.Initialize();
                 }
                 else
                     AddPrefab(sceneObject);
@@ -556,14 +553,14 @@ namespace C3DE
             clone.Transform.Position = position;
             clone.Transform.Rotation = rotation;
 
-            Application.SceneManager.ActiveScene.Add(clone);
+            Scene.current.Add(clone);
 
             return clone;
         }
 
         public static void Destroy(SceneObject sceneObject)
         {
-            Application.SceneManager.ActiveScene.Remove(sceneObject);
+            Scene.current.Remove(sceneObject);
         }
 
         public override bool Remove(SceneObject sceneObject)

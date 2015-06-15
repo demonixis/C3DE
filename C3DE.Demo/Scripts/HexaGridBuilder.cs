@@ -24,7 +24,7 @@ namespace C3DE.Demo.Scripts
         {
             GridWidth = 10;
             GridDepth = 10;
-            Margin = 1.05f;
+            Margin = 0.86f;
             TileScale = 0.5f;
         }
 
@@ -74,11 +74,11 @@ namespace C3DE.Demo.Scripts
             SceneObject cache = null;
 
             var waterMaterial = _gridPrefab.Renderer.MainMaterial;
-            
-            var groundMaterial = new StandardMaterial(Scene.Main);
+
+            var groundMaterial = new StandardMaterial(Scene.current);
             groundMaterial.MainTexture = Application.Content.Load<Texture2D>("Models/hexagone_green");
 
-            var montainMaterial = new StandardMaterial(Scene.Main);
+            var montainMaterial = new StandardMaterial(Scene.current);
             montainMaterial.MainTexture = Application.Content.Load<Texture2D>("Models/hexagone_brown");
             montainMaterial.DiffuseColor = Color.Red;
 

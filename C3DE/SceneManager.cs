@@ -14,23 +14,14 @@ namespace C3DE
         private int _levelToLoad;
         private int _activeSceneIndex;
 
-        /// <summary>
-        /// Gets or sets the active scene.
-        /// </summary>
-        public Scene ActiveScene
+        public Scene this[int index]
         {
-            get { return _scenes[_activeSceneIndex]; }
-            set { LoadLevel(value); }
+            get { return _scenes[index]; }
         }
 
         public int Count
         {
             get { return _scenes.Count; }
-        }
-
-        public Scene this[int index]
-        {
-            get { return _scenes[index]; }
         }
 
         /// <summary>
@@ -119,15 +110,6 @@ namespace C3DE
         }
 
         /// <summary>
-        /// Initialize the active scene.
-        /// </summary>
-        public void Initialize()
-        {
-            if (_activeSceneIndex > -1)
-                _scenes[_activeSceneIndex].Initialize();
-        }
-
-        /// <summary>
         /// Check if a scene need to be loaded (and load it) and update the active scene.
         /// </summary>
         public void Update()
@@ -147,8 +129,7 @@ namespace C3DE
                 _activeSceneIndex = _levelToLoad;
                 _levelToLoad = -1;
 
-                Scene.Main = _scenes[_activeSceneIndex];
- 
+                Scene.current = _scenes[_activeSceneIndex];
                 _scenes[_activeSceneIndex].Initialize();
             }
 

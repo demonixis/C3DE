@@ -1,3 +1,4 @@
+const float2 MIDDLE = float2(0.5, 0.5);
 float ColorLevel = 1.0;
 float Depth = 1.0;
 float2 TextureTiling = float2(1, 1);
@@ -38,7 +39,7 @@ struct PixelShaderInput
 float4 RefractionPixelShader(PixelShaderInput input) : COLOR
 {
 	float ref = 1.0 - tex2D(refractionSampler, input.UV * TextureTiling).r;
-	float2 uv = input.UV - float2(0.5, 0.5);
+	float2 uv = input.UV - MIDDLE;
 	float2 offset = uv * Depth * ref;
 	float3 sourceColor = tex2D(textureSampler, input.UV - offset).rgb;
 	

@@ -131,11 +131,6 @@ namespace C3DE
             base.Initialize();
         }
 
-        protected override void LoadContent()
-        {
-            sceneManager.Initialize();
-        }
-
         protected override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
@@ -145,7 +140,7 @@ namespace C3DE
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.Black);
-            renderer.render(sceneManager.ActiveScene, sceneManager.ActiveScene.MainCamera);
+            renderer.render(Scene.current, Scene.current.MainCamera);
             base.Draw(gameTime);
         }
 
