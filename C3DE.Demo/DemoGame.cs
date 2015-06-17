@@ -65,6 +65,7 @@ namespace C3DE.Demo
                 Screen.SetVirtualResolution(1280, 800);
                 Application.SceneManager.Add(new MenuDemo(), true);
                 Application.SceneManager.Add(new HeightmapDemo());
+                Application.SceneManager.Add(new HeightmapDesigner());
                 Application.SceneManager.Add(new ProceduralTerrainWater());
                 Application.SceneManager.Add(new ProceduralTerrainLava());
                 Application.SceneManager.Add(new HalloweenDemo());
