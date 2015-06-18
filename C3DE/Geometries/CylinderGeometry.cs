@@ -14,12 +14,13 @@ namespace C3DE.Geometries
         private int _nbSlices;
         private static Random random = new Random();
 
-        public CylinderGeometry()
+        public CylinderGeometry(bool isDynamic = false)
             : this(new Vector3(0, 0, 0), new Vector3(0, 1, 0))
         {
+            useDynamicBuffers = isDynamic;
         }
 
-        public CylinderGeometry(Vector3 startPosition, Vector3 endPosition, float startRadius = 1, float endRadius = 1, int nbSegments = 8, int nbSlices = 8)
+        public CylinderGeometry(Vector3 startPosition, Vector3 endPosition, float startRadius = 1, float endRadius = 1, int nbSegments = 8, int nbSlices = 8, bool isDynamic = false)
         {
             _startPosition = startPosition;
             _endPosition = endPosition;
@@ -27,6 +28,7 @@ namespace C3DE.Geometries
             _endRadius = endRadius;
             _nbSegments = nbSegments;
             _nbSlices = nbSlices;
+            useDynamicBuffers = isDynamic;
         }
 
         protected override void CreateGeometry()

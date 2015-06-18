@@ -21,15 +21,16 @@ namespace C3DE.Geometries
             set { _tessellationLevel = value; }
         }
 
-       public SphereGeometry()
-           : this(1, 8)
+       public SphereGeometry(bool isDynamic = false)
+           : this(1, 8, isDynamic)
         {
         }
 
-        public SphereGeometry(float radius = 1.0f, int tessellation = 8)
+        public SphereGeometry(float radius = 1.0f, int tessellation = 8, bool isDynamic = false)
         {
             _radius = radius;
             _tessellationLevel = tessellation;
+            useDynamicBuffers = isDynamic;
         }
 
         protected override void CreateGeometry()

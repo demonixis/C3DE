@@ -34,7 +34,8 @@ namespace C3DE.Geometries
             set { _data = value; }
         }
 
-        public TerrainGeometry(int width = 25, int depth = 25, float scale = 10.0f)
+        public TerrainGeometry(int width = 25, int depth = 25, float scale = 10.0f, bool isDynamic = false)
+            : base()
         {
             _width = width;
             _height = 0;
@@ -48,6 +49,8 @@ namespace C3DE.Geometries
                 for (int z = 0; z < _depth; z++)
                     Data[x, z] = 0.0f;
             }
+
+            useDynamicBuffers = isDynamic;
         }
 
         protected override void CreateGeometry()

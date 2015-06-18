@@ -5,6 +5,12 @@ namespace C3DE.Geometries
 {
     public class CubeGeometry : Geometry
     {
+        public CubeGeometry(bool isDynamic = false) 
+            : base() 
+        {
+            useDynamicBuffers = isDynamic; 
+        }
+
         protected override void CreateGeometry()
         {
             Vector3 topLeftFront = new Vector3(-1.0f, 1.0f, 1.0f);
@@ -54,7 +60,7 @@ namespace C3DE.Geometries
             Vector3 rightNormal = new Vector3(1, 0, 0);
             Vector3 topNormal = new Vector3(0, 1, 0);
             Vector3 bottomNormal = new Vector3(0, -1, 0);
-            
+
             Vertices = new VertexPositionNormalTexture[]
             {
                 // Front Surface

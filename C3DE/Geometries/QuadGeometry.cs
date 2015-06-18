@@ -5,6 +5,11 @@ namespace C3DE.Geometries
 {
     public class QuadGeometry : Geometry
     {
+        public QuadGeometry(bool isDynamic = false)
+        {
+            useDynamicBuffers = isDynamic;
+        }
+
         protected override void CreateGeometry()
         {
             var position = new Vector3[4]

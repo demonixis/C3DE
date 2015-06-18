@@ -36,7 +36,7 @@ namespace C3DE.Prefabs.Meshes
         public MeshPrefab(string name, T geometry)
             : base()
         {
-            if (!geometry.Constructed)
+            if (!geometry.Built)
                 geometry.Generate();
 
             _renderer = AddComponent<MeshRenderer>();

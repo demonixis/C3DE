@@ -11,17 +11,18 @@ namespace C3DE.Geometries
         private int _nbSlices;
         private int _nbSegments;
 
-        public TorusGeometry()
-            : this(2, 1, 8, 8)
+        public TorusGeometry(bool isDynamic = false)
+            : this(2, 1, 8, 8, isDynamic)
         {
         }
 
-        public TorusGeometry(float radiusExterior, float radiusInterior, int nbSlices, int nbSegments)
+        public TorusGeometry(float radiusExterior, float radiusInterior, int nbSlices, int nbSegments, bool isDynamic = false)
         {
             _radiusExterior = radiusExterior;
             _raduisInterior = radiusInterior;
             _nbSlices = nbSlices;
             _nbSegments = nbSegments;
+            useDynamicBuffers = false;
         }
 
         protected override void CreateGeometry()

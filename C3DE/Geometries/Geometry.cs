@@ -16,10 +16,13 @@ namespace C3DE.Geometries
         private ushort[] _indices;
         private VertexBuffer _vertexBuffer;
         private IndexBuffer _indexBuffer;
-        private bool _constructed;
+        private DynamicVertexBuffer _dVertexBuffer;
+        private DynamicIndexBuffer _dIndexBuffer;
+        private bool _built;
         protected Vector3 size = Vector3.One;
         protected Vector2 repeatTexture = Vector2.One;
         protected bool invertFaces = false;
+        protected bool useDynamicBuffers = false;
 
         public VertexPositionNormalTexture[] Vertices
         {
@@ -45,6 +48,21 @@ namespace C3DE.Geometries
             internal protected set { _indexBuffer = value; }
         }
 
+        public DynamicVertexBuffer DynamicVertexBuffer
+        {
+            get { return _dVertexBuffer; }
+        }
+
+        public DynamicIndexBuffer DynamicIndexBuffer
+        {
+            get { return _dIndexBuffer; }
+        }
+
+        public bool UseDynamicBuffers
+        {
+            get { return useDynamicBuffers; }
+        }
+
         public Vector3 Size
         {
             get { return size; }
@@ -57,22 +75,22 @@ namespace C3DE.Geometries
             set { repeatTexture = value; }
         }
 
-        public bool Constructed
+        public bool Built
         {
-            get { return _constructed; }
+            get { return _built; }
             internal protected set
             {
-                _constructed = value;
+                _built = value;
                 NotifyConstructionDone();
             }
         }
 
-        public event EventHandler<EventArgs> ConstructionDone = null;
+        public Action ConstructionDone = null;
 
         public void NotifyConstructionDone()
         {
             if (ConstructionDone != null)
-                ConstructionDone(this, EventArgs.Empty);
+                ConstructionDone();
         }
 
         protected virtual void CreateGeometry() { }
@@ -88,26 +106,31 @@ namespace C3DE.Geometries
 
         protected virtual void CreateBuffers(GraphicsDevice device)
         {
-            _vertexBuffer = new VertexBuffer(device, typeof(VertexPositionNormalTexture), _vertices.Length, BufferUsage.WriteOnly);
-            _vertexBuffer.SetData(_vertices);
+            if (useDynamicBuffers)
+            {
+                _vertexBuffer = new VertexBuffer(device, typeof(VertexPositionNormalTexture), _vertices.Length, BufferUsage.WriteOnly);
+                _vertexBuffer.SetData(_vertices);
 
-            _indexBuffer = new IndexBuffer(device, IndexElementSize.SixteenBits, _indices.Length, BufferUsage.WriteOnly);
-            _indexBuffer.SetData(_indices);
+                _indexBuffer = new IndexBuffer(device, IndexElementSize.SixteenBits, _indices.Length, BufferUsage.WriteOnly);
+                _indexBuffer.SetData(_indices);
+            }
+            else
+            {
+                _vertexBuffer = new VertexBuffer(device, typeof(VertexPositionNormalTexture), _vertices.Length, BufferUsage.WriteOnly);
+                _vertexBuffer.SetData(_vertices);
+
+                _indexBuffer = new IndexBuffer(device, IndexElementSize.SixteenBits, _indices.Length, BufferUsage.WriteOnly);
+                _indexBuffer.SetData(_indices);
+            }
         }
 
         public void Generate()
         {
-            if (Constructed)
-            {
-                _vertexBuffer.Dispose();
-                _indexBuffer.Dispose();
-            }
-
+            Dispose();
             CreateGeometry();
-
             ApplyParameters();
             CreateBuffers(Application.GraphicsDevice);
-            Constructed = true;
+            Built = true;
         }
 
         public void ComputeNormals()
@@ -154,10 +177,18 @@ namespace C3DE.Geometries
 
         public void Dispose()
         {
-            if (Constructed)
+            if (Built)
             {
-                _vertexBuffer.Dispose();
-                _indexBuffer.Dispose();
+                if (useDynamicBuffers)
+                {
+                    _dVertexBuffer.Dispose();
+                    _dIndexBuffer.Dispose();
+                }
+                else
+                {
+                    _vertexBuffer.Dispose();
+                    _indexBuffer.Dispose();
+                }
             }
         }
     }
