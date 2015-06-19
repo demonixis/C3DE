@@ -72,6 +72,7 @@
     <Compile Include="AudioManager.cs" />
     <Compile Include="CollisionSystem.cs" />
     <Compile Include="Components\Behaviour.cs" />
+    <Compile Include="Components\Renderers\BoundingBoxRenderer.cs" />
     <Compile Include="Components\Controllers\Controller.cs" />
     <Compile Include="Components\Controllers\OrbitController.cs" />
     <Compile Include="Components\Camera.cs" />

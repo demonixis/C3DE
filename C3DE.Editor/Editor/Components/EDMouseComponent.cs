@@ -13,12 +13,12 @@ namespace C3DE.Editor.Components
     using WpfMouseWheelEventArgs = System.Windows.Input.MouseWheelEventArgs;
     using System.Windows;
     using System.Timers;
+    using System;
 
     public class EDMouseComponent : MouseComponent
     {
         private UIElement _uiElement;
-        private int _mouseWheel;
-        private int _lastMouseWheel;
+        private float _wheel = 1;
         private bool _needsUpdate;
         private Timer _clickTimer;
         private Vector2 _sensibility;
@@ -30,9 +30,9 @@ namespace C3DE.Editor.Components
         public new int X { get; set; }
         public new int Y { get; set; }
 
-        public new int Wheel
+        public new float Wheel
         {
-            get { return _mouseWheel - _lastMouseWheel; }
+            get { return _wheel; }
         }
 
         public bool[] MouseButtons { get; set; }
@@ -104,12 +104,12 @@ namespace C3DE.Editor.Components
             // Delta
             _delta.X = (X - LastX) * _sensibility.X;
             _delta.Y = (Y - LastY) * _sensibility.Y;
+            _wheel *= 0.8f;
 
             if (_needsUpdate)
             {
                 LastX = X;
                 LastY = Y;
-                _lastMouseWheel = _mouseWheel; 
                 _needsUpdate = false;
             }
         }
@@ -177,9 +177,7 @@ namespace C3DE.Editor.Components
 
         private void OnMouseWheel(object sender, WpfMouseWheelEventArgs e)
         {
-            _lastMouseWheel = _mouseWheel;
-            _mouseWheel = e.Delta;
-            _needsUpdate = true;
+            _wheel += (float)e.Delta * 0.01f;
         }
     }
 }

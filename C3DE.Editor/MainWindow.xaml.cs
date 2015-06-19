@@ -24,11 +24,23 @@ namespace C3DE.Editor
             _separator = new char[1] { '_' };
 
             editorGameHost.SceneObjectAdded += editorGameHost_SceneObjectAdded;
+            editorGameHost.SceneObjectRemoved += editorGameHost_SceneObjectRemoved;
         }
 
-        void editorGameHost_SceneObjectAdded(object sender, SceneObjectAddedEventArgs e)
+        private void editorGameHost_SceneObjectAdded(object sender, SceneChangedEventArgs e)
         {
-            //throw new NotImplementedException();
+            if (e.Added)
+                sceneTreeView.Items.Add(e.Name);
+        }
+
+        private void editorGameHost_SceneObjectRemoved(object sender, SceneChangedEventArgs e)
+        {
+            if (e.Added)
+                return;
+
+            var index = sceneTreeView.Items.IndexOf(e.Name);
+            if (index > -1)
+                sceneTreeView.Items.RemoveAt(index);
         }
 
         private void OnMenuFileClick(object sender, RoutedEventArgs e)

@@ -23,14 +23,17 @@ namespace C3DE.Editor.MonoGameBridge
     using XnaColor = Microsoft.Xna.Framework.Color;
     using XnaVector2 = Microsoft.Xna.Framework.Vector2;
     using XnaVector3 = Microsoft.Xna.Framework.Vector3;
+    using XnaKeys = Microsoft.Xna.Framework.Input.Keys;
 
-    public class SceneObjectAddedEventArgs : EventArgs
+    public class SceneChangedEventArgs : EventArgs
     {
-        public SceneObject SceneObject { get; private set; }
+        public bool Added { get; set; }
+        public string Name { get; set; }
 
-        public SceneObjectAddedEventArgs(SceneObject sceneObject)
+        public SceneChangedEventArgs(string name, bool added)
         {
-            SceneObject = sceneObject;
+            Name = name;
+            Added = added;
         }
     }
 
@@ -44,18 +47,19 @@ namespace C3DE.Editor.MonoGameBridge
         private Renderer _renderer;
         private ContentManager _content;
         private Scene _scene;
-        private Camera _mainCamera;
-        private List<string> _sceneObjectToAdd;
-        private SceneObject _selectedObject;
+        private List<string> _toAdd;
+        private List<SceneObject> _toRemove;
+        private SceneObject _selected;
 
-        public event EventHandler<SceneObjectAddedEventArgs> SceneObjectAdded = null;
-        public event EventHandler<EventArgs> SceneObjectRemoved = null;
+        public event EventHandler<SceneChangedEventArgs> SceneObjectAdded = null;
+        public event EventHandler<SceneChangedEventArgs> SceneObjectRemoved = null;
 
         protected override void Initialize()
         {
             base.Initialize();
 
-            _sceneObjectToAdd = new List<string>();
+            _toAdd = new List<string>();
+            _toRemove = new List<SceneObject>();
 
             _gameTime = new GameTime(TimeSpan.Zero, TimeSpan.Zero);
             _gameComponents = new List<GameComponent>();
@@ -91,26 +95,28 @@ namespace C3DE.Editor.MonoGameBridge
 
         private void PopulateSceneWithThings()
         {
-            _scene.DefaultMaterial.MainTexture = GraphicsHelper.CreateCheckboardTexture(Color.Blue, Color.White, 64, 64);
+            _scene.DefaultMaterial.MainTexture = GraphicsHelper.CreateBorderTexture(XnaColor.Brown, XnaColor.BlanchedAlmond, 64, 64, 1);
 
-            var camera = new CameraPrefab("Editor_MainCamera");
-            _scene.Add(camera);
+            var camera = new CameraPrefab("EditorCamera.Main");
             camera.AddComponent<EDOrbitController>();
-            _mainCamera = camera.Camera;
+            _scene.Add(camera);
 
-            var lightPrefab = new LightPrefab("Editor_MainLight", LightType.Directional);
+            var lightPrefab = new LightPrefab("Editor_MainLight", LightType.Ambient);
             _scene.Add(lightPrefab);
             lightPrefab.Transform.Position = new XnaVector3(0, 15, 15);
             lightPrefab.Light.Direction = new XnaVector3(0, 1, -1);
 
             // Grid
-            var terrain = new TerrainPrefab("terrain");
+            var gridMaterial = new SimpleMaterial(_scene);
+            gridMaterial.MainTexture = GraphicsHelper.CreateCheckboardTexture(new XnaColor(0.4f, 0.4f, 0.4f), new XnaColor(0.9f, 0.9f, 0.9f), 256, 256);
+            gridMaterial.Tiling = new XnaVector2(24.0f);
+            gridMaterial.Alpha = 0.6f;
+
+            var terrain = new TerrainPrefab("Editor_Grid");
             _scene.Add(terrain);
             terrain.Flat();
-            terrain.Renderer.Material = new TransparentMaterial(_scene);
-            terrain.Renderer.Material.MainTexture = GraphicsHelper.CreateBorderTexture(XnaColor.Gray, XnaColor.Transparent, 256, 256, 2);
-            terrain.Renderer.Material.Tiling = new XnaVector2(16); ;
-            terrain.Transform.Translate(-terrain.Width >> 1, 0, -terrain.Depth / 2);
+            terrain.Renderer.Material = gridMaterial;
+            terrain.Transform.Translate(-terrain.Width >> 1, -1.0f, -terrain.Depth / 2);
 
             camera.Transform.Position = new XnaVector3(-terrain.Width >> 1, 2, -terrain.Depth / 2);
 
@@ -125,8 +131,7 @@ namespace C3DE.Editor.MonoGameBridge
             int height = (int)sizeInfo.NewSize.Height;
 
             Screen.Setup(width, height, null, null);
-
-            _mainCamera.ComputeProjectionMatrix(MathHelper.PiOver4, (float)width / (float)height, 1, 2000);
+            Camera.Main.ComputeProjectionMatrix(MathHelper.PiOver4, (float)width / (float)height, 1, 2000);
 
             _renderer.NeedsBufferUpdate = true;
         }
@@ -138,12 +143,20 @@ namespace C3DE.Editor.MonoGameBridge
             _gameTime.ElapsedGameTime = timer.Elapsed;
             _gameTime.TotalGameTime += timer.Elapsed;
 
-            if (_sceneObjectToAdd.Count > 0)
+            if (_toRemove.Count > 0)
             {
-                foreach (var type in _sceneObjectToAdd)
+                foreach (var sceneObject in _toRemove)
+                    InternalRemoveSceneObject(sceneObject);
+
+                _toRemove.Clear();
+            }
+
+            if (_toAdd.Count > 0)
+            {
+                foreach (var type in _toAdd)
                     InternalAddSceneObject(type);
 
-                _sceneObjectToAdd.Clear();
+                _toAdd.Clear();
             }
 
             foreach (var component in _gameComponents)
@@ -151,43 +164,53 @@ namespace C3DE.Editor.MonoGameBridge
 
             if (Input.Mouse.Clicked(MouseButton.Left))
             {
-                var ray = _mainCamera.GetRay((Input.Mouse as EDMouseComponent).Position);
+                var ray = Camera.Main.GetRay((Input.Mouse as EDMouseComponent).Position);
                 RaycastInfo info;
 
                 if (_scene.Raycast(ray, 100, out info))
                 {
-                    if (info.Collider.SceneObject == _selectedObject)
+                    if (info.Collider.SceneObject == _selected)
                         return;
 
-                    if (info.Collider.SceneObject != _selectedObject)
+                    if (info.Collider.SceneObject != _selected)
                         UnselectSceneObject();
 
-                    _selectedObject = info.Collider.SceneObject;
-
-                    /*var boxRenderer = _selectedObject.GetComponent<BoundingBoxRenderer>();
-
-                    if (boxRenderer == null)
-                        boxRenderer = _selectedObject.AddComponent<BoundingBoxRenderer>();
-
-                    boxRenderer.Enabled = true;*/
+                    SelectObject(info.Collider.SceneObject);
                 }
             }
 
-            if (_selectedObject != null)
+            else if (_selected != null)
             {
                 if (Input.Mouse.Down(MouseButton.Left))
-                    _selectedObject.Transform.Translate(Input.Mouse.Delta.X, 0, Input.Mouse.Delta.Y);
+                    _selected.Transform.Translate(Input.Mouse.Delta.X, 0, Input.Mouse.Delta.Y);
+
+                /*if (Input.Keys.JustPressed(XnaKeys.Delete))
+                {
+                    _toRemove.Add(_selected);
+                    _selected = null;
+                }*/
             }
 
             _scene.Update();
         }
 
+        private void SelectObject(SceneObject sceneObject)
+        {
+            UnselectSceneObject();
+
+            _selected = sceneObject;
+
+            var boxRenderer = _selected.GetComponent<BoundingBoxRenderer>();
+            if (boxRenderer == null)
+                boxRenderer = _selected.AddComponent<BoundingBoxRenderer>();
+
+            boxRenderer.Enabled = true;
+        }
+
         private void UnselectSceneObject()
         {
-            if (_selectedObject != null)
-            {
-                //_selectedObject.GetComponent<BoundingBoxRenderer>().Enabled = false;
-            }
+            if (_selected != null)
+                _selected.GetComponent<BoundingBoxRenderer>().Enabled = false;
         }
 
         protected override void Draw(RenderTarget2D renderTarget)
@@ -203,7 +226,7 @@ namespace C3DE.Editor.MonoGameBridge
 
         public void Add(string type)
         {
-            _sceneObjectToAdd.Add(type);
+            _toAdd.Add(type);
         }
 
         private void InternalAddSceneObject(string type)
@@ -242,7 +265,7 @@ namespace C3DE.Editor.MonoGameBridge
                 case "Camera": sceneObject = new CameraPrefab(type); break;
                 default: break;
             }
-            
+
             var collider = sceneObject.GetComponent<Collider>();
             if (collider != null)
                 collider.IsPickable = true;
@@ -250,7 +273,17 @@ namespace C3DE.Editor.MonoGameBridge
             _scene.Add(sceneObject);
 
             if (SceneObjectAdded != null)
-                SceneObjectAdded(this, new SceneObjectAddedEventArgs(sceneObject));
+                SceneObjectAdded(this, new SceneChangedEventArgs(sceneObject.Name, true));
+
+            SelectObject(sceneObject);
+        }
+
+        private void InternalRemoveSceneObject(SceneObject sceneObject)
+        {
+            if (SceneObjectRemoved != null)
+                SceneObjectAdded(this, new SceneChangedEventArgs(sceneObject.Name, false));
+         
+            _scene.Remove(sceneObject);
         }
     }
 }

@@ -42,9 +42,27 @@ namespace C3DE.Components.Renderers
             if (geometry == null)
                 return;
 
-            boundingSphere = BoundingSphere.CreateFromPoints(geometry.GetVertices(VertexType.Position));
-            boundingSphere.Center = sceneObject.Transform.Position;
-      
+            var min = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
+            var max = new Vector3(float.MinValue, float.MinValue, float.MinValue);
+            var vertices = geometry.GetVertices(VertexType.Position);
+
+            for (int i = 0, l = vertices.Length; i < l; i++)
+            {
+                min.X = Math.Min(vertices[i].X, min.X);
+                min.Y = Math.Min(vertices[i].Y, min.Y);
+                min.Z = Math.Min(vertices[i].Z, min.Z);
+                max.X = Math.Max(vertices[i].X, max.X);
+                max.Y = Math.Max(vertices[i].Y, max.Y);
+                max.Z = Math.Max(vertices[i].Z, max.Z);
+            }
+
+            var box = new BoundingBox(min, max);
+            var mx = max.X - min.X;
+            var my = max.Y - min.Y;
+            var mz = max.Z - min.Z;
+            boundingSphere.Radius = (float)Math.Max(Math.Max(mx, my), mz) / 2.0f;
+            boundingSphere.Center = transform.Position;
+
             UpdateColliders();
         }
 

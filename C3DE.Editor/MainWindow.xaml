@@ -72,10 +72,6 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             <local:C3DEGameHost Grid.Row="0" Grid.Column="0" x:Name="editorGameHost" Margin="0" SnapsToDevicePixels="True" Stretch="Fill" />
-            <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal" Height="100">
-                
-                <Label Content="Assets"></Label>
-            </StackPanel>
         </Grid>
         
         <StackPanel Grid.Row="1" Grid.Column="1">

@@ -74,7 +74,7 @@ namespace C3DE.Editor.Components
             if (Input.Mouse.Down(MouseButton.Middle))
                 _target.Y += StrafeSpeed * Input.Mouse.Delta.Y * Time.DeltaTime;
             
-            _distance -= (Input.Mouse as EDMouseComponent).Wheel * 0.01f * MoveSpeed * Time.DeltaTime;
+            _distance -= (Input.Mouse as EDMouseComponent).Wheel * 0.1f * MoveSpeed * Time.DeltaTime;
 
             CheckAngle();
             CheckDistance();
