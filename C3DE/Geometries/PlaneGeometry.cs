@@ -5,12 +5,6 @@ namespace C3DE.Geometries
 {
     public class PlaneGeometry : Geometry
     {
-        public PlaneGeometry(bool isDynamic = false)
-            : base()
-        {
-            useDynamicBuffers = isDynamic;
-        }
-
         protected override void CreateGeometry()
         {
             var position = new Vector3[4]

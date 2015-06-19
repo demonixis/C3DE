@@ -21,8 +21,8 @@ namespace C3DE.Geometries
             set { _tessellationLevel = value; }
         }
 
-       public SphereGeometry(bool isDynamic = false)
-           : this(1, 8, isDynamic)
+       public SphereGeometry()
+           : this(1, 8)
         {
         }
 

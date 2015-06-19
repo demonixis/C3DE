@@ -5,12 +5,6 @@ namespace C3DE.Geometries
 {
     public class CubeGeometry : Geometry
     {
-        public CubeGeometry(bool isDynamic = false) 
-            : base() 
-        {
-            useDynamicBuffers = isDynamic; 
-        }
-
         protected override void CreateGeometry()
         {
             Vector3 topLeftFront = new Vector3(-1.0f, 1.0f, 1.0f);

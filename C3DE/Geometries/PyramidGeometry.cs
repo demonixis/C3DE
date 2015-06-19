@@ -5,12 +5,6 @@ namespace C3DE.Geometries
 {
     public class PyramidGeometry : Geometry
     {
-        public PyramidGeometry(bool isDynamic = false)
-            : base()
-        {
-            useDynamicBuffers = isDynamic;
-        }
-
         protected override void CreateGeometry()
         {
             Vector2 topLeft = new Vector2(0.0f, 0.0f);

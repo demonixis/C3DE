@@ -11,8 +11,8 @@ namespace C3DE.Geometries
         private int _nbSlices;
         private int _nbSegments;
 
-        public TorusGeometry(bool isDynamic = false)
-            : this(2, 1, 8, 8, isDynamic)
+        public TorusGeometry()
+            : this(2, 1, 8, 8)
         {
         }
 
