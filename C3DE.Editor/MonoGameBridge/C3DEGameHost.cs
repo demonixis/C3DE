@@ -23,7 +23,6 @@ namespace C3DE.Editor.MonoGameBridge
     using XnaColor = Microsoft.Xna.Framework.Color;
     using XnaVector2 = Microsoft.Xna.Framework.Vector2;
     using XnaVector3 = Microsoft.Xna.Framework.Vector3;
-    using XnaKeys = Microsoft.Xna.Framework.Input.Keys;
 
     public class SceneChangedEventArgs : EventArgs
     {
@@ -216,7 +215,7 @@ namespace C3DE.Editor.MonoGameBridge
             boxRenderer.Enabled = true;
 
             Messenger.Notify("Editor.SceneObjectUpdated", new SceneObjectControlChanged(_selected.Name, _selected.Enabled));
-            Messenger.Notify("Editor.SceneObjectUpdated", new SceneObjectControlChanged(_selected.Name, _selected.Enabled));
+            Messenger.Notify("Editor.TransformUpdated", new GenericMessage<Transform>(_selected.Transform));
         }
 
         private void UnselectSceneObject()

@@ -101,6 +101,9 @@
     <Compile Include="Views\Controls\ColliderControl.xaml.cs">
       <DependentUpon>ColliderControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Controls\SceneListControl.xaml.cs">
+      <DependentUpon>SceneListControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Controls\SceneObjectControl.xaml.cs">
       <DependentUpon>SceneObjectControl.xaml</DependentUpon>
     </Compile>
@@ -111,6 +114,10 @@
       <DependentUpon>SceneSettingsWindow.xaml</DependentUpon>
     </Compile>
     <Page Include="Views\Controls\ColliderControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Controls\SceneListControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

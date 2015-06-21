@@ -1,5 +1,4 @@
 ﻿using C3DE.Components;
-using System;
 using System.Windows.Controls;
 
 namespace C3DE.Editor.Views.Controls
@@ -150,6 +149,17 @@ namespace C3DE.Editor.Views.Controls
                     ScaleY = data.Y;
                     ScaleZ = data.Z;
                 }
+
+                return;
+            }
+
+            var trData = m as GenericMessage<Transform>;
+            if (trData != null)
+            {
+                var transform = trData.Value;
+                Set(transform.Position.X, transform.Position.Y, transform.Position.Z,
+                    transform.Rotation.X, transform.Rotation.Y, transform.Rotation.Z,
+                    transform.LocalScale.X, transform.LocalScale.Y, transform.LocalScale.Z);
             }
         }
     }

@@ -1,8 +1,5 @@
-﻿using System;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using C3DE.Components;
-using C3DE.Rendering;
 
 namespace C3DE.Components.Renderers
 {
@@ -50,10 +47,11 @@ namespace C3DE.Components.Renderers
             var corners = _renderer.boundingBox.GetCorners();
             for (int i = 0; i < 8; i++)
             {
-                _vertices[i].Position = corners[i] + transform.Position;
+                _vertices[i].Position = corners[i];
                 _vertices[i].Color = Color.Green;
             }
 
+            _effect.World = transform.world;
             _effect.View = Camera.Main.view;
             _effect.Projection = Camera.Main.projection;
 

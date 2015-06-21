@@ -4,9 +4,8 @@ using System.Windows.Controls;
 namespace C3DE.Editor
 {
     using C3DE.Editor.MonoGameBridge;
-    using System;
     using System.Windows.Input;
-    using WpfApplication = System.Windows.Application;
+    using WPFApplication = System.Windows.Application;
 
     /// <summary>
     /// Logique d'interaction pour MainWindow.xaml
@@ -57,7 +56,7 @@ namespace C3DE.Editor
                 var tmp = item.Name.Split(_separator);
 
                 if (tmp[2] == "Exit")
-                    WpfApplication.Current.Shutdown();
+                    WPFApplication.Current.Shutdown();
             }
         }
 
