@@ -14,26 +14,31 @@ namespace C3DE.Editor
     public partial class MainWindow : Window
     {
         private char[] _separator;
-        private Point _lastMouseDown;
-        private TreeViewItem _draggedItem;
-        private TreeViewItem _target;
 
         public MainWindow()
         {
             InitializeComponent();
             _separator = new char[1] { '_' };
 
-            editorGameHost.SceneObjectAdded += editorGameHost_SceneObjectAdded;
-            editorGameHost.SceneObjectRemoved += editorGameHost_SceneObjectRemoved;
+            editorGameHost.SceneObjectAdded += OnSceneObjectAdded;
+            editorGameHost.SceneObjectRemoved += OnSceneObjectRemoved;
+
+            KeyUp += MainWindow_KeyUp;
         }
 
-        private void editorGameHost_SceneObjectAdded(object sender, SceneChangedEventArgs e)
+        void MainWindow_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.IsToggled)
+                Messenger.Notify("Editor.JustPressed", e.Key.ToString());
+        }
+
+        private void OnSceneObjectAdded(object sender, SceneChangedEventArgs e)
         {
             if (e.Added)
                 sceneTreeView.Items.Add(e.Name);
         }
 
-        private void editorGameHost_SceneObjectRemoved(object sender, SceneChangedEventArgs e)
+        private void OnSceneObjectRemoved(object sender, SceneChangedEventArgs e)
         {
             if (e.Added)
                 return;

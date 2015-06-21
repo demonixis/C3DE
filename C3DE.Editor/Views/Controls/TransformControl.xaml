@@ -3,30 +3,41 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             mc:Ignorable="d" Height="113" Width="230">
-
+             mc:Ignorable="d" Height="113" Width="250">
+    <UserControl.Resources>
+        <Style x:Key="Tr_Input" TargetType="TextBox" BasedOn="{ StaticResource { x:Type TextBox}}">
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Width" Value="55" />
+            <Setter Property="Height" Value="20" />
+            <Setter Property="Text" Value="0" />
+            <Setter Property="Margin" Value="0, 0, 5, 0" />
+        </Style>
+    </UserControl.Resources>
     <StackPanel>
-        <StackPanel>
-            <Label Content="Transform" />
-            <Line />
-            <StackPanel Orientation="Horizontal">
-                <Label Content="Position" Width="65" />
-                <TextBox Text="0" Width="50" Height="20" HorizontalAlignment="Center" VerticalAlignment="Center"  Margin="0, 0, 5, 0"/>
-                <TextBox Text="0" Width="50" Height="20" HorizontalAlignment="Center" VerticalAlignment="Center"  Margin="0, 0, 5, 0"/>
-                <TextBox Text="0" Width="50" Height="20" HorizontalAlignment="Center" VerticalAlignment="Center"  Margin="0, 0, 5, 0"/>
+        <Border BorderThickness="1" BorderBrush="LightGray" Margin="2">
+            <StackPanel>
+                <Label Content="Transform" />
+                <Separator Margin="5, 2, 5, 2" />
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="Position" Width="65" />
+                    <TextBox x:Name="transformPositionX" Tag="Position" Style="{StaticResource Tr_Input}" SelectionChanged="OnValueChanged" />
+                    <TextBox x:Name="transformPositionY" Tag="Position" Style="{StaticResource Tr_Input}" SelectionChanged="OnValueChanged" />
+                    <TextBox x:Name="transformPositionZ" Tag="Position" Style="{StaticResource Tr_Input}" SelectionChanged="OnValueChanged" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="Rotation" Width="65" />
+                    <TextBox x:Name="transformRotationX" Tag="Rotation" Style="{StaticResource Tr_Input}" SelectionChanged="OnValueChanged" />
+                    <TextBox x:Name="transformRotationY" Tag="Rotation" Style="{StaticResource Tr_Input}" SelectionChanged="OnValueChanged" />
+                    <TextBox x:Name="transformRotationZ" Tag="Rotation" Style="{StaticResource Tr_Input}" SelectionChanged="OnValueChanged" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0, 0, 0, 15">
+                    <Label Content="Scale" Width="65" />
+                    <TextBox x:Name="transformScaleX" Tag="Scale" Style="{StaticResource Tr_Input}" SelectionChanged="OnValueChanged" />
+                    <TextBox x:Name="transformScaleY" Tag="Scale" Style="{StaticResource Tr_Input}" SelectionChanged="OnValueChanged" />
+                    <TextBox x:Name="transformScaleZ" Tag="Scale" Style="{StaticResource Tr_Input}" SelectionChanged="OnValueChanged" />
+                </StackPanel>
             </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <Label Content="Rotation" Width="65" />
-                <TextBox Text="0" Width="50" Height="20" HorizontalAlignment="Center" VerticalAlignment="Center"  Margin="0, 0, 5, 0"/>
-                <TextBox Text="0" Width="50" Height="20" HorizontalAlignment="Center" VerticalAlignment="Center"  Margin="0, 0, 5, 0"/>
-                <TextBox Text="0" Width="50" Height="20" HorizontalAlignment="Center" VerticalAlignment="Center"  Margin="0, 0, 5, 0"/>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal" Margin="0, 0, 0, 15">
-                <Label Content="Scale" Width="65" />
-                <TextBox Text="0" Width="50" Height="20" HorizontalAlignment="Center" VerticalAlignment="Center"  Margin="0, 0, 5, 0"/>
-                <TextBox Text="0" Width="50" Height="20" HorizontalAlignment="Center" VerticalAlignment="Center"  Margin="0, 0, 5, 0"/>
-                <TextBox Text="0" Width="50" Height="20" HorizontalAlignment="Center" VerticalAlignment="Center"  Margin="0, 0, 5, 0"/>
-            </StackPanel>
-        </StackPanel>
+        </Border>
     </StackPanel>
 </UserControl>

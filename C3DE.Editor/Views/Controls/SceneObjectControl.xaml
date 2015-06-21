@@ -4,9 +4,15 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
-             d:DesignHeight="30" d:DesignWidth="230">
-    <StackPanel Orientation="Horizontal" Margin="5 2 5 2">
-        <CheckBox VerticalAlignment="Center" Content="Enabled" Margin="0 0 20 0"/>
-        <TextBox Text="SceneObject" Width="135" />
-    </StackPanel>
+             d:DesignHeight="65" d:DesignWidth="250">
+    <Border BorderThickness="1" BorderBrush="LightGray" Margin="2">
+        <StackPanel Orientation="Vertical">
+            <Label Content="Scene Object" />
+            <Separator Margin="5, 2, 5, 2" />
+            <StackPanel Orientation="Horizontal" Margin="5 2 5 2">
+                <CheckBox x:Name="SOEnabled" VerticalAlignment="Center" IsChecked="True" Content="Enabled" Margin="0 0 20 0"/>
+                <TextBox x:Name="SOName" Text="SceneObject" Width="150" />
+            </StackPanel>
+        </StackPanel>
+    </Border>
 </UserControl>

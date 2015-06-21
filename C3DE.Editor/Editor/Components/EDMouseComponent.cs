@@ -18,7 +18,7 @@ namespace C3DE.Editor.Components
     public class EDMouseComponent : MouseComponent
     {
         private UIElement _uiElement;
-        private float _wheel = 1;
+        private float _wheel = 0;
         private bool _needsUpdate;
         private Timer _clickTimer;
         private Vector2 _sensibility;

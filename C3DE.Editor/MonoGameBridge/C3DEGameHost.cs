@@ -91,20 +91,26 @@ namespace C3DE.Editor.MonoGameBridge
                 component.Initialize();
 
             PopulateSceneWithThings();
+
+            Messenger.Register("Editor.SceneObjectChanged", OnSceneObjectChanged);
+            Messenger.Register("Editor.TransformChanged", OnTransformChanged);
+            Messenger.Register("Editor.JustPressed", OnKeyDown);
         }
 
         private void PopulateSceneWithThings()
         {
-            _scene.DefaultMaterial.MainTexture = GraphicsHelper.CreateBorderTexture(XnaColor.Brown, XnaColor.BlanchedAlmond, 64, 64, 1);
+            var defaultMaterial = new SimpleMaterial(_scene);
+            defaultMaterial.MainTexture = GraphicsHelper.CreateBorderTexture(XnaColor.LightSkyBlue, XnaColor.LightGray, 64, 64, 1);
+            _scene.DefaultMaterial = defaultMaterial;
 
             var camera = new CameraPrefab("EditorCamera.Main");
             camera.AddComponent<EDOrbitController>();
             _scene.Add(camera);
 
-            var lightPrefab = new LightPrefab("Editor_MainLight", LightType.Ambient);
+            var lightPrefab = new LightPrefab("Editor_MainLight", LightType.Directional);
             _scene.Add(lightPrefab);
             lightPrefab.Transform.Position = new XnaVector3(0, 15, 15);
-            lightPrefab.Light.Direction = new XnaVector3(0, 1, -1);
+            lightPrefab.Light.Direction = new XnaVector3(0, 0.75f, 0.75f);
 
             // Grid
             var gridMaterial = new SimpleMaterial(_scene);
@@ -182,16 +188,19 @@ namespace C3DE.Editor.MonoGameBridge
             else if (_selected != null)
             {
                 if (Input.Mouse.Down(MouseButton.Left))
-                    _selected.Transform.Translate(Input.Mouse.Delta.X, 0, Input.Mouse.Delta.Y);
-
-                /*if (Input.Keys.JustPressed(XnaKeys.Delete))
                 {
-                    _toRemove.Add(_selected);
-                    _selected = null;
-                }*/
+                    _selected.Transform.Translate(Input.Mouse.Delta.X, 0, Input.Mouse.Delta.Y);
+                    Messenger.Notify("Editor.TransformUpdated", new TransformChanged(TransformChangeType.Position, _selected.Transform.Position.X, _selected.Transform.Position.Y, _selected.Transform.Position.Z));
+                }
             }
 
             _scene.Update();
+        }
+
+        private void OnKeyDown(BasicMessage m)
+        {
+            if (m.Message == "Escape")
+                UnselectSceneObject();
         }
 
         private void SelectObject(SceneObject sceneObject)
@@ -205,6 +214,9 @@ namespace C3DE.Editor.MonoGameBridge
                 boxRenderer = _selected.AddComponent<BoundingBoxRenderer>();
 
             boxRenderer.Enabled = true;
+
+            Messenger.Notify("Editor.SceneObjectUpdated", new SceneObjectControlChanged(_selected.Name, _selected.Enabled));
+            Messenger.Notify("Editor.SceneObjectUpdated", new SceneObjectControlChanged(_selected.Name, _selected.Enabled));
         }
 
         private void UnselectSceneObject()
@@ -227,6 +239,53 @@ namespace C3DE.Editor.MonoGameBridge
         public void Add(string type)
         {
             _toAdd.Add(type);
+        }
+
+        public void SetupSceneObject(string name, bool enabled)
+        {
+            if (_selected != null)
+            {
+                _selected.Name = name;
+                _selected.Enabled = enabled;
+            }
+        }
+
+        public void SetTransform(int type, float x, float y, float z)
+        {
+            if (_selected != null)
+            {
+                if (type == 0)
+                    _selected.Transform.SetPosition(x, y, z);
+                else if (type == 1)
+                    _selected.Transform.SetRotation(x, y, z);
+                else if (type == 2)
+                    _selected.Transform.LocalScale = new XnaVector3(x, y, z);
+            }
+        }
+
+        private void OnSceneObjectChanged(BasicMessage m)
+        {
+            var data = m as SceneObjectControlChanged;
+            if (data != null && _selected != null)
+            {
+                _selected.Name = data.Name;
+                _selected.Enabled = data.Enable;
+            }
+        }
+
+        private void OnTransformChanged(BasicMessage m)
+        {
+            var data = m as TransformChanged;
+            if (data != null && _selected != null)
+            {
+                var type = (int)data.ChangeType;
+                if (type == 0)
+                    _selected.Transform.SetPosition(data.X, data.Y, data.Z);
+                else if (type == 1)
+                    _selected.Transform.SetRotation(data.X, data.Y, data.Z);
+                else if (type == 2)
+                    _selected.Transform.LocalScale = new XnaVector3(data.X, data.Y, data.Z);
+            }
         }
 
         private void InternalAddSceneObject(string type)
@@ -282,7 +341,7 @@ namespace C3DE.Editor.MonoGameBridge
         {
             if (SceneObjectRemoved != null)
                 SceneObjectAdded(this, new SceneChangedEventArgs(sceneObject.Name, false));
-         
+
             _scene.Remove(sceneObject);
         }
     }

@@ -93,6 +93,9 @@
     </ApplicationDefinition>
     <Compile Include="Editor\Components\EDOrbitController.cs" />
     <Compile Include="Editor\Components\EDMouseComponent.cs" />
+    <Compile Include="Messenger\BasicMessage.cs" />
+    <Compile Include="Messenger\CustomMessage.cs" />
+    <Compile Include="Messenger\Messenger.cs" />
     <Compile Include="MonoGameBridge\C3DEGameHost.cs" />
     <Compile Include="MonoGameBridge\GraphicsDeviceService.cs" />
     <Compile Include="Views\Controls\ColliderControl.xaml.cs">

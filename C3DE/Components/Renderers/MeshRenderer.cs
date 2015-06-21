@@ -20,13 +20,13 @@ namespace C3DE.Components.Renderers
                 {
                     if (geometry != null && _haveListener)
                     {
-                        geometry.ConstructionDone -= ComputeBoundingSphere;
+                        geometry.ConstructionDone -= ComputeBoundingInfos;
                         _haveListener = false;
                     }
 
                     geometry = value;
 
-                    geometry.ConstructionDone += ComputeBoundingSphere;
+                    geometry.ConstructionDone += ComputeBoundingInfos;
                     _haveListener = true;
                 }
             }
@@ -37,7 +37,7 @@ namespace C3DE.Components.Renderers
         {
         }
 
-        public override void ComputeBoundingSphere()
+        public override void ComputeBoundingInfos()
         {
             if (geometry == null)
                 return;
@@ -56,7 +56,11 @@ namespace C3DE.Components.Renderers
                 max.Z = Math.Max(vertices[i].Z, max.Z);
             }
 
-            var box = new BoundingBox(min, max);
+            min *= transform.LocalScale;
+            max *= transform.LocalScale;
+
+            boundingBox = new BoundingBox(min, max);
+
             var mx = max.X - min.X;
             var my = max.Y - min.Y;
             var mz = max.Z - min.Z;

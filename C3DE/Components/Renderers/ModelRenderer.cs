@@ -22,7 +22,7 @@ namespace C3DE.Components.Renderers
                 if (value != model)
                 {
                     model = value;
-                    ComputeBoundingSphere();
+                    ComputeBoundingInfos();
                 }
             }
         }
@@ -32,7 +32,7 @@ namespace C3DE.Components.Renderers
         {
         }
 
-        public override void ComputeBoundingSphere()
+        public override void ComputeBoundingInfos()
         {
             if (model != null)
             {

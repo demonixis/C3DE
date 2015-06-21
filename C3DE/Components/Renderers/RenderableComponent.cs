@@ -12,6 +12,7 @@ namespace C3DE.Components.Renderers
     public abstract class RenderableComponent : Component
     {
         protected internal BoundingSphere boundingSphere;
+        protected internal BoundingBox boundingBox;
         protected internal List<int> materials;
         protected internal int materialCount;
         protected int materialIndex;
@@ -29,6 +30,11 @@ namespace C3DE.Components.Renderers
         public BoundingSphere BoundingSphere
         {
             get { return boundingSphere; }
+        }
+
+        public BoundingBox BoundingBox
+        {
+            get { return boundingBox; }
         }
 
         protected internal List<int> MaterialIndices
@@ -140,7 +146,7 @@ namespace C3DE.Components.Renderers
         /// <summary>
         /// Compute the internal bouding sphere of the collider, it's required by the shadow generator.
         /// </summary>
-        public abstract void ComputeBoundingSphere();
+        public abstract void ComputeBoundingInfos();
 
         /// <summary>
         /// Draw the content of the component.

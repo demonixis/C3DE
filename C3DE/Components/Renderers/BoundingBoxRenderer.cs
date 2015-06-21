@@ -39,19 +39,18 @@ namespace C3DE.Components.Renderers
                 return;
         }
 
-        public override void ComputeBoundingSphere()
+        public override void ComputeBoundingInfos()
         {
         }
 
         public override void Draw(GraphicsDevice device)
         {
-            _renderer.ComputeBoundingSphere();
+            _renderer.ComputeBoundingInfos();
 
-            var box = BoundingBox.CreateFromSphere(_renderer.boundingSphere);
-            var corners = box.GetCorners();
+            var corners = _renderer.boundingBox.GetCorners();
             for (int i = 0; i < 8; i++)
             {
-                _vertices[i].Position = corners[i];
+                _vertices[i].Position = corners[i] + transform.Position;
                 _vertices[i].Color = Color.Green;
             }
 

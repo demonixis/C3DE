@@ -8,6 +8,7 @@ using C3DE.Rendering;
 using C3DE.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.Collections.Generic;
 
 namespace C3DE
@@ -25,12 +26,12 @@ namespace C3DE
     public class Scene : SceneObject
     {
         public static Scene current { get; internal set; }
-        public readonly Material DefaultMaterial;
 
         private int _mainCameraIndex;
         private List<Component> _componentsToDestroy;
         private bool _needRemoveCheck;
 
+        internal protected Material defaultMaterial;
         internal protected SmartList<SceneObject> sceneObjects;
         internal protected List<RenderableComponent> renderList;
         internal protected List<Material> materials;
@@ -44,6 +45,18 @@ namespace C3DE
         internal protected List<PostProcessPass> postProcessPasses;
 
         public RenderSettings RenderSettings { get; private set; }
+
+        public Material DefaultMaterial
+        {
+            get { return defaultMaterial; }
+            set
+            {
+                if (value == null)
+                    throw new Exception("The default material can't be null");
+
+                defaultMaterial = value;
+            }
+        }
 
         public Camera MainCamera
         {
@@ -141,7 +154,7 @@ namespace C3DE
             _componentsToDestroy = new List<Component>();
             _needRemoveCheck = false;
             _mainCameraIndex = -1;
-            DefaultMaterial = new SimpleMaterial(this);
+            defaultMaterial = new SimpleMaterial(this);
             RenderSettings = new RenderSettings();
         }
 
@@ -569,7 +582,7 @@ namespace C3DE
 
             if (canRemove)
                 DestroyObject(sceneObject);
-            
+
             return canRemove;
         }
 
@@ -596,7 +609,7 @@ namespace C3DE
         #endregion
 
         #region Add/Remove PostProcess
-            
+
         public void Add(PostProcessPass pass)
         {
             if (!postProcessPasses.Contains(pass))
