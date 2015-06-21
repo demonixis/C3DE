@@ -79,17 +79,7 @@
                 <StackPanel Orientation="Vertical" x:Name="componentContainer">
                     <components:SceneObjectControl x:Name="sceneObjectComponent" Margin="0, 0, 0, 5" />
                     <components:TransformControl x:Name="transformComponent" Margin="0, 0, 0, 5"/>
-                    
-                    <Border BorderThickness="1" BorderBrush="LightGray" Margin="2">
-                        <StackPanel Orientation="Vertical">
-                            <Label Content="Scene" />
-                            <Separator Margin="2, 5, 2, 2" />
-                            <TreeView x:Name="sceneTreeView" AllowDrop="True" BorderThickness="0">
-                                <TreeViewItem Header="Main Camera" Tag="0" />
-                                <TreeViewItem Header="Ambient Light" Tag="1" />
-                            </TreeView>
-                        </StackPanel>
-                    </Border>
+                    <components:SceneListControl x:Name="sceneListComponent" Margin="0, 0, 0, 5" />
                 </StackPanel>
             </ScrollViewer>
         </StackPanel>

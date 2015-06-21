@@ -22,11 +22,23 @@ namespace C3DE.Editor
             editorGameHost.SceneObjectAdded += OnSceneObjectAdded;
             editorGameHost.SceneObjectRemoved += OnSceneObjectRemoved;
 
-            KeyUp += MainWindow_KeyUp;
+            KeyDown += MainWindow_KeyDown;
         }
 
-        void MainWindow_KeyUp(object sender, KeyEventArgs e)
+        void MainWindow_KeyDown(object sender, KeyEventArgs e)
         {
+            if (e.Key == Key.C && Keyboard.Modifiers == ModifierKeys.Control)
+                Messenger.Notify("Editor.Command.Copy");
+
+            else if (e.Key == Key.D && Keyboard.Modifiers == ModifierKeys.Control)
+                Messenger.Notify("Editor.Command.Past");
+
+            else if (e.Key == Key.X && Keyboard.Modifiers == ModifierKeys.Control)
+                Messenger.Notify("Editor.Command.Cut");
+
+            else if (e.Key == Key.A && Keyboard.Modifiers == ModifierKeys.Control)
+                Messenger.Notify("Editor.Command.SelectAll");
+
             if (e.IsToggled)
                 Messenger.Notify("Editor.JustPressed", e.Key.ToString());
         }
@@ -34,7 +46,7 @@ namespace C3DE.Editor
         private void OnSceneObjectAdded(object sender, SceneChangedEventArgs e)
         {
             if (e.Added)
-                sceneTreeView.Items.Add(e.Name);
+                sceneListComponent.AddItem(e.Name);
         }
 
         private void OnSceneObjectRemoved(object sender, SceneChangedEventArgs e)
@@ -42,9 +54,7 @@ namespace C3DE.Editor
             if (e.Added)
                 return;
 
-            var index = sceneTreeView.Items.IndexOf(e.Name);
-            if (index > -1)
-                sceneTreeView.Items.RemoveAt(index);
+            sceneListComponent.RemoveItem(e.Name);
         }
 
         private void OnMenuFileClick(object sender, RoutedEventArgs e)
@@ -54,7 +64,6 @@ namespace C3DE.Editor
             if (item != null)
             {
                 var tmp = item.Name.Split(_separator);
-
                 if (tmp[2] == "Exit")
                     WPFApplication.Current.Shutdown();
             }
