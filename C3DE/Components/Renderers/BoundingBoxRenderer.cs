@@ -51,7 +51,7 @@ namespace C3DE.Components.Renderers
                 _vertices[i].Color = Color.Green;
             }
 
-            _effect.World = transform.world;
+            _effect.World = Matrix.CreateFromYawPitchRoll(transform.Rotation.Y, transform.Rotation.X, transform.Rotation.Z) * Matrix.CreateTranslation(transform.Position);
             _effect.View = Camera.Main.view;
             _effect.Projection = Camera.Main.projection;
 

@@ -167,6 +167,7 @@ namespace C3DE
         /// <param name="content"></param>
         public override void Initialize()
         {
+            current = this;
             initialized = true;
 
             DefaultMaterial.MainTexture = GraphicsHelper.CreateTexture(Color.AntiqueWhite, 1, 1);
@@ -233,6 +234,7 @@ namespace C3DE
                 pass.Dispose();
 
             Clear();
+            current = null;
         }
 
         /// <summary>

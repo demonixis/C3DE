@@ -171,9 +171,10 @@ namespace C3DE.Editor.MonoGameBridge
             {
                 var ray = Camera.Main.GetRay((Input.Mouse as EDMouseComponent).Position);
                 RaycastInfo info;
-
+                
                 if (_scene.Raycast(ray, 100, out info))
                 {
+                    Debug.Log(info.Collider.SceneObject.Name);
                     if (info.Collider.SceneObject == _selected)
                         return;
 
@@ -221,7 +222,10 @@ namespace C3DE.Editor.MonoGameBridge
         private void UnselectSceneObject()
         {
             if (_selected != null)
+            {
                 _selected.GetComponent<BoundingBoxRenderer>().Enabled = false;
+                _selected = null;
+            }
         }
 
         protected override void Draw(RenderTarget2D renderTarget)
@@ -328,12 +332,32 @@ namespace C3DE.Editor.MonoGameBridge
             if (collider != null)
                 collider.IsPickable = true;
 
+            sceneObject.AddComponent<ObjectSerializer>();
+
             _scene.Add(sceneObject);
 
             if (SceneObjectAdded != null)
                 SceneObjectAdded(this, new SceneChangedEventArgs(sceneObject.Name, true));
 
             SelectObject(sceneObject);
+        }
+
+        public string SaveScene()
+        {
+            var data = new List<ObjectSerializer.SerializedData>();
+
+            foreach (Behaviour script in _scene.Behaviours)
+            {
+                if (script is ObjectSerializer)
+                    data.Add((script as ObjectSerializer).Serialize());
+            }
+
+            return Newtonsoft.Json.JsonConvert.SerializeObject(data.ToArray(), Newtonsoft.Json.Formatting.Indented);
+        }
+
+        public void ExportSceneTo(string format)
+        {
+
         }
 
         private void InternalRemoveSceneObject(SceneObject sceneObject)

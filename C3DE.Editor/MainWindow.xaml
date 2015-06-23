@@ -15,51 +15,48 @@
         </Grid.ColumnDefinitions>
         <Menu Grid.Row="0" Grid.ColumnSpan="2">
             <MenuItem Header="File">
-                <MenuItem Header="New Scene" x:Name="Menu_File_NewP" Click="OnMenuFileClick" />
-                <MenuItem Header="Load Scene" x:Name="Menu_File_LoadP" Click="OnMenuFileClick" />
-                <MenuItem Header="Save Scene" x:Name="Menu_File_SaveP" Click="OnMenuFileClick" />
+                <MenuItem Header="New Scene" Tag="New" Click="OnFileMenuClick" />
+                <MenuItem Header="Load Scene" Tag="Load" Click="OnFileMenuClick" />
+                <MenuItem Header="Save Scene" Tag="Save" Click="OnFileMenuClick" />
+                <MenuItem Header="Save Scene As..." Tag="SaveAs" Click="OnFileMenuClick" />
                 <Separator />
-                <MenuItem Header="New Project" />
-                <MenuItem Header="Load Project" />
-                <MenuItem Header="Save Project" />
+                <MenuItem Header="New Project" Tag="NewP" Click="OnFileMenuClick" />
+                <MenuItem Header="Load Project" Tag="LoadP" Click="OnFileMenuClick" />
+                <MenuItem Header="Save Project" Tag="SaveP" Click="OnFileMenuClick" />
+                <MenuItem Header="Save Project As..." Tag="SaveAsP" />
                 <Separator />
-                <MenuItem Header="Exit" x:Name="Menu_File_Exit" Click="OnMenuFileClick" />
-            </MenuItem>
-            <MenuItem Header="Assets">
-                <MenuItem Header="Add">
-                    <MenuItem Header="Texture" />
-                    <MenuItem Header="Font" />
-                    <MenuItem Header="Model" />
-                    <Separator />
-                    <MenuItem Header="Material" />
-                    <MenuItem Header="Shader" />
-                </MenuItem>
+                <MenuItem Header="Exit" Tag="Exit"  Click="OnFileMenuClick" />
             </MenuItem>
             <MenuItem Header="Scene">
                 <MenuItem Header="Empty" />
                 <Separator />
                 <MenuItem Header="3D Object">
-                    <MenuItem Header="Cube" x:Name="menu_SO_Cube" Click="OnMenuAddSceneObjectClick" />
-                    <MenuItem Header="Cylinder" x:Name="menu_SO_Cylinder" Click="OnMenuAddSceneObjectClick" />
-                    <MenuItem Header="Quad" x:Name="menu_SO_Quad" Click="OnMenuAddSceneObjectClick" />
-                    <MenuItem Header="Plane" x:Name="menu_SO_Plane" Click="OnMenuAddSceneObjectClick" />
-                    <MenuItem Header="Pyramid" x:Name="menu_SO_Pyramid" Click="OnMenuAddSceneObjectClick" />
-                    <MenuItem Header="Sphere" x:Name="menu_SO_Sphere" Click="OnMenuAddSceneObjectClick" />
-                    <MenuItem Header="Torus" x:Name="menu_SO_Torus" Click="OnMenuAddSceneObjectClick" />
+                    <MenuItem Header="Cube" Tag="Cube" Click="OnAddSceneObject" />
+                    <MenuItem Header="Cylinder" Tag="Cylinder" Click="OnAddSceneObject" />
+                    <MenuItem Header="Quad" Tag="Quad" Click="OnAddSceneObject" />
+                    <MenuItem Header="Plane" Tag="Plane" Click="OnAddSceneObject" />
+                    <MenuItem Header="Pyramid" Tag="Pyramid" Click="OnAddSceneObject" />
+                    <MenuItem Header="Sphere" Tag="Sphere" Click="OnAddSceneObject" />
+                    <MenuItem Header="Torus" Tag="Torus" Click="OnAddSceneObject" />
                 </MenuItem>
                 <MenuItem Header="Terrain">
-                    <MenuItem Header="Terrain" x:Name="menu_SO_Terrain" Click="OnMenuAddSceneObjectClick" />
-                    <MenuItem Header="Water" x:Name="menu_SO_Water" Click="OnMenuAddSceneObjectClick" />
+                    <MenuItem Header="Terrain" Tag="Terrain" Click="OnAddSceneObject" />
+                    <MenuItem Header="Water" Tag="Water" Click="OnAddSceneObject" />
                 </MenuItem>
                 <MenuItem Header="Light">
-                    <MenuItem Header="Directional Light" x:Name="menu_Light_Directional" Click="OnMenuAddSceneObjectClick" />
-                    <MenuItem Header="Point Light" x:Name="menu_Light_Point" Click="OnMenuAddSceneObjectClick" />
-                    <MenuItem Header="Spot Light" x:Name="menu_Light_Spot" Click="OnMenuAddSceneObjectClick" />
+                    <MenuItem Header="Directional Light" Tag="Directional" Click="OnAddSceneObject" />
+                    <MenuItem Header="Point Light" Tag="Point" Click="OnAddSceneObject" />
+                    <MenuItem Header="Spot Light" Tag="Spot" Click="OnAddSceneObject" />
                 </MenuItem>
-                <MenuItem Header="Camera" x:Name="menu_SO_Camera" Click="OnMenuAddSceneObjectClick" />
+                <MenuItem Header="Camera" x:Name="menu_SO_Camera" Click="OnAddSceneObject" />
+                <Separator />
+                <MenuItem Header="Exports">
+                    <MenuItem Header="OBJ/MTL" Tag="Obj" Click="OnExportClick" />
+                    <MenuItem Header="STL" Tag="Stl" Click="OnExportClick" />
+                </MenuItem>
             </MenuItem>
             <MenuItem Header="Help">
-                <MenuItem Header="About" x:Name="menu_Help_About" />
+                <MenuItem Header="About" Click="OnAboutClick" />
             </MenuItem>
         </Menu>
 

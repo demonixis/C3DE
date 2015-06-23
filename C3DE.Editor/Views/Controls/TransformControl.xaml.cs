@@ -28,19 +28,19 @@ namespace C3DE.Editor.Views.Controls
 
         public float RotationX
         {
-            get { return ParseValue(transformRotationX.Text); }
+            get { return ParseValue(transformRotationX.Text, true); }
             set { transformRotationX.Text = value.ToString(); }
         }
 
         public float RotationY
         {
-            get { return ParseValue(transformRotationY.Text); }
+            get { return ParseValue(transformRotationY.Text, true); }
             set { transformRotationY.Text = value.ToString(); }
         }
 
         public float RotationZ
         {
-            get { return ParseValue(transformRotationZ.Text); }
+            get { return ParseValue(transformRotationZ.Text, true); }
             set { transformRotationZ.Text = value.ToString(); }
         }
 
@@ -77,10 +77,14 @@ namespace C3DE.Editor.Views.Controls
             _initialized = true;
         }
 
-        public float ParseValue(string value)
+        public float ParseValue(string value, bool convertToRadians = false)
         {
             float result = 0.0f;
             float.TryParse(value, out result);
+
+            if (convertToRadians)
+                return ((float)System.Math.PI / 180.0f) * result;
+
             return result;
         }
 

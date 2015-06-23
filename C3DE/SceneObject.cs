@@ -317,6 +317,23 @@ namespace C3DE
             return sceneObjects.ToArray();
         }
 
+        public static Behaviour[] FindObjectsOfType<T>() where T : Behaviour
+        {
+            var scene = Scene.current;
+            var scripts = new List<Behaviour>();
+            
+            if (scene != null)
+            {
+                foreach (var script in scene.scripts)
+                {
+                    if (script is T)
+                        scripts.Add(script);
+                }
+            }
+
+            return scripts.ToArray();
+        }
+
         public object Clone()
         {
             SceneObject sceneObject = new SceneObject(Name + " (Clone)");

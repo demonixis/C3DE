@@ -104,6 +104,7 @@ namespace C3DE.Geometries
                             Indices[indexCount++] = invertFaces ? i2 : i1;
                             Indices[indexCount++] = invertFaces ? i1 : i2;
                         }
+
                         if (j == _nbSegments)
                         {   
                             // end cap - i0 is always the center point on end cap

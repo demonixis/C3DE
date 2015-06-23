@@ -4,6 +4,7 @@ using System.Windows.Controls;
 namespace C3DE.Editor
 {
     using C3DE.Editor.MonoGameBridge;
+    using System.IO;
     using System.Windows.Input;
     using WPFApplication = System.Windows.Application;
 
@@ -57,27 +58,49 @@ namespace C3DE.Editor
             sceneListComponent.RemoveItem(e.Name);
         }
 
-        private void OnMenuFileClick(object sender, RoutedEventArgs e)
+        private void OnFileMenuClick(object sender, RoutedEventArgs e)
         {
-            var item = sender as MenuItem;
+            var item = sender as Control;
+            if (item == null)
+                return;
 
-            if (item != null)
+            var tag = item.Tag.ToString();
+            switch(tag)
             {
-                var tmp = item.Name.Split(_separator);
-                if (tmp[2] == "Exit")
-                    WPFApplication.Current.Shutdown();
+                case "New": break;
+                case "Save": break;
+                case "SaveAs":
+                    var data = editorGameHost.SaveScene();
+                    var saveFileDialog = new System.Windows.Forms.SaveFileDialog();
+                    if (saveFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                            File.WriteAllText(saveFileDialog.FileName, data);
+                    break;
+                case "Load": break;
+                case "NewP": break;
+                case "LoadP": break;
+                case "SaveP": break;
+                case "SaveAsP": break;
+                case "Exit": WPFApplication.Current.Shutdown(); break;
             }
         }
 
-        private void OnMenuAddSceneObjectClick(object sender, RoutedEventArgs e)
+        private void OnAddSceneObject(object sender, RoutedEventArgs e)
         {
-            var item = sender as MenuItem;
-
+            var item = sender as Control;
             if (item != null)
-            {
-                var tmp = item.Name.Split(_separator);
-                editorGameHost.Add(tmp[2]);
-            }
+                editorGameHost.Add(item.Tag.ToString());
+        }
+
+        private void OnExportClick(object sender, RoutedEventArgs e)
+        {
+            var item = sender as Control;
+            if (item != null)
+                editorGameHost.ExportSceneTo(item.Tag.ToString());
+        }
+
+        private void OnAboutClick(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("C3DE Editor is a scene editor for the C3DE Engine. It's still very experimental.", "About C3DE Editor", MessageBoxButton.OK, MessageBoxImage.Information);
         }
     }
 }

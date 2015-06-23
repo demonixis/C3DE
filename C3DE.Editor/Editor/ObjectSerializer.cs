@@ -5,123 +5,32 @@ using Microsoft.Xna.Framework;
 using Newtonsoft.Json;
 using System;
 
-namespace C3DE.Editor.Editor
+namespace C3DE.Editor
 {
-    public class ObjectSerializer : Component
+    public class ObjectSerializer : Behaviour
     {
-        private MeshRenderer _meshRenderer;
-
-        public string SceneObjectId
+        public struct SerializedData
         {
-            get { return sceneObject.Id; }
-            set { sceneObject.Id = value; }
-        }
-
-        public string SceneObjectName
-        {
-            get { return sceneObject.Name; }
-            set { sceneObject.Name = value; }
-        }
-
-        public float X
-        {
-            get { return transform.Position.X; }
-            set { transform.SetPosition(value, null, null); }
-        }
-
-        public float Y
-        {
-            get { return transform.Position.Y; }
-            set { transform.SetPosition(null, value, null); }
-        }
-        
-        public float Z
-        {
-            get { return transform.Position.Z; }
-            set { transform.SetPosition(null, null, value); }
-        }
-        
-        public float RX
-        {
-            get { return transform.Rotation.X; }
-            set { transform.SetRotation(value, null, null); }
-        }
-        
-        public float RY
-        {
-            get { return transform.Rotation.Y; }
-            set { transform.SetRotation(null, value, null); }
-        }
-        
-        public float RZ
-        {
-            get { return transform.Rotation.Z; }
-            set { transform.SetRotation(null, null, value); }
-        }
-        
-        public float SX
-        {
-            get { return transform.LocalScale.X; }
-            set { transform.SetScale(value, null, null); }
-        }
-        
-        public float SY
-        {
-            get { return transform.LocalScale.Y; }
-            set { transform.SetScale(null, value, null); }
-        }
-        
-        public float SZ
-        {
-            get { return transform.LocalScale.Z; }
-            set { transform.SetScale(null, null, value); }
-        }
-
-        public string GeometryName
-        {
-            get
-            {
-                if (_meshRenderer == null ||_meshRenderer.Geometry == null)
-                    return string.Empty;
-
-                return _meshRenderer.Geometry.ToString();
-            }
-            set
-            {
-                if (_meshRenderer != null && _meshRenderer.Geometry != null)
-                    SetGeometry(value);
-            }
-        }
-
-        public Vector3 GeometrySize
-        {
-            get
-            {
-                if (_meshRenderer == null || _meshRenderer.Geometry == null)
-                    return Vector3.One;
-
-                return _meshRenderer.Geometry.Size;
-            }
-            set
-            {
-                if (_meshRenderer != null && _meshRenderer.Geometry != null)
-                    _meshRenderer.Geometry.Size = value;
-            }
-        }
-
-        public override void Start()
-        {
-            _meshRenderer = GetComponent<MeshRenderer>();
+            public string Id { get; set; }
+            public string Name { get; set; }
+            public float[][] Transform { get; set; }
+            public string Geometry { get; set; }
+            public float[] GeometrySize { get; set; }
         }
 
         public void SetGeometry(string name)
         {
             try
             {
+                var meshRenderer = GetComponent<MeshRenderer>();
+                if (meshRenderer == null)
+                    meshRenderer = sceneObject.AddComponent<MeshRenderer>();
+
                 var type = Type.GetType(name);
                 var geometry = Activator.CreateInstance(type) as Geometry;
-                _meshRenderer.Geometry = geometry;
-                _meshRenderer.Geometry.Generate();
+
+                meshRenderer.Geometry = geometry;
+                meshRenderer.Geometry.Generate();
             }
             catch (Exception ex)
             {
@@ -129,14 +38,31 @@ namespace C3DE.Editor.Editor
             }
         }
 
-        public string GetSerializedData()
+        public SerializedData Serialize()
         {
-            return JsonConvert.SerializeObject(this);
+            var data = new SerializedData();
+            data.Name = sceneObject.Name;
+            data.Id = sceneObject.Id;
+
+            data.Transform = new float[3][];
+            
+            data.Transform[0] = ToFloatArray(transform.Position);
+            data.Transform[1] = ToFloatArray(transform.Rotation);
+            data.Transform[2] = ToFloatArray(transform.LocalScale);
+
+            var meshRenderer = GetComponent<MeshRenderer>();
+            if (meshRenderer != null && meshRenderer.Geometry != null)
+            {
+                data.Geometry = meshRenderer.Geometry.ToString();
+                data.GeometrySize = ToFloatArray(meshRenderer.Geometry.Size);
+            }
+
+            return data;
         }
 
-        public void DeserializeData(string data)
+        private float[] ToFloatArray(Vector3 vector)
         {
-            JsonConvert.PopulateObject(data, this);
+            return new float[3] { vector.X, vector.Y, vector.Z };
         }
     }
 }
