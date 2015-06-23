@@ -23,6 +23,7 @@ Libs/Android/*.dll
 Libs/Windows8/*.dll
 Libs/WindowsPhone/*.dll
 Libs/WindowsGL/
+packages/
 !C3DE.Demo/Content/README.txt
 !C3DE.Demo/*/*/Content/README.txt
 !C3DE.Demo/Platforms/Android/Assets/Content/README.txt

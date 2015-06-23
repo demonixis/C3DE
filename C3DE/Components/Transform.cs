@@ -150,6 +150,13 @@ namespace C3DE.Components
             _localRotation.Z = z.HasValue ? z.Value : _localRotation.Z;
         }
 
+        public void SetScale(float? x, float? y, float? z)
+        {
+            _localScale.X = x.HasValue ? x.Value : _localScale.X;
+            _localScale.Y = y.HasValue ? y.Value : _localScale.Y;
+            _localScale.Z = z.HasValue ? z.Value : _localScale.Z;
+        }
+
         public override void Update()
         {
             if (!sceneObject.IsStatic || _dirty)

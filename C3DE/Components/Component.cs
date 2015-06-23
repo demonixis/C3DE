@@ -8,7 +8,6 @@ namespace C3DE.Components
     /// </summary>
     public abstract class Component : IComparable, ICloneable, IDisposable
     {
-        private static int ComponentCounter = 0;
         internal protected bool initialized;
         protected bool enabled;
         protected int order = 1;
@@ -32,7 +31,7 @@ namespace C3DE.Components
             get { return initialized; }
         }
 
-        public int Id { get; private set; }
+        public string Id { get; set; }
 
         /// <summary>
         /// Gets the scene object of this component.
@@ -83,7 +82,7 @@ namespace C3DE.Components
         {
             initialized = false;
             enabled = true;
-            Id = ++ComponentCounter;
+            Id = "CPN-" + Guid.NewGuid();
         }
 
         public virtual void OnEnabled()

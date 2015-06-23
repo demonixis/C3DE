@@ -58,6 +58,9 @@
     <Reference Include="MonoGame.Framework">
       <HintPath>..\Libs\MonoGame.Framework.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="SharpDX">
       <HintPath>..\Libs\SharpDX.dll</HintPath>
     </Reference>
@@ -93,6 +96,8 @@
     </ApplicationDefinition>
     <Compile Include="Editor\Components\EDOrbitController.cs" />
     <Compile Include="Editor\Components\EDMouseComponent.cs" />
+    <Compile Include="Editor\Gizmo.cs" />
+    <Compile Include="Editor\ObjectSerializer.cs" />
     <Compile Include="Messenger\BasicMessage.cs" />
     <Compile Include="Messenger\CustomMessage.cs" />
     <Compile Include="Messenger\Messenger.cs" />
@@ -144,6 +149,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

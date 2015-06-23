@@ -11,8 +11,6 @@ namespace C3DE
     {
         #region Private/protected declarations
 
-        private static int SceneObjectCounter = 0;
-
         protected Transform transform;
         protected Scene scene;
         protected bool enabled;
@@ -23,7 +21,7 @@ namespace C3DE
 
         #region Fields
 
-        public int Id { get; private set; }
+        public string Id { get; set; }
 
         public string Name { get; set; }
 
@@ -114,7 +112,7 @@ namespace C3DE
             IsStatic = false;
             IsPrefab = false;
 
-            Id = SceneObjectCounter++;
+            Id = "SO_" + Guid.NewGuid();
             Name = !string.IsNullOrEmpty(name) ? name : "SceneObject_" + Id;
         }
 
@@ -299,7 +297,7 @@ namespace C3DE
 
         #endregion
 
-        public static SceneObject FindById(int id)
+        public static SceneObject FindById(string id)
         {
             for (int i = 0; i < Scene.current.sceneObjects.Size; i++)
                 if (Scene.current.sceneObjects[i].Id == id)
@@ -308,7 +306,7 @@ namespace C3DE
             return null;
         }
 
-        public static SceneObject[] FindSceneObjectsById(int id)
+        public static SceneObject[] FindSceneObjectsById(string id)
         {
             List<SceneObject> sceneObjects = new List<SceneObject>();
 
@@ -330,6 +328,7 @@ namespace C3DE
             sceneObject.Transform.Position = transform.Position;
             sceneObject.Transform.Rotation = transform.Rotation;
             sceneObject.Transform.LocalScale = transform.LocalScale;
+            sceneObject.Id = "SO-" + Guid.NewGuid();
 
             return sceneObject;
         }
