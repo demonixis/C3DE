@@ -164,7 +164,7 @@ namespace C3DE.Geometries
 
             Vector3[] vertices = new Vector3[size];
 
-            for (int i = 0; i < size ; i++)
+            for (int i = 0; i < size; i++)
             {
                 if (type == VertexType.Normal)
                     vertices[i] = Vertices[i].Normal;
@@ -173,6 +173,18 @@ namespace C3DE.Geometries
             }
 
             return vertices;
+        }
+
+        public Vector2[] GetUVs()
+        {
+            int size = Vertices.Length;
+
+            Vector2[] uvs = new Vector2[Vertices.Length];
+
+            for (int i = 0; i < size; i++)
+                uvs[i] = Vertices[i].TextureCoordinate;
+
+            return uvs;
         }
 
         public void Dispose()

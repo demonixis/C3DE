@@ -7,6 +7,7 @@ namespace C3DE.Editor
     using System.IO;
     using System.Windows.Input;
     using WPFApplication = System.Windows.Application;
+    using Winforms = System.Windows.Forms;
 
     /// <summary>
     /// Logique d'interaction pour MainWindow.xaml
@@ -65,17 +66,37 @@ namespace C3DE.Editor
                 return;
 
             var tag = item.Tag.ToString();
-            switch(tag)
+            switch (tag)
             {
-                case "New": break;
-                case "Save": break;
-                case "SaveAs":
-                    var data = editorGameHost.SaveScene();
-                    var saveFileDialog = new System.Windows.Forms.SaveFileDialog();
-                    if (saveFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-                            File.WriteAllText(saveFileDialog.FileName, data);
+                case "New":
+                    editorGameHost.NewScene();
                     break;
-                case "Load": break;
+
+                case "Save":
+                case "SaveAs":
+                    {
+                        var data = editorGameHost.SaveScene();
+                        var saveFileDialog = new Winforms.SaveFileDialog();
+                        saveFileDialog.Filter = "C3DE Scene (*.scene)|*.scene";
+
+                        if (saveFileDialog.ShowDialog() == Winforms.DialogResult.OK)
+                            File.WriteAllText(saveFileDialog.FileName, data);
+                    }
+                    break;
+
+                case "Load":
+                    {
+                        var openFileDialog = new Winforms.OpenFileDialog();
+                        openFileDialog.Filter = "C3DE Scene (*.scene)|*.scene";
+
+                        if (openFileDialog.ShowDialog() == Winforms.DialogResult.OK)
+                        {
+                            var data = File.ReadAllText(openFileDialog.FileName);
+                            editorGameHost.LoadScene(data);
+                        }
+                    }
+                    break;
+
                 case "NewP": break;
                 case "LoadP": break;
                 case "SaveP": break;
@@ -95,7 +116,19 @@ namespace C3DE.Editor
         {
             var item = sender as Control;
             if (item != null)
-                editorGameHost.ExportSceneTo(item.Tag.ToString());
+            {
+                var format = item.Tag.ToString();
+
+                var saveFileDialog = new Winforms.SaveFileDialog();
+                saveFileDialog.Filter = format == "stl" ? "STL file (*.stl)|*.stl" : "OBJ/MTL file (*.obj)|*.obj";
+
+                if (saveFileDialog.ShowDialog() == Winforms.DialogResult.OK)
+                {
+                    var result = editorGameHost.ExportSceneTo(format);
+                    if (result != null)
+                        File.WriteAllText(saveFileDialog.FileName, result[0]);
+                }
+            }
         }
 
         private void OnAboutClick(object sender, RoutedEventArgs e)

@@ -27,7 +27,7 @@
                 <Separator />
                 <MenuItem Header="Exit" Tag="Exit"  Click="OnFileMenuClick" />
             </MenuItem>
-            <MenuItem Header="Scene">
+            <MenuItem Header="Scene Object">
                 <MenuItem Header="Empty" />
                 <Separator />
                 <MenuItem Header="3D Object">
@@ -51,8 +51,8 @@
                 <MenuItem Header="Camera" x:Name="menu_SO_Camera" Click="OnAddSceneObject" />
                 <Separator />
                 <MenuItem Header="Exports">
-                    <MenuItem Header="OBJ/MTL" Tag="Obj" Click="OnExportClick" />
-                    <MenuItem Header="STL" Tag="Stl" Click="OnExportClick" />
+                    <MenuItem Header="OBJ/MTL" Tag="obj" Click="OnExportClick" />
+                    <MenuItem Header="STL" Tag="stl" Click="OnExportClick" />
                 </MenuItem>
             </MenuItem>
             <MenuItem Header="Help">

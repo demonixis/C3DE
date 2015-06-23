@@ -17,9 +17,11 @@ namespace C3DE.Editor.MonoGameBridge
     using C3DE.Components;
     using C3DE.Components.Colliders;
     using C3DE.Components.Renderers;
+    using C3DE.Editor.Exporters;
     using C3DE.Geometries;
     using C3DE.Prefabs.Meshes;
     using C3DE.Rendering;
+    using Newtonsoft.Json;
     using XnaColor = Microsoft.Xna.Framework.Color;
     using XnaVector2 = Microsoft.Xna.Framework.Vector2;
     using XnaVector3 = Microsoft.Xna.Framework.Vector3;
@@ -89,14 +91,15 @@ namespace C3DE.Editor.MonoGameBridge
             foreach (var component in _gameComponents)
                 component.Initialize();
 
-            PopulateSceneWithThings();
+            CreateDefaultEditor();
+            _scene.RenderSettings.Skybox.Generate();
 
             Messenger.Register("Editor.SceneObjectChanged", OnSceneObjectChanged);
             Messenger.Register("Editor.TransformChanged", OnTransformChanged);
             Messenger.Register("Editor.JustPressed", OnKeyDown);
         }
 
-        private void PopulateSceneWithThings()
+        private void CreateDefaultEditor()
         {
             var defaultMaterial = new SimpleMaterial(_scene);
             defaultMaterial.MainTexture = GraphicsHelper.CreateBorderTexture(XnaColor.LightSkyBlue, XnaColor.LightGray, 64, 64, 1);
@@ -124,8 +127,6 @@ namespace C3DE.Editor.MonoGameBridge
             terrain.Transform.Translate(-terrain.Width >> 1, -1.0f, -terrain.Depth / 2);
 
             camera.Transform.Position = new XnaVector3(-terrain.Width >> 1, 2, -terrain.Depth / 2);
-
-            _scene.RenderSettings.Skybox.Generate();
         }
 
         protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo)
@@ -342,6 +343,12 @@ namespace C3DE.Editor.MonoGameBridge
             SelectObject(sceneObject);
         }
 
+        public void NewScene()
+        {
+            _scene.Unload();
+            CreateDefaultEditor();
+        }
+
         public string SaveScene()
         {
             var data = new List<ObjectSerializer.SerializedData>();
@@ -352,12 +359,40 @@ namespace C3DE.Editor.MonoGameBridge
                     data.Add((script as ObjectSerializer).Serialize());
             }
 
-            return Newtonsoft.Json.JsonConvert.SerializeObject(data.ToArray(), Newtonsoft.Json.Formatting.Indented);
+            return JsonConvert.SerializeObject(data.ToArray(), Newtonsoft.Json.Formatting.Indented);
         }
 
-        public void ExportSceneTo(string format)
+        public void LoadScene(string strData)
         {
+            var data = JsonConvert.DeserializeObject<List<ObjectSerializer.SerializedData>>(strData);
 
+            if (data.Count > 0)
+            {
+                //NewScene();
+                ImportScene(data);
+            }
+        }
+
+        public string[] ExportSceneTo(string format)
+        {
+            string[] result = null;
+
+            if (_selected != null)
+            {
+                if (format == "stl")
+                {
+                    result = new string[1];
+                    result[0] = STLExporter.Export(_selected);
+                }
+                else if (format == "obj")
+                {
+                    result = new string[2];
+                    result[0] = OBJExporter.ExportMesh(_selected.GetComponent<MeshRenderer>());
+                    result[1] = string.Empty;
+                }
+            }
+
+            return result;
         }
 
         private void InternalRemoveSceneObject(SceneObject sceneObject)
@@ -366,6 +401,20 @@ namespace C3DE.Editor.MonoGameBridge
                 SceneObjectAdded(this, new SceneChangedEventArgs(sceneObject.Name, false));
 
             _scene.Remove(sceneObject);
+        }
+
+        private void ImportScene(List<ObjectSerializer.SerializedData> data)
+        {
+            SceneObject sceneObject = null;
+            ObjectSerializer serializer = null;
+
+            foreach (ObjectSerializer.SerializedData sd in data)
+            {
+                sceneObject = new SceneObject();
+                serializer = sceneObject.AddComponent<ObjectSerializer>();
+                serializer.Deserialize(sd);
+                InternalAddSceneObject(sd.Type);
+            }
         }
     }
 }
