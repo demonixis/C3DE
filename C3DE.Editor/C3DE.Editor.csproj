@@ -94,10 +94,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Editor\Components\EDOrbitController.cs" />
-    <Compile Include="Editor\Components\EDMouseComponent.cs" />
-    <Compile Include="Editor\Gizmo.cs" />
-    <Compile Include="Editor\ObjectSerializer.cs" />
+    <Compile Include="Core\Components\EDOrbitController.cs" />
+    <Compile Include="Core\Components\EDMouseComponent.cs" />
+    <Compile Include="Core\Gizmo.cs" />
+    <Compile Include="Core\ObjectSerializer.cs" />
     <Compile Include="Exporters\MeshMerger.cs" />
     <Compile Include="Exporters\OBJExporter.cs" />
     <Compile Include="Exporters\STLExporter.cs" />

@@ -2,11 +2,9 @@
 using C3DE.Components.Controllers;
 using C3DE.Inputs;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Input;
 using System;
 
-namespace C3DE.Editor.Components
+namespace C3DE.Editor.Core.Components
 {
     /// <summary>
     /// An orbit controller component.

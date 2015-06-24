@@ -11,12 +11,11 @@ namespace C3DE.Editor.Exporters
     {
         public static float Precision = 100.0f;
 
-        public static string MergeExport(MeshRenderer[] renderers)
+        public static string ExportMeshes(MeshRenderer[] renderers)
         {
-            var geometry = MeshMerger.Merge(renderers);
-            var renderer = new MeshRenderer();
-            renderer.Transform = new Transform();
-            renderer.Geometry = geometry;
+            var sceneObject = new SceneObject("MergedObject");
+            var renderer = sceneObject.AddComponent<MeshRenderer>();
+            renderer.Geometry = MeshMerger.Merge(renderers);
             return Export(renderer);
         }
 

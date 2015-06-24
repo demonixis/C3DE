@@ -27,13 +27,13 @@ namespace C3DE.Geometries
         public VertexPositionNormalTexture[] Vertices
         {
             get { return _vertices; }
-            internal protected set { _vertices = value; }
+            set { _vertices = value; }
         }
 
         public ushort[] Indices
         {
             get { return _indices; }
-            internal protected set { _indices = value; }
+            set { _indices = value; }
         }
 
         public VertexBuffer VertexBuffer
@@ -158,6 +158,17 @@ namespace C3DE.Geometries
                 _vertices[i].Normal.Normalize();
         }
 
+        public void SetVertices(VertexType type, Vector3[] vertices)
+        {
+            for (int i = 0, l = vertices.Length; i < l; i++)
+            {
+                if (type == VertexType.Normal)
+                    Vertices[i].Normal = vertices[i];
+                else
+                    Vertices[i].Position = vertices[i];
+            }
+        }
+
         public Vector3[] GetVertices(VertexType type)
         {
             int size = Vertices.Length;
@@ -173,6 +184,12 @@ namespace C3DE.Geometries
             }
 
             return vertices;
+        }
+
+        public void SetUVs(Vector2[] uvs)
+        {
+            for (int i = 0, l = uvs.Length; i < l; i++)
+                Vertices[i].TextureCoordinate = uvs[i];
         }
 
         public Vector2[] GetUVs()

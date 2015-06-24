@@ -3,10 +3,9 @@ using C3DE.Components.Lights;
 using C3DE.Components.Renderers;
 using C3DE.Geometries;
 using Microsoft.Xna.Framework;
-using Newtonsoft.Json;
 using System;
 
-namespace C3DE.Editor
+namespace C3DE.Editor.Core
 {
     public class ObjectSerializer : Behaviour
     {

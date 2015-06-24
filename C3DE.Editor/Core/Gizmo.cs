@@ -4,7 +4,7 @@ using C3DE.Prefabs.Meshes;
 using C3DE.Utils;
 using Microsoft.Xna.Framework;
 
-namespace C3DE.Editor
+namespace C3DE.Editor.Core
 {
     public class Gizmo : SceneObject
     {

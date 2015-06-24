@@ -317,17 +317,18 @@ namespace C3DE
             return sceneObjects.ToArray();
         }
 
-        public static Behaviour[] FindObjectsOfType<T>() where T : Behaviour
+        public static T[] FindObjectsOfType<T>() where T : Component
         {
             var scene = Scene.current;
-            var scripts = new List<Behaviour>();
+            var scripts = new List<T>();
             
             if (scene != null)
             {
-                foreach (var script in scene.scripts)
+                foreach (SceneObject so in scene.sceneObjects)
                 {
-                    if (script is T)
-                        scripts.Add(script);
+                    var components = so.GetComponents<T>();
+                    if (components.Length > 0)
+                        scripts.AddRange(components);
                 }
             }
 

@@ -44,17 +44,19 @@ namespace C3DE.Editor.Exporters
                 indices.AddRange(current.Indices);
             }
 
-            var size = positions.Count;
             current = new Geometry();
-            current.Vertices = new VertexPositionNormalTexture[size];
+
+            var size = positions.Count;
+            var vertices = new VertexPositionNormalTexture[size];
             
             for (int i = 0; i < size; i++)
             {
-                current.Vertices[i].Position = positions[i];
-                current.Vertices[i].Normal = normals[i];
-                current.Vertices[i].TextureCoordinate = uvs[i];
+                vertices[i].Position = positions[i];
+                vertices[i].Normal = normals[i];
+                vertices[i].TextureCoordinate = uvs[i];
             }
 
+            current.Vertices = vertices;
             current.Indices = indices.ToArray();
 
             return current;

@@ -2,18 +2,16 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
-namespace C3DE.Editor.Components
+namespace C3DE.Editor.Core.Components
 {
     using WpfApplication = System.Windows.Application;
     using WpfMouse = System.Windows.Input.Mouse;
-    using WpfMouseButton = System.Windows.Input.MouseButton;
     using WpfMouseButtonState = System.Windows.Input.MouseButtonState;
     using WpfMouseButtonEventArgs = System.Windows.Input.MouseButtonEventArgs;
     using WpfMouseEventArgs = System.Windows.Input.MouseEventArgs;
     using WpfMouseWheelEventArgs = System.Windows.Input.MouseWheelEventArgs;
     using System.Windows;
     using System.Timers;
-    using System;
 
     public class EDMouseComponent : MouseComponent
     {

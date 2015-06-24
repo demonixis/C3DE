@@ -1,5 +1,5 @@
 ﻿using C3DE.Components.Lights;
-using C3DE.Editor.Components;
+using C3DE.Editor.Core.Components;
 using C3DE.Inputs;
 using C3DE.Materials;
 using C3DE.Prefabs;
@@ -17,6 +17,7 @@ namespace C3DE.Editor.MonoGameBridge
     using C3DE.Components;
     using C3DE.Components.Colliders;
     using C3DE.Components.Renderers;
+    using C3DE.Editor.Core;
     using C3DE.Editor.Exporters;
     using C3DE.Geometries;
     using C3DE.Prefabs.Meshes;
@@ -379,10 +380,12 @@ namespace C3DE.Editor.MonoGameBridge
 
             if (_selected != null)
             {
+                var renderers = SceneObject.FindObjectsOfType<MeshRenderer>();
+
                 if (format == "stl")
                 {
                     result = new string[1];
-                    result[0] = STLExporter.Export(_selected);
+                    result[0] = STLExporter.ExportMeshes(renderers);
                 }
                 else if (format == "obj")
                 {
