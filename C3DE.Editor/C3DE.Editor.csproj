@@ -98,6 +98,7 @@
     <Compile Include="Editor\Components\EDMouseComponent.cs" />
     <Compile Include="Editor\Gizmo.cs" />
     <Compile Include="Editor\ObjectSerializer.cs" />
+    <Compile Include="Exporters\MeshMerger.cs" />
     <Compile Include="Exporters\OBJExporter.cs" />
     <Compile Include="Exporters\STLExporter.cs" />
     <Compile Include="Messenger\BasicMessage.cs" />
