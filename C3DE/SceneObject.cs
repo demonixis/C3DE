@@ -207,6 +207,9 @@ namespace C3DE
 
         internal Component AddComponent(Component component)
         {
+            if (component == null)
+                return null;
+
             if (component is Transform)
             {
                 component = null;
@@ -236,7 +239,7 @@ namespace C3DE
         /// Add a component of the specified type. Note that you can't add another Transform component.
         /// </summary>
         /// <typeparam name="T">The component's type.</typeparam>
-        /// <returns>Return true if the component has been added, otherwise return false.</returns>
+        /// <returns></returns>
         public T AddComponent<T>() where T : Component, new()
         {
             var component = new T();
@@ -297,6 +300,63 @@ namespace C3DE
 
         #endregion
 
+        public object Clone()
+        {
+            SceneObject sceneObject = new SceneObject(Name + " (Clone)");
+
+            foreach (Component component in components)
+                sceneObject.AddComponent((Component)component.Clone());
+
+            // Fixme
+            sceneObject.Transform.Position = transform.Position;
+            sceneObject.Transform.Rotation = transform.Rotation;
+            sceneObject.Transform.LocalScale = transform.LocalScale;
+            sceneObject.Id = "SO-" + Guid.NewGuid();
+
+            return sceneObject;
+        }
+
+        public void Dispose()
+        {
+            foreach (Component component in components)
+                component.Dispose();
+        }
+
+        public virtual Dictionary<string, object> Serialize()
+        {
+            var data = new Dictionary<string, object>();
+
+            data.Add("Enabled", enabled);
+            data.Add("IsPrefab", IsPrefab);
+            data.Add("IsStatic", IsStatic);
+            data.Add("Name", Name);
+            data.Add("Id", Id);
+            data.Add("Type", GetType().FullName);
+
+            Dictionary<string, object>[] serComponents = new Dictionary<string, object>[components.Count];
+            for (int i = 0, l = components.Count; i < l; i++)
+                serComponents[i] = components[i].Serialize();
+
+            data.Add("Components", serComponents);
+
+            return data;
+        }
+
+        public virtual void Deserialize(Dictionary<string, object> data)
+        {
+            enabled = (bool)data["Enabled"];
+            IsStatic = (bool)data["IsStatic"];
+            IsPrefab = (bool)data["IsPrefab"];
+            Id = (string)data["Id"];
+            Name = (string)data["Name"];
+
+            var cpnts = data["Components"] as Dictionary<string, object>[];
+            foreach (var cpn in cpnts)
+                AddComponent(SerializerHelper.CreateFromType(cpn) as Component);
+        }
+
+        #region Static methods
+
         public static SceneObject FindById(string id)
         {
             for (int i = 0; i < Scene.current.sceneObjects.Size; i++)
@@ -335,61 +395,6 @@ namespace C3DE
             return scripts.ToArray();
         }
 
-        public object Clone()
-        {
-            SceneObject sceneObject = new SceneObject(Name + " (Clone)");
-
-            foreach (Component component in components)
-                sceneObject.AddComponent((Component)component.Clone());
-
-            // Fixme
-            sceneObject.Transform.Position = transform.Position;
-            sceneObject.Transform.Rotation = transform.Rotation;
-            sceneObject.Transform.LocalScale = transform.LocalScale;
-            sceneObject.Id = "SO-" + Guid.NewGuid();
-
-            return sceneObject;
-        }
-
-        public void Dispose()
-        {
-            foreach (Component component in components)
-                component.Dispose();
-        }
-
-        public Dictionary<string, object> Serialize()
-        {
-            var dico = new Dictionary<string, object>();
-
-            dico.Add("Enabled", enabled);
-            dico.Add("IsPrefab", IsPrefab);
-            dico.Add("IsStatic", IsStatic);
-            dico.Add("Name", Name);
-            dico.Add("Id", Id);
-
-            Dictionary<string, object>[] serComponents = new Dictionary<string, object>[components.Count];
-            for (int i = 0, l = components.Count; i < l; i++)
-                serComponents[i] = components[i].Serialize();
-
-            dico.Add("Components", serComponents);
-
-            return dico;
-        }
-
-        public void Deserialize(Dictionary<string, object> data)
-        {
-            enabled = (bool)data["Enabled"];
-            IsStatic = (bool)data["IsStatic"];
-            IsPrefab = (bool)data["IsPrefab"];
-            Id = (string)data["Id"];
-            Name = (string)data["Name"];
-
-            var cpnts = data["Components"] as Dictionary<string, object>[];
-
-            foreach (var cpn in cpnts)
-            {
-
-            }
-        }
+        #endregion
     }
 }

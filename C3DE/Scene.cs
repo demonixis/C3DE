@@ -771,5 +771,56 @@ namespace C3DE
         }
 
         #endregion
+
+        public override Dictionary<string, object> Serialize()
+        {
+            var data = new Dictionary<string, object>();
+            var soCount = sceneObjects.Size;
+            var matCount = materials.Count;
+            var i = 0;
+
+            // Basic settings.
+            data.Add("Id", Id);
+            data.Add("Name", Name);
+            data.Add("RenderSettings", RenderSettings.Serialize());
+
+            // Materials.
+            var list = new Dictionary<string, object>[matCount];
+            for (i = 0; i < matCount; i++)
+                list[i] = materials[i].Serialize();
+
+            data.Add("Materials", list);
+
+            // SceneObjects with components.
+            list = new Dictionary<string, object>[soCount];
+            for (i = 0; i < soCount; i++)
+                list[i] = sceneObjects[i].Serialize();
+
+            data.Add("SceneObjects", list);
+
+            return data;
+        }
+
+        public override void Deserialize(Dictionary<string, object> data)
+        {
+            Id = (string)data["Id"];
+            Name = (string)data["Name"];
+
+            RenderSettings.Deserialize((Dictionary<string, object>)data["RenderSettings"]);
+
+            var materialsData = (Dictionary<string, object>[])data["Materials"];
+            if (materialsData != null)
+            {
+                foreach (var materialData in materialsData)
+                    Add(SerializerHelper.CreateFromType(materialData) as Material);
+            }
+
+            var sceneObjectsData = (Dictionary<string, object>[])data["SceneObjects"];
+            if (sceneObjectsData != null)
+            {
+                foreach (var sceneObjectData in sceneObjectsData)
+                    Add(SerializerHelper.CreateFromType(sceneObjectData) as SceneObject);
+            }
+        }
     }
 }

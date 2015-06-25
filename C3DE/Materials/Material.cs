@@ -89,24 +89,21 @@ namespace C3DE.Materials
             var data = new Dictionary<string, object>();
             data.Add("Id", Id);
             data.Add("Name", Name);
+            data.Add("Type", GetType().FullName);
             data.Add("DiffuseColor", SerializerHelper.ToFloat(diffuseColor));
             data.Add("Tiling", SerializerHelper.ToFloat(Tiling));
             data.Add("Offset", SerializerHelper.ToFloat(Offset));
             
-            if (mainTexture != null)
-            {
-                if (mainTexture.Name != string.Empty)
-                    data.Add("MainTexture", mainTexture.Name);
-                else if (mainTexture.Tag != string.Empty)
-                    data.Add("MainTexture", mainTexture.Tag);
-            }
-
             return data;
         }
 
         public void Deserialize(Dictionary<string, object> data)
         {
-            throw new NotImplementedException();
+            Id = (string)data["Id"];
+            Name = (string)data["Name"];
+            DiffuseColor = SerializerHelper.ToColor((float[])data["DiffuseColor"]);
+            Tiling = SerializerHelper.ToVector2((float[])data["Tiling"]);
+            Offset = SerializerHelper.ToVector2((float[])data["Offset"]);
         }
     }
 }

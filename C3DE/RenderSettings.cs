@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
+using System.Collections.Generic;
 
 namespace C3DE
 {
@@ -11,8 +12,7 @@ namespace C3DE
     /// <summary>
     /// Define settings used by the renderer.
     /// </summary>
-    [Serializable]
-    public class RenderSettings
+    public class RenderSettings : ISerializable
     {
         internal Vector3 fogColor;
         internal Vector3 ambientColor;
@@ -97,6 +97,19 @@ namespace C3DE
             FogEnd = 150.0f;
             fogColor = Vector3.One;
             skybox = new Skybox();
+        }
+
+        public Dictionary<string, object> Serialize()
+        {
+            var data = new Dictionary<string, object>();
+            data.Add("FogData", SerializerHelper.ToFloat(fogData));
+            // TODO: Add skybox
+            return data;
+        }
+
+        public void Deserialize(Dictionary<string, object> data)
+        {
+            fogData = SerializerHelper.ToVector4((float[])data["FogData"]);
         }
     }
 }

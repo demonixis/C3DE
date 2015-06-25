@@ -176,6 +176,7 @@ namespace C3DE.Components
             var data = new Dictionary<string, object>();
             data.Add("Enabled", Enabled);
             data.Add("Order", Order);
+            data.Add("Type", GetType().FullName);
             return data;
         }
 

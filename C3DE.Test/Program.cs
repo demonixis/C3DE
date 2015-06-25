@@ -37,7 +37,21 @@ namespace C3DE.Test
             //XMLSerialization("material.xml", material);
             JSONSerialization("material.json", material);
 
+            
+        }
+
+        public override void Update()
+        {
+            base.Update();
+
+            JSONSerialization("scene.json", this);
+
             Application.Quit();
+        }
+
+        private void StartSerialization()
+        {
+
         }
 
         private void XMLSerialization(string path, ISerializable obj)

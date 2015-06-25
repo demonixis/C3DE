@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using System;
 using System.Collections.Generic;
 
 namespace C3DE
@@ -11,6 +12,17 @@ namespace C3DE
 
     public sealed class SerializerHelper
     {
+        public static ISerializable CreateFromType(Dictionary<string, object> data)
+        {
+            var type = (string)data["Type"];
+            var instance = Activator.CreateInstance(Type.GetType(type)) as ISerializable;
+
+            if (instance != null)
+                instance.Deserialize(data);
+
+            return instance;
+        }
+
         public static float[] ToFloat(Color color)
         {
             return new float[4] { color.R, color.G, color.B, color.A };
