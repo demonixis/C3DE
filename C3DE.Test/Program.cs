@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
+using C3DE.Components.Lights;
 
 namespace C3DE.Test
 {
@@ -25,19 +26,53 @@ namespace C3DE.Test
         {
             base.Initialize();
 
-            var camera = new CameraPrefab("cam");
+            // Add a camera with a FPS controller
+            var camera = new CameraPrefab("camera");
+            camera.Setup(new Vector3(0, 2, -10), new Vector3(0, 0, 0), Vector3.Up);
             Add(camera);
 
-            var material = new SimpleMaterial(this);
-            material.MainTexture = GraphicsHelper.CreateCheckboardTexture(Color.Blue, Color.Red);
+            // And a light
+            var lightPrefab = new LightPrefab("light", LightType.Directional);
+            Add(lightPrefab);
+            lightPrefab.Light.Direction = new Vector3(1, 1, 0);
+            lightPrefab.Light.DiffuseColor = Color.LightSkyBlue;
+            lightPrefab.Light.Intensity = 1.5f;
+            lightPrefab.EnableShadows = true;
+
+            // Finally a terrain
+            var terrainMat = new TerrainMaterial(scene);
+
+            var terrain = new TerrainPrefab("terrain");
+            scene.Add(terrain);
+            terrain.LoadHeightmap("Textures/heightmap");
+            terrain.Renderer.Material = terrainMat;
+            terrain.Transform.Translate(-terrain.Width >> 1, -10, -terrain.Depth >> 1);
+            var map = terrain.GenerateWeightMap();
+
+            terrainMat.WeightTexture = map;
+            terrainMat.Tiling = new Vector2(4);
+
+            // With water !
+            var water = new WaterPrefab("water");
+            scene.Add(water);
+
+            Screen.ShowCursor = true;
+
+            // Don't miss the Skybox ;)
+            RenderSettings.Skybox.Generate();
+
+            // And fog
+            RenderSettings.FogDensity = 0.0085f;
+            RenderSettings.FogMode = FogMode.Exp2;
 
             //XMLSerialization("camera.xml", camera);
             JSONSerialization("camera.json", camera);
 
-            //XMLSerialization("material.xml", material);
-            JSONSerialization("material.json", material);
+            //XMLSerialization("ligth.xml", lightPrefab);
+            JSONSerialization("ligth.json", lightPrefab);
 
-            
+            //XMLSerialization("material.xml", material);
+            JSONSerialization("material.json", terrainMat);
         }
 
         public override void Update()
@@ -47,11 +82,6 @@ namespace C3DE.Test
             JSONSerialization("scene.json", this);
 
             Application.Quit();
-        }
-
-        private void StartSerialization()
-        {
-
         }
 
         private void XMLSerialization(string path, ISerializable obj)
