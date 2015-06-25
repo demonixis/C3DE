@@ -1,13 +1,7 @@
-﻿using C3DE.Components;
-using C3DE.Components.Renderers;
+﻿using C3DE.Components.Renderers;
 using C3DE.Geometries;
-using C3DE.Materials;
 using Microsoft.Xna.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace C3DE.Editor.Exporters
 {

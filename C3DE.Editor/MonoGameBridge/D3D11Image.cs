@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework.Graphics;
+using SharpDX.Direct3D9;
+using System;
 using System.Windows;
 using System.Windows.Interop;
-using Microsoft.Xna.Framework.Graphics;
-using SharpDX.Direct3D9;
 using Texture = SharpDX.Direct3D9.Texture;
 
 namespace C3DE.Editor.MonoGameBridge

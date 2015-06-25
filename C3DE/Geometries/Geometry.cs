@@ -10,6 +10,7 @@ namespace C3DE.Geometries
         Position = 0, Normal
     }
 
+    [Serializable]
     public class Geometry : IDisposable
     {
         private VertexPositionNormalTexture[] _vertices;

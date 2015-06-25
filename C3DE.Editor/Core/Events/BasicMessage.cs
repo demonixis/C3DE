@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace C3DE.Editor
+namespace C3DE.Editor.Events
 {
     public class BasicMessage
     {

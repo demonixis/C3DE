@@ -88,6 +88,7 @@
     <Compile Include="Input.cs" />
     <Compile Include="Inputs\InputManager.cs" />
     <Compile Include="Inputs\InputProfile.cs" />
+    <Compile Include="ISerializable.cs" />
     <Compile Include="Prefabs\LavaPrefab.cs" />
     <Compile Include="Rendering\IRenderer.cs" />
     <Compile Include="Materials\DummyMaterial.cs" />

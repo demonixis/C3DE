@@ -1,6 +1,5 @@
 ﻿using C3DE.Components;
 using C3DE.UI;
-using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 
 namespace C3DE

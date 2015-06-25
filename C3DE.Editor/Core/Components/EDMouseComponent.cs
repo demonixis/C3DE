@@ -59,23 +59,10 @@ namespace C3DE.Editor.Core.Components
             MouseButtons = new bool[3];
             LastMouseButtons = new bool[3];
             _sensibility = new Vector2(0.05f);
-            _uiElement = uiElement;
             _needsUpdate = false;
             _clickTimer = new Timer(0.2);
-            _clickTimer.Elapsed += _clickTimer_Elapsed;
-        }
-
-        void _clickTimer_Elapsed(object sender, ElapsedEventArgs e)
-        {
-            LastMouseButtons[0] = MouseButtons[0];
-            LastMouseButtons[1] = MouseButtons[1];
-            LastMouseButtons[2] = MouseButtons[2];
-        }
-
-        public override void Initialize()
-        {
-            base.Initialize();
-
+            _clickTimer.Elapsed += OnClickTimerDone;
+            _uiElement = uiElement;
             _uiElement.MouseDown += OnMouseDown;
             _uiElement.MouseUp += OnMouseDown;
             _uiElement.MouseMove += OnMouseMove;
@@ -145,6 +132,15 @@ namespace C3DE.Editor.Core.Components
 
         #endregion
 
+        #region Event handlers
+
+        private void OnClickTimerDone(object sender, ElapsedEventArgs e)
+        {
+            LastMouseButtons[0] = MouseButtons[0];
+            LastMouseButtons[1] = MouseButtons[1];
+            LastMouseButtons[2] = MouseButtons[2];
+        }
+
         private void OnMouseDown(object sender, WpfMouseButtonEventArgs e)
         {
             MouseButtons[0] = e.LeftButton == WpfMouseButtonState.Pressed;
@@ -177,5 +173,7 @@ namespace C3DE.Editor.Core.Components
         {
             _wheel += (float)e.Delta * 0.01f;
         }
+
+        #endregion
     }
 }

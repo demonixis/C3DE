@@ -28,6 +28,11 @@ namespace C3DE.Materials
 
         public bool AlphaEnabled { get; set; }
 
+        public SimpleMaterial()
+            : this(null)
+        {
+        }
+
         public SimpleMaterial(Scene scene)
             : base(scene)
         {

@@ -4,7 +4,6 @@ using C3DE.Components.Lights;
 using C3DE.Components.Renderers;
 using C3DE.Materials;
 using C3DE.PostProcess;
-using C3DE.Rendering;
 using C3DE.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -134,10 +133,10 @@ namespace C3DE
         /// <summary>
         /// The root scene object which contains all scene objects.
         /// </summary>
-        public Scene(string name)
+        public Scene()
             : base()
         {
-            Name = name;
+            Name = "SCENE-" + Guid.NewGuid();
             transform.Root = transform;
             sceneObjects = new SmartList<SceneObject>();
             scene = this;
@@ -156,6 +155,13 @@ namespace C3DE
             _mainCameraIndex = -1;
             defaultMaterial = new SimpleMaterial(this);
             RenderSettings = new RenderSettings();
+        }
+
+        public Scene(string name)
+            : this()
+        {
+            if (!string.IsNullOrEmpty(name))
+                Name = name;
         }
 
         #region Lifecycle

@@ -4,6 +4,7 @@ using System;
 
 namespace C3DE
 {
+    [Serializable]
     public static class AudioManager
     {
         private static bool _soundEnabled = true;

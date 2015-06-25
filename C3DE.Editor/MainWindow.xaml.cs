@@ -8,6 +8,7 @@ namespace C3DE.Editor
     using System.Windows.Input;
     using WPFApplication = System.Windows.Application;
     using Winforms = System.Windows.Forms;
+    using C3DE.Editor.Events;
 
     /// <summary>
     /// Logique d'interaction pour MainWindow.xaml
@@ -30,19 +31,19 @@ namespace C3DE.Editor
         void MainWindow_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.C && Keyboard.Modifiers == ModifierKeys.Control)
-                Messenger.Notify("Editor.Command.Copy");
+                Messenger.Notify(EditorEvent.CommandCopy);
 
             else if (e.Key == Key.D && Keyboard.Modifiers == ModifierKeys.Control)
-                Messenger.Notify("Editor.Command.Past");
+                Messenger.Notify(EditorEvent.CommandPast);
 
             else if (e.Key == Key.X && Keyboard.Modifiers == ModifierKeys.Control)
-                Messenger.Notify("Editor.Command.Cut");
+                Messenger.Notify(EditorEvent.CommandCut);
 
             else if (e.Key == Key.A && Keyboard.Modifiers == ModifierKeys.Control)
-                Messenger.Notify("Editor.Command.SelectAll");
+                Messenger.Notify(EditorEvent.CommandAll);
 
             if (e.IsToggled)
-                Messenger.Notify("Editor.JustPressed", e.Key.ToString());
+                Messenger.Notify(EditorEvent.KeyJustPressed, e.Key.ToString());
         }
 
         private void OnSceneObjectAdded(object sender, SceneChangedEventArgs e)
@@ -75,12 +76,11 @@ namespace C3DE.Editor
                 case "Save":
                 case "SaveAs":
                     {
-                        var data = editorGameHost.SaveScene();
                         var saveFileDialog = new Winforms.SaveFileDialog();
                         saveFileDialog.Filter = "C3DE Scene (*.scene)|*.scene";
 
                         if (saveFileDialog.ShowDialog() == Winforms.DialogResult.OK)
-                            File.WriteAllText(saveFileDialog.FileName, data);
+                            editorGameHost.SaveScene(saveFileDialog.FileName);
                     }
                     break;
 

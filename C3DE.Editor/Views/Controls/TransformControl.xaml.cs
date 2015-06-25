@@ -1,4 +1,5 @@
 ﻿using C3DE.Components;
+using C3DE.Editor.Events;
 using System.Windows.Controls;
 
 namespace C3DE.Editor.Views.Controls
@@ -65,7 +66,7 @@ namespace C3DE.Editor.Views.Controls
         private void Notify(TransformChangeType type, float x, float y, float z)
         {
             _eventCache.Set(type, x, y, z);
-            Messenger.Notify("Editor.TransformChanged", _eventCache);
+            Messenger.Notify(EditorEvent.TransformChanged, _eventCache);
         }
 
         public TransformControl()
@@ -73,7 +74,7 @@ namespace C3DE.Editor.Views.Controls
             _eventCache = new TransformChanged();
             InitializeComponent();
             Reset();
-            Messenger.Register("Editor.TransformUpdated", OnTransformUpdated);
+            Messenger.Register(EditorEvent.TransformUpdated, OnTransformUpdated);
             _initialized = true;
         }
 

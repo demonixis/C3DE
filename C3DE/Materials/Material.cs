@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using System.Collections.Generic;
 
 namespace C3DE.Materials
 {
@@ -11,16 +12,15 @@ namespace C3DE.Materials
         Low, Normal
     }
 
-    public abstract class Material : IDisposable
+    [Serializable]
+    public abstract class Material : IDisposable, ISerializable
     {
-        private static int MaterialCounter = 0;
-
         protected internal Scene scene;
         protected Vector3 diffuseColor;
         protected Texture2D mainTexture;
         protected internal Effect effect;
 
-        public int Id
+        public string Id
         {
             get;
             private set;
@@ -55,10 +55,10 @@ namespace C3DE.Materials
 
         public ShaderQuality ShaderQuality { get; set; }
 
-        public Material(Scene mainScene)
+        public Material()
         {
             diffuseColor = Color.White.ToVector3();
-            Id = MaterialCounter++;
+            Id = "MAT-" + Guid.NewGuid();
             Name = "Material_" + Id;
             Tiling = Vector2.One;
             Offset = Vector2.Zero;
@@ -67,7 +67,11 @@ namespace C3DE.Materials
 #if ANDROID || OPENGL
             ShaderQuality = ShaderQuality.Low;
 #endif
+        }
 
+        public Material(Scene mainScene)
+            : this()
+        {
             scene = mainScene;
             scene.Add(this);
         }
@@ -78,8 +82,31 @@ namespace C3DE.Materials
 
         public abstract void Pass(RenderableComponent renderable);
 
-        public virtual void Dispose()
+        public virtual void Dispose() { }
+
+        public Dictionary<string, object> Serialize()
         {
+            var data = new Dictionary<string, object>();
+            data.Add("Id", Id);
+            data.Add("Name", Name);
+            data.Add("DiffuseColor", SerializerHelper.ToFloat(diffuseColor));
+            data.Add("Tiling", SerializerHelper.ToFloat(Tiling));
+            data.Add("Offset", SerializerHelper.ToFloat(Offset));
+            
+            if (mainTexture != null)
+            {
+                if (mainTexture.Name != string.Empty)
+                    data.Add("MainTexture", mainTexture.Name);
+                else if (mainTexture.Tag != string.Empty)
+                    data.Add("MainTexture", mainTexture.Tag);
+            }
+
+            return data;
+        }
+
+        public void Deserialize(Dictionary<string, object> data)
+        {
+            throw new NotImplementedException();
         }
     }
 }

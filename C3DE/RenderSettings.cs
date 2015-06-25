@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using System;
 
 namespace C3DE
 {
@@ -10,6 +11,7 @@ namespace C3DE
     /// <summary>
     /// Define settings used by the renderer.
     /// </summary>
+    [Serializable]
     public class RenderSettings
     {
         internal Vector3 fogColor;

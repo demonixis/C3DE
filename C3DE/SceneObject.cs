@@ -7,7 +7,7 @@ namespace C3DE
     /// <summary>
     /// A scene object is the base object on the scene.
     /// </summary>
-    public class SceneObject : ICloneable, IDisposable
+    public class SceneObject : ICloneable, IDisposable, ISerializable
     {
         #region Private/protected declarations
 
@@ -131,7 +131,7 @@ namespace C3DE
 
                 for (int i = 0; i < components.Count; i++)
                 {
-					components[i].initialized = true;
+                    components[i].initialized = true;
                     components[i].Start();
                 }
             }
@@ -218,14 +218,14 @@ namespace C3DE
 
             components.Add(component);
 
-			if (initialized && !component.Initialized) 
-			{
-				component.initialized = true;
-				component.Start ();
+            if (initialized && !component.Initialized)
+            {
+                component.initialized = true;
+                component.Start();
 
                 // Sort components here only if the SceneObject is already initialized.
                 components.Sort();
-			}
+            }
 
             NotifyComponentChanged(component);
 
@@ -321,7 +321,7 @@ namespace C3DE
         {
             var scene = Scene.current;
             var scripts = new List<T>();
-            
+
             if (scene != null)
             {
                 foreach (SceneObject so in scene.sceneObjects)
@@ -355,6 +355,41 @@ namespace C3DE
         {
             foreach (Component component in components)
                 component.Dispose();
+        }
+
+        public Dictionary<string, object> Serialize()
+        {
+            var dico = new Dictionary<string, object>();
+
+            dico.Add("Enabled", enabled);
+            dico.Add("IsPrefab", IsPrefab);
+            dico.Add("IsStatic", IsStatic);
+            dico.Add("Name", Name);
+            dico.Add("Id", Id);
+
+            Dictionary<string, object>[] serComponents = new Dictionary<string, object>[components.Count];
+            for (int i = 0, l = components.Count; i < l; i++)
+                serComponents[i] = components[i].Serialize();
+
+            dico.Add("Components", serComponents);
+
+            return dico;
+        }
+
+        public void Deserialize(Dictionary<string, object> data)
+        {
+            enabled = (bool)data["Enabled"];
+            IsStatic = (bool)data["IsStatic"];
+            IsPrefab = (bool)data["IsPrefab"];
+            Id = (string)data["Id"];
+            Name = (string)data["Name"];
+
+            var cpnts = data["Components"] as Dictionary<string, object>[];
+
+            foreach (var cpn in cpnts)
+            {
+
+            }
         }
     }
 }

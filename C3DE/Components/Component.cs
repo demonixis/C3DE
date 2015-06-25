@@ -1,12 +1,13 @@
 ﻿using Microsoft.Xna.Framework.Content;
 using System;
+using System.Collections.Generic;
 
 namespace C3DE.Components
 {
     /// <summary>
     /// A component is a part of a scene object.
     /// </summary>
-    public abstract class Component : IComparable, ICloneable, IDisposable
+    public abstract class Component : IComparable, ICloneable, IDisposable, ISerializable
     {
         internal protected bool initialized;
         protected bool enabled;
@@ -168,6 +169,20 @@ namespace C3DE.Components
 
         public virtual void Dispose()
         {
+        }
+
+        public virtual Dictionary<string, object> Serialize()
+        {
+            var data = new Dictionary<string, object>();
+            data.Add("Enabled", Enabled);
+            data.Add("Order", Order);
+            return data;
+        }
+
+        public virtual void Deserialize(Dictionary<string, object> data)
+        {
+            enabled =(bool)data["Enabled"];
+            order = (int)data["Order"];
         }
     }
 }

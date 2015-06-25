@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace C3DE.Editor
+namespace C3DE.Editor.Events
 {
     public sealed class Messenger
     {
         public delegate void BaseMessage(BasicMessage e);
 
-        private static Dictionary<string, List<BaseMessage>> _handlers = new Dictionary<string, List<BaseMessage>>();
+        private static Dictionary<ushort, List<BaseMessage>> _handlers = new Dictionary<ushort, List<BaseMessage>>();
 
-        public static void Register(string name, BaseMessage action)
+        public static void Register(ushort name, BaseMessage action)
         {
             if (!_handlers.ContainsKey(name))
             {
@@ -22,7 +22,7 @@ namespace C3DE.Editor
                 _handlers[name].Add(action);
         }
 
-        public static void Unregister(string name, BaseMessage action)
+        public static void Unregister(ushort name, BaseMessage action)
         {
             if (_handlers.ContainsKey(name))
             {
@@ -39,17 +39,17 @@ namespace C3DE.Editor
             _handlers.Clear();
         }
 
-        public static void Notify(string name)
+        public static void Notify(ushort name)
         {
             Notify(name, BasicMessage.Empty);
         }
 
-        public static void Notify(string name, string message)
+        public static void Notify(ushort name, string message)
         {
             Notify(name, new BasicMessage(message));
         }
 
-        public static void Notify(string name, BasicMessage e)
+        public static void Notify(ushort name, BasicMessage e)
         {
             if (_handlers.ContainsKey(name))
             {

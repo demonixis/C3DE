@@ -1,17 +1,6 @@
-﻿using System;
+﻿using C3DE.Editor.Events;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace C3DE.Editor.Views.Controls
 {
@@ -26,7 +15,7 @@ namespace C3DE.Editor.Views.Controls
         {
             InitializeComponent();
             _itemMapping = new Dictionary<string, int>();
-            Messenger.Register("Editor.SceneObjectChanged", OnSceneObjectChanged);
+            Messenger.Register(EditorEvent.SceneObjectChanged, OnSceneObjectChanged);
         }
 
         public void AddItem(string name)

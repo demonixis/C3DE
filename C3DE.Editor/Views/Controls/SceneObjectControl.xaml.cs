@@ -1,4 +1,5 @@
-﻿using System.Windows.Controls;
+﻿using C3DE.Editor.Events;
+using System.Windows.Controls;
 
 namespace C3DE.Editor.Views.Controls
 {
@@ -25,14 +26,14 @@ namespace C3DE.Editor.Views.Controls
         private void Notify()
         {
             _eventCache.Set(SceneObjectName, SceneObjectEnabled);
-            Messenger.Notify("Editor.SceneObjectChanged", _eventCache);
+            Messenger.Notify(EditorEvent.SceneObjectChanged, _eventCache);
         }
 
         public SceneObjectControl()
         {
             _eventCache = new SceneObjectControlChanged();
             InitializeComponent();
-            Messenger.Register("Editor.SceneObjectUpdated", OnSceneObjectUpdated);
+            Messenger.Register(EditorEvent.SceneObjectUpdated, OnSceneObjectUpdated);
             _initialized = true;
         }
 

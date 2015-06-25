@@ -73,7 +73,6 @@
     <Compile Include="DemoGame.cs" />
     <Compile Include="Scenes\GUIDemo.cs" />
     <Compile Include="Scenes\HalloweenDemo.cs" />
-    <Compile Include="Scenes\HeigthmapDesigner.cs" />
     <Compile Include="Scenes\HexagonGridTerrain.cs" />
     <Compile Include="Scenes\ProceduralTerrainLava.cs" />
     <Compile Include="Scenes\MenuDemo.cs" />

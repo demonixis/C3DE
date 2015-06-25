@@ -11,8 +11,8 @@
                 <Label Content="Scene" />
                 <Separator Margin="2, 5, 2, 2" />
                 <TreeView x:Name="sceneTreeView" AllowDrop="True" BorderThickness="1" BorderBrush="LightBlue" HorizontalAlignment="Stretch" Margin="5">
-                    <TreeViewItem Header="Main Camera" Tag="0" />
-                    <TreeViewItem Header="Ambient Light" Tag="1" />
+                    <TreeViewItem Header="Main Camera" Tag="" />
+                    <TreeViewItem Header="Directional Light" Tag="" />
                 </TreeView>
             </StackPanel>
         </ScrollViewer>

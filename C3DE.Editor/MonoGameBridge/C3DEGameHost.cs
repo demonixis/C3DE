@@ -1,8 +1,17 @@
-﻿using C3DE.Components.Lights;
+﻿using C3DE.Components;
+using C3DE.Components.Colliders;
+using C3DE.Components.Lights;
+using C3DE.Components.Renderers;
+using C3DE.Editor.Core;
 using C3DE.Editor.Core.Components;
+using C3DE.Editor.Events;
+using C3DE.Editor.Exporters;
+using C3DE.Geometries;
 using C3DE.Inputs;
 using C3DE.Materials;
 using C3DE.Prefabs;
+using C3DE.Prefabs.Meshes;
+using C3DE.Rendering;
 using C3DE.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
@@ -10,23 +19,12 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Windows;
+using System.IO;
+using System.Xml;
+using System.Xml.Serialization;
 
 namespace C3DE.Editor.MonoGameBridge
 {
-    using C3DE.Components;
-    using C3DE.Components.Colliders;
-    using C3DE.Components.Renderers;
-    using C3DE.Editor.Core;
-    using C3DE.Editor.Exporters;
-    using C3DE.Geometries;
-    using C3DE.Prefabs.Meshes;
-    using C3DE.Rendering;
-    using Newtonsoft.Json;
-    using XnaColor = Microsoft.Xna.Framework.Color;
-    using XnaVector2 = Microsoft.Xna.Framework.Vector2;
-    using XnaVector3 = Microsoft.Xna.Framework.Vector3;
-
     public class SceneChangedEventArgs : EventArgs
     {
         public bool Added { get; set; }
@@ -92,18 +90,18 @@ namespace C3DE.Editor.MonoGameBridge
             foreach (var component in _gameComponents)
                 component.Initialize();
 
-            CreateDefaultEditor();
+            CreateEditorScene();
             _scene.RenderSettings.Skybox.Generate();
 
-            Messenger.Register("Editor.SceneObjectChanged", OnSceneObjectChanged);
-            Messenger.Register("Editor.TransformChanged", OnTransformChanged);
-            Messenger.Register("Editor.JustPressed", OnKeyDown);
+            Messenger.Register(EditorEvent.SceneObjectChanged, OnSceneObjectChanged);
+            Messenger.Register(EditorEvent.TransformChanged, OnTransformChanged);
+            Messenger.Register(EditorEvent.KeyJustPressed, OnKeyDown);
         }
 
-        private void CreateDefaultEditor()
+        private void CreateEditorScene()
         {
             var defaultMaterial = new SimpleMaterial(_scene);
-            defaultMaterial.MainTexture = GraphicsHelper.CreateBorderTexture(XnaColor.LightSkyBlue, XnaColor.LightGray, 64, 64, 1);
+            defaultMaterial.MainTexture = GraphicsHelper.CreateBorderTexture(Color.LightSkyBlue, Color.LightGray, 64, 64, 1);
             _scene.DefaultMaterial = defaultMaterial;
 
             var camera = new CameraPrefab("EditorCamera.Main");
@@ -112,13 +110,13 @@ namespace C3DE.Editor.MonoGameBridge
 
             var lightPrefab = new LightPrefab("Editor_MainLight", LightType.Directional);
             _scene.Add(lightPrefab);
-            lightPrefab.Transform.Position = new XnaVector3(0, 15, 15);
-            lightPrefab.Light.Direction = new XnaVector3(0, 0.75f, 0.75f);
+            lightPrefab.Transform.Position = new Vector3(0, 15, 15);
+            lightPrefab.Light.Direction = new Vector3(0, 0.75f, 0.75f);
 
             // Grid
             var gridMaterial = new SimpleMaterial(_scene);
-            gridMaterial.MainTexture = GraphicsHelper.CreateCheckboardTexture(new XnaColor(0.4f, 0.4f, 0.4f), new XnaColor(0.9f, 0.9f, 0.9f), 256, 256);
-            gridMaterial.Tiling = new XnaVector2(24.0f);
+            gridMaterial.MainTexture = GraphicsHelper.CreateCheckboardTexture(new Color(0.4f, 0.4f, 0.4f), new Color(0.9f, 0.9f, 0.9f), 256, 256);
+            gridMaterial.Tiling = new Vector2(24.0f);
             gridMaterial.Alpha = 0.6f;
 
             var terrain = new TerrainPrefab("Editor_Grid");
@@ -127,10 +125,10 @@ namespace C3DE.Editor.MonoGameBridge
             terrain.Renderer.Material = gridMaterial;
             terrain.Transform.Translate(-terrain.Width >> 1, -1.0f, -terrain.Depth / 2);
 
-            camera.Transform.Position = new XnaVector3(-terrain.Width >> 1, 2, -terrain.Depth / 2);
+            camera.Transform.Position = new Vector3(-terrain.Width >> 1, 2, -terrain.Depth / 2);
         }
 
-        protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo)
+        protected override void OnRenderSizeChanged(System.Windows.SizeChangedInfo sizeInfo)
         {
             base.OnRenderSizeChanged(sizeInfo);
 
@@ -176,7 +174,6 @@ namespace C3DE.Editor.MonoGameBridge
                 
                 if (_scene.Raycast(ray, 100, out info))
                 {
-                    Debug.Log(info.Collider.SceneObject.Name);
                     if (info.Collider.SceneObject == _selected)
                         return;
 
@@ -192,7 +189,7 @@ namespace C3DE.Editor.MonoGameBridge
                 if (Input.Mouse.Down(MouseButton.Left))
                 {
                     _selected.Transform.Translate(Input.Mouse.Delta.X, 0, Input.Mouse.Delta.Y);
-                    Messenger.Notify("Editor.TransformUpdated", new TransformChanged(TransformChangeType.Position, _selected.Transform.Position.X, _selected.Transform.Position.Y, _selected.Transform.Position.Z));
+                    Messenger.Notify(EditorEvent.TransformUpdated, new TransformChanged(TransformChangeType.Position, _selected.Transform.Position.X, _selected.Transform.Position.Y, _selected.Transform.Position.Z));
                 }
             }
 
@@ -217,8 +214,8 @@ namespace C3DE.Editor.MonoGameBridge
 
             boxRenderer.Enabled = true;
 
-            Messenger.Notify("Editor.SceneObjectUpdated", new SceneObjectControlChanged(_selected.Name, _selected.Enabled));
-            Messenger.Notify("Editor.TransformUpdated", new GenericMessage<Transform>(_selected.Transform));
+            Messenger.Notify(EditorEvent.SceneObjectUpdated, new SceneObjectControlChanged(_selected.Name, _selected.Enabled));
+            Messenger.Notify(EditorEvent.TransformUpdated, new GenericMessage<Transform>(_selected.Transform));
         }
 
         private void UnselectSceneObject()
@@ -232,7 +229,7 @@ namespace C3DE.Editor.MonoGameBridge
 
         protected override void Draw(RenderTarget2D renderTarget)
         {
-            graphicsDevice.Clear(XnaColor.CornflowerBlue);
+            graphicsDevice.Clear(Color.CornflowerBlue);
             _renderer.RenderEditor(_scene, _scene.MainCamera, renderTarget);
         }
 
@@ -264,7 +261,7 @@ namespace C3DE.Editor.MonoGameBridge
                 else if (type == 1)
                     _selected.Transform.SetRotation(x, y, z);
                 else if (type == 2)
-                    _selected.Transform.LocalScale = new XnaVector3(x, y, z);
+                    _selected.Transform.LocalScale = new Vector3(x, y, z);
             }
         }
 
@@ -289,7 +286,7 @@ namespace C3DE.Editor.MonoGameBridge
                 else if (type == 1)
                     _selected.Transform.SetRotation(data.X, data.Y, data.Z);
                 else if (type == 2)
-                    _selected.Transform.LocalScale = new XnaVector3(data.X, data.Y, data.Z);
+                    _selected.Transform.LocalScale = new Vector3(data.X, data.Y, data.Z);
             }
         }
 
@@ -317,8 +314,8 @@ namespace C3DE.Editor.MonoGameBridge
                 case "Water":
                     var water = new WaterPrefab(type);
                     _scene.Add(water);
-                    water.Generate(string.Empty, string.Empty, new XnaVector3(10));
-                    water.Renderer.Material.MainTexture = GraphicsHelper.CreateTexture(XnaColor.LightSeaGreen, 1, 1);
+                    water.Generate(string.Empty, string.Empty, new Vector3(10));
+                    water.Renderer.Material.MainTexture = GraphicsHelper.CreateTexture(Color.LightSeaGreen, 1, 1);
                     sceneObject = water;
                     break;
 
@@ -334,8 +331,6 @@ namespace C3DE.Editor.MonoGameBridge
             if (collider != null)
                 collider.IsPickable = true;
 
-            sceneObject.AddComponent<ObjectSerializer>();
-
             _scene.Add(sceneObject);
 
             if (SceneObjectAdded != null)
@@ -347,30 +342,31 @@ namespace C3DE.Editor.MonoGameBridge
         public void NewScene()
         {
             _scene.Unload();
-            CreateDefaultEditor();
         }
 
-        public string SaveScene()
+        public void SaveScene(string path)
         {
-            var data = new List<ObjectSerializer.SerializedData>();
-
-            foreach (Behaviour script in _scene.Behaviours)
+            var serializer = new XmlSerializer(typeof(Scene));
+            using (var writer = new StreamWriter(path))
             {
-                if (script is ObjectSerializer)
-                    data.Add((script as ObjectSerializer).Serialize());
+                serializer.Serialize(writer, _scene);
+                writer.Close();
             }
-
-            return JsonConvert.SerializeObject(data.ToArray(), Newtonsoft.Json.Formatting.Indented);
         }
 
-        public void LoadScene(string strData)
+        public void LoadScene(string path)
         {
-            var data = JsonConvert.DeserializeObject<List<ObjectSerializer.SerializedData>>(strData);
-
-            if (data.Count > 0)
+            var serializer = new XmlSerializer(typeof(Scene));
+            using (var reader = new StreamReader(path))
             {
-                //NewScene();
-                ImportScene(data);
+                var scene = serializer.Deserialize(reader);
+                reader.Close();
+
+                if (scene is Scene)
+                {
+                    _scene.Unload();
+                    _scene = scene as Scene;
+                }
             }
         }
 
@@ -378,21 +374,18 @@ namespace C3DE.Editor.MonoGameBridge
         {
             string[] result = null;
 
-            if (_selected != null)
-            {
-                var renderers = SceneObject.FindObjectsOfType<MeshRenderer>();
+            var renderers = SceneObject.FindObjectsOfType<MeshRenderer>();
 
-                if (format == "stl")
-                {
-                    result = new string[1];
-                    result[0] = STLExporter.ExportMeshes(renderers);
-                }
-                else if (format == "obj")
-                {
-                    result = new string[2];
-                    result[0] = OBJExporter.ExportMesh(_selected.GetComponent<MeshRenderer>());
-                    result[1] = string.Empty;
-                }
+            if (format == "stl")
+            {
+                result = new string[1];
+                result[0] = STLExporter.ExportMeshes(renderers);
+            }
+            else if (format == "obj")
+            {
+                result = new string[2];
+                result[0] = OBJExporter.ExportMesh(_selected.GetComponent<MeshRenderer>());
+                result[1] = string.Empty;
             }
 
             return result;
@@ -404,20 +397,6 @@ namespace C3DE.Editor.MonoGameBridge
                 SceneObjectAdded(this, new SceneChangedEventArgs(sceneObject.Name, false));
 
             _scene.Remove(sceneObject);
-        }
-
-        private void ImportScene(List<ObjectSerializer.SerializedData> data)
-        {
-            SceneObject sceneObject = null;
-            ObjectSerializer serializer = null;
-
-            foreach (ObjectSerializer.SerializedData sd in data)
-            {
-                sceneObject = new SceneObject();
-                serializer = sceneObject.AddComponent<ObjectSerializer>();
-                serializer.Deserialize(sd);
-                InternalAddSceneObject(sd.Type);
-            }
         }
     }
 }
