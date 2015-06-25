@@ -16,6 +16,7 @@ using C3DE.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -50,8 +51,7 @@ namespace C3DE.Editor.MonoGameBridge
         private List<string> _toAdd;
         private List<SceneObject> _toRemove;
         private SceneObject _selected;
-
-        private SceneObject _copy;
+        private SceneObject _editorCopy;
 
         public event EventHandler<SceneChangedEventArgs> SceneObjectAdded = null;
         public event EventHandler<SceneChangedEventArgs> SceneObjectRemoved = null;
@@ -104,33 +104,24 @@ namespace C3DE.Editor.MonoGameBridge
 
         private void CopySelection(BasicMessage m)
         {
-            _copy = _selected;
+            _editorCopy = _selected;
         }
 
         private void PastSelection(BasicMessage m)
         {
-            if (_copy != null)
+            if (_editorCopy != null)
             {
-                var sceneObject = (SceneObject)_copy.Clone();
+                var sceneObject = (SceneObject)_editorCopy.Clone();
 
-                var collider = sceneObject.GetComponent<Collider>();
-                if (collider != null)
-                    collider.IsPickable = true;
+                InternalAddSceneObject(sceneObject);
 
-                _scene.Add(sceneObject);
+                var x = _editorCopy.Transform.Position.X;
+                x += _editorCopy.GetComponent<RenderableComponent>().BoundingSphere.Radius * 2.0f;
 
-                if (SceneObjectAdded != null)
-                    SceneObjectAdded(this, new SceneChangedEventArgs(sceneObject.Name, true));
-
-                var position = _copy.Transform.Position;
-                position.X += _copy.GetComponent<RenderableComponent>().BoundingSphere.Radius * 2.0f;
-
-                sceneObject.Transform.Position = position;
-
-                SelectObject(sceneObject);
+                sceneObject.Transform.SetPosition(x, null, null);
 
                 if (System.Windows.Input.Keyboard.Modifiers == System.Windows.Input.ModifierKeys.Control)
-                    _copy = _selected;
+                    _editorCopy = _selected;
             }
         }
 
@@ -363,6 +354,11 @@ namespace C3DE.Editor.MonoGameBridge
                 default: break;
             }
 
+            InternalAddSceneObject(sceneObject);
+        }
+
+        private void InternalAddSceneObject(SceneObject sceneObject)
+        {
             var collider = sceneObject.GetComponent<Collider>();
             if (collider != null)
                 collider.IsPickable = true;
@@ -375,33 +371,37 @@ namespace C3DE.Editor.MonoGameBridge
             SelectObject(sceneObject);
         }
 
+        private void InternalRemoveSceneObject(SceneObject sceneObject)
+        {
+            if (SceneObjectRemoved != null)
+                SceneObjectAdded(this, new SceneChangedEventArgs(sceneObject.Name, false));
+
+            _scene.Remove(sceneObject);
+        }
+
         public void NewScene()
         {
             _scene.Unload();
         }
 
-        public void SaveScene(string path)
+        public string SaveScene(string path)
         {
-            var serializer = new XmlSerializer(typeof(Scene));
-            using (var writer = new StreamWriter(path))
-            {
-                serializer.Serialize(writer, _scene);
-                writer.Close();
-            }
+            var serialization = _scene.Serialize();
+            return JsonConvert.SerializeObject(serialization);
         }
 
         public void LoadScene(string path)
         {
-            var serializer = new XmlSerializer(typeof(Scene));
             using (var reader = new StreamReader(path))
             {
-                var scene = serializer.Deserialize(reader);
+                var scene = JsonConvert.DeserializeObject(reader.ReadToEnd());
                 reader.Close();
 
-                if (scene is Scene)
+                var data = scene as Dictionary<string, object>;
+                if (data != null)
                 {
-                    _scene.Unload();
-                    _scene = scene as Scene;
+                    NewScene();
+                    _scene.Deserialize(data);
                 }
             }
         }
@@ -425,14 +425,6 @@ namespace C3DE.Editor.MonoGameBridge
             }
 
             return result;
-        }
-
-        private void InternalRemoveSceneObject(SceneObject sceneObject)
-        {
-            if (SceneObjectRemoved != null)
-                SceneObjectAdded(this, new SceneChangedEventArgs(sceneObject.Name, false));
-
-            _scene.Remove(sceneObject);
         }
     }
 }

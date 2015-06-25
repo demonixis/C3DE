@@ -1,4 +1,5 @@
-﻿using C3DE.Geometries;
+﻿using C3DE.Components.Renderers;
+using C3DE.Geometries;
 using C3DE.Materials;
 using C3DE.Prefabs.Meshes;
 using C3DE.Utils;
@@ -8,24 +9,24 @@ namespace C3DE.Editor.Core
 {
     public class Gizmo : SceneObject
     {
-        private MeshPrefab<CubeGeometry>[] _gizmos;
+        private MeshPrefab<CylinderGeometry>[] _gizmos;
 
         public void Build(Scene scene)
         {
-            _gizmos = new MeshPrefab<CubeGeometry>[3];
-            _gizmos[0] = new MeshPrefab<CubeGeometry>();
+            _gizmos = new MeshPrefab<CylinderGeometry>[3];
+            _gizmos[0] = new MeshPrefab<CylinderGeometry>();
             _gizmos[0].Renderer.Geometry.Size = new Vector3(2.0f, 0.1f, 0.1f);
             _gizmos[0].Transform.Position = new Vector3(2.1f, 0, 0);
             _gizmos[0].Renderer.Material = new SimpleMaterial(scene);
             _gizmos[0].Renderer.Material.MainTexture = GraphicsHelper.CreateBorderTexture(Color.DarkGray, Color.DarkRed, 32, 32, 2);
 
-            _gizmos[1] = new MeshPrefab<CubeGeometry>();
+            _gizmos[1] = new MeshPrefab<CylinderGeometry>();
             _gizmos[1].Renderer.Geometry.Size = new Vector3(0.1f, 0.1f, 2.0f);
             _gizmos[1].Transform.Position = new Vector3(0, 0, 2.1f);
             _gizmos[1].Renderer.Material = new SimpleMaterial(scene);
             _gizmos[1].Renderer.Material.MainTexture = GraphicsHelper.CreateBorderTexture(Color.DarkGray, Color.DarkGreen, 32, 32, 2);
 
-            _gizmos[2] = new MeshPrefab<CubeGeometry>();
+            _gizmos[2] = new MeshPrefab<CylinderGeometry>();
             _gizmos[2].Renderer.Geometry.Size = new Vector3(0.1f, 2.0f, 0.1f);
             _gizmos[2].Transform.Position = new Vector3(0, 1.9f, 0);
             _gizmos[2].Renderer.Material = new SimpleMaterial(scene);
@@ -34,19 +35,19 @@ namespace C3DE.Editor.Core
             foreach (var gizmo in _gizmos)
             {
                 gizmo.Renderer.Geometry.Generate();
-                scene.Add(gizmo);
+                scene.RenderList.Add(gizmo.GetComponent<MeshRenderer>());
             }
         }
 
-        public override void Update()
+        public void SetVisible(bool isVisible, Vector3 position)
         {
-
+            Enabled = isVisible;
+            transform.Position = position;
         }
 
-        public void SetVisible(bool isVisible)
+        public void SetPosition(Vector3 position)
         {
-            foreach (var gizmo in _gizmos)
-                gizmo.Enabled = isVisible;
+            transform.Position = position;
         }
     }
 }
