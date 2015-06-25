@@ -51,6 +51,8 @@ namespace C3DE.Editor.MonoGameBridge
         private List<SceneObject> _toRemove;
         private SceneObject _selected;
 
+        private SceneObject _copy;
+
         public event EventHandler<SceneChangedEventArgs> SceneObjectAdded = null;
         public event EventHandler<SceneChangedEventArgs> SceneObjectRemoved = null;
 
@@ -96,6 +98,40 @@ namespace C3DE.Editor.MonoGameBridge
             Messenger.Register(EditorEvent.SceneObjectChanged, OnSceneObjectChanged);
             Messenger.Register(EditorEvent.TransformChanged, OnTransformChanged);
             Messenger.Register(EditorEvent.KeyJustPressed, OnKeyDown);
+            Messenger.Register(EditorEvent.CommandCopy, CopySelection);
+            Messenger.Register(EditorEvent.CommandPast, PastSelection);
+        }
+
+        private void CopySelection(BasicMessage m)
+        {
+            _copy = _selected;
+        }
+
+        private void PastSelection(BasicMessage m)
+        {
+            if (_copy != null)
+            {
+                var sceneObject = (SceneObject)_copy.Clone();
+
+                var collider = sceneObject.GetComponent<Collider>();
+                if (collider != null)
+                    collider.IsPickable = true;
+
+                _scene.Add(sceneObject);
+
+                if (SceneObjectAdded != null)
+                    SceneObjectAdded(this, new SceneChangedEventArgs(sceneObject.Name, true));
+
+                var position = _copy.Transform.Position;
+                position.X += _copy.GetComponent<RenderableComponent>().BoundingSphere.Radius * 2.0f;
+
+                sceneObject.Transform.Position = position;
+
+                SelectObject(sceneObject);
+
+                if (System.Windows.Input.Keyboard.Modifiers == System.Windows.Input.ModifierKeys.Control)
+                    _copy = _selected;
+            }
         }
 
         private void CreateEditorScene()

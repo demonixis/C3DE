@@ -302,7 +302,7 @@ namespace C3DE
 
         public object Clone()
         {
-            SceneObject sceneObject = new SceneObject(Name + " (Clone)");
+            SceneObject sceneObject = new SceneObject(Name.Replace(" (Clone)", "") + " (Clone)");
 
             foreach (Component component in components)
                 sceneObject.AddComponent((Component)component.Clone());

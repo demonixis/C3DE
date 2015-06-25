@@ -154,6 +154,8 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Images\diskdrive.png" />
+    <Resource Include="Images\folder.png" />
     <Resource Include="Game.ico" />
     <Content Include="Content\**\*.*">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

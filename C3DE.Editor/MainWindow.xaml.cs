@@ -25,15 +25,25 @@ namespace C3DE.Editor
             editorGameHost.SceneObjectAdded += OnSceneObjectAdded;
             editorGameHost.SceneObjectRemoved += OnSceneObjectRemoved;
 
-            KeyDown += MainWindow_KeyDown;
+            KeyDown += OnKeyDown;
+            KeyUp += OnKeyUp;
         }
 
-        void MainWindow_KeyDown(object sender, KeyEventArgs e)
+        private void OnKeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Escape && e.IsToggled)
+                Messenger.Notify(EditorEvent.CommandEscape);
+
+            if (e.IsToggled)
+                Messenger.Notify(EditorEvent.KeyJustPressed, e.Key.ToString());
+        }
+
+        private void OnKeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.C && Keyboard.Modifiers == ModifierKeys.Control)
                 Messenger.Notify(EditorEvent.CommandCopy);
 
-            else if (e.Key == Key.D && Keyboard.Modifiers == ModifierKeys.Control)
+            else if (e.Key == Key.V && Keyboard.Modifiers == ModifierKeys.Control)
                 Messenger.Notify(EditorEvent.CommandPast);
 
             else if (e.Key == Key.X && Keyboard.Modifiers == ModifierKeys.Control)
@@ -42,8 +52,11 @@ namespace C3DE.Editor
             else if (e.Key == Key.A && Keyboard.Modifiers == ModifierKeys.Control)
                 Messenger.Notify(EditorEvent.CommandAll);
 
-            if (e.IsToggled)
-                Messenger.Notify(EditorEvent.KeyJustPressed, e.Key.ToString());
+            else if (e.Key == Key.S && Keyboard.Modifiers == ModifierKeys.Control)
+                Messenger.Notify(EditorEvent.CommandSave);
+
+            else if (e.Key == Key.S && Keyboard.Modifiers == ModifierKeys.Control && Keyboard.Modifiers == ModifierKeys.Shift)
+                Messenger.Notify(EditorEvent.CommandSaveAll);
         }
 
         private void OnSceneObjectAdded(object sender, SceneChangedEventArgs e)
