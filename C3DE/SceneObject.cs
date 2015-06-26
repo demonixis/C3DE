@@ -95,10 +95,16 @@ namespace C3DE
 
         #endregion
 
+        public SceneObject(string name)
+            : this()
+        {
+            Name = name;
+        }
+
         /// <summary>
         /// Create a basic scene object.
         /// </summary>
-        public SceneObject(string name = "")
+        public SceneObject()
         {
             transform = new Transform();
             transform.SceneObject = this;
@@ -114,7 +120,7 @@ namespace C3DE
             IsPrefab = false;
 
             Id = "SO_" + Guid.NewGuid();
-            Name = !string.IsNullOrEmpty(name) ? name : "SceneObject_" + Id;
+            Name = "SceneObject-" + Guid.NewGuid();
         }
 
         /// <summary>
@@ -323,37 +329,25 @@ namespace C3DE
                 component.Dispose();
         }
 
-        public virtual Dictionary<string, object> Serialize()
+        public virtual SerializedCollection Serialize()
         {
-            var data = new Dictionary<string, object>();
-
-            data.Add("Enabled", enabled);
-            data.Add("IsPrefab", IsPrefab);
-            data.Add("IsStatic", IsStatic);
+            var data = new SerializedCollection(6);
             data.Add("Name", Name);
             data.Add("Id", Id);
             data.Add("Type", GetType().FullName);
-
-            Dictionary<string, object>[] serComponents = new Dictionary<string, object>[components.Count];
-            for (int i = 0, l = components.Count; i < l; i++)
-                serComponents[i] = components[i].Serialize();
-
-            data.Add("Components", serComponents);
-
+            data.Add("Enabled", enabled);
+            data.Add("IsPrefab", IsPrefab);
+            data.Add("IsStatic", IsStatic);
             return data;
         }
 
-        public virtual void Deserialize(Dictionary<string, object> data)
+        public virtual void Deserialize(SerializedCollection data)
         {
-            enabled = (bool)data["Enabled"];
-            IsStatic = (bool)data["IsStatic"];
-            IsPrefab = (bool)data["IsPrefab"];
-            Id = (string)data["Id"];
-            Name = (string)data["Name"];
-
-            var cpnts = data["Components"] as Dictionary<string, object>[];
-            foreach (var cpn in cpnts)
-                AddComponent(SerializerHelper.CreateFromType(cpn) as Component);
+            Id = data["Id"];
+            Name = data["Name"];
+            enabled = bool.Parse(data["Enabled"]);
+            IsStatic = bool.Parse(data["IsStatic"]);
+            IsPrefab = bool.Parse(data["IsPrefab"]);
         }
 
         #region Static methods

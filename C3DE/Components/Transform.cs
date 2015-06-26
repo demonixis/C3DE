@@ -181,21 +181,22 @@ namespace C3DE.Components
             return Vector3.Transform(direction, Matrix.CreateFromYawPitchRoll(_localRotation.Y, _localRotation.X, _localRotation.Z));
         }
 
-        public override Dictionary<string, object> Serialize()
+        public override SerializedCollection Serialize()
         {
             var data = base.Serialize();
-            data.Add("Position", SerializerHelper.ToFloat(_localPosition));
-            data.Add("Rotation", SerializerHelper.ToFloat(_localRotation));
-            data.Add("Scale", SerializerHelper.ToFloat(_localScale));
+            data.IncreaseCapacity(3);
+            data.Add("Position", SerializerHelper.ToString(_localPosition));
+            data.Add("Rotation", SerializerHelper.ToString(_localRotation));
+            data.Add("Scale", SerializerHelper.ToString(_localScale));
             return data;
         }
 
-        public override void Deserialize(Dictionary<string, object> data)
+        public override void Deserialize(SerializedCollection data)
         {
             base.Deserialize(data);
-            _localPosition = SerializerHelper.ToVector3((float[])data["Position"]);
-            _localRotation = SerializerHelper.ToVector3((float[])data["Position"]);
-            _localScale = SerializerHelper.ToVector3((float[])data["Position"]);
+            _localPosition = SerializerHelper.ToVector3(data["Position"]);
+            _localRotation = SerializerHelper.ToVector3(data["Position"]);
+            _localScale = SerializerHelper.ToVector3(data["Position"]);
             _dirty = true;
         }
     }

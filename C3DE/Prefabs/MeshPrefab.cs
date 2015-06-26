@@ -20,14 +20,22 @@ namespace C3DE.Prefabs.Meshes
             get { return _collider; }
         }
 
-        public MeshPrefab() : this("MeshPrefab", 1.0f) { }
+        public MeshPrefab() 
+            : this("MeshPrefab", Vector3.One) 
+        { 
+        }
 
-        public MeshPrefab(string name, float size = 1.0f)
+        public MeshPrefab(string name)
+            : this(name, Vector3.One)
+        {
+        }
+
+        public MeshPrefab(string name, Vector3 size)
             : base(name)
         {
             _renderer = AddComponent<MeshRenderer>();
             _renderer.Geometry = new T();
-            _renderer.Geometry.Size = new Vector3(1);
+            _renderer.Geometry.Size = size;
             _renderer.ReceiveShadow = false;
             _renderer.Geometry.Generate();
             _collider = AddComponent<SphereCollider>();

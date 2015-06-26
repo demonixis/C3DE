@@ -11,6 +11,7 @@ namespace C3DE.Editor.Events
         public const ushort CommandEscape = 0x0005;
         public const ushort CommandSave = 0x0006;
         public const ushort CommandSaveAll = 0x0007;
+        public const ushort CommandDuplicate = 0x0008;
 
         public const ushort KeyJustPressed = 0x1000;
 

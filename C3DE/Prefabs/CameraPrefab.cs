@@ -13,11 +13,18 @@ namespace C3DE.Prefabs
             get { return camera; }
         }
 
-        public CameraPrefab(string name)
-            : base(name)
+        public CameraPrefab()
+            : base()
         {
+            Name = "CameraPrefab-" + System.Guid.NewGuid();
             camera = AddComponent<Camera>();
             camera.Setup(new Vector3(0, 0, -10), new Vector3(0, 0, 0), Vector3.Up);
+        }
+
+        public CameraPrefab(string name)
+            : this()
+        {
+            Name = name;
         }
 
         public void Setup(Vector3 position, Vector3 target, Vector3 upVector)

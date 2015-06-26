@@ -73,39 +73,17 @@ namespace C3DE.Test
             // And fog
             RenderSettings.FogDensity = 0.0085f;
             RenderSettings.FogMode = FogMode.Exp2;
-
-            //XMLSerialization("camera.xml", camera);
-            JSONSerialization("camera.json", camera);
-
-            //XMLSerialization("ligth.xml", lightPrefab);
-            JSONSerialization("ligth.json", lightPrefab);
-
-            //XMLSerialization("material.xml", terrainMat);
-            JSONSerialization("material.json", terrainMat);
         }
 
         public override void Update()
         {
             base.Update();
 
-            //XMLSerialization("scene.xml", this);
             JSONSerialization("scene.json", this);
 
             var des = JSONDeserialize("scene.json");
 
             Application.Quit();
-        }
-
-        private void XMLSerialization(string path, Scene scene)
-        {
-            var data = scene.SerializeScene();
-            var ser = new XmlSerializer(data.GetType());
-
-            using (var w = new StreamWriter(path))
-            {
-                ser.Serialize(w, data);
-                w.Close();
-            }
         }
 
         private void JSONSerialization(string path, ISerializable obj)
@@ -139,10 +117,7 @@ namespace C3DE.Test
                 r.Close();
             }
 
-            var scene = JsonConvert.DeserializeObject<SerializedScene>(data, new JsonSerializerSettings()
-                {
-                    TypeNameHandling = TypeNameHandling.Objects
-                });
+            var scene = JsonConvert.DeserializeObject<SerializedScene>(data);
 
             return scene;
         }

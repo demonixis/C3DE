@@ -100,17 +100,16 @@ namespace C3DE
             skybox = new Skybox();
         }
 
-        public Dictionary<string, object> Serialize()
+        public SerializedCollection Serialize()
         {
-            var data = new Dictionary<string, object>();
+            var data = new SerializedCollection(1);
             data.Add("FogData", SerializerHelper.ToFloat(fogData));
-            // TODO: Add skybox
             return data;
         }
 
-        public void Deserialize(Dictionary<string, object> data)
+        public void Deserialize(SerializedCollection data)
         {
-            fogData = SerializerHelper.ToVector4((float[])data["FogData"]);
+            fogData = SerializerHelper.ToVector4(data["FogData"]);
         }
     }
 }

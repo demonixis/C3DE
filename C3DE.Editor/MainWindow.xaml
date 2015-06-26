@@ -15,20 +15,24 @@
         </Grid.ColumnDefinitions>
         <Menu Grid.Row="0" Grid.ColumnSpan="2">
             <MenuItem Header="File">
-                <MenuItem Header="New Scene" Tag="New" Click="OnFileMenuClick" />
-                <MenuItem Header="Load Scene" Tag="Load" Click="OnFileMenuClick" />
-                <MenuItem Header="Save Scene" Tag="Save" Click="OnFileMenuClick" />
-                <MenuItem Header="Save Scene As..." Tag="SaveAs" Click="OnFileMenuClick" />
+                <MenuItem Header="New Scene" Tag="New" Click="OnFileMenuClick" InputGestureText="Ctrl+N" />
+                <MenuItem Header="Open Scene" Tag="Load" Click="OnFileMenuClick" InputGestureText="Ctrl+O" />
                 <Separator />
-                <MenuItem Header="New Project" Tag="NewP" Click="OnFileMenuClick" />
-                <MenuItem Header="Load Project" Tag="LoadP" Click="OnFileMenuClick" />
-                <MenuItem Header="Save Project" Tag="SaveP" Click="OnFileMenuClick" />
-                <MenuItem Header="Save Project As..." Tag="SaveAsP" />
+                <MenuItem Header="Save Scene" Tag="Save" Click="OnFileMenuClick" InputGestureText="Ctrl+S" />
+                <MenuItem Header="Save Scene as..." Tag="SaveAs" Click="OnFileMenuClick" InputGestureText="Ctrl+Shift+S" />
                 <Separator />
                 <MenuItem Header="Exit" Tag="Exit"  Click="OnFileMenuClick" />
             </MenuItem>
+            <MenuItem Header="Edit">
+                <MenuItem Header="Cut" InputGestureText="Ctrl+X" />
+                <MenuItem Header="Copy" InputGestureText="Ctrl+C"/>
+                <MenuItem Header="Past" InputGestureText="Ctrl+V" />
+                <Separator />
+                <MenuItem Header="Duplicate" InputGestureText="Ctrl+D" />
+                <MenuItem Header="Delete" InputGestureText="Suppr" />
+            </MenuItem>
             <MenuItem Header="Scene Object">
-                <MenuItem Header="Empty" />
+                <MenuItem Header="Empty" InputGestureText="Ctrl+N" />
                 <Separator />
                 <MenuItem Header="3D Object">
                     <MenuItem Header="Cube" Tag="Cube" Click="OnAddSceneObject" />

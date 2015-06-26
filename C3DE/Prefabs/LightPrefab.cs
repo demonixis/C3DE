@@ -23,12 +23,19 @@ namespace C3DE.Prefabs
             set { _light.shadowGenerator.Enabled = value; }
         }
 
-        public LightPrefab(string name, LightType type)
-            : base(name)
+        public LightPrefab()
+            : base()
         {
+            Name = "LightPrefab-" + System.Guid.NewGuid();
             _light = AddComponent<Light>();
-            _light.Type = type;
+            _light.Type = LightType.Directional;
             _light.shadowGenerator.SetShadowMapSize(Application.GraphicsDevice, 1024);
+        }
+
+        public LightPrefab(string name, LightType type)
+            : this()
+        {
+            Name = name;
         }
     }
 }

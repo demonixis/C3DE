@@ -1,14 +1,18 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace C3DE.Serialization
 {
     public sealed class SerializerHelper
     {
-        public static ISerializable CreateFromType(Dictionary<string, object> data)
+        private static StringBuilder stringBuilder = new StringBuilder();
+        private static string[] temp;
+
+        public static ISerializable CreateInstance(SerializedCollection data)
         {
-            var type = (string)data["Type"];
+            var type = data["Type"];
             var instance = Activator.CreateInstance(Type.GetType(type)) as ISerializable;
 
             if (instance != null)
@@ -17,44 +21,74 @@ namespace C3DE.Serialization
             return instance;
         }
 
-        public static float[] ToFloat(Color color)
+        public static string ToString(Color color)
         {
-            return new float[4] { color.R, color.G, color.B, color.A };
+            stringBuilder.Length = 0;
+            stringBuilder.Append(color.R);
+            stringBuilder.Append("|");
+            stringBuilder.Append(color.G);
+            stringBuilder.Append("|");
+            stringBuilder.Append(color.B);
+            stringBuilder.Append("|");
+            stringBuilder.Append(color.A);
+            return stringBuilder.ToString();
         }
 
-        public static float[] ToFloat(Vector2 vec)
+        public static string ToString(Vector2 vec)
         {
-            return new float[2] { vec.X, vec.Y };
+            stringBuilder.Length = 0;
+            stringBuilder.Append(vec.X);
+            stringBuilder.Append("|");
+            stringBuilder.Append(vec.Y);
+            return stringBuilder.ToString();
         }
 
-        public static float[] ToFloat(Vector3 vec)
+        public static string ToString(Vector3 vec)
         {
-            return new float[3] { vec.X, vec.Y, vec.Z };
+            stringBuilder.Length = 0;
+            stringBuilder.Append(vec.X);
+            stringBuilder.Append("|");
+            stringBuilder.Append(vec.Y);
+            stringBuilder.Append("|");
+            stringBuilder.Append(vec.Z);
+            return stringBuilder.ToString();
         }
 
-        public static float[] ToFloat(Vector4 vec)
+        public static string ToFloat(Vector4 vec)
         {
-            return new float[4] { vec.X, vec.Y, vec.Z, vec.W };
+            stringBuilder.Length = 0;
+            stringBuilder.Append(vec.X);
+            stringBuilder.Append("|");
+            stringBuilder.Append(vec.Y);
+            stringBuilder.Append("|");
+            stringBuilder.Append(vec.Z);
+            stringBuilder.Append("|");
+            stringBuilder.Append(vec.W);
+            return stringBuilder.ToString();
         }
 
-        public static Color ToColor(float[] value)
+        public static Color ToColor(string value)
         {
-            return new Color(value[0], value[1], value[2], value[3]);
+            temp = value.Split('|');
+            return new Color(float.Parse(temp[0]), float.Parse(temp[1]), float.Parse(temp[2]), temp.Length == 4 ? float.Parse(temp[3]) : 1);
         }
 
-        public static Vector2 ToVector2(float[] value)
+        public static Vector2 ToVector2(string value)
         {
-            return new Vector2(value[0], value[1]);
+            temp = value.Split('|');
+            return new Vector2(float.Parse(temp[0]), float.Parse(temp[1]));
         }
 
-        public static Vector3 ToVector3(float[] value)
+        public static Vector3 ToVector3(string value)
         {
-            return new Vector3(value[0], value[1], value[2]);
+            temp = value.Split('|');
+            return new Vector3(float.Parse(temp[0]), float.Parse(temp[1]), float.Parse(temp[2]));
         }
 
-        public static Vector4 ToVector4(float[] value)
+        public static Vector4 ToVector4(string value)
         {
-            return new Vector4(value[0], value[1], value[2], value[3]);
+            temp = value.Split('|');
+            return new Vector4(float.Parse(temp[0]), float.Parse(temp[1]), float.Parse(temp[2]), float.Parse(temp[3]));
         }
     }
 }

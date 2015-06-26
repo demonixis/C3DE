@@ -25,11 +25,18 @@ namespace C3DE.Prefabs
             get { return collider; }
         }
 
-        public ModelPrefab(string name)
-            : base(name)
+        public ModelPrefab()
+            : base()
         {
+            Name = "ModelPrefab-" + System.Guid.NewGuid();
             renderer = AddComponent<ModelRenderer>();
             collider = AddComponent<SphereCollider>();
+        }
+
+        public ModelPrefab(string name)
+            : this()
+        {
+            Name = name;
         }
 
         public void LoadModel(string modelPath)

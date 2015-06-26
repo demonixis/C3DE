@@ -74,6 +74,10 @@ namespace C3DE.Materials
             : this()
         {
             scene = mainScene;
+
+            if (scene == null)
+                scene = Scene.current;
+
             scene.Add(this);
         }
 
@@ -85,26 +89,25 @@ namespace C3DE.Materials
 
         public virtual void Dispose() { }
 
-        public Dictionary<string, object> Serialize()
+        public SerializedCollection Serialize()
         {
-            var data = new Dictionary<string, object>();
+            var data = new SerializedCollection(6);
             data.Add("Id", Id);
             data.Add("Name", Name);
             data.Add("Type", GetType().FullName);
-            data.Add("DiffuseColor", SerializerHelper.ToFloat(diffuseColor));
-            data.Add("Tiling", SerializerHelper.ToFloat(Tiling));
-            data.Add("Offset", SerializerHelper.ToFloat(Offset));
-            
+            data.Add("DiffuseColor", SerializerHelper.ToString(diffuseColor));
+            data.Add("Tiling", SerializerHelper.ToString(Tiling));
+            data.Add("Offset", SerializerHelper.ToString(Offset));
             return data;
         }
 
-        public void Deserialize(Dictionary<string, object> data)
+        public void Deserialize(SerializedCollection data)
         {
-            Id = (string)data["Id"];
-            Name = (string)data["Name"];
-            DiffuseColor = SerializerHelper.ToColor((float[])data["DiffuseColor"]);
-            Tiling = SerializerHelper.ToVector2((float[])data["Tiling"]);
-            Offset = SerializerHelper.ToVector2((float[])data["Offset"]);
+            Id = data["Id"];
+            Name = data["Name"];
+            DiffuseColor = SerializerHelper.ToColor(data["DiffuseColor"]);
+            Tiling = SerializerHelper.ToVector2(data["Tiling"]);
+            Offset = SerializerHelper.ToVector2(data["Offset"]);
         }
     }
 }

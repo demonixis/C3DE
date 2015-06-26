@@ -48,8 +48,15 @@ namespace C3DE.Prefabs
         }
 
         public TerrainPrefab(string name)
-            : base(name)
+            : this()
         {
+            Name = name;
+        }
+
+        public TerrainPrefab()
+            : base()
+        {
+            Name = "TerrainPrefab-" + System.Guid.NewGuid();
             geometry = new TerrainGeometry(100, 100, 1);
 
             renderer = AddComponent<MeshRenderer>();

@@ -53,7 +53,7 @@ namespace C3DE.Components
         public int Order
         {
             get { return order; }
-            protected set 
+            protected set
             {
                 if (value != order)
                 {
@@ -106,10 +106,10 @@ namespace C3DE.Components
                 else
                     OnDisabled();
 
-				return true;
+                return true;
             }
 
-			return false;
+            return false;
         }
 
         public virtual void Awake()
@@ -172,19 +172,22 @@ namespace C3DE.Components
         {
         }
 
-        public virtual Dictionary<string, object> Serialize()
+        public virtual SerializedCollection Serialize()
         {
-            var data = new Dictionary<string, object>();
-            data.Add("Enabled", Enabled);
-            data.Add("Order", Order);
+            var data = new SerializedCollection(5);
+            data.Add("Id", Enabled.ToString());
             data.Add("Type", GetType().FullName);
+            data.Add("Enabled", Enabled.ToString());
+            data.Add("Order", Order.ToString());
+            data.Add("SceneObject", sceneObject != null ? sceneObject.Id : null);
             return data;
         }
 
-        public virtual void Deserialize(Dictionary<string, object> data)
+        public virtual void Deserialize(SerializedCollection data)
         {
-            enabled =(bool)data["Enabled"];
-            order = (int)data["Order"];
+            Id = data["Id"];
+            enabled = bool.Parse(data["Enabled"]);
+            order = int.Parse(data["Order"]);
         }
     }
 }

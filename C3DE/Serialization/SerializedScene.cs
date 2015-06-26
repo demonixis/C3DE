@@ -8,8 +8,9 @@ namespace C3DE.Serialization
     {
         public string Name { get; set; }
         public string Id { get; set; }
-        public Dictionary<string, object> RenderSettings { get; set; }
-        public Dictionary<string, object>[] Materials { get; set; }
-        public Dictionary<string, object>[] SceneObjects { get; set; }
+        public SerializedCollection RenderSettings { get; set; }
+        public SerializedCollection[] Materials { get; set; }
+        public SerializedCollection[] SceneObjects { get; set; }
+        public SerializedCollection[] Components { get; set; }
     }
 }

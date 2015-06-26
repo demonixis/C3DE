@@ -30,7 +30,13 @@ namespace C3DE.Prefabs
         }
 
         public LavaPrefab(string name)
-            : base(name)
+            : this()
+        {
+            Name = name;
+        }
+
+        public LavaPrefab()
+            : base()
         {
             renderer = AddComponent<MeshRenderer>();
             renderer.CastShadow = false;

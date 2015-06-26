@@ -30,8 +30,15 @@ namespace C3DE.Prefabs
         }
 
         public WaterPrefab(string name)
-            : base(name)
+            : this()
         {
+            Name = name;
+        }
+
+        public WaterPrefab()
+            : base()
+        {
+            Name = "WaterPrefab-" + System.Guid.NewGuid();
             renderer = AddComponent<MeshRenderer>();
             renderer.CastShadow = false;
             renderer.ReceiveShadow = false;

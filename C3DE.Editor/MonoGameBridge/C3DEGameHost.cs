@@ -2,7 +2,6 @@
 using C3DE.Components.Colliders;
 using C3DE.Components.Lights;
 using C3DE.Components.Renderers;
-using C3DE.Editor.Core;
 using C3DE.Editor.Core.Components;
 using C3DE.Editor.Events;
 using C3DE.Editor.Exporters;
@@ -12,6 +11,7 @@ using C3DE.Materials;
 using C3DE.Prefabs;
 using C3DE.Prefabs.Meshes;
 using C3DE.Rendering;
+using C3DE.Serialization;
 using C3DE.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
@@ -20,9 +20,6 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
-using System.Xml;
-using System.Xml.Serialization;
 
 namespace C3DE.Editor.MonoGameBridge
 {
@@ -55,6 +52,30 @@ namespace C3DE.Editor.MonoGameBridge
 
         public event EventHandler<SceneChangedEventArgs> SceneObjectAdded = null;
         public event EventHandler<SceneChangedEventArgs> SceneObjectRemoved = null;
+
+        #region GameHost implementation
+
+        public object GetService(Type serviceType)
+        {
+            return _services.GetService(serviceType);
+        }
+
+        protected override void OnRenderSizeChanged(System.Windows.SizeChangedInfo sizeInfo)
+        {
+            base.OnRenderSizeChanged(sizeInfo);
+
+            int width = (int)sizeInfo.NewSize.Width;
+            int height = (int)sizeInfo.NewSize.Height;
+
+            Screen.Setup(width, height, null, null);
+            Camera.Main.ComputeProjectionMatrix(MathHelper.PiOver4, (float)width / (float)height, 1, 2000);
+
+            _renderer.NeedsBufferUpdate = true;
+        }
+
+        #endregion
+
+        #region Life cycle
 
         protected override void Initialize()
         {
@@ -93,6 +114,7 @@ namespace C3DE.Editor.MonoGameBridge
                 component.Initialize();
 
             CreateEditorScene();
+
             _scene.RenderSettings.Skybox.Generate();
 
             Messenger.Register(EditorEvent.SceneObjectChanged, OnSceneObjectChanged);
@@ -100,73 +122,10 @@ namespace C3DE.Editor.MonoGameBridge
             Messenger.Register(EditorEvent.KeyJustPressed, OnKeyDown);
             Messenger.Register(EditorEvent.CommandCopy, CopySelection);
             Messenger.Register(EditorEvent.CommandPast, PastSelection);
+            Messenger.Register(EditorEvent.CommandDuplicate, DuplicateSelection);
         }
 
-        private void CopySelection(BasicMessage m)
-        {
-            _editorCopy = _selected;
-        }
 
-        private void PastSelection(BasicMessage m)
-        {
-            if (_editorCopy != null)
-            {
-                var sceneObject = (SceneObject)_editorCopy.Clone();
-
-                InternalAddSceneObject(sceneObject);
-
-                var x = _editorCopy.Transform.Position.X;
-                x += _editorCopy.GetComponent<RenderableComponent>().BoundingSphere.Radius * 2.0f;
-
-                sceneObject.Transform.SetPosition(x, null, null);
-
-                if (System.Windows.Input.Keyboard.Modifiers == System.Windows.Input.ModifierKeys.Control)
-                    _editorCopy = _selected;
-            }
-        }
-
-        private void CreateEditorScene()
-        {
-            var defaultMaterial = new SimpleMaterial(_scene);
-            defaultMaterial.MainTexture = GraphicsHelper.CreateBorderTexture(Color.LightSkyBlue, Color.LightGray, 64, 64, 1);
-            _scene.DefaultMaterial = defaultMaterial;
-
-            var camera = new CameraPrefab("EditorCamera.Main");
-            camera.AddComponent<EDOrbitController>();
-            _scene.Add(camera);
-
-            var lightPrefab = new LightPrefab("Editor_MainLight", LightType.Directional);
-            _scene.Add(lightPrefab);
-            lightPrefab.Transform.Position = new Vector3(0, 15, 15);
-            lightPrefab.Light.Direction = new Vector3(0, 0.75f, 0.75f);
-
-            // Grid
-            var gridMaterial = new SimpleMaterial(_scene);
-            gridMaterial.MainTexture = GraphicsHelper.CreateCheckboardTexture(new Color(0.4f, 0.4f, 0.4f), new Color(0.9f, 0.9f, 0.9f), 256, 256);
-            gridMaterial.Tiling = new Vector2(24.0f);
-            gridMaterial.Alpha = 0.6f;
-
-            var terrain = new TerrainPrefab("Editor_Grid");
-            _scene.Add(terrain);
-            terrain.Flat();
-            terrain.Renderer.Material = gridMaterial;
-            terrain.Transform.Translate(-terrain.Width >> 1, -1.0f, -terrain.Depth / 2);
-
-            camera.Transform.Position = new Vector3(-terrain.Width >> 1, 2, -terrain.Depth / 2);
-        }
-
-        protected override void OnRenderSizeChanged(System.Windows.SizeChangedInfo sizeInfo)
-        {
-            base.OnRenderSizeChanged(sizeInfo);
-
-            int width = (int)sizeInfo.NewSize.Width;
-            int height = (int)sizeInfo.NewSize.Height;
-
-            Screen.Setup(width, height, null, null);
-            Camera.Main.ComputeProjectionMatrix(MathHelper.PiOver4, (float)width / (float)height, 1, 2000);
-
-            _renderer.NeedsBufferUpdate = true;
-        }
 
         protected override void Update(Stopwatch timer)
         {
@@ -198,7 +157,7 @@ namespace C3DE.Editor.MonoGameBridge
             {
                 var ray = Camera.Main.GetRay((Input.Mouse as EDMouseComponent).Position);
                 RaycastInfo info;
-                
+
                 if (_scene.Raycast(ray, 100, out info))
                 {
                     if (info.Collider.SceneObject == _selected)
@@ -223,98 +182,63 @@ namespace C3DE.Editor.MonoGameBridge
             _scene.Update();
         }
 
-        private void OnKeyDown(BasicMessage m)
-        {
-            if (m.Message == "Escape")
-                UnselectSceneObject();
-        }
-
-        private void SelectObject(SceneObject sceneObject)
-        {
-            UnselectSceneObject();
-
-            _selected = sceneObject;
-
-            var boxRenderer = _selected.GetComponent<BoundingBoxRenderer>();
-            if (boxRenderer == null)
-                boxRenderer = _selected.AddComponent<BoundingBoxRenderer>();
-
-            boxRenderer.Enabled = true;
-
-            Messenger.Notify(EditorEvent.SceneObjectUpdated, new SceneObjectControlChanged(_selected.Name, _selected.Enabled));
-            Messenger.Notify(EditorEvent.TransformUpdated, new GenericMessage<Transform>(_selected.Transform));
-        }
-
-        private void UnselectSceneObject()
-        {
-            if (_selected != null)
-            {
-                _selected.GetComponent<BoundingBoxRenderer>().Enabled = false;
-                _selected = null;
-            }
-        }
-
         protected override void Draw(RenderTarget2D renderTarget)
         {
             graphicsDevice.Clear(Color.CornflowerBlue);
             _renderer.RenderEditor(_scene, _scene.MainCamera, renderTarget);
         }
 
-        public object GetService(Type serviceType)
+        #endregion
+
+        #region Scene settings
+
+        private void CreateEditorScene()
         {
-            return _services.GetService(serviceType);
+            var defaultMaterial = new SimpleMaterial(_scene);
+            defaultMaterial.MainTexture = GraphicsHelper.CreateBorderTexture(Color.LightSkyBlue, Color.LightGray, 64, 64, 1);
+            _scene.DefaultMaterial = defaultMaterial;
+
+            var camera = new CameraPrefab("EditorCamera.Main");
+            camera.AddComponent<EDOrbitController>();
+            _scene.Add(camera);
+
+            var lightPrefab = new LightPrefab("Editor_MainLight", LightType.Directional);
+            _scene.Add(lightPrefab);
+            lightPrefab.Transform.Position = new Vector3(0, 15, 15);
+            lightPrefab.Light.Direction = new Vector3(0, 0.75f, 0.75f);
+
+            // Grid
+            var gridMaterial = new SimpleMaterial(_scene);
+            gridMaterial.MainTexture = GraphicsHelper.CreateCheckboardTexture(new Color(0.4f, 0.4f, 0.4f), new Color(0.9f, 0.9f, 0.9f), 256, 256);
+            gridMaterial.Tiling = new Vector2(24.0f);
+            gridMaterial.Alpha = 0.6f;
+
+            var terrain = new TerrainPrefab("Editor_Grid");
+            _scene.Add(terrain);
+            terrain.Flat();
+            terrain.Renderer.Material = gridMaterial;
+            terrain.Transform.Translate(-terrain.Width >> 1, -1.0f, -terrain.Depth / 2);
+
+            camera.Transform.Position = new Vector3(-terrain.Width >> 1, 2, -terrain.Depth / 2);
         }
+
+        #endregion
+
+        #region Other Handlers
+
+        private void OnKeyDown(BasicMessage m)
+        {
+            if (m.Message == "Escape")
+                UnselectSceneObject();
+        }
+
+        #endregion
+
+        #region Add / Remove SceneObject
 
         public void Add(string type)
         {
             _toAdd.Add(type);
-        }
-
-        public void SetupSceneObject(string name, bool enabled)
-        {
-            if (_selected != null)
-            {
-                _selected.Name = name;
-                _selected.Enabled = enabled;
-            }
-        }
-
-        public void SetTransform(int type, float x, float y, float z)
-        {
-            if (_selected != null)
-            {
-                if (type == 0)
-                    _selected.Transform.SetPosition(x, y, z);
-                else if (type == 1)
-                    _selected.Transform.SetRotation(x, y, z);
-                else if (type == 2)
-                    _selected.Transform.LocalScale = new Vector3(x, y, z);
-            }
-        }
-
-        private void OnSceneObjectChanged(BasicMessage m)
-        {
-            var data = m as SceneObjectControlChanged;
-            if (data != null && _selected != null)
-            {
-                _selected.Name = data.Name;
-                _selected.Enabled = data.Enable;
-            }
-        }
-
-        private void OnTransformChanged(BasicMessage m)
-        {
-            var data = m as TransformChanged;
-            if (data != null && _selected != null)
-            {
-                var type = (int)data.ChangeType;
-                if (type == 0)
-                    _selected.Transform.SetPosition(data.X, data.Y, data.Z);
-                else if (type == 1)
-                    _selected.Transform.SetRotation(data.X, data.Y, data.Z);
-                else if (type == 2)
-                    _selected.Transform.LocalScale = new Vector3(data.X, data.Y, data.Z);
-            }
         }
 
         private void InternalAddSceneObject(string type)
@@ -379,32 +303,93 @@ namespace C3DE.Editor.MonoGameBridge
             _scene.Remove(sceneObject);
         }
 
-        public void NewScene()
+        #endregion
+
+        #region Select / Unselect a SceneObject
+
+        private void SelectObject(SceneObject sceneObject)
         {
-            _scene.Unload();
+            UnselectSceneObject();
+
+            _selected = sceneObject;
+
+            var boxRenderer = _selected.GetComponent<BoundingBoxRenderer>();
+            if (boxRenderer == null)
+                boxRenderer = _selected.AddComponent<BoundingBoxRenderer>();
+
+            boxRenderer.Enabled = true;
+
+            Messenger.Notify(EditorEvent.SceneObjectUpdated, new SceneObjectControlChanged(_selected.Name, _selected.Enabled));
+            Messenger.Notify(EditorEvent.TransformUpdated, new GenericMessage<Transform>(_selected.Transform));
         }
 
-        public string SaveScene(string path)
+        private void UnselectSceneObject()
         {
-            var serialization = _scene.Serialize();
+            if (_selected != null)
+            {
+                _selected.GetComponent<BoundingBoxRenderer>().Enabled = false;
+                _selected = null;
+                _editorCopy = null;
+            }
+        }
+
+        #endregion
+
+        #region Handler for component changes
+
+        private void OnSceneObjectChanged(BasicMessage m)
+        {
+            var data = m as SceneObjectControlChanged;
+            if (data != null && _selected != null)
+            {
+                _selected.Name = data.Name;
+                _selected.Enabled = data.Enable;
+            }
+        }
+
+        private void OnTransformChanged(BasicMessage m)
+        {
+            var data = m as TransformChanged;
+            if (data != null && _selected != null)
+            {
+                var type = (int)data.ChangeType;
+                if (type == 0)
+                    _selected.Transform.SetPosition(data.X, data.Y, data.Z);
+                else if (type == 1)
+                    _selected.Transform.SetRotation(data.X, data.Y, data.Z);
+                else if (type == 2)
+                    _selected.Transform.LocalScale = new Vector3(data.X, data.Y, data.Z);
+            }
+        }
+
+        #endregion
+
+        #region New / Save and Load scene
+
+        public void NewScene()
+        {
+            //_scene.Unload();
+        }
+
+        public string SaveScene()
+        {
+            var serialization = _scene.SerializeScene();
             return JsonConvert.SerializeObject(serialization);
         }
 
-        public void LoadScene(string path)
+        public void LoadScene(string strData)
         {
-            using (var reader = new StreamReader(path))
+            var scene = JsonConvert.DeserializeObject<SerializedScene>(strData);
+            if (scene != null)
             {
-                var scene = JsonConvert.DeserializeObject(reader.ReadToEnd());
-                reader.Close();
-
-                var data = scene as Dictionary<string, object>;
-                if (data != null)
-                {
-                    NewScene();
-                    _scene.Deserialize(data);
-                }
+                NewScene();
+                _scene.DeserializeScene(scene);
             }
         }
+
+        #endregion
+
+        #region Export
 
         public string[] ExportSceneTo(string format)
         {
@@ -426,5 +411,44 @@ namespace C3DE.Editor.MonoGameBridge
 
             return result;
         }
+
+        #endregion
+
+        #region Copy/Duplicate/Past
+
+        private void CopySelection(BasicMessage m)
+        {
+            _editorCopy = _selected;
+        }
+
+        private void DuplicateSelection(BasicMessage m)
+        {
+            _editorCopy = _selected;
+            PastSelection(null);
+        }
+
+        private void PastSelection(BasicMessage m)
+        {
+            if (_editorCopy != null)
+            {
+                var sceneObject = (SceneObject)_editorCopy.Clone();
+
+                var previous = _editorCopy;
+
+                InternalAddSceneObject(sceneObject);
+
+                _editorCopy = previous;
+
+                var x = _editorCopy.Transform.Position.X;
+                x += _editorCopy.GetComponent<RenderableComponent>().BoundingSphere.Radius * 2.0f;
+
+                sceneObject.Transform.SetPosition(x, null, null);
+
+                if (System.Windows.Input.Keyboard.Modifiers == System.Windows.Input.ModifierKeys.Control)
+                    _editorCopy = _selected;
+            }
+        }
+
+        #endregion
     }
 }

@@ -55,10 +55,13 @@ namespace C3DE.Editor
             else if (e.Key == Key.S && Keyboard.Modifiers == ModifierKeys.Control)
                 Messenger.Notify(EditorEvent.CommandSave);
 
+            else if (e.Key == Key.D && Keyboard.Modifiers == ModifierKeys.Control)
+                Messenger.Notify(EditorEvent.CommandDuplicate);
+
             else if (e.Key == Key.S && Keyboard.Modifiers == ModifierKeys.Control && Keyboard.Modifiers == ModifierKeys.Shift)
                 Messenger.Notify(EditorEvent.CommandSaveAll);
         }
-
+        // -- DEPRECATED
         private void OnSceneObjectAdded(object sender, SceneChangedEventArgs e)
         {
             if (e.Added)
@@ -72,6 +75,7 @@ namespace C3DE.Editor
 
             sceneListComponent.RemoveItem(e.Name);
         }
+        // -- DEPRECATED
 
         private void OnFileMenuClick(object sender, RoutedEventArgs e)
         {
@@ -93,7 +97,10 @@ namespace C3DE.Editor
                         saveFileDialog.Filter = "C3DE Scene (*.scene)|*.scene";
 
                         if (saveFileDialog.ShowDialog() == Winforms.DialogResult.OK)
-                            editorGameHost.SaveScene(saveFileDialog.FileName);
+                        {
+                            var save = editorGameHost.SaveScene();
+                            File.WriteAllText(saveFileDialog.FileName, save);
+                        }
                     }
                     break;
 
