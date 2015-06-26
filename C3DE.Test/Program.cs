@@ -11,12 +11,21 @@ using System.Threading.Tasks;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
 using C3DE.Components.Lights;
+using C3DE.Serialization;
 
 namespace C3DE.Test
 {
+    public class Item
+    {
+        [XmlAttribute]
+        public int Id;
+        [XmlAttribute]
+        public object Value;
+    }
+
     class TestApp : Scene
     {
-        public TestApp ()
+        public TestApp()
             : base("TestScene")
         {
 
@@ -71,7 +80,7 @@ namespace C3DE.Test
             //XMLSerialization("ligth.xml", lightPrefab);
             JSONSerialization("ligth.json", lightPrefab);
 
-            //XMLSerialization("material.xml", material);
+            //XMLSerialization("material.xml", terrainMat);
             JSONSerialization("material.json", terrainMat);
         }
 
@@ -79,15 +88,19 @@ namespace C3DE.Test
         {
             base.Update();
 
+            //XMLSerialization("scene.xml", this);
             JSONSerialization("scene.json", this);
+
+            var des = JSONDeserialize("scene.json");
 
             Application.Quit();
         }
 
-        private void XMLSerialization(string path, ISerializable obj)
+        private void XMLSerialization(string path, Scene scene)
         {
-            var data = obj.Serialize();
+            var data = scene.SerializeScene();
             var ser = new XmlSerializer(data.GetType());
+
             using (var w = new StreamWriter(path))
             {
                 ser.Serialize(w, data);
@@ -97,9 +110,41 @@ namespace C3DE.Test
 
         private void JSONSerialization(string path, ISerializable obj)
         {
-            var d = obj.Serialize();
-            var data = JsonConvert.SerializeObject(d, Formatting.Indented);
+            var data = string.Empty;
+
+            if (obj is Scene)
+            {
+                var d = (obj as Scene).SerializeScene();
+                data = JsonConvert.SerializeObject(d, Formatting.Indented, new JsonSerializerSettings()
+                {
+                    TypeNameHandling = TypeNameHandling.Objects
+                });
+            }
+            else
+            {
+                var d = obj.Serialize();
+                data = JsonConvert.SerializeObject(d, Formatting.Indented);
+            }
+
             File.WriteAllText(path, data);
+        }
+
+        private SerializedScene JSONDeserialize(string path)
+        {
+            var data = string.Empty;
+
+            using (var r = new StreamReader(path))
+            {
+                data = r.ReadToEnd();
+                r.Close();
+            }
+
+            var scene = JsonConvert.DeserializeObject<SerializedScene>(data, new JsonSerializerSettings()
+                {
+                    TypeNameHandling = TypeNameHandling.Objects
+                });
+
+            return scene;
         }
     }
 

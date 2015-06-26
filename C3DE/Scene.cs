@@ -4,6 +4,7 @@ using C3DE.Components.Lights;
 using C3DE.Components.Renderers;
 using C3DE.Materials;
 using C3DE.PostProcess;
+using C3DE.Serialization;
 using C3DE.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -771,6 +772,59 @@ namespace C3DE
         }
 
         #endregion
+
+        public SerializedScene SerializeScene()
+        {
+            var i = 0;
+            var size = 0;
+            var scene = new SerializedScene();
+            scene.Id = Id;
+            scene.Name = Name;
+            scene.RenderSettings = RenderSettings.Serialize();
+
+            size = materials.Count;
+            scene.Materials = new Dictionary<string, object>[size];
+            for (i = 0; i < size; i++)
+                scene.Materials[i] = materials[i].Serialize();
+
+            size = sceneObjects.Size;
+            scene.SceneObjects = new Dictionary<string, object>[size];
+            for (i = 0; i < size; i++)
+                scene.SceneObjects[i] = sceneObjects[i].Serialize();
+
+            return scene;
+        }
+
+        public void DeserializeScene(SerializedScene scene)
+        {
+            var i = 0;
+            var size = 0;
+            Material material = null;
+            SceneObject sceneObject = null;
+
+            Name = scene.Name;
+            Id = Scene.Id;
+            RenderSettings.Deserialize(scene.RenderSettings);
+
+            size = scene.Materials.Length;
+            materials.Clear();
+            materials.Capacity = size;
+
+            for (i = 0; i < size; i++)
+            {
+                material = SerializerHelper.CreateFromType(scene.Materials[i]) as Material;
+                Add(material);
+            }
+
+            size = scene.SceneObjects.Length;
+            sceneObjects.Clear();
+
+            for (i = 0; i < size; i++)
+            {
+                sceneObject = SerializerHelper.CreateFromType(scene.SceneObjects[i]) as SceneObject;
+                Add(sceneObject);
+            }
+        }
 
         public override Dictionary<string, object> Serialize()
         {

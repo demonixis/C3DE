@@ -1,4 +1,5 @@
 ﻿using C3DE.Components;
+using C3DE.Serialization;
 using System;
 using System.Collections.Generic;
 

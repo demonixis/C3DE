@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using C3DE.Serialization;
+using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 

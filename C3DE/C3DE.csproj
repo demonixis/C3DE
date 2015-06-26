@@ -88,7 +88,7 @@
     <Compile Include="Input.cs" />
     <Compile Include="Inputs\InputManager.cs" />
     <Compile Include="Inputs\InputProfile.cs" />
-    <Compile Include="ISerializable.cs" />
+    <Compile Include="Serialization\ISerializable.cs" />
     <Compile Include="Prefabs\LavaPrefab.cs" />
     <Compile Include="Rendering\IRenderer.cs" />
     <Compile Include="Materials\DummyMaterial.cs" />
@@ -127,6 +127,8 @@
     <Compile Include="Resources\ResourcesHelper.cs" />
     <Compile Include="SceneManager.cs" />
     <Compile Include="Screen.cs" />
+    <Compile Include="Serialization\SerializationHelper.cs" />
+    <Compile Include="Serialization\SerializedScene.cs" />
     <Compile Include="UI\GUISkin.cs" />
     <Compile Include="UI\GUI.cs" />
     <Compile Include="Utils\GraphicsHelper.cs" />

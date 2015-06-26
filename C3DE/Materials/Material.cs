@@ -1,4 +1,5 @@
 ﻿using C3DE.Components.Renderers;
+using C3DE.Serialization;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;

@@ -2,14 +2,8 @@
 using System;
 using System.Collections.Generic;
 
-namespace C3DE
+namespace C3DE.Serialization
 {
-    public interface ISerializable
-    {
-        Dictionary<string, object> Serialize();
-        void Deserialize(Dictionary<string, object> data);
-    }
-
     public sealed class SerializerHelper
     {
         public static ISerializable CreateFromType(Dictionary<string, object> data)
