@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework;
+using System;
 
 namespace C3DE.Editor.Events
 {
@@ -12,11 +13,14 @@ namespace C3DE.Editor.Events
         public const ushort CommandSave = 0x0006;
         public const ushort CommandSaveAll = 0x0007;
         public const ushort CommandDuplicate = 0x0008;
-
+        public const ushort CommandNew = 0x0009;
+        public const ushort CommandOpen = 0x0010;
         public const ushort KeyJustPressed = 0x1000;
 
-        public const ushort SceneObjectChanged = 0xA000;
-        public const ushort SceneObjectUpdated = 0xA001;
+        public const ushort SceneObjectAdded = 0xA000;
+        public const ushort SceneObjectRemoved = 0xA001;
+        public const ushort SceneObjectRenamed = 0xA010;
+        public const ushort SceneObjectSelected = 0xA011;
         public const ushort TransformChanged = 0xB000;
         public const ushort TransformUpdated = 0xB001;
     }
@@ -35,6 +39,11 @@ namespace C3DE.Editor.Events
 
         public TransformChanged() { }
 
+        public TransformChanged(TransformChangeType type, Vector3 vector)
+        {
+            Set(type, vector.X, vector.Y, vector.Z);
+        }
+
         public TransformChanged(TransformChangeType type, float x, float y, float z)
         {
             Set(type, x, y, z);
@@ -46,25 +55,6 @@ namespace C3DE.Editor.Events
             X = x;
             Y = y;
             Z = z;
-        }
-    }
-
-    public class SceneObjectControlChanged : BasicMessage
-    {
-        public string Name { get; protected set; }
-        public bool Enable { get; protected set; }
-
-        public SceneObjectControlChanged() { }
-
-        public SceneObjectControlChanged(string name, bool enable)
-        {
-            Set(name, enable);
-        }
-
-        public void Set(string name, bool enable)
-        {
-            Name = name;
-            Enable = enable;
         }
     }
 }

@@ -15,76 +15,51 @@ namespace C3DE.Editor
     /// </summary>
     public partial class MainWindow : Window
     {
-        private char[] _separator;
-
         public MainWindow()
         {
             InitializeComponent();
-            _separator = new char[1] { '_' };
-
-            editorGameHost.SceneObjectAdded += OnSceneObjectAdded;
-            editorGameHost.SceneObjectRemoved += OnSceneObjectRemoved;
-
             KeyDown += OnKeyDown;
-            KeyUp += OnKeyUp;
-        }
-
-        private void OnKeyUp(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Escape && e.IsToggled)
-                Messenger.Notify(EditorEvent.CommandEscape);
-
-            if (e.IsToggled)
-                Messenger.Notify(EditorEvent.KeyJustPressed, e.Key.ToString());
         }
 
         private void OnKeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.C && Keyboard.Modifiers == ModifierKeys.Control)
-                Messenger.Notify(EditorEvent.CommandCopy);
+            if (e.Key == Key.N && Keyboard.Modifiers == ModifierKeys.Control)
+                Messenger.Notify(EditorEvent.CommandNew);
 
-            else if (e.Key == Key.V && Keyboard.Modifiers == ModifierKeys.Control)
-                Messenger.Notify(EditorEvent.CommandPast);
-
-            else if (e.Key == Key.X && Keyboard.Modifiers == ModifierKeys.Control)
-                Messenger.Notify(EditorEvent.CommandCut);
-
-            else if (e.Key == Key.A && Keyboard.Modifiers == ModifierKeys.Control)
-                Messenger.Notify(EditorEvent.CommandAll);
+            else if (e.Key == Key.O && Keyboard.Modifiers == ModifierKeys.Control)
+                Messenger.Notify(EditorEvent.CommandOpen);
 
             else if (e.Key == Key.S && Keyboard.Modifiers == ModifierKeys.Control)
                 Messenger.Notify(EditorEvent.CommandSave);
 
+            else if (e.Key == Key.S && Keyboard.Modifiers == ModifierKeys.Control && Keyboard.Modifiers == ModifierKeys.Shift)
+                Messenger.Notify(EditorEvent.CommandSaveAll);
+
+            else if (e.Key == Key.C && Keyboard.Modifiers == ModifierKeys.Control)
+                Messenger.Notify(EditorEvent.CommandCopy);
+
+            else if (e.Key == Key.X && Keyboard.Modifiers == ModifierKeys.Control)
+                Messenger.Notify(EditorEvent.CommandCut);
+
+            else if (e.Key == Key.V && Keyboard.Modifiers == ModifierKeys.Control)
+                Messenger.Notify(EditorEvent.CommandPast);
+
             else if (e.Key == Key.D && Keyboard.Modifiers == ModifierKeys.Control)
                 Messenger.Notify(EditorEvent.CommandDuplicate);
 
-            else if (e.Key == Key.S && Keyboard.Modifiers == ModifierKeys.Control && Keyboard.Modifiers == ModifierKeys.Shift)
-                Messenger.Notify(EditorEvent.CommandSaveAll);
+            else if (e.Key == Key.A && Keyboard.Modifiers == ModifierKeys.Control)
+                Messenger.Notify(EditorEvent.CommandAll);
+
+            else if (e.Key == Key.Escape)
+                Messenger.Notify(EditorEvent.CommandEscape);
+
+            else
+                Messenger.Notify(EditorEvent.KeyJustPressed, e.Key.ToString());
         }
-        // -- DEPRECATED
-        private void OnSceneObjectAdded(object sender, SceneChangedEventArgs e)
+
+        private void NotifyCommand(string commandName)
         {
-            if (e.Added)
-                sceneListComponent.AddItem(e.Name);
-        }
-
-        private void OnSceneObjectRemoved(object sender, SceneChangedEventArgs e)
-        {
-            if (e.Added)
-                return;
-
-            sceneListComponent.RemoveItem(e.Name);
-        }
-        // -- DEPRECATED
-
-        private void OnFileMenuClick(object sender, RoutedEventArgs e)
-        {
-            var item = sender as Control;
-            if (item == null)
-                return;
-
-            var tag = item.Tag.ToString();
-            switch (tag)
+            switch (commandName)
             {
                 case "New":
                     editorGameHost.NewScene();
@@ -104,7 +79,7 @@ namespace C3DE.Editor
                     }
                     break;
 
-                case "Load":
+                case "Open":
                     {
                         var openFileDialog = new Winforms.OpenFileDialog();
                         openFileDialog.Filter = "C3DE Scene (*.scene)|*.scene";
@@ -117,12 +92,22 @@ namespace C3DE.Editor
                     }
                     break;
 
-                case "NewP": break;
-                case "LoadP": break;
-                case "SaveP": break;
-                case "SaveAsP": break;
+                case "Copy": editorGameHost.CopySelection(); break;
+                //case "Cut": editorGameHost.CutSelection(); break;
+                case "Past": editorGameHost.PastSelection(); break;
+                case "Duplicate": editorGameHost.DuplicateSelection(); break;
+                case "Delete": editorGameHost.DeleteSelection(); break;
                 case "Exit": WPFApplication.Current.Shutdown(); break;
             }
+        }
+
+        private void OnCommonMenuClick(object sender, RoutedEventArgs e)
+        {
+            var item = sender as Control;
+            if (item == null)
+                return;
+
+            NotifyCommand(item.Tag.ToString());
         }
 
         private void OnAddSceneObject(object sender, RoutedEventArgs e)
@@ -154,6 +139,11 @@ namespace C3DE.Editor
         private void OnAboutClick(object sender, RoutedEventArgs e)
         {
             MessageBox.Show("C3DE Editor is a scene editor for the C3DE Engine. It's still very experimental.", "About C3DE Editor", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+
+        private void OnDrop(object sender, DragEventArgs e)
+        {
+            Debug.Log("drop");
         }
     }
 }

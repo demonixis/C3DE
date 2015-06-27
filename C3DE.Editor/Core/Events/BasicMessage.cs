@@ -26,12 +26,10 @@ namespace C3DE.Editor.Events
     {
         public T Value { get; set; }
 
-        public GenericMessage(string message, T value)
+        public GenericMessage(T value = default(T), string message = "")
             : base(message)
         {
             Value = value;
         }
-
-        public GenericMessage(T value) : this("", value) { }
     }
 }

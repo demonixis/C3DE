@@ -8,7 +8,7 @@ namespace C3DE.Editor.Views.Controls
     /// </summary>
     public partial class SceneObjectControl : UserControl
     {
-        private SceneObjectControlChanged _eventCache;
+        private static GenericMessage<bool> SceneObjectChangedMessage = new GenericMessage<bool>();
         private bool _initialized = false;
 
         public bool SceneObjectEnabled
@@ -25,15 +25,15 @@ namespace C3DE.Editor.Views.Controls
 
         private void Notify()
         {
-            _eventCache.Set(SceneObjectName, SceneObjectEnabled);
-            Messenger.Notify(EditorEvent.SceneObjectChanged, _eventCache);
+            SceneObjectChangedMessage.Value = SceneObjectEnabled;
+            SceneObjectChangedMessage.Message = SceneObjectName;
+            Messenger.Notify(EditorEvent.SceneObjectRenamed, SceneObjectChangedMessage);
         }
 
         public SceneObjectControl()
         {
-            _eventCache = new SceneObjectControlChanged();
             InitializeComponent();
-            Messenger.Register(EditorEvent.SceneObjectUpdated, OnSceneObjectUpdated);
+            Messenger.Register(EditorEvent.SceneObjectSelected, OnSceneObjectSelected);
             _initialized = true;
         }
 
@@ -43,13 +43,13 @@ namespace C3DE.Editor.Views.Controls
             SceneObjectEnabled = isEnabled;
         }
 
-        private void OnSceneObjectUpdated(BasicMessage m)
+        private void OnSceneObjectSelected(BasicMessage m)
         {
-            var data = m as SceneObjectControlChanged;
-            if (data != null && _initialized)
+            SceneObjectChangedMessage = m as GenericMessage<bool>;
+            if (SceneObjectChangedMessage != null && _initialized)
             {
-                SceneObjectName = data.Name;
-                SceneObjectEnabled = data.Enable;
+                SceneObjectName = SceneObjectChangedMessage.Message;
+                SceneObjectEnabled = SceneObjectChangedMessage.Value;
             }
         }
     }

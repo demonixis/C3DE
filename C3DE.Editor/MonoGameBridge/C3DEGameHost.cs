@@ -2,6 +2,7 @@
 using C3DE.Components.Colliders;
 using C3DE.Components.Lights;
 using C3DE.Components.Renderers;
+using C3DE.Editor.Core;
 using C3DE.Editor.Core.Components;
 using C3DE.Editor.Events;
 using C3DE.Editor.Exporters;
@@ -23,20 +24,56 @@ using System.Diagnostics;
 
 namespace C3DE.Editor.MonoGameBridge
 {
-    public class SceneChangedEventArgs : EventArgs
+    public class SelectedSceneObject
     {
-        public bool Added { get; set; }
-        public string Name { get; set; }
+        public SceneObject SceneObject { get; private set; }
+        private BoundingBoxRenderer _boundingBoxRenderer;
+        private RenderableComponent _renderer;
 
-        public SceneChangedEventArgs(string name, bool added)
+        public void Set(SceneObject sceneObject)
         {
-            Name = name;
-            Added = added;
+            SceneObject = sceneObject;
+
+            _boundingBoxRenderer = sceneObject.GetComponent<BoundingBoxRenderer>();
+            if (_boundingBoxRenderer == null)
+                _boundingBoxRenderer = sceneObject.AddComponent<BoundingBoxRenderer>();
+
+            _renderer = sceneObject.GetComponent<RenderableComponent>();
+        }
+
+        public void Select(bool isSelected)
+        {
+            if (SceneObject != null)
+            {
+                _boundingBoxRenderer.Enabled = isSelected;
+               
+                if (!isSelected)
+                {
+                    _renderer = null;
+                    _boundingBoxRenderer = null;
+                    SceneObject = null;
+                }
+            }
+        }
+
+        public bool IsEqualTo(SceneObject other)
+        {
+            if (SceneObject == null)
+                return false;
+
+            return other == SceneObject;
+        }
+
+        public bool IsNull()
+        {
+            return SceneObject == null;
         }
     }
 
     public sealed class C3DEGameHost : D3D11Host, IServiceProvider
     {
+        private static GenericMessage<SceneObject> SceneObjectMessage = new GenericMessage<SceneObject>(null);
+
         private GameTime _gameTime;
         private GameServiceContainer _services;
         private List<GameComponent> _gameComponents;
@@ -47,11 +84,9 @@ namespace C3DE.Editor.MonoGameBridge
         private Scene _scene;
         private List<string> _toAdd;
         private List<SceneObject> _toRemove;
-        private SceneObject _selected;
-        private SceneObject _editorCopy;
 
-        public event EventHandler<SceneChangedEventArgs> SceneObjectAdded = null;
-        public event EventHandler<SceneChangedEventArgs> SceneObjectRemoved = null;
+        private SelectedSceneObject _selectedObject;
+        private BasicEditionSceneObject _editionSceneObject;
 
         #region GameHost implementation
 
@@ -117,15 +152,18 @@ namespace C3DE.Editor.MonoGameBridge
 
             _scene.RenderSettings.Skybox.Generate();
 
-            Messenger.Register(EditorEvent.SceneObjectChanged, OnSceneObjectChanged);
+            Messenger.Register(EditorEvent.SceneObjectRenamed, OnSceneObjectChanged);
             Messenger.Register(EditorEvent.TransformChanged, OnTransformChanged);
-            Messenger.Register(EditorEvent.KeyJustPressed, OnKeyDown);
+            Messenger.Register(EditorEvent.CommandEscape, UnselectObject);
             Messenger.Register(EditorEvent.CommandCopy, CopySelection);
             Messenger.Register(EditorEvent.CommandPast, PastSelection);
             Messenger.Register(EditorEvent.CommandDuplicate, DuplicateSelection);
+
+            SceneObjectMessage = new GenericMessage<SceneObject>(null);
+
+            _selectedObject = new SelectedSceneObject();
+            _editionSceneObject = new BasicEditionSceneObject();
         }
-
-
 
         protected override void Update(Stopwatch timer)
         {
@@ -160,22 +198,22 @@ namespace C3DE.Editor.MonoGameBridge
 
                 if (_scene.Raycast(ray, 100, out info))
                 {
-                    if (info.Collider.SceneObject == _selected)
+                    if (info.Collider.SceneObject == _selectedObject.SceneObject)
                         return;
 
-                    if (info.Collider.SceneObject != _selected)
-                        UnselectSceneObject();
+                    if (info.Collider.SceneObject != _selectedObject.SceneObject)
+                        UnselectObject();
 
                     SelectObject(info.Collider.SceneObject);
                 }
             }
 
-            else if (_selected != null)
+            else if (_selectedObject.SceneObject != null)
             {
                 if (Input.Mouse.Down(MouseButton.Left))
                 {
-                    _selected.Transform.Translate(Input.Mouse.Delta.X, 0, Input.Mouse.Delta.Y);
-                    Messenger.Notify(EditorEvent.TransformUpdated, new TransformChanged(TransformChangeType.Position, _selected.Transform.Position.X, _selected.Transform.Position.Y, _selected.Transform.Position.Z));
+                    _selectedObject.SceneObject.Transform.Translate(Input.Mouse.Delta.X, 0, Input.Mouse.Delta.Y);
+                    Messenger.Notify(EditorEvent.TransformUpdated, new TransformChanged(TransformChangeType.Position, _selectedObject.SceneObject.Transform.Position));
                 }
             }
 
@@ -220,16 +258,6 @@ namespace C3DE.Editor.MonoGameBridge
             terrain.Transform.Translate(-terrain.Width >> 1, -1.0f, -terrain.Depth / 2);
 
             camera.Transform.Position = new Vector3(-terrain.Width >> 1, 2, -terrain.Depth / 2);
-        }
-
-        #endregion
-
-        #region Other Handlers
-
-        private void OnKeyDown(BasicMessage m)
-        {
-            if (m.Message == "Escape")
-                UnselectSceneObject();
         }
 
         #endregion
@@ -289,16 +317,16 @@ namespace C3DE.Editor.MonoGameBridge
 
             _scene.Add(sceneObject);
 
-            if (SceneObjectAdded != null)
-                SceneObjectAdded(this, new SceneChangedEventArgs(sceneObject.Name, true));
+            SceneObjectMessage.Value = sceneObject;
+
+            Messenger.Notify(EditorEvent.SceneObjectAdded, SceneObjectMessage);
 
             SelectObject(sceneObject);
         }
 
         private void InternalRemoveSceneObject(SceneObject sceneObject)
         {
-            if (SceneObjectRemoved != null)
-                SceneObjectAdded(this, new SceneChangedEventArgs(sceneObject.Name, false));
+            Messenger.Notify(EditorEvent.SceneObjectRemoved, sceneObject.Id);
 
             _scene.Remove(sceneObject);
         }
@@ -309,28 +337,20 @@ namespace C3DE.Editor.MonoGameBridge
 
         private void SelectObject(SceneObject sceneObject)
         {
-            UnselectSceneObject();
+            UnselectObject();
 
-            _selected = sceneObject;
+            _selectedObject.Set(sceneObject);
+            _selectedObject.Select(true);
+            _editionSceneObject.Selected = sceneObject;
 
-            var boxRenderer = _selected.GetComponent<BoundingBoxRenderer>();
-            if (boxRenderer == null)
-                boxRenderer = _selected.AddComponent<BoundingBoxRenderer>();
-
-            boxRenderer.Enabled = true;
-
-            Messenger.Notify(EditorEvent.SceneObjectUpdated, new SceneObjectControlChanged(_selected.Name, _selected.Enabled));
-            Messenger.Notify(EditorEvent.TransformUpdated, new GenericMessage<Transform>(_selected.Transform));
+            Messenger.Notify(EditorEvent.SceneObjectSelected, new GenericMessage<bool>(sceneObject.Enabled, sceneObject.Name));
+            Messenger.Notify(EditorEvent.TransformUpdated, new GenericMessage<Transform>(sceneObject.Transform));
         }
 
-        private void UnselectSceneObject()
+        private void UnselectObject(BasicMessage m = null)
         {
-            if (_selected != null)
-            {
-                _selected.GetComponent<BoundingBoxRenderer>().Enabled = false;
-                _selected = null;
-                _editorCopy = null;
-            }
+            _selectedObject.Select(false);
+            _editionSceneObject.Reset();
         }
 
         #endregion
@@ -339,26 +359,26 @@ namespace C3DE.Editor.MonoGameBridge
 
         private void OnSceneObjectChanged(BasicMessage m)
         {
-            var data = m as SceneObjectControlChanged;
-            if (data != null && _selected != null)
+            var data = m as GenericMessage<bool>;
+            if (data != null && !_selectedObject.IsNull())
             {
-                _selected.Name = data.Name;
-                _selected.Enabled = data.Enable;
+                _selectedObject.SceneObject.Name = data.Message;
+                _selectedObject.SceneObject.Enabled = data.Value;
             }
         }
 
         private void OnTransformChanged(BasicMessage m)
         {
             var data = m as TransformChanged;
-            if (data != null && _selected != null)
+            if (data != null && !_selectedObject.IsNull())
             {
                 var type = (int)data.ChangeType;
                 if (type == 0)
-                    _selected.Transform.SetPosition(data.X, data.Y, data.Z);
+                    _selectedObject.SceneObject.Transform.SetPosition(data.X, data.Y, data.Z);
                 else if (type == 1)
-                    _selected.Transform.SetRotation(data.X, data.Y, data.Z);
+                    _selectedObject.SceneObject.Transform.SetRotation(data.X, data.Y, data.Z);
                 else if (type == 2)
-                    _selected.Transform.LocalScale = new Vector3(data.X, data.Y, data.Z);
+                    _selectedObject.SceneObject.Transform.LocalScale = new Vector3(data.X, data.Y, data.Z);
             }
         }
 
@@ -405,7 +425,7 @@ namespace C3DE.Editor.MonoGameBridge
             else if (format == "obj")
             {
                 result = new string[2];
-                result[0] = OBJExporter.ExportMesh(_selected.GetComponent<MeshRenderer>());
+                result[0] = OBJExporter.ExportMesh(_selectedObject.SceneObject.GetComponent<MeshRenderer>());
                 result[1] = string.Empty;
             }
 
@@ -416,36 +436,28 @@ namespace C3DE.Editor.MonoGameBridge
 
         #region Copy/Duplicate/Past
 
-        private void CopySelection(BasicMessage m)
+        public void CopySelection(BasicMessage m = null)
         {
-            _editorCopy = _selected;
+            _editionSceneObject.CopySelection();
         }
 
-        private void DuplicateSelection(BasicMessage m)
+        public void DuplicateSelection(BasicMessage m = null)
         {
-            _editorCopy = _selected;
-            PastSelection(null);
+            _editionSceneObject.Copy = _selectedObject.SceneObject;
+            _editionSceneObject.PastSelection(InternalAddSceneObject);
         }
 
-        private void PastSelection(BasicMessage m)
+        public void PastSelection(BasicMessage m = null)
         {
-            if (_editorCopy != null)
+            _editionSceneObject.PastSelection(InternalAddSceneObject);
+        }
+
+        public void DeleteSelection(BasicMessage m = null)
+        {
+            if (!_selectedObject.IsNull())
             {
-                var sceneObject = (SceneObject)_editorCopy.Clone();
-
-                var previous = _editorCopy;
-
-                InternalAddSceneObject(sceneObject);
-
-                _editorCopy = previous;
-
-                var x = _editorCopy.Transform.Position.X;
-                x += _editorCopy.GetComponent<RenderableComponent>().BoundingSphere.Radius * 2.0f;
-
-                sceneObject.Transform.SetPosition(x, null, null);
-
-                if (System.Windows.Input.Keyboard.Modifiers == System.Windows.Input.ModifierKeys.Control)
-                    _editorCopy = _selected;
+                InternalRemoveSceneObject(_selectedObject.SceneObject);
+                UnselectObject();
             }
         }
 

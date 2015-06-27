@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:C3DE.Editor.MonoGameBridge"
         xmlns:controls="clr-namespace:C3DE.Editor.Views.Controls"
-        Title="C3DE Editor" Height="600" Width="1280" Icon="Game.ico" WindowState="Maximized">
+        Title="C3DE Editor" Height="600" Width="1280" Icon="Game.ico" WindowState="Maximized" AllowDrop="True">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="20" />
@@ -15,24 +15,24 @@
         </Grid.ColumnDefinitions>
         <Menu Grid.Row="0" Grid.ColumnSpan="2">
             <MenuItem Header="File">
-                <MenuItem Header="New Scene" Tag="New" Click="OnFileMenuClick" InputGestureText="Ctrl+N" />
-                <MenuItem Header="Open Scene" Tag="Load" Click="OnFileMenuClick" InputGestureText="Ctrl+O" />
+                <MenuItem Header="New Scene" Tag="New" Click="OnCommonMenuClick" InputGestureText="Ctrl+N" />
+                <MenuItem Header="Open Scene" Tag="Load" Click="OnCommonMenuClick" InputGestureText="Ctrl+O" />
                 <Separator />
-                <MenuItem Header="Save Scene" Tag="Save" Click="OnFileMenuClick" InputGestureText="Ctrl+S" />
-                <MenuItem Header="Save Scene as..." Tag="SaveAs" Click="OnFileMenuClick" InputGestureText="Ctrl+Shift+S" />
+                <MenuItem Header="Save Scene" Tag="Save" Click="OnCommonMenuClick" InputGestureText="Ctrl+S" />
+                <MenuItem Header="Save Scene as..." Tag="SaveAs" Click="OnCommonMenuClick" InputGestureText="Ctrl+Shift+S" />
                 <Separator />
-                <MenuItem Header="Exit" Tag="Exit"  Click="OnFileMenuClick" />
+                <MenuItem Header="Exit" Tag="Exit"  Click="OnCommonMenuClick" />
             </MenuItem>
             <MenuItem Header="Edit">
-                <MenuItem Header="Cut" InputGestureText="Ctrl+X" />
-                <MenuItem Header="Copy" InputGestureText="Ctrl+C"/>
-                <MenuItem Header="Past" InputGestureText="Ctrl+V" />
+                <MenuItem Header="Cut" Click="OnCommonMenuClick" Tag="Cut" InputGestureText="Ctrl+X" />
+                <MenuItem Header="Copy" Click="OnCommonMenuClick" Tag="Copy" InputGestureText="Ctrl+C"/>
+                <MenuItem Header="Past" Click="OnCommonMenuClick" Tag="Past" InputGestureText="Ctrl+V" />
                 <Separator />
-                <MenuItem Header="Duplicate" InputGestureText="Ctrl+D" />
-                <MenuItem Header="Delete" InputGestureText="Suppr" />
+                <MenuItem Header="Duplicate" Click="OnCommonMenuClick" Tag="Duplicate" InputGestureText="Ctrl+D" />
+                <MenuItem Header="Delete" Click="OnCommonMenuClick" Tag="Delete" InputGestureText="Del" />
             </MenuItem>
             <MenuItem Header="Scene Object">
-                <MenuItem Header="Empty" InputGestureText="Ctrl+N" />
+                <MenuItem Header="Empty" />
                 <Separator />
                 <MenuItem Header="3D Object">
                     <MenuItem Header="Cube" Tag="Cube" Click="OnAddSceneObject" />
@@ -72,7 +72,7 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <local:C3DEGameHost Grid.Row="0" Grid.Column="0" x:Name="editorGameHost" Margin="0" SnapsToDevicePixels="True" Stretch="Fill" />
+            <local:C3DEGameHost Grid.Row="0" Grid.Column="0" x:Name="editorGameHost" Margin="0" SnapsToDevicePixels="True" Stretch="Fill" Drop="OnDrop" />
         </Grid>
 
         <StackPanel Grid.Row="1" Grid.Column="1">
