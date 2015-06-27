@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace C3DE.Utils
@@ -109,7 +110,7 @@ namespace C3DE.Utils
 
             if (_rmSize > 0)
             {
-                for (i = 0; i < _rmSize; i++)
+             for (i = 0; i < _rmSize; i++)
                     _items.Remove(_rmList[i]);
 
                 _size -= _rmSize;

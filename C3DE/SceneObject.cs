@@ -331,13 +331,24 @@ namespace C3DE
 
         public virtual SerializedCollection Serialize()
         {
-            var data = new SerializedCollection(6);
+            var data = new SerializedCollection(7);
             data.Add("Name", Name);
             data.Add("Id", Id);
             data.Add("Type", GetType().FullName);
             data.Add("Enabled", enabled);
             data.Add("IsPrefab", IsPrefab);
             data.Add("IsStatic", IsStatic);
+
+            var cSize = components.Count;
+            var sb = new System.Text.StringBuilder(cSize);
+
+            for (int i = 0; i < cSize; i++)
+                sb.AppendFormat("{0}|", components[i].Id);
+
+            sb.Length = sb.Length - 1;
+
+            data.Add("Components", sb.ToString());
+
             return data;
         }
 

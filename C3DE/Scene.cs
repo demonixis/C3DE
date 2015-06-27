@@ -318,6 +318,21 @@ namespace C3DE
                 prefabs.Remove(prefab);
         }
 
+        private void RemoveAllObjects()
+        {
+            sceneObjects.Clear();
+            prefabs.Clear();
+        }
+
+        private void RemoveAllComponents()
+        {
+            renderList.Clear();
+            colliders.Clear();
+            cameras.Clear();
+            scripts.Clear();
+            lights.Clear();
+        }
+
         /// <summary>
         /// Check all components of a scene object to update all list of the scene.
         /// </summary>
@@ -636,7 +651,18 @@ namespace C3DE
 
         #endregion
 
-        #region SceneObject search
+        #region SceneObject
+
+        public SceneObject FindById(string id)
+        {
+            for (int i = 0; i < sceneObjects.Size; i++)
+            {
+                if (sceneObjects[i].Id == id)
+                    return sceneObjects[i];
+            }
+
+            return null;
+        }
 
         public SceneObject Find(string name)
         {
@@ -822,12 +848,25 @@ namespace C3DE
             }
 
             size = scene.SceneObjects.Length;
-            sceneObjects.Clear();
+            RemoveAllObjects();
 
             for (i = 0; i < size; i++)
             {
                 sceneObject = SerializerHelper.CreateInstance(scene.SceneObjects[i]) as SceneObject;
                 Add(sceneObject);
+
+                var meshRenderer = sceneObject.GetComponent<MeshRenderer>();
+                if (meshRenderer != null && meshRenderer.Geometry != null && !meshRenderer.Geometry.Built)
+                    meshRenderer.Geometry.Generate();
+            }
+
+            size = scene.Components.Length;
+            RemoveAllComponents();
+            components.Capacity = size;
+
+            for (i = 0; i < size; i++)
+            {
+
             }
         }
     }

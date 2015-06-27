@@ -124,7 +124,7 @@ namespace C3DE.Prefabs
             Build();
         }
 
-        private void Build()
+        public void Build()
         {
             renderer.Geometry.Generate();
         }
