@@ -91,6 +91,24 @@ namespace C3DE.Demo.Scenes
             RenderSettings.Skybox.Generate(Application.GraphicsDevice, Application.Content, DemoGame.StarsSkybox);
 
             Screen.ShowCursor = true;
+
+            AddBackedLight(new Vector3(-200, 200, 0), Color.Red);
+            AddBackedLight(new Vector3(200, 200, 0), Color.Blue);
+            AddBackedLight(new Vector3(0, 200, 200), Color.Green);
+            AddBackedLight(new Vector3(0, 200, -200), Color.Yellow);
+        }
+
+        private void AddBackedLight(Vector3 position, Color color)
+        {
+            var sceneObject = new SceneObject("Light_" + color.ToString());
+            sceneObject.Transform.Position = position;
+
+            var light = sceneObject.AddComponent<Light>();
+            light.FallOf = 2000;
+            light.DiffuseColor = color;
+            light.Backing = LightRenderMode.Backed;
+
+            Add(sceneObject);
         }
     }
 }

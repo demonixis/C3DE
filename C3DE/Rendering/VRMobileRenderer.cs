@@ -145,19 +145,19 @@ namespace C3DE.Rendering
         /// </summary>
         /// <param name="scene">The scene to render.</param>
         /// <param name="camera">The camera to use for render.</param>
-        public void render(Scene scene, Camera camera)
+        public void render(Scene scene)
         {
-            SetProjection(camera);
+			SetProjection(Camera.Main);
 
             _device.SetRenderTarget(_renderTargetLeft);
             _device.Clear(Color.Black);
-            BaseDraw(scene, camera);
+			BaseDraw(scene, Camera.Main);
 
             _device.SetRenderTarget(_renderTargetRight);
             _device.Clear(Color.Black);
-            BaseDraw(scene, camera);
+			BaseDraw(scene, Camera.Main);
 
-            DrawRenderTargets(camera);
+			DrawRenderTargets(Camera.Main);
         }
 
         public void RenderEditor(Scene scene, Camera camera, RenderTarget2D target) { }

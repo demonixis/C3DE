@@ -14,6 +14,7 @@ namespace C3DE.Rendering
     public class Renderer : IRenderer
     {
         private GraphicsDevice _device;
+        private PrelightRenderer _plRenderer;
         private RenderTarget2D _sceneRT;
         private SpriteBatch _spriteBatch;
         private bool _needsBufferUpdate;
@@ -37,6 +38,9 @@ namespace C3DE.Rendering
             _spriteBatch = new SpriteBatch(_device);
             uiManager = new GUI(_spriteBatch);
             uiManager.LoadContent(content);
+
+            _plRenderer = new PrelightRenderer(_device);
+            _plRenderer.Initialize(content);
         }
 
         private void renderShadowMaps(Scene scene, Camera camera)
@@ -113,9 +117,22 @@ namespace C3DE.Rendering
                     if (scripts[i].Enabled)
                         scripts[i].OnGUI(uiManager);
 
+#if DEBUG
+                RenderDebug(uiManager);
+#endif
+
                 _spriteBatch.End();
             }
         }
+
+#if DEBUG
+        internal static List<Behaviour> __DebugUIScripts = new List<Behaviour>();
+        private void RenderDebug(GUI ui)
+        {
+            foreach (var script in __DebugUIScripts)
+                script.OnGUI(ui);
+        }
+#endif
 
         /// <summary>
         /// Render the scene with the specified camera.
@@ -127,7 +144,7 @@ namespace C3DE.Rendering
         /// </summary>
         /// <param name="scene">The scene to render.</param>
         /// <param name="camera">The camera to use for render.</param>
-        public void render(Scene scene, Camera camera)
+        public void render(Scene scene)
         {
             if (_needsBufferUpdate)
             {
@@ -135,12 +152,30 @@ namespace C3DE.Rendering
                 _needsBufferUpdate = false;
             }
 
-            renderShadowMaps(scene, camera);
-            renderObjects(scene, camera);
-            renderBuffers();
-            renderPostProcess(scene.postProcessPasses);
-            renderUI(scene.Behaviours);
+			var camCount = scene.cameras.Count;
+            if (camCount > 1)
+            {
+                for (int i = 0; i < camCount; i++)
+                {
+                    _plRenderer.Draw(_device, scene, scene.cameras[0]);
+                    RenderScene(scene, scene.cameras[i]);
+                }
+            }
+            else
+            {
+                _plRenderer.Draw(_device, scene, scene.cameras[0]);
+                RenderScene(scene, scene.cameras[0]);
+            }
         }
+
+		private void RenderScene(Scene scene, Camera camera)
+		{
+			renderShadowMaps(scene, camera);
+			renderObjects(scene, camera);
+			renderBuffers();
+			renderPostProcess(scene.postProcessPasses);
+			renderUI(scene.Behaviours);
+		}
 
         public void RenderEditor(Scene scene, Camera camera, RenderTarget2D target)
         {

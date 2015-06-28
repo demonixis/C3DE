@@ -1,5 +1,6 @@
 #include "ShadowMap.fxh"
 #include "Fog.fxh"
+#include "PreLighting/PreLighting.fxh"
 
 // Matrix
 float4x4 World;
@@ -92,6 +93,7 @@ struct VertexShaderOutput
 	float2 UV : TEXCOORD0;
 	float3 Normal : TEXCOORD1;
 	float4 WorldPosition : TEXCOORD2;
+	float4 CopyPosition : TEXCOORD3;
 	float FogDistance : FOG;
 };
 
@@ -105,6 +107,7 @@ VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
 	output.UV = input.UV;
 	output.Normal = mul(input.Normal, World);
 	output.WorldPosition = worldPosition;
+	output.CopyPosition = input.Position;
 	output.FogDistance = distance(worldPosition, EyePosition);
 
 	return output;
@@ -127,7 +130,7 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 	baseCompose *= mainTex;
 	baseCompose += weightTex.r * sandTex + weightTex.g * rockTex + weightTex.b * snowTex;
 	
-	float4 finalCompose = float4(AmbientColor + (DiffuseColor * float4(baseCompose, 1.0) * light * shadowTerm), 1.0);
+	float4 finalCompose = float4(AmbientColor + (DiffuseColor * float4(baseCompose, 1.0) * light  * GetLightingValue(input.CopyPosition) * shadowTerm), 1.0);
 	
 	return ApplyFog(finalCompose, input.FogDistance);
 }

@@ -102,12 +102,26 @@
     <Compile Include="Core\Events\Messenger.cs" />
     <Compile Include="MonoGameBridge\C3DEGameHost.cs" />
     <Compile Include="MonoGameBridge\GraphicsDeviceService.cs" />
+    <Compile Include="Views\Controls\CameraControl.xaml.cs">
+      <DependentUpon>CameraControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Controls\MeshRendererControl.xaml.cs">
+      <DependentUpon>MeshRendererControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Controls\SceneListControl.xaml.cs">
       <DependentUpon>SceneListControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Controls\SceneObjectControl.xaml.cs">
       <DependentUpon>SceneObjectControl.xaml</DependentUpon>
     </Compile>
+    <Page Include="Views\Controls\CameraControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Controls\MeshRendererControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\Controls\SceneListControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

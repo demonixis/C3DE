@@ -72,6 +72,7 @@ namespace C3DE.Editor.MonoGameBridge
 
     public sealed class C3DEGameHost : D3D11Host, IServiceProvider
     {
+        private const string EditorTag = "C3DE_Editor";
         private static GenericMessage<SceneObject> SceneObjectMessage = new GenericMessage<SceneObject>(null);
 
         private GameTime _gameTime;
@@ -237,10 +238,12 @@ namespace C3DE.Editor.MonoGameBridge
             _scene.DefaultMaterial = defaultMaterial;
 
             var camera = new CameraPrefab("EditorCamera.Main");
+            camera.Tag = EditorTag;
             camera.AddComponent<EDOrbitController>();
             _scene.Add(camera);
 
             var lightPrefab = new LightPrefab("Editor_MainLight", LightType.Directional);
+            lightPrefab.Tag = EditorTag;
             _scene.Add(lightPrefab);
             lightPrefab.Transform.Position = new Vector3(0, 15, 15);
             lightPrefab.Light.Direction = new Vector3(0, 0.75f, 0.75f);
@@ -252,6 +255,7 @@ namespace C3DE.Editor.MonoGameBridge
             gridMaterial.Alpha = 0.6f;
 
             var terrain = new TerrainPrefab("Editor_Grid");
+            terrain.Tag = EditorTag;
             _scene.Add(terrain);
             terrain.Flat();
             terrain.Renderer.Material = gridMaterial;
@@ -393,7 +397,7 @@ namespace C3DE.Editor.MonoGameBridge
 
         public string SaveScene()
         {
-            var serialization = _scene.SerializeScene();
+            var serialization = _scene.SerializeScene(new string[1] { "C3DE_Editor" });
             return JsonConvert.SerializeObject(serialization);
         }
 
@@ -415,7 +419,7 @@ namespace C3DE.Editor.MonoGameBridge
         {
             string[] result = null;
 
-            var renderers = SceneObject.FindObjectsOfType<MeshRenderer>();
+            var renderers = Scene.FindObjectsOfType<MeshRenderer>();
 
             if (format == "stl")
             {

@@ -11,7 +11,7 @@
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="250" />
+            <ColumnDefinition Width="270" />
         </Grid.ColumnDefinitions>
         <Menu Grid.Row="0" Grid.ColumnSpan="2">
             <MenuItem Header="File">
@@ -74,15 +74,14 @@
             </Grid.ColumnDefinitions>
             <local:C3DEGameHost Grid.Row="0" Grid.Column="0" x:Name="editorGameHost" Margin="0" SnapsToDevicePixels="True" Stretch="Fill" Drop="OnDrop" />
         </Grid>
-
-        <StackPanel Grid.Row="1" Grid.Column="1">
-            <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
-                <StackPanel Orientation="Vertical" x:Name="componentContainer">
-                    <controls:SceneObjectControl x:Name="sceneObjectComponent" Margin="0, 0, 0, 5" />
-                    <controls:TransformControl x:Name="transformComponent" Margin="0, 0, 0, 5"/>
-                    <controls:SceneListControl x:Name="sceneListComponent" Margin="0, 0, 0, 5" />
-                </StackPanel>
-            </ScrollViewer>
-        </StackPanel>
+        <ScrollViewer Grid.Row="1" Grid.Column="1" x:Name="ComponentsScrollViewer" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" CanContentScroll="True">
+            <StackPanel Orientation="Vertical" x:Name="componentContainer">
+                <controls:SceneObjectControl x:Name="sceneObjectComponent" Margin="0, 0, 0, 5" />
+                <controls:TransformControl x:Name="transformComponent" Margin="0, 0, 0, 5" />
+                <controls:MeshRendererControl Margin="0, 0, 0, 5"/>
+                <controls:CameraControl Margin="0, 0, 0, 5"/>
+                <controls:SceneListControl x:Name="sceneListComponent" Margin="0, 0, 0, 5" />
+            </StackPanel>
+        </ScrollViewer>
     </Grid>
 </Window>

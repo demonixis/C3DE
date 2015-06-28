@@ -71,17 +71,8 @@ namespace C3DE.Components.Renderers
 
         public override void Draw(GraphicsDevice device)
         {
-            if (geometry.UseDynamicBuffers)
-            {
-                device.SetVertexBuffer(geometry.DynamicVertexBuffer);
-                device.Indices = geometry.DynamicIndexBuffer;
-            }
-            else
-            {
-                device.SetVertexBuffer(geometry.VertexBuffer);
-                device.Indices = geometry.IndexBuffer;
-            }
-
+            device.SetVertexBuffer(geometry.VertexBuffer);
+            device.Indices = geometry.IndexBuffer;
             device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, geometry.Vertices.Length, 0, geometry.Indices.Length / 3);
         }
 

@@ -15,7 +15,7 @@ namespace C3DE.Rendering
         /// </summary>
         /// <param name="scene">The scene to render.</param>
         /// <param name="camera">The camera to use for render.</param>
-        void render(Scene scene, Camera camera);
+        void render(Scene scene);
 
         void RenderEditor(Scene scene, Camera camera, RenderTarget2D target);
     }

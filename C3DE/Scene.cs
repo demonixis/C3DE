@@ -58,6 +58,7 @@ namespace C3DE
             }
         }
 
+        // TODO: Needs refactoring here
         public Camera MainCamera
         {
             get { return cameras[_mainCameraIndex]; }
@@ -653,41 +654,46 @@ namespace C3DE
 
         #region SceneObject
 
-        public SceneObject FindById(string id)
+        public static SceneObject FindById(string id)
         {
-            for (int i = 0; i < sceneObjects.Size; i++)
+            if (current != null)
             {
-                if (sceneObjects[i].Id == id)
-                    return sceneObjects[i];
+                for (int i = 0; i < current.sceneObjects.Size; i++)
+                    if (current.sceneObjects[i].Id == id)
+                        return current.sceneObjects[i];
             }
-
             return null;
         }
 
-        public SceneObject Find(string name)
+        public static SceneObject[] FindSceneObjectsById(string id)
         {
-            for (int i = 0; i < sceneObjects.Size; i++)
+            var sceneObjects = new List<SceneObject>();
+
+            if (current != null)
             {
-                if (sceneObjects[i].Name == name)
-                    return sceneObjects[i];
+                for (int i = 0; i < current.sceneObjects.Size; i++)
+                    if (current.sceneObjects[i].Id == id)
+                        sceneObjects.Add(current.sceneObjects[i]);
             }
 
-            return null;
+            return sceneObjects.ToArray();
         }
 
-        public SceneObject FindObjectOfType<T>() where T : Component, new()
+        public static T[] FindObjectsOfType<T>() where T : Component
         {
-            Component component = null;
+            var scripts = new List<T>();
 
-            for (int i = 0; i < sceneObjects.Size; i++)
+            if (current != null)
             {
-                component = sceneObjects[i].GetComponent<T>();
-
-                if (component != null)
-                    return sceneObjects[i];
+                foreach (SceneObject so in current.sceneObjects)
+                {
+                    var components = so.GetComponents<T>();
+                    if (components.Length > 0)
+                        scripts.AddRange(components);
+                }
             }
 
-            return null;
+            return scripts.ToArray();
         }
 
         #endregion
@@ -799,7 +805,7 @@ namespace C3DE
 
         #endregion
 
-        public SerializedScene SerializeScene()
+        public SerializedScene SerializeScene(string[] excludeTags = null)
         {
             var i = 0;
             var size = 0;
@@ -811,12 +817,23 @@ namespace C3DE
             size = materials.Count;
             scene.Materials = new SerializedCollection[size];
             for (i = 0; i < size; i++)
-                scene.Materials[i] = materials[i].Serialize();
+            {
+                if (materials[i] != defaultMaterial)
+                    scene.Materials[i] = materials[i].Serialize();
+            }
 
             size = sceneObjects.Size;
             scene.SceneObjects = new SerializedCollection[size];
             for (i = 0; i < size; i++)
-                scene.SceneObjects[i] = sceneObjects[i].Serialize();
+            {
+                if (excludeTags != null)
+                {
+                    if (Array.IndexOf(excludeTags, sceneObjects[i].Tag) == -1)
+                        scene.SceneObjects[i] = sceneObjects[i].Serialize();
+                }
+                else
+                    scene.SceneObjects[i] = sceneObjects[i].Serialize();
+            }
 
             size = components.Count;
             scene.Components = new SerializedCollection[size];

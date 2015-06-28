@@ -23,13 +23,9 @@ namespace C3DE
         #region Fields
 
         public string Id { get; set; }
-
         public string Name { get; set; }
-
         public string Tag { get; set; }
-
         public bool IsStatic { get; set; }
-
         public bool IsPrefab { get; set; }
 
         public bool Enabled
@@ -95,11 +91,7 @@ namespace C3DE
 
         #endregion
 
-        public SceneObject(string name)
-            : this()
-        {
-            Name = name;
-        }
+		#region Constructors
 
         /// <summary>
         /// Create a basic scene object.
@@ -122,6 +114,14 @@ namespace C3DE
             Id = "SO_" + Guid.NewGuid();
             Name = "SceneObject-" + Guid.NewGuid();
         }
+
+		public SceneObject(string name)
+			: this()
+		{
+			Name = name;
+		}
+
+		#endregion
 
         /// <summary>
         /// Initialize and load specific content.
@@ -360,47 +360,5 @@ namespace C3DE
             IsStatic = bool.Parse(data["IsStatic"]);
             IsPrefab = bool.Parse(data["IsPrefab"]);
         }
-
-        #region Static methods
-
-        public static SceneObject FindById(string id)
-        {
-            for (int i = 0; i < Scene.current.sceneObjects.Size; i++)
-                if (Scene.current.sceneObjects[i].Id == id)
-                    return Scene.current.sceneObjects[i];
-
-            return null;
-        }
-
-        public static SceneObject[] FindSceneObjectsById(string id)
-        {
-            List<SceneObject> sceneObjects = new List<SceneObject>();
-
-            for (int i = 0; i < Scene.current.sceneObjects.Size; i++)
-                if (Scene.current.sceneObjects[i].Id == id)
-                    sceneObjects.Add(Scene.current.sceneObjects[i]);
-
-            return sceneObjects.ToArray();
-        }
-
-        public static T[] FindObjectsOfType<T>() where T : Component
-        {
-            var scene = Scene.current;
-            var scripts = new List<T>();
-
-            if (scene != null)
-            {
-                foreach (SceneObject so in scene.sceneObjects)
-                {
-                    var components = so.GetComponents<T>();
-                    if (components.Length > 0)
-                        scripts.AddRange(components);
-                }
-            }
-
-            return scripts.ToArray();
-        }
-
-        #endregion
     }
 }

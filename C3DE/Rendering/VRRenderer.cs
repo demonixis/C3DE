@@ -194,26 +194,26 @@ namespace C3DE.Rendering
         /// </summary>
         /// <param name="scene">The scene to render.</param>
         /// <param name="camera">The camera to use for render.</param>
-        public void render(Scene scene, Camera camera)
+        public void render(Scene scene)
         {
             if (!_projectionUpdated)
-                SetProjection(camera);
+                SetProjection(Camera.Main);
 
-            ComputeViewProjMatrix(ref camera.projection, ref camera.view);
+			ComputeViewProjMatrix(ref Camera.Main.projection, ref Camera.Main.view);
 
             Application.GraphicsDevice.SetRenderTarget(_renderTargetLeft);
             Application.GraphicsDevice.Clear(Color.Black);
-            camera.projection = _projectionMatrixLeft;
-            camera.view = _viewMatrixLeft;
-            BaseDraw(scene, camera);
+			Camera.Main.projection = _projectionMatrixLeft;
+			Camera.Main.view = _viewMatrixLeft;
+			BaseDraw(scene, Camera.Main);
 
             Application.GraphicsDevice.SetRenderTarget(_renderTargetRight);
             Application.GraphicsDevice.Clear(Color.Black);
-            camera.projection = _projectionMatrixRight;
-            camera.view = _viewMatrixRight;
-            BaseDraw(scene, camera);
+			Camera.Main.projection = _projectionMatrixRight;
+			Camera.Main.view = _viewMatrixRight;
+			BaseDraw(scene, Camera.Main);
 
-            DrawOculusRenderTargets(camera);
+			DrawOculusRenderTargets(Camera.Main);
         }
 
         public void RenderEditor(Scene scene, Camera camera, RenderTarget2D target) { }

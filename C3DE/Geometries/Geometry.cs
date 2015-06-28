@@ -17,13 +17,10 @@ namespace C3DE.Geometries
         private ushort[] _indices;
         private VertexBuffer _vertexBuffer;
         private IndexBuffer _indexBuffer;
-        private DynamicVertexBuffer _dVertexBuffer;
-        private DynamicIndexBuffer _dIndexBuffer;
         private bool _built;
         protected Vector3 size = Vector3.One;
         protected Vector2 repeatTexture = Vector2.One;
         protected bool invertFaces = false;
-        protected bool useDynamicBuffers = false;
 
         public VertexPositionNormalTexture[] Vertices
         {
@@ -47,21 +44,6 @@ namespace C3DE.Geometries
         {
             get { return _indexBuffer; }
             internal protected set { _indexBuffer = value; }
-        }
-
-        public DynamicVertexBuffer DynamicVertexBuffer
-        {
-            get { return _dVertexBuffer; }
-        }
-
-        public DynamicIndexBuffer DynamicIndexBuffer
-        {
-            get { return _dIndexBuffer; }
-        }
-
-        public bool UseDynamicBuffers
-        {
-            get { return useDynamicBuffers; }
         }
 
         public Vector3 Size
@@ -107,22 +89,11 @@ namespace C3DE.Geometries
 
         protected virtual void CreateBuffers(GraphicsDevice device)
         {
-            if (useDynamicBuffers)
-            {
-                _vertexBuffer = new VertexBuffer(device, typeof(VertexPositionNormalTexture), _vertices.Length, BufferUsage.WriteOnly);
-                _vertexBuffer.SetData(_vertices);
+            _vertexBuffer = new VertexBuffer(device, typeof(VertexPositionNormalTexture), _vertices.Length, BufferUsage.WriteOnly);
+            _vertexBuffer.SetData(_vertices);
 
-                _indexBuffer = new IndexBuffer(device, IndexElementSize.SixteenBits, _indices.Length, BufferUsage.WriteOnly);
-                _indexBuffer.SetData(_indices);
-            }
-            else
-            {
-                _vertexBuffer = new VertexBuffer(device, typeof(VertexPositionNormalTexture), _vertices.Length, BufferUsage.WriteOnly);
-                _vertexBuffer.SetData(_vertices);
-
-                _indexBuffer = new IndexBuffer(device, IndexElementSize.SixteenBits, _indices.Length, BufferUsage.WriteOnly);
-                _indexBuffer.SetData(_indices);
-            }
+            _indexBuffer = new IndexBuffer(device, IndexElementSize.SixteenBits, _indices.Length, BufferUsage.WriteOnly);
+            _indexBuffer.SetData(_indices);
         }
 
         public void Generate()
@@ -209,16 +180,8 @@ namespace C3DE.Geometries
         {
             if (Built)
             {
-                if (useDynamicBuffers)
-                {
-                    _dVertexBuffer.Dispose();
-                    _dIndexBuffer.Dispose();
-                }
-                else
-                {
-                    _vertexBuffer.Dispose();
-                    _indexBuffer.Dispose();
-                }
+                _vertexBuffer.Dispose();
+                _indexBuffer.Dispose();
             }
         }
     }

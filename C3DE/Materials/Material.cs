@@ -13,7 +13,6 @@ namespace C3DE.Materials
         Low, Normal
     }
 
-    [Serializable]
     public abstract class Material : IDisposable, ISerializable
     {
         protected internal Scene scene;
@@ -88,7 +87,7 @@ namespace C3DE.Materials
         public abstract void Pass(RenderableComponent renderable);
 
         public virtual void Dispose() { }
-
+		
         public SerializedCollection Serialize()
         {
             var data = new SerializedCollection(6);

@@ -26,11 +26,10 @@ namespace C3DE.Geometries
         {
         }
 
-        public SphereGeometry(float radius = 1.0f, int tessellation = 8, bool isDynamic = false)
+        public SphereGeometry(float radius = 1.0f, int tessellation = 8)
         {
             _radius = radius;
             _tessellationLevel = tessellation;
-            useDynamicBuffers = isDynamic;
         }
 
         protected override void CreateGeometry()

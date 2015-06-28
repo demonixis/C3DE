@@ -15,6 +15,7 @@ namespace C3DE.Components
         protected internal Matrix view;
         protected internal Matrix projection;
         protected internal Color clearColor;
+		protected internal float depth;
         protected Vector3 reference;
         private Vector3 _target;
         private Vector3 _upVector;
@@ -44,6 +45,12 @@ namespace C3DE.Components
             get { return clearColor; }
             set { clearColor = value; }
         }
+
+		public float Depth
+		{
+			get { return depth; }
+			set { depth = value; }
+		}
 
         public float FieldOfView
         {

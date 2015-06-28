@@ -6,8 +6,13 @@ namespace C3DE.Components.Lights
 {
     public enum LightType
     {
-        Ambient = 0, Directional, Point, Spot, Area
+        Ambient = 0, Directional, Point, Spot
     }
+
+	public enum LightRenderMode
+	{
+		RealTime = 0, Backed, Mixed
+	}
 
     public class Light : Component
     {
@@ -56,6 +61,8 @@ namespace C3DE.Components.Lights
         /// </summary>
         public float Range { get; set; }
 
+		public LightRenderMode Backing { get; set; }
+
         public float FallOf { get; set; }
 
         /// <summary>
@@ -85,6 +92,7 @@ namespace C3DE.Components.Lights
             Type = LightType.Ambient;
             Range = 5000.0f;
             FallOf = 2.0f;
+			Backing = LightRenderMode.RealTime;
             shadowGenerator = new ShadowGenerator(this);
         }
 

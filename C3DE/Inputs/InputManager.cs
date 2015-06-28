@@ -16,8 +16,6 @@ namespace C3DE.Inputs
         // Caches
         private float _cacheFloat;
         private Vector2 _cacheVector2;
-        private bool _bValue;
-        private Rectangle _cRectangle;
 
         // In the future, we'll load them using a JSON file, or a XML file (but JSON is cooler)
         public InputManager()
