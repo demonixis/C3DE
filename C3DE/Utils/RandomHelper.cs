@@ -62,7 +62,10 @@ namespace C3DE.Utils
         /// <returns></returns>
         public static Vector3 GetVector3(float minX, float minY, float minZ, float maxX, float maxY, float maxZ)
         {
-            return new Vector3(GetVector2(minX, minY, maxX, maxY), Range(minZ, maxZ));
+            return new Vector3(
+                Range(minX, maxX),
+                Range(minY, maxY),
+                Range(minZ, maxZ));
         }
 
         /// <summary>

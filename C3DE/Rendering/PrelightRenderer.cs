@@ -13,11 +13,11 @@ namespace C3DE.Rendering
 #if DEBUG
     class PrelightRendererDebugger : Behaviour
     {
-        internal PrelightRenderer renderer;
+        internal PreLightRenderer renderer;
 
         public override void OnGUI(UI.GUI gui)
         {
-            if (renderer == null || !PrelightRenderer.Enabled)
+            if (renderer == null || !PreLightRenderer.Enabled)
                 return;
 
             gui.DrawTexture(new Rectangle(0, 0, 320, 240), renderer._normalRT);
@@ -27,7 +27,7 @@ namespace C3DE.Rendering
     }
 #endif
 
-    public class PrelightRenderer
+    public class PreLightRenderer
     {
         private Vector2 _viewport;
         internal RenderTarget2D _depthRT;
@@ -36,18 +36,15 @@ namespace C3DE.Rendering
         private MeshRenderer _lightMesh;
         private Effect _depthNormalFX;
         private Effect _lightingFX;
-        internal bool _dirtry;
 
         public static bool Enabled { get; set; }
-       
 
-        public PrelightRenderer(GraphicsDevice device)
+        public PreLightRenderer(GraphicsDevice device)
         {
             _viewport.X = device.Viewport.Width;
             _viewport.Y = device.Viewport.Height;
             CreateRenderTargets(device);
             Enabled = false;
-            _dirtry = true;
 
 #if DEBUG
             var plDebug = new PrelightRendererDebugger();
@@ -81,12 +78,7 @@ namespace C3DE.Rendering
                 _viewport.X = device.Viewport.Width;
                 _viewport.Y = device.Viewport.Height;
 
-                if (_dirtry)
-                {
-                    DrawDepthNormalMap(device, scene, camera);
-                    _dirtry = false;
-                }
-
+                DrawDepthNormalMap(device, scene, camera);
                 DrawLightMap(device, scene, camera);
                 PrepareEffects(scene.materials);
             }
@@ -111,7 +103,7 @@ namespace C3DE.Rendering
             for (int i = 0, l = scene.renderList.Count; i < l; i++)
             {
                 _depthNormalFX.Parameters["World"].SetValue(scene.renderList[i].Transform.world);
-                _depthNormalFX.CurrentTechnique.Passes[passName].Apply(); ;
+                _depthNormalFX.CurrentTechnique.Passes[passName].Apply();
                 scene.renderList[i].Draw(device);
             }
 
@@ -144,17 +136,20 @@ namespace C3DE.Rendering
 
                 if (light.Backing != LightRenderMode.RealTime)
                 {
-                    worldViewProjection = (Matrix.CreateScale(light.FallOf) * Matrix.CreateTranslation(light.Transform.Position)) * viewProjection;
+                    worldViewProjection = (Matrix.CreateScale(light.Range) * light.Transform.world) * viewProjection;
                     _lightingFX.Parameters["WorldViewProjection"].SetValue(worldViewProjection);
                     _lightingFX.Parameters["LightColor"].SetValue(light.diffuseColor);
                     _lightingFX.Parameters["LightAttenuation"].SetValue(light.FallOf);
                     _lightingFX.Parameters["LightPosition"].SetValue(light.Transform.Position);
+                    _lightingFX.Parameters["LightRange"].SetValue(light.Range);
+                    _lightingFX.Parameters["LightIntensity"].SetValue(light.Intensity);
 
                     distance = Vector3.Distance(camera.Transform.Position, light.Transform.Position);
 
                     if (distance < light.FallOf)
                         device.RasterizerState = RasterizerState.CullClockwise;
 
+                    _lightingFX.CurrentTechnique.Passes[0].Apply();
                     _lightMesh.Draw(device);
 
                     device.RasterizerState = RasterizerState.CullCounterClockwise;

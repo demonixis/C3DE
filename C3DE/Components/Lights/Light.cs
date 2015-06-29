@@ -11,7 +11,7 @@ namespace C3DE.Components.Lights
 
 	public enum LightRenderMode
 	{
-		RealTime = 0, Backed, Mixed
+		RealTime = 0, Backed
 	}
 
     public class Light : Component

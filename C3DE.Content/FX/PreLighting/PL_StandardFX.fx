@@ -6,6 +6,7 @@ float4x4 View;
 float4x4 Projection;
 float3 AmbientColor;
 float3 DiffuseColor;
+float2 TextureTiling;
 
 Texture2D MainTexture;
 sampler2D mainSampler = sampler_state
@@ -32,7 +33,7 @@ struct VertexShaderOutput
 {
 	float4 Position : POSITION0;
 	float2 UV : TEXCOORD0;
-	float4 CopyPosition : TEXCOORD3;
+	float4 CopyPosition : TEXCOORD1;
 };
 
 VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
@@ -48,7 +49,7 @@ VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
 
 float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 {
-	float3 texColor = tex2D(mainSampler, input.UV);
+	float3 texColor = tex2D(mainSampler, input.UV * TextureTiling);
 	float3 light = GetLightingValue(input.CopyPosition);
 	light += AmbientColor;
 	return float4(texColor * DiffuseColor * light, 1);

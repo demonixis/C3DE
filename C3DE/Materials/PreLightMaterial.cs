@@ -27,9 +27,11 @@ namespace C3DE.Materials
 
         public override void Pass(RenderableComponent renderable)
         {
+            effect.Parameters["TextureTiling"].SetValue(Tiling);
             effect.Parameters["DiffuseColor"].SetValue(diffuseColor);
             effect.Parameters["MainTexture"].SetValue(mainTexture);
             effect.Parameters["World"].SetValue(renderable.Transform.world);
+			effect.CurrentTechnique.Passes[0].Apply();
         }
     }
 }

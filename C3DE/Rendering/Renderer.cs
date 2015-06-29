@@ -14,7 +14,7 @@ namespace C3DE.Rendering
     public class Renderer : IRenderer
     {
         private GraphicsDevice _device;
-        private PrelightRenderer _plRenderer;
+        private PreLightRenderer _plRenderer;
         private RenderTarget2D _sceneRT;
         private SpriteBatch _spriteBatch;
         private bool _needsBufferUpdate;
@@ -39,7 +39,7 @@ namespace C3DE.Rendering
             uiManager = new GUI(_spriteBatch);
             uiManager.LoadContent(content);
 
-            _plRenderer = new PrelightRenderer(_device);
+            _plRenderer = new PreLightRenderer(_device);
             _plRenderer.Initialize(content);
         }
 

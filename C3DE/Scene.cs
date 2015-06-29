@@ -227,7 +227,7 @@ namespace C3DE
         /// <summary>
         /// Unload the scene.
         /// </summary>
-        public void Unload()
+        public virtual void Unload()
         {
             foreach (Behaviour script in Behaviours)
                 script.OnDestroy();

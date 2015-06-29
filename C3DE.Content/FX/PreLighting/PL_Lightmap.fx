@@ -5,7 +5,9 @@ float4x4 InvViewProjection;
 // Light
 float3 LightColor;
 float3 LightPosition;
-float3 LightAttenuation;
+float LightAttenuation;
+float LightRange;
+float LightIntensity;
 
 float2 Viewport;
 
@@ -50,17 +52,30 @@ VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
 	return output;
 }
 
+float2 PostProjectToScreen(float4 position)
+{
+	float2 sp = position.xy / position.w;
+	return 0.5f * (float2(sp.x, -sp.y) + 1);
+}
+
+float2 HalfPixel()
+{
+	return 0.5f / float2(Viewport.x, Viewport.y);
+}
+
 float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 {
-	float2 texCoord = input.LightPosition.xy / input.LightPosition.w;
-	texCoord.y *= -1.0;
-	texCoord = 0.5f * (texCoord + 1.0);
-	texCoord = texCoord + (0.5f / Viewport);
+	float2 texCoord = PostProjectToScreen(input.LightPosition) + HalfPixel();
 	
 	float4 depth = tex2D(depthSampler, texCoord);
 	
 	// Recreate position and UV
-	float4 pos = float4(texCoord.x * 2 - 1, (1 - texCoord.y) * 2 - 1, depth.r, 1);
+	float4 pos;
+	pos.x = texCoord.x * 2 - 1;
+	pos.y = (1 - texCoord.y) * 2 - 1;
+	pos.z = depth.x;
+	pos.w = 1.0f;
+	
 	pos = mul(pos, InvViewProjection);
 	pos.xyz /= pos.w;
 	
@@ -68,11 +83,11 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 	float4 normal = (tex2D(normalSampler, texCoord) - 0.5) * 2;
 	
 	float3 direction = normalize(LightPosition - pos);
-	float light = clamp(dot(normal, direction), 0, 1);
+	float light = saturate(dot(normal, direction));
 	float d = distance(LightPosition, pos);
-	float att = pow(d / LightAttenuation, 6);
+	float att = 1 - pow(clamp(d / LightRange, 0, 1), LightAttenuation);
 	
-	return float4(LightColor * light * att, 1);
+	return float4(light * att * LightColor * LightIntensity, 1);
 }
 
 technique Basic
