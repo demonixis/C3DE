@@ -91,6 +91,7 @@
     <Compile Include="Input.cs" />
     <Compile Include="Inputs\InputManager.cs" />
     <Compile Include="Inputs\InputProfile.cs" />
+    <Compile Include="Materials\PreLightMaterial.cs" />
     <Compile Include="Serialization\ISerializable.cs" />
     <Compile Include="Prefabs\LavaPrefab.cs" />
     <Compile Include="Rendering\IRenderer.cs" />

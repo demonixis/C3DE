@@ -1,6 +1,5 @@
 #include "ShadowMap.fxh"
 #include "Fog.fxh"
-#include "PreLighting/PreLighting.fxh"
 
 // Matrix
 float4x4 World;
@@ -141,7 +140,7 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 	else if (LightType == 3)
 		lightFactor = CalcSpotLightColor(normal, input.WorldPosition);
 
-	float3 finalDiffuse = baseDiffuse * lightFactor * shadowTerm * GetLightingValue(input.CopyPosition);
+	float3 finalDiffuse = baseDiffuse * lightFactor * shadowTerm;
 	float3 finalSpecular = CalcSpecularColor(normal, input.WorldPosition, finalDiffuse, LightType);
 	float4 finalCompose = float4(AmbientColor + finalDiffuse + finalSpecular + EmissiveColor, 1.0);
 	

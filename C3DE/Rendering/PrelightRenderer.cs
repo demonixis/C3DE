@@ -17,7 +17,7 @@ namespace C3DE.Rendering
 
         public override void OnGUI(UI.GUI gui)
         {
-            if (renderer == null)
+            if (renderer == null || !PrelightRenderer.Enabled)
                 return;
 
             gui.DrawTexture(new Rectangle(0, 0, 320, 240), renderer._normalRT);
@@ -36,12 +36,18 @@ namespace C3DE.Rendering
         private MeshRenderer _lightMesh;
         private Effect _depthNormalFX;
         private Effect _lightingFX;
+        internal bool _dirtry;
+
+        public static bool Enabled { get; set; }
+       
 
         public PrelightRenderer(GraphicsDevice device)
         {
             _viewport.X = device.Viewport.Width;
             _viewport.Y = device.Viewport.Height;
             CreateRenderTargets(device);
+            Enabled = false;
+            _dirtry = true;
 
 #if DEBUG
             var plDebug = new PrelightRendererDebugger();
@@ -70,12 +76,29 @@ namespace C3DE.Rendering
 
         public void Draw(GraphicsDevice device, Scene scene, Camera camera)
         {
-            _viewport.X = device.Viewport.Width;
-            _viewport.Y = device.Viewport.Height;
+            if (Enabled)
+            {
+                _viewport.X = device.Viewport.Width;
+                _viewport.Y = device.Viewport.Height;
 
-            DrawDepthNormalMap(device, scene, camera);
-            DrawLightMap(device, scene, camera);
-            PrepareEffects(scene.materials);
+                if (_dirtry)
+                {
+                    DrawDepthNormalMap(device, scene, camera);
+                    _dirtry = false;
+                }
+
+                DrawLightMap(device, scene, camera);
+                PrepareEffects(scene.materials);
+            }
+        }
+
+        private void DrawDepthNormalMap(GraphicsDevice device, Scene scene, Camera camera)
+        {
+            _depthNormalFX.Parameters["View"].SetValue(camera.view);
+            _depthNormalFX.Parameters["Projection"].SetValue(camera.projection);
+
+            DrawMap(device, scene, camera, true);
+            DrawMap(device, scene, camera, false);
         }
 
         private void DrawMap(GraphicsDevice device, Scene scene, Camera camera, bool normalTarget)
@@ -93,15 +116,6 @@ namespace C3DE.Rendering
             }
 
             device.SetRenderTarget(null);
-        }
-
-        private void DrawDepthNormalMap(GraphicsDevice device, Scene scene, Camera camera)
-        {
-            _depthNormalFX.Parameters["View"].SetValue(camera.view);
-            _depthNormalFX.Parameters["Projection"].SetValue(camera.projection);
-
-            DrawMap(device, scene, camera, true);
-            DrawMap(device, scene, camera, false);
         }
 
         private void DrawLightMap(GraphicsDevice device, Scene scene, Camera camera)

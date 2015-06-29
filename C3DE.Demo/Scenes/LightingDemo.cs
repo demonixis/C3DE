@@ -64,12 +64,12 @@ namespace C3DE.Demo.Scenes
             Add(terrain);
 
             // Cube
-            var cubeSuperMaterial = new StandardMaterial(scene);
+            var cubeSuperMaterial = new PreLightMaterial(scene);
             cubeSuperMaterial.MainTexture = GraphicsHelper.CreateTriangleTexture(Color.Red, Color.White);  //GraphicsHelper.CreateCheckboardTexture(Color.FloralWhite, Color.DodgerBlue); //Content.Load<Texture2D>("Textures/tech_box2");
             cubeSuperMaterial.DiffuseColor = Color.WhiteSmoke;
-            cubeSuperMaterial.SpecularColor = new Color(0.8f, 0.8f, 0.8f, 1.0f);
-            cubeSuperMaterial.Shininess = 10;
-            cubeSuperMaterial.EmissiveColor = new Color(0f, 0.0f, 0.2f, 1.0f);
+            //cubeSuperMaterial.SpecularColor = new Color(0.8f, 0.8f, 0.8f, 1.0f);
+            //cubeSuperMaterial.Shininess = 10;
+            //cubeSuperMaterial.EmissiveColor = new Color(0f, 0.0f, 0.2f, 1.0f);
 
             var cubeScene = new SceneObject();
             cubeScene.Transform.Translate(0, 6f, 0);
@@ -92,10 +92,10 @@ namespace C3DE.Demo.Scenes
 
             Screen.ShowCursor = true;
 
-            AddBackedLight(new Vector3(-200, 200, 0), Color.Red);
-            AddBackedLight(new Vector3(200, 200, 0), Color.Blue);
-            AddBackedLight(new Vector3(0, 200, 200), Color.Green);
-            AddBackedLight(new Vector3(0, 200, -200), Color.Yellow);
+            AddBackedLight(new Vector3(-2000, 200, 0), Color.Red);
+            AddBackedLight(new Vector3(2000, 200, 0), Color.Blue);
+            AddBackedLight(new Vector3(0, 2000, 200), Color.Green);
+            AddBackedLight(new Vector3(0, 2000, -200), Color.Yellow);
         }
 
         private void AddBackedLight(Vector3 position, Color color)
@@ -104,7 +104,7 @@ namespace C3DE.Demo.Scenes
             sceneObject.Transform.Position = position;
 
             var light = sceneObject.AddComponent<Light>();
-            light.FallOf = 2000;
+            light.FallOf = 2;
             light.DiffuseColor = color;
             light.Backing = LightRenderMode.Backed;
 

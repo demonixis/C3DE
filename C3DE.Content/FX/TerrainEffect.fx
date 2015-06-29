@@ -1,6 +1,5 @@
 #include "ShadowMap.fxh"
 #include "Fog.fxh"
-#include "PreLighting/PreLighting.fxh"
 
 // Matrix
 float4x4 World;
@@ -130,7 +129,7 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 	baseCompose *= mainTex;
 	baseCompose += weightTex.r * sandTex + weightTex.g * rockTex + weightTex.b * snowTex;
 	
-	float4 finalCompose = float4(AmbientColor + (DiffuseColor * float4(baseCompose, 1.0) * light  * GetLightingValue(input.CopyPosition) * shadowTerm), 1.0);
+	float4 finalCompose = float4(AmbientColor + (DiffuseColor * float4(baseCompose, 1.0) * light * shadowTerm), 1.0);
 	
 	return ApplyFog(finalCompose, input.FogDistance);
 }
