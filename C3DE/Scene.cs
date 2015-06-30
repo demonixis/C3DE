@@ -319,13 +319,13 @@ namespace C3DE
                 prefabs.Remove(prefab);
         }
 
-        private void RemoveAllObjects()
+        protected virtual void RemoveAllObjects()
         {
             sceneObjects.Clear();
             prefabs.Clear();
         }
 
-        private void RemoveAllComponents()
+        protected virtual void RemoveAllComponents()
         {
             renderList.Clear();
             colliders.Clear();
@@ -808,19 +808,15 @@ namespace C3DE
         public SerializedScene SerializeScene(string[] excludeTags = null)
         {
             var i = 0;
+            var j = 0;
             var size = 0;
             var scene = new SerializedScene();
+            var excludeMaterial = new List<Material>();
+            var excludeCount = 0;
+            RenderableComponent renderer = null;
             scene.Id = Id;
             scene.Name = Name;
             scene.RenderSettings = RenderSettings.Serialize();
-
-            size = materials.Count;
-            scene.Materials = new SerializedCollection[size];
-            for (i = 0; i < size; i++)
-            {
-                if (materials[i] != defaultMaterial)
-                    scene.Materials[i] = materials[i].Serialize();
-            }
 
             size = sceneObjects.Size;
             scene.SceneObjects = new SerializedCollection[size];
@@ -828,8 +824,18 @@ namespace C3DE
             {
                 if (excludeTags != null)
                 {
-                    if (Array.IndexOf(excludeTags, sceneObjects[i].Tag) == -1)
+                    if (Array.IndexOf(excludeTags, sceneObjects[i].Tag) > -1)
+                    {
+                        renderer = sceneObjects[i].GetComponent<RenderableComponent>();
+                        if (renderer != null && renderer.Material != null)
+                        {
+                            excludeMaterial.Add(renderer.Material);
+                            excludeCount++;
+                        }
+                    }
+                    else
                         scene.SceneObjects[i] = sceneObjects[i].Serialize();
+
                 }
                 else
                     scene.SceneObjects[i] = sceneObjects[i].Serialize();
@@ -838,7 +844,27 @@ namespace C3DE
             size = components.Count;
             scene.Components = new SerializedCollection[size];
             for (i = 0; i < size; i++)
-                scene.Components[i] = components[i].Serialize();
+            {
+                if (excludeTags != null)
+                {
+                    if (Array.IndexOf(excludeTags, components[i].SceneObject.Tag) == -1)
+                        scene.Components[i] = components[i].Serialize();
+                }
+            }
+
+            size = materials.Count;
+            scene.Materials = new SerializedCollection[size];
+            for (i = 0; i < size; i++)
+            {
+                if (excludeCount > 0)
+                {
+                    if (excludeMaterial.IndexOf(materials[i]) > -1)
+                        continue;
+                }
+
+                if (materials[i] != defaultMaterial)
+                    scene.Materials[i] = materials[i].Serialize();
+            }
 
             return scene;
         }
@@ -847,6 +873,8 @@ namespace C3DE
         {
             var i = 0;
             var size = 0;
+            var sceneObjectCollection = new List<SceneObject>();
+            var componentCollection = new List<Component>();
             Material material = null;
             SceneObject sceneObject = null;
 
@@ -855,8 +883,7 @@ namespace C3DE
             RenderSettings.Deserialize(scene.RenderSettings);
 
             size = scene.Materials.Length;
-            materials.Clear();
-            materials.Capacity = size;
+            materials.Capacity += size;
 
             for (i = 0; i < size; i++)
             {
@@ -865,26 +892,25 @@ namespace C3DE
             }
 
             size = scene.SceneObjects.Length;
-            RemoveAllObjects();
-
             for (i = 0; i < size; i++)
             {
                 sceneObject = SerializerHelper.CreateInstance(scene.SceneObjects[i]) as SceneObject;
                 Add(sceneObject);
-
-                var meshRenderer = sceneObject.GetComponent<MeshRenderer>();
-                if (meshRenderer != null && meshRenderer.Geometry != null && !meshRenderer.Geometry.Built)
-                    meshRenderer.Geometry.Generate();
+                sceneObjectCollection.Add(sceneObject);
             }
 
             size = scene.Components.Length;
-            RemoveAllComponents();
-            components.Capacity = size;
-
+            componentCollection.Capacity = size;
             for (i = 0; i < size; i++)
             {
-
+                var component = SerializerHelper.CreateInstance(scene.Components[i]) as Component;
+                if (component != null)
+                    componentCollection.Add(component);
             }
+
+            size = scene.SceneObjects.Length;
+            for (i = 0; i < size; i++)
+                sceneObjectCollection[i].PostDeserialize(scene.SceneObjects[i]["Components"], componentCollection);
         }
     }
 }

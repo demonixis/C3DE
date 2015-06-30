@@ -360,5 +360,16 @@ namespace C3DE
             IsStatic = bool.Parse(data["IsStatic"]);
             IsPrefab = bool.Parse(data["IsPrefab"]);
         }
+
+        public virtual void PostDeserialize(string strComponents, List<Component> components)
+        {
+            var ids = strComponents.Split('|');
+
+            for (int i = 0, l = components.Count; i < l; i++)
+            {
+                if (Array.IndexOf(ids, components[i].Id) > -1)
+                    AddComponent(components[i]);
+            }
+        }
     }
 }

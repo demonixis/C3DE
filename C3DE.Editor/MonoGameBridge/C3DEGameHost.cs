@@ -82,7 +82,7 @@ namespace C3DE.Editor.MonoGameBridge
         private SpriteBatch _spriteBatch;
         private Renderer _renderer;
         private ContentManager _content;
-        private Scene _scene;
+        private EDScene _scene;
         private List<string> _toAdd;
         private List<SceneObject> _toRemove;
 
@@ -128,7 +128,7 @@ namespace C3DE.Editor.MonoGameBridge
 
             _content = new ContentManager(this);
             _content.RootDirectory = "Content";
-            _scene = new Scene("Root");
+            _scene = new EDScene("Root");
 
             Application.Content = _content;
             Application.GraphicsDevice = GraphicsDevice;
