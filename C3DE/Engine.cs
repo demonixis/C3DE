@@ -140,7 +140,7 @@ namespace C3DE
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.Black);
-            renderer.render(Scene.current);
+            renderer.Render(Scene.current);
 			base.Draw(gameTime);
         }
 

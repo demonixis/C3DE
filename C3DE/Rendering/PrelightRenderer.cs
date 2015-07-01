@@ -3,6 +3,7 @@ using C3DE.Components.Lights;
 using C3DE.Components.Renderers;
 using C3DE.Geometries;
 using C3DE.Materials;
+using C3DE.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -10,24 +11,7 @@ using System.Collections.Generic;
 
 namespace C3DE.Rendering
 {
-#if DEBUG
-    class PrelightRendererDebugger : Behaviour
-    {
-        internal PreLightRenderer renderer;
-
-        public override void OnGUI(UI.GUI gui)
-        {
-            if (renderer == null || !PreLightRenderer.Enabled)
-                return;
-
-            gui.DrawTexture(new Rectangle(0, 0, 320, 240), renderer._normalRT);
-            gui.DrawTexture(new Rectangle(Screen.Width - 320, 0, 320, 240), renderer._depthRT);
-            gui.DrawTexture(new Rectangle(0, Screen.Height - 240, 320, 240), renderer._lightRT);
-        }
-    }
-#endif
-
-    public class PreLightRenderer
+    public class PreLightRenderer : Renderer
     {
         private Vector2 _viewport;
         internal RenderTarget2D _depthRT;
@@ -37,24 +21,18 @@ namespace C3DE.Rendering
         private Effect _depthNormalFX;
         private Effect _lightingFX;
 
-        public static bool Enabled { get; set; }
-
-        public PreLightRenderer(GraphicsDevice device)
-        {
-            _viewport.X = device.Viewport.Width;
-            _viewport.Y = device.Viewport.Height;
-            CreateRenderTargets(device);
-            Enabled = false;
-
-#if DEBUG
-            var plDebug = new PrelightRendererDebugger();
-            plDebug.renderer = this;
-            Renderer.__DebugUIScripts.Add(plDebug);
-#endif
+        public PreLightRenderer()
+        { 
         }
 
-        public void Initialize(ContentManager content)
+        public override void Initialize(ContentManager content)
         {
+            base.Initialize(content);
+
+            _viewport.X = graphicsDevice.Viewport.Width;
+            _viewport.Y = graphicsDevice.Viewport.Height;
+            CreateRenderTargets(graphicsDevice);
+
             _depthNormalFX = content.Load<Effect>("FX/PreLighting/PL_DepthNormal");
             _lightingFX = content.Load<Effect>("FX/PreLighting/PL_LightMap");
 
@@ -71,17 +49,15 @@ namespace C3DE.Rendering
             _lightRT = new RenderTarget2D(device, (int)_viewport.X, (int)_viewport.Y, false, SurfaceFormat.Color, DepthFormat.Depth24);
         }
 
-        public void Draw(GraphicsDevice device, Scene scene, Camera camera)
+        public void PreLightingPass(GraphicsDevice device, Scene scene, Camera camera)
         {
-            if (Enabled)
-            {
+
                 _viewport.X = device.Viewport.Width;
                 _viewport.Y = device.Viewport.Height;
 
                 DrawDepthNormalMap(device, scene, camera);
                 DrawLightMap(device, scene, camera);
                 PrepareEffects(scene.materials);
-            }
         }
 
         private void DrawDepthNormalMap(GraphicsDevice device, Scene scene, Camera camera)
@@ -146,7 +122,7 @@ namespace C3DE.Rendering
 
                     distance = Vector3.Distance(camera.Transform.Position, light.Transform.Position);
 
-                    if (distance < light.FallOf)
+                    if (distance < light.Range)
                         device.RasterizerState = RasterizerState.CullClockwise;
 
                     _lightingFX.CurrentTechnique.Passes[0].Apply();
@@ -175,6 +151,13 @@ namespace C3DE.Rendering
                     effect.Parameters["Viewport"].SetValue(_viewport);
                 }
             }
+        }
+
+        public override void Render(Scene scene)
+        {
+            RebuildRenderTargets();
+            PreLightingPass(graphicsDevice, scene, scene.cameras[0]);
+            RenderSceneForCamera(scene, scene.cameras[0]);
         }
     }
 }

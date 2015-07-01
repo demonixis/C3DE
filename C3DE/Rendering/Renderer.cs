@@ -13,55 +13,51 @@ namespace C3DE.Rendering
     /// </summary>
     public class Renderer : IRenderer
     {
-        private GraphicsDevice _device;
-        private PreLightRenderer _plRenderer;
-        private RenderTarget2D _sceneRT;
-        private SpriteBatch _spriteBatch;
-        private bool _needsBufferUpdate;
-        internal GUI uiManager;
+        protected GraphicsDevice graphicsDevice;
+        protected RenderTarget2D sceneRT;
+        protected SpriteBatch spriteBatch;
+        protected bool needsBufferUpdate;
+        protected internal GUI uiManager;
 
         public bool NeedsBufferUpdate
         {
-            get { return _needsBufferUpdate; }
-            set { _needsBufferUpdate = value; }
+            get { return needsBufferUpdate; }
+            set { needsBufferUpdate = value; }
         }
 
         public Renderer()
         {
-            _needsBufferUpdate = false;
+            needsBufferUpdate = false;
         }
 
-        public void Initialize(ContentManager content)
+        public virtual void Initialize(ContentManager content)
         {
-            _device = Application.GraphicsDevice;
-            _sceneRT = new RenderTarget2D(_device, _device.Viewport.Width, _device.Viewport.Height, false, SurfaceFormat.Color, DepthFormat.Depth24, 0, RenderTargetUsage.DiscardContents);
-            _spriteBatch = new SpriteBatch(_device);
-            uiManager = new GUI(_spriteBatch);
+            graphicsDevice = Application.GraphicsDevice;
+            sceneRT = new RenderTarget2D(graphicsDevice, graphicsDevice.Viewport.Width, graphicsDevice.Viewport.Height, false, SurfaceFormat.Color, DepthFormat.Depth24, 0, RenderTargetUsage.DiscardContents);
+            spriteBatch = new SpriteBatch(graphicsDevice);
+            uiManager = new GUI(spriteBatch);
             uiManager.LoadContent(content);
-
-            _plRenderer = new PreLightRenderer(_device);
-            _plRenderer.Initialize(content);
         }
 
-        private void renderShadowMaps(Scene scene, Camera camera)
+        protected virtual void renderShadowMaps(Scene scene, Camera camera)
         {
             for (int i = 0, l = scene.Lights.Count; i < l; i++)
                 if (scene.Lights[i].shadowGenerator.Enabled)
-                    scene.Lights[i].shadowGenerator.RenderShadows(_device, scene.renderList);
+                    scene.Lights[i].shadowGenerator.RenderShadows(graphicsDevice, scene.renderList);
         }
 
         /// <summary>
         /// Render renderable objects
         /// </summary>
         /// <param name="camera">The camera to use.</param>
-        private void renderObjects(Scene scene, Camera camera)
+        protected void renderObjects(Scene scene, Camera camera)
         {
-            _device.SetRenderTarget(_sceneRT);
-            _device.Clear(camera.clearColor);
-            _device.DepthStencilState = DepthStencilState.Default;
+            graphicsDevice.SetRenderTarget(sceneRT);
+            graphicsDevice.Clear(camera.clearColor);
+            graphicsDevice.DepthStencilState = DepthStencilState.Default;
 
             if (scene.RenderSettings.Skybox.Enabled)
-                scene.RenderSettings.Skybox.Draw(_device, camera);
+                scene.RenderSettings.Skybox.Draw(graphicsDevice, camera);
 
             // Prepass, Update light, eye position, etc.
             for (int i = 0; i < scene.effects.Count; i++)
@@ -77,7 +73,7 @@ namespace C3DE.Rendering
                     else
                         scene.RenderList[i].Material.Pass(scene.RenderList[i]);
 
-                    scene.RenderList[i].Draw(_device);
+                    scene.RenderList[i].Draw(graphicsDevice);
                 }
             }
         }
@@ -85,54 +81,41 @@ namespace C3DE.Rendering
         /// <summary>
         /// Render buffers to screen.
         /// </summary>
-        private void renderBuffers()
+        protected void renderBuffers()
         {
-            _device.SetRenderTarget(null);
-            _spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Opaque, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone);
-            _spriteBatch.Draw(_sceneRT, Vector2.Zero, Color.White);
-            _spriteBatch.End();
+            graphicsDevice.SetRenderTarget(null);
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Opaque, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone);
+            spriteBatch.Draw(sceneRT, Vector2.Zero, Color.White);
+            spriteBatch.End();
         }
 
-        private void renderPostProcess(List<PostProcessPass> passes)
+        protected void renderPostProcess(List<PostProcessPass> passes)
         {
             if (passes.Count > 0)
             {
                 for (int i = 0, l = passes.Count; i < l; i++)
                 {
                     if (passes[i].Enabled)
-                        passes[i].Apply(_spriteBatch, _sceneRT);
+                        passes[i].Apply(spriteBatch, sceneRT);
                 }
             }
         }
 
-        private void renderUI(List<Behaviour> scripts)
+        protected void renderUI(List<Behaviour> scripts)
         {
             var size = scripts.Count;
 
             if (size > 0 && GUI.Enabled)
             {
-                _spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone, GUI.uiEffect, GUI.uiMatrix);
+                spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone, GUI.uiEffect, GUI.uiMatrix);
 
                 for (int i = 0; i < size; i++)
                     if (scripts[i].Enabled)
                         scripts[i].OnGUI(uiManager);
 
-#if DEBUG
-                RenderDebug(uiManager);
-#endif
-
-                _spriteBatch.End();
+                spriteBatch.End();
             }
         }
-
-#if DEBUG
-        internal static List<Behaviour> __DebugUIScripts = new List<Behaviour>();
-        private void RenderDebug(GUI ui)
-        {
-            foreach (var script in __DebugUIScripts)
-                script.OnGUI(ui);
-        }
-#endif
 
         /// <summary>
         /// Render the scene with the specified camera.
@@ -144,54 +127,41 @@ namespace C3DE.Rendering
         /// </summary>
         /// <param name="scene">The scene to render.</param>
         /// <param name="camera">The camera to use for render.</param>
-        public void render(Scene scene)
+        public virtual void Render(Scene scene)
         {
-            if (_needsBufferUpdate)
-            {
-                _sceneRT = new RenderTarget2D(_device, _device.Viewport.Width, _device.Viewport.Height, false, SurfaceFormat.Color, DepthFormat.Depth24, 0, RenderTargetUsage.DiscardContents);
-                _needsBufferUpdate = false;
-            }
+            RebuildRenderTargets();
+            RenderSceneForCamera(scene, scene.cameras[0]);
+        }
 
-			var camCount = scene.cameras.Count;
-            if (camCount > 1)
+        protected virtual void RebuildRenderTargets()
+        {
+            if (needsBufferUpdate)
             {
-                for (int i = 0; i < camCount; i++)
-                {
-                    _plRenderer.Draw(_device, scene, scene.cameras[0]);
-                    RenderScene(scene, scene.cameras[i]);
-                }
-            }
-            else
-            {
-                _plRenderer.Draw(_device, scene, scene.cameras[0]);
-                RenderScene(scene, scene.cameras[0]);
+                sceneRT = new RenderTarget2D(graphicsDevice, graphicsDevice.Viewport.Width, graphicsDevice.Viewport.Height, false, SurfaceFormat.Color, DepthFormat.Depth24, 0, RenderTargetUsage.DiscardContents);
+                needsBufferUpdate = false;
             }
         }
 
-		private void RenderScene(Scene scene, Camera camera)
-		{
-			renderShadowMaps(scene, camera);
-			renderObjects(scene, camera);
-			renderBuffers();
-			renderPostProcess(scene.postProcessPasses);
-			renderUI(scene.Behaviours);
-		}
+        protected virtual void RenderSceneForCamera(Scene scene, Camera camera)
+        {
+            renderShadowMaps(scene, camera);
+            renderObjects(scene, camera);
+            renderBuffers();
+            renderPostProcess(scene.postProcessPasses);
+            renderUI(scene.Behaviours);
+        }
 
         public void RenderEditor(Scene scene, Camera camera, RenderTarget2D target)
         {
-            if (_needsBufferUpdate)
-            {
-                _sceneRT = new RenderTarget2D(_device, _device.Viewport.Width, _device.Viewport.Height, false, SurfaceFormat.Color, DepthFormat.Depth24, 0, RenderTargetUsage.DiscardContents);
-                _needsBufferUpdate = false;
-            }
+            RebuildRenderTargets();
 
             renderObjects(scene, camera);
             renderBuffers();
 
-            _device.SetRenderTarget(target);
-            _spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Opaque, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone);
-            _spriteBatch.Draw(_sceneRT, Vector2.Zero, Color.White);
-            _spriteBatch.End();
+            graphicsDevice.SetRenderTarget(target);
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Opaque, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone);
+            spriteBatch.Draw(sceneRT, Vector2.Zero, Color.White);
+            spriteBatch.End();
         }
     }
 }

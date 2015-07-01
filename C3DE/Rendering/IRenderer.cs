@@ -1,6 +1,4 @@
-﻿using C3DE.Components;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework.Content;
 
 namespace C3DE.Rendering
 {
@@ -11,12 +9,9 @@ namespace C3DE.Rendering
         void Initialize(ContentManager content);
 
         /// <summary>
-        /// Render the scene with the specified camera.
+        /// Render the scene.
         /// </summary>
         /// <param name="scene">The scene to render.</param>
-        /// <param name="camera">The camera to use for render.</param>
-        void render(Scene scene);
-
-        void RenderEditor(Scene scene, Camera camera, RenderTarget2D target);
+        void Render(Scene scene);
     }
 }

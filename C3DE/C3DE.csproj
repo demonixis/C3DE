@@ -88,6 +88,7 @@
     <Compile Include="Components\Controllers\Mobile\VirtualGamepad.cs" />
     <Compile Include="Components\Lights\Light.cs" />
     <Compile Include="Components\Renderers\MeshRenderer.cs" />
+    <Compile Include="Extensions\QuaternionExtensions.cs" />
     <Compile Include="Input.cs" />
     <Compile Include="Inputs\InputManager.cs" />
     <Compile Include="Inputs\InputProfile.cs" />
@@ -109,8 +110,6 @@
     <Compile Include="PostProcess\FXAAPass.cs" />
     <Compile Include="PostProcess\GrayScalePass.cs" />
     <Compile Include="PostProcess\RefractionPass.cs" />
-    <Compile Include="Rendering\VRMobileRenderer.cs" />
-    <Compile Include="Rendering\VRRenderer.cs" />
     <Compile Include="Prefabs\MeshPrefab.cs" />
     <Compile Include="Rendering\QuadRenderer.cs" />
     <Compile Include="Geometries\CubeGeometry.cs" />

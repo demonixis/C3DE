@@ -6,7 +6,6 @@ using C3DE.Demo.Scripts;
 using C3DE.Geometries;
 using C3DE.Materials;
 using C3DE.Prefabs;
-using C3DE.Rendering;
 using C3DE.Utils;
 using Microsoft.Xna.Framework;
 using System;
@@ -23,8 +22,7 @@ namespace C3DE.Demo.Scenes
 
             // Camera
             var camera = new CameraPrefab("camera");
-            var orbit = camera.AddComponent<OrbitController>();
-            orbit.MaxDistance = 250;
+            camera.AddComponent<OrbitController>();
             camera.AddComponent<RayPickingTester>();
             Add(camera);
 
@@ -42,87 +40,59 @@ namespace C3DE.Demo.Scenes
             lightPrefab.Light.ShadowGenerator.SetShadowMapSize(Application.GraphicsDevice, 1024);
             lightPrefab.EnableShadows = true;
             lightPrefab.AddComponent<LightSwitcher>();
+            lightPrefab.AddComponent<LightMover>();
             lightPrefab.AddComponent<DemoBehaviour>();
 
+            var lightPrefabSphere = lightPrefab.AddComponent<MeshRenderer>();
+            lightPrefabSphere.Geometry = new SphereGeometry(2f, 4);
+            lightPrefabSphere.Geometry.Generate();
+            lightPrefabSphere.CastShadow = false;
+            lightPrefabSphere.ReceiveShadow = false;
+            lightPrefabSphere.Material = new SimpleMaterial(scene);
+            lightPrefabSphere.Material.MainTexture = GraphicsHelper.CreateTexture(Color.Yellow, 1, 1);
+
             // Terrain
-            var terrainMaterial = new PreLightMaterial(scene);
-            terrainMaterial.MainTexture = GraphicsHelper.CreateCheckboardTexture(Color.LightGreen, Color.LightSeaGreen, 128, 128);
-            //terrainMaterial.Shininess = 10;
+            var terrainMaterial = new StandardMaterial(scene);
+            terrainMaterial.MainTexture = GraphicsHelper.CreateBorderTexture(Color.LightGreen, Color.LightSeaGreen, 128, 128, 1);
+            terrainMaterial.Shininess = 10;
             terrainMaterial.Tiling = new Vector2(16);
 
             var terrain = new TerrainPrefab("terrain");
-            terrain.Renderer.Geometry.Size = new Vector3(4, 1, 4);
-            terrain.Randomize(1, 2, 0.1, 0.2);
+            terrain.Renderer.Geometry.Size = new Vector3(4);
+            terrain.Renderer.Geometry.Generate();
+            terrain.Flat();
             terrain.Renderer.Material = terrainMaterial;
             terrain.Transform.Translate(-terrain.Width >> 1, 0, -terrain.Depth / 2);
             Add(terrain);
 
-            for (int i = 0; i < 4; i++)
-                AddObject();
+            // Cube
+            var cubeSuperMaterial = new StandardMaterial(scene);
+            cubeSuperMaterial.MainTexture = GraphicsHelper.CreateTriangleTexture(Color.Red, Color.White);  //GraphicsHelper.CreateCheckboardTexture(Color.FloralWhite, Color.DodgerBlue); //Content.Load<Texture2D>("Textures/tech_box2");
+            cubeSuperMaterial.DiffuseColor = Color.WhiteSmoke;
+            cubeSuperMaterial.SpecularColor = new Color(0.8f, 0.8f, 0.8f, 1.0f);
+            cubeSuperMaterial.Shininess = 10;
+            cubeSuperMaterial.EmissiveColor = new Color(0f, 0.0f, 0.2f, 1.0f);
 
-            // Skybox
-            RenderSettings.AmbientColor = new Color(0.15f, 0.15f, 0.15f, 1.0f);
-            RenderSettings.Skybox.Generate(Application.GraphicsDevice, Application.Content, DemoGame.StarsSkybox);
+            var cubeScene = new SceneObject();
+            cubeScene.Transform.Translate(0, 6f, 0);
+            cubeScene.Transform.LocalScale = new Vector3(4.0f);
+            cubeScene.Transform.Rotate((float)Math.PI / 4, 0, (float)Math.PI / 4);
+            var autoRot = cubeScene.AddComponent<AutoRotation>();
+            autoRot.Rotation = new Vector3(0, 0.01f, 0);
+            Add(cubeScene);
 
-            Screen.ShowCursor = true;
-
-            var v = 60;
-            AddBackedLight(new Vector3(v, 15, v), Color.Red);
-            AddBackedLight(new Vector3(-v, 15, v), Color.Blue);
-            AddBackedLight(new Vector3(v, 15, -v), Color.Green);
-            AddBackedLight(new Vector3(-v, 15, -v), Color.Yellow);  
-
-            PreLightRenderer.Enabled = true;
-        }
-
-        public override void Unload()
-        {
-            PreLightRenderer.Enabled = false;
-            base.Unload();
-        }
-
-        private void AddObject()
-        {
-            var sceneObject = new SceneObject();
-            var cube = sceneObject.AddComponent<MeshRenderer>();
+            var cube = cubeScene.AddComponent<MeshRenderer>();
             cube.ReceiveShadow = false;
             cube.Geometry = new CubeGeometry();
             cube.Geometry.Generate();
-            cube.Material = new PreLightMaterial(scene);
-            cube.Material.MainTexture = GraphicsHelper.CreateCheckboardTexture(RandomHelper.GetColor(), RandomHelper.GetColor(), 64, 64);
+            cube.Material = cubeSuperMaterial;
 
-            var inc = 75;
-            var path = cube.AddComponent<SimplePath>();
-            path.Loop = true;
+            cubeScene.AddComponent<BoxCollider>();
 
-            cube.Transform.Position = RandomHelper.GetVector3(-inc, 3, -inc, inc, 15, -inc);
-            
-            var autoRotate = cube.AddComponent<AutoRotation>();
-            autoRotate.Rotation = Vector3.Normalize(RandomHelper.GetVector3(-0.01f, -0.01f, 0, 0.01f, 0.01f, 0));
+            // Skybox
+            RenderSettings.Skybox.Generate(Application.GraphicsDevice, Application.Content, DemoGame.StarsSkybox, 500);
 
-            path.Begin();
-
-            for (int i = 0; i < 6; i++)
-                path.AddPath(RandomHelper.GetVector3(-inc, 0, -inc, inc, 0, inc), cube.Transform);
-
-            path.End();
-
-            Add(sceneObject);
-        }
-
-        private void AddBackedLight(Vector3 position, Color color)
-        {
-            var sceneObject = new SceneObject("Light_" + color.ToString());
-            sceneObject.Transform.Position = position;
-
-            var light = sceneObject.AddComponent<Light>();
-            light.FallOf = 10f;
-            light.Intensity = 1.5f;
-            light.Range = 65;
-            light.DiffuseColor = color;
-            light.Backing = LightRenderMode.Backed;
-
-            Add(sceneObject);
+            Screen.ShowCursor = true;
         }
     }
 }

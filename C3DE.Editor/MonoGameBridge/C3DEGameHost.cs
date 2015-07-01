@@ -74,7 +74,6 @@ namespace C3DE.Editor.MonoGameBridge
     {
         private const string EditorTag = "C3DE_Editor";
         private static GenericMessage<SceneObject> SceneObjectMessage = new GenericMessage<SceneObject>(null);
-
         private GameTime _gameTime;
         private GameServiceContainer _services;
         private List<GameComponent> _gameComponents;
