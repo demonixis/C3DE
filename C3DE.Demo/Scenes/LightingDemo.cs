@@ -53,7 +53,7 @@ namespace C3DE.Demo.Scenes
 
             // Terrain
             var terrainMaterial = new StandardMaterial(scene);
-            terrainMaterial.MainTexture = GraphicsHelper.CreateBorderTexture(Color.LightGreen, Color.LightSeaGreen, 128, 128, 1);
+            terrainMaterial.MainTexture = GraphicsHelper.CreateBorderTexture(Color.LightGreen, Color.LightSeaGreen, 128, 128, 4);
             terrainMaterial.Shininess = 10;
             terrainMaterial.Tiling = new Vector2(16);
 
@@ -67,7 +67,7 @@ namespace C3DE.Demo.Scenes
 
             // Cube
             var cubeSuperMaterial = new StandardMaterial(scene);
-            cubeSuperMaterial.MainTexture = GraphicsHelper.CreateTriangleTexture(Color.Red, Color.White);  //GraphicsHelper.CreateCheckboardTexture(Color.FloralWhite, Color.DodgerBlue); //Content.Load<Texture2D>("Textures/tech_box2");
+            cubeSuperMaterial.MainTexture = GraphicsHelper.CreateCheckboardTexture(Color.FloralWhite, Color.DodgerBlue);
             cubeSuperMaterial.DiffuseColor = Color.WhiteSmoke;
             cubeSuperMaterial.SpecularColor = new Color(0.8f, 0.8f, 0.8f, 1.0f);
             cubeSuperMaterial.Shininess = 10;
