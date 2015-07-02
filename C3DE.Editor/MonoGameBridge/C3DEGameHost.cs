@@ -72,7 +72,7 @@ namespace C3DE.Editor.MonoGameBridge
 
     public sealed class C3DEGameHost : D3D11Host, IServiceProvider
     {
-        private const string EditorTag = "C3DE_Editor";
+        public const string EditorTag = "C3DE_Editor";
         private static GenericMessage<SceneObject> SceneObjectMessage = new GenericMessage<SceneObject>(null);
         private GameTime _gameTime;
         private GameServiceContainer _services;
@@ -87,6 +87,7 @@ namespace C3DE.Editor.MonoGameBridge
 
         private SelectedSceneObject _selectedObject;
         private BasicEditionSceneObject _editionSceneObject;
+        private Gizmo _gizmo;
 
         #region GameHost implementation
 
@@ -163,6 +164,8 @@ namespace C3DE.Editor.MonoGameBridge
 
             _selectedObject = new SelectedSceneObject();
             _editionSceneObject = new BasicEditionSceneObject();
+            _gizmo = new Gizmo();
+            _scene.Add(_gizmo);
         }
 
         protected override void Update(Stopwatch timer)
@@ -199,6 +202,9 @@ namespace C3DE.Editor.MonoGameBridge
                 if (_scene.Raycast(ray, 100, out info))
                 {
                     if (info.Collider.SceneObject == _selectedObject.SceneObject)
+                        return;
+
+                    if (info.Collider.SceneObject.Tag == EditorTag)
                         return;
 
                     if (info.Collider.SceneObject != _selectedObject.SceneObject)
@@ -346,6 +352,8 @@ namespace C3DE.Editor.MonoGameBridge
             _selectedObject.Select(true);
             _editionSceneObject.Selected = sceneObject;
 
+            _gizmo.SetVisible(true, _selectedObject.SceneObject.Transform.Position);
+
             Messenger.Notify(EditorEvent.SceneObjectSelected, new GenericMessage<bool>(sceneObject.Enabled, sceneObject.Name));
             Messenger.Notify(EditorEvent.TransformUpdated, new GenericMessage<Transform>(sceneObject.Transform));
         }
@@ -354,6 +362,7 @@ namespace C3DE.Editor.MonoGameBridge
         {
             _selectedObject.Select(false);
             _editionSceneObject.Reset();
+            _gizmo.SetVisible(false);
         }
 
         #endregion
