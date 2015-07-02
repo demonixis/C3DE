@@ -91,10 +91,11 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Core\BasicEditionSceneObject.cs" />
+    <Compile Include="Core\Components\EDCamera.cs" />
     <Compile Include="Core\Components\EDOrbitController.cs" />
     <Compile Include="Core\Components\EDMouseComponent.cs" />
-    <Compile Include="Core\Gizmo.cs" />
     <Compile Include="Core\EDScene.cs" />
+    <Compile Include="Core\SceneObjectSelector.cs" />
     <Compile Include="Exporters\MeshMerger.cs" />
     <Compile Include="Exporters\OBJExporter.cs" />
     <Compile Include="Exporters\STLExporter.cs" />

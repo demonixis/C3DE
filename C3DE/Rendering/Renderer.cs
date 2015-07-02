@@ -66,7 +66,8 @@ namespace C3DE.Rendering
             // Pass, Update matrix, material attributes, etc.
             for (int i = 0; i < scene.RenderList.Count; i++)
             {
-                if (scene.renderList[i].Enabled)
+                // FIXME If a scene object is disabled, the renderlist MUST be updated
+                if (scene.renderList[i].SceneObject.Enabled && scene.renderList[i].Enabled)
                 {
                     if (scene.RenderList[i].MaterialCount == 0)
                         scene.DefaultMaterial.Pass(scene.renderList[i]);

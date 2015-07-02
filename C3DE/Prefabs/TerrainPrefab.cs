@@ -119,7 +119,7 @@ namespace C3DE.Prefabs
             Build();
         }
 
-        public void Flat()
+        public void Flatten()
         {
             Build();
         }

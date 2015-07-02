@@ -20,6 +20,12 @@ struct VertexShaderOutput
 	float3 Normal : TEXCOORD1;
 };
 
+struct PixelShaderOutput
+{
+	float4 Normal: COLOR0;
+	float4 Depth : COLOR1;
+};
+
 VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
 {
 	VertexShaderOutput output;
@@ -28,45 +34,34 @@ VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
 	float4x4 worldViewProjection = mul(World, viewProjection);
 	
 	output.Position = mul(input.Position, worldViewProjection);
-	output.Normal = mul(input.Normal, World);
-	output.Depth.xy = output.Position.zw;
+	output.Normal = (float3)mul(input.Normal, World);
+	output.Depth.xy = (float2)output.Position.zw;
 
 	return output;
 }
 
-float4 PSNormalFunction(VertexShaderOutput input) : COLOR0
+PixelShaderOutput PSNormalDepthFunction(VertexShaderOutput input)
 {
-	return float4((normalize(input.Normal).xyz / 2.0) + 0.5, 1.0);
-}
-
-float4 PSDepthFunction(VertexShaderOutput input) : COLOR0
-{
-	// Distance from camera (0, 1)
-	float d = input.Depth.x / input.Depth.y;
-	return float4(d, d, d, 1.0);
-}
-
-technique Basic
-{
-	pass NormalPass
-	{
-#if SM4
-		VertexShader = compile vs_4_0_level_9_1 VertexShaderFunction();
-		PixelShader = compile ps_4_0_level_9_1 PSNormalFunction();
-#else
-		VertexShader = compile vs_3_0 VertexShaderFunction();
-		PixelShader = compile ps_3_0 PSNormalFunction();
-#endif
-	}
+	PixelShaderOutput output;
 	
-	pass DepthPass
+	output.Normal = float4((normalize(input.Normal).xyz / 2.0) + 0.5, 1.0);
+	
+	output.Depth = input.Depth.x / input.Depth.y;
+	output.Depth.a = 1;
+
+	return output;
+}
+
+technique NormalDepth
+{
+	pass NormalDepthPass
 	{
 #if SM4
 		VertexShader = compile vs_4_0_level_9_1 VertexShaderFunction();
-		PixelShader = compile ps_4_0_level_9_1 PSDepthFunction();
+		PixelShader = compile ps_4_0_level_9_1 PSNormalDepthFunction();
 #else
 		VertexShader = compile vs_3_0 VertexShaderFunction();
-		PixelShader = compile ps_3_0 PSDepthFunction();
+		PixelShader = compile ps_3_0 PSNormalDepthFunction();
 #endif
 	}
 }

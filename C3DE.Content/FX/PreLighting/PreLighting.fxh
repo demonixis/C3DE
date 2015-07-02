@@ -17,6 +17,6 @@ float3 GetLightingValue(float4 position)
 	float2 texCoord = position.xy / position.w;
 	texCoord.y *= -1.0;
 	texCoord = 0.5f * (texCoord + 1.0);
-	texCoord = texCoord + (0.5f / Viewport);
+	texCoord += 0.5f / Viewport;
 	return tex2D(lightSampler, texCoord).xyz;
 }

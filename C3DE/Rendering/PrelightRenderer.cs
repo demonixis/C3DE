@@ -22,7 +22,7 @@ namespace C3DE.Rendering
         private Effect _lightingFX;
 
         public PreLightRenderer()
-        { 
+        {
         }
 
         public override void Initialize(ContentManager content)
@@ -51,13 +51,12 @@ namespace C3DE.Rendering
 
         public void PreLightingPass(GraphicsDevice device, Scene scene, Camera camera)
         {
+            _viewport.X = device.Viewport.Width;
+            _viewport.Y = device.Viewport.Height;
 
-                _viewport.X = device.Viewport.Width;
-                _viewport.Y = device.Viewport.Height;
-
-                DrawDepthNormalMap(device, scene, camera);
-                DrawLightMap(device, scene, camera);
-                PrepareEffects(scene.materials);
+            DrawDepthNormalMap(device, scene, camera);
+            DrawLightMap(device, scene, camera);
+            PrepareEffects(scene.materials);
         }
 
         private void DrawDepthNormalMap(GraphicsDevice device, Scene scene, Camera camera)
@@ -65,21 +64,13 @@ namespace C3DE.Rendering
             _depthNormalFX.Parameters["View"].SetValue(camera.view);
             _depthNormalFX.Parameters["Projection"].SetValue(camera.projection);
 
-            DrawMap(device, scene, camera, true);
-            DrawMap(device, scene, camera, false);
-        }
-
-        private void DrawMap(GraphicsDevice device, Scene scene, Camera camera, bool normalTarget)
-        {
-            device.SetRenderTarget(normalTarget ? _normalRT : _depthRT);
+            device.SetRenderTargets(_normalRT, _depthRT);
             device.Clear(Color.White);
-
-            var passName = normalTarget ? "NormalPass" : "DepthPass";
 
             for (int i = 0, l = scene.renderList.Count; i < l; i++)
             {
                 _depthNormalFX.Parameters["World"].SetValue(scene.renderList[i].Transform.world);
-                _depthNormalFX.CurrentTechnique.Passes[passName].Apply();
+                _depthNormalFX.CurrentTechnique.Passes[0].Apply();
                 scene.renderList[i].Draw(device);
             }
 

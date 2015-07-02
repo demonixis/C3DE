@@ -24,56 +24,13 @@ using System.Diagnostics;
 
 namespace C3DE.Editor.MonoGameBridge
 {
-    public class SelectedSceneObject
-    {
-        public SceneObject SceneObject { get; private set; }
-        private BoundingBoxRenderer _boundingBoxRenderer;
-        private RenderableComponent _renderer;
-
-        public void Set(SceneObject sceneObject)
-        {
-            SceneObject = sceneObject;
-
-            _boundingBoxRenderer = sceneObject.GetComponent<BoundingBoxRenderer>();
-            if (_boundingBoxRenderer == null)
-                _boundingBoxRenderer = sceneObject.AddComponent<BoundingBoxRenderer>();
-
-            _renderer = sceneObject.GetComponent<RenderableComponent>();
-        }
-
-        public void Select(bool isSelected)
-        {
-            if (SceneObject != null)
-            {
-                _boundingBoxRenderer.Enabled = isSelected;
-               
-                if (!isSelected)
-                {
-                    _renderer = null;
-                    _boundingBoxRenderer = null;
-                    SceneObject = null;
-                }
-            }
-        }
-
-        public bool IsEqualTo(SceneObject other)
-        {
-            if (SceneObject == null)
-                return false;
-
-            return other == SceneObject;
-        }
-
-        public bool IsNull()
-        {
-            return SceneObject == null;
-        }
-    }
-
     public sealed class C3DEGameHost : D3D11Host, IServiceProvider
     {
-        private const string EditorTag = "C3DE_Editor";
+        public const string EditorTag = "C3DE_Editor";
         private static GenericMessage<SceneObject> SceneObjectMessage = new GenericMessage<SceneObject>(null);
+
+        public static Camera camera = null;
+
         private GameTime _gameTime;
         private GameServiceContainer _services;
         private List<GameComponent> _gameComponents;
@@ -85,9 +42,8 @@ namespace C3DE.Editor.MonoGameBridge
         private List<string> _toAdd;
         private List<SceneObject> _toRemove;
 
-        private SelectedSceneObject _selectedObject;
+        private SceneObjectSelector _selectedObject;
         private BasicEditionSceneObject _editionSceneObject;
-        private Gizmo _gizmo;
 
         #region GameHost implementation
 
@@ -162,11 +118,8 @@ namespace C3DE.Editor.MonoGameBridge
 
             SceneObjectMessage = new GenericMessage<SceneObject>(null);
 
-            _selectedObject = new SelectedSceneObject();
+            _selectedObject = new SceneObjectSelector();
             _editionSceneObject = new BasicEditionSceneObject();
-
-            _gizmo = new Gizmo();
-            _gizmo.Initialize();
         }
 
         protected override void Update(Stopwatch timer)
@@ -205,6 +158,9 @@ namespace C3DE.Editor.MonoGameBridge
                     if (info.Collider.SceneObject == _selectedObject.SceneObject)
                         return;
 
+                    if (info.Collider.SceneObject.Tag == EditorTag)
+                        return;
+
                     if (info.Collider.SceneObject != _selectedObject.SceneObject)
                         UnselectObject();
 
@@ -234,16 +190,25 @@ namespace C3DE.Editor.MonoGameBridge
 
         #region Scene settings
 
+        private SceneObject CreateSceneObjectEditor(string name)
+        {
+            var sceneObject = new SceneObject(name);
+            sceneObject.Tag = EditorTag;
+            return sceneObject;
+        }
+
         private void CreateEditorScene()
         {
             var defaultMaterial = new SimpleMaterial(_scene);
             defaultMaterial.MainTexture = GraphicsHelper.CreateBorderTexture(Color.LightSkyBlue, Color.LightGray, 64, 64, 1);
             _scene.DefaultMaterial = defaultMaterial;
 
-            var camera = new CameraPrefab("EditorCamera.Main");
-            camera.Tag = EditorTag;
-            camera.AddComponent<EDOrbitController>();
-            _scene.Add(camera);
+            var cameraPrefab = new CameraPrefab("EditorCamera.Main");
+            cameraPrefab.Tag = EditorTag;
+            cameraPrefab.AddComponent<EDOrbitController>();
+            _scene.Add(cameraPrefab);
+
+            camera = cameraPrefab.GetComponent<Camera>();
 
             var lightPrefab = new LightPrefab("Editor_MainLight", LightType.Directional);
             lightPrefab.Tag = EditorTag;
@@ -260,7 +225,7 @@ namespace C3DE.Editor.MonoGameBridge
             var terrain = new TerrainPrefab("Editor_Grid");
             terrain.Tag = EditorTag;
             _scene.Add(terrain);
-            terrain.Flat();
+            terrain.Flatten();
             terrain.Renderer.Material = gridMaterial;
             terrain.Transform.Translate(-terrain.Width >> 1, -1.0f, -terrain.Depth / 2);
 
@@ -292,7 +257,7 @@ namespace C3DE.Editor.MonoGameBridge
 
                 case "Terrain":
                     var terrain = new TerrainPrefab(type);
-                    terrain.Flat();
+                    terrain.Flatten();
                     terrain.Renderer.Material = _scene.DefaultMaterial;
                     sceneObject = terrain;
                     break;
@@ -349,7 +314,6 @@ namespace C3DE.Editor.MonoGameBridge
             _selectedObject.Set(sceneObject);
             _selectedObject.Select(true);
             _editionSceneObject.Selected = sceneObject;
-            _gizmo.Select(_selectedObject.SceneObject.Transform);
 
             Messenger.Notify(EditorEvent.SceneObjectSelected, new GenericMessage<bool>(sceneObject.Enabled, sceneObject.Name));
             Messenger.Notify(EditorEvent.TransformUpdated, new GenericMessage<Transform>(sceneObject.Transform));
@@ -359,7 +323,6 @@ namespace C3DE.Editor.MonoGameBridge
         {
             _selectedObject.Select(false);
             _editionSceneObject.Reset();
-            _gizmo.Unselect();
         }
 
         #endregion

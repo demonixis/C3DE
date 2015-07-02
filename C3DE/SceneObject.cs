@@ -37,6 +37,9 @@ namespace C3DE
                 {
                     NotifyPropertyChanged("Enabled");
                     enabled = value;
+
+                    for (int i = 0, l = transform.Transforms.Count; i < l; i++)
+                        transform.Transforms[i].Enabled = value;
                 }
             }
         }
@@ -184,6 +187,7 @@ namespace C3DE
                 sceneObject.transform.Parent = transform;
                 sceneObject.transform.Root = transform.Root;
                 transform.Transforms.Add(sceneObject.transform);
+                sceneObject.Enabled = enabled;
 
                 return true;
             }

@@ -47,7 +47,7 @@ namespace C3DE.Editor.Core
 
             grid = new TerrainPrefab("Editor_Grid");
             grid.Tag = EditorTag;
-            grid.Flat();
+            grid.Flatten();
             grid.Renderer.Material = gridMaterial;
             grid.Transform.Translate(-grid.Width >> 1, -1.0f, -grid.Depth / 2);
             Add(grid);
