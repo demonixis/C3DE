@@ -87,6 +87,7 @@ namespace C3DE.Editor.MonoGameBridge
 
         private SelectedSceneObject _selectedObject;
         private BasicEditionSceneObject _editionSceneObject;
+        private Gizmo _gizmo;
 
         #region GameHost implementation
 
@@ -163,6 +164,9 @@ namespace C3DE.Editor.MonoGameBridge
 
             _selectedObject = new SelectedSceneObject();
             _editionSceneObject = new BasicEditionSceneObject();
+
+            _gizmo = new Gizmo();
+            _gizmo.Initialize();
         }
 
         protected override void Update(Stopwatch timer)
@@ -345,6 +349,7 @@ namespace C3DE.Editor.MonoGameBridge
             _selectedObject.Set(sceneObject);
             _selectedObject.Select(true);
             _editionSceneObject.Selected = sceneObject;
+            _gizmo.Select(_selectedObject.SceneObject.Transform);
 
             Messenger.Notify(EditorEvent.SceneObjectSelected, new GenericMessage<bool>(sceneObject.Enabled, sceneObject.Name));
             Messenger.Notify(EditorEvent.TransformUpdated, new GenericMessage<Transform>(sceneObject.Transform));
@@ -354,6 +359,7 @@ namespace C3DE.Editor.MonoGameBridge
         {
             _selectedObject.Select(false);
             _editionSceneObject.Reset();
+            _gizmo.Unselect();
         }
 
         #endregion

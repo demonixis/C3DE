@@ -1,4 +1,5 @@
-﻿using C3DE.Components.Renderers;
+﻿using C3DE.Components;
+using C3DE.Components.Renderers;
 using C3DE.Geometries;
 using C3DE.Materials;
 using C3DE.Prefabs.Meshes;
@@ -7,11 +8,18 @@ using Microsoft.Xna.Framework;
 
 namespace C3DE.Editor.Core
 {
-    public class Gizmo : SceneObject
+    public class Gizmo : Scene
     {
         private MeshPrefab<CylinderGeometry>[] _gizmos;
+        private Transform _parent;
 
-        public void Build(Scene scene)
+        public override void Initialize()
+        {
+            base.Initialize();
+            Build();
+        }
+
+        public void Build()
         {
             _gizmos = new MeshPrefab<CylinderGeometry>[3];
             _gizmos[0] = new MeshPrefab<CylinderGeometry>();
@@ -39,15 +47,14 @@ namespace C3DE.Editor.Core
             }
         }
 
-        public void SetVisible(bool isVisible, Vector3 position)
+        public void Select(Transform transform)
         {
-            Enabled = isVisible;
-            transform.Position = position;
+            _parent = transform;
         }
 
-        public void SetPosition(Vector3 position)
+        public void Unselect()
         {
-            transform.Position = position;
+            _parent = null;
         }
     }
 }
