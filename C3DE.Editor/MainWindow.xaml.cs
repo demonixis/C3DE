@@ -9,6 +9,8 @@ namespace C3DE.Editor
     using WPFApplication = System.Windows.Application;
     using Winforms = System.Windows.Forms;
     using C3DE.Editor.Events;
+    using C3DE.Editor.Core;
+    using C3DE.Editor.Core.Components;
 
     /// <summary>
     /// Logique d'interaction pour MainWindow.xaml
@@ -19,6 +21,9 @@ namespace C3DE.Editor
         {
             InitializeComponent();
             KeyDown += OnKeyDown;
+
+            Registry.Keys = new EDKeyboardComponent(null, this);
+            Registry.Mouse = new EDMouseComponent(null, this);
         }
 
         private void OnKeyDown(object sender, KeyEventArgs e)

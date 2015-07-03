@@ -2,7 +2,6 @@
 using C3DE.Components.Controllers;
 using C3DE.Inputs;
 using Microsoft.Xna.Framework;
-using System;
 
 namespace C3DE.Editor.Core.Components
 {
@@ -63,16 +62,16 @@ namespace C3DE.Editor.Core.Components
 
         public override void Update()
         {
-            if (Input.Mouse.Down(MouseButton.Right))
+            if (Registry.Mouse.Down(MouseButton.Right))
             {
-                _angle.X -= RotationSpeed * Input.Mouse.Delta.X * Time.DeltaTime;
-                _angle.Y -= RotationSpeed * Input.Mouse.Delta.Y * Time.DeltaTime;
+                _angle.X -= RotationSpeed * Registry.Mouse.Delta.X * Time.DeltaTime;
+                _angle.Y -= RotationSpeed * Registry.Mouse.Delta.Y * Time.DeltaTime;
             }
  
-            if (Input.Mouse.Down(MouseButton.Middle))
-                _target.Y += StrafeSpeed * Input.Mouse.Delta.Y * Time.DeltaTime;
+            if (Registry.Mouse.Down(MouseButton.Middle))
+                _target.Y += StrafeSpeed * Registry.Mouse.Delta.Y * Time.DeltaTime;
             
-            _distance -= (Input.Mouse as EDMouseComponent).Wheel * 0.1f * MoveSpeed * Time.DeltaTime;
+            _distance -= Registry.Mouse.Wheel * 0.1f * MoveSpeed * Time.DeltaTime;
 
             CheckAngle();
             CheckDistance();
@@ -103,27 +102,22 @@ namespace C3DE.Editor.Core.Components
 
         protected override void UpdateInputs()
         {
-            throw new NotImplementedException();
         }
 
         protected override void UpdateKeyboardInput()
         {
-            throw new NotImplementedException();
         }
 
         protected override void UpdateMouseInput()
         {
-            throw new NotImplementedException();
         }
 
         protected override void UpdateGamepadInput()
         {
-            throw new NotImplementedException();
         }
 
         protected override void UpdateTouchInput()
         {
-            throw new NotImplementedException();
         }
     }
 }

@@ -28,14 +28,11 @@ namespace C3DE.Editor.MonoGameBridge
     {
         public const string EditorTag = "C3DE_Editor";
         private static GenericMessage<SceneObject> SceneObjectMessage = new GenericMessage<SceneObject>(null);
-
         public static Camera camera = null;
 
         private GameTime _gameTime;
         private GameServiceContainer _services;
         private List<GameComponent> _gameComponents;
-        private EDMouseComponent _mouse;
-        private SpriteBatch _spriteBatch;
         private Renderer _renderer;
         private ContentManager _content;
         private EDScene _scene;
@@ -89,15 +86,12 @@ namespace C3DE.Editor.MonoGameBridge
             Application.Content = _content;
             Application.GraphicsDevice = GraphicsDevice;
 
-            _mouse = new EDMouseComponent(null, this);
-            Input.Mouse = _mouse;
-
+            _gameComponents.Add(Registry.Mouse);
+            _gameComponents.Add(Registry.Keys);
             _gameComponents.Add(new Time(null));
-            _gameComponents.Add(Input.Mouse);
 
             Screen.Setup((int)ActualWidth, (int)ActualHeight, null, null);
 
-            _spriteBatch = new SpriteBatch(GraphicsDevice);
             _renderer = new Renderer();
             _renderer.Initialize(_content);
             _scene.Initialize();
@@ -148,9 +142,9 @@ namespace C3DE.Editor.MonoGameBridge
             foreach (var component in _gameComponents)
                 component.Update(_gameTime);
 
-            if (Input.Mouse.Clicked(MouseButton.Left))
+            if (Registry.Mouse.Clicked(MouseButton.Left))
             {
-                var ray = Camera.Main.GetRay((Input.Mouse as EDMouseComponent).Position);
+                var ray = Camera.Main.GetRay(Registry.Mouse.Position);
                 RaycastInfo info;
 
                 if (_scene.Raycast(ray, 100, out info))
@@ -170,7 +164,7 @@ namespace C3DE.Editor.MonoGameBridge
 
             else if (_selectedObject.SceneObject != null)
             {
-                if (Input.Mouse.Down(MouseButton.Left))
+                if (Registry.Mouse.Down(MouseButton.Left))
                 {
                     _selectedObject.SceneObject.Transform.Translate(Input.Mouse.Delta.X, 0, Input.Mouse.Delta.Y);
                     Messenger.Notify(EditorEvent.TransformUpdated, new TransformChanged(TransformChangeType.Position, _selectedObject.SceneObject.Transform.Position));
@@ -205,7 +199,8 @@ namespace C3DE.Editor.MonoGameBridge
 
             var cameraPrefab = new CameraPrefab("EditorCamera.Main");
             cameraPrefab.Tag = EditorTag;
-            cameraPrefab.AddComponent<EDOrbitController>();
+            cameraPrefab.AddComponent<EDFirstPersonCamera>();
+            //cameraPrefab.AddComponent<EDOrbitController>();
             _scene.Add(cameraPrefab);
 
             camera = cameraPrefab.GetComponent<Camera>();
