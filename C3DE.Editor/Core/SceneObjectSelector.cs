@@ -1,4 +1,5 @@
 ﻿using C3DE.Components.Renderers;
+using C3DE.Editor.Events;
 
 namespace C3DE.Editor.Core
 {
@@ -7,6 +8,12 @@ namespace C3DE.Editor.Core
         public SceneObject SceneObject { get; private set; }
         private BoundingBoxRenderer _boundingBoxRenderer;
         private RenderableComponent _renderer;
+        private SceneObjectSelectedMessage _message;
+
+        public SceneObjectSelector()
+        {
+            _message = new SceneObjectSelectedMessage();
+        }
 
         public void Set(SceneObject sceneObject)
         {
@@ -17,6 +24,10 @@ namespace C3DE.Editor.Core
                 _boundingBoxRenderer = sceneObject.AddComponent<BoundingBoxRenderer>();
 
             _renderer = sceneObject.GetComponent<RenderableComponent>();
+
+            _message.SceneObject = sceneObject;
+
+            Messenger.Notify(1, _message);
         }
 
         public void Select(bool isSelected)

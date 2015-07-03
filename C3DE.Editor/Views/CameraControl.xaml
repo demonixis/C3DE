@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="C3DE.Editor.Views.Controls.CameraControl"
+﻿<UserControl x:Class="C3DE.Editor.Controls.CameraControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -6,7 +6,7 @@
              mc:Ignorable="d" Height="170" Width="250">
 
     <Border BorderThickness="1" BorderBrush="LightGray" Margin="2">
-        <StackPanel Orientation="Vertical">
+        <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch">
             <Label Content="Camera" />
             <Separator Margin="5, 2, 5, 2" />
             <Grid Margin="5">

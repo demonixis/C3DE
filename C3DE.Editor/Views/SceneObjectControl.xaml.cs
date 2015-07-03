@@ -1,7 +1,7 @@
 ﻿using C3DE.Editor.Events;
 using System.Windows.Controls;
 
-namespace C3DE.Editor.Views.Controls
+namespace C3DE.Editor.Controls
 {
     /// <summary>
     /// Logique d'interaction pour SceneObjectControl.xaml
@@ -45,11 +45,13 @@ namespace C3DE.Editor.Views.Controls
 
         private void OnSceneObjectSelected(BasicMessage m)
         {
-            SceneObjectChangedMessage = m as GenericMessage<bool>;
-            if (SceneObjectChangedMessage != null && _initialized)
+            var soMessage = m as GenericMessage<SceneObject>;
+            var sceneObject = soMessage != null ? soMessage.Value : null;
+
+            if (sceneObject != null && _initialized)
             {
-                SceneObjectName = SceneObjectChangedMessage.Message;
-                SceneObjectEnabled = SceneObjectChangedMessage.Value;
+                SceneObjectName = sceneObject.Name;
+                SceneObjectEnabled = sceneObject.Enabled;
             }
         }
     }

@@ -21,6 +21,7 @@ namespace C3DE.Editor.Events
         public const ushort SceneObjectRemoved = 0xA001;
         public const ushort SceneObjectRenamed = 0xA010;
         public const ushort SceneObjectSelected = 0xA011;
+        public const ushort SceneObjectUnSelected = 0xA012;
         public const ushort TransformChanged = 0xB000;
         public const ushort TransformUpdated = 0xB001;
     }
@@ -55,6 +56,20 @@ namespace C3DE.Editor.Events
             X = x;
             Y = y;
             Z = z;
+        }
+    }
+
+    public class SceneObjectSelectedMessage : BasicMessage
+    {
+        public SceneObject SceneObject { get; set; }
+
+        public SceneObjectSelectedMessage()
+        {
+        }
+
+        public SceneObjectSelectedMessage(SceneObject sceneObject)
+        {
+            SceneObject = sceneObject;
         }
     }
 }

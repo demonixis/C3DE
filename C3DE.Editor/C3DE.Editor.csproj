@@ -95,7 +95,7 @@
     <Compile Include="Core\Components\EDKeyboardComponent.cs" />
     <Compile Include="Core\Components\EDOrbitController.cs" />
     <Compile Include="Core\Components\EDMouseComponent.cs" />
-    <Compile Include="Core\Registry.cs" />
+    <Compile Include="Core\EDRegistry.cs" />
     <Compile Include="Core\EDScene.cs" />
     <Compile Include="Core\SceneObjectSelector.cs" />
     <Compile Include="Exporters\MeshMerger.cs" />
@@ -106,35 +106,35 @@
     <Compile Include="Core\Events\Messenger.cs" />
     <Compile Include="MonoGameBridge\C3DEGameHost.cs" />
     <Compile Include="MonoGameBridge\GraphicsDeviceService.cs" />
-    <Compile Include="Views\Controls\CameraControl.xaml.cs">
+    <Compile Include="Views\CameraControl.xaml.cs">
       <DependentUpon>CameraControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Controls\MeshRendererControl.xaml.cs">
+    <Compile Include="Views\MeshRendererControl.xaml.cs">
       <DependentUpon>MeshRendererControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Controls\SceneListControl.xaml.cs">
+    <Compile Include="Views\SceneListControl.xaml.cs">
       <DependentUpon>SceneListControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Controls\SceneObjectControl.xaml.cs">
+    <Compile Include="Views\SceneObjectControl.xaml.cs">
       <DependentUpon>SceneObjectControl.xaml</DependentUpon>
     </Compile>
-    <Page Include="Views\Controls\CameraControl.xaml">
+    <Page Include="Views\CameraControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Controls\MeshRendererControl.xaml">
+    <Page Include="Views\MeshRendererControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Controls\SceneListControl.xaml">
+    <Page Include="Views\SceneListControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Controls\SceneObjectControl.xaml">
+    <Page Include="Views\SceneObjectControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Controls\TransformControl.xaml">
+    <Page Include="Views\TransformControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -146,7 +146,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Views\Controls\TransformControl.xaml.cs">
+    <Compile Include="Views\TransformControl.xaml.cs">
       <DependentUpon>TransformControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="MainWindow.xaml.cs">

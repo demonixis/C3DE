@@ -28,7 +28,6 @@ namespace C3DE.Editor.MonoGameBridge
     {
         public const string EditorTag = "C3DE_Editor";
         private static GenericMessage<SceneObject> SceneObjectMessage = new GenericMessage<SceneObject>(null);
-        public static Camera camera = null;
 
         private GameTime _gameTime;
         private GameServiceContainer _services;
@@ -86,8 +85,8 @@ namespace C3DE.Editor.MonoGameBridge
             Application.Content = _content;
             Application.GraphicsDevice = GraphicsDevice;
 
-            _gameComponents.Add(Registry.Mouse);
-            _gameComponents.Add(Registry.Keys);
+            _gameComponents.Add(EDRegistry.Mouse);
+            _gameComponents.Add(EDRegistry.Keys);
             _gameComponents.Add(new Time(null));
 
             Screen.Setup((int)ActualWidth, (int)ActualHeight, null, null);
@@ -142,9 +141,9 @@ namespace C3DE.Editor.MonoGameBridge
             foreach (var component in _gameComponents)
                 component.Update(_gameTime);
 
-            if (Registry.Mouse.Clicked(MouseButton.Left))
+            if (EDRegistry.Mouse.Clicked(MouseButton.Left))
             {
-                var ray = Camera.Main.GetRay(Registry.Mouse.Position);
+                var ray = Camera.Main.GetRay(EDRegistry.Mouse.Position);
                 RaycastInfo info;
 
                 if (_scene.Raycast(ray, 100, out info))
@@ -164,9 +163,9 @@ namespace C3DE.Editor.MonoGameBridge
 
             else if (_selectedObject.SceneObject != null)
             {
-                if (Registry.Mouse.Down(MouseButton.Left))
+                if (EDRegistry.Mouse.Down(MouseButton.Left))
                 {
-                    _selectedObject.SceneObject.Transform.Translate(Input.Mouse.Delta.X, 0, Input.Mouse.Delta.Y);
+                    _selectedObject.SceneObject.Transform.Translate(EDRegistry.Mouse.Delta.X, 0, EDRegistry.Mouse.Delta.Y);
                     Messenger.Notify(EditorEvent.TransformUpdated, new TransformChanged(TransformChangeType.Position, _selectedObject.SceneObject.Transform.Position));
                 }
             }
@@ -200,10 +199,9 @@ namespace C3DE.Editor.MonoGameBridge
             var cameraPrefab = new CameraPrefab("EditorCamera.Main");
             cameraPrefab.Tag = EditorTag;
             cameraPrefab.AddComponent<EDFirstPersonCamera>();
-            //cameraPrefab.AddComponent<EDOrbitController>();
             _scene.Add(cameraPrefab);
 
-            camera = cameraPrefab.GetComponent<Camera>();
+            EDRegistry.Camera = cameraPrefab.GetComponent<Camera>();
 
             var lightPrefab = new LightPrefab("Editor_MainLight", LightType.Directional);
             lightPrefab.Tag = EditorTag;
@@ -219,12 +217,12 @@ namespace C3DE.Editor.MonoGameBridge
 
             var terrain = new TerrainPrefab("Editor_Grid");
             terrain.Tag = EditorTag;
-            _scene.Add(terrain);
             terrain.Flatten();
             terrain.Renderer.Material = gridMaterial;
             terrain.Transform.Translate(-terrain.Width >> 1, -1.0f, -terrain.Depth / 2);
+            _scene.Add(terrain);
 
-            camera.Transform.Position = new Vector3(-terrain.Width >> 1, 2, -terrain.Depth / 2);
+            EDRegistry.Camera.Transform.Position = new Vector3(-terrain.Width >> 1, 2, -terrain.Depth / 2);
         }
 
         #endregion
@@ -310,7 +308,7 @@ namespace C3DE.Editor.MonoGameBridge
             _selectedObject.Select(true);
             _editionSceneObject.Selected = sceneObject;
 
-            Messenger.Notify(EditorEvent.SceneObjectSelected, new GenericMessage<bool>(sceneObject.Enabled, sceneObject.Name));
+            Messenger.Notify(EditorEvent.SceneObjectSelected, new GenericMessage<SceneObject>(sceneObject));
             Messenger.Notify(EditorEvent.TransformUpdated, new GenericMessage<Transform>(sceneObject.Transform));
         }
 
@@ -318,6 +316,7 @@ namespace C3DE.Editor.MonoGameBridge
         {
             _selectedObject.Select(false);
             _editionSceneObject.Reset();
+            Messenger.Notify(EditorEvent.SceneObjectUnSelected);
         }
 
         #endregion

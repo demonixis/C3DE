@@ -1,0 +1,41 @@
+﻿<UserControl x:Class="C3DE.Editor.Controls.TransformControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" Height="130" Width="250">
+    <UserControl.Resources>
+        <Style x:Key="Tr_Input" TargetType="TextBox" BasedOn="{ StaticResource { x:Type TextBox}}">
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Width" Value="55" />
+            <Setter Property="Height" Value="20" />
+            <Setter Property="Text" Value="0" />
+            <Setter Property="Margin" Value="0, 0, 5, 0" />
+        </Style>
+    </UserControl.Resources>
+    <Border BorderThickness="1" BorderBrush="LightGray" Margin="2">
+        <StackPanel HorizontalAlignment="Stretch">
+            <Label Content="Transform" />
+            <Separator Margin="5, 2, 5, 2" />
+            <StackPanel Orientation="Horizontal">
+                <Label Style="{StaticResource Control_LeftText}" Content="Position" Width="65" />
+                <TextBox x:Name="transformPositionX" Tag="Position" Style="{StaticResource Tr_Input}" SelectionChanged="OnValueChanged" />
+                <TextBox x:Name="transformPositionY" Tag="Position" Style="{StaticResource Tr_Input}" SelectionChanged="OnValueChanged" />
+                <TextBox x:Name="transformPositionZ" Tag="Position" Style="{StaticResource Tr_Input}" SelectionChanged="OnValueChanged" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <Label Style="{StaticResource Control_LeftText}" Content="Rotation" Width="65" />
+                <TextBox x:Name="transformRotationX" Tag="Rotation" Style="{StaticResource Tr_Input}" SelectionChanged="OnValueChanged" />
+                <TextBox x:Name="transformRotationY" Tag="Rotation" Style="{StaticResource Tr_Input}" SelectionChanged="OnValueChanged" />
+                <TextBox x:Name="transformRotationZ" Tag="Rotation" Style="{StaticResource Tr_Input}" SelectionChanged="OnValueChanged" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="0, 0, 0, 15">
+                <Label Style="{StaticResource Control_LeftText}" Content="Scale" Width="65" />
+                <TextBox x:Name="transformScaleX" Tag="Scale" Style="{StaticResource Tr_Input}" SelectionChanged="OnValueChanged" />
+                <TextBox x:Name="transformScaleY" Tag="Scale" Style="{StaticResource Tr_Input}" SelectionChanged="OnValueChanged" />
+                <TextBox x:Name="transformScaleZ" Tag="Scale" Style="{StaticResource Tr_Input}" SelectionChanged="OnValueChanged" />
+            </StackPanel>
+        </StackPanel>
+    </Border>
+</UserControl>

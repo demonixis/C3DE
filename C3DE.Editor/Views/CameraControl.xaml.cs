@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace C3DE.Editor.Views.Controls
+namespace C3DE.Editor.Controls
 {
     /// <summary>
     /// Logique d'interaction pour CameraControl.xaml

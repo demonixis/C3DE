@@ -9,7 +9,6 @@ namespace C3DE.Editor.Core.Components
 
     public class EDFirstPersonCamera : Controller
     {
-        private Camera _camera;
         private Matrix _rotationMatrix;
         private Vector3 _transformedReference;
         protected Vector3 translation = Vector3.Zero;
@@ -18,19 +17,13 @@ namespace C3DE.Editor.Core.Components
         public EDFirstPersonCamera()
             : base()
         {
-            Velocity = 0.90f;
-            AngularVelocity = 0.85f;
-            MoveSpeed = 0.5f;
-            RotationSpeed = 0.35f;
+            Velocity = 0.8f;
+            AngularVelocity = 0.8f;
+            MoveSpeed = 0.25f;
+            RotationSpeed = 0.25f;
             LookSpeed = 0.15f;
             StrafeSpeed = 0.75f;
             MouseSensibility = new Vector2(0.15f);
-            GamepadSensibility = new Vector2(2.5f);
-        }
-
-        public override void Start()
-        {
-            _camera = GetComponent<Camera>(); // TODO Editor.Camera
         }
 
         public override void Update()
@@ -50,7 +43,6 @@ namespace C3DE.Editor.Core.Components
             }
 
             _rotationMatrix = Matrix.CreateFromYawPitchRoll(transform.Rotation.Y, transform.Rotation.X, 0.0f);
-
             _transformedReference = Vector3.Transform(translation, Matrix.CreateRotationY(transform.Rotation.Y));
 
             // Translate and rotate
@@ -58,49 +50,48 @@ namespace C3DE.Editor.Core.Components
             transform.Rotate(ref rotation);
 
             // Update target
-            _camera.Target = transform.Position + Vector3.Transform(_camera.Reference, _rotationMatrix);
+            EDRegistry.Camera.Target = transform.Position + Vector3.Transform(EDRegistry.Camera.Reference, _rotationMatrix);
 
             translation *= Velocity;
-            rotation *= AngularVelocity; Debug.Log(translation.X);
+            rotation *= AngularVelocity;
         }
 
         protected override void UpdateInputs()
         {
             UpdateMouseInput();
             UpdateKeyboardInput();
-            UpdateGamepadInput();
         }
 
         protected override void UpdateKeyboardInput()
         {
-            if (Registry.Keys.Pressed(WinInput.Key.Up))
+            if (EDRegistry.Keys.Pressed(WinInput.Key.Up))
                 translation.Z += MoveSpeed * Time.DeltaTime;
 
-            else if (Registry.Keys.Pressed(WinInput.Key.Down))
+            else if (EDRegistry.Keys.Pressed(WinInput.Key.Down))
                 translation.Z -= MoveSpeed * Time.DeltaTime;
 
-            if (Registry.Keys.Pressed(WinInput.Key.Left))
+            if (EDRegistry.Keys.Pressed(WinInput.Key.Left))
                 translation.X += MoveSpeed * Time.DeltaTime / 2.0f;
 
-            else if (Registry.Keys.Pressed(WinInput.Key.Right))
+            else if (EDRegistry.Keys.Pressed(WinInput.Key.Right))
                 translation.X -= MoveSpeed * Time.DeltaTime / 2.0f;
         }
 
         protected override void UpdateMouseInput()
         {
-            if (Registry.Mouse.Down(Inputs.MouseButton.Right))
+            if (EDRegistry.Mouse.Down(Inputs.MouseButton.Right))
             {
-                rotation.Y -= Registry.Mouse.Delta.X * RotationSpeed * MouseSensibility.Y * Time.DeltaTime;
-                rotation.X += Registry.Mouse.Delta.Y * RotationSpeed * MouseSensibility.X * Time.DeltaTime;
+                rotation.Y -= EDRegistry.Mouse.Delta.X * LookSpeed * MouseSensibility.Y * Time.DeltaTime;
+                rotation.X += EDRegistry.Mouse.Delta.Y * LookSpeed * MouseSensibility.X * Time.DeltaTime;
             }
 
-            if (Registry.Mouse.Down(Inputs.MouseButton.Middle))
+            if (EDRegistry.Mouse.Down(Inputs.MouseButton.Middle))
             {
-                translation.Y += Registry.Mouse.Delta.Y * MoveSpeed * MouseSensibility.Y * Time.DeltaTime;
-                translation.X += Registry.Mouse.Delta.X * StrafeSpeed * MouseSensibility.X * Time.DeltaTime;
+                translation.Y += EDRegistry.Mouse.Delta.Y * StrafeSpeed * MouseSensibility.Y * Time.DeltaTime;
+                translation.X += EDRegistry.Mouse.Delta.X * StrafeSpeed * MouseSensibility.X * Time.DeltaTime;
             }
 
-            translation.Z += MoveSpeed * Registry.Mouse.Wheel;
+            translation.Z += MoveSpeed * EDRegistry.Mouse.Wheel * Time.DeltaTime;
         }
 
         protected override void UpdateGamepadInput()

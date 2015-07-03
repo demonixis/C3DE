@@ -11,6 +11,10 @@ namespace C3DE.Editor
     using C3DE.Editor.Events;
     using C3DE.Editor.Core;
     using C3DE.Editor.Core.Components;
+    using C3DE.Editor.Controls;
+    using C3DE.Components.Renderers;
+    using C3DE.Components.Colliders;
+    using C3DE.Components;
 
     /// <summary>
     /// Logique d'interaction pour MainWindow.xaml
@@ -22,9 +26,58 @@ namespace C3DE.Editor
             InitializeComponent();
             KeyDown += OnKeyDown;
 
-            Registry.Keys = new EDKeyboardComponent(null, this);
-            Registry.Mouse = new EDMouseComponent(null, this);
+            EDRegistry.Keys = new EDKeyboardComponent(null, this);
+            EDRegistry.Mouse = new EDMouseComponent(null, this);
+
+            Messenger.Register(EditorEvent.SceneObjectSelected, OnSceneObjectSelected);
+            Messenger.Register(EditorEvent.SceneObjectUnSelected, OnSceneObjectUnselected);
+
+            componentContainer.Children.Clear();
         }
+
+        private void OnSceneObjectSelected(BasicMessage m)
+        {
+            var soMessage = m as GenericMessage<SceneObject>;
+            var sceneObject = soMessage != null ? soMessage.Value : null;
+
+            if (sceneObject != null)
+            {
+                var soEdition = new SceneObjectControl();
+                soEdition.Set(sceneObject.Name, sceneObject.Enabled);
+
+                var transform = new TransformControl();
+                transform.Set(sceneObject.Transform);
+
+                componentContainer.Children.Add(soEdition);
+                componentContainer.Children.Add(transform);
+                
+                foreach (var component in sceneObject.Components)
+                {
+                    MeshRenderer meshRenderer = component as MeshRenderer;
+                    if (meshRenderer != null)
+                    {
+                        var mr = new MeshRendererControl();
+                        mr.Set(meshRenderer.Geometry.ToString(), meshRenderer.CastShadow, meshRenderer.ReceiveShadow, 0);
+                        componentContainer.Children.Add(mr);
+                        continue;
+                    }
+
+                    Camera camera = component as Camera;
+                    if (camera != null)
+                    {
+                        var cam = new CameraControl();
+
+                        continue;
+                    }
+                }
+            }
+        }
+
+        private void OnSceneObjectUnselected(BasicMessage m)
+        {
+            componentContainer.Children.Clear();
+        }
+
 
         private void OnKeyDown(object sender, KeyEventArgs e)
         {

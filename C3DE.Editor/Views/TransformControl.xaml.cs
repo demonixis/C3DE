@@ -2,7 +2,7 @@
 using C3DE.Editor.Events;
 using System.Windows.Controls;
 
-namespace C3DE.Editor.Views.Controls
+namespace C3DE.Editor.Controls
 {
     public partial class TransformControl : UserControl
     {
@@ -100,6 +100,13 @@ namespace C3DE.Editor.Views.Controls
             ScaleX = sx;
             ScaleY = sy;
             ScaleZ = sz;
+        }
+
+        public void Set(Transform transform)
+        {
+            Set(transform.Position.X, transform.Position.Y, transform.Position.Z,
+                transform.Rotation.X, transform.Rotation.Y, transform.Rotation.Z,
+                transform.LocalScale.X, transform.LocalScale.Y, transform.LocalScale.Z);
         }
 
         public void Reset()

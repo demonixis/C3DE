@@ -62,16 +62,16 @@ namespace C3DE.Editor.Core.Components
 
         public override void Update()
         {
-            if (Registry.Mouse.Down(MouseButton.Right))
+            if (EDRegistry.Mouse.Down(MouseButton.Right))
             {
-                _angle.X -= RotationSpeed * Registry.Mouse.Delta.X * Time.DeltaTime;
-                _angle.Y -= RotationSpeed * Registry.Mouse.Delta.Y * Time.DeltaTime;
+                _angle.X -= RotationSpeed * EDRegistry.Mouse.Delta.X * Time.DeltaTime;
+                _angle.Y -= RotationSpeed * EDRegistry.Mouse.Delta.Y * Time.DeltaTime;
             }
  
-            if (Registry.Mouse.Down(MouseButton.Middle))
-                _target.Y += StrafeSpeed * Registry.Mouse.Delta.Y * Time.DeltaTime;
+            if (EDRegistry.Mouse.Down(MouseButton.Middle))
+                _target.Y += StrafeSpeed * EDRegistry.Mouse.Delta.Y * Time.DeltaTime;
             
-            _distance -= Registry.Mouse.Wheel * 0.1f * MoveSpeed * Time.DeltaTime;
+            _distance -= EDRegistry.Mouse.Wheel * 0.1f * MoveSpeed * Time.DeltaTime;
 
             CheckAngle();
             CheckDistance();

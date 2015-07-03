@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Windows.Controls;
 
-namespace C3DE.Editor.Views.Controls
+namespace C3DE.Editor.Controls
 {
     /// <summary>
     /// Interaction logic for SceneListControl.xaml

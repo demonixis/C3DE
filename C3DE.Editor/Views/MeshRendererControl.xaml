@@ -1,11 +1,11 @@
-﻿<UserControl x:Class="C3DE.Editor.Views.Controls.MeshRendererControl"
+﻿<UserControl x:Class="C3DE.Editor.Controls.MeshRendererControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" Height="150" Width="250">
     <Border BorderThickness="1" BorderBrush="LightGray" Margin="2">
-        <StackPanel Orientation="Vertical">
+        <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch">
             <Label Content="Mesh Renderer" />
             <Separator Margin="5, 2, 5, 2" />
             <Grid Margin="5">
@@ -30,10 +30,10 @@
                     <ComboBoxItem>Sphere</ComboBoxItem>
                 </ComboBox>
 
-                <CheckBox Grid.Row="1" Grid.Column="1" x:Name="CastShadow" IsChecked="True" Style="{ StaticResource MR_Checkbox }" />
-                <CheckBox Grid.Row="2" Grid.Column="1" x:Name="ReceiveShadow" IsChecked="True" Style="{ StaticResource MR_Checkbox }" />
+                <CheckBox Grid.Row="1" Grid.Column="1" x:Name="IsCastShadow" IsChecked="True" Style="{ StaticResource MR_Checkbox }" />
+                <CheckBox Grid.Row="2" Grid.Column="1" x:Name="IsReceiveShadow" IsChecked="True" Style="{ StaticResource MR_Checkbox }" />
 
-                <ComboBox Grid.Row="3" Grid.Column="1" x:Name="Materials">
+                <ComboBox Grid.Row="3" Grid.Column="1" x:Name="SelectedMaterials">
                     <ComboBoxItem>Default Material</ComboBoxItem>
                 </ComboBox>
 
