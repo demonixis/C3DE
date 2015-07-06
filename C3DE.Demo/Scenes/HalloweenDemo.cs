@@ -65,7 +65,7 @@ namespace C3DE.Demo.Scenes
             var jackMaterial = new StandardMaterial(this);
             jackMaterial.EmissiveColor = new Color(0.2f, 0.005f, 0);
             jackMaterial.MainTexture = Application.Content.Load<Texture2D>("Models/Jack/PumpkinColor");
-            jack.Renderer.MainMaterial = jackMaterial;
+            jack.Renderer.Material = jackMaterial;
             Add(jack);
 
             orbitController.LookAt(jack.Transform);

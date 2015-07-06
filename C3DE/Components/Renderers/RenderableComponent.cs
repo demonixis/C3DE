@@ -13,9 +13,7 @@ namespace C3DE.Components.Renderers
     {
         protected internal BoundingSphere boundingSphere;
         protected internal BoundingBox boundingBox;
-        protected internal List<int> materials;
-        protected internal int materialCount;
-        protected int materialIndex;
+        protected internal int materialIndex;
 
         /// <summary>
         /// Indicates whether the object can cast shadow. 
@@ -37,38 +35,13 @@ namespace C3DE.Components.Renderers
             get { return boundingBox; }
         }
 
-        protected internal List<int> MaterialIndices
-        {
-            get { return materials; }
-        }
-
-        public Material MainMaterial
-        {
-            get { return Material; }
-            set
-            {
-                var index = AddMaterial(value);
-
-                if (index > -1 && index < materials.Count)
-                    materialIndex = index;
-            }
-        }
-
         /// <summary>
         /// Gets the main material.
         /// </summary>
         public Material Material
         {
-            get { return materialCount > 0 ? sceneObject.Scene.Materials[materials[materialIndex]] : null; }
-            set { AddMaterial(value); }
-        }
-
-        /// <summary>
-        /// Gets the number of materials.
-        /// </summary>
-        public int MaterialCount
-        {
-            get { return materialCount; }
+            get { return materialIndex > -1 ? Scene.current.materials[materialIndex] : Scene.current.defaultMaterial; }
+            set { materialIndex = value.Index; }
         }
 
         /// <summary>
@@ -80,8 +53,7 @@ namespace C3DE.Components.Renderers
             CastShadow = true;
             ReceiveShadow = true;
             boundingSphere = new BoundingSphere();
-            materials = new List<int>(1);
-            materialCount = 0;
+            boundingBox = new BoundingBox();
             materialIndex = 0;
         }
 
@@ -89,43 +61,6 @@ namespace C3DE.Components.Renderers
         {
             if (!sceneObject.IsStatic)
                 boundingSphere.Center = transform.Position;
-        }
-
-        /// <summary>
-        /// Add a material, if the component have not a material it is used by default.
-        /// If the material is already added it is used by default.
-        /// </summary>
-        /// <param name="material"></param>
-        public int AddMaterial(Material material)
-        {
-            if (sceneObject.Scene == null)
-                sceneObject.Scene = material.scene;
-
-            var index = material.Index;
-            var matIndex = materials.IndexOf(index);
-
-            if (matIndex == -1)
-            {
-                materials.Add(material.Index);
-                matIndex = materialCount++;
-            }
-
-            return matIndex;
-        }
-
-        /// <summary>
-        /// Remove a material.
-        /// </summary>
-        /// <param name="material">The material to remove.</param>
-        public void RemoveMaterial(Material material)
-        {
-            var index = material.Index;
-
-            if (materials.IndexOf(index) > -1)
-            {
-                materials.Remove(index);
-                materialCount--;
-            }
         }
 
         /// <summary>

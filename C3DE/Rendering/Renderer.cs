@@ -69,11 +69,7 @@ namespace C3DE.Rendering
                 // FIXME If a scene object is disabled, the renderlist MUST be updated
                 if (scene.renderList[i].SceneObject.Enabled && scene.renderList[i].Enabled)
                 {
-                    if (scene.RenderList[i].MaterialCount == 0)
-                        scene.DefaultMaterial.Pass(scene.renderList[i]);
-                    else
-                        scene.RenderList[i].Material.Pass(scene.RenderList[i]);
-
+                    scene.RenderList[i].Material.Pass(scene.RenderList[i]);
                     scene.RenderList[i].Draw(graphicsDevice);
                 }
             }
