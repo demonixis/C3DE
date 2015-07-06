@@ -39,7 +39,7 @@ namespace C3DE.Demo.Scenes
             groundMaterial.MainTexture = GraphicsHelper.CreateCheckboardTexture(Color.LightGreen, Color.LightSeaGreen, 128, 128);
             groundMaterial.Tiling = new Vector2(16);
 
-            var ground = new TerrainPrefab("terrain");
+            var ground = new Terrain("terrain");
             ground.Renderer.Geometry.Size = new Vector3(4, 1, 4);
             ground.Flatten();
             ground.Renderer.Material = groundMaterial;
@@ -87,7 +87,7 @@ namespace C3DE.Demo.Scenes
             var cube = sceneObject.AddComponent<MeshRenderer>();
             cube.ReceiveShadow = false;
             cube.Geometry = new CubeGeometry();
-            cube.Geometry.Generate();
+            cube.Geometry.Buid();
             cube.Material = new PreLightMaterial(scene);
             cube.Material.MainTexture = GraphicsHelper.CreateCheckboardTexture(RandomHelper.GetColor(), RandomHelper.GetColor(), 64, 64);
 
@@ -119,7 +119,7 @@ namespace C3DE.Demo.Scenes
             var renderer = sceneObject.AddComponent<MeshRenderer>();
             renderer.Geometry = new CubeGeometry();
             renderer.Geometry.Size = size;
-            renderer.Geometry.Generate();
+            renderer.Geometry.Buid();
 
             return renderer;
         }

@@ -96,7 +96,7 @@ namespace C3DE.Geometries
             _indexBuffer.SetData(_indices);
         }
 
-        public void Generate()
+        public void Buid()
         {
             Dispose();
             CreateGeometry();

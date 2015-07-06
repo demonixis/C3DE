@@ -40,7 +40,7 @@ namespace C3DE.Demo.Scenes
             // Finally a terrain
             var terrainMat = new TerrainMaterial(scene);
 
-            var terrain = new TerrainPrefab("terrain");
+            var terrain = new Terrain("terrain");
             terrain.Randomize(4, 12);
             terrain.Renderer.Material = terrainMat;
             terrain.Transform.Translate(-terrain.Width >> 1, 0, -terrain.Depth / 2);

@@ -33,7 +33,7 @@ namespace C3DE.Demo.Scenes
             // Finally a terrain
             var terrainMat = new TerrainMaterial(scene);
 
-            var terrain = new TerrainPrefab("terrain");
+            var terrain = new Terrain("terrain");
             scene.Add(terrain);
             terrain.LoadHeightmap("Textures/heightmap");
             terrain.Renderer.Material = terrainMat;

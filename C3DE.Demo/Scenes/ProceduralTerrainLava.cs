@@ -37,7 +37,7 @@ namespace C3DE.Demo.Scenes
             terrainMaterial.Shininess = 150;
             terrainMaterial.Tiling = new Vector2(8);
 
-            var terrain = new TerrainPrefab("terrain");
+            var terrain = new Terrain("terrain");
             terrain.Renderer.Geometry.Size = new Vector3(2);
             terrain.Renderer.ReceiveShadow = true;
             terrain.Randomize(4, 12);
@@ -54,7 +54,7 @@ namespace C3DE.Demo.Scenes
             lava.Renderer.Material = lavaMaterial;
             lava.Renderer.ReceiveShadow = true;
             lava.Renderer.Geometry.Size = new Vector3(terrain.Width * 0.5f);
-            lava.Renderer.Geometry.Generate();
+            lava.Renderer.Geometry.Buid();
             Add(lava);
         }
     }

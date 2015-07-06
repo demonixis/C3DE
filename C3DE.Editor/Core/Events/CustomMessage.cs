@@ -15,7 +15,10 @@ namespace C3DE.Editor.Events
         public const ushort CommandDuplicate = 0x0008;
         public const ushort CommandNew = 0x0009;
         public const ushort CommandOpen = 0x0010;
+        public const ushort CommandDelete = 0x0020;
         public const ushort KeyJustPressed = 0x1000;
+
+        public const ushort CreateSceneObject = 0x9000;
 
         public const ushort SceneObjectAdded = 0xA000;
         public const ushort SceneObjectRemoved = 0xA001;
