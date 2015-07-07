@@ -1,4 +1,5 @@
-﻿using C3DE.Components.Renderers;
+﻿using C3DE.Components;
+using C3DE.Components.Renderers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -27,27 +28,28 @@ namespace C3DE.Materials
             effect = content.Load<Effect>("FX/ToonEffect");
         }
 
-        public override void PrePass()
+        public override void PrePass(Camera camera)
         {
-            effect.Parameters["View"].SetValue(scene.MainCamera.view);
-            effect.Parameters["Projection"].SetValue(scene.MainCamera.projection);
+            effect.Parameters["View"].SetValue(camera.view);
+            effect.Parameters["Projection"].SetValue(camera.projection);
+            effect.Parameters["AmbientColor"].SetValue(scene.RenderSettings.ambientColor);
 
-            var light0 = scene.Lights[0]; // FIXME
-
-          
-            // Light
-            effect.Parameters["LightDirection"].SetValue(light0.Direction);
+            if (scene.lights.Count > 0)
+            {
+                var light0 = scene.Lights[0]; // FIXME
+                effect.Parameters["LightDirection"].SetValue(light0.Direction);
+            }
         }
 
         public override void Pass(RenderableComponent renderable)
         {
             // Material
-            effect.Parameters["AmbientColor"].SetValue(scene.RenderSettings.ambientColor);
+            
             effect.Parameters["DiffuseColor"].SetValue(diffuseColor);
             effect.Parameters["EmissiveColor"].SetValue(_emissiveColor);
             effect.Parameters["TextureTiling"].SetValue(Tiling);
             effect.Parameters["TextureOffset"].SetValue(Offset);
-            effect.Parameters["MainTexture"].SetValue(mainTexture);
+            effect.Parameters["MainTexture"].SetValue(diffuseTexture);
             effect.Parameters["World"].SetValue(renderable.SceneObject.Transform.world);
             effect.CurrentTechnique.Passes[0].Apply();
         }

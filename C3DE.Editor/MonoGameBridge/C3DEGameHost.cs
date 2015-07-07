@@ -41,7 +41,7 @@ namespace C3DE.Editor.MonoGameBridge
             int height = (int)sizeInfo.NewSize.Height;
 
             Screen.Setup(width, height, null, null);
-            Camera.Main.ComputeProjectionMatrix(MathHelper.PiOver4, (float)width / (float)height, 1, 2000);
+            Camera.main.ComputeProjectionMatrix(MathHelper.PiOver4, (float)width / (float)height, 1, 2000);
 
             _renderer.NeedsBufferUpdate = true;
         }

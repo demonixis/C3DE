@@ -49,11 +49,11 @@ namespace C3DE.Demo.Scenes
             lightPrefabSphere.CastShadow = false;
             lightPrefabSphere.ReceiveShadow = false;
             lightPrefabSphere.Material = new SimpleMaterial(scene);
-            lightPrefabSphere.Material.MainTexture = GraphicsHelper.CreateTexture(Color.Yellow, 1, 1);
+            lightPrefabSphere.Material.Texture = GraphicsHelper.CreateTexture(Color.Yellow, 1, 1);
 
             // Terrain
             var terrainMaterial = new StandardMaterial(scene);
-            terrainMaterial.MainTexture = GraphicsHelper.CreateBorderTexture(Color.LightGreen, Color.LightSeaGreen, 128, 128, 4);
+            terrainMaterial.Texture = GraphicsHelper.CreateBorderTexture(Color.LightGreen, Color.LightSeaGreen, 128, 128, 4);
             terrainMaterial.Shininess = 10;
             terrainMaterial.Tiling = new Vector2(16);
 
@@ -67,7 +67,7 @@ namespace C3DE.Demo.Scenes
 
             // Cube
             var cubeSuperMaterial = new StandardMaterial(scene);
-            cubeSuperMaterial.MainTexture = GraphicsHelper.CreateCheckboardTexture(Color.FloralWhite, Color.DodgerBlue);
+            cubeSuperMaterial.Texture = GraphicsHelper.CreateCheckboardTexture(Color.FloralWhite, Color.DodgerBlue);
             cubeSuperMaterial.DiffuseColor = Color.WhiteSmoke;
             cubeSuperMaterial.SpecularColor = new Color(0.8f, 0.8f, 0.8f, 1.0f);
             cubeSuperMaterial.Shininess = 10;

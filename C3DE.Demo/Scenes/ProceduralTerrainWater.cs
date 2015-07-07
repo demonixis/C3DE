@@ -48,7 +48,7 @@ namespace C3DE.Demo.Scenes
 
             terrain.SetWeightData(0.5f, 4, 15, 30);
 
-            terrainMat.MainTexture = Application.Content.Load<Texture2D>("Textures/Terrain/Grass");
+            terrainMat.Texture = Application.Content.Load<Texture2D>("Textures/Terrain/Grass");
             terrainMat.SandTexture = Application.Content.Load<Texture2D>("Textures/Terrain/Sand");
             terrainMat.SnowTexture = Application.Content.Load<Texture2D>("Textures/Terrain/Snow");
             terrainMat.RockTexture = Application.Content.Load<Texture2D>("Textures/Terrain/Rock");

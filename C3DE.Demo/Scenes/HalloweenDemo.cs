@@ -39,7 +39,7 @@ namespace C3DE.Demo.Scenes
 
             // Terrain
             var terrainMaterial = new StandardMaterial(scene);
-            terrainMaterial.MainTexture = Application.Content.Load<Texture2D>("Textures/Terrain/Rock");
+            terrainMaterial.Texture = Application.Content.Load<Texture2D>("Textures/Terrain/Rock");
             terrainMaterial.Shininess = 50;
             terrainMaterial.Tiling = new Vector2(8);
 
@@ -64,7 +64,7 @@ namespace C3DE.Demo.Scenes
             jack.LoadModel("Models/Jack/JackOLantern");
             var jackMaterial = new StandardMaterial(this);
             jackMaterial.EmissiveColor = new Color(0.2f, 0.005f, 0);
-            jackMaterial.MainTexture = Application.Content.Load<Texture2D>("Models/Jack/PumpkinColor");
+            jackMaterial.Texture = Application.Content.Load<Texture2D>("Models/Jack/PumpkinColor");
             jack.Renderer.Material = jackMaterial;
             Add(jack);
 

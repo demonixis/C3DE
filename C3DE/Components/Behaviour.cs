@@ -6,7 +6,7 @@ namespace C3DE.Components
     {
         public Behaviour() : base() { }
 
-        public virtual void OnGUI(GUI gui) { }
+        public virtual void OnGUI(GUI ui) { }
 
         public virtual void OnDestroy() { }
 

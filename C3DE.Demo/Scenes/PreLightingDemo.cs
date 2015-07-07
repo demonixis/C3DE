@@ -36,7 +36,7 @@ namespace C3DE.Demo.Scenes
 
             // Terrain
             var groundMaterial = new PreLightMaterial(scene);
-            groundMaterial.MainTexture = GraphicsHelper.CreateCheckboardTexture(Color.LightGreen, Color.LightSeaGreen, 128, 128);
+            groundMaterial.Texture = GraphicsHelper.CreateCheckboardTexture(Color.LightGreen, Color.LightSeaGreen, 128, 128);
             groundMaterial.Tiling = new Vector2(16);
 
             var ground = new Terrain("terrain");
@@ -54,7 +54,7 @@ namespace C3DE.Demo.Scenes
                 var size = RandomHelper.GetVector3(0.5f, 0.5f, 0.5f, 16, 16, 16);
                 cube = CreateCube(size, RandomHelper.GetVector3(-limits, size.Y, -limits, limits, size.Y, limits));
                 cube.Material = new PreLightMaterial(this);
-                cube.Material.MainTexture = GraphicsHelper.CreateCheckboardTexture(RandomHelper.GetColor(), RandomHelper.GetColor());
+                cube.Material.Texture = GraphicsHelper.CreateCheckboardTexture(RandomHelper.GetColor(), RandomHelper.GetColor());
                 Add(cube.SceneObject);
             }
 
@@ -89,7 +89,7 @@ namespace C3DE.Demo.Scenes
             cube.Geometry = new CubeGeometry();
             cube.Geometry.Buid();
             cube.Material = new PreLightMaterial(scene);
-            cube.Material.MainTexture = GraphicsHelper.CreateCheckboardTexture(RandomHelper.GetColor(), RandomHelper.GetColor(), 64, 64);
+            cube.Material.Texture = GraphicsHelper.CreateCheckboardTexture(RandomHelper.GetColor(), RandomHelper.GetColor(), 64, 64);
 
             var inc = 75;
             var path = cube.AddComponent<SimplePath>();

@@ -3,10 +3,6 @@ float4x4 World;
 float4x4 View;
 float4x4 Projection;
 
-// Material
-float3 AmbientColor = float3(0.1, 0.1, 0.1);
-float3 DiffuseColor = float3(1.0, 1.0, 1.0);
-
 // Misc
 float2 TextureTiling = float2(1, 1);
 float2 TextureOffset = float2(0, 0);
@@ -50,7 +46,7 @@ VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
 
 float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 {
-	return float4(AmbientColor + (DiffuseColor * tex2D(textureSampler, (input.UV + TextureOffset) * TextureTiling)), 1.0);
+	return tex2D(textureSampler, (input.UV + TextureOffset) * TextureTiling);
 }
 
 technique TexturedSimple

@@ -50,7 +50,7 @@ namespace C3DE.Demo
                 skin.TextColor = Color.Black;
             }
 
-            GUI.Scale = Screen.GetScale();
+            //GUI.Scale = Screen.GetScale();
 
             return skin;
         }
@@ -62,7 +62,7 @@ namespace C3DE.Demo
         {
             using (var game = new Engine("C3DE Game Engine", ScreenWidth, ScreenHeight))
             {
-                Screen.SetVirtualResolution(1280, 800);
+                //Screen.SetVirtualResolution(1280, 800);
                 Application.SceneManager.Add(new MenuDemo(), true);
                 Application.SceneManager.Add(new HeightmapDemo());
                 Application.SceneManager.Add(new ProceduralTerrainWater());

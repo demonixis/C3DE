@@ -1,4 +1,5 @@
-﻿using C3DE.Components.Renderers;
+﻿using C3DE.Components;
+using C3DE.Components.Renderers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -18,16 +19,16 @@ namespace C3DE.Materials
             effect = content.Load<Effect>("FX/FresnelEffect");
         }
 
-        public override void PrePass()
+        public override void PrePass(Camera camera)
         {
-            effect.Parameters["View"].SetValue(scene.MainCamera.ViewMatrix);
-            effect.Parameters["Projection"].SetValue(scene.MainCamera.ProjectionMatrix);
+            effect.Parameters["View"].SetValue(camera.view);
+            effect.Parameters["Projection"].SetValue(camera.projection);
+            effect.Parameters["EyePosition"].SetValue(camera.Transform.Position);
         }
 
         public override void Pass(RenderableComponent renderable)
         {
-            effect.Parameters["EyePosition"].SetValue(scene.MainCamera.SceneObject.Transform.Position);
-            effect.Parameters["World"].SetValue(renderable.SceneObject.Transform.WorldMatrix);
+            effect.Parameters["World"].SetValue(renderable.Transform.world);
             effect.CurrentTechnique.Passes[0].Apply();
         }
     }

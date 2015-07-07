@@ -121,7 +121,7 @@ namespace C3DE
                 if (_activeSceneIndex > -1)
                     _scenes[_activeSceneIndex].Unload();
 
-                Camera.Main = null;
+                Camera.main = null;
                 GUI.Enabled = true;
                 GUI.Effect = null;
 

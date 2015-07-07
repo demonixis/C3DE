@@ -33,7 +33,7 @@ namespace C3DE.Demo.Scenes
 
             // A terrain with its material.
             var terrainMaterial = new StandardMaterial(scene);
-            terrainMaterial.MainTexture = Application.Content.Load<Texture2D>("Textures/Terrain/Rock");
+            terrainMaterial.Texture = Application.Content.Load<Texture2D>("Textures/Terrain/Rock");
             terrainMaterial.Shininess = 150;
             terrainMaterial.Tiling = new Vector2(8);
 
@@ -47,7 +47,7 @@ namespace C3DE.Demo.Scenes
 
             // Lava !
             var lavaMaterial = new LavaMaterial(this);
-            lavaMaterial.MainTexture = Application.Content.Load<Texture2D>("Textures/lava_texture");
+            lavaMaterial.Texture = Application.Content.Load<Texture2D>("Textures/lava_texture");
             lavaMaterial.NormalMap = Application.Content.Load<Texture2D>("Textures/lava_bump");
 
             var lava = new WaterPrefab("water");

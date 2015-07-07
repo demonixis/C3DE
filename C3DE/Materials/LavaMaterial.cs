@@ -1,4 +1,5 @@
-﻿using C3DE.Components.Renderers;
+﻿using C3DE.Components;
+using C3DE.Components.Renderers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -23,10 +24,10 @@ namespace C3DE.Materials
             effect = content.Load<Effect>("FX/LavaEffect");
         }
 
-        public override void PrePass()
+        public override void PrePass(Camera camera)
         {
-            effect.Parameters["View"].SetValue(scene.MainCamera.view);
-            effect.Parameters["Projection"].SetValue(scene.MainCamera.projection);
+            effect.Parameters["View"].SetValue(camera.view);
+            effect.Parameters["Projection"].SetValue(camera.projection);
             effect.Parameters["AmbientColor"].SetValue(scene.RenderSettings.ambientColor);
         }
 
@@ -35,11 +36,11 @@ namespace C3DE.Materials
             _totalTime += Time.DeltaTime / 10.0f;
 
             effect.Parameters["Time"].SetValue(_totalTime);
-            effect.Parameters["MainTexture"].SetValue(mainTexture);
+            effect.Parameters["MainTexture"].SetValue(diffuseTexture);
             effect.Parameters["TextureTiling"].SetValue(Tiling);
             effect.Parameters["TextureOffset"].SetValue(Offset);
             effect.Parameters["DiffuseColor"].SetValue(diffuseColor);
-            effect.Parameters["World"].SetValue(renderable.SceneObject.Transform.world);
+            effect.Parameters["World"].SetValue(renderable.Transform.world);
             effect.CurrentTechnique.Passes[0].Apply();
         }
     }

@@ -41,7 +41,7 @@ namespace C3DE.Editor.Core
             base.Initialize();
 
             DefaultMaterial = new SimpleMaterial(this);
-            DefaultMaterial.MainTexture = GraphicsHelper.CreateBorderTexture(Color.LightSkyBlue, Color.LightGray, 64, 64, 1);
+            DefaultMaterial.Texture = GraphicsHelper.CreateBorderTexture(Color.LightSkyBlue, Color.LightGray, 64, 64, 1);
 
             camera = CreateAddSceneObject<Camera>("EditorCamera.Main");
             camera.Setup(new Vector3(0.0f, 20.0f, -20.0f), Vector3.Zero, Vector3.Up);
@@ -54,7 +54,7 @@ namespace C3DE.Editor.Core
 
             // Grid
             var gridMaterial = new UnlitMaterial(this);
-            gridMaterial.MainTexture = GraphicsHelper.CreateCheckboardTexture(new Color(0.6f, 0.6f, 0.6f), new Color(0.95f, 0.95f, 0.95f), 256, 256);;
+            gridMaterial.Texture = GraphicsHelper.CreateCheckboardTexture(new Color(0.6f, 0.6f, 0.6f), new Color(0.95f, 0.95f, 0.95f), 256, 256);;
             gridMaterial.Tiling = new Vector2(24);
 
             grid = new Terrain("Editor_Grid");
@@ -174,7 +174,7 @@ namespace C3DE.Editor.Core
                     var water = new WaterPrefab(type);
                     Add(water);
                     water.Generate(string.Empty, string.Empty, new Vector3(10));
-                    water.Renderer.Material.MainTexture = GraphicsHelper.CreateTexture(Color.LightSeaGreen, 1, 1);
+                    water.Renderer.Material.Texture = GraphicsHelper.CreateTexture(Color.LightSeaGreen, 1, 1);
                     sceneObject = water;
                     break;
 

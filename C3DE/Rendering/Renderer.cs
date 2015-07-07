@@ -61,7 +61,7 @@ namespace C3DE.Rendering
 
             // Prepass, Update light, eye position, etc.
             for (int i = 0; i < scene.effects.Count; i++)
-                scene.materials[scene.materialsEffectIndex[i]].PrePass();
+                scene.materials[scene.materialsEffectIndex[i]].PrePass(camera);
 
             // Pass, Update matrix, material attributes, etc.
             for (int i = 0; i < scene.RenderList.Count; i++)
