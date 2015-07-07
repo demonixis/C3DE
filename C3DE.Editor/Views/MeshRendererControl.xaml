@@ -25,15 +25,15 @@
                 <Label Style="{StaticResource Control_LeftText}" Grid.Row="2" Grid.Column="0" Content="Receive Shadow" />
                 <Label Style="{StaticResource Control_LeftText}" Grid.Row="3" Grid.Column="0" Content="Material" />
 
-                <ComboBox Grid.Row="0" Grid.Column="1" x:Name="SelectedGeometry">
+                <ComboBox Grid.Row="0" Grid.Column="1" x:Name="SelectedGeometry" SelectedIndex="{Binding Geometry}">
                     <ComboBoxItem>Cube</ComboBoxItem>
                     <ComboBoxItem>Sphere</ComboBoxItem>
                 </ComboBox>
 
-                <CheckBox Grid.Row="1" Grid.Column="1" x:Name="IsCastShadow" IsChecked="True" Style="{ StaticResource MR_Checkbox }" />
-                <CheckBox Grid.Row="2" Grid.Column="1" x:Name="IsReceiveShadow" IsChecked="True" Style="{ StaticResource MR_Checkbox }" />
+                <CheckBox Grid.Row="1" Grid.Column="1" x:Name="IsCastShadow" IsChecked="{Binding CastShadow}" Style="{ StaticResource MR_Checkbox }" />
+                <CheckBox Grid.Row="2" Grid.Column="1" x:Name="IsReceiveShadow" IsChecked="{Binding ReceiveShadow}" Style="{ StaticResource MR_Checkbox }" />
 
-                <ComboBox Grid.Row="3" Grid.Column="1" x:Name="SelectedMaterials">
+                <ComboBox Grid.Row="3" Grid.Column="1" x:Name="SelectedMaterials" SelectedIndex="{Binding Material }">
                     <ComboBoxItem>Default Material</ComboBoxItem>
                 </ComboBox>
 

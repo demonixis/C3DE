@@ -50,23 +50,27 @@ namespace C3DE.Editor
 
                 componentContainer.Children.Add(soEdition);
                 componentContainer.Children.Add(transform);
+
+                MeshRenderer meshRenderer = null;
+                Camera camera = null;
                 
                 foreach (var component in sceneObject.Components)
                 {
-                    MeshRenderer meshRenderer = component as MeshRenderer;
+                    meshRenderer = component as MeshRenderer;
                     if (meshRenderer != null)
                     {
-                        var mr = new MeshRendererControl();
-                        mr.Set(meshRenderer.Geometry.ToString(), meshRenderer.CastShadow, meshRenderer.ReceiveShadow, 0);
-                        componentContainer.Children.Add(mr);
+                        var meshRendererControl = new MeshRendererControl();
+                        meshRendererControl.Set(meshRenderer);
+                        componentContainer.Children.Add(meshRendererControl);
                         continue;
                     }
 
-                    Camera camera = component as Camera;
+                    camera = component as Camera;
                     if (camera != null)
                     {
-                        var cam = new CameraControl();
-
+                        var cameraControl = new CameraControl();
+                        cameraControl.Set(camera);
+                        componentContainer.Children.Add(cameraControl);
                         continue;
                     }
                 }
@@ -77,7 +81,6 @@ namespace C3DE.Editor
         {
             componentContainer.Children.Clear();
         }
-
 
         private void OnKeyDown(object sender, KeyEventArgs e)
         {

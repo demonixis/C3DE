@@ -26,15 +26,15 @@
                 <Label Style="{StaticResource Control_LeftText}" Grid.Row="1" Grid.Column="0" Content="Projection" />
                 <Label Style="{StaticResource Control_LeftText}" Grid.Row="2" Grid.Column="0" Content="Field of View" />
                 <Label Style="{StaticResource Control_LeftText}" Grid.Row="3" Grid.Column="0" Content="Clipping Planes" />
-                
-                <Rectangle Grid.Row="0" Grid.Column="1" x:Name="BackgroundColor" HorizontalAlignment="Right" VerticalAlignment="Center" Fill="CornflowerBlue" Width="20" Height="20" Margin="1" />
 
-                <ComboBox Grid.Row="1" Grid.Column="1" x:Name="ProjectionType">
+                <Rectangle Grid.Row="0" Grid.Column="1" x:Name="CamClearColor" HorizontalAlignment="Right" VerticalAlignment="Center" Fill="CornflowerBlue" Width="20" Height="20" Margin="1" />
+
+                <ComboBox Grid.Row="1" Grid.Column="1" x:Name="CamProjection" SelectedIndex="1">
                     <ComboBoxItem>Orthographic</ComboBoxItem>
                     <ComboBoxItem>Perspective</ComboBoxItem>
                 </ComboBox>
 
-                <TextBox Style="{StaticResource Control_TextBox}" x:Name="FOV" Text="45" Grid.Row="2" Grid.Column="1" />
+                <TextBox Style="{StaticResource Control_TextBox}" x:Name="CamFOV" Text="45" Grid.Row="2" Grid.Column="1" />
 
                 <Grid Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Margin="10, 0, 0, 0">
                     <Grid.RowDefinitions>
@@ -48,9 +48,9 @@
                     </Grid.ColumnDefinitions>
 
                     <Label Grid.Row="0" Grid.Column="0" VerticalAlignment="Bottom" Content="Near" />
-                    <TextBox Grid.Row="0" Grid.Column="1" x:Name="NearClip" VerticalAlignment="Bottom" Text="10" />
+                    <TextBox Grid.Row="0" x:Name="CamNearClip" VerticalAlignment="Bottom" Text="10" Margin="-149,0,149,0" />
                     <Label Grid.Row="0" Grid.Column="2" VerticalAlignment="Bottom" HorizontalAlignment="Center" Content="Far" />
-                    <TextBox Grid.Row="0" Grid.Column="3" x:Name="FarClip" VerticalAlignment="Bottom" Text="5000" Width="50" />
+                    <TextBox Grid.Row="0" Grid.Column="3" x:Name="CamFarClip" VerticalAlignment="Bottom" Text="5000" Width="50" />
                 </Grid>
             </Grid>
         </StackPanel>
