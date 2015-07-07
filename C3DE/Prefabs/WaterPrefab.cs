@@ -55,14 +55,14 @@ namespace C3DE.Prefabs
             material = new WaterMaterial(scene);
 
             if (!string.IsNullOrEmpty(waterTexture))
-                material.MainTexture = Application.Content.Load<Texture2D>(waterTexture);
+                material.Texture = Application.Content.Load<Texture2D>(waterTexture);
 
             if (!string.IsNullOrEmpty(bumpTexture))
                 material.NormalMap = Application.Content.Load<Texture2D>(bumpTexture);
 
             renderer.Material = material;
             renderer.Geometry.Size = size;
-            renderer.Geometry.Generate();
+            renderer.Geometry.Buid();
             collider.Box = new BoundingBox(transform.Position, size);
         }
     }

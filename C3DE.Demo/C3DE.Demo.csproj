@@ -87,6 +87,7 @@
     <Compile Include="Scripts\LightMoverKeys.cs" />
     <Compile Include="Scripts\LightSwitcher.cs" />
     <Compile Include="Scripts\MenuBehaviour.cs" />
+    <Compile Include="Scripts\PointerCoordDebug.cs" />
     <Compile Include="Scripts\PostProcessSwitcher.cs" />
     <Compile Include="Scripts\RayPickingTester.cs" />
     <Compile Include="Scripts\SimplePath.cs" />

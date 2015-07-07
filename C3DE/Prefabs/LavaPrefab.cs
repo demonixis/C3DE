@@ -54,14 +54,14 @@ namespace C3DE.Prefabs
             material = new LavaMaterial(scene);
 
             if (!string.IsNullOrEmpty(lavaTexture))
-                material.MainTexture = Application.Content.Load<Texture2D>(lavaTexture);
+                material.Texture = Application.Content.Load<Texture2D>(lavaTexture);
 
             if (!string.IsNullOrEmpty(bumpTexture))
                 material.NormalMap = Application.Content.Load<Texture2D>(bumpTexture);
 
             renderer.Material = material;
             renderer.Geometry.Size = size;
-            renderer.Geometry.Generate();
+            renderer.Geometry.Buid();
             collider.Box = new BoundingBox(transform.Position, size);
         }
     }

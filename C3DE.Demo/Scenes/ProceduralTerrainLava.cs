@@ -33,11 +33,11 @@ namespace C3DE.Demo.Scenes
 
             // A terrain with its material.
             var terrainMaterial = new StandardMaterial(scene);
-            terrainMaterial.MainTexture = Application.Content.Load<Texture2D>("Textures/Terrain/Rock");
+            terrainMaterial.Texture = Application.Content.Load<Texture2D>("Textures/Terrain/Rock");
             terrainMaterial.Shininess = 150;
             terrainMaterial.Tiling = new Vector2(8);
 
-            var terrain = new TerrainPrefab("terrain");
+            var terrain = new Terrain("terrain");
             terrain.Renderer.Geometry.Size = new Vector3(2);
             terrain.Renderer.ReceiveShadow = true;
             terrain.Randomize(4, 12);
@@ -47,14 +47,14 @@ namespace C3DE.Demo.Scenes
 
             // Lava !
             var lavaMaterial = new LavaMaterial(this);
-            lavaMaterial.MainTexture = Application.Content.Load<Texture2D>("Textures/lava_texture");
+            lavaMaterial.Texture = Application.Content.Load<Texture2D>("Textures/lava_texture");
             lavaMaterial.NormalMap = Application.Content.Load<Texture2D>("Textures/lava_bump");
 
             var lava = new WaterPrefab("water");
             lava.Renderer.Material = lavaMaterial;
             lava.Renderer.ReceiveShadow = true;
             lava.Renderer.Geometry.Size = new Vector3(terrain.Width * 0.5f);
-            lava.Renderer.Geometry.Generate();
+            lava.Renderer.Geometry.Buid();
             Add(lava);
         }
     }

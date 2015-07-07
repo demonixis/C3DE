@@ -42,7 +42,7 @@ namespace C3DE
                 SkyboxEffect = content.Load<Effect>("FX/SkyboxEffect");
 
             _geometry.Size = new Vector3(size);
-            _geometry.Generate();
+            _geometry.Buid();
 
             _texture = new TextureCube(device, textures[0].Width, false, SurfaceFormat.Color);
             Color[] textureData;

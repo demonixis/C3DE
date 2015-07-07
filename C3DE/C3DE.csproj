@@ -153,7 +153,7 @@
     <Compile Include="Materials\Material.cs" />
     <Compile Include="PostProcess\PostProcessPass.cs" />
     <Compile Include="Prefabs\ModelPrefab.cs" />
-    <Compile Include="Prefabs\TerrainPrefab.cs" />
+    <Compile Include="Prefabs\Terrain.cs" />
     <Compile Include="Prefabs\WaterPrefab.cs" />
     <Compile Include="Scene.cs" />
     <Compile Include="SceneObject.cs" />

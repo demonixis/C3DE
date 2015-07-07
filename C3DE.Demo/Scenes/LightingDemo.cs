@@ -45,21 +45,21 @@ namespace C3DE.Demo.Scenes
 
             var lightPrefabSphere = lightPrefab.AddComponent<MeshRenderer>();
             lightPrefabSphere.Geometry = new SphereGeometry(2f, 4);
-            lightPrefabSphere.Geometry.Generate();
+            lightPrefabSphere.Geometry.Buid();
             lightPrefabSphere.CastShadow = false;
             lightPrefabSphere.ReceiveShadow = false;
             lightPrefabSphere.Material = new SimpleMaterial(scene);
-            lightPrefabSphere.Material.MainTexture = GraphicsHelper.CreateTexture(Color.Yellow, 1, 1);
+            lightPrefabSphere.Material.Texture = GraphicsHelper.CreateTexture(Color.Yellow, 1, 1);
 
             // Terrain
             var terrainMaterial = new StandardMaterial(scene);
-            terrainMaterial.MainTexture = GraphicsHelper.CreateBorderTexture(Color.LightGreen, Color.LightSeaGreen, 128, 128, 4);
+            terrainMaterial.Texture = GraphicsHelper.CreateBorderTexture(Color.LightGreen, Color.LightSeaGreen, 128, 128, 4);
             terrainMaterial.Shininess = 10;
             terrainMaterial.Tiling = new Vector2(16);
 
-            var terrain = new TerrainPrefab("terrain");
+            var terrain = new Terrain("terrain");
             terrain.Renderer.Geometry.Size = new Vector3(4);
-            terrain.Renderer.Geometry.Generate();
+            terrain.Renderer.Geometry.Buid();
             terrain.Flatten();
             terrain.Renderer.Material = terrainMaterial;
             terrain.Transform.Translate(-terrain.Width >> 1, 0, -terrain.Depth / 2);
@@ -67,7 +67,7 @@ namespace C3DE.Demo.Scenes
 
             // Cube
             var cubeSuperMaterial = new StandardMaterial(scene);
-            cubeSuperMaterial.MainTexture = GraphicsHelper.CreateCheckboardTexture(Color.FloralWhite, Color.DodgerBlue);
+            cubeSuperMaterial.Texture = GraphicsHelper.CreateCheckboardTexture(Color.FloralWhite, Color.DodgerBlue);
             cubeSuperMaterial.DiffuseColor = Color.WhiteSmoke;
             cubeSuperMaterial.SpecularColor = new Color(0.8f, 0.8f, 0.8f, 1.0f);
             cubeSuperMaterial.Shininess = 10;
@@ -84,7 +84,7 @@ namespace C3DE.Demo.Scenes
             var cube = cubeScene.AddComponent<MeshRenderer>();
             cube.ReceiveShadow = false;
             cube.Geometry = new CubeGeometry();
-            cube.Geometry.Generate();
+            cube.Geometry.Buid();
             cube.Material = cubeSuperMaterial;
 
             cubeScene.AddComponent<BoxCollider>();

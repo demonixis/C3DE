@@ -1,4 +1,5 @@
-﻿using C3DE.Components.Renderers;
+﻿using C3DE.Components;
+using C3DE.Components.Renderers;
 using C3DE.Serialization;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
@@ -17,7 +18,7 @@ namespace C3DE.Materials
     {
         protected internal Scene scene;
         protected Vector3 diffuseColor;
-        protected Texture2D mainTexture;
+        protected Texture2D diffuseTexture;
         protected internal Effect effect;
 
         public string Id
@@ -43,10 +44,10 @@ namespace C3DE.Materials
             set { diffuseColor = value.ToVector3(); }
         }
 
-        public Texture2D MainTexture
+        public Texture2D Texture
         {
-            get { return mainTexture; }
-            set { mainTexture = value; }
+            get { return diffuseTexture; }
+            set { diffuseTexture = value; }
         }
 
         public Vector2 Tiling { get; set; }
@@ -82,7 +83,7 @@ namespace C3DE.Materials
 
         public abstract void LoadContent(ContentManager content);
 
-        public abstract void PrePass();
+        public abstract void PrePass(Camera camera);
 
         public abstract void Pass(RenderableComponent renderable);
 

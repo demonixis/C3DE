@@ -1,4 +1,5 @@
-﻿using C3DE.Components.Renderers;
+﻿using C3DE.Components;
+using C3DE.Components.Renderers;
 using Microsoft.Xna.Framework.Content;
 
 namespace C3DE.Materials
@@ -17,7 +18,7 @@ namespace C3DE.Materials
         {
         }
 
-        public override void PrePass()
+        public override void PrePass(Camera camera)
         {
         }
 

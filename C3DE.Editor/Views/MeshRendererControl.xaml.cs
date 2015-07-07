@@ -1,6 +1,7 @@
 ﻿using C3DE.Components.Renderers;
 using C3DE.Geometries;
 using System;
+using System.Collections.Generic;
 using System.Windows.Controls;
 
 namespace C3DE.Editor.Controls
@@ -21,28 +22,41 @@ namespace C3DE.Editor.Controls
 
         public int Geometry
         {
-            get { return SelectedGeometry.SelectedIndex; }
+            get
+            {
+                if (meshRenderer != null)
+                    return GetGeometryIndex(meshRenderer.Geometry);
+
+                return 0;
+            }
             set
             {
-                SelectedGeometry.SelectedIndex = value;
-
                 if (meshRenderer != null)
                 {
-                    var geometry = Activator.CreateInstance(Type.GetType(String.Format("C3DE.Geometries.{0}Geometry", KnownGeometries[value])));
+                    var typeName = String.Format("C3DE.Geometries.{0}Geometry,C3DE", KnownGeometries[value]);
+                    var type = Type.GetType(typeName);
+                    var geometry = Activator.CreateInstance(type);
 
                     if (geometry != null)
+                    {
                         meshRenderer.Geometry = geometry as Geometry;
+                        meshRenderer.Geometry.Buid();
+                    }
                 }
             }
         }
 
         public bool CastShadow
         {
-            get { return IsCastShadow.IsChecked.HasValue ? IsCastShadow.IsChecked.Value : false; }
+            get
+            {
+                if (meshRenderer != null)
+                    return meshRenderer.CastShadow;
+
+                return false;
+            }
             set
             {
-                IsCastShadow.IsChecked = value;
-
                 if (meshRenderer != null)
                     meshRenderer.CastShadow = value;
             }
@@ -50,11 +64,15 @@ namespace C3DE.Editor.Controls
 
         public bool ReceiveShadow
         {
-            get { return IsReceiveShadow.IsChecked.HasValue ? IsReceiveShadow.IsChecked.Value : false; }
+            get
+            {
+                if (meshRenderer != null)
+                    return meshRenderer.ReceiveShadow;
+
+                return false;
+            }
             set
             {
-                IsReceiveShadow.IsChecked = value;
-
                 if (meshRenderer != null)
                     meshRenderer.ReceiveShadow = value;
             }
@@ -62,11 +80,15 @@ namespace C3DE.Editor.Controls
 
         public int Material
         {
-            get { return SelectedMaterials.SelectedIndex; }
+            get
+            {
+                if (meshRenderer != null)
+                    return Scene.current.Materials.IndexOf(meshRenderer.Material);
+
+                return 0;
+            }
             set
             {
-                SelectedMaterials.SelectedIndex = value;
-
                 if (meshRenderer != null)
                     meshRenderer.Material = Scene.current.Materials[value];
             }
@@ -86,24 +108,26 @@ namespace C3DE.Editor.Controls
 
             SelectedGeometry.SelectedIndex = 0;
             SelectedMaterials.SelectedIndex = 0;
-
-            this.DataContext = this;
         }
 
         public void Set(MeshRenderer mRenderer)
         {
             meshRenderer = mRenderer;
+            this.DataContext = this;
+            /*
+            SelectedGeometry.SelectedIndex = GetGeometryIndex(mRenderer.Geometry);
+            IsCastShadow.IsChecked = mRenderer.CastShadow;
+            IsReceiveShadow.IsChecked = mRenderer.ReceiveShadow;
+            SelectedMaterials.SelectedIndex = Scene.current.Materials.IndexOf(mRenderer.Material);*/
+        }
 
-            var tmp = mRenderer.Geometry.ToString().Split('.');
+        private int GetGeometryIndex(Geometry geometry)
+        {
+            var tmp = geometry.ToString().Split('.');
             var geo = tmp[tmp.Length - 1];
             var name = geo.Replace("Geometry", "");
             var index = Array.IndexOf(KnownGeometries, name);
-            index = index == -1 ? KnownGeometries.Length - 1 : index;
-            SelectedGeometry.SelectedIndex = index;
-
-            IsCastShadow.IsChecked = mRenderer.CastShadow;
-            IsReceiveShadow.IsChecked = mRenderer.ReceiveShadow;
-            SelectedMaterials.SelectedIndex = Scene.current.Materials.IndexOf(mRenderer.Material);
+            return index == -1 ? KnownGeometries.Length - 1 : index;
         }
     }
 }

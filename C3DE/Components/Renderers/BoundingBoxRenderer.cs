@@ -52,8 +52,8 @@ namespace C3DE.Components.Renderers
             }
 
             _effect.World = Matrix.CreateFromYawPitchRoll(transform.Rotation.Y, transform.Rotation.X, transform.Rotation.Z) * Matrix.CreateTranslation(transform.Position);
-            _effect.View = Camera.Main.view;
-            _effect.Projection = Camera.Main.projection;
+            _effect.View = Camera.main.view;
+            _effect.Projection = Camera.main.projection;
 
             foreach (EffectPass pass in _effect.CurrentTechnique.Passes)
             {

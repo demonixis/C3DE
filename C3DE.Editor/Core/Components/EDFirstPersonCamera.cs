@@ -20,9 +20,9 @@ namespace C3DE.Editor.Core.Components
             Velocity = 0.8f;
             AngularVelocity = 0.8f;
             MoveSpeed = 0.25f;
-            RotationSpeed = 0.25f;
-            LookSpeed = 0.15f;
-            StrafeSpeed = 0.75f;
+            RotationSpeed = 0.5f;
+            LookSpeed = 0.25f;
+            StrafeSpeed = 1.5f;
             MouseSensibility = new Vector2(0.15f);
         }
 

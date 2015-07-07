@@ -15,7 +15,7 @@ namespace C3DE.Prefabs
         public float SnowLayer { get; set; }
     }
 
-    public class TerrainPrefab : SceneObject
+    public class Terrain : SceneObject
     {
         protected MeshRenderer renderer;
         protected TerrainGeometry geometry;
@@ -47,13 +47,13 @@ namespace C3DE.Prefabs
             get { return (int)(geometry.Depth * geometry.Size.Z); }
         }
 
-        public TerrainPrefab(string name)
+        public Terrain(string name)
             : this()
         {
             Name = name;
         }
 
-        public TerrainPrefab()
+        public Terrain()
             : base()
         {
             Name = "TerrainPrefab-" + System.Guid.NewGuid();
@@ -126,7 +126,7 @@ namespace C3DE.Prefabs
 
         public void Build()
         {
-            renderer.Geometry.Generate();
+            renderer.Geometry.Buid();
         }
 
         public void ApplyCollision(Transform tr)

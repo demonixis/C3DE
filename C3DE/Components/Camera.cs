@@ -10,12 +10,11 @@ namespace C3DE.Components
 
     public class Camera : Component
     {
-        public static Camera Main { get; internal set; }
-
+        public static Camera main { get; internal set; }
         protected internal Matrix view;
         protected internal Matrix projection;
         protected internal Color clearColor;
-		protected internal float depth;
+		protected internal short depth;
         protected Vector3 reference;
         private Vector3 _target;
         private Vector3 _upVector;
@@ -46,7 +45,7 @@ namespace C3DE.Components
             set { clearColor = value; }
         }
 
-		public float Depth
+		public short Depth
 		{
 			get { return depth; }
 			set { depth = value; }
@@ -134,6 +133,7 @@ namespace C3DE.Components
             _farPlane = 500.0f;
             _projectionType = CameraProjectionType.Perspective;
             clearColor = Color.Black;
+            depth = 0;
             reference = new Vector3(0.0f, 0.0f, 1.0f);
         }
 

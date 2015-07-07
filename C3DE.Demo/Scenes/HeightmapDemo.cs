@@ -33,7 +33,7 @@ namespace C3DE.Demo.Scenes
             // Finally a terrain
             var terrainMat = new TerrainMaterial(scene);
 
-            var terrain = new TerrainPrefab("terrain");
+            var terrain = new Terrain("terrain");
             scene.Add(terrain);
             terrain.LoadHeightmap("Textures/heightmap");
             terrain.Renderer.Material = terrainMat;
@@ -41,7 +41,7 @@ namespace C3DE.Demo.Scenes
             terrain.AddComponent<WeightMapViewer>();
             var map = terrain.GenerateWeightMap();
 
-            terrainMat.MainTexture = Application.Content.Load<Texture2D>("Textures/Terrain/Grass");
+            terrainMat.Texture = Application.Content.Load<Texture2D>("Textures/Terrain/Grass");
             terrainMat.SandTexture = Application.Content.Load<Texture2D>("Textures/Terrain/Sand");
             terrainMat.SnowTexture = Application.Content.Load<Texture2D>("Textures/Terrain/Snow");
             terrainMat.RockTexture = Application.Content.Load<Texture2D>("Textures/Terrain/Rock");

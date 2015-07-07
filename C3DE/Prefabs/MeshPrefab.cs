@@ -37,7 +37,7 @@ namespace C3DE.Prefabs.Meshes
             _renderer.Geometry = new T();
             _renderer.Geometry.Size = size;
             _renderer.ReceiveShadow = false;
-            _renderer.Geometry.Generate();
+            _renderer.Geometry.Buid();
             _collider = AddComponent<SphereCollider>();
         }
 
@@ -45,7 +45,7 @@ namespace C3DE.Prefabs.Meshes
             : base()
         {
             if (!geometry.Built)
-                geometry.Generate();
+                geometry.Buid();
 
             _renderer = AddComponent<MeshRenderer>();
             _renderer.Geometry = geometry;

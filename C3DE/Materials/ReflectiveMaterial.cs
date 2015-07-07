@@ -1,4 +1,5 @@
-﻿using C3DE.Components.Renderers;
+﻿using C3DE.Components;
+using C3DE.Components.Renderers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -7,18 +8,7 @@ namespace C3DE.Materials
 {
     public class ReflectiveMaterial : Material
     {
-        private bool _mainTextureEnabled;
         private Vector3 _reflectionColor;
-
-        public new Texture2D MainTexture
-        {
-            get { return mainTexture; }
-            set
-            {
-                mainTexture = value;
-                _mainTextureEnabled = (value != null);
-            }
-        }
 
         public TextureCube ReflectionMap { get; set; }
 
@@ -27,7 +17,6 @@ namespace C3DE.Materials
             get { return new Color(_reflectionColor); }
             set { _reflectionColor = value.ToVector3(); }
         }
-
 
         public ReflectiveMaterial(Scene scene)
             : base(scene)
@@ -40,21 +29,21 @@ namespace C3DE.Materials
             effect = content.Load<Effect>("FX/ReflectionEffect");
         }
 
-        public override void PrePass()
+        public override void PrePass(Camera camera)
         {
-            effect.Parameters["View"].SetValue(scene.MainCamera.view);
-            effect.Parameters["Projection"].SetValue(scene.MainCamera.projection);
+            effect.Parameters["View"].SetValue(camera.view);
+            effect.Parameters["Projection"].SetValue(camera.projection);
 
             // Material
-            effect.Parameters["EyePosition"].SetValue(scene.MainCamera.SceneObject.Transform.Position);
+            effect.Parameters["EyePosition"].SetValue(camera.SceneObject.Transform.Position);
         }
 
         public override void Pass(RenderableComponent renderable)
         {
-            effect.Parameters["MainTextureEnabled"].SetValue(_mainTextureEnabled);
+            effect.Parameters["MainTextureEnabled"].SetValue(diffuseTexture != null);
 
-            if (_mainTextureEnabled)
-                effect.Parameters["MainTexture"].SetValue(mainTexture);
+            if (diffuseTexture != null)
+                effect.Parameters["MainTexture"].SetValue(diffuseTexture);
 
             effect.Parameters["ReflectionColor"].SetValue(diffuseColor);
             effect.Parameters["ReflectiveTexture"].SetValue(ReflectionMap);

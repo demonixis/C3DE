@@ -1,4 +1,5 @@
-﻿using C3DE.Components.Renderers;
+﻿using C3DE.Components;
+using C3DE.Components.Renderers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -71,34 +72,38 @@ namespace C3DE.Materials
                 effect = content.Load<Effect>("FX/WaterEffect");
         }
 
-        public override void PrePass()
+        public override void PrePass(Camera camera)
         {
             _totalTime += Time.DeltaTime / 10.0f;
 
             if (ShaderQuality == ShaderQuality.Normal)
             {
-                effect.Parameters["EyePosition"].SetValue(scene.MainCamera.SceneObject.Transform.Position);
+                effect.Parameters["EyePosition"].SetValue(camera.Transform.Position);
 
                 // Fog
                 effect.Parameters["FogColor"].SetValue(scene.RenderSettings.fogColor);
                 effect.Parameters["FogData"].SetValue(scene.RenderSettings.fogData);
             }
 
-            effect.Parameters["View"].SetValue(scene.MainCamera.view);
-            effect.Parameters["Projection"].SetValue(scene.MainCamera.projection);
+            effect.Parameters["View"].SetValue(camera.view);
+            effect.Parameters["Projection"].SetValue(camera.projection);
 
             // Light
-            var light0 = scene.Lights[0]; // FIXME
-            effect.Parameters["LightColor"].SetValue(light0.diffuseColor);
-            effect.Parameters["LightDirection"].SetValue(light0.Direction);
-            effect.Parameters["LightIntensity"].SetValue(light0.Intensity);
+            if (scene.lights.Count > 0)
+            {
+                var light0 = scene.Lights[0];
+                effect.Parameters["LightColor"].SetValue(light0.diffuseColor);
+                effect.Parameters["LightDirection"].SetValue(light0.Direction);
+                effect.Parameters["LightIntensity"].SetValue(light0.Intensity);
+            }
+
             effect.Parameters["AmbientColor"].SetValue(scene.RenderSettings.ambientColor);
         }
 
         public override void Pass(RenderableComponent renderable)
         {
             effect.Parameters["TotalTime"].SetValue(_totalTime);
-            effect.Parameters["WaterTexture"].SetValue(mainTexture);
+            effect.Parameters["WaterTexture"].SetValue(diffuseTexture);
 
             if (ShaderQuality == ShaderQuality.Normal)
             {
@@ -121,7 +126,7 @@ namespace C3DE.Materials
             effect.Parameters["DiffuseColor"].SetValue(diffuseColor);
             effect.Parameters["SpecularColor"].SetValue(_specularColor);
             effect.Parameters["Shininess"].SetValue(Shininess);
-            effect.Parameters["World"].SetValue(renderable.SceneObject.Transform.world);
+            effect.Parameters["World"].SetValue(renderable.Transform.world);
             effect.CurrentTechnique.Passes[0].Apply();
         }
     }

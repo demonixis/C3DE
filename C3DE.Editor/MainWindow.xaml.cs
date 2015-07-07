@@ -85,34 +85,34 @@ namespace C3DE.Editor
         private void OnKeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.N && Keyboard.Modifiers == ModifierKeys.Control)
-                Messenger.Notify(EditorEvent.CommandNew);
+                NotifyCommand("New");
 
             else if (e.Key == Key.O && Keyboard.Modifiers == ModifierKeys.Control)
-                Messenger.Notify(EditorEvent.CommandOpen);
+                NotifyCommand("Open");
 
             else if (e.Key == Key.S && Keyboard.Modifiers == ModifierKeys.Control)
-                Messenger.Notify(EditorEvent.CommandSave);
+                NotifyCommand("Save");
 
             else if (e.Key == Key.S && Keyboard.Modifiers == ModifierKeys.Control && Keyboard.Modifiers == ModifierKeys.Shift)
-                Messenger.Notify(EditorEvent.CommandSaveAll);
+                NotifyCommand("SaveAs");
 
             else if (e.Key == Key.C && Keyboard.Modifiers == ModifierKeys.Control)
-                Messenger.Notify(EditorEvent.CommandCopy);
+                NotifyCommand("Copy");
 
             else if (e.Key == Key.X && Keyboard.Modifiers == ModifierKeys.Control)
-                Messenger.Notify(EditorEvent.CommandCut);
+                NotifyCommand("Cut");
 
             else if (e.Key == Key.V && Keyboard.Modifiers == ModifierKeys.Control)
-                Messenger.Notify(EditorEvent.CommandPast);
+                NotifyCommand("Past");
 
             else if (e.Key == Key.D && Keyboard.Modifiers == ModifierKeys.Control)
-                Messenger.Notify(EditorEvent.CommandDuplicate);
+                NotifyCommand("Duplicate");
 
             else if (e.Key == Key.A && Keyboard.Modifiers == ModifierKeys.Control)
-                Messenger.Notify(EditorEvent.CommandAll);
+                NotifyCommand("All");
 
             else if (e.Key == Key.Escape)
-                Messenger.Notify(EditorEvent.CommandEscape);
+                NotifyCommand("Escape");
 
             else
                 Messenger.Notify(EditorEvent.KeyJustPressed, e.Key.ToString());
@@ -122,9 +122,7 @@ namespace C3DE.Editor
         {
             switch (commandName)
             {
-                case "New":
-                    editorGameHost.NewScene();
-                    break;
+                case "New": editorGameHost.NewScene(); break;
 
                 case "Save":
                 case "SaveAs":
@@ -153,12 +151,14 @@ namespace C3DE.Editor
                     }
                     break;
 
-                case "Copy": editorGameHost.CopySelection(); break;
-                //case "Cut": editorGameHost.CutSelection(); break;
-                case "Past": editorGameHost.PastSelection(); break;
-                case "Duplicate": editorGameHost.DuplicateSelection(); break;
-                case "Delete": editorGameHost.DeleteSelection(); break;
+                case "All": Messenger.Notify(EditorEvent.CommandAll); break;
+                case "Copy": Messenger.Notify(EditorEvent.CommandCopy); break;
+                case "Cut": Messenger.Notify(EditorEvent.CommandCut); break;
+                case "Past": Messenger.Notify(EditorEvent.CommandPast); break;
+                case "Duplicate": Messenger.Notify(EditorEvent.CommandDuplicate); break;
+                case "Delete": Messenger.Notify(EditorEvent.CommandDelete); break;
                 case "Exit": WPFApplication.Current.Shutdown(); break;
+                case "Escape": Messenger.Notify(EditorEvent.CommandEscape); break;
             }
         }
 
@@ -175,7 +175,7 @@ namespace C3DE.Editor
         {
             var item = sender as Control;
             if (item != null)
-                editorGameHost.Add(item.Tag.ToString());
+                Messenger.Notify(EditorEvent.CreateSceneObject, item.Tag.ToString());
         }
 
         private void OnExportClick(object sender, RoutedEventArgs e)

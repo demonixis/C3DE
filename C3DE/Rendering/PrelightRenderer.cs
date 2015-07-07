@@ -39,7 +39,7 @@ namespace C3DE.Rendering
             var so = new SceneObject("LightMesh");
             _lightMesh = so.AddComponent<MeshRenderer>();
             _lightMesh.Geometry = new SphereGeometry();
-            _lightMesh.Geometry.Generate();
+            _lightMesh.Geometry.Buid();
         }
 
         public void CreateRenderTargets(GraphicsDevice device)

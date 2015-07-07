@@ -58,7 +58,7 @@ namespace C3DE
             }
         }
 
-        // TODO: Needs refactoring here
+       /*
         public Camera MainCamera
         {
             get { return cameras[_mainCameraIndex]; }
@@ -66,10 +66,10 @@ namespace C3DE
             {
                 _mainCameraIndex = Add(value);
 
-                if (_mainCameraIndex > -1 && cameras[_mainCameraIndex] != Camera.Main)
-                    Camera.Main = cameras[_mainCameraIndex];
+                if (_mainCameraIndex > -1 && cameras[_mainCameraIndex] != Camera.main)
+                    Camera.main = cameras[_mainCameraIndex];
             }
-        }
+        }*/
 
         /// <summary>
         /// Gets the collection of renderable scene objects.
@@ -178,7 +178,7 @@ namespace C3DE
             current = this;
             initialized = true;
 
-            DefaultMaterial.MainTexture = GraphicsHelper.CreateTexture(Color.AntiqueWhite, 1, 1);
+            DefaultMaterial.Texture = GraphicsHelper.CreateTexture(Color.AntiqueWhite, 1, 1);
 
             for (int i = 0, l = materials.Count; i < l; i++)
                 materials[i].LoadContent(Application.Content);
@@ -505,7 +505,7 @@ namespace C3DE
             if (_mainCameraIndex == -1)
             {
                 _mainCameraIndex = index;
-                Camera.Main = camera;
+                Camera.main = camera;
             }
 
             return index;
@@ -808,7 +808,6 @@ namespace C3DE
         public SerializedScene SerializeScene(string[] excludeTags = null)
         {
             var i = 0;
-            var j = 0;
             var size = 0;
             var scene = new SerializedScene();
             var excludeMaterial = new List<Material>();

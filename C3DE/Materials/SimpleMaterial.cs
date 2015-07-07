@@ -1,4 +1,5 @@
-﻿using C3DE.Components.Renderers;
+﻿using C3DE.Components;
+using C3DE.Components.Renderers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -47,23 +48,24 @@ namespace C3DE.Materials
             effect = content.Load<Effect>("FX/SimpleEffect");
         }
 
-        public override void PrePass()
+        public override void PrePass(Camera camera)
         {
-            effect.Parameters["View"].SetValue(scene.MainCamera.view);
-            effect.Parameters["Projection"].SetValue(scene.MainCamera.projection); 
+            effect.Parameters["AmbientColor"].SetValue(scene.RenderSettings.ambientColor);
+            effect.Parameters["View"].SetValue(camera.view);
+            effect.Parameters["Projection"].SetValue(camera.projection); 
         }
 
         public override void Pass(RenderableComponent renderable)
         {
             // Material
-            effect.Parameters["AmbientColor"].SetValue(scene.RenderSettings.ambientColor);
+            
             effect.Parameters["DiffuseColor"].SetValue(diffuseColor);
             effect.Parameters["EmissiveColor"].SetValue(_emissiveColor);
             effect.Parameters["TextureTiling"].SetValue(Tiling);
             effect.Parameters["TextureOffset"].SetValue(Offset);
             effect.Parameters["Alpha"].SetValue(_alpha);
-            effect.Parameters["MainTexture"].SetValue(mainTexture);
-            effect.Parameters["World"].SetValue(renderable.SceneObject.Transform.world);
+            effect.Parameters["MainTexture"].SetValue(diffuseTexture);
+            effect.Parameters["World"].SetValue(renderable.Transform.world);
             effect.CurrentTechnique.Passes[AlphaEnabled ? 0 : 1].Apply();
         }
     }
