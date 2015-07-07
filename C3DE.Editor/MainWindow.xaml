@@ -52,7 +52,7 @@
                     <MenuItem Header="Point Light" Tag="Point" Click="OnAddSceneObject" />
                     <MenuItem Header="Spot Light" Tag="Spot" Click="OnAddSceneObject" />
                 </MenuItem>
-                <MenuItem Header="Camera" x:Name="menu_SO_Camera" Click="OnAddSceneObject" />
+                <MenuItem Header="Camera" Tag="Camera" Click="OnAddSceneObject" />
                 <Separator />
                 <MenuItem Header="Exports">
                     <MenuItem Header="OBJ/MTL" Tag="obj" Click="OnExportClick" />

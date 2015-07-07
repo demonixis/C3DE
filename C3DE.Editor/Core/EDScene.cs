@@ -195,7 +195,14 @@ namespace C3DE.Editor.Core
                 case "Point": sceneObject = new LightPrefab(type, LightType.Point); break;
                 case "Spot": sceneObject = new LightPrefab(type, LightType.Spot); break;
 
-                case "Camera": sceneObject = new CameraPrefab(type); break;
+                case "Camera": 
+                    sceneObject = new CameraPrefab(type);
+                    sceneObject.AddComponent<BoxCollider>();
+
+                    var camRenderer = sceneObject.AddComponent<MeshRenderer>();
+                    camRenderer.Geometry = new SphereGeometry();
+                    camRenderer.Geometry.Buid();
+                    break;
                 default: break;
             }
 
@@ -233,6 +240,8 @@ namespace C3DE.Editor.Core
             _editionSceneObject.Selected = sceneObject;
 
             Messenger.Notify(EditorEvent.SceneObjectSelected, new GenericMessage<SceneObject>(sceneObject));
+            
+            // FIXME
             Messenger.Notify(EditorEvent.TransformUpdated, new GenericMessage<Transform>(sceneObject.Transform));
         }
 
@@ -244,7 +253,6 @@ namespace C3DE.Editor.Core
         }
 
         #endregion
-
 
         #region Handler for component changes
 

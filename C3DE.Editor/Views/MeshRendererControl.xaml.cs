@@ -35,6 +35,10 @@ namespace C3DE.Editor.Controls
                 {
                     var typeName = String.Format("C3DE.Geometries.{0}Geometry,C3DE", KnownGeometries[value]);
                     var type = Type.GetType(typeName);
+
+                    if (type == null)
+                        return;
+
                     var geometry = Activator.CreateInstance(type);
 
                     if (geometry != null)
@@ -110,15 +114,17 @@ namespace C3DE.Editor.Controls
             SelectedMaterials.SelectedIndex = 0;
         }
 
+        public MeshRendererControl(MeshRenderer renderer)
+            : this()
+        {
+            meshRenderer = renderer;
+            DataContext = this;
+        }
+
         public void Set(MeshRenderer mRenderer)
         {
             meshRenderer = mRenderer;
             this.DataContext = this;
-            /*
-            SelectedGeometry.SelectedIndex = GetGeometryIndex(mRenderer.Geometry);
-            IsCastShadow.IsChecked = mRenderer.CastShadow;
-            IsReceiveShadow.IsChecked = mRenderer.ReceiveShadow;
-            SelectedMaterials.SelectedIndex = Scene.current.Materials.IndexOf(mRenderer.Material);*/
         }
 
         private int GetGeometryIndex(Geometry geometry)

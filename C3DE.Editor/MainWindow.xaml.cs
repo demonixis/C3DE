@@ -42,9 +42,7 @@ namespace C3DE.Editor
 
             if (sceneObject != null)
             {
-                var soEdition = new SceneObjectControl();
-                soEdition.Set(sceneObject.Name, sceneObject.Enabled);
-
+                var soEdition = new SceneObjectControl(sceneObject);
                 var transform = new TransformControl();
                 transform.Set(sceneObject.Transform);
 
@@ -59,8 +57,7 @@ namespace C3DE.Editor
                     meshRenderer = component as MeshRenderer;
                     if (meshRenderer != null)
                     {
-                        var meshRendererControl = new MeshRendererControl();
-                        meshRendererControl.Set(meshRenderer);
+                        var meshRendererControl = new MeshRendererControl(meshRenderer);
                         componentContainer.Children.Add(meshRendererControl);
                         continue;
                     }
@@ -68,8 +65,7 @@ namespace C3DE.Editor
                     camera = component as Camera;
                     if (camera != null)
                     {
-                        var cameraControl = new CameraControl();
-                        cameraControl.Set(camera);
+                        var cameraControl = new CameraControl(camera);
                         componentContainer.Children.Add(cameraControl);
                         continue;
                     }
@@ -174,7 +170,7 @@ namespace C3DE.Editor
         private void OnAddSceneObject(object sender, RoutedEventArgs e)
         {
             var item = sender as Control;
-            if (item != null)
+            if (item != null && item.Tag != null)
                 Messenger.Notify(EditorEvent.CreateSceneObject, item.Tag.ToString());
         }
 

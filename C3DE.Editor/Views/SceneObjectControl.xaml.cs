@@ -8,51 +8,56 @@ namespace C3DE.Editor.Controls
     /// </summary>
     public partial class SceneObjectControl : UserControl
     {
-        private static GenericMessage<bool> SceneObjectChangedMessage = new GenericMessage<bool>();
-        private bool _initialized = false;
+        private SceneObject sceneObject;
 
         public bool SceneObjectEnabled
         {
-            get { return SOEnabled.IsChecked.HasValue ? SOEnabled.IsChecked.Value : false; }
-            set { SOEnabled.IsChecked = value; }
+            get
+            {
+                if (sceneObject != null)
+                    return sceneObject.Enabled;
+
+                return false;
+            }
+            set
+            {
+                if (sceneObject != null)
+                    sceneObject.Enabled = value;
+            }
         }
 
         public string SceneObjectName
         {
-            get { return SOName.Text; }
-            set { SOName.Text = value; }
-        }
+            get
+            {
+                if (sceneObject != null)
+                    return sceneObject.Name;
 
-        private void Notify()
-        {
-            SceneObjectChangedMessage.Value = SceneObjectEnabled;
-            SceneObjectChangedMessage.Message = SceneObjectName;
-            Messenger.Notify(EditorEvent.SceneObjectRenamed, SceneObjectChangedMessage);
+                return string.Empty;
+            }
+            set
+            {
+                if (sceneObject != null)
+                    sceneObject.Name = value;
+            }
         }
 
         public SceneObjectControl()
         {
             InitializeComponent();
-            Messenger.Register(EditorEvent.SceneObjectSelected, OnSceneObjectSelected);
-            _initialized = true;
         }
 
-        public void Set(string name, bool isEnabled)
+        public SceneObjectControl(SceneObject so)
+            : this()
         {
-            SceneObjectName = name;
-            SceneObjectEnabled = isEnabled;
+            sceneObject = so;
+            DataContext = this;
         }
 
-        private void OnSceneObjectSelected(BasicMessage m)
+        public void Set(SceneObject so)
         {
-            var soMessage = m as GenericMessage<SceneObject>;
-            var sceneObject = soMessage != null ? soMessage.Value : null;
-
-            if (sceneObject != null && _initialized)
-            {
-                SceneObjectName = sceneObject.Name;
-                SceneObjectEnabled = sceneObject.Enabled;
-            }
+            sceneObject = so;
+            DataContext = this;
         }
     }
 }

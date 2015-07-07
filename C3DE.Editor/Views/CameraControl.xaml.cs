@@ -6,45 +6,59 @@ namespace C3DE.Editor.Controls
 {
     public partial class CameraControl : UserControl
     {
-        private Camera camera { get; set; }
+        private Camera camera;
 
-        public Color ClearColor
+        public string ClearColor
         {
             get
             {
                 if (camera != null)
-                    return Color.FromArgb(camera.ClearColor.A, camera.ClearColor.R, camera.ClearColor.G, camera.ClearColor.B);
+                {
+                    var color = Color.FromArgb(camera.ClearColor.A, camera.ClearColor.R, camera.ClearColor.G, camera.ClearColor.B);
+                    return string.Format("#{0}{1}{2}", color.R.ToString("X2"), color.G.ToString("X2"), color.B.ToString("X2"));
+                }
 
-                return Color.FromRgb(0, 0, 0);
+                return "#ffffff";
             }
             set
             {
-                CamClearColor.Fill = new SolidColorBrush(value);
-
                 if (camera != null)
-                    camera.ClearColor = new Microsoft.Xna.Framework.Color(value.R, value.G, value.B);
+                {
+                    var strColor = value;
+                    var color = (Color)ColorConverter.ConvertFromString(strColor);
+                    camera.ClearColor = new Microsoft.Xna.Framework.Color(color.R, color.G, color.B, color.A);
+                    ClearColorRect.Fill = new SolidColorBrush(color);
+                }
             }
         }
 
-        public CameraProjectionType Projection
+        public int Projection
         {
-            get { return CamProjection.SelectedIndex == 0 ? CameraProjectionType.Orthographic : CameraProjectionType.Perspective; }
+            get
+            {
+                if (camera != null)
+                    return (int)camera.ProjectionType;
+
+                return 0;
+            }
             set
             {
-                CamProjection.SelectedIndex = value == CameraProjectionType.Orthographic ? 0 : 1;
-
                 if (camera != null)
-                    camera.ProjectionType = value == 0 ? CameraProjectionType.Orthographic : CameraProjectionType.Perspective;
+                    camera.ProjectionType = (CameraProjectionType)value;
             }
         }
 
         public float FOV
         {
-            get { return float.Parse(CamFOV.Text); }
+            get
+            {
+                if (camera != null)
+                    return camera.FieldOfView;
+
+                return 0.0f;
+            }
             set
             {
-                CamFOV.Text = value.ToString();
-
                 if (camera != null)
                     camera.FieldOfView = value;
             }
@@ -52,11 +66,15 @@ namespace C3DE.Editor.Controls
 
         public float NearClip
         {
-            get { return float.Parse(CamNearClip.Text); }
+            get
+            {
+                if (camera != null)
+                    return camera.Near;
+
+                return 0.0f;
+            }
             set
             {
-                CamNearClip.Text = value.ToString();
-
                 if (camera != null)
                     camera.Near = value;
             }
@@ -64,11 +82,15 @@ namespace C3DE.Editor.Controls
 
         public float FarClip
         {
-            get { return float.Parse(CamFarClip.Text); }
+            get
+            {
+                if (camera != null)
+                    return camera.Far;
+
+                return 0.0f;
+            }
             set
             {
-                CamFarClip.Text = value.ToString();
-
                 if (camera != null)
                     camera.Far = value;
             }
@@ -79,14 +101,11 @@ namespace C3DE.Editor.Controls
             InitializeComponent();
         }
 
-        public void Set(Camera camComponent)
+        public CameraControl(Camera cam)
+            : this()
         {
-            camera = camComponent;
-            CamProjection.SelectedIndex = camComponent.ProjectionType == CameraProjectionType.Orthographic ? 0 : 1;
-            CamFOV.Text = camComponent.FieldOfView.ToString();
-            CamNearClip.Text = camComponent.Near.ToString();
-            CamFarClip.Text = camComponent.Far.ToString();
-            CamClearColor.Fill = new SolidColorBrush(Color.FromArgb(camComponent.ClearColor.A, camComponent.ClearColor.R, camComponent.ClearColor.G, camComponent.ClearColor.B));
+            camera = cam;
+            DataContext = this;
         }
     }
 }
