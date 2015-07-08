@@ -8,10 +8,11 @@ namespace C3DE.Materials
 {
     public class FresnelMaterial : Material
     {
-        public FresnelMaterial(Scene scene)
+        public FresnelMaterial(Scene scene, string name = "Fresnel Material")
             : base(scene)
         {
             diffuseColor = new Vector3(1.0f, 1.0f, 1.0f);
+            Name = name;
         }
 
         public override void LoadContent(ContentManager content)

@@ -1,4 +1,5 @@
 ﻿using C3DE.Components.Renderers;
+using C3DE.Editor.Core;
 using C3DE.Geometries;
 using System;
 using System.Collections.Generic;
@@ -11,7 +12,7 @@ namespace C3DE.Editor.Controls
     /// </summary>
     public partial class MeshRendererControl : UserControl
     {
-        public MeshRenderer meshRenderer { get; set; }
+        private MeshRenderer meshRenderer;
 
         private string[] KnownGeometries = new string[]
         {

@@ -13,11 +13,12 @@ namespace C3DE.Materials
         public Texture2D RockTexture { get; set; }
         public Texture2D WeightTexture { get; set; }
 
-        public TerrainMaterial(Scene scene)
+        public TerrainMaterial(Scene scene, string name = "Terrain Material")
             : base(scene)
         {
             diffuseColor = new Vector3(1.0f, 1.0f, 1.0f);
             Tiling = Vector2.One;
+            Name = name;
         }
 
         public override void LoadContent(ContentManager content)

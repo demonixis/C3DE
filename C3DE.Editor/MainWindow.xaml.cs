@@ -15,6 +15,7 @@ namespace C3DE.Editor
     using C3DE.Components.Renderers;
     using C3DE.Components.Colliders;
     using C3DE.Components;
+    using C3DE.Components.Lights;
 
     /// <summary>
     /// Logique d'interaction pour MainWindow.xaml
@@ -43,14 +44,15 @@ namespace C3DE.Editor
             if (sceneObject != null)
             {
                 var soEdition = new SceneObjectControl(sceneObject);
-                var transform = new TransformControl();
-                transform.Set(sceneObject.Transform);
+                var transform = new TransformControl(sceneObject.Transform);
 
                 componentContainer.Children.Add(soEdition);
                 componentContainer.Children.Add(transform);
 
                 MeshRenderer meshRenderer = null;
                 Camera camera = null;
+                Light light = null;
+                Collider collider = null;
                 
                 foreach (var component in sceneObject.Components)
                 {

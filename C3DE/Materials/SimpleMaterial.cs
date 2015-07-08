@@ -34,12 +34,13 @@ namespace C3DE.Materials
         {
         }
 
-        public SimpleMaterial(Scene scene)
+        public SimpleMaterial(Scene scene, string name = "Simple Material")
             : base(scene)
         {
             diffuseColor = new Vector3(1.0f, 1.0f, 1.0f);
             _emissiveColor = new Vector3(0.0f, 0.0f, 0.0f);
             _alpha = 1.0f;
+            Name = name;
             AlphaEnabled = true;
         }
 

@@ -12,11 +12,12 @@ namespace C3DE.Materials
 
         public Texture2D NormalMap;
 
-        public LavaMaterial(Scene scene)
+        public LavaMaterial(Scene scene, string name = "Lava Material")
             : base(scene)
         {
             DiffuseColor = Color.White;
             _totalTime = 0.0f;
+            Name = name;
         }
 
         public override void LoadContent(ContentManager content)

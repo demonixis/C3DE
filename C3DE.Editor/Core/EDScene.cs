@@ -44,7 +44,7 @@ namespace C3DE.Editor.Core
             DefaultMaterial.Texture = GraphicsHelper.CreateBorderTexture(Color.LightSkyBlue, Color.LightGray, 64, 64, 1);
 
             camera = CreateAddSceneObject<Camera>("EditorCamera.Main");
-            camera.Setup(new Vector3(0.0f, 20.0f, -20.0f), Vector3.Zero, Vector3.Up);
+            camera.Setup(new Vector3(0.0f, 10.0f, -30.0f), Vector3.Zero, Vector3.Up);
             camera.Transform.Rotation = new Vector3(MathHelper.Pi / 6, 0.0f, 0.0f);
             camera.AddComponent<EDFirstPersonCamera>();
 
@@ -54,6 +54,7 @@ namespace C3DE.Editor.Core
 
             // Grid
             var gridMaterial = new UnlitMaterial(this);
+            gridMaterial.Tag = EditorTag;
             gridMaterial.Texture = GraphicsHelper.CreateCheckboardTexture(new Color(0.6f, 0.6f, 0.6f), new Color(0.95f, 0.95f, 0.95f), 256, 256);;
             gridMaterial.Tiling = new Vector2(24);
 
@@ -73,15 +74,13 @@ namespace C3DE.Editor.Core
             mat1.Texture = GraphicsHelper.CreateCircleTexture(Color.Aquamarine, 10);
 
             mat1 = new StandardMaterial(this);
-            mat1.Name = "Random_Blue";
+            mat1.Name = "Random";
             mat1.Texture = GraphicsHelper.CreateRandomTexture(64);
 
             EDRegistry.Camera = camera;
 
             Messenger.Register(EditorEvent.CreateSceneObject, CreateNewObject);
             Messenger.Register(EditorEvent.CommandDelete, RemoveSceneObject);
-            Messenger.Register(EditorEvent.SceneObjectRenamed, OnSceneObjectRenamed);
-            Messenger.Register(EditorEvent.TransformChanged, OnTransformChanged);
             Messenger.Register(EditorEvent.CommandEscape, UnselectObject);
             Messenger.Register(EditorEvent.CommandCopy, CopySelection);
             Messenger.Register(EditorEvent.CommandPast, PastSelection);
@@ -191,9 +190,9 @@ namespace C3DE.Editor.Core
                     sceneObject = water;
                     break;
 
-                case "Directional": sceneObject = new LightPrefab(type, LightType.Directional); break;
-                case "Point": sceneObject = new LightPrefab(type, LightType.Point); break;
-                case "Spot": sceneObject = new LightPrefab(type, LightType.Spot); break;
+                case "Directional": sceneObject = CreateLightNode(type, LightType.Directional); break;
+                case "Point": sceneObject = CreateLightNode(type, LightType.Point); break;
+                case "Spot": sceneObject = CreateLightNode(type, LightType.Spot); break;
 
                 case "Camera": 
                     sceneObject = new CameraPrefab(type);
@@ -207,6 +206,21 @@ namespace C3DE.Editor.Core
             }
 
             InternalAddSceneObject(sceneObject);
+        }
+
+        private SceneObject CreateLightNode(string name, LightType type)
+        {
+            var sceneObject = new SceneObject(name);
+            sceneObject.AddComponent<BoxCollider>();
+
+            var light = sceneObject.AddComponent<Light>();
+            light.Type = type;
+
+            var lightRenderer = sceneObject.AddComponent<MeshRenderer>();
+            lightRenderer.Geometry = new SphereGeometry();
+            lightRenderer.Geometry.Buid();
+
+            return sceneObject;
         }
 
         private void InternalAddSceneObject(SceneObject sceneObject)
@@ -240,9 +254,6 @@ namespace C3DE.Editor.Core
             _editionSceneObject.Selected = sceneObject;
 
             Messenger.Notify(EditorEvent.SceneObjectSelected, new GenericMessage<SceneObject>(sceneObject));
-            
-            // FIXME
-            Messenger.Notify(EditorEvent.TransformUpdated, new GenericMessage<Transform>(sceneObject.Transform));
         }
 
         private void UnselectObject(BasicMessage m = null)
@@ -250,35 +261,6 @@ namespace C3DE.Editor.Core
             _selectedObject.Select(false);
             _editionSceneObject.Reset();
             Messenger.Notify(EditorEvent.SceneObjectUnSelected);
-        }
-
-        #endregion
-
-        #region Handler for component changes
-
-        private void OnSceneObjectRenamed(BasicMessage m)
-        {
-            var data = m as GenericMessage<bool>;
-            if (data != null && !_selectedObject.IsNull())
-            {
-                _selectedObject.SceneObject.Name = data.Message;
-                _selectedObject.SceneObject.Enabled = data.Value;
-            }
-        }
-
-        private void OnTransformChanged(BasicMessage m)
-        {
-            var data = m as TransformChanged;
-            if (data != null && !_selectedObject.IsNull())
-            {
-                var type = (int)data.ChangeType;
-                if (type == 0)
-                    _selectedObject.SceneObject.Transform.SetPosition(data.X, data.Y, data.Z);
-                else if (type == 1)
-                    _selectedObject.SceneObject.Transform.SetRotation(data.X, data.Y, data.Z);
-                else if (type == 2)
-                    _selectedObject.SceneObject.Transform.LocalScale = new Vector3(data.X, data.Y, data.Z);
-            }
         }
 
         #endregion

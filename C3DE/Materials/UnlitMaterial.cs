@@ -13,9 +13,10 @@ namespace C3DE.Materials
         {
         }
 
-        public UnlitMaterial(Scene scene)
+        public UnlitMaterial(Scene scene, string name = "Unlit Material")
             : base(scene)
         {
+            Name = name;
         }
 
         public override void LoadContent(ContentManager content)

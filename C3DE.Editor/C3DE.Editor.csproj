@@ -109,6 +109,9 @@
     <Compile Include="Views\CameraControl.xaml.cs">
       <DependentUpon>CameraControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\LightControl.xaml.cs">
+      <DependentUpon>LightControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\MeshRendererControl.xaml.cs">
       <DependentUpon>MeshRendererControl.xaml</DependentUpon>
     </Compile>
@@ -119,6 +122,10 @@
       <DependentUpon>SceneObjectControl.xaml</DependentUpon>
     </Compile>
     <Page Include="Views\CameraControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\LightControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -177,6 +184,8 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Resources\Images\Camera_Icon.png" />
+    <Resource Include="Resources\Images\Light_Icon.png" />
     <Resource Include="Game.ico" />
     <Content Include="Content\**\*.*">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

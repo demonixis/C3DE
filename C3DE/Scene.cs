@@ -54,22 +54,11 @@ namespace C3DE
                 if (value == null)
                     throw new Exception("The default material can't be null");
 
+                scene.Remove(value);
                 defaultMaterial = value;
+                defaultMaterial.Name = "Default Material";
             }
         }
-
-       /*
-        public Camera MainCamera
-        {
-            get { return cameras[_mainCameraIndex]; }
-            set
-            {
-                _mainCameraIndex = Add(value);
-
-                if (_mainCameraIndex > -1 && cameras[_mainCameraIndex] != Camera.main)
-                    Camera.main = cameras[_mainCameraIndex];
-            }
-        }*/
 
         /// <summary>
         /// Gets the collection of renderable scene objects.
@@ -155,7 +144,7 @@ namespace C3DE
             _componentsToDestroy = new List<Component>();
             _needRemoveCheck = false;
             _mainCameraIndex = -1;
-            defaultMaterial = new SimpleMaterial(this);
+            defaultMaterial = new SimpleMaterial(this, "Default Material");
             RenderSettings = new RenderSettings();
         }
 
@@ -438,7 +427,7 @@ namespace C3DE
 
         #endregion
 
-        #region Add/Remove materials
+        #region Add / Get / Remove materials
 
         /// <summary>
         /// Add a new material.
@@ -461,6 +450,15 @@ namespace C3DE
                     }
                 }
             }
+        }
+
+        public int GetMaterialIndexByName(string name)
+        {
+            for (int i = 0, l = materials.Count; i < l; i++)
+                if (materials[i].Name == name)
+                    return i;
+
+            return -1;
         }
 
         /// <summary>
@@ -849,6 +847,8 @@ namespace C3DE
                     if (Array.IndexOf(excludeTags, components[i].SceneObject.Tag) == -1)
                         scene.Components[i] = components[i].Serialize();
                 }
+                else
+                    scene.Components[i] = components[i].Serialize();
             }
 
             size = materials.Count;

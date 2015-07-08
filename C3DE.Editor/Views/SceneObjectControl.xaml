@@ -10,8 +10,8 @@
             <Label Content="Scene Object" />
             <Separator Margin="5, 2, 5, 2" />
             <StackPanel Orientation="Horizontal" Margin="5 2 5 2">
-                <CheckBox x:Name="SOEnabled" VerticalAlignment="Center" IsChecked="{Binding SceneObjectEnabled}" Content="" Margin="0 0 5 0"/>
-                <TextBox x:Name="SOName" Text="{Binding SceneObjectName}" Width="210" />
+                <CheckBox VerticalAlignment="Center" IsChecked="{Binding SceneObjectEnabled}" Margin="0 0 5 0"/>
+                <TextBox Text="{Binding SceneObjectName}" Width="210" />
             </StackPanel>
         </StackPanel>
     </Border>

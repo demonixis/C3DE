@@ -9,9 +9,10 @@ namespace C3DE.Materials
     /// </summary>
     public sealed class DummyMaterial : Material
     {
-        public DummyMaterial(Scene scene)
+        public DummyMaterial(Scene scene, string name = "Dummy Material")
             : base(scene)
         {
+            Name = name;
         }
 
         public override void LoadContent(ContentManager content)

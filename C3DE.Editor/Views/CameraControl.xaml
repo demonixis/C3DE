@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             mc:Ignorable="d" Height="170" Width="250">
+             mc:Ignorable="d" d:DesignHeight="170" d:DesignWidth="250" >
 
     <Border BorderThickness="1" BorderBrush="LightGray" Margin="2">
         <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch">
@@ -21,7 +21,6 @@
                     <ColumnDefinition />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
-
                 <Label Style="{StaticResource Control_LeftText}" Grid.Row="0" Grid.Column="0" Content="Background" />
                 <Label Style="{StaticResource Control_LeftText}" Grid.Row="1" Grid.Column="0" Content="Projection" />
                 <Label Style="{StaticResource Control_LeftText}" Grid.Row="2" Grid.Column="0" Content="Field of View" />
@@ -31,14 +30,11 @@
                     <TextBlock Text="{Binding ClearColor}" Width="90" Margin="0, 0, 5, 0" />
                     <Rectangle x:Name="ClearColorRect" Fill="Black" Width="20" Height="20" HorizontalAlignment="Right" />
                 </StackPanel>
-               
-                <ComboBox Grid.Row="1" Grid.Column="1" x:Name="CamProjection" SelectedIndex="{Binding Projection}">
+                <ComboBox Grid.Row="1" Grid.Column="1" SelectedIndex="{Binding Projection}">
                     <ComboBoxItem>Orthographic</ComboBoxItem>
                     <ComboBoxItem>Perspective</ComboBoxItem>
                 </ComboBox>
-
-                <TextBox Style="{StaticResource Control_TextBox}" x:Name="CamFOV" Text="{Binding FOV}" Grid.Row="2" Grid.Column="1" />
-
+                <TextBox Style="{StaticResource Control_TextBox}" Text="{Binding FOV}" Grid.Row="2" Grid.Column="1" />
                 <StackPanel Orientation="Horizontal" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Margin="10, 0, 0, 0">
                     <Label Content="Near" Width="50" />
                     <TextBox Text="{Binding NearClip}" HorizontalAlignment="Stretch" Width="50" Margin="0, 0, 25, 0" />

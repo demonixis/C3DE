@@ -26,13 +26,14 @@ namespace C3DE.Materials
 
         public float Shininess { get; set; }
 
-        public StandardMaterial(Scene scene)
+        public StandardMaterial(Scene scene, string name = "Standard Material")
             : base(scene)
         {
             _diffuseColor = new Vector3(1.0f, 1.0f, 1.0f);
             _emissiveColor = new Vector3(0.0f, 0.0f, 0.0f);
             _specularColor = new Vector3(0.6f, 0.6f, 0.6f);
             Shininess = 250.0f;
+            Name = name;
         }
 
         public override void LoadContent(ContentManager content)

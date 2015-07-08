@@ -51,7 +51,7 @@ namespace C3DE.Materials
         public float WaterTransparency { get; set; }
         public float Shininess { get; set; }
 
-        public WaterMaterial(Scene scene)
+        public WaterMaterial(Scene scene, string name = "Water Material")
             : base(scene)
         {
             WaterTransparency = 0.45f;
@@ -62,6 +62,7 @@ namespace C3DE.Materials
             _normalMapEnabled = false;
             _reflectiveMapEnabled = false;
             _totalTime = 0.0f;
+            Name = name;
         }
 
         public override void LoadContent(ContentManager content)

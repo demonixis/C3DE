@@ -16,11 +16,12 @@ namespace C3DE.Materials
             set { _emissiveColor = value.ToVector3(); }
         }
 
-        public ToonMaterial(Scene scene)
+        public ToonMaterial(Scene scene, string name = "Toon Material")
             : base(scene)
         {
             diffuseColor = new Vector3(1.0f, 1.0f, 1.0f);
             _emissiveColor = new Vector3(0.0f, 0.0f, 0.0f);
+            Name = name;
         }
 
         public override void LoadContent(ContentManager content)

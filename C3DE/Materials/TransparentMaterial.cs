@@ -8,7 +8,7 @@ namespace C3DE.Materials
 {
     public class TransparentMaterial : Material
     {
-        public TransparentMaterial(Scene scene)
+        public TransparentMaterial(Scene scene, string name = "Transparent Material")
             : base(scene)
         {
             diffuseColor = new Vector3(1.0f, 1.0f, 1.0f);

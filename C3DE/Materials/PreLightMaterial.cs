@@ -10,10 +10,11 @@ namespace C3DE.Materials
     {
         private Vector2 _viewport;
 
-        public PreLightMaterial(Scene scene)
+        public PreLightMaterial(Scene scene, string name = "PreLightMaterial")
             : base(scene)
         {
             _viewport = new Vector2(Screen.Width, Screen.Height);
+            Name = name;
         }
 
         public override void LoadContent(ContentManager content)

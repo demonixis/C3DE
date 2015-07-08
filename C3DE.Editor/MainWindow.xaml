@@ -75,9 +75,12 @@
             <local:C3DEGameHost Grid.Row="0" Grid.Column="0" x:Name="editorGameHost" Margin="0" SnapsToDevicePixels="True" Stretch="Fill" Drop="OnDrop" />
         </Grid>
         <ScrollViewer Grid.Row="1" Grid.Column="1" x:Name="ComponentsScrollViewer" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" CanContentScroll="True">
-            <StackPanel Orientation="Vertical" x:Name="componentContainer">
-                <c3de:SceneObjectControl x:Name="sceneObjectComponent" Margin="0, 0, 0, 5" />
-                <c3de:TransformControl x:Name="transformComponent" Margin="0, 0, 0, 5" />
+            <StackPanel x:Name="Inspector" Orientation="Vertical">
+                <StackPanel Orientation="Vertical" x:Name="componentContainer">
+                    <c3de:SceneObjectControl x:Name="sceneObjectComponent" Margin="0, 0, 0, 5" />
+                    <c3de:TransformControl x:Name="transformComponent" Margin="0, 0, 0, 5" />
+                </StackPanel>
+                <c3de:SceneListControl />
             </StackPanel>
         </ScrollViewer>
     </Grid>

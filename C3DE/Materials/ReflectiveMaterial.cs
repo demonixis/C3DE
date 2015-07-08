@@ -18,10 +18,10 @@ namespace C3DE.Materials
             set { _reflectionColor = value.ToVector3(); }
         }
 
-        public ReflectiveMaterial(Scene scene)
+        public ReflectiveMaterial(Scene scene, string name = "Reflective Material")
             : base(scene)
         {
-
+            Name = name;
         }
 
         public override void LoadContent(ContentManager content)

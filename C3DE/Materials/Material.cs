@@ -54,6 +54,8 @@ namespace C3DE.Materials
 
         public Vector2 Offset { get; set; }
 
+        public string Tag { get; set; }
+
         public ShaderQuality ShaderQuality { get; set; }
 
         public Material()
