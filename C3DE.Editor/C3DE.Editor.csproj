@@ -106,42 +106,42 @@
     <Compile Include="Core\Events\Messenger.cs" />
     <Compile Include="MonoGameBridge\C3DEGameHost.cs" />
     <Compile Include="MonoGameBridge\GraphicsDeviceService.cs" />
-    <Compile Include="Views\CameraControl.xaml.cs">
+    <Compile Include="Controls\CameraControl.xaml.cs">
       <DependentUpon>CameraControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\LightControl.xaml.cs">
+    <Compile Include="Controls\LightControl.xaml.cs">
       <DependentUpon>LightControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\MeshRendererControl.xaml.cs">
+    <Compile Include="Controls\MeshRendererControl.xaml.cs">
       <DependentUpon>MeshRendererControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\SceneListControl.xaml.cs">
+    <Compile Include="Controls\SceneListControl.xaml.cs">
       <DependentUpon>SceneListControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\SceneObjectControl.xaml.cs">
+    <Compile Include="Controls\SceneObjectControl.xaml.cs">
       <DependentUpon>SceneObjectControl.xaml</DependentUpon>
     </Compile>
-    <Page Include="Views\CameraControl.xaml">
+    <Page Include="Controls\CameraControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\LightControl.xaml">
+    <Page Include="Controls\LightControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\MeshRendererControl.xaml">
+    <Page Include="Controls\MeshRendererControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\SceneListControl.xaml">
+    <Page Include="Controls\SceneListControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\SceneObjectControl.xaml">
+    <Page Include="Controls\SceneObjectControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\TransformControl.xaml">
+    <Page Include="Controls\TransformControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -153,7 +153,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Views\TransformControl.xaml.cs">
+    <Compile Include="Controls\TransformControl.xaml.cs">
       <DependentUpon>TransformControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="MainWindow.xaml.cs">

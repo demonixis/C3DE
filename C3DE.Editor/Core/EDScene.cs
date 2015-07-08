@@ -131,7 +131,7 @@ namespace C3DE.Editor.Core
             {
                 if (EDRegistry.Mouse.Down(MouseButton.Left))
                 {
-                    _selectedObject.SceneObject.Transform.Translate(EDRegistry.Mouse.Delta.X, 0, EDRegistry.Mouse.Delta.Y);
+                    _selectedObject.SceneObject.Transform.Translate(-EDRegistry.Mouse.Delta.X, 0, -EDRegistry.Mouse.Delta.Y);
                     Messenger.Notify(EditorEvent.TransformUpdated, new TransformChanged(TransformChangeType.Position, _selectedObject.SceneObject.Transform.Position));
                 }
             }
@@ -231,7 +231,6 @@ namespace C3DE.Editor.Core
 
             Add(sceneObject);
 
-            Messenger.Notify(EditorEvent.SceneObjectAdded, new GenericMessage<SceneObject>(sceneObject));
             SelectObject(sceneObject);
         }
 
@@ -252,7 +251,6 @@ namespace C3DE.Editor.Core
             _selectedObject.Set(sceneObject);
             _selectedObject.Select(true);
             _editionSceneObject.Selected = sceneObject;
-
             Messenger.Notify(EditorEvent.SceneObjectSelected, new GenericMessage<SceneObject>(sceneObject));
         }
 

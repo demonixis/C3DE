@@ -153,6 +153,18 @@ namespace C3DE.Editor.Controls
         {
             transform = tr;
             DataContext = this;
+            Messenger.Register(EditorEvent.TransformUpdated, OnTransformChanged);
+            Unloaded += OnUnload;
+        }
+
+        private void OnTransformChanged(BasicMessage m)
+        {
+            DataContext = null;
+            DataContext = this;
+        }
+        private void OnUnload(object sender, System.Windows.RoutedEventArgs e)
+        {
+            Messenger.Unregister(EditorEvent.TransformUpdated, OnTransformChanged);
         }
     }
 }

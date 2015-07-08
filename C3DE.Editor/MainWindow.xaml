@@ -76,9 +76,11 @@
         </Grid>
         <ScrollViewer Grid.Row="1" Grid.Column="1" x:Name="ComponentsScrollViewer" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" CanContentScroll="True">
             <StackPanel x:Name="Inspector" Orientation="Vertical">
+                <TextBlock Text="Inspector" Margin="10, 5, 10, 5" />
+                <Separator />
                 <StackPanel Orientation="Vertical" x:Name="componentContainer">
-                    <c3de:SceneObjectControl x:Name="sceneObjectComponent" Margin="0, 0, 0, 5" />
-                    <c3de:TransformControl x:Name="transformComponent" Margin="0, 0, 0, 5" />
+                    <c3de:SceneObjectControl Margin="0, 0, 0, 5" />
+                    <c3de:TransformControl Margin="0, 0, 0, 5" />
                 </StackPanel>
                 <c3de:SceneListControl />
             </StackPanel>

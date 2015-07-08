@@ -49,6 +49,7 @@ namespace C3DE.Editor
                 componentContainer.Children.Add(soEdition);
                 componentContainer.Children.Add(transform);
 
+                Control control = null;
                 MeshRenderer meshRenderer = null;
                 Camera camera = null;
                 Light light = null;
@@ -59,16 +60,24 @@ namespace C3DE.Editor
                     meshRenderer = component as MeshRenderer;
                     if (meshRenderer != null)
                     {
-                        var meshRendererControl = new MeshRendererControl(meshRenderer);
-                        componentContainer.Children.Add(meshRendererControl);
+                        control = new MeshRendererControl(meshRenderer);
+                        componentContainer.Children.Add(control);
                         continue;
                     }
 
                     camera = component as Camera;
                     if (camera != null)
                     {
-                        var cameraControl = new CameraControl(camera);
-                        componentContainer.Children.Add(cameraControl);
+                        control = new CameraControl(camera);
+                        componentContainer.Children.Add(control);
+                        continue;
+                    }
+
+                    light = component as Light;
+                    if (light != null)
+                    {
+                        control = new LightControl(light);
+                        componentContainer.Children.Add(control);
                         continue;
                     }
                 }
