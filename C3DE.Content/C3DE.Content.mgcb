@@ -199,28 +199,6 @@
 /processorParam:TextureFormat=Compressed
 /build:Font/SegoeUILight.spritefont
 
-#begin Misc/leftHand.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:TextureFormat=Color
-/build:Misc/leftHand.png
-
-#begin Misc/rightHand.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:TextureFormat=Color
-/build:Misc/rightHand.png
-
 #begin Models/Jack/JackOLantern.fbx
 /importer:FbxImporter
 /processor:ModelProcessor
@@ -619,17 +597,6 @@
 /processorParam:TextureFormat=Color
 /build:Textures/hexa_tex.png
 
-#begin Textures/Kinect_Logo.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:TextureFormat=Color
-/build:Textures/Kinect_Logo.png
-
 #begin Textures/lava_bump.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -685,4 +652,26 @@
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
 /build:FX/Unlit.fx
+
+#begin Textures/Camera_Icon.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:TextureFormat=Color
+/build:Textures/Camera_Icon.png
+
+#begin Textures/Light_Icon.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:TextureFormat=Color
+/build:Textures/Light_Icon.png
 

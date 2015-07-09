@@ -10,9 +10,12 @@ namespace C3DE.Editor.Controls
     /// </summary>
     public partial class SceneListControl : UserControl
     {
+        Dictionary<int, string> _mapping;
+
         public SceneListControl()
         {
             InitializeComponent();
+            _mapping = new Dictionary<int, string>();
             Messenger.Register(EditorEvent.SceneObjectAdded, OnSceneObjectAdded);
             Messenger.Register(EditorEvent.SceneObjectRemoved, OnSceneObjectRemoved);
             Messenger.Register(EditorEvent.SceneObjectRenamed, OnSceneObjectChanged);
@@ -21,7 +24,13 @@ namespace C3DE.Editor.Controls
 
         void SceneListControl_Loaded(object sender, System.Windows.RoutedEventArgs e)
         {
+            sceneTreeView.SelectedItemChanged += sceneTreeView_SelectedItemChanged;
             UpdateList();
+        }
+
+        void sceneTreeView_SelectedItemChanged(object sender, System.Windows.RoutedPropertyChangedEventArgs<object> e)
+        {
+            Debug.Log(sceneTreeView.SelectedItem, sceneTreeView.SelectedValue);
         }
 
         private void UpdateList()
@@ -30,10 +39,13 @@ namespace C3DE.Editor.Controls
             {
                 sceneTreeView.Items.Clear();
 
-                var objects = ((EDScene)(Scene.current)).SceneObjects;
+                var objects = ((EDScene)(Scene.current)).SceneObjects2;
 
-                for (int i = 0, l = objects.Length; i < l; i++)
-                    sceneTreeView.Items.Add(objects[i]);
+                foreach (var obj in objects)
+                {
+                    var index = sceneTreeView.Items.Add(obj.Value);
+                    _mapping.Add(index, obj.Key);
+                }
             }
         }
 

@@ -152,8 +152,11 @@ namespace C3DE.Rendering
         {
             RebuildRenderTargets();
 
+            renderShadowMaps(scene, camera);
             renderObjects(scene, camera);
             renderBuffers();
+            //renderPostProcess(scene.PostProcessPasses);
+            //renderUI(scene.Behaviours);
 
             graphicsDevice.SetRenderTarget(target);
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Opaque, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone);

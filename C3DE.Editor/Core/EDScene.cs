@@ -42,6 +42,20 @@ namespace C3DE.Editor.Core
             }
         }
 
+        public Dictionary<string, string> SceneObjects2
+        {
+            get
+            {
+                var size = sceneObjects.Size;
+                var array = new Dictionary<string, string>(size);
+
+                for (int i = 0; i < size; i++)
+                    array.Add(sceneObjects[i].Id, sceneObjects[i].Name);
+
+                return array;
+            }
+        }
+
         public EDScene(string name)
             : base(name)
         {
@@ -55,7 +69,7 @@ namespace C3DE.Editor.Core
         {
             base.Initialize();
 
-            DefaultMaterial = new SimpleMaterial(this);
+            DefaultMaterial = new StandardMaterial(this, "DefaultMaterial");
             DefaultMaterial.Texture = GraphicsHelper.CreateBorderTexture(Color.LightSkyBlue, Color.LightGray, 64, 64, 1);
 
             camera = CreateAddSceneObject<Camera>("EditorCamera.Main");
@@ -66,9 +80,10 @@ namespace C3DE.Editor.Core
             light = CreateAddSceneObject<Light>("Editor_MainLight");
             light.Transform.Position = new Vector3(0, 15, 15);
             light.Direction = new Vector3(0, 0.75f, 0.75f);
+            light.Type = LightType.Directional;
 
             // Grid
-            var gridMaterial = new UnlitMaterial(this);
+            var gridMaterial = new StandardMaterial(this, "GridMaterial");
             gridMaterial.Tag = EditorTag;
             gridMaterial.Texture = GraphicsHelper.CreateCheckboardTexture(new Color(0.6f, 0.6f, 0.6f), new Color(0.95f, 0.95f, 0.95f), 256, 256);;
             gridMaterial.Tiling = new Vector2(24);
@@ -114,8 +129,14 @@ namespace C3DE.Editor.Core
             CreateMaterial("Rock", "Textures/Terrain/Rock");
             CreateMaterial("Sand", "Textures/Terrain/Sand");
             CreateMaterial("Snow", "Textures/Terrain/Snow");
-            CreateMaterial("Water", "Textures/Water");
             CreateMaterial("Hexa", "Textures/hexa_tex");
+
+            CreateMaterial("Camera", "Textures/Camera_Icon");
+            CreateMaterial("Light", "Textures/Light_Icon");
+
+            var waterMaterial = new WaterMaterial(this, "WaterMaterial");
+            waterMaterial.Texture = Application.Content.Load<Texture2D>("Textures/water");
+            waterMaterial.NormalMap = Application.Content.Load<Texture2D>("Textures/wavesbump");
         }
 
         private void CreateMaterial(string name, string path)
@@ -253,7 +274,7 @@ namespace C3DE.Editor.Core
                     var water = new WaterPrefab(type);
                     Add(water);
                     water.Generate(string.Empty, string.Empty, new Vector3(10));
-                    water.Renderer.Material = GetMaterialByName("Water");
+                    water.Renderer.Material = GetMaterialByName("WaterMaterial");
                     sceneObject = water;
                     break;
 
@@ -266,8 +287,9 @@ namespace C3DE.Editor.Core
                     sceneObject.AddComponent<BoxCollider>();
 
                     var camRenderer = sceneObject.AddComponent<MeshRenderer>();
-                    camRenderer.Geometry = new SphereGeometry();
+                    camRenderer.Geometry = new QuadGeometry();
                     camRenderer.Geometry.Buid();
+                    camRenderer.Material = GetMaterialByName("Camera");
                     break;
                 default: break;
             }
@@ -284,8 +306,9 @@ namespace C3DE.Editor.Core
             light.Type = type;
 
             var lightRenderer = sceneObject.AddComponent<MeshRenderer>();
-            lightRenderer.Geometry = new SphereGeometry();
+            lightRenderer.Geometry = new QuadGeometry();
             lightRenderer.Geometry.Buid();
+            lightRenderer.Material = GetMaterialByName("Light");
 
             return sceneObject;
         }
