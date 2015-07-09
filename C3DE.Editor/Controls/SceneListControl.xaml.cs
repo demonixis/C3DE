@@ -30,16 +30,35 @@ namespace C3DE.Editor.Controls
 
         void sceneTreeView_SelectedItemChanged(object sender, System.Windows.RoutedPropertyChangedEventArgs<object> e)
         {
-            Debug.Log(sceneTreeView.SelectedItem, sceneTreeView.SelectedValue);
+            var index = -1;
+            var i = 0;
+
+            foreach (var item in sceneTreeView.Items)
+            {
+                if (item == sceneTreeView.SelectedItem)
+                {
+                    index = i;
+                    break;
+                }
+                i++;
+            }
+
+            if (index > -1)
+            {
+                var sceneObject = Scene.FindById(_mapping[index]);
+                Messenger.Notify(EditorEvent.SceneObjectUnSelected);
+                Messenger.Notify(EditorEvent.SceneObjectSelected, new GenericMessage<SceneObject>(sceneObject));
+            }
         }
 
         private void UpdateList()
         {
             if (Scene.current != null)
             {
+                _mapping.Clear();
                 sceneTreeView.Items.Clear();
 
-                var objects = ((EDScene)(Scene.current)).SceneObjects2;
+                var objects = ((EDScene)(Scene.current)).SceneObjects;
 
                 foreach (var obj in objects)
                 {

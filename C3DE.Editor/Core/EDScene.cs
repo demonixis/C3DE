@@ -28,21 +28,7 @@ namespace C3DE.Editor.Core
         private SceneObjectSelector _selectedObject;
         private BasicEditionSceneObject _editionSceneObject;
 
-        public string[] SceneObjects
-        {
-            get
-            {
-                var size = sceneObjects.Size;
-                var array = new string[size];
-
-                for (int i = 0; i < size; i++)
-                    array[i] = sceneObjects[i].Name;
-
-                return array;
-            }
-        }
-
-        public Dictionary<string, string> SceneObjects2
+        public Dictionary<string, string> SceneObjects
         {
             get
             {
@@ -54,6 +40,11 @@ namespace C3DE.Editor.Core
 
                 return array;
             }
+        }
+
+        public SmartList<SceneObject> SceneObjects2
+        {
+            get { return sceneObjects; }
         }
 
         public EDScene(string name)
