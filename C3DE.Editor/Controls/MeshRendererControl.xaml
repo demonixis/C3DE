@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             mc:Ignorable="d" d:DesignHeight="150" d:DesignWidth="250">
+             mc:Ignorable="d" d:DesignHeight="250" d:DesignWidth="250">
     <Border BorderThickness="1" BorderBrush="LightGray" Margin="2">
         <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch">
             <Label Content="Mesh Renderer" />
@@ -14,22 +14,37 @@
                     <RowDefinition Height="25" />
                     <RowDefinition Height="25" />
                     <RowDefinition Height="25" />
+                    <RowDefinition Height="25" />
+                    <RowDefinition Height="25" />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
                 <Label Style="{StaticResource Control_LeftText}" Grid.Row="0" Grid.Column="0" Content="Geometry" />
-                <Label Style="{StaticResource Control_LeftText}" Grid.Row="1" Grid.Column="0" Content="Cast Shadow" />
-                <Label Style="{StaticResource Control_LeftText}" Grid.Row="2" Grid.Column="0" Content="Receive Shadow" />
-                <Label Style="{StaticResource Control_LeftText}" Grid.Row="3" Grid.Column="0" Content="Material" />
+                <Label Style="{StaticResource Control_LeftText}" Grid.Row="1" Grid.Column="0" Content="Size" />
+                <Label Style="{StaticResource Control_LeftText}" Grid.Row="2" Grid.Column="0" Content="UV" />
+                <Label Style="{StaticResource Control_LeftText}" Grid.Row="3" Grid.Column="0" Content="Cast Shadow" />
+                <Label Style="{StaticResource Control_LeftText}" Grid.Row="4" Grid.Column="0" Content="Receive Shadow" />
+                <Label Style="{StaticResource Control_LeftText}" Grid.Row="5" Grid.Column="0" Content="Material" />
                 <ComboBox Grid.Row="0" Grid.Column="1" SelectedIndex="{Binding Geometry}" x:Name="SelectedGeometry">
                     <ComboBoxItem>Cube</ComboBoxItem>
                     <ComboBoxItem>Sphere</ComboBoxItem>
                 </ComboBox>
-                <CheckBox Grid.Row="1" Grid.Column="1" IsChecked="{Binding CastShadow}" Style="{ StaticResource MR_Checkbox }" />
-                <CheckBox Grid.Row="2" Grid.Column="1" IsChecked="{Binding ReceiveShadow}" Style="{ StaticResource MR_Checkbox }" />
-                <ComboBox Grid.Row="3" Grid.Column="1" SelectedIndex="{Binding Material }" x:Name="SelectedMaterials"></ComboBox>
+                <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal">
+                    <Label Content="X" /><TextBox Width="30" Text="{Binding GeometrySizeX}" />
+                    <Label Content="Y" /><TextBox Width="30" Text="{Binding GeometrySizeY}" />
+                    <Label Content="Z" /><TextBox Width="30" Text="{Binding GeometrySizeZ}" />
+                </StackPanel>
+                <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal">
+                    <Label Content="X" />
+                    <TextBox Width="30" Text="{Binding GeometryUVX}" />
+                    <Label Content="Y" />
+                    <TextBox Width="30" Text="{Binding GeometryUVY}" />
+                </StackPanel>
+                <CheckBox Grid.Row="3" Grid.Column="1" IsChecked="{Binding CastShadow}" Style="{ StaticResource MR_Checkbox }" />
+                <CheckBox Grid.Row="4" Grid.Column="1" IsChecked="{Binding ReceiveShadow}" Style="{ StaticResource MR_Checkbox }" />
+                <ComboBox Grid.Row="5" Grid.Column="1" SelectedIndex="{Binding Material }" x:Name="SelectedMaterials"></ComboBox>
             </Grid>
         </StackPanel>
     </Border>

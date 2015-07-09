@@ -11,6 +11,7 @@ using C3DE.Prefabs;
 using C3DE.Prefabs.Meshes;
 using C3DE.Utils;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 
 namespace C3DE.Editor.Core
@@ -26,6 +27,20 @@ namespace C3DE.Editor.Core
         private List<SceneObject> _removeList;
         private SceneObjectSelector _selectedObject;
         private BasicEditionSceneObject _editionSceneObject;
+
+        public string[] SceneObjects
+        {
+            get
+            {
+                var size = sceneObjects.Size;
+                var array = new string[size];
+
+                for (int i = 0; i < size; i++)
+                    array[i] = sceneObjects[i].Name;
+
+                return array;
+            }
+        }
 
         public EDScene(string name)
             : base(name)
@@ -64,18 +79,7 @@ namespace C3DE.Editor.Core
             grid.Transform.SetPosition(-grid.Width / 2, -1, -grid.Depth / 2);
             Add(grid);
 
-            // TODO: It's here for testing unitil the material creator is created.
-            var mat1 = new StandardMaterial(this);
-            mat1.Name = "Border_Blue";
-            mat1.Texture = GraphicsHelper.CreateBorderTexture(Color.Black, Color.Azure, 64, 64, 2);
-
-            mat1 = new StandardMaterial(this);
-            mat1.Name = "Circle_Blue";
-            mat1.Texture = GraphicsHelper.CreateCircleTexture(Color.Aquamarine, 10);
-
-            mat1 = new StandardMaterial(this);
-            mat1.Name = "Random";
-            mat1.Texture = GraphicsHelper.CreateRandomTexture(64);
+            CreateMaterialCollection();
 
             EDRegistry.Camera = camera;
 
@@ -87,9 +91,70 @@ namespace C3DE.Editor.Core
             Messenger.Register(EditorEvent.CommandDuplicate, DuplicateSelection);
         }
 
+        private void CreateMaterialCollection()
+        {
+            // TODO: It's here for testing unitil the material creator is created.
+            CreateMaterial("Border Red", GraphicsHelper.CreateBorderTexture(Color.Red, Color.LightGray, 64, 64, 1));
+            CreateMaterial("Border Green", GraphicsHelper.CreateBorderTexture(Color.Green, Color.LightGray, 64, 64, 1));
+            CreateMaterial("Border Blue", GraphicsHelper.CreateBorderTexture(Color.Blue, Color.LightGray, 64, 64, 1));
+
+            CreateMaterial("Checkboard Red", GraphicsHelper.CreateCheckboardTexture(Color.Red, Color.LightGray, 64, 64));
+            CreateMaterial("Checkboard Green", GraphicsHelper.CreateCheckboardTexture(Color.Green, Color.LightGray, 64, 64));
+            CreateMaterial("Checkboard Blue", GraphicsHelper.CreateCheckboardTexture(Color.Blue, Color.LightGray, 64, 64));
+
+            CreateMaterial("Circle Red", GraphicsHelper.CreateCircleTexture(Color.Red, Color.LightGray, 64));
+            CreateMaterial("Circle Green", GraphicsHelper.CreateCircleTexture(Color.Green, Color.LightGray, 64));
+            CreateMaterial("Circle Blue", GraphicsHelper.CreateCircleTexture(Color.Blue, Color.LightGray, 64));
+
+            CreateMaterial("Random 1", GraphicsHelper.CreateRandomTexture(64));
+            CreateMaterial("Random 2", GraphicsHelper.CreateRandomTexture(64));
+            CreateMaterial("Random 3", GraphicsHelper.CreateRandomTexture(64));
+
+            CreateMaterial("Grass", "Textures/Terrain/Grass");
+            CreateMaterial("Rock", "Textures/Terrain/Rock");
+            CreateMaterial("Sand", "Textures/Terrain/Sand");
+            CreateMaterial("Snow", "Textures/Terrain/Snow");
+            CreateMaterial("Water", "Textures/Water");
+            CreateMaterial("Hexa", "Textures/hexa_tex");
+        }
+
+        private void CreateMaterial(string name, string path)
+        {
+            CreateMaterial(name, Application.Content.Load<Texture2D>(path));
+        }
+
+        private void CreateMaterial(string name, Texture2D texture)
+        {
+            var mat = new StandardMaterial(this, name);
+            mat.Texture = texture;
+        }
+
+        private Material GetMaterialByName(string name)
+        {
+            foreach (var mat in materials)
+                if (mat.Name == name)
+                    return mat;
+            return null;
+        }
+
+        bool pendingAdd = false;
+        bool pendingRemove = false;
+
         public override void Update()
         {
             base.Update();
+
+            if (pendingAdd)
+            {
+                Messenger.Notify(EditorEvent.SceneObjectAdded);
+                pendingAdd = false;
+            }
+
+            if (pendingRemove)
+            {
+                Messenger.Notify(EditorEvent.SceneObjectRemoved);
+                pendingRemove = false;
+            }
 
             if (_removeList.Count > 0)
             {
@@ -104,6 +169,8 @@ namespace C3DE.Editor.Core
                 foreach (var type in _addList)
                     InternalAddSceneObject(type);
 
+                pendingAdd = true;
+                
                 _addList.Clear();
             }
 
@@ -186,7 +253,7 @@ namespace C3DE.Editor.Core
                     var water = new WaterPrefab(type);
                     Add(water);
                     water.Generate(string.Empty, string.Empty, new Vector3(10));
-                    water.Renderer.Material.Texture = GraphicsHelper.CreateTexture(Color.LightSeaGreen, 1, 1);
+                    water.Renderer.Material = GetMaterialByName("Water");
                     sceneObject = water;
                     break;
 

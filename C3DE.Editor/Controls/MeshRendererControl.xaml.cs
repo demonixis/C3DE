@@ -51,6 +51,101 @@ namespace C3DE.Editor.Controls
             }
         }
 
+        public float GeometrySizeX
+        {
+            get
+            {
+                if (meshRenderer != null && meshRenderer.Geometry != null)
+                    return meshRenderer.Geometry.Size.X;
+
+                return 0.0f;
+            }
+            set
+            {
+                if (meshRenderer != null)
+                {
+                    meshRenderer.Geometry.SetSize(value, null, null);
+                    meshRenderer.Geometry.Buid();
+                }
+            }
+        }
+
+        public float GeometrySizeY
+        {
+            get
+            {
+                if (meshRenderer != null && meshRenderer.Geometry != null)
+                    return meshRenderer.Geometry.Size.Y;
+
+                return 0.0f;
+            }
+            set
+            {
+                if (meshRenderer != null)
+                {
+                    meshRenderer.Geometry.SetSize(null, value, null);
+                    meshRenderer.Geometry.Buid();
+                }
+            }
+        }
+
+        public float GeometrySizeZ
+        {
+            get
+            {
+                if (meshRenderer != null && meshRenderer.Geometry != null)
+                    return meshRenderer.Geometry.Size.Z;
+
+                return 0.0f;
+            }
+            set
+            {
+                if (meshRenderer != null)
+                {
+                    meshRenderer.Geometry.SetSize(null, null, value);
+                    meshRenderer.Geometry.Buid();
+                }
+            }
+        }
+
+        public float GeometryUVX
+        {
+            get
+            {
+                if (meshRenderer != null && meshRenderer.Geometry != null)
+                    return meshRenderer.Geometry.TextureRepeat.X;
+
+                return 0.0f;
+            }
+            set
+            {
+                if (meshRenderer != null)
+                {
+                    meshRenderer.Geometry.SetTextureRepeat(value, null);
+                    meshRenderer.Geometry.Buid();
+                }
+            }
+        }
+
+        public float GeometryUVY
+        {
+            get
+            {
+                if (meshRenderer != null && meshRenderer.Geometry != null)
+                    return meshRenderer.Geometry.TextureRepeat.Y;
+
+                return 0.0f;
+            }
+            set
+            {
+                if (meshRenderer != null)
+                {
+                    meshRenderer.Geometry.SetTextureRepeat(null, value);
+                    meshRenderer.Geometry.Buid();
+                }
+            }
+        }
+
         public bool CastShadow
         {
             get

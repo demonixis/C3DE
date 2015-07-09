@@ -1,4 +1,5 @@
-﻿using C3DE.Editor.Events;
+﻿using C3DE.Editor.Core;
+using C3DE.Editor.Events;
 using System.Collections.Generic;
 using System.Windows.Controls;
 
@@ -9,54 +10,46 @@ namespace C3DE.Editor.Controls
     /// </summary>
     public partial class SceneListControl : UserControl
     {
-        public static GenericMessage<SceneObject> SceneObjectMessage;
-        private Dictionary<string, int> _itemMapping;
-
         public SceneListControl()
         {
             InitializeComponent();
-            _itemMapping = new Dictionary<string, int>();
             Messenger.Register(EditorEvent.SceneObjectAdded, OnSceneObjectAdded);
             Messenger.Register(EditorEvent.SceneObjectRemoved, OnSceneObjectRemoved);
             Messenger.Register(EditorEvent.SceneObjectRenamed, OnSceneObjectChanged);
+            Loaded += SceneListControl_Loaded;
+        }
+
+        void SceneListControl_Loaded(object sender, System.Windows.RoutedEventArgs e)
+        {
+            UpdateList();
+        }
+
+        private void UpdateList()
+        {
+            if (Scene.current != null)
+            {
+                sceneTreeView.Items.Clear();
+
+                var objects = ((EDScene)(Scene.current)).SceneObjects;
+
+                for (int i = 0, l = objects.Length; i < l; i++)
+                    sceneTreeView.Items.Add(objects[i]);
+            }
         }
 
         private void OnSceneObjectAdded(BasicMessage m)
         {
-            SceneObjectMessage = m as GenericMessage<SceneObject>;
-
-            if (SceneObjectMessage != null)
-            {
-                var index = sceneTreeView.Items.Add(SceneObjectMessage.Value.Name);
-                if (index > -1)
-                    _itemMapping.Add(SceneObjectMessage.Value.Id, index);
-            }
+            UpdateList();
         }
 
         private void OnSceneObjectRemoved(BasicMessage m)
         {
-            if (_itemMapping.ContainsKey(m.Message))
-            {
-                var index = _itemMapping[m.Message];
-                sceneTreeView.Items.RemoveAt(index);
-                _itemMapping.Remove(m.Message);
-            }
+            UpdateList();
         }
 
         private void OnSceneObjectChanged(BasicMessage m)
         {
-            SceneObjectMessage = m as GenericMessage<SceneObject>;
-
-            if (SceneObjectMessage != null)
-            {
-                var id = SceneObjectMessage.Value.Id;
-
-                if (_itemMapping.ContainsKey(id))
-                {
-                    var index = _itemMapping[id];
-                    sceneTreeView.Items[index] = SceneObjectMessage.Value.Name;
-                }
-            }
+            UpdateList();
         }
     }
 }

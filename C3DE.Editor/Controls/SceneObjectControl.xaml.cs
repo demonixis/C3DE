@@ -38,7 +38,10 @@ namespace C3DE.Editor.Controls
             set
             {
                 if (sceneObject != null)
+                {
                     sceneObject.Name = value;
+                    Messenger.Notify(EditorEvent.SceneObjectRenamed, sceneObject.Id);
+                }
             }
         }
 

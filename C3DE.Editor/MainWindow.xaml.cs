@@ -53,8 +53,7 @@ namespace C3DE.Editor
                 MeshRenderer meshRenderer = null;
                 Camera camera = null;
                 Light light = null;
-                Collider collider = null;
-                
+
                 foreach (var component in sceneObject.Components)
                 {
                     meshRenderer = component as MeshRenderer;

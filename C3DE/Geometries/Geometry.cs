@@ -10,7 +10,6 @@ namespace C3DE.Geometries
         Position = 0, Normal
     }
 
-    [Serializable]
     public class Geometry : IDisposable
     {
         private VertexPositionNormalTexture[] _vertices;
@@ -174,6 +173,27 @@ namespace C3DE.Geometries
                 uvs[i] = Vertices[i].TextureCoordinate;
 
             return uvs;
+        }
+
+        public void SetSize(float? x, float? y, float? z)
+        {
+            if (x.HasValue)
+                size.X = x.Value;
+
+            if (y.HasValue)
+                size.Y = y.Value;
+
+            if (z.HasValue)
+                size.Z = z.Value;
+        }
+
+        public void SetTextureRepeat(float? x, float? y)
+        {
+            if (x.HasValue)
+                repeatTexture.X = x.Value;
+
+            if (y.HasValue)
+                repeatTexture.Y = y.Value;
         }
 
         public void Dispose()
