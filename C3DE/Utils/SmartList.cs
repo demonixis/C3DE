@@ -47,11 +47,11 @@ namespace C3DE.Utils
             _checkRequired = false;
         }
 
-        public void Add(T item)
+        public void Add(T item, bool noCheck = false)
         {
             if (_items.IndexOf(item) == -1)
             {
-                if (_checkRequired)
+                if (_checkRequired && !noCheck)
                 {
                     _addList.Add(item);
                     _addSize++;
@@ -64,13 +64,13 @@ namespace C3DE.Utils
             }
         }
 
-        public void Remove(T item)
+        public void Remove(T item, bool noCheck = false)
         {
             var index = _items.IndexOf(item);
 
             if (index > -1)
             {
-                if (_checkRequired)
+                if (_checkRequired && !noCheck)
                 {
                     _rmList.Add(item);
                     _rmSize++;
@@ -133,6 +133,11 @@ namespace C3DE.Utils
         {
             foreach (T item in _items)
                 yield return item;
+        }
+
+        public T[] ToArray()
+        {
+            return _items.ToArray();
         }
     }
 }

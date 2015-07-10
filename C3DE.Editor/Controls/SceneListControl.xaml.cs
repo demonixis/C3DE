@@ -1,6 +1,5 @@
 ﻿using C3DE.Editor.Core;
 using C3DE.Editor.Events;
-using System.Collections.Generic;
 using System.Windows.Controls;
 
 namespace C3DE.Editor.Controls
@@ -10,25 +9,38 @@ namespace C3DE.Editor.Controls
     /// </summary>
     public partial class SceneListControl : UserControl
     {
-        Dictionary<int, string> _mapping;
+        private EDScene scene;
 
         public SceneListControl()
         {
             InitializeComponent();
-            _mapping = new Dictionary<int, string>();
-            Messenger.Register(EditorEvent.SceneObjectAdded, OnSceneObjectAdded);
-            Messenger.Register(EditorEvent.SceneObjectRemoved, OnSceneObjectRemoved);
-            Messenger.Register(EditorEvent.SceneObjectRenamed, OnSceneObjectChanged);
-            Loaded += SceneListControl_Loaded;
+
+            Messenger.Register(EditorEvent.SceneObjectAdded, UpdateList);
+            Messenger.Register(EditorEvent.SceneObjectRemoved, UpdateList);
+            Messenger.Register(EditorEvent.SceneObjectRenamed, UpdateList);
+
+            Loaded += OnLoaded;
         }
 
-        void SceneListControl_Loaded(object sender, System.Windows.RoutedEventArgs e)
+        private void OnLoaded(object sender, System.Windows.RoutedEventArgs e)
         {
-            sceneTreeView.SelectedItemChanged += sceneTreeView_SelectedItemChanged;
+            sceneTreeView.SelectedItemChanged += OnSelectedItemChanged;
             UpdateList();
+            scene = Scene.current as EDScene;
         }
 
-        void sceneTreeView_SelectedItemChanged(object sender, System.Windows.RoutedPropertyChangedEventArgs<object> e)
+        private void OnSelectedItemChanged(object sender, System.Windows.RoutedPropertyChangedEventArgs<object> e)
+        {
+            var index = GetSelectedIndex();
+            if (index > -1)
+            {
+                var textBlock = sceneTreeView.Items[index] as TextBlock;
+                if (textBlock != null)
+                    scene.SetSeletected(textBlock.Tag.ToString());
+            }
+        }
+
+        private int GetSelectedIndex()
         {
             var index = -1;
             var i = 0;
@@ -43,44 +55,43 @@ namespace C3DE.Editor.Controls
                 i++;
             }
 
-            if (index > -1)
-            {
-                var sceneObject = Scene.FindById(_mapping[index]);
-                Messenger.Notify(EditorEvent.SceneObjectUnSelected);
-                Messenger.Notify(EditorEvent.SceneObjectSelected, new GenericMessage<SceneObject>(sceneObject));
-            }
+            return index;
         }
 
-        private void UpdateList()
+        private object GetObjectByTag(string tag)
+        {
+            TextBlock textBlock = null;
+
+            for (int i = 0, l = sceneTreeView.Items.Count; i < l; i++)
+            {
+                textBlock = sceneTreeView.Items[i] as TextBlock;
+                if (textBlock != null && textBlock.Tag.ToString() == tag)
+                    return sceneTreeView.Items[i];
+            }
+
+            return null;
+        }
+
+        private void UpdateList(BasicMessage m = null)
         {
             if (Scene.current != null)
             {
-                _mapping.Clear();
                 sceneTreeView.Items.Clear();
 
-                var objects = ((EDScene)(Scene.current)).SceneObjects;
+                var sceneObjects = ((EDScene)(Scene.current)).GetSceneObjects();
+                TextBlock textBlock = null;
 
-                foreach (var obj in objects)
+                for (int i = 0, l = sceneObjects.Length; i < l; i++)
                 {
-                    var index = sceneTreeView.Items.Add(obj.Value);
-                    _mapping.Add(index, obj.Key);
+                    if (sceneObjects[i].Tag != EDScene.EditorTag)
+                    {
+                        textBlock = new TextBlock();
+                        textBlock.Text = sceneObjects[i].Name;
+                        textBlock.Tag = sceneObjects[i].Id;
+                        sceneTreeView.Items.Add(textBlock);
+                    }
                 }
             }
-        }
-
-        private void OnSceneObjectAdded(BasicMessage m)
-        {
-            UpdateList();
-        }
-
-        private void OnSceneObjectRemoved(BasicMessage m)
-        {
-            UpdateList();
-        }
-
-        private void OnSceneObjectChanged(BasicMessage m)
-        {
-            UpdateList();
         }
     }
 }

@@ -258,12 +258,12 @@ namespace C3DE
 
         #region SceneObjects/Components management
 
-        /// <summary>
-        /// Add a scene object to the scene.
-        /// </summary>
-        /// <param name="sceneObject">The scene object to add.</param>
-        /// <returns>Return true if the scene object is added, otherwise return false.</returns>
         public override bool Add(SceneObject sceneObject)
+        {
+            return Add(sceneObject, false);
+        }
+
+        public bool Add(SceneObject sceneObject, bool noCheck)
         {
             bool canAdd = base.Add(sceneObject);
 
@@ -271,7 +271,7 @@ namespace C3DE
             {
                 if (!sceneObject.IsPrefab)
                 {
-                    sceneObjects.Add(sceneObject);
+                    sceneObjects.Add(sceneObject, noCheck);
                     sceneObject.Scene = this;
                     sceneObject.Transform.Root = transform;
 
@@ -599,22 +599,27 @@ namespace C3DE
             Scene.current.Remove(sceneObject);
         }
 
-        public override bool Remove(SceneObject sceneObject)
+        public bool Remove(SceneObject sceneObject)
+        {
+            return Remove(sceneObject, false);
+        }
+
+        public bool Remove(SceneObject sceneObject, bool noCheck = false)
         {
             bool canRemove = base.Remove(sceneObject);
 
             if (canRemove)
-                DestroyObject(sceneObject);
+                DestroyObject(sceneObject, noCheck);
 
             return canRemove;
         }
 
-        public void DestroyObject(SceneObject sceneObject)
+        public void DestroyObject(SceneObject sceneObject, bool noCheck = false)
         {
             for (int i = 0, l = sceneObject.Components.Count; i < l; i++)
                 this.DestroyComponent(sceneObject.Components[i]);
 
-            sceneObjects.Remove(sceneObject);
+            sceneObjects.Remove(sceneObject, noCheck);
         }
 
         public void DestroyComponent(Component component)
@@ -808,9 +813,7 @@ namespace C3DE
             var i = 0;
             var size = 0;
             var scene = new SerializedScene();
-            var excludeMaterial = new List<Material>();
-            var excludeCount = 0;
-            RenderableComponent renderer = null;
+            var savedMaterials = new List<int>();
             scene.Id = Id;
             scene.Name = Name;
             scene.RenderSettings = RenderSettings.Serialize();
@@ -822,20 +825,17 @@ namespace C3DE
                 if (excludeTags != null)
                 {
                     if (Array.IndexOf(excludeTags, sceneObjects[i].Tag) > -1)
-                    {
-                        renderer = sceneObjects[i].GetComponent<RenderableComponent>();
-                        if (renderer != null && renderer.Material != null)
-                        {
-                            excludeMaterial.Add(renderer.Material);
-                            excludeCount++;
-                        }
-                    }
-                    else
-                        scene.SceneObjects[i] = sceneObjects[i].Serialize();
-
+                        continue;
                 }
-                else
-                    scene.SceneObjects[i] = sceneObjects[i].Serialize();
+                
+                scene.SceneObjects[i] = sceneObjects[i].Serialize();
+
+                var renderers = sceneObjects[i].GetComponents<RenderableComponent>();
+                foreach (var rendr in renderers)
+                {
+                    if (rendr.materialIndex >= 0 && savedMaterials.IndexOf(rendr.materialIndex) == -1)
+                        savedMaterials.Add(rendr.materialIndex);
+                }
             }
 
             size = components.Count;
@@ -851,18 +851,12 @@ namespace C3DE
                     scene.Components[i] = components[i].Serialize();
             }
 
-            size = materials.Count;
+            size = savedMaterials.Count;
             scene.Materials = new SerializedCollection[size];
             for (i = 0; i < size; i++)
             {
-                if (excludeCount > 0)
-                {
-                    if (excludeMaterial.IndexOf(materials[i]) > -1)
-                        continue;
-                }
-
                 if (materials[i] != defaultMaterial)
-                    scene.Materials[i] = materials[i].Serialize();
+                    scene.Materials[i] = materials[savedMaterials[i]].Serialize();
             }
 
             return scene;

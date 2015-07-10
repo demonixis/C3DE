@@ -22,30 +22,10 @@ namespace C3DE.Editor.Core
         internal Camera camera;
         internal Light light;
         internal Terrain grid;
-
         private List<string> _addList;
         private List<SceneObject> _removeList;
         private SceneObjectSelector _selectedObject;
         private BasicEditionSceneObject _editionSceneObject;
-
-        public Dictionary<string, string> SceneObjects
-        {
-            get
-            {
-                var size = sceneObjects.Size;
-                var array = new Dictionary<string, string>(size);
-
-                for (int i = 0; i < size; i++)
-                    array.Add(sceneObjects[i].Id, sceneObjects[i].Name);
-
-                return array;
-            }
-        }
-
-        public SmartList<SceneObject> SceneObjects2
-        {
-            get { return sceneObjects; }
-        }
 
         public EDScene(string name)
             : base(name)
@@ -74,12 +54,12 @@ namespace C3DE.Editor.Core
             light.Type = LightType.Directional;
 
             // Grid
-            var gridMaterial = new StandardMaterial(this, "GridMaterial");
-            gridMaterial.Tag = EditorTag;
+            var gridMaterial = new UnlitMaterial(this, "GridMaterial");
             gridMaterial.Texture = GraphicsHelper.CreateCheckboardTexture(new Color(0.6f, 0.6f, 0.6f), new Color(0.95f, 0.95f, 0.95f), 256, 256);;
             gridMaterial.Tiling = new Vector2(24);
 
             grid = new Terrain("Editor_Grid");
+            grid.Tag = EditorTag;
             grid.Renderer.Material = gridMaterial;
             grid.Flatten();
             grid.Transform.SetPosition(-grid.Width / 2, -1, -grid.Depth / 2);
@@ -137,7 +117,7 @@ namespace C3DE.Editor.Core
 
         private void CreateMaterial(string name, Texture2D texture)
         {
-            var mat = new StandardMaterial(this, name);
+            var mat = new UnlitMaterial(this, name);
             mat.Texture = texture;
         }
 
@@ -310,7 +290,7 @@ namespace C3DE.Editor.Core
             if (collider != null)
                 collider.IsPickable = true;
 
-            Add(sceneObject);
+            Add(sceneObject, true);
 
             SelectObject(sceneObject);
         }
@@ -318,7 +298,7 @@ namespace C3DE.Editor.Core
         private void InternalRemoveSceneObject(SceneObject sceneObject)
         {
             Messenger.Notify(EditorEvent.SceneObjectRemoved, sceneObject.Id);
-            Remove(sceneObject);
+            Remove(sceneObject, true);
         }
 
         #endregion
@@ -340,6 +320,30 @@ namespace C3DE.Editor.Core
             _selectedObject.Select(false);
             _editionSceneObject.Reset();
             Messenger.Notify(EditorEvent.SceneObjectUnSelected);
+        }
+
+        public void SetSeletected(string id, bool notify = false)
+        {
+            SetSelected(FindById(id), notify);
+        }
+
+        private void SetSelected(SceneObject sceneObject, bool notify = false)
+        {
+            if (sceneObject != null)
+            {
+                _selectedObject.Select(false);
+                _editionSceneObject.Reset();
+
+                if (notify)
+                    Messenger.Notify(EditorEvent.SceneObjectUnSelected);
+
+                _selectedObject.Set(sceneObject);
+                _selectedObject.Select(true);
+                _editionSceneObject.Selected = sceneObject;
+
+                if (notify)
+                    Messenger.Notify(EditorEvent.SceneObjectSelected, new GenericMessage<SceneObject>(sceneObject));
+            }
         }
 
         #endregion
@@ -369,6 +373,15 @@ namespace C3DE.Editor.Core
                 InternalRemoveSceneObject(_selectedObject.SceneObject);
                 UnselectObject();
             }
+        }
+
+        #endregion
+
+        #region Utility / Misc
+
+        public SceneObject[] GetSceneObjects()
+        {
+            return sceneObjects.ToArray();
         }
 
         #endregion
