@@ -175,7 +175,7 @@ namespace C3DE.Components
         public virtual SerializedCollection Serialize()
         {
             var data = new SerializedCollection(5);
-            data.Add("Id", Enabled.ToString());
+            data.Add("Id", Id.ToString());
             data.Add("Type", GetType().FullName);
             data.Add("Enabled", Enabled.ToString());
             data.Add("Order", Order.ToString());

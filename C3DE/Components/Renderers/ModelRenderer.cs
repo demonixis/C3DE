@@ -14,6 +14,8 @@ namespace C3DE.Components.Renderers
     {
         protected Model model;
 
+        public bool UseBasicEffect { get; set; }
+
         public Model Model
         {
             get { return model; }
@@ -30,6 +32,7 @@ namespace C3DE.Components.Renderers
         public ModelRenderer()
             : base()
         {
+            UseBasicEffect = true;
         }
 
         public override void ComputeBoundingInfos()
@@ -57,6 +60,24 @@ namespace C3DE.Components.Renderers
                     device.Indices = meshPart.IndexBuffer;
                     device.DrawIndexedPrimitives(PrimitiveType.TriangleList, meshPart.VertexOffset, 0, meshPart.NumVertices, meshPart.StartIndex, meshPart.PrimitiveCount);
                 }
+            }
+        }
+
+        public void DrawWithBasicEffect(Camera camera, GraphicsDevice device)
+        {
+            Matrix[] bonesTransforms = new Matrix[model.Bones.Count];
+            model.CopyAbsoluteBoneTransformsTo(bonesTransforms);
+
+            foreach (ModelMesh mesh in model.Meshes)
+            {
+                foreach (BasicEffect effect in mesh.Effects)
+                {
+                    effect.World = bonesTransforms[mesh.ParentBone.Index] * transform.world;
+                    effect.View = camera.view;
+                    effect.Projection = camera.projection;
+                    effect.EnableDefaultLighting();
+                }
+                mesh.Draw();
             }
         }
     }

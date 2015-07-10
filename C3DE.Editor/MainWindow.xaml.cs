@@ -144,7 +144,7 @@ namespace C3DE.Editor
                     }
                     break;
 
-                case "Open":
+                case "Load":
                     {
                         var openFileDialog = new Winforms.OpenFileDialog();
                         openFileDialog.Filter = "C3DE Scene (*.scene)|*.scene";

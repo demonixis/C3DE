@@ -1,4 +1,5 @@
 ﻿using C3DE.Components.Renderers;
+using C3DE.Editor.Events;
 using System;
 
 namespace C3DE.Editor.Core
@@ -44,6 +45,8 @@ namespace C3DE.Editor.Core
 
                 if (System.Windows.Input.Keyboard.Modifiers == System.Windows.Input.ModifierKeys.Control)
                     Copy = Selected;
+
+                Messenger.Notify(EditorEvent.SceneObjectAdded);
             }
         }
     }

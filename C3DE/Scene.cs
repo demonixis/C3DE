@@ -811,45 +811,46 @@ namespace C3DE
         public SerializedScene SerializeScene(string[] excludeTags = null)
         {
             var i = 0;
+            var j = 0;
             var size = 0;
             var scene = new SerializedScene();
+            var savedSceneObjects = new List<SerializedCollection>();
+            var savedComponents = new List<SerializedCollection>();
             var savedMaterials = new List<int>();
+            RenderableComponent[] renderers = null;
+
             scene.Id = Id;
             scene.Name = Name;
             scene.RenderSettings = RenderSettings.Serialize();
 
             size = sceneObjects.Size;
-            scene.SceneObjects = new SerializedCollection[size];
             for (i = 0; i < size; i++)
             {
+                // Exclude not needed scene objects.
                 if (excludeTags != null)
                 {
                     if (Array.IndexOf(excludeTags, sceneObjects[i].Tag) > -1)
                         continue;
                 }
-                
-                scene.SceneObjects[i] = sceneObjects[i].Serialize();
 
-                var renderers = sceneObjects[i].GetComponents<RenderableComponent>();
-                foreach (var rendr in renderers)
+                // Serialize it.
+                savedSceneObjects.Add(sceneObjects[i].Serialize());
+
+                // Serialize components
+                for (j = 0; j < sceneObjects[i].Components.Count; j++)
+                    savedComponents.Add(sceneObjects[i].Components[j].Serialize());
+
+                // Gets used materials.
+                renderers = sceneObjects[i].GetComponents<RenderableComponent>();
+                for (j = 0; j < renderers.Length; j++)
                 {
-                    if (rendr.materialIndex >= 0 && savedMaterials.IndexOf(rendr.materialIndex) == -1)
-                        savedMaterials.Add(rendr.materialIndex);
+                    if (renderers[j].materialIndex >= 0 && savedMaterials.IndexOf(renderers[j].materialIndex) == -1)
+                        savedMaterials.Add(renderers[j].materialIndex);
                 }
             }
 
-            size = components.Count;
-            scene.Components = new SerializedCollection[size];
-            for (i = 0; i < size; i++)
-            {
-                if (excludeTags != null)
-                {
-                    if (Array.IndexOf(excludeTags, components[i].SceneObject.Tag) == -1)
-                        scene.Components[i] = components[i].Serialize();
-                }
-                else
-                    scene.Components[i] = components[i].Serialize();
-            }
+            scene.SceneObjects = savedSceneObjects.ToArray();
+            scene.Components = savedComponents.ToArray();
 
             size = savedMaterials.Count;
             scene.Materials = new SerializedCollection[size];

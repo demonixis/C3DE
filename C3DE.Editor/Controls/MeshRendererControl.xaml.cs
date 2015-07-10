@@ -45,7 +45,7 @@ namespace C3DE.Editor.Controls
                     if (geometry != null)
                     {
                         meshRenderer.Geometry = geometry as Geometry;
-                        meshRenderer.Geometry.Buid();
+                        meshRenderer.Geometry.Build();
                     }
                 }
             }
@@ -65,7 +65,7 @@ namespace C3DE.Editor.Controls
                 if (meshRenderer != null)
                 {
                     meshRenderer.Geometry.SetSize(value, null, null);
-                    meshRenderer.Geometry.Buid();
+                    meshRenderer.Geometry.Build();
                 }
             }
         }
@@ -84,7 +84,7 @@ namespace C3DE.Editor.Controls
                 if (meshRenderer != null)
                 {
                     meshRenderer.Geometry.SetSize(null, value, null);
-                    meshRenderer.Geometry.Buid();
+                    meshRenderer.Geometry.Build();
                 }
             }
         }
@@ -103,7 +103,7 @@ namespace C3DE.Editor.Controls
                 if (meshRenderer != null)
                 {
                     meshRenderer.Geometry.SetSize(null, null, value);
-                    meshRenderer.Geometry.Buid();
+                    meshRenderer.Geometry.Build();
                 }
             }
         }
@@ -122,7 +122,7 @@ namespace C3DE.Editor.Controls
                 if (meshRenderer != null)
                 {
                     meshRenderer.Geometry.SetTextureRepeat(value, null);
-                    meshRenderer.Geometry.Buid();
+                    meshRenderer.Geometry.Build();
                 }
             }
         }
@@ -141,7 +141,7 @@ namespace C3DE.Editor.Controls
                 if (meshRenderer != null)
                 {
                     meshRenderer.Geometry.SetTextureRepeat(null, value);
-                    meshRenderer.Geometry.Buid();
+                    meshRenderer.Geometry.Build();
                 }
             }
         }

@@ -126,7 +126,7 @@ namespace C3DE.Prefabs
 
         public void Build()
         {
-            renderer.Geometry.Buid();
+            renderer.Geometry.Build();
         }
 
         public void ApplyCollision(Transform tr)

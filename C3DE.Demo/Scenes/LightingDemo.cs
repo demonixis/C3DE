@@ -45,7 +45,7 @@ namespace C3DE.Demo.Scenes
 
             var lightPrefabSphere = lightPrefab.AddComponent<MeshRenderer>();
             lightPrefabSphere.Geometry = new SphereGeometry(2f, 4);
-            lightPrefabSphere.Geometry.Buid();
+            lightPrefabSphere.Geometry.Build();
             lightPrefabSphere.CastShadow = false;
             lightPrefabSphere.ReceiveShadow = false;
             lightPrefabSphere.Material = new SimpleMaterial(scene);
@@ -59,7 +59,7 @@ namespace C3DE.Demo.Scenes
 
             var terrain = new Terrain("terrain");
             terrain.Renderer.Geometry.Size = new Vector3(4);
-            terrain.Renderer.Geometry.Buid();
+            terrain.Renderer.Geometry.Build();
             terrain.Flatten();
             terrain.Renderer.Material = terrainMaterial;
             terrain.Transform.Translate(-terrain.Width >> 1, 0, -terrain.Depth / 2);
@@ -84,7 +84,7 @@ namespace C3DE.Demo.Scenes
             var cube = cubeScene.AddComponent<MeshRenderer>();
             cube.ReceiveShadow = false;
             cube.Geometry = new CubeGeometry();
-            cube.Geometry.Buid();
+            cube.Geometry.Build();
             cube.Material = cubeSuperMaterial;
 
             cubeScene.AddComponent<BoxCollider>();

@@ -26,6 +26,7 @@ namespace C3DE.Editor.Core
         private List<SceneObject> _removeList;
         private SceneObjectSelector _selectedObject;
         private BasicEditionSceneObject _editionSceneObject;
+        private ModelRenderer _gizmo;
 
         public EDScene(string name)
             : base(name)
@@ -64,6 +65,9 @@ namespace C3DE.Editor.Core
             grid.Flatten();
             grid.Transform.SetPosition(-grid.Width / 2, -1, -grid.Depth / 2);
             Add(grid);
+
+            _gizmo = CreateAddSceneObject<ModelRenderer>("Gizmo");
+            _gizmo.Model = Application.Content.Load<Model>("Models/Gizmo");
 
             CreateMaterialCollection();
 
@@ -259,7 +263,7 @@ namespace C3DE.Editor.Core
 
                     var camRenderer = sceneObject.AddComponent<MeshRenderer>();
                     camRenderer.Geometry = new QuadGeometry();
-                    camRenderer.Geometry.Buid();
+                    camRenderer.Geometry.Build();
                     camRenderer.Material = GetMaterialByName("Camera");
                     break;
                 default: break;
@@ -278,7 +282,7 @@ namespace C3DE.Editor.Core
 
             var lightRenderer = sceneObject.AddComponent<MeshRenderer>();
             lightRenderer.Geometry = new QuadGeometry();
-            lightRenderer.Geometry.Buid();
+            lightRenderer.Geometry.Build();
             lightRenderer.Material = GetMaterialByName("Light");
 
             return sceneObject;

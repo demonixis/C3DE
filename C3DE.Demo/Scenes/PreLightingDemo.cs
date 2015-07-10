@@ -87,7 +87,7 @@ namespace C3DE.Demo.Scenes
             var cube = sceneObject.AddComponent<MeshRenderer>();
             cube.ReceiveShadow = false;
             cube.Geometry = new CubeGeometry();
-            cube.Geometry.Buid();
+            cube.Geometry.Build();
             cube.Material = new PreLightMaterial(scene);
             cube.Material.Texture = GraphicsHelper.CreateCheckboardTexture(RandomHelper.GetColor(), RandomHelper.GetColor(), 64, 64);
 
@@ -119,7 +119,7 @@ namespace C3DE.Demo.Scenes
             var renderer = sceneObject.AddComponent<MeshRenderer>();
             renderer.Geometry = new CubeGeometry();
             renderer.Geometry.Size = size;
-            renderer.Geometry.Buid();
+            renderer.Geometry.Build();
 
             return renderer;
         }

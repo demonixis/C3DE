@@ -223,7 +223,20 @@ namespace C3DE
 
             if (component is Transform)
             {
-                component = null;
+                var tr = (Transform)component;
+
+                if (transform != null)
+                {
+                    transform.Position = tr.Position;
+                    transform.Rotation = tr.Rotation;
+                    transform.LocalScale = tr.LocalScale;
+                }
+                else
+                    transform = tr;
+
+                if (components.Count == 0)
+                    components.Add(transform);
+
                 return transform;
             }
 
@@ -309,6 +322,14 @@ namespace C3DE
             return index > -1;
         }
 
+        internal protected void RemoveAllComponents()
+        {
+            for (int i = 0, l = components.Count; i < l; i++)
+                NotifyComponentChanged(components[i], ComponentChangeType.Remove);
+
+            components.Clear();
+        }
+
         #endregion
 
         public object Clone()
@@ -365,14 +386,16 @@ namespace C3DE
             IsPrefab = bool.Parse(data["IsPrefab"]);
         }
 
-        public virtual void PostDeserialize(string strComponents, List<Component> components)
+        public virtual void PostDeserialize(string strComponents, List<Component> componentCollection)
         {
             var ids = strComponents.Split('|');
 
-            for (int i = 0, l = components.Count; i < l; i++)
+            RemoveAllComponents();
+
+            for (int i = 0, l = componentCollection.Count; i < l; i++)
             {
-                if (Array.IndexOf(ids, components[i].Id) > -1)
-                    AddComponent(components[i]);
+                if (Array.IndexOf(ids, componentCollection[i].Id) > -1)
+                    AddComponent(componentCollection[i]);
             }
         }
     }

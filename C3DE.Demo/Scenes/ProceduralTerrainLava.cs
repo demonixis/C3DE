@@ -54,7 +54,7 @@ namespace C3DE.Demo.Scenes
             lava.Renderer.Material = lavaMaterial;
             lava.Renderer.ReceiveShadow = true;
             lava.Renderer.Geometry.Size = new Vector3(terrain.Width * 0.5f);
-            lava.Renderer.Geometry.Buid();
+            lava.Renderer.Geometry.Build();
             Add(lava);
         }
     }
