@@ -101,7 +101,7 @@ namespace C3DE.Materials
             effect.Parameters["AmbientColor"].SetValue(scene.RenderSettings.ambientColor);
         }
 
-        public override void Pass(RenderableComponent renderable)
+        public override void Pass(Renderer renderable)
         {
             effect.Parameters["TotalTime"].SetValue(_totalTime);
             effect.Parameters["WaterTexture"].SetValue(diffuseTexture);

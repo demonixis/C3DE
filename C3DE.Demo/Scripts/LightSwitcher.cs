@@ -31,13 +31,13 @@ namespace C3DE.Demo.Scripts
             gui.Box(_box, "Lights");
 
             if (gui.Button(_btn1, "Ambiant"))
-                _light.Type = LightType.Ambient;
+                _light.TypeLight = LightType.Ambient;
 
             if (gui.Button(_btn2, "Directional"))
-                _light.Type = LightType.Directional;
+                _light.TypeLight = LightType.Directional;
 
             if (gui.Button(_btn3, "Point"))
-                _light.Type = LightType.Point;
+                _light.TypeLight = LightType.Point;
         }
     }
 }

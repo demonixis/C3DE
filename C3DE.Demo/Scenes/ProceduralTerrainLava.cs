@@ -37,7 +37,7 @@ namespace C3DE.Demo.Scenes
             terrainMaterial.Shininess = 150;
             terrainMaterial.Tiling = new Vector2(8);
 
-            var terrain = new Terrain("terrain");
+            var terrain = new TerrainPrefab("terrain");
             terrain.Renderer.Geometry.Size = new Vector3(2);
             terrain.Renderer.ReceiveShadow = true;
             terrain.Randomize(4, 12);

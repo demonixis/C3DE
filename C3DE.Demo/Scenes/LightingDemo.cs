@@ -57,7 +57,7 @@ namespace C3DE.Demo.Scenes
             terrainMaterial.Shininess = 10;
             terrainMaterial.Tiling = new Vector2(16);
 
-            var terrain = new Terrain("terrain");
+            var terrain = new TerrainPrefab("terrain");
             terrain.Renderer.Geometry.Size = new Vector3(4);
             terrain.Renderer.Geometry.Build();
             terrain.Flatten();

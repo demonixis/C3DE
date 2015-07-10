@@ -12,7 +12,7 @@ namespace C3DE.Rendering
     /// <summary>
     /// The renderer is responsible to render a scene with a camera view to the screen.
     /// </summary>
-    public class Renderer : IRenderer
+    public class ForwardRenderer : IRenderer
     {
         protected GraphicsDevice graphicsDevice;
         protected RenderTarget2D sceneRT;
@@ -26,7 +26,7 @@ namespace C3DE.Rendering
             set { needsBufferUpdate = value; }
         }
 
-        public Renderer()
+        public ForwardRenderer()
         {
             needsBufferUpdate = false;
         }
@@ -70,6 +70,7 @@ namespace C3DE.Rendering
                 // FIXME If a scene object is disabled, the renderlist MUST be updated
                 if (scene.renderList[i].SceneObject.Enabled && scene.renderList[i].Enabled)
                 {
+                    // Fix me again... 
                     if (scene.renderList[i] is ModelRenderer)
                     {
                         var mr = (ModelRenderer)scene.renderList[i];

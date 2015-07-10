@@ -78,11 +78,11 @@ namespace C3DE.Materials
                 effect.Parameters["LightIntensity"].SetValue(light0.Intensity);
                 effect.Parameters["LightRange"].SetValue(light0.Range);
                 effect.Parameters["LightFallOff"].SetValue((int)light0.FallOf);
-                effect.Parameters["LightType"].SetValue((int)light0.Type);
+                effect.Parameters["LightType"].SetValue((int)light0.TypeLight);
             }
         }
 
-        public override void Pass(RenderableComponent renderable)
+        public override void Pass(Renderer renderable)
         {
             if (ShaderQuality == Materials.ShaderQuality.Normal)
                 effect.Parameters["RecieveShadow"].SetValue(renderable.ReceiveShadow);

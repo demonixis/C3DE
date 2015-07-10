@@ -21,7 +21,7 @@ namespace C3DE.Editor.Core
         internal const string EditorTag = "C3DE_Editor";
         internal Camera camera;
         internal Light light;
-        internal Terrain grid;
+        internal TerrainPrefab grid;
         private List<string> _addList;
         private List<SceneObject> _removeList;
         private SceneObjectSelector _selectedObject;
@@ -52,14 +52,14 @@ namespace C3DE.Editor.Core
             light = CreateAddSceneObject<Light>("Editor_MainLight");
             light.Transform.Position = new Vector3(0, 15, 15);
             light.Direction = new Vector3(0, 0.75f, 0.75f);
-            light.Type = LightType.Directional;
+            light.TypeLight = LightType.Directional;
 
             // Grid
             var gridMaterial = new UnlitMaterial(this, "GridMaterial");
             gridMaterial.Texture = GraphicsHelper.CreateCheckboardTexture(new Color(0.6f, 0.6f, 0.6f), new Color(0.95f, 0.95f, 0.95f), 256, 256);;
             gridMaterial.Tiling = new Vector2(24);
 
-            grid = new Terrain("Editor_Grid");
+            grid = new TerrainPrefab("Editor_Grid");
             grid.Tag = EditorTag;
             grid.Renderer.Material = gridMaterial;
             grid.Flatten();
@@ -239,7 +239,7 @@ namespace C3DE.Editor.Core
                 case "Torus": sceneObject = new MeshPrefab<TorusGeometry>(type); break;
 
                 case "Terrain":
-                    var terrain = new Terrain(type);
+                    var terrain = new TerrainPrefab(type);
                     terrain.Flatten();
                     terrain.Renderer.Material = DefaultMaterial;
                     sceneObject = terrain;
@@ -278,7 +278,7 @@ namespace C3DE.Editor.Core
             sceneObject.AddComponent<BoxCollider>();
 
             var light = sceneObject.AddComponent<Light>();
-            light.Type = type;
+            light.TypeLight = type;
 
             var lightRenderer = sceneObject.AddComponent<MeshRenderer>();
             lightRenderer.Geometry = new QuadGeometry();

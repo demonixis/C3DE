@@ -56,7 +56,7 @@ namespace C3DE.Materials
             effect.Parameters["Projection"].SetValue(camera.projection); 
         }
 
-        public override void Pass(RenderableComponent renderable)
+        public override void Pass(Renderer renderable)
         {
             // Material
             

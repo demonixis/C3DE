@@ -38,7 +38,7 @@ namespace C3DE.Components.Colliders
 
         public override void Compute()
         {
-            var renderable = GetComponent<RenderableComponent>();
+            var renderable = GetComponent<Renderer>();
 
             if (renderable != null)
                 _box = new BoundingBox(Vector3.Zero, new Vector3(renderable.boundingSphere.Radius));

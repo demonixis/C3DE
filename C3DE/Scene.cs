@@ -4,7 +4,6 @@ using C3DE.Components.Lights;
 using C3DE.Components.Renderers;
 using C3DE.Materials;
 using C3DE.PostProcess;
-using C3DE.Serialization;
 using C3DE.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -33,7 +32,7 @@ namespace C3DE
 
         internal protected Material defaultMaterial;
         internal protected SmartList<SceneObject> sceneObjects;
-        internal protected List<RenderableComponent> renderList;
+        internal protected List<Renderer> renderList;
         internal protected List<Material> materials;
         internal protected List<Effect> effects;
         internal protected Dictionary<int, int> materialsEffectIndex;
@@ -63,7 +62,7 @@ namespace C3DE
         /// <summary>
         /// Gets the collection of renderable scene objects.
         /// </summary>
-        public List<RenderableComponent> RenderList
+        public List<Renderer> RenderList
         {
             get { return renderList; }
         }
@@ -131,7 +130,7 @@ namespace C3DE
             transform.Root = transform;
             sceneObjects = new SmartList<SceneObject>();
             scene = this;
-            renderList = new List<RenderableComponent>(10);
+            renderList = new List<Renderer>(10);
             materials = new List<Material>(5);
             effects = new List<Effect>(5);
             materialsEffectIndex = new Dictionary<int, int>(5);
@@ -341,9 +340,9 @@ namespace C3DE
         /// <param name="type"></param>
         protected void CheckComponent(Component component, ComponentChangeType type)
         {
-            if (component is RenderableComponent)
+            if (component is Renderer)
             {
-                var renderable = component as RenderableComponent;
+                var renderable = component as Renderer;
 
                 if (type == ComponentChangeType.Add)
                     Add(renderable);
@@ -509,7 +508,7 @@ namespace C3DE
             return index;
         }
 
-        protected void Add(RenderableComponent renderable)
+        protected void Add(Renderer renderable)
         {
             if (!renderList.Contains(renderable))
                 renderList.Add(renderable);
@@ -533,7 +532,7 @@ namespace C3DE
                 scripts.Add(script);
         }
 
-        protected void Remove(RenderableComponent renderable)
+        protected void Remove(Renderer renderable)
         {
             if (renderList.Contains(renderable))
                 renderList.Remove(renderable);
@@ -817,7 +816,7 @@ namespace C3DE
             var savedSceneObjects = new List<SerializedCollection>();
             var savedComponents = new List<SerializedCollection>();
             var savedMaterials = new List<int>();
-            RenderableComponent[] renderers = null;
+            Renderer[] renderers = null;
 
             scene.Id = Id;
             scene.Name = Name;
@@ -841,7 +840,7 @@ namespace C3DE
                     savedComponents.Add(sceneObjects[i].Components[j].Serialize());
 
                 // Gets used materials.
-                renderers = sceneObjects[i].GetComponents<RenderableComponent>();
+                renderers = sceneObjects[i].GetComponents<Renderer>();
                 for (j = 0; j < renderers.Length; j++)
                 {
                     if (renderers[j].materialIndex >= 0 && savedMaterials.IndexOf(renderers[j].materialIndex) == -1)

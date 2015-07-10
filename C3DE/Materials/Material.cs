@@ -1,6 +1,5 @@
 ﻿using C3DE.Components;
 using C3DE.Components.Renderers;
-using C3DE.Serialization;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -87,7 +86,7 @@ namespace C3DE.Materials
 
         public abstract void PrePass(Camera camera);
 
-        public abstract void Pass(RenderableComponent renderable);
+        public abstract void Pass(Renderer renderable);
 
         public virtual void Dispose() { }
 		

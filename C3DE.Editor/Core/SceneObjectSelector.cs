@@ -7,7 +7,7 @@ namespace C3DE.Editor.Core
     {
         public SceneObject SceneObject { get; private set; }
         private BoundingBoxRenderer _boundingBoxRenderer;
-        private RenderableComponent _renderer;
+        private Renderer _renderer;
 
         public SceneObjectSelector()
         {
@@ -21,7 +21,7 @@ namespace C3DE.Editor.Core
             if (_boundingBoxRenderer == null)
                 _boundingBoxRenderer = sceneObject.AddComponent<BoundingBoxRenderer>();
 
-            _renderer = sceneObject.GetComponent<RenderableComponent>();
+            _renderer = sceneObject.GetComponent<Renderer>();
         }
 
         public void Select(bool isSelected)

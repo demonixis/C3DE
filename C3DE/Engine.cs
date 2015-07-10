@@ -111,7 +111,7 @@ namespace C3DE
                 Screen.SetBestResolution(_requestFullscreen);
 
             if (renderer == null)
-                renderer = new Renderer();
+                renderer = new ForwardRenderer();
 
             renderer.Initialize(Content);
 

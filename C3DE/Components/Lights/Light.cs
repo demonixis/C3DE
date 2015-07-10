@@ -1,5 +1,4 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace C3DE.Components.Lights
@@ -68,7 +67,7 @@ namespace C3DE.Components.Lights
         /// <summary>
         /// The type of the light.
         /// </summary>
-        public LightType Type { get; set; }
+        public LightType TypeLight { get; set; }
 
         /// <summary>
         /// The direction of the directional light.
@@ -89,7 +88,7 @@ namespace C3DE.Components.Lights
             diffuseColor = new Vector3(1.0f, 1.0f, 1.0f);
             Intensity = 1.0f;
             Direction = new Vector3(1, 1, 0);
-            Type = LightType.Ambient;
+            TypeLight = LightType.Ambient;
             Range = 5000.0f;
             FallOf = 2.0f;
 			Backing = LightRenderMode.RealTime;
@@ -114,16 +113,45 @@ namespace C3DE.Components.Lights
             projectionMatrix = Matrix.CreateOrthographicOffCenter(-size, size, size, -size, dist - sphere.Radius, dist + sphere.Radius * 2);
         }
 
-        public void DrawShadowMap(SpriteBatch sb)
+        public void DrawShadowMap(SpriteBatch spriteBatch)
         {
-            sb.Begin(SpriteSortMode.Deferred, BlendState.Opaque, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone, null);
-            sb.Draw(shadowGenerator.ShadowMap, new Rectangle(0, 0, 100, 100), Color.White);
-            sb.End();
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Opaque, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone, null);
+            spriteBatch.Draw(shadowGenerator.ShadowMap, new Rectangle(0, 0, 100, 100), Color.White);
+            spriteBatch.End();
         }
 
         public override void Dispose()
         {
             shadowGenerator.Dispose();
+        }
+		
+		public override SerializedCollection Serialize()
+        {
+            var data = base.Serialize();
+            data.IncreaseCapacity(8);
+            data.Add("Color", SerializerHelper.ToString(diffuseColor));
+            data.Add("Intensity", Intensity.ToString());
+            data.Add("Direction", SerializerHelper.ToString(Direction));
+            data.Add("TypeLight", ((int)TypeLight).ToString());
+            data.Add("Range", Range.ToString());
+            data.Add("FallOf", FallOf.ToString());
+            data.Add("Backing", ((int)Backing).ToString());
+            data.Add("ShadowG", shadowGenerator.Serialize());
+			
+            return data;
+        }
+
+        public override void Deserialize(SerializedCollection data)
+        {
+            base.Deserialize(data);
+            diffuseColor = SerializerHelper.ToVector3(data["Color"]);
+            Intensity = float.Parse(data["Intensity"]);
+            Direction = SerializerHelper.ToVector3(data["Direction"]);
+            TypeLight = (LightType)int.Parse(data["TypeLight"]);
+            Range = float.Parse(data["Range"]);
+            FallOf = float.Parse(data["FallOf"]);
+            Backing = (LightRenderMode)int.Parse(data["Backing"]);
+            shadowGenerator.Deserialize(data["ShadowG"]);
         }
     }
 }

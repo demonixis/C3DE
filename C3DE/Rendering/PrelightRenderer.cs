@@ -11,7 +11,7 @@ using System.Collections.Generic;
 
 namespace C3DE.Rendering
 {
-    public class PreLightRenderer : Renderer
+    public class PreLightRenderer : ForwardRenderer
     {
         private Vector2 _viewport;
         internal RenderTarget2D _depthRT;

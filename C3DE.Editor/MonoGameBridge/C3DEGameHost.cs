@@ -1,10 +1,8 @@
 ﻿using C3DE.Components;
 using C3DE.Components.Renderers;
 using C3DE.Editor.Core;
-using C3DE.Editor.Events;
 using C3DE.Editor.Exporters;
 using C3DE.Rendering;
-using C3DE.Serialization;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -22,7 +20,7 @@ namespace C3DE.Editor.MonoGameBridge
         private GameTime _gameTime;
         private GameServiceContainer _services;
         private List<GameComponent> _gameComponents;
-        private Renderer _renderer;
+        private ForwardRenderer _renderer;
         private ContentManager _content;
         private EDScene _scene;
 
@@ -72,7 +70,7 @@ namespace C3DE.Editor.MonoGameBridge
 
             Screen.Setup((int)ActualWidth, (int)ActualHeight, null, null);
 
-            _renderer = new Renderer();
+            _renderer = new ForwardRenderer();
             _renderer.Initialize(_content);
 
             foreach (var component in _gameComponents)

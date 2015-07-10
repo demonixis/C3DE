@@ -1,8 +1,6 @@
-﻿using Microsoft.Xna.Framework;
-using System;
-using System.Collections.Generic;
+﻿using System;
 
-namespace C3DE.Serialization
+namespace C3DE
 {
     public interface ISerializable
     {

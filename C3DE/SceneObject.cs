@@ -1,5 +1,4 @@
 ﻿using C3DE.Components;
-using C3DE.Serialization;
 using System;
 using System.Collections.Generic;
 
@@ -354,6 +353,8 @@ namespace C3DE
                 component.Dispose();
         }
 
+        #region Serialization / Deserialization
+
         public virtual SerializedCollection Serialize()
         {
             var data = new SerializedCollection(7);
@@ -398,5 +399,7 @@ namespace C3DE
                     AddComponent(componentCollection[i]);
             }
         }
+
+        #endregion
     }
 }

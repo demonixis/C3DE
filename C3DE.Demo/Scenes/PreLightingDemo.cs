@@ -39,7 +39,7 @@ namespace C3DE.Demo.Scenes
             groundMaterial.Texture = GraphicsHelper.CreateCheckboardTexture(Color.LightGreen, Color.LightSeaGreen, 128, 128);
             groundMaterial.Tiling = new Vector2(16);
 
-            var ground = new Terrain("terrain");
+            var ground = new TerrainPrefab("terrain");
             ground.Renderer.Geometry.Size = new Vector3(4, 1, 4);
             ground.Flatten();
             ground.Renderer.Material = groundMaterial;
@@ -77,7 +77,7 @@ namespace C3DE.Demo.Scenes
 
         public override void Unload()
         {
-            Application.Engine.Renderer = new Renderer();
+            Application.Engine.Renderer = new ForwardRenderer();
             base.Unload();
         }
 

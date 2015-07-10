@@ -27,7 +27,7 @@ namespace C3DE.Materials
             effect.Parameters["EyePosition"].SetValue(camera.Transform.Position);
         }
 
-        public override void Pass(RenderableComponent renderable)
+        public override void Pass(Renderer renderable)
         {
             effect.Parameters["World"].SetValue(renderable.Transform.world);
             effect.CurrentTechnique.Passes[0].Apply();

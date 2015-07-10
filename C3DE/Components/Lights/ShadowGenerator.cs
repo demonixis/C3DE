@@ -15,11 +15,7 @@ namespace C3DE
         private Light _light;
         private RenderTarget2D shadowMap;
         private Effect _shadowEffect;
-        private float _shadowMapSize;
-        private float _shadowBias;
-        private float _shadowStrength;
         private BoundingSphere _boundingSphere;
-        private bool _enabled;
         private Vector3 _shadowData;
 
         public RenderTarget2D ShadowMap
@@ -29,37 +25,27 @@ namespace C3DE
 
         public float ShadowMapSize
         {
-            get { return _shadowMapSize; }
+            get { return _shadowData.X; }
+            set { _shadowData.X = value; }
         }
 
         public float ShadowBias
         {
-            get { return _shadowBias; }
-            set
-            {
-                _shadowBias = value;
-                _shadowData.Y = value;
-            }
+            get { return _shadowData.Y; }
+            set { _shadowData.Y = value; }
         }
 
         public float ShadowStrength
         {
-            get { return 1 - _shadowStrength; }
-            set
-            {
-                _shadowStrength = Math.Min(1.0f, Math.Max(0.0f, value));
-                _shadowData.Z = _shadowStrength;
-            }
+            get { return 1 - _shadowData.Z; }
+            set { _shadowData.Z = Math.Min(1.0f, Math.Max(0.0f, value)); }
         }
 
+        // FIXME
         public bool Enabled
         {
-            get { return _enabled; }
-            set
-            {
-                _enabled = value;
-                _shadowData.X = value ? _shadowMapSize : 0;
-            }
+            get { return _shadowData.X > 0; }
+            set { _shadowData.X = value ? Math.Max(_shadowData.X, 256) : 0; }
         }
 
         public Vector3 Data
@@ -69,11 +55,8 @@ namespace C3DE
 
         public ShadowGenerator(Light light)
         {
-            _enabled = false;
-            _shadowBias = 0.005f;
-            _shadowStrength = 0.8f;
             _light = light;
-            _shadowData = new Vector3(0, 0, 0);
+            _shadowData = new Vector3(0, 0.005f, 0.8f);
         }
 
         public void Initialize()
@@ -90,20 +73,16 @@ namespace C3DE
 #if ANDROID
 			shadowMap = new RenderTarget2D (device, size, size);
 #else
-			shadowMap = new RenderTarget2D (device, size, size, false, SurfaceFormat.Single, DepthFormat.Depth24, 0, RenderTargetUsage.DiscardContents);
+            shadowMap = new RenderTarget2D(device, size, size, false, SurfaceFormat.Single, DepthFormat.Depth24, 0, RenderTargetUsage.DiscardContents);
 #endif
-            _shadowMapSize = size;
-
-            _shadowData.X = _enabled ? _shadowMapSize : 0;
-            _shadowData.Y = _shadowBias;
-            _shadowData.Z = _shadowStrength;
+            _shadowData.X = size;
         }
 
         /// <summary>
         /// Render shadows for the specified camera into a renderTarget.
         /// </summary>
         /// <param name="camera"></param>
-        public void RenderShadows(GraphicsDevice device, List<RenderableComponent> renderList)
+        public void RenderShadows(GraphicsDevice device, List<Renderer> renderList)
         {
             _boundingSphere = new BoundingSphere();
 
@@ -144,6 +123,16 @@ namespace C3DE
         {
             if (shadowMap != null)
                 shadowMap.Dispose();
+        }
+
+        public string Serialize()
+        {
+            return SerializerHelper.ToString(_shadowData);
+        }
+
+        public void Deserialize(string strData)
+        {
+            _shadowData = SerializerHelper.ToVector3(strData);
         }
     }
 }

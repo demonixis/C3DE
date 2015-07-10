@@ -1,12 +1,11 @@
 ﻿using C3DE.Geometries;
-using C3DE.Serialization;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 
 namespace C3DE.Components.Renderers
 {
-    public class MeshRenderer : RenderableComponent
+    public class MeshRenderer : Renderer
     {
         private bool _haveListener;
         protected Geometry geometry;

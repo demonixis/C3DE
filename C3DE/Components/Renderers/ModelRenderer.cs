@@ -1,16 +1,13 @@
-﻿using C3DE.Components.Colliders;
-using C3DE.Materials;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
-using System.Collections.Generic;
 
 namespace C3DE.Components.Renderers
 {
     /// <summary>
     /// A component used to render an XNA model.
     /// </summary>
-    public class ModelRenderer : RenderableComponent
+    public class ModelRenderer : Renderer
     {
         protected Model model;
 
@@ -79,6 +76,25 @@ namespace C3DE.Components.Renderers
                 }
                 mesh.Draw();
             }
+        }
+		
+		public override SerializedCollection Serialize()
+        {
+            var data = base.Serialize();
+            data.IncreaseCapacity(2);
+            data.Add("UseBasicEffect", UseBasicEffect.ToString());
+            data.Add("Model", model.Tag.ToString());
+            return data;
+        }
+
+        public override void Deserialize(SerializedCollection data)
+        {
+            base.Deserialize(data);
+            UseBasicEffect = bool.Parse(data["UseBasicEffect"]);
+			var path = data["Model"];
+			
+			if (!string.IsNullOrEmpty(path))
+				model = Application.Content.Load<Model>(path);
         }
     }
 }

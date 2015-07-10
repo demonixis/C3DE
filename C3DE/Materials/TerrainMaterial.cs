@@ -59,7 +59,7 @@ namespace C3DE.Materials
             effect.Parameters["AmbientColor"].SetValue(scene.RenderSettings.ambientColor);
         }
 
-        public override void Pass(RenderableComponent renderable)
+        public override void Pass(Renderer renderable)
         {
             // Material
             effect.Parameters["DiffuseColor"].SetValue(diffuseColor);

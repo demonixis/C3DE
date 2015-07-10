@@ -42,7 +42,7 @@ namespace C3DE.Materials
             }
         }
 
-        public override void Pass(RenderableComponent renderable)
+        public override void Pass(Renderer renderable)
         {
             // Material
             

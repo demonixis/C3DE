@@ -33,7 +33,7 @@ namespace C3DE.Materials
             effect.Parameters["Viewport"].SetValue(_viewport);
         }
 
-        public override void Pass(RenderableComponent renderable)
+        public override void Pass(Renderer renderable)
         {
             effect.Parameters["TextureTiling"].SetValue(Tiling);
             effect.Parameters["DiffuseColor"].SetValue(diffuseColor);

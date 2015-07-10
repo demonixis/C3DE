@@ -1,9 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
-using System.Collections.Generic;
 using System.Text;
 
-namespace C3DE.Serialization
+namespace C3DE
 {
     public sealed class SerializerHelper
     {

@@ -28,14 +28,14 @@ namespace C3DE.Editor.Controls
             get
             {
                 if (light != null)
-                    return (int)light.Type;
+                    return (int)light.TypeLight;
 
                 return 0;
             }
             set
             {
                 if (light != null)
-                    light.Type = (LightType)value;
+                    light.TypeLight = (LightType)value;
             }
         }
 

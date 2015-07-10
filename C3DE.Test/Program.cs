@@ -1,17 +1,10 @@
-﻿using C3DE.Materials;
+﻿using C3DE.Components.Lights;
+using C3DE.Materials;
 using C3DE.Prefabs;
-using C3DE.Utils;
 using Microsoft.Xna.Framework;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Serialization;
 using Newtonsoft.Json;
-using C3DE.Components.Lights;
-using C3DE.Serialization;
+using System.IO;
+using System.Xml.Serialization;
 
 namespace C3DE.Test
 {
@@ -51,7 +44,7 @@ namespace C3DE.Test
             // Finally a terrain
             var terrainMat = new TerrainMaterial(scene);
 
-            var terrain = new Terrain("terrain");
+            var terrain = new TerrainPrefab("terrain");
             scene.Add(terrain);
             terrain.LoadHeightmap("Textures/heightmap");
             terrain.Renderer.Material = terrainMat;

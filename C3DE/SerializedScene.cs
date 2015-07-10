@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 
-namespace C3DE.Serialization
+namespace C3DE
 {
     [Serializable]
     public class SerializedScene

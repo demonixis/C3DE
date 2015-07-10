@@ -36,7 +36,7 @@ namespace C3DE.Components.Colliders
 
         public override void Compute()
         {
-            var renderable = GetComponent<RenderableComponent>();
+            var renderable = GetComponent<Renderer>();
 
             if (renderable != null)
             {

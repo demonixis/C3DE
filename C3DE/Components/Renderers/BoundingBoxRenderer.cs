@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace C3DE.Components.Renderers
 {
-    public class BoundingBoxRenderer : RenderableComponent
+    public class BoundingBoxRenderer : Renderer
     {
         private VertexPositionColor[] _vertices = new VertexPositionColor[8];
         private static short[] _indices = new short[]
@@ -12,7 +12,7 @@ namespace C3DE.Components.Renderers
         };
 
         private static BasicEffect _effect;
-        private RenderableComponent _renderer;
+        private Renderer _renderer;
 
         public override void Awake()
         {
@@ -30,7 +30,7 @@ namespace C3DE.Components.Renderers
         {
             base.Start();
 
-            _renderer = GetComponent<RenderableComponent>();
+            _renderer = GetComponent<Renderer>();
 
             if (_renderer == null)
                 return;

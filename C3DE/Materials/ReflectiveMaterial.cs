@@ -38,7 +38,7 @@ namespace C3DE.Materials
             effect.Parameters["EyePosition"].SetValue(camera.SceneObject.Transform.Position);
         }
 
-        public override void Pass(RenderableComponent renderable)
+        public override void Pass(Renderer renderable)
         {
             effect.Parameters["MainTextureEnabled"].SetValue(diffuseTexture != null);
 

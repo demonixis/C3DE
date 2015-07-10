@@ -39,7 +39,7 @@ namespace C3DE.Editor.Core
                 Copy = previous;
 
                 var x = Copy.Transform.Position.X;
-                x += Copy.GetComponent<RenderableComponent>().BoundingSphere.Radius * 2.0f;
+                x += Copy.GetComponent<Renderer>().BoundingSphere.Radius * 2.0f;
 
                 sceneObject.Transform.SetPosition(x, null, null);
 
