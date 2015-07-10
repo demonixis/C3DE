@@ -11,8 +11,6 @@ namespace C3DE.Components.Renderers
     {
         protected Model model;
 
-        public bool UseBasicEffect { get; set; }
-
         public Model Model
         {
             get { return model; }
@@ -29,7 +27,6 @@ namespace C3DE.Components.Renderers
         public ModelRenderer()
             : base()
         {
-            UseBasicEffect = true;
         }
 
         public override void ComputeBoundingInfos()
@@ -76,25 +73,6 @@ namespace C3DE.Components.Renderers
                 }
                 mesh.Draw();
             }
-        }
-		
-		public override SerializedCollection Serialize()
-        {
-            var data = base.Serialize();
-            data.IncreaseCapacity(2);
-            data.Add("UseBasicEffect", UseBasicEffect.ToString());
-            data.Add("Model", model.Tag.ToString());
-            return data;
-        }
-
-        public override void Deserialize(SerializedCollection data)
-        {
-            base.Deserialize(data);
-            UseBasicEffect = bool.Parse(data["UseBasicEffect"]);
-			var path = data["Model"];
-			
-			if (!string.IsNullOrEmpty(path))
-				model = Application.Content.Load<Model>(path);
         }
     }
 }
