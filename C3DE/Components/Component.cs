@@ -7,7 +7,7 @@ namespace C3DE.Components
     /// <summary>
     /// A component is a part of a scene object.
     /// </summary>
-    public abstract class Component : IComparable, ICloneable, IDisposable, ISerializable
+    public abstract class Component : IComparable, ICloneable, IDisposable
     {
         internal protected bool initialized;
         protected bool enabled;
@@ -169,24 +169,6 @@ namespace C3DE.Components
 
         public virtual void Dispose()
         {
-        }
-
-        public virtual SerializedCollection Serialize()
-        {
-            var data = new SerializedCollection(5);
-            data.Add("Id", Id.ToString());
-            data.Add("Type", GetType().FullName);
-            data.Add("Enabled", Enabled.ToString());
-            data.Add("Order", Order.ToString());
-            data.Add("SceneObject", sceneObject != null ? sceneObject.Id : null);
-            return data;
-        }
-
-        public virtual void Deserialize(SerializedCollection data)
-        {
-            Id = data["Id"];
-            enabled = bool.Parse(data["Enabled"]);
-            order = int.Parse(data["Order"]);
         }
     }
 }

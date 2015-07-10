@@ -7,7 +7,7 @@ namespace C3DE
     /// <summary>
     /// A scene object is the base object on the scene.
     /// </summary>
-    public class SceneObject : ICloneable, IDisposable, ISerializable
+    public class SceneObject : ICloneable, IDisposable
     {
         #region Private/protected declarations
 
@@ -321,7 +321,7 @@ namespace C3DE
             return index > -1;
         }
 
-        internal protected void RemoveAllComponents()
+        internal protected virtual void RemoveAllComponents()
         {
             for (int i = 0, l = components.Count; i < l; i++)
                 NotifyComponentChanged(components[i], ComponentChangeType.Remove);
@@ -352,54 +352,5 @@ namespace C3DE
             foreach (Component component in components)
                 component.Dispose();
         }
-
-        #region Serialization / Deserialization
-
-        public virtual SerializedCollection Serialize()
-        {
-            var data = new SerializedCollection(7);
-            data.Add("Name", Name);
-            data.Add("Id", Id);
-            data.Add("Type", GetType().FullName);
-            data.Add("Enabled", enabled);
-            data.Add("IsPrefab", IsPrefab);
-            data.Add("IsStatic", IsStatic);
-
-            var cSize = components.Count;
-            var sb = new System.Text.StringBuilder(cSize);
-
-            for (int i = 0; i < cSize; i++)
-                sb.AppendFormat("{0}|", components[i].Id);
-
-            sb.Length = sb.Length - 1;
-
-            data.Add("Components", sb.ToString());
-
-            return data;
-        }
-
-        public virtual void Deserialize(SerializedCollection data)
-        {
-            Id = data["Id"];
-            Name = data["Name"];
-            enabled = bool.Parse(data["Enabled"]);
-            IsStatic = bool.Parse(data["IsStatic"]);
-            IsPrefab = bool.Parse(data["IsPrefab"]);
-        }
-
-        public virtual void PostDeserialize(string strComponents, List<Component> componentCollection)
-        {
-            var ids = strComponents.Split('|');
-
-            RemoveAllComponents();
-
-            for (int i = 0, l = componentCollection.Count; i < l; i++)
-            {
-                if (Array.IndexOf(ids, componentCollection[i].Id) > -1)
-                    AddComponent(componentCollection[i]);
-            }
-        }
-
-        #endregion
     }
 }

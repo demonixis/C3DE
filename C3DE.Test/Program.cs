@@ -72,48 +72,10 @@ namespace C3DE.Test
         {
             base.Update();
 
-            JSONSerialization("scene.json", this);
-
-            var des = JSONDeserialize("scene.json");
 
             Application.Quit();
         }
 
-        private void JSONSerialization(string path, ISerializable obj)
-        {
-            var data = string.Empty;
-
-            if (obj is Scene)
-            {
-                var d = (obj as Scene).SerializeScene();
-                data = JsonConvert.SerializeObject(d, Formatting.Indented, new JsonSerializerSettings()
-                {
-                    TypeNameHandling = TypeNameHandling.Objects
-                });
-            }
-            else
-            {
-                var d = obj.Serialize();
-                data = JsonConvert.SerializeObject(d, Formatting.Indented);
-            }
-
-            File.WriteAllText(path, data);
-        }
-
-        private SerializedScene JSONDeserialize(string path)
-        {
-            var data = string.Empty;
-
-            using (var r = new StreamReader(path))
-            {
-                data = r.ReadToEnd();
-                r.Close();
-            }
-
-            var scene = JsonConvert.DeserializeObject<SerializedScene>(data);
-
-            return scene;
-        }
     }
 
     class Program

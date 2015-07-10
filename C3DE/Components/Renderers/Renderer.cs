@@ -88,23 +88,5 @@ namespace C3DE.Components.Renderers
         /// </summary>
         /// <param name="device"></param>
         public abstract void Draw(GraphicsDevice device);
-		
-		public override SerializedCollection Serialize()
-        {
-            var data = base.Serialize();
-            data.IncreaseCapacity(3);
-            data.Add("CastShadow", CastShadow.ToString());
-            data.Add("ReceiveShadow", ReceiveShadow.ToString());
-            data.Add("MaterialIndex", materialIndex.ToString());
-            return data;
-        }
-
-        public override void Deserialize(SerializedCollection data)
-        {
-            base.Deserialize(data);
-            CastShadow = bool.Parse(data["CastShadow"]);
-			ReceiveShadow = bool.Parse(data["ReceiveShadow"]);
-			materialIndex = int.Parse(data["MaterialIndex"]);
-        }
     }
 }

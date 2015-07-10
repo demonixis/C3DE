@@ -84,28 +84,5 @@ namespace C3DE.Components.Renderers
                 geometry = null;
             }
         }
-
-        public override SerializedCollection Serialize()
-        {
-            var data = base.Serialize();
-            data.IncreaseCapacity(1);
-            data.Add("Geometry", geometry != null ? geometry.Serialize() : null);
-            return data;
-        }
-
-        public override void Deserialize(SerializedCollection data)
-        {
-            base.Deserialize(data);
-
-            var geoStr = data["Geometry"];
-                     
-            if (!string.IsNullOrEmpty(geoStr))
-            {
-                var tmp = geoStr.Split('_');
-                geometry = Activator.CreateInstance(Type.GetType(tmp[0])) as Geometry;
-                if (geometry != null)
-                    geometry.Deserialize(geoStr);
-            }
-        }
     }
 }

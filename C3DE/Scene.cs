@@ -313,7 +313,7 @@ namespace C3DE
             prefabs.Clear();
         }
 
-        protected virtual void RemoveAllComponents()
+        internal protected override void RemoveAllComponents()
         {
             renderList.Clear();
             colliders.Clear();
@@ -598,7 +598,7 @@ namespace C3DE
             Scene.current.Remove(sceneObject);
         }
 
-        public bool Remove(SceneObject sceneObject)
+        public override bool Remove(SceneObject sceneObject)
         {
             return Remove(sceneObject, false);
         }
@@ -807,103 +807,14 @@ namespace C3DE
 
         #endregion
 
-        public SerializedScene SerializeScene(string[] excludeTags = null)
+        public void SerializeScene(string[] excludeTags = null)
         {
-            var i = 0;
-            var j = 0;
-            var size = 0;
-            var scene = new SerializedScene();
-            var savedSceneObjects = new List<SerializedCollection>();
-            var savedComponents = new List<SerializedCollection>();
-            var savedMaterials = new List<int>();
-            Renderer[] renderers = null;
-
-            scene.Id = Id;
-            scene.Name = Name;
-            scene.RenderSettings = RenderSettings.Serialize();
-
-            size = sceneObjects.Size;
-            for (i = 0; i < size; i++)
-            {
-                // Exclude not needed scene objects.
-                if (excludeTags != null)
-                {
-                    if (Array.IndexOf(excludeTags, sceneObjects[i].Tag) > -1)
-                        continue;
-                }
-
-                // Serialize it.
-                savedSceneObjects.Add(sceneObjects[i].Serialize());
-
-                // Serialize components
-                for (j = 0; j < sceneObjects[i].Components.Count; j++)
-                    savedComponents.Add(sceneObjects[i].Components[j].Serialize());
-
-                // Gets used materials.
-                renderers = sceneObjects[i].GetComponents<Renderer>();
-                for (j = 0; j < renderers.Length; j++)
-                {
-                    if (renderers[j].materialIndex >= 0 && savedMaterials.IndexOf(renderers[j].materialIndex) == -1)
-                        savedMaterials.Add(renderers[j].materialIndex);
-                }
-            }
-
-            scene.SceneObjects = savedSceneObjects.ToArray();
-            scene.Components = savedComponents.ToArray();
-
-            size = savedMaterials.Count;
-            scene.Materials = new SerializedCollection[size];
-            for (i = 0; i < size; i++)
-            {
-                if (materials[i] != defaultMaterial)
-                    scene.Materials[i] = materials[savedMaterials[i]].Serialize();
-            }
-
-            return scene;
+            
         }
 
-        public void DeserializeScene(SerializedScene scene)
+        public void DeserializeScene()
         {
-            var i = 0;
-            var size = 0;
-            var sceneObjectCollection = new List<SceneObject>();
-            var componentCollection = new List<Component>();
-            Material material = null;
-            SceneObject sceneObject = null;
-
-            Name = scene.Name;
-            Id = Scene.Id;
-            RenderSettings.Deserialize(scene.RenderSettings);
-
-            size = scene.Materials.Length;
-            materials.Capacity += size;
-
-            for (i = 0; i < size; i++)
-            {
-                material = SerializerHelper.CreateInstance(scene.Materials[i]) as Material;
-                Add(material);
-            }
-
-            size = scene.SceneObjects.Length;
-            for (i = 0; i < size; i++)
-            {
-                sceneObject = SerializerHelper.CreateInstance(scene.SceneObjects[i]) as SceneObject;
-                Add(sceneObject);
-                sceneObjectCollection.Add(sceneObject);
-            }
-
-            size = scene.Components.Length;
-            componentCollection.Capacity = size;
-            for (i = 0; i < size; i++)
-            {
-                var component = SerializerHelper.CreateInstance(scene.Components[i]) as Component;
-                if (component != null)
-                    componentCollection.Add(component);
-            }
-
-            size = scene.SceneObjects.Length;
-            for (i = 0; i < size; i++)
-                sceneObjectCollection[i].PostDeserialize(scene.SceneObjects[i]["Components"], componentCollection);
+            
         }
     }
 }

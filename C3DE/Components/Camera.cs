@@ -215,41 +215,5 @@ namespace C3DE.Components
 
             return new Ray(nearPoint, direction);
         }
-
-        public override SerializedCollection Serialize()
-        {
-            var data = base.Serialize();
-            data.IncreaseCapacity(10);
-            data.Add("Color", SerializerHelper.ToString(clearColor));
-            data.Add("Depth", depth.ToString());
-            data.Add("Reference", SerializerHelper.ToString(reference));
-            data.Add("Target", SerializerHelper.ToString(_target));
-            data.Add("Up", SerializerHelper.ToString(_upVector));
-            data.Add("FOV", _fieldOfView.ToString());
-            data.Add("Aspect", _aspectRatio.ToString());
-            data.Add("Near", _nearPlane.ToString());
-            data.Add("Far", _farPlane.ToString());
-            data.Add("Type", ((int)_projectionType).ToString());
-
-            return data;
-        }
-
-        public override void Deserialize(SerializedCollection data)
-        {
-            base.Deserialize(data);
-
-            clearColor = SerializerHelper.ToColor(data["Color"]);
-            depth = short.Parse(data["Depth"]);
-            reference = SerializerHelper.ToVector3(data["Reference"]);
-            _target = SerializerHelper.ToVector3(data["Target"]);
-            _upVector = SerializerHelper.ToVector3(data["Up"]);
-            _fieldOfView = float.Parse(data["FOV"]);
-            _aspectRatio = float.Parse(data["Aspect"]);
-            _nearPlane = float.Parse(data["Near"]);
-            _farPlane = float.Parse(data["Far"]);
-            _projectionType = (CameraProjectionType)int.Parse(data["Type"]);
-            _needProjectionUpdate = true;
-            _needUpdate = true;
-        }
     }
 }

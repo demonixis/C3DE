@@ -203,30 +203,5 @@ namespace C3DE.Geometries
                 _indexBuffer.Dispose();
             }
         }
-
-        public string Serialize()
-        {
-            var data = new System.Text.StringBuilder(7);
-            data.Append(GetType().FullName);
-            data.Append("_");
-            data.Append(SerializerHelper.ToString(repeatTexture));
-            data.Append("_");
-            data.Append(SerializerHelper.ToString(size));
-            data.Append("_");
-            data.Append(_built.ToString());
-            return data.ToString();
-        }
-
-        public void Deserialize(string strData)
-        {
-            var tmp = strData.Split('_');
-
-            repeatTexture = SerializerHelper.ToVector2(tmp[1]);
-            size = SerializerHelper.ToVector3(tmp[2]);
-
-            var built = bool.Parse(tmp[3]);
-            if (built)
-                Build();
-        }
     }
 }

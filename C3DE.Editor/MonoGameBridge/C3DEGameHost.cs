@@ -113,18 +113,12 @@ namespace C3DE.Editor.MonoGameBridge
 
         public string SaveScene()
         {
-            var serialization = _scene.SerializeScene(new string[1] { "C3DE_Editor" });
-            return JsonConvert.SerializeObject(serialization, Formatting.Indented);
+            return string.Empty;
         }
 
         public void LoadScene(string strData)
         {
-            var scene = JsonConvert.DeserializeObject<SerializedScene>(strData);
-            if (scene != null)
-            {
-                NewScene();
-                _scene.DeserializeScene(scene);
-            }
+
         }
 
         #endregion

@@ -12,7 +12,7 @@ namespace C3DE
     /// <summary>
     /// Define settings used by the renderer.
     /// </summary>
-    public class RenderSettings : ISerializable
+    public class RenderSettings
     {
         internal Vector3 fogColor;
         internal Vector3 ambientColor;
@@ -97,18 +97,6 @@ namespace C3DE
             FogEnd = 150.0f;
             fogColor = Vector3.One;
             skybox = new Skybox();
-        }
-
-        public SerializedCollection Serialize()
-        {
-            var data = new SerializedCollection(1);
-            data.Add("FogData", SerializerHelper.ToFloat(fogData));
-            return data;
-        }
-
-        public void Deserialize(SerializedCollection data)
-        {
-            fogData = SerializerHelper.ToVector4(data["FogData"]);
         }
     }
 }

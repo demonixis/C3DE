@@ -124,15 +124,5 @@ namespace C3DE
             if (shadowMap != null)
                 shadowMap.Dispose();
         }
-
-        public string Serialize()
-        {
-            return SerializerHelper.ToString(_shadowData);
-        }
-
-        public void Deserialize(string strData)
-        {
-            _shadowData = SerializerHelper.ToVector3(strData);
-        }
     }
 }

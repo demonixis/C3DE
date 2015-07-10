@@ -179,24 +179,5 @@ namespace C3DE.Components
         {
             return Vector3.Transform(direction, Matrix.CreateFromYawPitchRoll(_localRotation.Y, _localRotation.X, _localRotation.Z));
         }
-
-        public override SerializedCollection Serialize()
-        {
-            var data = base.Serialize();
-            data.IncreaseCapacity(3);
-            data.Add("Position", SerializerHelper.ToString(_localPosition));
-            data.Add("Rotation", SerializerHelper.ToString(_localRotation));
-            data.Add("Scale", SerializerHelper.ToString(_localScale));
-            return data;
-        }
-
-        public override void Deserialize(SerializedCollection data)
-        {
-            base.Deserialize(data);
-            _localPosition = SerializerHelper.ToVector3(data["Position"]);
-            _localRotation = SerializerHelper.ToVector3(data["Position"]);
-            _localScale = SerializerHelper.ToVector3(data["Position"]);
-            _dirty = true;
-        }
     }
 }

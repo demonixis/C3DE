@@ -13,7 +13,7 @@ namespace C3DE.Materials
         Low, Normal
     }
 
-    public abstract class Material : IDisposable, ISerializable
+    public abstract class Material : IDisposable
     {
         protected internal Scene scene;
         protected Vector3 diffuseColor;
@@ -89,26 +89,5 @@ namespace C3DE.Materials
         public abstract void Pass(Renderer renderable);
 
         public virtual void Dispose() { }
-		
-        public SerializedCollection Serialize()
-        {
-            var data = new SerializedCollection(6);
-            data.Add("Id", Id);
-            data.Add("Name", Name);
-            data.Add("Type", GetType().FullName);
-            data.Add("DiffuseColor", SerializerHelper.ToString(diffuseColor));
-            data.Add("Tiling", SerializerHelper.ToString(Tiling));
-            data.Add("Offset", SerializerHelper.ToString(Offset));
-            return data;
-        }
-
-        public void Deserialize(SerializedCollection data)
-        {
-            Id = data["Id"];
-            Name = data["Name"];
-            DiffuseColor = SerializerHelper.ToColor(data["DiffuseColor"]);
-            Tiling = SerializerHelper.ToVector2(data["Tiling"]);
-            Offset = SerializerHelper.ToVector2(data["Offset"]);
-        }
     }
 }
