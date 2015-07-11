@@ -1,12 +1,19 @@
 ﻿using C3DE.Components;
 using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 
 namespace C3DE
 {
     /// <summary>
     /// A scene object is the base object on the scene.
     /// </summary>
+    [DataContract]
+    [KnownType(typeof(Component))]
+    [KnownType(typeof(Transform))]
+    [KnownType(typeof(C3DE.Components.Colliders.BoxCollider))]
+    [KnownType(typeof(C3DE.Components.Renderers.MeshRenderer))]
+    [KnownType(typeof(C3DE.Geometries.SphereGeometry))]
     public class SceneObject : ICloneable, IDisposable
     {
         #region Private/protected declarations
@@ -14,19 +21,33 @@ namespace C3DE
         protected Transform transform;
         protected Scene scene;
         protected bool enabled;
+
+        [DataMember]
         protected List<Component> components;
+
+        [DataMember]
         protected bool initialized;
 
         #endregion
 
         #region Fields
 
+        [DataMember]
         public string Id { get; set; }
+
+        [DataMember]
         public string Name { get; set; }
+
+        [DataMember]
         public string Tag { get; set; }
+
+        [DataMember]
         public bool IsStatic { get; set; }
+
+        [DataMember]
         public bool IsPrefab { get; set; }
 
+        [DataMember]
         public bool Enabled
         {
             get { return enabled; }
@@ -93,7 +114,7 @@ namespace C3DE
 
         #endregion
 
-		#region Constructors
+        #region Constructors
 
         /// <summary>
         /// Create a basic scene object.
@@ -117,13 +138,13 @@ namespace C3DE
             Name = "SceneObject-" + Guid.NewGuid();
         }
 
-		public SceneObject(string name)
-			: this()
-		{
-			Name = name;
-		}
+        public SceneObject(string name)
+            : this()
+        {
+            Name = name;
+        }
 
-		#endregion
+        #endregion
 
         /// <summary>
         /// Initialize and load specific content.

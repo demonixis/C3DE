@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 
 namespace C3DE.Utils
 {
@@ -10,8 +11,10 @@ namespace C3DE.Utils
     /// When the initialization process is done, set CheckRequired to true and call Check method before any updates.
     /// </summary>
     /// <typeparam name="T"></typeparam>
+    [DataContract]
     public class SmartList<T>
     {
+        [DataMember]
         private List<T> _items;
         private List<T> _addList;
         private List<T> _rmList;
@@ -25,11 +28,13 @@ namespace C3DE.Utils
             get { return _items[index]; }
         }
 
+        [DataMember]
         public int Size
         {
             get { return _size; }
         }
 
+        [DataMember]
         public bool CheckRequired
         {
             get { return _checkRequired; }

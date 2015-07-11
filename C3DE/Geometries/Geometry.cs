@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using System.Runtime.Serialization;
 
 namespace C3DE.Geometries
 {
@@ -9,6 +10,7 @@ namespace C3DE.Geometries
         Position = 0, Normal
     }
 
+    [DataContract]
     public class Geometry : IDisposable
     {
         private VertexPositionNormalTexture[] _vertices;
@@ -44,18 +46,21 @@ namespace C3DE.Geometries
             internal protected set { _indexBuffer = value; }
         }
 
+        [DataMember]
         public Vector3 Size
         {
             get { return size; }
             set { size = value; }
         }
 
+        [DataMember]
         public Vector2 TextureRepeat
         {
             get { return repeatTexture; }
             set { repeatTexture = value; }
         }
 
+        [DataMember]
         public bool Built
         {
             get { return _built; }

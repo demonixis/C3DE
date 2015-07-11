@@ -1,11 +1,13 @@
 ﻿using Microsoft.Xna.Framework;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 
 namespace C3DE.Components
 {
     /// <summary>
     /// A component responible to manage transform operations (translation, rotation and scaling).
     /// </summary>
+    [DataContract]
     public class Transform : Component
     {
         internal Matrix world;
@@ -36,18 +38,21 @@ namespace C3DE.Components
             protected set { _transforms = value; }
         }
 
+        [DataMember]
         public Vector3 Position
         {
             get { return _localPosition; }
             set { _localPosition = value; }
         }
 
+        [DataMember]
         public Vector3 Rotation
         {
             get { return _localRotation; }
             set { _localRotation = value; }
         }
 
+        [DataMember]
         public Vector3 LocalScale
         {
             get { return _localScale; }

@@ -3,27 +3,32 @@ using C3DE.Components.Renderers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using System.Runtime.Serialization;
 
 namespace C3DE.Materials
 {
+    [DataContract]
     public class StandardMaterial : Material
     {
         private Vector3 _diffuseColor;
         private Vector3 _emissiveColor;
         private Vector3 _specularColor;
 
+        [DataMember]
         public Color EmissiveColor
         {
             get { return new Color(_emissiveColor); }
             set { _emissiveColor = value.ToVector3(); }
         }
 
+        [DataMember]
         public Color SpecularColor
         {
             get { return new Color(_specularColor); }
             set { _specularColor = value.ToVector3(); }
         }
 
+        [DataMember]
         public float Shininess { get; set; }
 
         public StandardMaterial(Scene scene, string name = "Standard Material")

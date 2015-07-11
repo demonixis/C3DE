@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
-using System.Collections.Generic;
+using System.Runtime.Serialization;
 
 namespace C3DE.Materials
 {
@@ -13,6 +13,7 @@ namespace C3DE.Materials
         Low, Normal
     }
 
+    [DataContract]
     public abstract class Material : IDisposable
     {
         protected internal Scene scene;
@@ -20,23 +21,18 @@ namespace C3DE.Materials
         protected Texture2D diffuseTexture;
         protected internal Effect effect;
 
-        public string Id
-        {
-            get;
-            private set;
-        }
+        [DataMember]
+        public string Id { get; private set; }
 
-        public string Name
-        {
-            get;
-            set;
-        }
+        [DataMember]
+        public string Name { get; set; }
 
         internal int Index
         {
             get { return scene.Materials.IndexOf(this); }
         }
 
+        [DataMember]
         public Color DiffuseColor
         {
             get { return new Color(diffuseColor); }
@@ -49,12 +45,13 @@ namespace C3DE.Materials
             set { diffuseTexture = value; }
         }
 
+        [DataMember]
         public Vector2 Tiling { get; set; }
 
+        [DataMember]
         public Vector2 Offset { get; set; }
 
-        public string Tag { get; set; }
-
+        [DataMember]
         public ShaderQuality ShaderQuality { get; set; }
 
         public Material()

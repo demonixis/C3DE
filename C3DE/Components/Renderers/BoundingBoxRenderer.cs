@@ -1,8 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Runtime.Serialization;
 
 namespace C3DE.Components.Renderers
 {
+    [DataContract]
     public class BoundingBoxRenderer : Renderer
     {
         private VertexPositionColor[] _vertices = new VertexPositionColor[8];

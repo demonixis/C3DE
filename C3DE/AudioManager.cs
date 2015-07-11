@@ -1,10 +1,11 @@
 ﻿using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Media;
 using System;
+using System.Runtime.Serialization;
 
 namespace C3DE
 {
-    [Serializable]
+    [DataContract]
     public static class AudioManager
     {
         private static bool _soundEnabled = true;
@@ -12,18 +13,21 @@ namespace C3DE
         private static float _maxSoundVolume = 1.0f;
         private static float _maxMusicVolume = 1.0f;
 
+        [DataMember]
         public static bool SoundEnabled
         {
             get { return _soundEnabled; }
             set { _soundEnabled = value; }
         }
 
+        [DataMember]
         public static float SoundVolume
         {
             get { return _maxSoundVolume; }
             set { _maxSoundVolume = value; }
         }
 
+        [DataMember]
         public static bool MusicEnabled
         {
             get { return _musicEnabled; }
@@ -36,6 +40,7 @@ namespace C3DE
             }
         }
 
+        [DataMember]
         public static float MusicVolume
         {
             get { return _maxMusicVolume; }

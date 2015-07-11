@@ -5,9 +5,11 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using System.Runtime.Serialization;
 
 namespace C3DE
 {
+    [DataContract]
     public class Skybox
     {
         private static Effect SkyboxEffect = null;
@@ -23,6 +25,7 @@ namespace C3DE
             set { _texture = value; }
         }
 
+        [DataMember]
         public bool Enabled { get; set; }
 
         public Skybox()

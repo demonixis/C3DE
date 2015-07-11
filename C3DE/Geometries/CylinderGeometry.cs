@@ -1,17 +1,31 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using System.Runtime.Serialization;
 
 namespace C3DE.Geometries
 {
+    [DataContract]
     public class CylinderGeometry : Geometry
     {
-        private Vector3 _startPosition;
-        private Vector3 _endPosition;
-        private float _startRadius;
-        private float _endRadius;
-        private int _nbSegments;
-        private int _nbSlices;
+        [DataMember]
+        public Vector3 StartPosition { get; set; }
+
+        [DataMember]
+        public Vector3 EndPosition { get; set; }
+
+        [DataMember]
+        public float StartRadius { get; set; }
+
+        [DataMember]
+        public float EndRadius { get; set; }
+
+        [DataMember]
+        public int NbSegments { get; set; }
+
+        [DataMember]
+        public int NbSlices { get; set; }
+
         private static Random random = new Random();
 
         public CylinderGeometry()
@@ -22,39 +36,39 @@ namespace C3DE.Geometries
         public CylinderGeometry(Vector3 startPosition, Vector3 endPosition, float startRadius = 1, float endRadius = 1, int nbSegments = 8, int nbSlices = 8)
             :  base()
         {
-            _startPosition = startPosition;
-            _endPosition = endPosition;
-            _startRadius = startRadius;
-            _endRadius = endRadius;
-            _nbSegments = nbSegments;
-            _nbSlices = nbSlices;
+            StartPosition = startPosition;
+            EndPosition = endPosition;
+            StartRadius = startRadius;
+            EndRadius = endRadius;
+            NbSegments = nbSegments;
+            NbSlices = nbSlices;
         }
 
         protected override void CreateGeometry()
         {
-            _nbSegments = Math.Max(1, _nbSegments);
-            _nbSlices = Math.Max(3, _nbSlices);
+            NbSegments = Math.Max(1, NbSegments);
+            NbSlices = Math.Max(3, NbSlices);
 
             // this vector should not be between start and end
             Vector3 p = new Vector3((float)random.NextDouble(), (float)random.NextDouble(), (float)random.NextDouble());
 
             // derive two points on the plane formed by [end - start]
-            Vector3 r = Vector3.Cross(p - _startPosition, _endPosition - _startPosition);
-            Vector3 s = Vector3.Cross(r, _endPosition - _startPosition);
+            Vector3 r = Vector3.Cross(p - StartPosition, EndPosition - StartPosition);
+            Vector3 s = Vector3.Cross(r, EndPosition - StartPosition);
             r.Normalize();
             s.Normalize();
 
             int vertexCount = 0, indexCount = 0;
-            float invSegments = 1f / (float)_nbSegments;
-            float invSlices = 1f / (float)_nbSlices;
+            float invSegments = 1f / (float)NbSegments;
+            float invSlices = 1f / (float)NbSlices;
 
-            Vertices = new VertexPositionNormalTexture[((_nbSegments + 1) * (_nbSlices + 1)) + 2];
-            Indices = new ushort[(_nbSlices + (_nbSlices * _nbSegments)) * 6];
+            Vertices = new VertexPositionNormalTexture[((NbSegments + 1) * (NbSlices + 1)) + 2];
+            Indices = new ushort[(NbSlices + (NbSlices * NbSegments)) * 6];
 
-            for (int j = 0; j <= _nbSegments; j++)
+            for (int j = 0; j <= NbSegments; j++)
             {
-                Vector3 center = Vector3.Lerp(_startPosition, _endPosition, j * invSegments);
-                float radius = MathHelper.Lerp(_startRadius, _endRadius, j * invSegments);
+                Vector3 center = Vector3.Lerp(StartPosition, EndPosition, j * invSegments);
+                float radius = MathHelper.Lerp(StartRadius, EndRadius, j * invSegments);
 
                 if (j == 0)
                 {
@@ -65,7 +79,7 @@ namespace C3DE.Geometries
                     };
                 }
 
-                for (int i = 0; i <= _nbSlices; i++)
+                for (int i = 0; i <= NbSlices; i++)
                 {
                     float theta = i * MathHelper.TwoPi * invSlices;
                     float rCosTheta = radius * (float)Math.Cos(theta);
@@ -86,7 +100,7 @@ namespace C3DE.Geometries
                         }
                     };
 
-                    if (i < _nbSlices)
+                    if (i < NbSlices)
                     {
                         // just an alias to assist with think of each vertex that's
                         //  iterated in here as the bottom right corner of a triangle
@@ -104,10 +118,10 @@ namespace C3DE.Geometries
                             Indices[indexCount++] = invertFaces ? i1 : i2;
                         }
 
-                        if (j == _nbSegments)
+                        if (j == NbSegments)
                         {   
                             // end cap - i0 is always the center point on end cap
-                            ushort i0 = (ushort)((vRef + _nbSlices + 2) - (vRef % (_nbSlices + 1)));
+                            ushort i0 = (ushort)((vRef + NbSlices + 2) - (vRef % (NbSlices + 1)));
                             ushort i1 = (ushort)(vRef);
                             ushort i2 = (ushort)(vRef + 1);
 
@@ -116,13 +130,13 @@ namespace C3DE.Geometries
                             Indices[indexCount++] = invertFaces ? i1 : i2;
                         }
 
-                        if (j < _nbSegments)
+                        if (j < NbSegments)
                         {   
                             // middle area
                             ushort i0 = (ushort)(vRef);
                             ushort i1 = (ushort)(vRef + 1);
-                            ushort i2 = (ushort)(vRef + _nbSlices + 2);
-                            ushort i3 = (ushort)(vRef + _nbSlices + 1);
+                            ushort i2 = (ushort)(vRef + NbSlices + 2);
+                            ushort i3 = (ushort)(vRef + NbSlices + 1);
 
                             Indices[indexCount++] = i0;
                             Indices[indexCount++] = invertFaces ? i2 : i1;
@@ -135,7 +149,7 @@ namespace C3DE.Geometries
                     }
                 }
 
-                if (j == _nbSegments)
+                if (j == NbSegments)
                 {
                     Vertices[vertexCount++] = new VertexPositionNormalTexture()
                     {

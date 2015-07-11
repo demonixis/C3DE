@@ -1,12 +1,14 @@
 ﻿using Microsoft.Xna.Framework.Content;
 using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 
 namespace C3DE.Components
 {
     /// <summary>
     /// A component is a part of a scene object.
     /// </summary>
+    [DataContract]
     public abstract class Component : IComparable, ICloneable, IDisposable
     {
         internal protected bool initialized;
@@ -17,6 +19,7 @@ namespace C3DE.Components
 
         #region Fields
 
+        [DataMember]
         public bool Enabled
         {
             get { return enabled; }
@@ -32,11 +35,9 @@ namespace C3DE.Components
             get { return initialized; }
         }
 
+        [DataMember]
         public string Id { get; set; }
 
-        /// <summary>
-        /// Gets the scene object of this component.
-        /// </summary>
         public SceneObject SceneObject
         {
             get { return sceneObject; }
@@ -49,6 +50,7 @@ namespace C3DE.Components
             internal set { transform = value; }
         }
 
+        [DataMember]
         public int Order
         {
             get { return order; }

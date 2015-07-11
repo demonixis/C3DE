@@ -2,14 +2,17 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using System.Runtime.Serialization;
 
 namespace C3DE.Components.Renderers
 {
+    [DataContract]
     public class MeshRenderer : Renderer
     {
         private bool _haveListener;
         protected Geometry geometry;
 
+        [DataMember]
         public Geometry Geometry
         {
             get { return geometry; }

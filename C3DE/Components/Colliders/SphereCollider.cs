@@ -1,11 +1,13 @@
 ﻿using C3DE.Components.Renderers;
 using Microsoft.Xna.Framework;
+using System.Runtime.Serialization;
 
 namespace C3DE.Components.Colliders
 {
     /// <summary>
     /// A sphere collider component used to handle collisions by sphere.
     /// </summary>
+    [DataContract]
     public class SphereCollider : Collider
     {
         private BoundingSphere _sphere;
@@ -13,6 +15,7 @@ namespace C3DE.Components.Colliders
         /// <summary>
         /// Gets the bounding sphere.
         /// </summary>
+        [DataMember]
         public BoundingSphere Sphere
         {
             get { return _sphere; }

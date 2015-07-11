@@ -1,8 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Runtime.Serialization;
 
 namespace C3DE.Geometries
 {
+    [DataContract]
     public class TerrainGeometry : Geometry
     {
         private int _width;
@@ -10,24 +12,28 @@ namespace C3DE.Geometries
         private int _depth;
         private float[,] _data;
 
+        [DataMember]
         public int Width
         {
             get { return _width; }
             set { _width = value; }
         }
 
+        [DataMember]
         public int Height
         {
             get { return _height; }
             set { _height = value; }
         }
 
+        [DataMember]
         public int Depth
         {
             get { return _depth; }
             set { _depth = value; }
         }
 
+        [DataMember]
         public float[,] Data
         {
             get { return _data; }

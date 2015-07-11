@@ -1,15 +1,24 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using System.Runtime.Serialization;
 
 namespace C3DE.Geometries
 {
+    [DataContract]
     public class TorusGeometry : Geometry
     {
-        private float _radiusExterior;
-        private float _raduisInterior;
-        private int _nbSlices;
-        private int _nbSegments;
+        [DataMember]
+        public float RadiusExterior { get; set; }
+
+        [DataMember]
+        public float RaduisInterior { get; set; }
+
+        [DataMember]
+        public int NbSlices { get; set; }
+
+        [DataMember]
+        public int NbSegments { get; set; }
 
         public TorusGeometry()
             : this(2, 1, 8, 8)
@@ -18,32 +27,32 @@ namespace C3DE.Geometries
 
         public TorusGeometry(float radiusExterior, float radiusInterior, int nbSlices, int nbSegments)
         {
-            _radiusExterior = radiusExterior;
-            _raduisInterior = radiusInterior;
-            _nbSlices = nbSlices;
-            _nbSegments = nbSegments;
+            RadiusExterior = radiusExterior;
+            RaduisInterior = radiusInterior;
+            NbSlices = nbSlices;
+            NbSegments = nbSegments;
         }
 
         protected override void CreateGeometry()
         {
-            _nbSegments = Math.Max(3, _nbSegments);
-            _nbSlices = Math.Max(3, _nbSlices);
+            NbSegments = Math.Max(3, NbSegments);
+            NbSlices = Math.Max(3, NbSlices);
 
-            float invSegments = 1f / _nbSegments, invSlices = 1f / _nbSlices;
+            float invSegments = 1f / NbSegments, invSlices = 1f / NbSlices;
             float radSegment = MathHelper.TwoPi * invSegments;
             float radSlice = MathHelper.TwoPi * invSlices;
             bool lines = false;
 
             int indexCount = 0;
-            Vertices = new VertexPositionNormalTexture[(_nbSegments + 1) * (_nbSlices + 1)];
-            Indices = new ushort[_nbSegments * _nbSlices * (lines ? 8 : 6)];
+            Vertices = new VertexPositionNormalTexture[(NbSegments + 1) * (NbSlices + 1)];
+            Indices = new ushort[NbSegments * NbSlices * (lines ? 8 : 6)];
 
-            for (int j = 0; j <= _nbSegments; j++)
+            for (int j = 0; j <= NbSegments; j++)
             {
                 float theta = j * radSegment - MathHelper.PiOver2;
                 float cosTheta = (float)Math.Cos(theta), sinTheta = (float)Math.Sin(theta);
 
-                for (int i = 0; i <= _nbSlices; i++)
+                for (int i = 0; i <= NbSlices; i++)
                 {
                     float phi = i * radSlice;
                     float cosPhi = (float)Math.Cos(phi);
@@ -51,18 +60,18 @@ namespace C3DE.Geometries
 
                     Vector3 position = new Vector3()
                     {
-                        X = cosTheta * (_radiusExterior + _raduisInterior * cosPhi),
-                        Y = _raduisInterior * sinPhi,
-                        Z = sinTheta * (_radiusExterior + _raduisInterior * cosPhi)
+                        X = cosTheta * (RadiusExterior + RaduisInterior * cosPhi),
+                        Y = RaduisInterior * sinPhi,
+                        Z = sinTheta * (RadiusExterior + RaduisInterior * cosPhi)
                     };
                     Vector3 center = new Vector3()
                     {
-                        X = _radiusExterior * cosTheta,
+                        X = RadiusExterior * cosTheta,
                         Y = 0,
-                        Z = _radiusExterior * sinTheta
+                        Z = RadiusExterior * sinTheta
                     };
 
-                    Vertices[(j * (_nbSlices + 1)) + i] = new VertexPositionNormalTexture()
+                    Vertices[(j * (NbSlices + 1)) + i] = new VertexPositionNormalTexture()
                     {
                         Position = position,
                         Normal = Vector3.Normalize(position - center),
@@ -72,12 +81,12 @@ namespace C3DE.Geometries
                     // 0---2
                     // | \ |
                     // 1---3
-                    if (j < _nbSegments && i < _nbSlices)
+                    if (j < NbSegments && i < NbSlices)
                     {
-                        ushort i0 = (ushort)((j * (_nbSlices + 1)) + i);
-                        ushort i1 = (ushort)((j * (_nbSlices + 1)) + i + 1);
-                        ushort i2 = (ushort)(((j + 1) * (_nbSlices + 1)) + i);
-                        ushort i3 = (ushort)(((j + 1) * (_nbSlices + 1)) + i + 1);
+                        ushort i0 = (ushort)((j * (NbSlices + 1)) + i);
+                        ushort i1 = (ushort)((j * (NbSlices + 1)) + i + 1);
+                        ushort i2 = (ushort)(((j + 1) * (NbSlices + 1)) + i);
+                        ushort i3 = (ushort)(((j + 1) * (NbSlices + 1)) + i + 1);
 
                         Indices[indexCount++] = i0;
                         Indices[indexCount++] = invertFaces ? i1 : i3;

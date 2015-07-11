@@ -3,26 +3,32 @@ using C3DE.Materials;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 
 namespace C3DE.Components.Renderers
 {
     /// <summary>
     /// An abstract class to define a renderable object.
     /// </summary>
+    [DataContract]
     public abstract class Renderer : Component
     {
         protected internal BoundingSphere boundingSphere;
         protected internal BoundingBox boundingBox;
+
+        [DataMember]
         protected internal int materialIndex;
 
         /// <summary>
         /// Indicates whether the object can cast shadow. 
         /// </summary>
+        [DataMember]
         public bool CastShadow { get; set; }
 
         /// <summary>
         /// Indicates whether the object can receive shadow.
         /// </summary>
+        [DataMember]
         public bool ReceiveShadow { get; set; }
 
         public BoundingSphere BoundingSphere
