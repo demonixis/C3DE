@@ -5,9 +5,11 @@ using C3DE.Materials;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using System.Runtime.Serialization;
 
 namespace C3DE.Prefabs
 {
+    [DataContract]
     public class WaterPrefab : SceneObject
     {
         protected MeshRenderer renderer;

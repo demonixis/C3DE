@@ -3,9 +3,11 @@ using C3DE.Components.Renderers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using System.Runtime.Serialization;
 
 namespace C3DE.Materials
 {
+    [DataContract]
     public class WaterMaterial : Material
     {
         private Texture2D _normalMap;
@@ -36,19 +38,24 @@ namespace C3DE.Materials
             }
         }
 
+        [DataMember]
         public Color ReflectionColor
         {
             get { return new Color(_reflectionColor); }
             set { _reflectionColor = value.ToVector3(); }
         }
 
+        [DataMember]
         public Color SpecularColor
         {
             get { return new Color(_specularColor); }
             set { _specularColor = value.ToVector3(); }
         }
 
+        [DataMember]
         public float WaterTransparency { get; set; }
+
+        [DataMember]
         public float Shininess { get; set; }
 
         public WaterMaterial(Scene scene, string name = "Water Material")

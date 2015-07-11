@@ -1,7 +1,9 @@
 ﻿using C3DE.UI;
+using System.Runtime.Serialization;
 
 namespace C3DE.Components
 {
+    [DataContract]
     public class Behaviour : Component
     {
         public Behaviour() : base() { }

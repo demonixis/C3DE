@@ -4,19 +4,23 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 
 namespace C3DE
 {
     /// <summary>
     /// A generator of shadow for a specified light.
     /// </summary>
+    [DataContract]
     public class ShadowGenerator : IDisposable
     {
         private Light _light;
         private RenderTarget2D shadowMap;
         private Effect _shadowEffect;
         private BoundingSphere _boundingSphere;
-        private Vector3 _shadowData;
+
+        [DataMember]
+        protected internal Vector3 shadowData;
 
         public RenderTarget2D ShadowMap
         {
@@ -25,38 +29,38 @@ namespace C3DE
 
         public float ShadowMapSize
         {
-            get { return _shadowData.X; }
-            set { _shadowData.X = value; }
+            get { return shadowData.X; }
+            set { shadowData.X = value; }
         }
 
         public float ShadowBias
         {
-            get { return _shadowData.Y; }
-            set { _shadowData.Y = value; }
+            get { return shadowData.Y; }
+            set { shadowData.Y = value; }
         }
 
         public float ShadowStrength
         {
-            get { return 1 - _shadowData.Z; }
-            set { _shadowData.Z = Math.Min(1.0f, Math.Max(0.0f, value)); }
+            get { return 1 - shadowData.Z; }
+            set { shadowData.Z = Math.Min(1.0f, Math.Max(0.0f, value)); }
         }
 
         // FIXME
         public bool Enabled
         {
-            get { return _shadowData.X > 0; }
-            set { _shadowData.X = value ? Math.Max(_shadowData.X, 256) : 0; }
+            get { return shadowData.X > 0; }
+            set { shadowData.X = value ? Math.Max(shadowData.X, 256) : 0; }
         }
 
         public Vector3 Data
         {
-            get { return _shadowData; }
+            get { return shadowData; }
         }
 
         public ShadowGenerator(Light light)
         {
             _light = light;
-            _shadowData = new Vector3(0, 0.005f, 0.8f);
+            shadowData = new Vector3(0, 0.005f, 0.8f);
         }
 
         public void Initialize()
@@ -75,7 +79,7 @@ namespace C3DE
 #else
             shadowMap = new RenderTarget2D(device, size, size, false, SurfaceFormat.Single, DepthFormat.Depth24, 0, RenderTargetUsage.DiscardContents);
 #endif
-            _shadowData.X = size;
+            shadowData.X = size;
         }
 
         /// <summary>

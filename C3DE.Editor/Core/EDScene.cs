@@ -26,7 +26,6 @@ namespace C3DE.Editor.Core
         private List<SceneObject> _removeList;
         private SceneObjectSelector _selectedObject;
         private BasicEditionSceneObject _editionSceneObject;
-        private ModelRenderer _gizmo;
 
         public EDScene(string name)
             : base(name)
@@ -65,9 +64,6 @@ namespace C3DE.Editor.Core
             grid.Flatten();
             grid.Transform.SetPosition(-grid.Width / 2, -1, -grid.Depth / 2);
             Add(grid);
-
-            _gizmo = CreateAddSceneObject<ModelRenderer>("Gizmo");
-            _gizmo.Model = Application.Content.Load<Model>("Models/Gizmo");
 
             CreateMaterialCollection();
 
@@ -230,13 +226,13 @@ namespace C3DE.Editor.Core
 
             switch (type)
             {
-                case "Cube": sceneObject = new MeshPrefab<CubeGeometry>(type); break;
-                case "Cylinder": sceneObject = new MeshPrefab<CylinderGeometry>(type); break;
-                case "Quad": sceneObject = new MeshPrefab<QuadGeometry>(type); break;
-                case "Plane": sceneObject = new MeshPrefab<PlaneGeometry>(type); break;
-                case "Pyramid": sceneObject = new MeshPrefab<PyramidGeometry>(type); break;
-                case "Sphere": sceneObject = new MeshPrefab<SphereGeometry>(type); break;
-                case "Torus": sceneObject = new MeshPrefab<TorusGeometry>(type); break;
+                case "Cube": sceneObject = new MeshPrefab(type, new CubeGeometry()); break;
+                case "Cylinder": sceneObject = new MeshPrefab(type, new CylinderGeometry()); break;
+                case "Quad": sceneObject = new MeshPrefab(type, new QuadGeometry()); break;
+                case "Plane": sceneObject = new MeshPrefab(type, new PlaneGeometry()); break;
+                case "Pyramid": sceneObject = new MeshPrefab(type, new PyramidGeometry()); break;
+                case "Sphere": sceneObject = new MeshPrefab(type, new SphereGeometry()); break;
+                case "Torus": sceneObject = new MeshPrefab(type, new TorusGeometry()); break;
 
                 case "Terrain":
                     var terrain = new TerrainPrefab(type);

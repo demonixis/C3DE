@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Runtime.Serialization;
 
 namespace C3DE.Components.Lights
 {
@@ -13,6 +14,7 @@ namespace C3DE.Components.Lights
 		RealTime = 0, Backed
 	}
 
+    [DataContract]
     public class Light : Component
     {
         internal protected Matrix viewMatrix;
@@ -30,20 +32,24 @@ namespace C3DE.Components.Lights
             get { return projectionMatrix; }
         }
 
+        [DataMember]
         public bool EnableShadow
         {
             get { return shadowGenerator.Enabled; }
             set { shadowGenerator.Enabled = value; }
         }
 
+        [DataMember]
         public ShadowGenerator ShadowGenerator
         {
             get { return shadowGenerator; }
+            protected set { shadowGenerator = value; }
         }
 
         /// <summary>
         /// The color of the light.
         /// </summary>
+        [DataMember]
         public Color DiffuseColor
         {
             get { return new Color(diffuseColor); }
@@ -53,30 +59,37 @@ namespace C3DE.Components.Lights
         /// <summary>
         /// The intensity of the light.
         /// </summary>
+        [DataMember]
         public float Intensity { get; set; }
 
         /// <summary>
         /// The maximum distance of emission.
         /// </summary>
+        [DataMember]
         public float Range { get; set; }
 
+        [DataMember]
 		public LightRenderMode Backing { get; set; }
 
+        [DataMember]
         public float FallOf { get; set; }
 
         /// <summary>
         /// The type of the light.
         /// </summary>
+        [DataMember]
         public LightType TypeLight { get; set; }
 
         /// <summary>
         /// The direction of the directional light.
         /// </summary>
+        [DataMember]
         public Vector3 Direction { get; set; }
 
         /// <summary>
         /// The angle used by the Spot light.
         /// </summary>
+        [DataMember]
         public float Angle { get; set; }
 
         public Light()

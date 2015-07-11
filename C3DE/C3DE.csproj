@@ -93,7 +93,6 @@
     <Compile Include="Materials\UnlitMaterial.cs" />
     <Compile Include="Prefabs\LavaPrefab.cs" />
     <Compile Include="Rendering\IRenderer.cs" />
-    <Compile Include="Materials\DummyMaterial.cs" />
     <Compile Include="Materials\FresnelMaterial.cs" />
     <Compile Include="Materials\LavaMaterial.cs" />
     <Compile Include="Materials\TerrainMaterial.cs" />
@@ -157,7 +156,6 @@
     <Compile Include="Time.cs" />
     <Compile Include="Utils\NoiseGenerator.cs" />
     <Compile Include="Utils\RandomHelper.cs" />
-    <Compile Include="Utils\SmartList.cs" />
     <Compile Include="Rendering\PreLightRenderer.cs" />
   </ItemGroup>
   <!--

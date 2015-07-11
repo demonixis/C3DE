@@ -1,8 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Runtime.Serialization;
 
 namespace C3DE.Geometries
 {
+    [DataContract]
     public class CubeGeometry : Geometry
     {
         protected override void CreateGeometry()

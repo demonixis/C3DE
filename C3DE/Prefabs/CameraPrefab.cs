@@ -1,9 +1,11 @@
 ﻿using C3DE.Components;
 using C3DE.Components.Colliders;
 using Microsoft.Xna.Framework;
+using System.Runtime.Serialization;
 
 namespace C3DE.Prefabs
 {
+    [DataContract]
     public class CameraPrefab : SceneObject
     {
         protected Camera camera;

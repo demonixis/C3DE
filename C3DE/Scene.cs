@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 
 namespace C3DE
 {
@@ -22,6 +23,7 @@ namespace C3DE
     /// <summary>
     /// The scene is responsible to store scene objects, components.
     /// </summary>
+    [DataContract]
     public class Scene : SceneObject
     {
         public static Scene current { get; internal set; }
@@ -31,8 +33,13 @@ namespace C3DE
         private bool _needRemoveCheck;
 
         internal protected Material defaultMaterial;
-        internal protected SmartList<SceneObject> sceneObjects;
+        
+        [DataMember]
+        internal protected List<SceneObject> sceneObjects;
+        
         internal protected List<Renderer> renderList;
+
+        [DataMember]
         internal protected List<Material> materials;
         internal protected List<Effect> effects;
         internal protected Dictionary<int, int> materialsEffectIndex;
@@ -40,6 +47,8 @@ namespace C3DE
         internal protected List<Camera> cameras;
         internal protected List<Light> lights;
         internal protected List<Behaviour> scripts;
+
+        [DataMember]
         internal protected List<SceneObject> prefabs;
         internal protected List<PostProcessPass> postProcessPasses;
 
@@ -128,7 +137,7 @@ namespace C3DE
         {
             Name = "SCENE-" + Guid.NewGuid();
             transform.Root = transform;
-            sceneObjects = new SmartList<SceneObject>();
+            sceneObjects = new List<SceneObject>();
             scene = this;
             renderList = new List<Renderer>(10);
             materials = new List<Material>(5);
@@ -173,10 +182,10 @@ namespace C3DE
 
             UpdateEffectMaterialMatching();
 
-            for (int i = 0; i < sceneObjects.Size; i++)
+            for (int i = 0; i < sceneObjects.Count; i++)
                 sceneObjects[i].Initialize();
 
-            sceneObjects.CheckRequired = true;
+            //sceneObjects.CheckRequired = true;
         }
 
         /// <summary>
@@ -202,10 +211,10 @@ namespace C3DE
             }
 
             // Second - Check if we need to remove some SceneObjectlists.
-            sceneObjects.Check();
+            //sceneObjects.Check();
 
             // Third - Safe update
-            for (int i = 0; i < sceneObjects.Size; i++)
+            for (int i = 0; i < sceneObjects.Count; i++)
             {
                 if (sceneObjects[i].Enabled)
                     sceneObjects[i].Update();
@@ -270,7 +279,7 @@ namespace C3DE
             {
                 if (!sceneObject.IsPrefab)
                 {
-                    sceneObjects.Add(sceneObject, noCheck);
+                    sceneObjects.Add(sceneObject);
                     sceneObject.Scene = this;
                     sceneObject.Transform.Root = transform;
 
@@ -618,7 +627,7 @@ namespace C3DE
             for (int i = 0, l = sceneObject.Components.Count; i < l; i++)
                 this.DestroyComponent(sceneObject.Components[i]);
 
-            sceneObjects.Remove(sceneObject, noCheck);
+            sceneObjects.Remove(sceneObject);
         }
 
         public void DestroyComponent(Component component)
@@ -660,7 +669,7 @@ namespace C3DE
         {
             if (current != null)
             {
-                for (int i = 0; i < current.sceneObjects.Size; i++)
+                for (int i = 0; i < current.sceneObjects.Count; i++)
                     if (current.sceneObjects[i].Id == id)
                         return current.sceneObjects[i];
             }
@@ -673,7 +682,7 @@ namespace C3DE
 
             if (current != null)
             {
-                for (int i = 0; i < current.sceneObjects.Size; i++)
+                for (int i = 0; i < current.sceneObjects.Count; i++)
                     if (current.sceneObjects[i].Id == id)
                         sceneObjects.Add(current.sceneObjects[i]);
             }

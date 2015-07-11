@@ -7,9 +7,12 @@ using C3DE.Materials;
 using C3DE.Prefabs;
 using C3DE.Utils;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using System.Runtime.Serialization;
 using System.Xml;
 using System.Xml.Serialization;
@@ -18,6 +21,8 @@ namespace C3DE.Test
 {
     class TestApp : Scene
     {
+        public static Type[] knowTypes;
+
         public TestApp()
             : base("TestScene")
         {
@@ -33,38 +38,8 @@ namespace C3DE.Test
             camera.Setup(new Vector3(0, 2, -10), new Vector3(0, 0, 0), Vector3.Up);
             Add(camera);
 
-            // And a light
-            var lightPrefab = new LightPrefab("light", LightType.Directional);
-            Add(lightPrefab);
-            lightPrefab.Light.Direction = new Vector3(1, 1, 0);
-            lightPrefab.Light.DiffuseColor = Color.LightSkyBlue;
-            lightPrefab.Light.Intensity = 1.5f;
-            lightPrefab.EnableShadows = true;
-            sceneObjects.Add(lightPrefab);
-
-            // Finally a terrain
-            var terrainMat = new TerrainMaterial(scene);
-
-            var terrain = new TerrainPrefab("terrain");
-            scene.Add(terrain);
-            terrain.LoadHeightmap("Textures/heightmap");
-            terrain.Renderer.Material = terrainMat;
-            terrain.Transform.Translate(-terrain.Width >> 1, -10, -terrain.Depth >> 1);
-            var map = terrain.GenerateWeightMap();
-
-            terrainMat.WeightTexture = map;
-            terrainMat.Tiling = new Vector2(4);
-
-            // With water !
-            var water = new WaterPrefab("water");
-            scene.Add(water);
-
             Screen.ShowCursor = true;
-
-            // Don't miss the Skybox ;)
             RenderSettings.Skybox.Generate();
-
-            // And fog
             RenderSettings.FogDensity = 0.0085f;
             RenderSettings.FogMode = FogMode.Exp2;
         }
@@ -73,54 +48,100 @@ namespace C3DE.Test
         {
             base.Update();
 
-            Serialize("RenderSettings.xml", RenderSettings);
+            if (Input.Keys.JustPressed(Keys.S))
+            {
+                Serialize("RenderSettings.xml", RenderSettings);
 
-            var cubeGeometry = new CubeGeometry();
-            cubeGeometry.Size = new Vector3(4, 3, 12);
-            cubeGeometry.TextureRepeat = new Vector2(4, 1.5f);
-            Serialize("CubeGeometry.xml", cubeGeometry);
+                var cubeGeometry = new CubeGeometry();
+                cubeGeometry.Size = new Vector3(4, 3, 12);
+                cubeGeometry.TextureRepeat = new Vector2(4, 1.5f);
+                Serialize("CubeGeometry.xml", cubeGeometry);
 
-            var sphereGeometry = new SphereGeometry();
-            sphereGeometry.Size = new Vector3(5, 8, 9);
-            sphereGeometry.TessellationLevel = 4;
-            sphereGeometry.TextureRepeat = new Vector2(1, 0.5f);
-            sphereGeometry.Radius = 45;
-            Serialize("SphereGeometry.xml", sphereGeometry);
+                var sphereGeometry = new SphereGeometry();
+                sphereGeometry.Size = new Vector3(5, 8, 9);
+                sphereGeometry.TessellationLevel = 4;
+                sphereGeometry.TextureRepeat = new Vector2(1, 0.5f);
+                sphereGeometry.Radius = 45;
+                Serialize("SphereGeometry.xml", sphereGeometry);
 
-            var cylinderGeometry = new CylinderGeometry();
-            Serialize("CylinderGeometry.xml", cylinderGeometry);
+                var cylinderGeometry = new CylinderGeometry();
+                Serialize("CylinderGeometry.xml", cylinderGeometry);
 
-            var tr = new C3DE.Components.Transform();
-            tr.Position = new Vector3(45, 12, 258);
-            tr.Rotation = new Vector3(1, 1.55f, 0.98f);
-            tr.LocalScale = new Vector3(1, 2, 10);
-            Serialize("Transform.xml", tr);
+                var tr = new C3DE.Components.Transform();
+                tr.Position = new Vector3(45, 12, 258);
+                tr.Rotation = new Vector3(1, 1.55f, 0.98f);
+                tr.LocalScale = new Vector3(1, 2, 10);
+                Serialize("Transform.xml", tr);
 
-            var cam = new Camera();
-            Serialize("Camera.xml", cam);
+                var cam = new Camera();
+                Serialize("Camera.xml", cam);
 
-            var material = new StandardMaterial(this);
-            material.Texture = GraphicsHelper.CreateBorderTexture(Color.White, Color.Gray, 64, 64, 4);
-            Serialize("StandardMaterial.xml", material);
+                var material = new StandardMaterial(this);
+                material.Texture = GraphicsHelper.CreateBorderTexture(Color.White, Color.Gray, 64, 64, 4);
+                Serialize("StandardMaterial.xml", material);
 
-            var sceneObject = new SceneObject("SO");
-            var mr = sceneObject.AddComponent<MeshRenderer>();
-            mr.Geometry = sphereGeometry;
-            var bc = sceneObject.AddComponent<BoxCollider>();
-            Serialize("SceneObject.xml", sceneObject);
+                var sceneObject = new SceneObject("SO");
+                var mr = sceneObject.AddComponent<MeshRenderer>();
+                mr.Geometry = sphereGeometry;
+                var bc = sceneObject.AddComponent<BoxCollider>();
+                Serialize("SceneObject.xml", sceneObject);
 
-            /*
-            foreach(var so in sceneObjects)
-                Serialize(so.Name + ".xml", so);
+                /*
+                foreach(var so in sceneObjects)
+                    Serialize(so.Name + ".xml", so);
 
-            Serialize("SceneObjects.xml", sceneObjects);*/
+                Serialize("SceneObjects.xml", sceneObjects);*/
+            }
 
-            Application.Quit();
+            if (Input.Keys.JustPressed(Keys.L))
+            {
+                var cube = Deserialize("CubeGeometry.xml", typeof(CubeGeometry));
+                var sphere = Deserialize("SphereGeometry.xml", typeof(SphereGeometry));
+                var cylinder = Deserialize("CylinderGeometry.xml", typeof(CylinderGeometry));
+                var tr = Deserialize("Transform.xml", typeof(Transform));
+                var cam = Deserialize("Camera.xml", typeof(Camera));
+                var mat = Deserialize("StandardMaterial.xml", typeof(StandardMaterial));
+                var so = Deserialize("SceneObject.xml", typeof(SceneObject));
+            }
+
+            if (Input.Keys.Escape)
+                Application.Quit();
+        }
+
+        private object Deserialize(string name, Type type)
+        {
+            object result = null;
+
+            var fileStream = new FileStream(name, FileMode.Open);
+            var reader = XmlDictionaryReader.CreateTextReader(fileStream, new XmlDictionaryReaderQuotas());
+            var serializer = new DataContractSerializer(type);
+
+            // Deserialize the data and read it from the instance.
+            result = serializer.ReadObject(reader, true);
+            reader.Close();
+            fileStream.Close();
+
+            return result;
         }
 
         private void Serialize(string name, object obj)
         {
-            var dataContractSerializer = new DataContractSerializer(obj.GetType());
+            if (knowTypes == null)
+            {
+                var assembly = Assembly.GetAssembly(typeof(SceneObject));
+                var types = assembly.GetTypes();
+                var list = new List<Type>(types.Length);
+
+                foreach (var type in types)
+                {
+                    if (Attribute.IsDefined(type, typeof(DataContractAttribute)) || Attribute.IsDefined(type, typeof(CollectionDataContractAttribute)))
+                        list.Add(type);
+                }
+
+                knowTypes = list.ToArray();
+            }
+
+            var dataContractSerializer = new DataContractSerializer(obj.GetType(), knowTypes);
             var xmlSettings = new XmlWriterSettings();
             xmlSettings.Indent = true;
             xmlSettings.IndentChars = "\t";

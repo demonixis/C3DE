@@ -9,11 +9,6 @@ namespace C3DE
     /// A scene object is the base object on the scene.
     /// </summary>
     [DataContract]
-    [KnownType(typeof(Component))]
-    [KnownType(typeof(Transform))]
-    [KnownType(typeof(C3DE.Components.Colliders.BoxCollider))]
-    [KnownType(typeof(C3DE.Components.Renderers.MeshRenderer))]
-    [KnownType(typeof(C3DE.Geometries.SphereGeometry))]
     public class SceneObject : ICloneable, IDisposable
     {
         #region Private/protected declarations

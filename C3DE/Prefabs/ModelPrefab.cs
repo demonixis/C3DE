@@ -2,9 +2,11 @@
 using C3DE.Components.Renderers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Runtime.Serialization;
 
 namespace C3DE.Prefabs
 {
+    [DataContract]
     public class ModelPrefab : SceneObject
     {
         protected ModelRenderer renderer;

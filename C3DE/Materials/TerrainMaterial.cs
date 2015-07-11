@@ -3,9 +3,11 @@ using C3DE.Components.Renderers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using System.Runtime.Serialization;
 
 namespace C3DE.Materials
 {
+    [DataContract]
     public class TerrainMaterial : Material
     {
         public Texture2D SnowTexture { get; set; }
@@ -45,7 +47,7 @@ namespace C3DE.Materials
                 effect.Parameters["LightIntensity"].SetValue(light0.Intensity);
 
                 // Update shadow data.
-                effect.Parameters["ShadowData"].SetValue(light0.shadowGenerator.Data);
+                effect.Parameters["ShadowData"].SetValue(light0.shadowGenerator.shadowData);
                 effect.Parameters["ShadowMap"].SetValue(light0.shadowGenerator.ShadowMap);
             }
 

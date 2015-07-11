@@ -3,15 +3,18 @@ using C3DE.Components.Renderers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using System.Runtime.Serialization;
 
 namespace C3DE.Materials
 {
+    [DataContract]
     public class ReflectiveMaterial : Material
     {
         private Vector3 _reflectionColor;
 
         public TextureCube ReflectionMap { get; set; }
 
+        [DataMember]
         public Color ReflectionColor
         {
             get { return new Color(_reflectionColor); }

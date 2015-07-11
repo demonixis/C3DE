@@ -212,5 +212,10 @@ namespace C3DE.Editor
         {
             Debug.Log("drop");
         }
+
+        private void sceneListControl_MouseEnter(object sender, MouseEventArgs e)
+        {
+            editorGameHost.Focus();
+        }
     }
 }

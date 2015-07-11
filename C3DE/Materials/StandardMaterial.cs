@@ -64,7 +64,7 @@ namespace C3DE.Materials
                 if (ShaderQuality == ShaderQuality.Normal)
                 {
                     // Update shadow data.
-                    effect.Parameters["ShadowData"].SetValue(light0.shadowGenerator.Data);
+                    effect.Parameters["ShadowData"].SetValue(light0.shadowGenerator.shadowData);
                     effect.Parameters["ShadowMap"].SetValue(light0.shadowGenerator.ShadowMap);
 
                     // Fog

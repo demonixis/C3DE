@@ -2,10 +2,12 @@
 using C3DE.Components.Renderers;
 using C3DE.Geometries;
 using Microsoft.Xna.Framework;
+using System.Runtime.Serialization;
 
 namespace C3DE.Prefabs.Meshes
 {
-    public class MeshPrefab<T> : SceneObject where T : Geometry, new()
+    [DataContract]
+    public class MeshPrefab : SceneObject
     {
         private MeshRenderer _renderer;
         private Collider _collider;
@@ -21,36 +23,25 @@ namespace C3DE.Prefabs.Meshes
         }
 
         public MeshPrefab() 
-            : this("MeshPrefab", Vector3.One) 
+            : this("MeshPrefab", null) 
         { 
         }
 
         public MeshPrefab(string name)
-            : this(name, Vector3.One)
+            : this(name, null)
         {
         }
 
-        public MeshPrefab(string name, Vector3 size)
+        public MeshPrefab(string name, Geometry geometry)
             : base(name)
         {
-            _renderer = AddComponent<MeshRenderer>();
-            _renderer.Geometry = new T();
-            _renderer.Geometry.Size = size;
-            _renderer.ReceiveShadow = false;
-            _renderer.Geometry.Build();
-            _collider = AddComponent<SphereCollider>();
-        }
-
-        public MeshPrefab(string name, T geometry)
-            : base()
-        {
-            if (!geometry.Built)
-                geometry.Build();
-
             _renderer = AddComponent<MeshRenderer>();
             _renderer.Geometry = geometry;
             _renderer.ReceiveShadow = false;
             _collider = AddComponent<SphereCollider>();
+
+            if (geometry != null && !geometry.Built)
+                geometry.Build();
         }
     }
 }

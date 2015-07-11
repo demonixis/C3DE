@@ -3,9 +3,11 @@ using C3DE.Components.Renderers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using System.Runtime.Serialization;
 
 namespace C3DE.Materials
 {
+    [DataContract]
     public class FresnelMaterial : Material
     {
         public FresnelMaterial(Scene scene, string name = "Fresnel Material")

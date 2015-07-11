@@ -3,20 +3,24 @@ using C3DE.Components.Renderers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using System.Runtime.Serialization;
 
 namespace C3DE.Materials
 {
+    [DataContract]
     public class SimpleMaterial : Material
     {
         private Vector3 _emissiveColor;
         private float _alpha;
 
+        [DataMember]
         public Color EmissiveColor
         {
             get { return new Color(_emissiveColor); }
             set { _emissiveColor = value.ToVector3(); }
         }
 
+        [DataMember]
         public float Alpha
         {
             get { return _alpha; }
@@ -27,6 +31,7 @@ namespace C3DE.Materials
             }
         }
 
+        [DataMember]
         public bool AlphaEnabled { get; set; }
 
         public SimpleMaterial()

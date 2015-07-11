@@ -3,13 +3,16 @@ using C3DE.Components.Renderers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using System.Runtime.Serialization;
 
 namespace C3DE.Materials
 {
+    [DataContract]
     public class ToonMaterial : Material
     {
         private Vector3 _emissiveColor;
 
+        [DataMember]
         public Color EmissiveColor
         {
             get { return new Color(_emissiveColor); }

@@ -5,6 +5,7 @@ using System.Runtime.Serialization;
 
 namespace C3DE.Geometries
 {
+    [DataContract]
     public class SphereGeometry : Geometry
     {
         [DataMember]

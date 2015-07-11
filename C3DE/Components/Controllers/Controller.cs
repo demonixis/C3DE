@@ -1,10 +1,12 @@
 ﻿using Microsoft.Xna.Framework;
+using System.Runtime.Serialization;
 
 namespace C3DE.Components.Controllers
 {
     /// <summary>
     /// An abstract class to create a camera controller.
     /// </summary>
+    [DataContract]
     public abstract class Controller : Behaviour
     {
         #region Fields
@@ -12,47 +14,56 @@ namespace C3DE.Components.Controllers
         /// <summary>
         /// Gets or sets the velocity factor. Default is 0.95f.
         /// </summary>
+        [DataMember]
         public float Velocity { get; set; }
 
         /// <summary>
         /// Gets or sets the angular velocity factor. Default is 0.95f.
         /// </summary>
+        [DataMember]
         public float AngularVelocity { get; set; }
 
         /// <summary>
         /// Gets or sets the move speed. Default is 1.0f.
         /// </summary>
+        [DataMember]
         public float MoveSpeed { get; set; }
 
         /// <summary>
         /// Gets or sets the rotation speed. Default is 0.1f.
         /// </summary>
+        [DataMember]
         public float RotationSpeed { get; set; }
 
         /// <summary>
         /// Gets or sets the look speed. Default is 0.15f.
         /// </summary>
+        [DataMember]
         public float LookSpeed { get; set; }
 
         /// <summary>
         /// Gets or sets the strafe speed. Default is 0.75f.
         /// </summary>
+        [DataMember]
         public float StrafeSpeed { get; set; }
 
         /// <summary>
         /// Gets or sets the mouse sensibility. Default is [0.15f, 0.15f].
         /// </summary>
+        [DataMember]
         public Vector2 MouseSensibility { get; set; }
 
         /// <summary>
         /// Gets or sets the gamepad sensibility. Default is [0.15f, 0.15f].
         /// </summary>
+        [DataMember]
         public Vector2 GamepadSensibility { get; set; }
 
         /// <summary>
         /// Gets or sets the touch sensibility. Default is [1.0f, 1.0f].
         /// </summary>
-		public float TouchSensibility { get; set; }
+        [DataMember]
+        public float TouchSensibility { get; set; }
 
         #endregion
 

@@ -82,7 +82,7 @@
                     <c3de:SceneObjectControl Margin="0, 0, 0, 5" />
                     <c3de:TransformControl Margin="0, 0, 0, 5" />
                 </StackPanel>
-                <c3de:SceneListControl x:Name="sceneListControl" />
+                <c3de:SceneListControl x:Name="sceneListControl" MouseEnter="sceneListControl_MouseEnter" />
             </StackPanel>
         </ScrollViewer>
     </Grid>
