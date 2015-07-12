@@ -172,5 +172,9 @@ namespace C3DE.Components
         public virtual void Dispose()
         {
         }
+
+        public virtual void PostDeserialization()
+        {
+        }
     }
 }

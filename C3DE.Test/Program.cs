@@ -1,6 +1,5 @@
 ﻿using C3DE.Components;
 using C3DE.Components.Colliders;
-using C3DE.Components.Lights;
 using C3DE.Components.Renderers;
 using C3DE.Geometries;
 using C3DE.Materials;
@@ -8,25 +7,35 @@ using C3DE.Prefabs;
 using C3DE.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Runtime.Serialization;
 using System.Xml;
-using System.Xml.Serialization;
 
 namespace C3DE.Test
 {
-    class TestApp : Scene
+    [DataContract]
+    public struct SerializedScene
+    {
+        [DataMember]
+        public RenderSettings RenderSettings { get; set; }
+
+        [DataMember]
+        public SceneObject[] SceneObjects { get; set; }
+
+        [DataMember]
+        public Material[] Materials { get; set; }
+    }
+
+    public class TestApp : Scene
     {
         public static Type[] knowTypes;
 
         public TestApp()
             : base("TestScene")
         {
-
         }
 
         public override void Initialize()
@@ -86,6 +95,16 @@ namespace C3DE.Test
                 var bc = sceneObject.AddComponent<BoxCollider>();
                 Serialize("SceneObject.xml", sceneObject);
 
+                Serialize("Scene.xml", this);
+
+                var s = new SerializedScene()
+                {
+                    Materials = materials.ToArray(),
+                    SceneObjects = sceneObjects.ToArray(),
+                    RenderSettings = RenderSettings
+                };
+                Serialize("SceneS.xml", s);
+
                 /*
                 foreach(var so in sceneObjects)
                     Serialize(so.Name + ".xml", so);
@@ -102,6 +121,8 @@ namespace C3DE.Test
                 var cam = Deserialize("Camera.xml", typeof(Camera));
                 var mat = Deserialize("StandardMaterial.xml", typeof(StandardMaterial));
                 var so = Deserialize("SceneObject.xml", typeof(SceneObject));
+                var sc = Deserialize("Scene.xml", typeof(TestApp));
+                var s = Deserialize("SceneS.xml", typeof(SerializedScene));
             }
 
             if (Input.Keys.Escape)
@@ -110,11 +131,13 @@ namespace C3DE.Test
 
         private object Deserialize(string name, Type type)
         {
+            GetKnowTypes();
+
             object result = null;
 
             var fileStream = new FileStream(name, FileMode.Open);
             var reader = XmlDictionaryReader.CreateTextReader(fileStream, new XmlDictionaryReaderQuotas());
-            var serializer = new DataContractSerializer(type);
+            var serializer = new DataContractSerializer(type, knowTypes);
 
             // Deserialize the data and read it from the instance.
             result = serializer.ReadObject(reader, true);
@@ -126,20 +149,7 @@ namespace C3DE.Test
 
         private void Serialize(string name, object obj)
         {
-            if (knowTypes == null)
-            {
-                var assembly = Assembly.GetAssembly(typeof(SceneObject));
-                var types = assembly.GetTypes();
-                var list = new List<Type>(types.Length);
-
-                foreach (var type in types)
-                {
-                    if (Attribute.IsDefined(type, typeof(DataContractAttribute)) || Attribute.IsDefined(type, typeof(CollectionDataContractAttribute)))
-                        list.Add(type);
-                }
-
-                knowTypes = list.ToArray();
-            }
+            GetKnowTypes();
 
             var dataContractSerializer = new DataContractSerializer(obj.GetType(), knowTypes);
             var xmlSettings = new XmlWriterSettings();
@@ -151,6 +161,34 @@ namespace C3DE.Test
                 dataContractSerializer.WriteObject(xmlWriter, obj);
                 xmlWriter.Close();
             }
+        }
+
+        private void GetKnowTypes()
+        {
+            if (knowTypes == null)
+            {
+                var c3deTypes = GetDataContractTypes(typeof(SceneObject));
+                var thisTypes = GetDataContractTypes(typeof(TestApp));
+                var list = new List<Type>();
+                list.AddRange(c3deTypes);
+                list.AddRange(thisTypes);
+                knowTypes = list.ToArray();
+            }
+        }
+
+        private Type[] GetDataContractTypes(Type targetType)
+        {
+            var assembly = Assembly.GetAssembly(targetType);
+            var types = assembly.GetTypes();
+            var list = new List<Type>(types.Length);
+
+            foreach (var type in types)
+            {
+                if (Attribute.IsDefined(type, typeof(DataContractAttribute)) || Attribute.IsDefined(type, typeof(CollectionDataContractAttribute)))
+                    list.Add(type);
+            }
+
+            return list.ToArray();
         }
     }
 

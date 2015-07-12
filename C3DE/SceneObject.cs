@@ -53,8 +53,11 @@ namespace C3DE
                     NotifyPropertyChanged("Enabled");
                     enabled = value;
 
-                    for (int i = 0, l = transform.Transforms.Count; i < l; i++)
-                        transform.Transforms[i].Enabled = value;
+                    if (transform != null)
+                    {
+                        for (int i = 0, l = transform.Transforms.Count; i < l; i++)
+                            transform.Transforms[i].Enabled = value;
+                    }
                 }
             }
         }
@@ -367,6 +370,10 @@ namespace C3DE
         {
             foreach (Component component in components)
                 component.Dispose();
+        }
+
+        public virtual void PostDeserialization()
+        {
         }
     }
 }
