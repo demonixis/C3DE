@@ -372,8 +372,30 @@ namespace C3DE
                 component.Dispose();
         }
 
-        public virtual void PostDeserialization()
+        public virtual void PostDeserialize()
         {
+            var size = components.Count;
+            var i = 0;
+
+            if (size > 0)
+            {
+                transform = GetComponent<Transform>();
+
+                for (i = 0; i < size; i++)
+                {
+                    components[i].sceneObject = this;
+                    components[i].transform = transform;
+                }
+
+                for (i = 0; i < size; i++)
+                {
+                    components[i].PostDeserialize();
+                    components[i].Awake();
+
+                    if (initialized)
+                        components[i].Start();
+                }
+            }
         }
     }
 }

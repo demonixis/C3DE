@@ -57,7 +57,7 @@ namespace C3DE.Editor.Core
 
             // Grid
             var gridMaterial = new UnlitMaterial(this, "GridMaterial");
-            gridMaterial.Texture = GraphicsHelper.CreateCheckboardTexture(new Color(0.6f, 0.6f, 0.6f), new Color(0.95f, 0.95f, 0.95f), 256, 256);;
+            gridMaterial.Texture = GraphicsHelper.CreateCheckboardTexture(new Color(0.6f, 0.6f, 0.6f), new Color(0.95f, 0.95f, 0.95f), 256, 256); ;
             gridMaterial.Tiling = new Vector2(24);
 
             grid = new TerrainPrefab("Editor_Grid");
@@ -123,14 +123,6 @@ namespace C3DE.Editor.Core
             mat.Texture = texture;
         }
 
-        private Material GetMaterialByName(string name)
-        {
-            foreach (var mat in materials)
-                if (mat.Name == name)
-                    return mat;
-            return null;
-        }
-
         bool pendingAdd = false;
         bool pendingRemove = false;
 
@@ -164,7 +156,7 @@ namespace C3DE.Editor.Core
                     InternalAddSceneObject(type);
 
                 pendingAdd = true;
-                
+
                 _addList.Clear();
             }
 
@@ -255,7 +247,7 @@ namespace C3DE.Editor.Core
                 case "Point": sceneObject = CreateLightNode(type, LightType.Point); break;
                 case "Spot": sceneObject = CreateLightNode(type, LightType.Spot); break;
 
-                case "Camera": 
+                case "Camera":
                     sceneObject = new CameraPrefab(type);
                     sceneObject.AddComponent<BoxCollider>();
 
@@ -384,6 +376,29 @@ namespace C3DE.Editor.Core
         public SceneObject[] GetSceneObjects()
         {
             return sceneObjects.ToArray();
+        }
+
+        public Material[] GetUsedMaterials()
+        {
+            var renderers = FindObjectsOfType<Renderer>();
+            var list = new List<Material>();
+
+            for (int i = 0, l = renderers.Length; i < l; i++)
+                if (renderers[i].SceneObject.Tag != EditorTag && renderers[i].Material != null)
+                    list.Add(renderers[i].Material);
+
+            return list.ToArray();
+        }
+
+        public SceneObject[] GetUsedSceneObjects()
+        {
+            var list = new List<SceneObject>();
+
+            for (int i = 0, l = sceneObjects.Count; i < l; i++)
+                if (sceneObjects[i].Tag != EditorTag)
+                    list.Add(sceneObjects[i]);
+
+            return list.ToArray();
         }
 
         #endregion

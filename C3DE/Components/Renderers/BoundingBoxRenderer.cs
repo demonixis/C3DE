@@ -7,7 +7,7 @@ namespace C3DE.Components.Renderers
     [DataContract]
     public class BoundingBoxRenderer : Renderer
     {
-        private VertexPositionColor[] _vertices = new VertexPositionColor[8];
+        private static VertexPositionColor[] _vertices = new VertexPositionColor[8];
         private static short[] _indices = new short[]
         {
             0, 1, 1, 2, 2, 3, 3, 0, 0, 4, 1, 5, 2, 6, 3, 7, 4, 5, 5, 6, 6, 7, 7, 4

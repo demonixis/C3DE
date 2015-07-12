@@ -16,18 +16,6 @@ using System.Xml;
 
 namespace C3DE.Test
 {
-    [DataContract]
-    public struct SerializedScene
-    {
-        [DataMember]
-        public RenderSettings RenderSettings { get; set; }
-
-        [DataMember]
-        public SceneObject[] SceneObjects { get; set; }
-
-        [DataMember]
-        public Material[] Materials { get; set; }
-    }
 
     [DataContract]
     public class TestApp : Scene

@@ -204,8 +204,11 @@ namespace C3DE.Geometries
         {
             if (Built)
             {
-                _vertexBuffer.Dispose();
-                _indexBuffer.Dispose();
+                if (_vertexBuffer != null)
+                    _vertexBuffer.Dispose();
+
+                if (_indexBuffer != null)
+                    _indexBuffer.Dispose();
             }
         }
     }

@@ -676,7 +676,7 @@ namespace C3DE
 
         #endregion
 
-        #region SceneObject
+        #region Search methods
 
         public static SceneObject FindById(string id)
         {
@@ -718,6 +718,22 @@ namespace C3DE
             }
 
             return scripts.ToArray();
+        }
+
+        public Material GetMaterialById(string id)
+        {
+            foreach (var mat in materials)
+                if (mat.Id == id)
+                    return mat;
+            return null;
+        }
+
+        public Material GetMaterialByName(string name)
+        {
+            foreach (var mat in materials)
+                if (mat.Name == name)
+                    return mat;
+            return null;
         }
 
         #endregion

@@ -118,8 +118,8 @@ namespace C3DE.Editor.MonoGameBridge
             // TODO : Exclude editor material and scene objects.
             var serScene = new SerializedScene()
             {
-                Materials = _scene.Materials.ToArray(),
-                SceneObjects = _scene.GetSceneObjects(),
+                Materials = _scene.GetUsedMaterials(),
+                SceneObjects = _scene.GetUsedSceneObjects(),
                 RenderSettings = _scene.RenderSettings
             };
 
@@ -142,22 +142,23 @@ namespace C3DE.Editor.MonoGameBridge
 
             try
             {
-                var serializedScene = Serializr.Deserialize(path, typeof(SerializedScene)) as SerializedScene;
+                var data = Serializr.Deserialize(path, typeof(SerializedScene));
+                var serializedScene = data as SerializedScene;
                 if (serializedScene != null)
                 {
                     NewScene();
-
+                    
                     foreach (var mat in serializedScene.Materials)
                         _scene.Add(mat);
 
                     foreach (var so in serializedScene.SceneObjects)
                     {
-                        so.PostDeserialization();
+                        so.PostDeserialize();
                         _scene.Add(so);
                     }
 
                     _scene.RenderSettings.Set(serializedScene.RenderSettings);
-
+                    
                     result = true;
                 }
             }

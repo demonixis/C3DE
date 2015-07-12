@@ -14,7 +14,7 @@ namespace C3DE
         public static void Serialize(string name, object obj)
         {
             if (SerializablesTypes == null)
-                return;
+                AddTypes(typeof(Engine));
 
             var dataContractSerializer = new DataContractSerializer(obj.GetType(), SerializablesTypes);
             var xmlSettings = new XmlWriterSettings();
@@ -31,7 +31,7 @@ namespace C3DE
         public static object Deserialize(string name, Type type)
         {
             if (SerializablesTypes == null)
-                return null;
+                AddTypes(typeof(Engine));
 
             object result = null;
 

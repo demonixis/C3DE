@@ -14,8 +14,8 @@ namespace C3DE.Components
         internal protected bool initialized;
         protected bool enabled;
         protected int order = 1;
-        protected SceneObject sceneObject;
-        protected Transform transform;
+        internal protected SceneObject sceneObject;
+        internal protected Transform transform;
 
         #region Fields
 
@@ -115,7 +115,8 @@ namespace C3DE.Components
 
         public virtual void Awake()
         {
-            transform = GetComponent<Transform>();
+            if (transform == null)
+                transform = GetComponent<Transform>();
         }
 
         /// <summary>
@@ -173,7 +174,7 @@ namespace C3DE.Components
         {
         }
 
-        public virtual void PostDeserialization()
+        public virtual void PostDeserialize()
         {
         }
     }

@@ -87,5 +87,11 @@ namespace C3DE.Components.Renderers
                 geometry = null;
             }
         }
+
+        public override void PostDeserialize()
+        {
+            if (geometry != null && geometry.Built)
+                geometry.Build();
+        }
     }
 }
