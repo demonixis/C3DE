@@ -13,6 +13,19 @@ using System.Runtime.Serialization;
 
 namespace C3DE
 {
+    [DataContract]
+    public class SerializedScene
+    {
+        [DataMember]
+        public RenderSettings RenderSettings { get; set; }
+
+        [DataMember]
+        public SceneObject[] SceneObjects { get; set; }
+
+        [DataMember]
+        public Material[] Materials { get; set; }
+    }
+
     public struct RaycastInfo
     {
         public Ray Ray;

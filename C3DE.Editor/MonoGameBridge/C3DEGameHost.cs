@@ -111,14 +111,62 @@ namespace C3DE.Editor.MonoGameBridge
             _scene.Initialize();
         }
 
-        public string SaveScene()
+        public bool SaveScene(string path)
         {
-            return string.Empty;
+            var result = true;
+
+            // TODO : Exclude editor material and scene objects.
+            var serScene = new SerializedScene()
+            {
+                Materials = _scene.Materials.ToArray(),
+                SceneObjects = _scene.GetSceneObjects(),
+                RenderSettings = _scene.RenderSettings
+            };
+
+            try
+            {
+                Serializr.Serialize(path, serScene);
+            }
+            catch (Exception ex)
+            {
+                result = false;
+                Debug.Log(ex.Message);
+            }
+
+            return result;
         }
 
-        public void LoadScene(string strData)
+        public bool LoadScene(string path)
         {
+            var result = false;
 
+            try
+            {
+                var serializedScene = Serializr.Deserialize(path, typeof(SerializedScene)) as SerializedScene;
+                if (serializedScene != null)
+                {
+                    NewScene();
+
+                    foreach (var mat in serializedScene.Materials)
+                        _scene.Add(mat);
+
+                    foreach (var so in serializedScene.SceneObjects)
+                    {
+                        so.PostDeserialization();
+                        _scene.Add(so);
+                    }
+
+                    _scene.RenderSettings.Set(serializedScene.RenderSettings);
+
+                    result = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.Log(ex.Message);
+            }
+
+            return result;
         }
 
         #endregion

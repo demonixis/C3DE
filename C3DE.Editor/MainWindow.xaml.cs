@@ -138,8 +138,8 @@ namespace C3DE.Editor
 
                         if (saveFileDialog.ShowDialog() == Winforms.DialogResult.OK)
                         {
-                            var save = editorGameHost.SaveScene();
-                            File.WriteAllText(saveFileDialog.FileName, save);
+                            if (!editorGameHost.SaveScene(saveFileDialog.FileName))
+                                MessageBox.Show("This scene can't be saved. Please contact the developer with the error file", "Save error", MessageBoxButton.OK, MessageBoxImage.Error);
                         }
                     }
                     break;
@@ -150,9 +150,9 @@ namespace C3DE.Editor
                         openFileDialog.Filter = "C3DE Scene (*.scene)|*.scene";
 
                         if (openFileDialog.ShowDialog() == Winforms.DialogResult.OK)
-                        {
-                            var data = File.ReadAllText(openFileDialog.FileName);
-                            editorGameHost.LoadScene(data);
+                        { 
+                            if (!editorGameHost.LoadScene(openFileDialog.FileName))
+                                MessageBox.Show("This scene can't be loaded. Please contact the developer with the error file", "Load error", MessageBoxButton.OK, MessageBoxImage.Error);
                         }
                     }
                     break;

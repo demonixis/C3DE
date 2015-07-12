@@ -109,5 +109,14 @@ namespace C3DE
             fogColor = Vector3.One;
             skybox = new Skybox();
         }
+
+        public void Set(RenderSettings settings)
+        {
+            ambientColor = settings.ambientColor;
+            fogData = settings.fogData;
+            fogColor = settings.fogColor;
+            FogEnabled = settings.FogEnabled;
+            skybox = new Skybox(); // FIXME
+        }
     }
 }
