@@ -12,6 +12,7 @@ using C3DE.Prefabs.Meshes;
 using C3DE.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
@@ -184,7 +185,21 @@ namespace C3DE.Editor.Core
             {
                 if (EDRegistry.Mouse.Down(MouseButton.Left))
                 {
-                    _selectedObject.SceneObject.Transform.Translate(-EDRegistry.Mouse.Delta.X, 0, -EDRegistry.Mouse.Delta.Y);
+                    if (System.Windows.Input.Keyboard.Modifiers == System.Windows.Input.ModifierKeys.Shift)
+                    {
+                        var position = _selectedObject.SceneObject.Transform.Position;
+
+                        if (Math.Abs(EDRegistry.Mouse.Delta.X) > 0.1f)
+                            position.X += 1 * (Math.Sign(EDRegistry.Mouse.Delta.X));
+
+                        if (Math.Abs(EDRegistry.Mouse.Delta.Y) > 0.1f)
+                            position.Z += 1 * (Math.Sign(EDRegistry.Mouse.Delta.Y));
+
+                        _selectedObject.SceneObject.Transform.Position = position;
+                    }
+                    else
+                        _selectedObject.SceneObject.Transform.Translate(-EDRegistry.Mouse.Delta.X, 0, -EDRegistry.Mouse.Delta.Y);
+
                     Messenger.Notify(EditorEvent.TransformUpdated, new TransformChanged(TransformChangeType.Position, _selectedObject.SceneObject.Transform.Position));
                 }
             }
@@ -316,27 +331,25 @@ namespace C3DE.Editor.Core
             Messenger.Notify(EditorEvent.SceneObjectUnSelected);
         }
 
-        public void SetSeletected(string id, bool notify = false)
+        public void SetSeletected(string id)
         {
-            SetSelected(FindById(id), notify);
+            SetSelected(FindById(id));
         }
 
-        private void SetSelected(SceneObject sceneObject, bool notify = false)
+        private void SetSelected(SceneObject sceneObject)
         {
             if (sceneObject != null)
             {
                 _selectedObject.Select(false);
                 _editionSceneObject.Reset();
 
-                if (notify)
-                    Messenger.Notify(EditorEvent.SceneObjectUnSelected);
+                Messenger.Notify(EditorEvent.SceneObjectUnSelected);
 
                 _selectedObject.Set(sceneObject);
                 _selectedObject.Select(true);
                 _editionSceneObject.Selected = sceneObject;
 
-                if (notify)
-                    Messenger.Notify(EditorEvent.SceneObjectSelected, new GenericMessage<SceneObject>(sceneObject));
+                Messenger.Notify(EditorEvent.SceneObjectSelected, new GenericMessage<SceneObject>(sceneObject));
             }
         }
 

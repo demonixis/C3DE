@@ -352,18 +352,19 @@ namespace C3DE
 
         public object Clone()
         {
-            SceneObject sceneObject = new SceneObject(Name.Replace(" (Clone)", "") + " (Clone)");
+            SceneObject clone = new SceneObject(Name.Replace(" (Clone)", "") + " (Clone)");
 
             foreach (Component component in components)
-                sceneObject.AddComponent((Component)component.Clone());
+                clone.AddComponent((Component)component.Clone());
 
             // Fixme
-            sceneObject.Transform.Position = transform.Position;
-            sceneObject.Transform.Rotation = transform.Rotation;
-            sceneObject.Transform.LocalScale = transform.LocalScale;
-            sceneObject.Id = "SO-" + Guid.NewGuid();
+            clone.Transform.Position = transform.Position;
+            clone.Transform.Rotation = transform.Rotation;
+            clone.Transform.LocalScale = transform.LocalScale;
+            clone.Id = "SO-" + Guid.NewGuid();
+            clone.Tag = Tag;
 
-            return sceneObject;
+            return clone;
         }
 
         public void Dispose()

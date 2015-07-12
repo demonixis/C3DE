@@ -40,11 +40,8 @@ namespace C3DE.Components.Colliders
         public override void Compute()
         {
             var renderable = GetComponent<Renderer>();
-
             if (renderable != null)
-            {
                 _sphere = renderable.boundingSphere;
-            }
         }
 
         public override bool Collides(Collider other)

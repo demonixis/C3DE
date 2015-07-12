@@ -43,7 +43,7 @@ namespace C3DE.Editor.Core.Components
             }
 
             _rotationMatrix = Matrix.CreateFromYawPitchRoll(transform.Rotation.Y, transform.Rotation.X, 0.0f);
-            _transformedReference = Vector3.Transform(translation, Matrix.CreateRotationY(transform.Rotation.Y));
+            _transformedReference = Vector3.Transform(translation, _rotationMatrix);
 
             // Translate and rotate
             transform.Translate(ref _transformedReference);

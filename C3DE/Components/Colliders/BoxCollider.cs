@@ -31,14 +31,6 @@ namespace C3DE.Components.Colliders
             _box = new BoundingBox();
         }
 
-        public override void Update()
-        {
-            if (!sceneObject.IsStatic)
-            {
-
-            }
-        }
-
         public override void Compute()
         {
             var renderable = GetComponent<Renderer>();

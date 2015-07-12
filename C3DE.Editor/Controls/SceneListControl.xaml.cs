@@ -18,8 +18,10 @@ namespace C3DE.Editor.Controls
             Messenger.Register(EditorEvent.SceneObjectAdded, UpdateList);
             Messenger.Register(EditorEvent.SceneObjectRemoved, UpdateList);
             Messenger.Register(EditorEvent.SceneObjectRenamed, UpdateList);
-
+            Messenger.Register(EditorEvent.SceneObjectSelected, OnSelected);
+            Messenger.Register(EditorEvent.SceneObjectUnSelected, OnUnselected);
             Loaded += OnLoaded;
+            Visibility = System.Windows.Visibility.Hidden;
         }
 
         private void OnLoaded(object sender, System.Windows.RoutedEventArgs e)
@@ -29,14 +31,27 @@ namespace C3DE.Editor.Controls
             scene = Scene.current as EDScene;
         }
 
+        private void OnSelected(BasicMessage m)
+        {
+            if (sceneTreeView.Items.Count == 0)
+                Visibility = System.Windows.Visibility.Visible;
+        }
+
+        private void OnUnselected(BasicMessage m)
+        {
+            if (sceneTreeView.Items.Count == 0)
+                Visibility = System.Windows.Visibility.Hidden;
+        }
+
         private void OnSelectedItemChanged(object sender, System.Windows.RoutedPropertyChangedEventArgs<object> e)
         {
             var index = GetSelectedIndex();
             if (index > -1)
             {
-                var textBlock = sceneTreeView.Items[index] as TextBlock;
+                var stackPanel = sceneTreeView.Items[index] as StackPanel;
+                var textBlock = stackPanel.Children[0] as TextBlock;
                 if (textBlock != null)
-                    scene.SetSeletected(textBlock.Tag.ToString());
+                    scene.SetSeletected(stackPanel.Tag.ToString());
             }
         }
 
@@ -60,16 +75,34 @@ namespace C3DE.Editor.Controls
 
         private object GetObjectByTag(string tag)
         {
-            TextBlock textBlock = null;
+            StackPanel control = null;
 
             for (int i = 0, l = sceneTreeView.Items.Count; i < l; i++)
             {
-                textBlock = sceneTreeView.Items[i] as TextBlock;
-                if (textBlock != null && textBlock.Tag.ToString() == tag)
+                control = sceneTreeView.Items[i] as StackPanel;
+                if (control != null && control.Tag.ToString() == tag)
                     return sceneTreeView.Items[i];
             }
 
             return null;
+        }
+
+        private StackPanel CreateItem(string title, string tag)
+        {
+            var sp = new StackPanel();
+            sp.Orientation = Orientation.Horizontal;
+            sp.VerticalAlignment = System.Windows.VerticalAlignment.Stretch;
+            sp.HorizontalAlignment = System.Windows.HorizontalAlignment.Stretch;
+            sp.Tag = tag;
+
+            var text = new TextBlock();
+            text.Text = title;
+            text.HorizontalAlignment = System.Windows.HorizontalAlignment.Center;
+            text.VerticalAlignment = System.Windows.VerticalAlignment.Center;
+
+            sp.Children.Add(text);
+
+            return sp;
         }
 
         private void UpdateList(BasicMessage m = null)
@@ -79,16 +112,14 @@ namespace C3DE.Editor.Controls
                 sceneTreeView.Items.Clear();
 
                 var sceneObjects = ((EDScene)(Scene.current)).GetSceneObjects();
-                TextBlock textBlock = null;
+                StackPanel control = null;
 
                 for (int i = 0, l = sceneObjects.Length; i < l; i++)
                 {
                     if (sceneObjects[i].Tag != EDScene.EditorTag)
                     {
-                        textBlock = new TextBlock();
-                        textBlock.Text = sceneObjects[i].Name;
-                        textBlock.Tag = sceneObjects[i].Id;
-                        sceneTreeView.Items.Add(textBlock);
+                        control = CreateItem(sceneObjects[i].Name, sceneObjects[i].Id);
+                        sceneTreeView.Items.Add(control);
                     }
                 }
             }
