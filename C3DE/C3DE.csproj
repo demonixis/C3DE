@@ -125,6 +125,7 @@
     <Compile Include="Resources\ResourcesHelper.cs" />
     <Compile Include="SceneManager.cs" />
     <Compile Include="Screen.cs" />
+    <Compile Include="Serializr.cs" />
     <Compile Include="UI\GUISkin.cs" />
     <Compile Include="UI\GUI.cs" />
     <Compile Include="Utils\GraphicsHelper.cs" />
@@ -177,7 +178,7 @@
       <HintPath>..\Libs\MonoGame.Framework.dll</HintPath>
     </Reference>
     <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.Xml.Serialization" />
+    <Reference Include="System.XML" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -13,9 +13,11 @@ using C3DE.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 
 namespace C3DE.Editor.Core
 {
+    [DataContract]
     public class EDScene : Scene
     {
         internal const string EditorTag = "C3DE_Editor";
