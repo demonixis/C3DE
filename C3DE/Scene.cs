@@ -46,10 +46,10 @@ namespace C3DE
         private bool _needRemoveCheck;
 
         internal protected Material defaultMaterial;
-        
+
         [DataMember]
         internal protected List<SceneObject> sceneObjects;
-        
+
         internal protected List<Renderer> renderList;
 
         [DataMember]
@@ -299,8 +299,8 @@ namespace C3DE
                     if (sceneObject.Enabled)
                     {
                         CheckComponents(sceneObject, ComponentChangeType.Add);
-                        sceneObject.PropertyChanged += OnComponentPropertyChanged;
-                        sceneObject.ComponentChanged += OnComponentChanged;
+                        sceneObject.PropertyChanged += OnSceneObjectPropertyChanged;
+                        sceneObject.ComponentChanged += OnSceneObjectComponentChanged;
                     }
 
                     if (initialized && !sceneObject.Initialized)
@@ -414,23 +414,22 @@ namespace C3DE
             }
         }
 
-        private void OnComponentPropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void OnSceneObjectPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.Name == "Enabled")
             {
-                var sceneObject = sender as SceneObject;
-
+                var sceneObject = (SceneObject)sender;
                 if (sceneObject.Enabled)
                 {
                     CheckComponents(sceneObject, ComponentChangeType.Add);
-                    sceneObject.PropertyChanged += OnComponentPropertyChanged;
-                    sceneObject.ComponentChanged += OnComponentChanged;
+                    sceneObject.PropertyChanged += OnSceneObjectPropertyChanged;
+                    sceneObject.ComponentChanged += OnSceneObjectComponentChanged;
                 }
                 else
                 {
                     CheckComponents(sceneObject, ComponentChangeType.Remove);
-                    sceneObject.PropertyChanged -= OnComponentPropertyChanged;
-                    sceneObject.ComponentChanged -= OnComponentChanged;
+                    sceneObject.PropertyChanged -= OnSceneObjectPropertyChanged;
+                    sceneObject.ComponentChanged -= OnSceneObjectComponentChanged;
                 }
             }
         }
@@ -441,9 +440,15 @@ namespace C3DE
         /// </summary>
         /// <param name="sender">The scene object which as added or removed a component.</param>
         /// <param name="e">An object which contains the component and a flag to know if it's added or removed.</param>
-        private void OnComponentChanged(object sender, ComponentChangedEventArgs e)
+        private void OnSceneObjectComponentChanged(object sender, ComponentChangedEventArgs e)
         {
-            CheckComponent(e.Component, e.ChangeType);
+            if (e.ChangeType == ComponentChangeType.Update)
+            {
+                if (e.PropertyName == "Enable")
+                    CheckComponent(e.Component, e.Component.Enabled ? ComponentChangeType.Add : ComponentChangeType.Remove);
+            }
+            else
+                CheckComponent(e.Component, e.ChangeType);
         }
 
         #endregion

@@ -82,7 +82,16 @@
                     <c3de:SceneObjectControl Margin="0, 0, 0, 5" />
                     <c3de:TransformControl Margin="0, 0, 0, 5" />
                 </StackPanel>
-                <c3de:SceneListControl x:Name="sceneListControl" MouseEnter="sceneListControl_MouseEnter" />
+                <TabControl>
+                    <TabItem Header="Scene">
+                        <c3de:SceneListControl x:Name="sceneListControl" MouseEnter="sceneListControl_MouseEnter" />
+                    </TabItem>
+                    <TabItem Header="Materials">
+                        <ListBox>
+                            <TextBlock Text="Material 1" />
+                        </ListBox>
+                    </TabItem>
+                </TabControl>
             </StackPanel>
         </ScrollViewer>
     </Grid>

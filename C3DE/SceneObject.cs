@@ -98,16 +98,16 @@ namespace C3DE
         /// </summary>
         public event EventHandler<PropertyChangedEventArgs> PropertyChanged = null;
 
-        private void NotifyComponentChanged(Component component, ComponentChangeType type = ComponentChangeType.Add)
-        {
-            if (ComponentChanged != null)
-                ComponentChanged(this, new ComponentChangedEventArgs(component, type));
-        }
-
         private void NotifyPropertyChanged(string property)
         {
             if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(property));
+        }
+
+        private void NotifyComponentChanged(Component component, string propertyName, ComponentChangeType type)
+        {
+            if (ComponentChanged != null)
+                ComponentChanged(this, new ComponentChangedEventArgs(component, propertyName, type));
         }
 
         #endregion
@@ -241,6 +241,7 @@ namespace C3DE
 
             if (component is Transform)
             {
+                // Deserialization case
                 var tr = (Transform)component;
 
                 if (transform != null)
@@ -252,6 +253,7 @@ namespace C3DE
                 else
                     transform = tr;
 
+                // Deserialization
                 if (components.Count == 0)
                     components.Add(transform);
 
@@ -260,6 +262,7 @@ namespace C3DE
 
             component.SceneObject = this;
             component.Awake();
+            component.PropertyChanged += OnComponentChanged;
 
             components.Add(component);
 
@@ -272,7 +275,7 @@ namespace C3DE
                 components.Sort();
             }
 
-            NotifyComponentChanged(component);
+            NotifyComponentChanged(component, string.Empty, ComponentChangeType.Add);
 
             return component;
         }
@@ -318,6 +321,37 @@ namespace C3DE
             return comps.ToArray();
         }
 
+        public Component GetComponentInChildren<T>() where T : Component
+        {
+            Component component = null;
+
+            for (int i = 0, l = transform.Transforms.Count; i < l; i++)
+            {
+                component = transform.Transforms[i].GetComponent<T>();
+
+                if (component != null)
+                    return component;
+            }
+
+            return null;
+        }
+
+        public Component[] GetComponentsInChildren<T>() where T : Component
+        {
+            var list = new List<Component>();
+            Component[] cpns;
+
+            for (int i = 0, l = transform.Transforms.Count; i < l; i++)
+            {
+                cpns = transform.Transforms[i].GetComponents<T>();
+
+                if (cpns != null && cpns.Length > 0)
+                    list.AddRange(cpns);
+            }
+
+            return list.ToArray();
+        }
+
         /// <summary>
         /// Remove the component and update the scene.
         /// </summary>
@@ -327,7 +361,10 @@ namespace C3DE
         {
             var result = components.Remove(component);
             if (result)
-                NotifyComponentChanged(component, ComponentChangeType.Remove);
+            {
+                component.PropertyChanged -= OnComponentChanged;
+                NotifyComponentChanged(component, string.Empty, ComponentChangeType.Remove);
+            }
 
             return result;
         }
@@ -335,7 +372,10 @@ namespace C3DE
         internal protected virtual void RemoveAllComponents()
         {
             for (int i = 0, l = components.Count; i < l; i++)
-                NotifyComponentChanged(components[i], ComponentChangeType.Remove);
+            {
+                components[i].PropertyChanged -= OnComponentChanged;
+                NotifyComponentChanged(components[i], string.Empty, ComponentChangeType.Remove);
+            }
 
             components.Clear();
         }
@@ -350,9 +390,6 @@ namespace C3DE
                 clone.AddComponent((Component)component.Clone());
 
             // Fixme
-            clone.Transform.Position = transform.Position;
-            clone.Transform.Rotation = transform.Rotation;
-            clone.Transform.LocalScale = transform.LocalScale;
             clone.Id = "SO-" + Guid.NewGuid();
             clone.Tag = Tag;
 
@@ -363,6 +400,11 @@ namespace C3DE
         {
             foreach (Component component in components)
                 component.Dispose();
+        }
+
+        protected virtual void OnComponentChanged(object sender, PropertyChangedEventArgs e)
+        {
+            NotifyComponentChanged((Component)sender, e.Name, ComponentChangeType.Update);
         }
 
         public virtual void PostDeserialize()
@@ -388,6 +430,9 @@ namespace C3DE
                     if (initialized)
                         components[i].Start();
                 }
+
+                // Refresh children
+                Enabled = enabled;
             }
         }
     }

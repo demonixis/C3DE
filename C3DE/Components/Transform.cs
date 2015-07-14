@@ -184,5 +184,23 @@ namespace C3DE.Components
         {
             return Vector3.Transform(direction, Matrix.CreateFromYawPitchRoll(_localRotation.Y, _localRotation.X, _localRotation.Z));
         }
+
+        public override object Clone()
+        {
+            var tr = new Transform();
+            tr._parent = Parent;
+            tr._root = _root;
+            tr.sceneObject = sceneObject;
+
+            foreach (var t in _transforms)
+                tr._transforms.Add(t);
+
+            tr._localPosition = _localPosition;
+            tr._localRotation = _localRotation;
+            tr._localScale = _localScale;
+            tr._dirty = true;
+
+            return tr;
+        }
     }
 }
