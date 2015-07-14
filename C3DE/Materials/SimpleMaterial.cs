@@ -47,6 +47,7 @@ namespace C3DE.Materials
             _alpha = 1.0f;
             Name = name;
             AlphaEnabled = true;
+            hasAlpha = true;
         }
 
         public override void LoadContent(ContentManager content)

@@ -137,5 +137,20 @@ namespace C3DE.Components.Lights
         {
             shadowGenerator.Dispose();
         }
+
+        public override int CompareTo(object obj)
+        {
+            var light = obj as Light;
+
+            if (light == null)
+                return 1;
+
+            if (TypeLight == light.TypeLight)
+                return 0;
+            else if (Backing == LightRenderMode.RealTime && light.Backing == LightRenderMode.Backed)
+                return 1;
+            else
+                return -1;
+        }
     }
 }

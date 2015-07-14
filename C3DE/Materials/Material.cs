@@ -20,6 +20,7 @@ namespace C3DE.Materials
         protected Vector3 diffuseColor;
         protected Texture2D diffuseTexture;
         protected internal Effect effect;
+        protected internal bool hasAlpha;
 
         [DataMember]
         public string Id { get; private set; }
@@ -62,6 +63,7 @@ namespace C3DE.Materials
             Tiling = Vector2.One;
             Offset = Vector2.Zero;
             ShaderQuality = ShaderQuality.Normal;
+            hasAlpha = false;
 
 #if ANDROID || OPENGL
             ShaderQuality = ShaderQuality.Low;

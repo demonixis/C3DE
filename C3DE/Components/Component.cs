@@ -135,7 +135,7 @@ namespace C3DE.Components
         {
         }
 
-        public int CompareTo(object obj)
+        public virtual int CompareTo(object obj)
         {
             var component = obj as Component;
 

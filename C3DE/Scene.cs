@@ -518,28 +518,32 @@ namespace C3DE
             if (index == -1)
             {
                 cameras.Add(camera);
+                cameras.Sort();
                 index = cameras.Count - 1;
-            }
 
-            if (_mainCameraIndex == -1)
-            {
-                _mainCameraIndex = index;
-                Camera.main = camera;
+                if (Camera.main == null)
+                    Camera.main = camera;
             }
 
             return index;
         }
 
-        protected void Add(Renderer renderable)
+        protected void Add(Renderer renderer)
         {
-            if (!renderList.Contains(renderable))
-                renderList.Add(renderable);
+            if (!renderList.Contains(renderer))
+            {
+                renderList.Add(renderer);
+                renderList.Sort();
+            }
         }
 
         protected void Add(Light light)
         {
             if (!lights.Contains(light))
+            {
                 lights.Add(light);
+                lights.Sort();
+            }
         }
 
         protected void Add(Collider collider)
@@ -844,15 +848,5 @@ namespace C3DE
         }
 
         #endregion
-
-        public void SerializeScene(string[] excludeTags = null)
-        {
-            
-        }
-
-        public void DeserializeScene()
-        {
-            
-        }
     }
 }

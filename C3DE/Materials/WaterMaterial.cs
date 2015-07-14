@@ -70,6 +70,7 @@ namespace C3DE.Materials
             _reflectiveMapEnabled = false;
             _totalTime = 0.0f;
             Name = name;
+            hasAlpha = true;
         }
 
         public override void LoadContent(ContentManager content)

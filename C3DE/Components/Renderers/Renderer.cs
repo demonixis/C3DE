@@ -94,5 +94,24 @@ namespace C3DE.Components.Renderers
         /// </summary>
         /// <param name="device"></param>
         public abstract void Draw(GraphicsDevice device);
+
+        public override int CompareTo(object obj)
+        {
+            var renderer = obj as Renderer;
+            var material = renderer != null ? renderer.Material : null;
+
+            if (renderer == null)
+                return 1;
+
+            if (material == null || Material == null)
+                return base.CompareTo(obj);
+
+            if (Material.hasAlpha == material.hasAlpha)
+                return 0;
+            else if (Material.hasAlpha && !material.hasAlpha)
+                return 1;
+            else
+                return -1;
+        }
     }
 }

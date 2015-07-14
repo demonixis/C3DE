@@ -227,5 +227,20 @@ namespace C3DE.Components
 
             return new Ray(nearPoint, direction);
         }
+
+        public override int CompareTo(object obj)
+        {
+            var camera = obj as Camera;
+
+            if (camera == null)
+                return 1;
+
+            if (depth == camera.depth)
+                return 0;
+            else if (depth > camera.depth)
+                return 1;
+            else
+                return -1;
+        }
     }
 }

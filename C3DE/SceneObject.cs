@@ -325,19 +325,11 @@ namespace C3DE
         /// <returns>Return true if the component has been removed, otherwise return false.</returns>
         public bool RemoveComponent(Component component)
         {
-            int index = -1;
-            int i = 0;
-
-            while (i < components.Count && index == -1)
-                index = (components[i] == component) ? i : index;
-
-            if (index > -1)
-            {
-                components.Remove(component);
+            var result = components.Remove(component);
+            if (result)
                 NotifyComponentChanged(component, ComponentChangeType.Remove);
-            }
 
-            return index > -1;
+            return result;
         }
 
         internal protected virtual void RemoveAllComponents()
