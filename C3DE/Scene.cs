@@ -329,21 +329,6 @@ namespace C3DE
                 prefabs.Remove(prefab);
         }
 
-        protected virtual void RemoveAllObjects()
-        {
-            sceneObjects.Clear();
-            prefabs.Clear();
-        }
-
-        internal protected override void RemoveAllComponents()
-        {
-            renderList.Clear();
-            colliders.Clear();
-            cameras.Clear();
-            scripts.Clear();
-            lights.Clear();
-        }
-
         /// <summary>
         /// Check all components of a scene object to update all list of the scene.
         /// </summary>
@@ -444,7 +429,7 @@ namespace C3DE
         {
             if (e.ChangeType == ComponentChangeType.Update)
             {
-                if (e.PropertyName == "Enable")
+                if (e.PropertyName == "Enabled")
                     CheckComponent(e.Component, e.Component.Enabled ? ComponentChangeType.Add : ComponentChangeType.Remove);
             }
             else

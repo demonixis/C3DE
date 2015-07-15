@@ -65,14 +65,11 @@ namespace C3DE.Rendering
                 scene.materials[scene.materialsEffectIndex[i]].PrePass(camera);
 
             // Pass, Update matrix, material attributes, etc.
+            // Note: The renderList contains ONLY enabled components/objects.
             for (int i = 0; i < scene.RenderList.Count; i++)
             {
-                // FIXME If a scene object is disabled, the renderlist MUST be updated
-                if (scene.renderList[i].SceneObject.Enabled && scene.renderList[i].Enabled)
-                {
-                    scene.RenderList[i].Material.Pass(scene.RenderList[i]);
-                    scene.RenderList[i].Draw(graphicsDevice);
-                }
+                scene.RenderList[i].Material.Pass(scene.RenderList[i]);
+                scene.RenderList[i].Draw(graphicsDevice);
             }
         }
 

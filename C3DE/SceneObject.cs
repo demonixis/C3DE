@@ -234,7 +234,7 @@ namespace C3DE
 
         #region Component collection
 
-        internal Component AddComponent(Component component)
+        public Component AddComponent(Component component)
         {
             if (component == null)
                 return null;
@@ -321,9 +321,9 @@ namespace C3DE
             return comps.ToArray();
         }
 
-        public Component GetComponentInChildren<T>() where T : Component
+        public T GetComponentInChildren<T>() where T : Component
         {
-            Component component = null;
+            T component = null;
 
             for (int i = 0, l = transform.Transforms.Count; i < l; i++)
             {
@@ -336,10 +336,10 @@ namespace C3DE
             return null;
         }
 
-        public Component[] GetComponentsInChildren<T>() where T : Component
+        public T[] GetComponentsInChildren<T>() where T : Component
         {
-            var list = new List<Component>();
-            Component[] cpns;
+            var list = new List<T>();
+            T[] cpns;
 
             for (int i = 0, l = transform.Transforms.Count; i < l; i++)
             {
@@ -352,6 +352,16 @@ namespace C3DE
             return list.ToArray();
         }
 
+        public T GetComponentInParent<T>() where T : Component
+        {
+            return transform.Parent.GetComponent<T>();
+        }
+
+        public T[] GetComponentsInParent<T>() where T : Component
+        {
+            return transform.Parent.GetComponents<T>();
+        }
+
         /// <summary>
         /// Remove the component and update the scene.
         /// </summary>
@@ -359,6 +369,9 @@ namespace C3DE
         /// <returns>Return true if the component has been removed, otherwise return false.</returns>
         public bool RemoveComponent(Component component)
         {
+            if (component == transform)
+                return false;
+
             var result = components.Remove(component);
             if (result)
             {
@@ -369,15 +382,9 @@ namespace C3DE
             return result;
         }
 
-        internal protected virtual void RemoveAllComponents()
+        protected virtual void OnComponentChanged(object sender, PropertyChangedEventArgs e)
         {
-            for (int i = 0, l = components.Count; i < l; i++)
-            {
-                components[i].PropertyChanged -= OnComponentChanged;
-                NotifyComponentChanged(components[i], string.Empty, ComponentChangeType.Remove);
-            }
-
-            components.Clear();
+            NotifyComponentChanged((Component)sender, e.Name, ComponentChangeType.Update);
         }
 
         #endregion
@@ -400,11 +407,6 @@ namespace C3DE
         {
             foreach (Component component in components)
                 component.Dispose();
-        }
-
-        protected virtual void OnComponentChanged(object sender, PropertyChangedEventArgs e)
-        {
-            NotifyComponentChanged((Component)sender, e.Name, ComponentChangeType.Update);
         }
 
         public virtual void PostDeserialize()
