@@ -30,6 +30,8 @@
                 <Separator />
                 <MenuItem Header="Duplicate" Click="OnCommonMenuClick" Tag="Duplicate" InputGestureText="Ctrl+D" />
                 <MenuItem Header="Delete" Click="OnCommonMenuClick" Tag="Delete" InputGestureText="Del" />
+                <Separator />
+                <MenuItem Header="Render Settings" Click="ShowRenderSettings" />
             </MenuItem>
             <MenuItem Header="Scene Object">
                 <MenuItem Header="Empty" />

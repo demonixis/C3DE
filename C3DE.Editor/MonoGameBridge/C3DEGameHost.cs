@@ -26,6 +26,11 @@ namespace C3DE.Editor.MonoGameBridge
 
         public Action EngineReady = null;
 
+        public Scene Scene
+        {
+            get { return _scene; }
+        }
+
         #region GameHost implementation
 
         public object GetService(Type serviceType)

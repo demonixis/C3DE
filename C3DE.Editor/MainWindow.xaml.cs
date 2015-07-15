@@ -235,5 +235,11 @@ namespace C3DE.Editor
         {
             editorGameHost.Focus();
         }
+
+        private void ShowRenderSettings(object sender, RoutedEventArgs e)
+        {
+            var renderSettings = new RenderSettingsWindow(editorGameHost.Scene.RenderSettings);
+            renderSettings.Show();
+        }
     }
 }

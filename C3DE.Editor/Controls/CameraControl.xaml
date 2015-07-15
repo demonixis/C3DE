@@ -30,7 +30,7 @@
                 <Label Style="{StaticResource Control_LeftText}" Grid.Row="3" Grid.Column="0" Content="Clipping Planes" />
 
                 <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal">
-                    <TextBlock Text="{Binding ClearColor}" Width="90" Margin="0, 0, 5, 0" />
+                    <TextBox Text="{Binding ClearColor}" Width="90" Margin="0, 0, 5, 0" />
                     <Rectangle x:Name="ClearColorRect" Fill="Black" Width="20" Height="20" HorizontalAlignment="Right" />
                 </StackPanel>
                 <ComboBox Grid.Row="1" Grid.Column="1" SelectedIndex="{Binding Projection}">

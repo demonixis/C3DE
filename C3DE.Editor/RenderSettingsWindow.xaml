@@ -1,0 +1,54 @@
+﻿<Window x:Class="C3DE.Editor.RenderSettingsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Render Settings" Height="255" Width="250" Icon="Game.ico" ResizeMode="NoResize" ShowInTaskbar="False" Topmost="True" WindowStartupLocation="CenterScreen" ToolTip="Configure the render settings">
+    <StackPanel Orientation="Vertical" Margin="5">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="110" />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Label Grid.Row="0" Grid.Column="0" Content="Ambient Color" />
+            <Label Grid.Row="1" Grid.Column="0" Content="Fog Enabled" />
+            <Label Grid.Row="2" Grid.Column="0" Content="Fog Mode" />
+            <Label Grid.Row="3" Grid.Column="0" Content="Fog Color" />
+            <Label Grid.Row="4" Grid.Column="0" Content="Fog Density" />
+            <Label Grid.Row="5" Grid.Column="0" Content="Fog Start" />
+            <Label Grid.Row="6" Grid.Column="0" Content="Fog End" />
+
+            <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal">
+                <TextBox Text="{Binding AmbientColor}" Width="90" Margin="0, 0, 5, 0" />
+                <Rectangle x:Name="AmbientColorRect" Fill="Black" Width="20" Height="20" HorizontalAlignment="Right" />
+            </StackPanel>
+            
+            <CheckBox Grid.Row="1" Grid.Column="1" IsChecked="{Binding FogEnabled}" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0, 0, 5, 0"/>
+
+            <ComboBox Grid.Row="2" Grid.Column="1" SelectedIndex="{Binding FogMode}">
+                <ComboBoxItem Content="None" />
+                <ComboBoxItem Content="Linear" />
+                <ComboBoxItem Content="Exp" />
+                <ComboBoxItem Content="Exp2" />
+            </ComboBox>
+            
+            <StackPanel Grid.Row="3" Grid.Column="1" Orientation="Horizontal">
+                <TextBox Text="{Binding FogColor}" Width="90" Margin="0, 0, 5, 0" />
+                <Rectangle x:Name="FogColorRect" Fill="Black" Width="20" Height="20" HorizontalAlignment="Right" />
+            </StackPanel>
+
+            <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding FogDensity}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" TextAlignment="Right" Margin="0, 0, 5, 0" />
+            <TextBox Grid.Row="5" Grid.Column="1" Text="{Binding FogStart}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" TextAlignment="Right" Margin="0, 0, 5, 0" />
+            <TextBox Grid.Row="6" Grid.Column="1" Text="{Binding FogEnd}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" TextAlignment="Right" Margin="0, 0, 5, 0" />
+        </Grid>
+        <Separator />
+        <Button Click="Button_Click" Width="100" HorizontalAlignment="Right" Margin="0, 5, 5, 0">Ok</Button>
+    </StackPanel>
+</Window>
