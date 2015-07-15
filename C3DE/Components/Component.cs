@@ -25,8 +25,17 @@ namespace C3DE.Components
             get { return enabled; }
             set
             {
-                if (SetActive(value))
+                if (value != enabled)
+                {
+                    enabled = value;
+
+                    if (enabled)
+                        OnEnabled();
+                    else
+                        OnDisabled();
+
                     NotifyPropertyChanged("Enabled");
+                }  
             }
         }
 
@@ -94,23 +103,6 @@ namespace C3DE.Components
 
         public virtual void OnDisabled()
         {
-        }
-
-        public virtual bool SetActive(bool value)
-        {
-            if (value != enabled)
-            {
-                enabled = value;
-
-                if (enabled)
-                    OnEnabled();
-                else
-                    OnDisabled();
-
-                return true;
-            }
-
-            return false;
         }
 
         public virtual void Awake()

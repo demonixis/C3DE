@@ -407,13 +407,11 @@ namespace C3DE
                 if (sceneObject.Enabled)
                 {
                     CheckComponents(sceneObject, ComponentChangeType.Add);
-                    sceneObject.PropertyChanged += OnSceneObjectPropertyChanged;
                     sceneObject.ComponentChanged += OnSceneObjectComponentChanged;
                 }
                 else
                 {
                     CheckComponents(sceneObject, ComponentChangeType.Remove);
-                    sceneObject.PropertyChanged -= OnSceneObjectPropertyChanged;
                     sceneObject.ComponentChanged -= OnSceneObjectComponentChanged;
                 }
             }

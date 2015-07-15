@@ -50,14 +50,15 @@ namespace C3DE
             {
                 if (value != enabled)
                 {
-                    NotifyPropertyChanged("Enabled");
                     enabled = value;
+
+                    NotifyPropertyChanged("Enabled");
 
                     if (transform != null)
                     {
                         for (int i = 0, l = transform.Transforms.Count; i < l; i++)
-                            transform.Transforms[i].Enabled = value;
-                    }
+                            transform.Transforms[i].SceneObject.Enabled = value;
+                    }                  
                 }
             }
         }
