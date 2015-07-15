@@ -1,11 +1,7 @@
 ﻿using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace C3DE
 {
@@ -31,7 +27,7 @@ namespace C3DE
 
         public static Model LoadModel(string path)
         {
-            Model model = Content.Load<Model>(path);
+            var model = Content.Load<Model>(path);
 
             if (model != null)
                 model.Tag = path;

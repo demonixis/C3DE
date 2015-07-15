@@ -29,6 +29,7 @@ namespace C3DE.Editor.Core
         private List<SceneObject> _removeList;
         private SceneObjectSelector _selectedObject;
         private BasicEditionSceneObject _editionSceneObject;
+        private Gizmo _gizmo;
 
         public EDScene(string name)
             : base(name)
@@ -79,6 +80,9 @@ namespace C3DE.Editor.Core
             CreateMaterialCollection();
 
             EDRegistry.Camera = camera;
+
+            _gizmo = new Gizmo();
+            Add(_gizmo);
 
             Messenger.Register(EditorEvent.CreateSceneObject, CreateNewObject);
             Messenger.Register(EditorEvent.CommandDelete, RemoveSceneObject);
@@ -337,6 +341,7 @@ namespace C3DE.Editor.Core
             _selectedObject.Set(sceneObject);
             _selectedObject.Select(true);
             _editionSceneObject.Selected = sceneObject;
+            _gizmo.SetVisible(sceneObject.Transform);
             Messenger.Notify(EditorEvent.SceneObjectSelected, new GenericMessage<SceneObject>(sceneObject));
         }
 
@@ -344,6 +349,7 @@ namespace C3DE.Editor.Core
         {
             _selectedObject.Select(false);
             _editionSceneObject.Reset();
+            _gizmo.SetVisible(null);
             Messenger.Notify(EditorEvent.SceneObjectUnSelected);
         }
 

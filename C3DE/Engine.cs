@@ -57,6 +57,8 @@ namespace C3DE
             Application.GraphicsDevice = GraphicsDevice;
             Application.GraphicsDeviceManager = graphics;
             Application.SceneManager = sceneManager;
+            Asset.Content = Content;
+            Asset.Graphics = GraphicsDevice;
 
 #if !ANDROID && !WINDOWS_APP
             _autoDetectResolution = width == 0 || height == 0;
@@ -75,7 +77,6 @@ namespace C3DE
         {
             int width = e.GraphicsDeviceInformation.PresentationParameters.BackBufferWidth;
             int height = e.GraphicsDeviceInformation.PresentationParameters.BackBufferHeight;
-
             Screen.Setup(width, height, null, null);
         }
 
