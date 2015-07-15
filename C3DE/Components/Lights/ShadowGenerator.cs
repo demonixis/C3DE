@@ -27,10 +27,16 @@ namespace C3DE
             get { return shadowMap; }
         }
 
-        public float ShadowMapSize
+        public int ShadowMapSize
         {
-            get { return shadowData.X; }
-            set { shadowData.X = value; }
+            get { return (int)shadowData.X; }
+            set
+            {
+                if (value > 0)
+                    SetShadowMapSize(Application.GraphicsDevice, value);
+
+                shadowData.X = value;
+            }
         }
 
         public float ShadowBias

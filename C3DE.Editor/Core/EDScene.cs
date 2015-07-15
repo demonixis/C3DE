@@ -44,26 +44,34 @@ namespace C3DE.Editor.Core
             base.Initialize();
 
             DefaultMaterial = new StandardMaterial(this, "DefaultMaterial");
-            DefaultMaterial.Texture = GraphicsHelper.CreateBorderTexture(Color.LightSkyBlue, Color.LightGray, 64, 64, 1);
+            DefaultMaterial.Texture = GraphicsHelper.CreateTexture(Color.Gray, 64, 64);
 
             camera = CreateAddSceneObject<Camera>("EditorCamera.Main");
             camera.Setup(new Vector3(0.0f, 10.0f, -30.0f), Vector3.Zero, Vector3.Up);
             camera.Transform.Rotation = new Vector3(MathHelper.Pi / 6, 0.0f, 0.0f);
             camera.AddComponent<EDFirstPersonCamera>();
 
-            light = CreateAddSceneObject<Light>("Editor_MainLight");
-            light.Transform.Position = new Vector3(0, 15, 15);
-            light.Direction = new Vector3(0, 0.75f, 0.75f);
+            light = CreateAddSceneObject<Light>("Directional Light", false);
+            light.Transform.Position = new Vector3(0, 150, 150);
+            light.Direction = new Vector3(0, 1.0f, 1f);
             light.TypeLight = LightType.Directional;
+            light.Backing = LightRenderMode.RealTime;
+            light.DiffuseColor = Color.LightCoral;
+            light.EnableShadow = true;
+            light.Intensity = 1.0f;
+            light.ShadowGenerator.ShadowMapSize = 1024;
+            light.ShadowGenerator.ShadowStrength = 0.6f;
 
             // Grid
-            var gridMaterial = new UnlitMaterial(this, "GridMaterial");
+            var gridMaterial = new StandardMaterial(this, "GridMaterial");
             gridMaterial.Texture = GraphicsHelper.CreateCheckboardTexture(new Color(0.6f, 0.6f, 0.6f), new Color(0.95f, 0.95f, 0.95f), 256, 256); ;
             gridMaterial.Tiling = new Vector2(24);
 
             grid = new TerrainPrefab("Editor_Grid");
             grid.Tag = EditorTag;
             grid.Renderer.Material = gridMaterial;
+            grid.Renderer.ReceiveShadow = true;
+            grid.Renderer.CastShadow = false;
             grid.Flatten();
             grid.Transform.SetPosition(-grid.Width / 2, -1, -grid.Depth / 2);
             Add(grid);
@@ -120,7 +128,7 @@ namespace C3DE.Editor.Core
 
         private void CreateMaterial(string name, Texture2D texture)
         {
-            var mat = new UnlitMaterial(this, name);
+            var mat = new StandardMaterial(this, name);
             mat.Texture = texture;
         }
 
@@ -207,10 +215,11 @@ namespace C3DE.Editor.Core
 
         #region Add / Remove SceneObject
 
-        private T CreateAddSceneObject<T>(string name) where T : Component, new()
+        private T CreateAddSceneObject<T>(string name, bool tag = true) where T : Component, new()
         {
             var sceneObject = new SceneObject(name);
-            sceneObject.Tag = EditorTag;
+            if (tag)
+                sceneObject.Tag = EditorTag;
             Add(sceneObject);
             return sceneObject.AddComponent<T>();
         }

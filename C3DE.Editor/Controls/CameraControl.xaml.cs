@@ -8,6 +8,22 @@ namespace C3DE.Editor.Controls
     {
         private Camera camera;
 
+        public bool Enabled
+        {
+            get
+            {
+                if (camera != null)
+                    return camera.Enabled;
+
+                return false;
+            }
+            set
+            {
+                if (camera != null)
+                    camera.Enabled = value;
+            }
+        }
+
         public string ClearColor
         {
             get

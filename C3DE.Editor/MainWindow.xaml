@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:C3DE.Editor.MonoGameBridge"
         xmlns:c3de="clr-namespace:C3DE.Editor.Controls"
-        Title="C3DE Editor" Height="600" Width="1280" Icon="Game.ico" WindowState="Maximized" AllowDrop="True">
+        Title="C3DE Editor" Height="600" Width="1024" Icon="Game.ico" WindowState="Maximized" AllowDrop="True">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="20" />
@@ -87,7 +87,7 @@
                         <c3de:SceneListControl x:Name="sceneListControl" MouseEnter="sceneListControl_MouseEnter" />
                     </TabItem>
                     <TabItem Header="Materials">
-                        <ListBox>
+                        <ListBox x:Name="MaterialsList">
                             <TextBlock Text="Material 1" />
                         </ListBox>
                     </TabItem>

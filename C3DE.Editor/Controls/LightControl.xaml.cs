@@ -23,6 +23,22 @@ namespace C3DE.Editor.Controls
     {
         private Light light;
 
+        public bool Enabled
+        {
+            get
+            {
+                if (light != null)
+                    return light.Enabled;
+
+                return false;
+            }
+            set
+            {
+                if (light != null)
+                    light.Enabled = value;
+            }
+        }
+
         public int LightTypeLight
         {
             get

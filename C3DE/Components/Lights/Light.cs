@@ -126,13 +126,6 @@ namespace C3DE.Components.Lights
             projectionMatrix = Matrix.CreateOrthographicOffCenter(-size, size, size, -size, dist - sphere.Radius, dist + sphere.Radius * 2);
         }
 
-        public void DrawShadowMap(SpriteBatch spriteBatch)
-        {
-            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Opaque, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone, null);
-            spriteBatch.Draw(shadowGenerator.ShadowMap, new Rectangle(0, 0, 100, 100), Color.White);
-            spriteBatch.End();
-        }
-
         public override void Dispose()
         {
             shadowGenerator.Dispose();

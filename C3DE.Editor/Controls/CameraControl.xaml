@@ -7,7 +7,10 @@
 
     <Border BorderThickness="1" BorderBrush="LightGray" Margin="2">
         <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch">
-            <Label Content="Camera" />
+            <StackPanel Orientation="Horizontal">
+                <CheckBox IsChecked="{Binding Enabled}" VerticalAlignment="Center" Margin="5, 0, 10, 0" />
+                <Label Content="Camera" />
+            </StackPanel>
             <Separator Margin="5, 2, 5, 2" />
             <Grid Margin="5">
                 <Grid.RowDefinitions>

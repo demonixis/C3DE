@@ -26,6 +26,7 @@ namespace C3DE.Editor
         {
             InitializeComponent();
             KeyDown += OnKeyDown;
+            editorGameHost.EngineReady += InitializeUI;
 
             EDRegistry.Keys = new EDKeyboardComponent(null, this);
             EDRegistry.Mouse = new EDMouseComponent(null, this);
@@ -34,6 +35,23 @@ namespace C3DE.Editor
             Messenger.Register(EditorEvent.SceneObjectUnSelected, OnSceneObjectUnselected);
 
             componentContainer.Children.Clear();
+        }
+
+
+        private void InitializeUI()
+        {
+            // List all materials
+            MaterialsList.Items.Clear();
+
+            TextBlock item = null;
+            foreach (var material in Scene.current.Materials)
+            {
+                item = new TextBlock();
+                item.Text = material.Name;
+                MaterialsList.Items.Add(item);
+            }
+
+            sceneListControl.UpdateList();
         }
 
         private void OnSceneObjectSelected(BasicMessage m)

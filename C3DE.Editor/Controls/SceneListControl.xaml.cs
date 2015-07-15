@@ -79,7 +79,7 @@ namespace C3DE.Editor.Controls
             return item;
         }
 
-        private void UpdateList(BasicMessage m = null)
+        public void UpdateList(BasicMessage m = null)
         {
             if (Scene.current != null)
             {

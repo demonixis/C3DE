@@ -24,6 +24,8 @@ namespace C3DE.Editor.MonoGameBridge
         private ContentManager _content;
         private EDScene _scene;
 
+        public Action EngineReady = null;
+
         #region GameHost implementation
 
         public object GetService(Type serviceType)
@@ -79,6 +81,9 @@ namespace C3DE.Editor.MonoGameBridge
             _scene = new EDScene("Root");
             _scene.Initialize();
             _scene.RenderSettings.Skybox.Generate();
+
+            if (EngineReady != null)
+                EngineReady();
         }
 
         protected override void Update(Stopwatch timer)

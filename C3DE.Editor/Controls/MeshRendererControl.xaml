@@ -6,7 +6,10 @@
              mc:Ignorable="d" d:DesignHeight="250" d:DesignWidth="250">
     <Border BorderThickness="1" BorderBrush="LightGray" Margin="2">
         <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch">
-            <Label Content="Mesh Renderer" />
+            <StackPanel Orientation="Horizontal">
+                <CheckBox IsChecked="{Binding Enabled}" VerticalAlignment="Center" Margin="5, 0, 10, 0" />
+                <Label Content="Mesh Renderer" />
+            </StackPanel>
             <Separator Margin="5, 2, 5, 2" />
             <Grid Margin="5">
                 <Grid.RowDefinitions>
@@ -32,9 +35,12 @@
                     <ComboBoxItem>Sphere</ComboBoxItem>
                 </ComboBox>
                 <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal">
-                    <Label Content="X" /><TextBox Width="30" Text="{Binding GeometrySizeX}" />
-                    <Label Content="Y" /><TextBox Width="30" Text="{Binding GeometrySizeY}" />
-                    <Label Content="Z" /><TextBox Width="30" Text="{Binding GeometrySizeZ}" />
+                    <Label Content="X" />
+                    <TextBox Width="30" Text="{Binding GeometrySizeX}" />
+                    <Label Content="Y" />
+                    <TextBox Width="30" Text="{Binding GeometrySizeY}" />
+                    <Label Content="Z" />
+                    <TextBox Width="30" Text="{Binding GeometrySizeZ}" />
                 </StackPanel>
                 <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal">
                     <Label Content="X" />

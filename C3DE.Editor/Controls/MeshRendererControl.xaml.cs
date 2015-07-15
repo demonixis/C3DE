@@ -21,6 +21,22 @@ namespace C3DE.Editor.Controls
             "Terrain", "Torus", "Other"
         };
 
+        public bool Enabled
+        {
+            get
+            {
+                if (meshRenderer != null)
+                    return meshRenderer.Enabled;
+
+                return false;
+            }
+            set
+            {
+                if (meshRenderer != null)
+                    meshRenderer.Enabled = value;
+            }
+        }
+
         public int Geometry
         {
             get
