@@ -53,14 +53,14 @@ namespace C3DE.Editor.Core
 
             light = CreateAddSceneObject<Light>("Directional Light", false);
             light.Transform.Position = new Vector3(0, 150, 150);
-            light.Direction = new Vector3(0, 1.0f, 1f);
+            light.Direction = new Vector3(-0.5f, 0.75f, -0.5f);
             light.TypeLight = LightType.Directional;
             light.Backing = LightRenderMode.RealTime;
-            light.DiffuseColor = Color.LightCoral;
+            light.DiffuseColor = Color.White;
             light.EnableShadow = true;
             light.Intensity = 1.0f;
             light.ShadowGenerator.ShadowMapSize = 1024;
-            light.ShadowGenerator.ShadowStrength = 0.6f;
+            light.ShadowGenerator.ShadowStrength = 0.4f;
 
             // Grid
             var gridMaterial = new StandardMaterial(this, "GridMaterial");
@@ -113,8 +113,11 @@ namespace C3DE.Editor.Core
             CreateMaterial("Snow", "Textures/Terrain/Snow");
             CreateMaterial("Hexa", "Textures/hexa_tex");
 
-            CreateMaterial("Camera", "Textures/Camera_Icon");
-            CreateMaterial("Light", "Textures/Light_Icon");
+            var camMaterial = new BillboardMaterial(this, "Camera");
+            camMaterial.Texture = Application.Content.Load<Texture2D>("Textures/Camera_Icon");
+
+            var lightMaterial = new BillboardMaterial(this, "Light");
+            lightMaterial.Texture = Application.Content.Load<Texture2D>("Textures/Light_Icon");
 
             var waterMaterial = new WaterMaterial(this, "WaterMaterial");
             waterMaterial.Texture = Application.Content.Load<Texture2D>("Textures/water");
@@ -276,6 +279,8 @@ namespace C3DE.Editor.Core
                     sceneObject.AddComponent<BoxCollider>();
 
                     var camRenderer = sceneObject.AddComponent<MeshRenderer>();
+                    camRenderer.CastShadow = false;
+                    camRenderer.ReceiveShadow = false;
                     camRenderer.Geometry = new QuadGeometry();
                     camRenderer.Geometry.Build();
                     camRenderer.Material = GetMaterialByName("Camera");
@@ -295,6 +300,8 @@ namespace C3DE.Editor.Core
             light.TypeLight = type;
 
             var lightRenderer = sceneObject.AddComponent<MeshRenderer>();
+            lightRenderer.CastShadow = false;
+            lightRenderer.ReceiveShadow = false;
             lightRenderer.Geometry = new QuadGeometry();
             lightRenderer.Geometry.Build();
             lightRenderer.Material = GetMaterialByName("Light");

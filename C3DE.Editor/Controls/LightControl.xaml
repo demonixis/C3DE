@@ -37,12 +37,12 @@
                     <ComboBoxItem>Point</ComboBoxItem>
                     <ComboBoxItem>Spot</ComboBoxItem>
                 </ComboBox>
-                <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding LightRange}" Width="115" />
+                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding LightRange}" Width="115" />
                 <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal">
-                    <TextBlock Text="{Binding LightColor}" Width="90" Margin="0, 0, 5, 0" />
+                    <TextBox Text="{Binding LightColor}" Width="90" Margin="0, 0, 5, 0" />
                     <Rectangle x:Name="LightColorRect" Fill="White" Width="20" Height="20" HorizontalAlignment="Right" />
                 </StackPanel>
-                <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding LightIntensity}" />
+                <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding LightIntensity}" />
                 <ComboBox x:Name="SelectShadowType" Grid.Row="4" Grid.Column="1" SelectedIndex="{Binding LightShadowType}">
                     <ComboBoxItem>None</ComboBoxItem>
                     <ComboBoxItem>Hard Shadow</ComboBoxItem>

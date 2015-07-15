@@ -89,6 +89,7 @@
     <Compile Include="Components\Renderers\MeshRenderer.cs" />
     <Compile Include="Extensions\QuaternionExtensions.cs" />
     <Compile Include="Input.cs" />
+    <Compile Include="Materials\BillboardMaterial.cs" />
     <Compile Include="Materials\PreLightMaterial.cs" />
     <Compile Include="Materials\UnlitMaterial.cs" />
     <Compile Include="Prefabs\LavaPrefab.cs" />

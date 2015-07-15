@@ -26,6 +26,9 @@ namespace C3DE.Components.Renderers
                 _effect.VertexColorEnabled = true;
                 _effect.LightingEnabled = false;
             }
+
+            CastShadow = false;
+            ReceiveShadow = false;
         }
 
         public override void Start()
@@ -60,7 +63,7 @@ namespace C3DE.Components.Renderers
             foreach (EffectPass pass in _effect.CurrentTechnique.Passes)
             {
                 pass.Apply();
-                Application.GraphicsDevice.DrawUserIndexedPrimitives(PrimitiveType.LineList, _vertices, 0, 8, _indices, 0, _indices.Length / 2);
+                device.DrawUserIndexedPrimitives(PrimitiveType.LineList, _vertices, 0, 8, _indices, 0, _indices.Length / 2);
             }
         }
     }

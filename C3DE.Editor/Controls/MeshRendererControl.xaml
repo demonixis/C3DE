@@ -21,8 +21,8 @@
                     <RowDefinition Height="25" />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition />
-                    <ColumnDefinition />
+                    <ColumnDefinition Width="100" />
+                    <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
                 <Label Style="{StaticResource Control_LeftText}" Grid.Row="0" Grid.Column="0" Content="Geometry" />
                 <Label Style="{StaticResource Control_LeftText}" Grid.Row="1" Grid.Column="0" Content="Size" />

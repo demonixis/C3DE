@@ -12,6 +12,7 @@
             <Setter Property="Height" Value="20" />
             <Setter Property="Text" Value="0" />
             <Setter Property="Margin" Value="0, 0, 5, 0" />
+            <Setter Property="Focusable" Value="True" />
         </Style>
     </UserControl.Resources>
     <Border BorderThickness="1" BorderBrush="LightGray" Margin="2">
