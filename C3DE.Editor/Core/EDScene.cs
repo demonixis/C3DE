@@ -51,8 +51,8 @@ namespace C3DE.Editor.Core
         {
             base.Initialize();
 
-            DefaultMaterial = new StandardMaterial(this, "DefaultMaterial");
-            DefaultMaterial.Texture = GraphicsHelper.CreateTexture(Color.Gray, 64, 64);
+            DefaultMaterial = new UnlitColorMaterial(this, "DefaultMaterial");
+            DefaultMaterial.DiffuseColor = Color.DarkBlue;
 
             camera = CreateAddSceneObject<Camera>("EditorCamera.Main");
             camera.Setup(new Vector3(0.0f, 10.0f, -30.0f), Vector3.Zero, Vector3.Up);

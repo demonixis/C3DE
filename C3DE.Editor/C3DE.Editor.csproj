@@ -128,6 +128,7 @@
     </Compile>
     <Compile Include="XNAGizmo\Geometry.cs" />
     <Compile Include="XNAGizmo\GizmoComponent.cs" />
+    <Compile Include="XNAGizmo\Quad.cs" />
     <Page Include="Controls\CameraControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

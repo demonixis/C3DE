@@ -20,7 +20,7 @@ namespace C3DE.Editor.Core.Components
         private bool _needsUpdate;
         private Timer _clickTimer;
         private Vector2 _sensibility;
-        
+
         #region Fields
 
         public int LastX { get; set; }
@@ -164,9 +164,9 @@ namespace C3DE.Editor.Core.Components
 
             LastX = X;
             LastY = Y;
-
+            
             X = (int)position.X;
-            Y = (int)position.Y;
+            Y = (int)position.Y - 20;
 
             _needsUpdate = true;
         }

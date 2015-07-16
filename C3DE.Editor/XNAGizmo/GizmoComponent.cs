@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Content;
 using C3DE.Components.Renderers;
 using C3DE;
 using C3DE.Editor.Core;
@@ -34,6 +32,7 @@ using C3DE.Editor.Core;
 namespace XNAGizmo
 {
     using WinInput = System.Windows.Input;
+    using C3DE.Inputs;
 
     public class GizmoComponent
     {
@@ -47,12 +46,9 @@ namespace XNAGizmo
         /// </summary>
         public bool Enabled { get; set; }
 
-        public bool SelectionBoxesIsVisible = true;
-
         private readonly GraphicsDevice _graphics;
         private readonly BasicEffect _lineEffect;
         private readonly BasicEffect _meshEffect;
-        private readonly SpriteFont _font;
 
         private Matrix _view = Matrix.Identity;
         private Matrix _projection = Matrix.Identity;
@@ -193,30 +189,34 @@ namespace XNAGizmo
         private Vector3 _translationScaleSnapDelta;
         private float _rotationSnapDelta;
 
-        private BasicEffect _selectionBoxEffect;
-        private List<VertexPositionColor> _selectionBoxVertices = new List<VertexPositionColor>();
-        /*
-        private KeyboardState _currentKeys;
-        private MouseState _lastMouseState, _currentMouseState;
-        */
-        public GizmoComponent(GraphicsDevice graphics, SpriteFont font)
-            : this(graphics, font, Matrix.Identity) { }
+        public GizmoComponent(GraphicsDevice graphics)
+            : this(graphics, Matrix.Identity) { }
 
-        public GizmoComponent(GraphicsDevice graphics, SpriteFont font, Matrix world)
+        public GizmoComponent(GraphicsDevice graphics, Matrix world)
         {
             SceneWorld = world;
             _graphics = graphics;
-            _font = font;
 
-            Enabled = true;
+            _lineEffect = new BasicEffect(graphics)
+            {
+                VertexColorEnabled = true,
+                AmbientLightColor = Vector3.One,
+                EmissiveColor = Vector3.One
+            };
 
-            _selectionBoxEffect = new BasicEffect(graphics) { VertexColorEnabled = true };
-            _lineEffect = new BasicEffect(graphics) { VertexColorEnabled = true, AmbientLightColor = Vector3.One, EmissiveColor = Vector3.One };
             _meshEffect = new BasicEffect(graphics);
-            _quadEffect = new BasicEffect(graphics) { World = Matrix.Identity, DiffuseColor = _highlightColor.ToVector3(), Alpha = 0.5f };
+
+            _quadEffect = new BasicEffect(graphics)
+            {
+                World = Matrix.Identity,
+                DiffuseColor = _highlightColor.ToVector3(),
+                Alpha = 0.5f
+            };
+
             _quadEffect.EnableDefaultLighting();
 
             Initialize();
+            Enabled = true;
         }
 
         private void Initialize()
@@ -321,17 +321,6 @@ namespace XNAGizmo
             else
                 ActivePivot++;
         }
-        /*
-        public void SelectEntities(Vector2 mouseloc, bool addToSelection, bool removeFromSelection)
-        {
-            if (ActiveAxis == GizmoAxis.None)
-            {
-                if (!addToSelection && !removeFromSelection)
-                    Selection.Clear();
-                PickObject(mouseloc, removeFromSelection);
-            }
-            ResetDeltas();
-        }*/
 
         /// <summary>
         /// Clears selection of Gizmo.
@@ -351,13 +340,17 @@ namespace XNAGizmo
 
         public void Update()
         {
-            Vector2 mousePosition = EDRegistry.Mouse.Position;
+            _view = EDRegistry.Camera.ViewMatrix;
+            _projection = EDRegistry.Camera.ProjectionMatrix;
+            _cameraPosition = EDRegistry.Camera.Transform.Position;
+
+            var mousePosition = EDRegistry.Mouse.Position;
 
             if (_isActive)
             {
                 _lastIntersectionPosition = _intersectPosition;
 
-                if (WasButtonHeld(MouseButtons.Left) && ActiveAxis != GizmoAxis.None)
+                if (WasButtonHeld(MouseButton.Left) && ActiveAxis != GizmoAxis.None)
                 {
                     switch (ActiveMode)
                     {
@@ -537,7 +530,7 @@ namespace XNAGizmo
                 SetGizmoPosition();
 
                 // -- Trigger Translation, Rotation & Scale events -- //
-                if (WasButtonHeld(MouseButtons.Left) /*&& !IsAnyModifierPressed()*/)
+                if (WasButtonHeld(MouseButton.Left))
                 {
                     if (_translationDelta != Vector3.Zero)
                     {
@@ -639,20 +632,19 @@ namespace XNAGizmo
             return WinInput.Keyboard.Modifiers != WinInput.ModifierKeys.None;
         }
 
-        private bool WasButtonHeld(MouseButtons button)
+        private bool WasButtonHeld(MouseButton button)
         {
-            if (button == MouseButtons.Left)
-                return EDRegistry.Mouse.Down(C3DE.Inputs.MouseButton.Left);
-            else if (button == MouseButtons.Right)
-                return EDRegistry.Mouse.Down(C3DE.Inputs.MouseButton.Right);
-            else if (button == MouseButtons.Middle)
-                return EDRegistry.Mouse.Down(C3DE.Inputs.MouseButton.Middle);
+            if (button == MouseButton.Left)
+                return EDRegistry.Mouse.Down(MouseButton.Left);
+            else if (button == MouseButton.Right)
+                return EDRegistry.Mouse.Down(MouseButton.Right);
+            else if (button == MouseButton.Middle)
+                return EDRegistry.Mouse.Down(MouseButton.Middle);
 
             return false;
         }
 
         #endregion
-
 
         /// <summary>
         /// Helper method for applying color to the gizmo lines.
@@ -916,21 +908,17 @@ namespace XNAGizmo
                 return Vector3.Zero;
 
             Vector3 center = Vector3.Zero;
+
             foreach (var selected in Selection)
                 center += selected.Transform.Position;
+
             return center / Selection.Count;
         }
 
-        public void UpdateCameraProperties(Matrix view, Matrix projection, Vector3 cameraPosition)
-        {
-            _view = view;
-            _projection = projection;
-            _cameraPosition = cameraPosition;
-        }
 
         #region Draw
 
-        public void Draw(SpriteBatch spriteBatch)
+        public void Draw()
         {
             if (!_isActive)
                 return;
@@ -944,7 +932,7 @@ namespace XNAGizmo
             _lineEffect.CurrentTechnique.Passes[0].Apply();
             _graphics.DrawUserPrimitives(PrimitiveType.LineList, _translationLineVertices, 0, _translationLineVertices.Length / 2);
 
-            #endregion
+        #endregion
 
             switch (ActiveMode)
             {
@@ -1044,60 +1032,6 @@ namespace XNAGizmo
             }
 
             _graphics.DepthStencilState = DepthStencilState.Default;
-
-            Draw2D(spriteBatch);
-        }
-
-        private void Draw2D(SpriteBatch spriteBatch)
-        {
-            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
-
-            // -- Draw Axis identifiers ("X,Y,Z") -- // 
-            for (int i = 0; i < 3; i++)
-            {
-                Vector3 screenPos =
-                  _graphics.Viewport.Project(_modelLocalSpace[i].Translation + _modelLocalSpace[i].Backward + _axisTextOffset,
-                                             _projection, _view, _gizmoWorld);
-
-                if (screenPos.Z < 0f || screenPos.Z > 1.0f)
-                    continue;
-
-                Color color = _axisColors[i];
-                switch (i)
-                {
-                    case 0:
-                        if (ActiveAxis == GizmoAxis.X || ActiveAxis == GizmoAxis.XY || ActiveAxis == GizmoAxis.ZX)
-                            color = _highlightColor;
-                        break;
-                    case 1:
-                        if (ActiveAxis == GizmoAxis.Y || ActiveAxis == GizmoAxis.XY || ActiveAxis == GizmoAxis.YZ)
-                            color = _highlightColor;
-                        break;
-                    case 2:
-                        if (ActiveAxis == GizmoAxis.Z || ActiveAxis == GizmoAxis.YZ || ActiveAxis == GizmoAxis.ZX)
-                            color = _highlightColor;
-                        break;
-                }
-
-                spriteBatch.DrawString(_font, _axisText[i], new Vector2(screenPos.X, screenPos.Y), color);
-            }
-
-            // -- Draw StatusInfo -- //
-            string statusInfo = GetStatusInfo();
-            Vector2 stringDims = _font.MeasureString(statusInfo);
-            Vector2 position = new Vector2(_graphics.Viewport.Width - stringDims.X, _graphics.Viewport.Height - stringDims.Y);
-
-            spriteBatch.DrawString(_font, statusInfo, position, Color.White);
-            spriteBatch.End();
-        }
-
-        /// <summary>
-        /// returns a string filled with status info of the gizmo component. (includes: mode/space/snapping/precision/pivot)
-        /// </summary>
-        /// <returns></returns>
-        private string GetStatusInfo()
-        {
-            return "Mode: " + ActiveMode + " | Space: " + ActiveSpace + " | Snapping:" + (SnapEnabled ? "ON" : "OFF") + " | Precision:" + (PrecisionModeEnabled ? "ON" : "OFF") + " | Pivot: " + ActivePivot + " ";
         }
 
         #region ConvertMouseToRay
@@ -1147,80 +1081,6 @@ namespace XNAGizmo
 
         #endregion
 
-        #region Private Quad Struct
-
-        private struct Quad
-        {
-            public Vector3 Origin;
-            public Vector3 UpperLeft;
-            public Vector3 LowerLeft;
-            public Vector3 UpperRight;
-            public Vector3 LowerRight;
-            public Vector3 Normal;
-            public Vector3 Up;
-            public Vector3 Left;
-
-            public VertexPositionNormalTexture[] Vertices;
-            public short[] Indexes;
-
-            public Quad(Vector3 origin, Vector3 normal, Vector3 up,
-                        float width, float height)
-            {
-                Vertices = new VertexPositionNormalTexture[4];
-                Indexes = new short[6];
-                Origin = origin;
-                Normal = normal;
-                Up = up;
-
-                // Calculate the quad corners
-                Left = Vector3.Cross(normal, Up);
-                Vector3 uppercenter = (Up * height / 2) + origin;
-                UpperLeft = uppercenter + (Left * width / 2);
-                UpperRight = uppercenter - (Left * width / 2);
-                LowerLeft = UpperLeft - (Up * height);
-                LowerRight = UpperRight - (Up * height);
-
-                FillVertices();
-            }
-
-            private void FillVertices()
-            {
-                // Fill in texture coordinates to display full texture
-                // on quad
-                Vector2 textureUpperLeft = new Vector2(0.0f, 0.0f);
-                Vector2 textureUpperRight = new Vector2(1.0f, 0.0f);
-                Vector2 textureLowerLeft = new Vector2(0.0f, 1.0f);
-                Vector2 textureLowerRight = new Vector2(1.0f, 1.0f);
-
-                // Provide a normal for each vertex
-                for (int i = 0; i < Vertices.Length; i++)
-                {
-                    Vertices[i].Normal = Normal;
-                }
-
-                // Set the position and texture coordinate for each
-                // vertex
-                Vertices[0].Position = LowerLeft;
-                Vertices[0].TextureCoordinate = textureLowerLeft;
-                Vertices[1].Position = UpperLeft;
-                Vertices[1].TextureCoordinate = textureUpperLeft;
-                Vertices[2].Position = LowerRight;
-                Vertices[2].TextureCoordinate = textureLowerRight;
-                Vertices[3].Position = UpperRight;
-                Vertices[3].TextureCoordinate = textureUpperRight;
-
-                // Set the index buffer for each vertex, using
-                // clockwise winding
-                Indexes[0] = 0;
-                Indexes[1] = 1;
-                Indexes[2] = 2;
-                Indexes[3] = 2;
-                Indexes[4] = 1;
-                Indexes[5] = 3;
-            }
-        }
-        #endregion
-
         #region Helper Functions
         /// <summary>
         /// Helper function to apply rotation to objects using the built-in method.
@@ -1252,9 +1112,6 @@ namespace XNAGizmo
 
         #endregion
     }
-
-    // An enum of buttons on the mouse, since XNA doesn't provide one
-    internal enum MouseButtons { Left, Right, Middle, X1, X2 };
 
     #region Gizmo EventHandlers
 

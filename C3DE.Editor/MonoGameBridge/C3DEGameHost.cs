@@ -24,7 +24,6 @@ namespace C3DE.Editor.MonoGameBridge
         private ForwardRenderer _renderer;
         private ContentManager _content;
         private EDScene _scene;
-        private SpriteBatch _spriteBatch;
         private GizmoComponent _gizmo;
 
         public Action EngineReady = null;
@@ -80,15 +79,13 @@ namespace C3DE.Editor.MonoGameBridge
 
             Screen.Setup((int)ActualWidth, (int)ActualHeight, null, null);
 
-            _spriteBatch = new SpriteBatch(graphicsDevice);
-
             _renderer = new ForwardRenderer();
             _renderer.Initialize(_content);
 
             foreach (var component in _gameComponents)
                 component.Initialize();
 
-            _gizmo = new GizmoComponent(GraphicsDevice, _content.Load<SpriteFont>("Font/default"));
+            _gizmo = new GizmoComponent(GraphicsDevice);
             _gizmo.ActiveMode = GizmoMode.Translate;
 
             _scene = new EDScene("Root", _gizmo);
@@ -110,8 +107,6 @@ namespace C3DE.Editor.MonoGameBridge
                 component.Update(_gameTime);
 
             _scene.Update();
-
-            _gizmo.UpdateCameraProperties(EDRegistry.Camera.ViewMatrix, EDRegistry.Camera.ProjectionMatrix, EDRegistry.Camera.Transform.Position);
             _gizmo.Update();
         }
 
@@ -119,7 +114,7 @@ namespace C3DE.Editor.MonoGameBridge
         {
             graphicsDevice.Clear(Color.CornflowerBlue);
             _renderer.RenderEditor(_scene, _scene.camera, renderTarget);
-            _gizmo.Draw(_spriteBatch);
+            _gizmo.Draw();
         }
 
         #endregion
