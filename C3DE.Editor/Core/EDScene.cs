@@ -29,7 +29,8 @@ namespace C3DE.Editor.Core
         private List<SceneObject> _removeList;
         private SceneObjectSelector _selectedObject;
         private BasicEditionSceneObject _editionSceneObject;
-        private Gizmo _gizmo;
+        private bool pendingAdd = false;
+        private bool pendingRemove = false;
 
         public EDScene(string name)
             : base(name)
@@ -80,9 +81,6 @@ namespace C3DE.Editor.Core
             CreateMaterialCollection();
 
             EDRegistry.Camera = camera;
-
-            _gizmo = new Gizmo();
-            Add(_gizmo);
 
             Messenger.Register(EditorEvent.CreateSceneObject, CreateNewObject);
             Messenger.Register(EditorEvent.CommandDelete, RemoveSceneObject);
@@ -138,9 +136,6 @@ namespace C3DE.Editor.Core
             var mat = new StandardMaterial(this, name);
             mat.Texture = texture;
         }
-
-        bool pendingAdd = false;
-        bool pendingRemove = false;
 
         public override void Update()
         {
