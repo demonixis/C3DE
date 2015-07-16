@@ -17,13 +17,13 @@ namespace C3DE.Editor.Core.Components
         public EDFirstPersonCamera()
             : base()
         {
-            Velocity = 0.8f;
-            AngularVelocity = 0.8f;
+            Velocity = 0.7f;
+            AngularVelocity = 0.7f;
             MoveSpeed = 0.25f;
             RotationSpeed = 0.5f;
             LookSpeed = 0.25f;
             StrafeSpeed = 1.5f;
-            MouseSensibility = new Vector2(0.15f);
+            MouseSensibility = new Vector2(0.2f);
         }
 
         public override void Update()

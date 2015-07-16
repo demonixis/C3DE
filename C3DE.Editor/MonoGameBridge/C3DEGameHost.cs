@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using XNAGizmo;
 
 namespace C3DE.Editor.MonoGameBridge
 {
@@ -23,6 +24,8 @@ namespace C3DE.Editor.MonoGameBridge
         private ForwardRenderer _renderer;
         private ContentManager _content;
         private EDScene _scene;
+        private SpriteBatch _spriteBatch;
+        private GizmoComponent _gizmo;
 
         public Action EngineReady = null;
 
@@ -77,16 +80,21 @@ namespace C3DE.Editor.MonoGameBridge
 
             Screen.Setup((int)ActualWidth, (int)ActualHeight, null, null);
 
+            _spriteBatch = new SpriteBatch(graphicsDevice);
+
             _renderer = new ForwardRenderer();
             _renderer.Initialize(_content);
 
             foreach (var component in _gameComponents)
                 component.Initialize();
 
-            _scene = new EDScene("Root");
+            _gizmo = new GizmoComponent(GraphicsDevice, _content.Load<SpriteFont>("Font/default"));
+            _gizmo.ActiveMode = GizmoMode.Translate;
+
+            _scene = new EDScene("Root", _gizmo);
             _scene.Initialize();
             _scene.RenderSettings.Skybox.Generate();
-
+            
             if (EngineReady != null)
                 EngineReady();
         }
@@ -102,12 +110,16 @@ namespace C3DE.Editor.MonoGameBridge
                 component.Update(_gameTime);
 
             _scene.Update();
+
+            _gizmo.UpdateCameraProperties(EDRegistry.Camera.ViewMatrix, EDRegistry.Camera.ProjectionMatrix, EDRegistry.Camera.Transform.Position);
+            _gizmo.Update();
         }
 
         protected override void Draw(RenderTarget2D renderTarget)
         {
             graphicsDevice.Clear(Color.CornflowerBlue);
             _renderer.RenderEditor(_scene, _scene.camera, renderTarget);
+            _gizmo.Draw(_spriteBatch);
         }
 
         #endregion
@@ -117,24 +129,25 @@ namespace C3DE.Editor.MonoGameBridge
         public void NewScene()
         {
             _scene.Unload();
-            _scene = new EDScene("Main");
+            _gizmo.Selection.Clear();
+            _scene = new EDScene("Root", _gizmo);
             _scene.Initialize();
+            _scene.RenderSettings.Skybox.Generate();
         }
 
         public bool SaveScene(string path)
         {
             var result = true;
 
-            // TODO : Exclude editor material and scene objects.
-            var serScene = new SerializedScene()
-            {
-                Materials = _scene.GetUsedMaterials(),
-                SceneObjects = _scene.GetUsedSceneObjects(),
-                RenderSettings = _scene.RenderSettings
-            };
-
             try
             {
+                var serScene = new SerializedScene()
+                {
+                    Materials = _scene.GetUsedMaterials(),
+                    SceneObjects = _scene.GetUsedSceneObjects(),
+                    RenderSettings = _scene.RenderSettings
+                };
+
                 Serializr.Serialize(path, serScene);
             }
             catch (Exception ex)
@@ -148,7 +161,7 @@ namespace C3DE.Editor.MonoGameBridge
 
         public bool LoadScene(string path)
         {
-            var result = false;
+            var result = true;
 
             try
             {
@@ -168,13 +181,12 @@ namespace C3DE.Editor.MonoGameBridge
                     }
 
                     _scene.RenderSettings.Set(serializedScene.RenderSettings);
-                    
-                    result = true;
                 }
             }
             catch (Exception ex)
             {
                 Debug.Log(ex.Message);
+                result = false;
             }
 
             return result;

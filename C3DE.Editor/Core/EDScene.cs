@@ -15,6 +15,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using XNAGizmo;
 
 namespace C3DE.Editor.Core
 {
@@ -31,14 +32,19 @@ namespace C3DE.Editor.Core
         private BasicEditionSceneObject _editionSceneObject;
         private bool pendingAdd = false;
         private bool pendingRemove = false;
+        private GizmoComponent _gizmo;
 
-        public EDScene(string name)
+        public EDScene(string name, GizmoComponent gizmo)
             : base(name)
         {
             _addList = new List<string>();
             _removeList = new List<SceneObject>();
             _selectedObject = new SceneObjectSelector();
             _editionSceneObject = new BasicEditionSceneObject();
+            _gizmo = gizmo;
+            _gizmo.TranslateEvent += GizmoTranslateEvent;
+            _gizmo.RotateEvent += GizmoRotateEvent;
+            _gizmo.ScaleEvent += GizmoScaleEvent;
         }
 
         public override void Initialize()
@@ -88,6 +94,15 @@ namespace C3DE.Editor.Core
             Messenger.Register(EditorEvent.CommandCopy, CopySelection);
             Messenger.Register(EditorEvent.CommandPast, PastSelection);
             Messenger.Register(EditorEvent.CommandDuplicate, DuplicateSelection);
+        }
+
+        public override void Unload()
+        {
+            _gizmo.TranslateEvent -= GizmoTranslateEvent;
+            _gizmo.RotateEvent -= GizmoRotateEvent;
+            _gizmo.ScaleEvent -= GizmoScaleEvent;
+
+            base.Unload();
         }
 
         private void CreateMaterialCollection()
@@ -190,31 +205,37 @@ namespace C3DE.Editor.Core
                     SelectObject(info.Collider.SceneObject);
                 }
             }
-
-            // Soon deprecated
-            else if (_selectedObject.SceneObject != null)
-            {
-                if (EDRegistry.Mouse.Down(MouseButton.Left))
-                {
-                    if (System.Windows.Input.Keyboard.Modifiers == System.Windows.Input.ModifierKeys.Shift)
-                    {
-                        var position = _selectedObject.SceneObject.Transform.Position;
-
-                        if (Math.Abs(EDRegistry.Mouse.Delta.X) > 0.1f)
-                            position.X += 1 * (Math.Sign(EDRegistry.Mouse.Delta.X));
-
-                        if (Math.Abs(EDRegistry.Mouse.Delta.Y) > 0.1f)
-                            position.Z += 1 * (Math.Sign(EDRegistry.Mouse.Delta.Y));
-
-                        _selectedObject.SceneObject.Transform.Position = position;
-                    }
-                    else
-                        _selectedObject.SceneObject.Transform.Translate(-EDRegistry.Mouse.Delta.X, 0, -EDRegistry.Mouse.Delta.Y);
-
-                    Messenger.Notify(EditorEvent.TransformUpdated, new TransformChanged(TransformChangeType.Position, _selectedObject.SceneObject.Transform.Position));
-                }
-            }
         }
+
+        #region Gizmo Handlers
+
+        private void GizmoTranslateEvent(Renderer renderer, TransformationEventArgs e)
+        {
+            renderer.Transform.Position += (Vector3)e.Value;
+            Messenger.Notify(EditorEvent.TransformUpdated, new TransformChanged(TransformChangeType.Position, _selectedObject.SceneObject.Transform.Position));
+        }
+
+        private void GizmoRotateEvent(Renderer renderer, TransformationEventArgs e)
+        {
+            _gizmo.RotationHelper(renderer, e);
+            Messenger.Notify(EditorEvent.TransformUpdated, new TransformChanged(TransformChangeType.Position, _selectedObject.SceneObject.Transform.Position));
+        }
+
+        private void GizmoScaleEvent(Renderer renderer, TransformationEventArgs e)
+        {
+            Vector3 delta = (Vector3)e.Value;
+
+            if (_gizmo.ActiveMode == GizmoMode.UniformScale)
+                renderer.Transform.LocalScale *= 1 + ((delta.X + delta.Y + delta.Z) / 3);
+            else
+                renderer.Transform.LocalScale += delta;
+
+            renderer.Transform.LocalScale = Vector3.Clamp(renderer.Transform.LocalScale, Vector3.Zero, renderer.Transform.LocalScale);
+
+            Messenger.Notify(EditorEvent.TransformUpdated, new TransformChanged(TransformChangeType.Position, _selectedObject.SceneObject.Transform.Position));
+        }
+
+        #endregion
 
         #region Add / Remove SceneObject
 
@@ -337,13 +358,25 @@ namespace C3DE.Editor.Core
             _selectedObject.Set(sceneObject);
             _selectedObject.Select(true);
             _editionSceneObject.Selected = sceneObject;
+
+            var renderer = sceneObject.GetComponent<Renderer>();
+            if (renderer != null)
+                _gizmo.Selection.Add(renderer);
             Messenger.Notify(EditorEvent.SceneObjectSelected, new GenericMessage<SceneObject>(sceneObject));
         }
 
         private void UnselectObject(BasicMessage m = null)
         {
+            if (_selectedObject.SceneObject != null)
+            {
+                var renderer = _selectedObject.SceneObject.GetComponent<Renderer>();
+                if (renderer != null)
+                    _gizmo.Selection.Remove(renderer);
+            }
+
             _selectedObject.Select(false);
             _editionSceneObject.Reset();
+
             Messenger.Notify(EditorEvent.SceneObjectUnSelected);
         }
 

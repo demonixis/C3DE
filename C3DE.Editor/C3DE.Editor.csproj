@@ -99,7 +99,6 @@
     <Compile Include="Core\Components\EDMouseComponent.cs" />
     <Compile Include="Core\EDRegistry.cs" />
     <Compile Include="Core\EDScene.cs" />
-    <Compile Include="Core\Gizmo.cs" />
     <Compile Include="Core\SceneObjectSelector.cs" />
     <Compile Include="Exporters\MeshMerger.cs" />
     <Compile Include="Exporters\OBJExporter.cs" />
@@ -127,6 +126,8 @@
     <Compile Include="RenderSettingsWindow.xaml.cs">
       <DependentUpon>RenderSettingsWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="XNAGizmo\Geometry.cs" />
+    <Compile Include="XNAGizmo\GizmoComponent.cs" />
     <Page Include="Controls\CameraControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

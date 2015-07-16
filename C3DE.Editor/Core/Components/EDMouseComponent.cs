@@ -143,6 +143,8 @@ namespace C3DE.Editor.Core.Components
 
         private void OnMouseDown(object sender, WpfMouseButtonEventArgs e)
         {
+            OnMouseMove(sender, e);
+
             MouseButtons[0] = e.LeftButton == WpfMouseButtonState.Pressed;
             MouseButtons[1] = e.MiddleButton == WpfMouseButtonState.Pressed;
             MouseButtons[2] = e.RightButton == WpfMouseButtonState.Pressed;
