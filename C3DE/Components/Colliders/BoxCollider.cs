@@ -36,7 +36,7 @@ namespace C3DE.Components.Colliders
             var renderable = GetComponent<Renderer>();
 
             if (renderable != null)
-                _box = new BoundingBox(Vector3.Zero, new Vector3(renderable.boundingSphere.Radius));
+                _box = new BoundingBox(transform.Position, new Vector3(renderable.boundingSphere.Radius));
         }
 
         public override bool Collides(Collider other)

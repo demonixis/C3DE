@@ -7,17 +7,14 @@ namespace C3DE
 {
     public static class Asset
     {
-        internal static GraphicsDevice Graphics;
-        internal static ContentManager Content;
-
         public static Texture2D LoadTexture(string path, bool isExternal = false)
         {
             Texture2D texture = null;
 
             if (!isExternal)
-                texture = Content.Load<Texture2D>(path);
+                texture = Application.Content.Load<Texture2D>(path);
             else
-                texture = Texture2D.FromStream(Graphics, File.Open(path, FileMode.Open));
+                texture = Texture2D.FromStream(Application.GraphicsDevice, File.Open(path, FileMode.Open));
 
             if (texture != null)
                 texture.Tag = String.Format("{0}|{1}", path, isExternal);
@@ -27,7 +24,7 @@ namespace C3DE
 
         public static Model LoadModel(string path)
         {
-            var model = Content.Load<Model>(path);
+            var model = Application.Content.Load<Model>(path);
 
             if (model != null)
                 model.Tag = path;

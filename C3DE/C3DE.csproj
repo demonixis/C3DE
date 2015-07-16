@@ -92,6 +92,7 @@
     <Compile Include="Input.cs" />
     <Compile Include="Materials\BillboardMaterial.cs" />
     <Compile Include="Materials\PreLightMaterial.cs" />
+    <Compile Include="Materials\UnlitColorMaterial.cs" />
     <Compile Include="Materials\UnlitMaterial.cs" />
     <Compile Include="Prefabs\LavaPrefab.cs" />
     <Compile Include="Rendering\IRenderer.cs" />

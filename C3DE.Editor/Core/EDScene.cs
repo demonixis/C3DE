@@ -191,6 +191,7 @@ namespace C3DE.Editor.Core
                 }
             }
 
+            // Soon deprecated
             else if (_selectedObject.SceneObject != null)
             {
                 if (EDRegistry.Mouse.Down(MouseButton.Left))
@@ -336,7 +337,6 @@ namespace C3DE.Editor.Core
             _selectedObject.Set(sceneObject);
             _selectedObject.Select(true);
             _editionSceneObject.Selected = sceneObject;
-            _gizmo.SetVisible(sceneObject.Transform);
             Messenger.Notify(EditorEvent.SceneObjectSelected, new GenericMessage<SceneObject>(sceneObject));
         }
 
@@ -344,7 +344,6 @@ namespace C3DE.Editor.Core
         {
             _selectedObject.Select(false);
             _editionSceneObject.Reset();
-            _gizmo.SetVisible(null);
             Messenger.Notify(EditorEvent.SceneObjectUnSelected);
         }
 

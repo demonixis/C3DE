@@ -7,14 +7,14 @@ using System.Runtime.Serialization;
 namespace C3DE.Materials
 {
     [DataContract]
-    public class UnlitMaterial : Material
+    public class UnlitColorMaterial : Material
     {
-        public UnlitMaterial()
+        public UnlitColorMaterial()
             : this(null)
         {
         }
 
-        public UnlitMaterial(Scene scene, string name = "Unlit Material")
+        public UnlitColorMaterial(Scene scene, string name = "Unlit Material")
             : base(scene)
         {
             Name = name;
@@ -22,7 +22,7 @@ namespace C3DE.Materials
 
         public override void LoadContent(ContentManager content)
         {
-            effect = content.Load<Effect>("FX/Unlit");
+            effect = content.Load<Effect>("FX/UnlitColor");
         }
 
         public override void PrePass(Camera camera)
@@ -34,9 +34,7 @@ namespace C3DE.Materials
         public override void Pass(Renderer renderable)
         {
             effect.Parameters["World"].SetValue(renderable.SceneObject.Transform.world);
-            effect.Parameters["MainTexture"].SetValue(diffuseTexture);
-            effect.Parameters["TextureTiling"].SetValue(Tiling);
-            effect.Parameters["TextureOffset"].SetValue(Offset);
+            effect.Parameters["DiffuseColor"].SetValue(diffuseColor);
             effect.CurrentTechnique.Passes[0].Apply();
         }
     }

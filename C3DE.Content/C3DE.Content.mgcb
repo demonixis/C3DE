@@ -675,3 +675,9 @@
 /processorParam:TextureFormat=Color
 /build:Textures/Light_Icon.png
 
+#begin FX/UnlitColor.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:FX/UnlitColor.fx
+
