@@ -246,12 +246,9 @@ namespace XNAGizmo
 
             const float halfLineOffset = LINE_OFFSET / 2;
             _quads = new Quad[3];
-            _quads[0] = new Quad(new Vector3(halfLineOffset, halfLineOffset, 0), Vector3.Backward, Vector3.Up, LINE_OFFSET,
-                                 LINE_OFFSET); //XY
-            _quads[1] = new Quad(new Vector3(halfLineOffset, 0, halfLineOffset), Vector3.Up, Vector3.Right, LINE_OFFSET,
-                                 LINE_OFFSET); //XZ
-            _quads[2] = new Quad(new Vector3(0, halfLineOffset, halfLineOffset), Vector3.Right, Vector3.Up, LINE_OFFSET,
-                                 LINE_OFFSET); //ZY 
+            _quads[0] = new Quad(new Vector3(halfLineOffset, halfLineOffset, 0), Vector3.Backward, Vector3.Up, LINE_OFFSET, LINE_OFFSET); //XY
+            _quads[1] = new Quad(new Vector3(halfLineOffset, 0, halfLineOffset), Vector3.Up, Vector3.Right, LINE_OFFSET, LINE_OFFSET); //XZ
+            _quads[2] = new Quad(new Vector3(0, halfLineOffset, halfLineOffset), Vector3.Right, Vector3.Up, LINE_OFFSET, LINE_OFFSET); //ZY 
 
             #endregion
 
@@ -301,12 +298,6 @@ namespace XNAGizmo
             _translationLineVertices = vertexList.ToArray();
 
             #endregion
-
-            //const float length = 50;
-            //_lineRenderer = new LineRenderer(_graphics, Color.Gold);
-            //_lineRenderer.Add(Vector3.Backward*length, Vector3.Forward*length);
-            //_lineRenderer.Add(Vector3.Up*length, Vector3.Down*length);
-            //_lineRenderer.Add(Vector3.Left*length, Vector3.Right*length);
         }
 
         /// <summary>
@@ -323,21 +314,6 @@ namespace XNAGizmo
             return _selectionPool;
         }
 
-        //public void SetGizmoMode(GizmoMode mode)
-        //{
-        //  ActiveMode = mode;
-        //}
-
-        //public void SetTransformSpace(TransformSpace space)
-        //{
-        //  ActiveSpace = space;
-        //}
-
-        //public void SetPivotType(PivotType pivot)
-        //{
-        //  ActivePivot = pivot;
-        //}
-
         public void NextPivotType()
         {
             if (ActivePivot == PivotType.WorldOrigin)
@@ -345,7 +321,7 @@ namespace XNAGizmo
             else
                 ActivePivot++;
         }
-
+        /*
         public void SelectEntities(Vector2 mouseloc, bool addToSelection, bool removeFromSelection)
         {
             if (ActiveAxis == GizmoAxis.None)
@@ -355,7 +331,7 @@ namespace XNAGizmo
                 PickObject(mouseloc, removeFromSelection);
             }
             ResetDeltas();
-        }
+        }*/
 
         /// <summary>
         /// Clears selection of Gizmo.
@@ -375,14 +351,7 @@ namespace XNAGizmo
 
         public void Update()
         {
-            /*
-            _currentMouseState = Mouse.GetState();
-            _currentKeys = Keyboard.GetState();*/
-
             Vector2 mousePosition = EDRegistry.Mouse.Position;
-
-            // show or hide the orientation-lines helper.
-            //_showLines = _currentKeys.IsKeyDown(Keys.Space);
 
             if (_isActive)
             {
@@ -411,20 +380,16 @@ namespace XNAGizmo
                                     case GizmoAxis.XY:
                                     case GizmoAxis.X:
                                         {
-                                            Plane plane = new Plane(Vector3.Forward,
-                                                                    Vector3.Transform(_position, Matrix.Invert(_rotationMatrix)).Z);
+                                            Plane plane = new Plane(Vector3.Forward, Vector3.Transform(_position, Matrix.Invert(_rotationMatrix)).Z);
 
                                             float? intersection = ray.Intersects(plane);
                                             if (intersection.HasValue)
                                             {
                                                 _intersectPosition = (ray.Position + (ray.Direction * intersection.Value));
                                                 if (_lastIntersectionPosition != Vector3.Zero)
-                                                {
                                                     _tDelta = _intersectPosition - _lastIntersectionPosition;
-                                                }
-                                                delta = ActiveAxis == GizmoAxis.X
-                                                          ? new Vector3(_tDelta.X, 0, 0)
-                                                          : new Vector3(_tDelta.X, _tDelta.Y, 0);
+
+                                                delta = ActiveAxis == GizmoAxis.X ? new Vector3(_tDelta.X, 0, 0) : new Vector3(_tDelta.X, _tDelta.Y, 0);
                                             }
                                         }
                                         break;
@@ -439,9 +404,8 @@ namespace XNAGizmo
                                             {
                                                 _intersectPosition = (ray.Position + (ray.Direction * intersection.Value));
                                                 if (_lastIntersectionPosition != Vector3.Zero)
-                                                {
                                                     _tDelta = _intersectPosition - _lastIntersectionPosition;
-                                                }
+
                                                 switch (ActiveAxis)
                                                 {
                                                     case GizmoAxis.Y:
@@ -466,9 +430,7 @@ namespace XNAGizmo
                                             {
                                                 _intersectPosition = (ray.Position + (ray.Direction * intersection.Value));
                                                 if (_lastIntersectionPosition != Vector3.Zero)
-                                                {
                                                     _tDelta = _intersectPosition - _lastIntersectionPosition;
-                                                }
                                             }
                                             delta = new Vector3(_tDelta.X, 0, _tDelta.Z);
                                         }
@@ -479,8 +441,10 @@ namespace XNAGizmo
                                 if (SnapEnabled)
                                 {
                                     float snapValue = TranslationSnapValue;
+
                                     if (ActiveMode == GizmoMode.UniformScale || ActiveMode == GizmoMode.NonUniformScale)
                                         snapValue = ScaleSnapValue;
+
                                     if (PrecisionModeEnabled)
                                     {
                                         delta *= PRECISION_MODE_SCALE;
@@ -581,12 +545,14 @@ namespace XNAGizmo
                             OnTranslateEvent(entity, _translationDelta);
                         _translationDelta = Vector3.Zero;
                     }
+
                     if (_rotationDelta != Matrix.Identity)
                     {
                         foreach (var entity in Selection)
                             OnRotateEvent(entity, _rotationDelta);
                         _rotationDelta = Matrix.Identity;
                     }
+
                     if (_scaleDelta != Vector3.Zero)
                     {
                         foreach (var entity in Selection)
@@ -740,8 +706,7 @@ namespace XNAGizmo
                     }
                     break;
                 case GizmoMode.UniformScale:
-                    ApplyLineColor(0, _translationLineVertices.Length,
-                                   ActiveAxis == GizmoAxis.None ? _axisColors[0] : _highlightColor);
+                    ApplyLineColor(0, _translationLineVertices.Length, ActiveAxis == GizmoAxis.None ? _axisColors[0] : _highlightColor);
                     break;
             }
         }
@@ -752,9 +717,7 @@ namespace XNAGizmo
         private void ApplyLineColor(int startindex, int count, Color color)
         {
             for (int i = startindex; i < (startindex + count); i++)
-            {
                 _translationLineVertices[i].Color = color;
-            }
         }
 
         /// <summary>
@@ -776,13 +739,17 @@ namespace XNAGizmo
             }
 
             #region X,Y,Z Boxes
+
             float? intersection = XAxisBox.Intersects(ray);
             if (intersection.HasValue)
+            {
                 if (intersection.Value < closestintersection)
                 {
                     ActiveAxis = GizmoAxis.X;
                     closestintersection = intersection.Value;
                 }
+            }
+
             intersection = YAxisBox.Intersects(ray);
             if (intersection.HasValue)
             {
@@ -792,6 +759,7 @@ namespace XNAGizmo
                     closestintersection = intersection.Value;
                 }
             }
+
             intersection = ZAxisBox.Intersects(ray);
             if (intersection.HasValue)
             {
@@ -801,39 +769,46 @@ namespace XNAGizmo
                     closestintersection = intersection.Value;
                 }
             }
+
             #endregion
 
-            if (ActiveMode == GizmoMode.Rotate || ActiveMode == GizmoMode.UniformScale ||
-                ActiveMode == GizmoMode.NonUniformScale)
+            if (ActiveMode == GizmoMode.Rotate || ActiveMode == GizmoMode.UniformScale || ActiveMode == GizmoMode.NonUniformScale)
             {
                 #region BoundingSpheres
 
                 intersection = XSphere.Intersects(ray);
                 if (intersection.HasValue)
+                {
                     if (intersection.Value < closestintersection)
                     {
                         ActiveAxis = GizmoAxis.X;
                         closestintersection = intersection.Value;
                     }
+                }
+
                 intersection = YSphere.Intersects(ray);
                 if (intersection.HasValue)
+                {
                     if (intersection.Value < closestintersection)
                     {
                         ActiveAxis = GizmoAxis.Y;
                         closestintersection = intersection.Value;
                     }
+                }
+
                 intersection = ZSphere.Intersects(ray);
                 if (intersection.HasValue)
+                {
                     if (intersection.Value < closestintersection)
                     {
                         ActiveAxis = GizmoAxis.Z;
                         closestintersection = intersection.Value;
                     }
-
+                }
                 #endregion
             }
-            if (ActiveMode == GizmoMode.Translate || ActiveMode == GizmoMode.NonUniformScale ||
-                ActiveMode == GizmoMode.UniformScale)
+
+            if (ActiveMode == GizmoMode.Translate || ActiveMode == GizmoMode.NonUniformScale || ActiveMode == GizmoMode.UniformScale)
             {
                 // if no axis was hit (x,y,z) set value to lowest possible to select the 'farthest' intersection for the XY,XZ,YZ boxes. 
                 // This is done so you may still select multi-axis if you're looking at the gizmo from behind!
@@ -841,29 +816,40 @@ namespace XNAGizmo
                     closestintersection = float.MinValue;
 
                 #region BoundingBoxes
+
                 intersection = XYBox.Intersects(ray);
                 if (intersection.HasValue)
+                {
                     if (intersection.Value > closestintersection)
                     {
                         ActiveAxis = GizmoAxis.XY;
                         closestintersection = intersection.Value;
                     }
+                }
+
                 intersection = XZAxisBox.Intersects(ray);
                 if (intersection.HasValue)
+                {
                     if (intersection.Value > closestintersection)
                     {
                         ActiveAxis = GizmoAxis.ZX;
                         closestintersection = intersection.Value;
                     }
+                }
+
                 intersection = YZBox.Intersects(ray);
                 if (intersection.HasValue)
+                {
                     if (intersection.Value > closestintersection)
                     {
                         ActiveAxis = GizmoAxis.YZ;
                         closestintersection = intersection.Value;
                     }
+                }
+
                 #endregion
             }
+
             if (closestintersection >= float.MaxValue || closestintersection <= float.MinValue)
                 ActiveAxis = GizmoAxis.None;
         }
@@ -894,6 +880,7 @@ namespace XNAGizmo
                         Selection.Remove(entity);
                 }
             }
+
             if (obj != null)
                 Selection.Add(obj);
         }
@@ -942,24 +929,20 @@ namespace XNAGizmo
         }
 
         #region Draw
+
         public void Draw(SpriteBatch spriteBatch)
         {
-            if (!_isActive) return;
+            if (!_isActive)
+                return;
+
             _graphics.DepthStencilState = DepthStencilState.None;
-
-            if (_view == Matrix.Identity || _projection == Matrix.Identity)
-                throw new Exception("Error: Must call .UpdateCameraProperties() before .Draw()");
-
-            #region Draw: Axis-Lines
 
             // -- Draw Lines -- //
             _lineEffect.World = _gizmoWorld;
             _lineEffect.View = _view;
             _lineEffect.Projection = _projection;
-
             _lineEffect.CurrentTechnique.Passes[0].Apply();
-            _graphics.DrawUserPrimitives(PrimitiveType.LineList, _translationLineVertices, 0,
-                                         _translationLineVertices.Length / 2);
+            _graphics.DrawUserPrimitives(PrimitiveType.LineList, _translationLineVertices, 0, _translationLineVertices.Length / 2);
 
             #endregion
 
@@ -969,18 +952,15 @@ namespace XNAGizmo
                 case GizmoMode.Translate:
                     switch (ActiveAxis)
                     {
-                        #region Draw Quads
                         case GizmoAxis.ZX:
                         case GizmoAxis.YZ:
                         case GizmoAxis.XY:
                             {
                                 _graphics.BlendState = BlendState.AlphaBlend;
                                 _graphics.RasterizerState = RasterizerState.CullNone;
-
                                 _quadEffect.World = _gizmoWorld;
                                 _quadEffect.View = _view;
                                 _quadEffect.Projection = _projection;
-
                                 _quadEffect.CurrentTechnique.Passes[0].Apply();
 
                                 Quad activeQuad = new Quad();
@@ -997,19 +977,15 @@ namespace XNAGizmo
                                         break;
                                 }
 
-                                _graphics.DrawUserIndexedPrimitives(PrimitiveType.TriangleList,
-                                                                    activeQuad.Vertices, 0, 4,
-                                                                    activeQuad.Indexes, 0, 2);
-
+                                _graphics.DrawUserIndexedPrimitives(PrimitiveType.TriangleList, activeQuad.Vertices, 0, 4, activeQuad.Indexes, 0, 2);
                                 _graphics.BlendState = BlendState.Opaque;
                                 _graphics.RasterizerState = RasterizerState.CullCounterClockwise;
                             }
                             break;
-                        #endregion
                     }
                     break;
+
                 case GizmoMode.UniformScale:
-                    #region Draw Quads
                     if (ActiveAxis != GizmoAxis.None)
                     {
                         _graphics.BlendState = BlendState.AlphaBlend;
@@ -1027,7 +1003,6 @@ namespace XNAGizmo
                         _graphics.BlendState = BlendState.Opaque;
                         _graphics.RasterizerState = RasterizerState.CullCounterClockwise;
                     }
-                    #endregion
                     break;
             }
 
@@ -1062,52 +1037,13 @@ namespace XNAGizmo
                 _meshEffect.World = _modelLocalSpace[i] * _gizmoWorld;
                 _meshEffect.View = _view;
                 _meshEffect.Projection = _projection;
-
                 _meshEffect.DiffuseColor = color;
                 _meshEffect.EmissiveColor = color;
-
                 _meshEffect.CurrentTechnique.Passes[0].Apply();
-
-                _graphics.DrawUserIndexedPrimitives(PrimitiveType.TriangleList,
-                    activeModel.Vertices, 0, activeModel.Vertices.Length,
-                    activeModel.Indices, 0, activeModel.Indices.Length / 3);
+                _graphics.DrawUserIndexedPrimitives(PrimitiveType.TriangleList, activeModel.Vertices, 0, activeModel.Vertices.Length, activeModel.Indices, 0, activeModel.Indices.Length / 3);
             }
-            //foreach (ModelMesh mesh in activeModel.Meshes)
-            //{
-            //  foreach (ModelMeshPart meshpart in mesh.MeshParts)
-            //  {
-            //    BasicEffect effect = (BasicEffect) meshpart.Effect;
-            //    Vector3 color;
-            //    switch (ActiveMode)
-            //    {
-            //      case GizmoMode.UniformScale:
-            //        color = _axisColors[0].ToVector3();
-            //        break;
-            //      default:
-            //        color = _axisColors[i].ToVector3();
-            //        break;
-            //    }
-
-
-            //    effect.World = _modelLocalSpace[i]*_gizmoWorld;
-            //    effect.DiffuseColor = color;
-            //    effect.EmissiveColor = color;
-
-            //    effect.EnableDefaultLighting();
-
-            //    effect.View = _view;
-            //    effect.Projection = _projection;
-            //  }
-            //  mesh.Draw();
-            //}
-
-            if (SelectionBoxesIsVisible)
-                DrawSelectionBox();
 
             _graphics.DepthStencilState = DepthStencilState.Default;
-
-            //if (_showLines)
-            //  _lineRenderer.Draw(_gizmoWorld);
 
             Draw2D(spriteBatch);
         }
@@ -1161,11 +1097,8 @@ namespace XNAGizmo
         /// <returns></returns>
         private string GetStatusInfo()
         {
-            return "Mode: " + ActiveMode + " | Space: " + ActiveSpace + " | Snapping:" +
-                   (SnapEnabled ? "ON" : "OFF") +
-                   " | Precision:" + (PrecisionModeEnabled ? "ON" : "OFF") + " | Pivot: " + ActivePivot + " ";
+            return "Mode: " + ActiveMode + " | Space: " + ActiveSpace + " | Snapping:" + (SnapEnabled ? "ON" : "OFF") + " | Precision:" + (PrecisionModeEnabled ? "ON" : "OFF") + " | Pivot: " + ActivePivot + " ";
         }
-        #endregion
 
         #region ConvertMouseToRay
         /// <summary>
@@ -1176,232 +1109,20 @@ namespace XNAGizmo
             Vector3 nearPoint = new Vector3(mousePosition, 0);
             Vector3 farPoint = new Vector3(mousePosition, 1);
 
-            nearPoint = _graphics.Viewport.Unproject(nearPoint,
-                                                     _projection,
-                                                     _view,
-                                                     Matrix.Identity);
-            farPoint = _graphics.Viewport.Unproject(farPoint,
-                                                    _projection,
-                                                    _view,
-                                                    Matrix.Identity);
+            nearPoint = _graphics.Viewport.Unproject(nearPoint, _projection, _view, Matrix.Identity);
+            farPoint = _graphics.Viewport.Unproject(farPoint, _projection, _view, Matrix.Identity);
 
             Vector3 direction = farPoint - nearPoint;
             direction.Normalize();
 
             return new Ray(nearPoint, direction);
         }
+
         #endregion
 
-        #region Selection Box
-        private void CreateSelectionBox()
-        {
-            Color lineColor = Color.White;
-            const float lineLength = 5f;
-
-            _selectionBoxVertices.Clear();
-
-            //Vector3 min = new Vector3(float.MaxValue), max = new Vector3(float.MinValue);
-            //SelectionBox = new BoundingBox();
-            //foreach (var selectable in Selection)
-            //{
-            //  min = Vector3.Min(min, selectable.BoundingBox.Min);
-            //  max = Vector3.Max(max, selectable.BoundingBox.Max);
-            //}
-
-            //// convert to local-space
-            //min -= _position;
-            //max -= _position;
-
-            //SelectionBox = new BoundingBox(min, max);
-            //Vector3[] boundingBoxCorners = SelectionBox.GetCorners();
-
-            foreach (var renderer in Selection)
-            {
-                BoundingBox boundingBox = renderer.BoundingBox;
-                Vector3[] boundingBoxCorners = boundingBox.GetCorners();
-
-                #region Create Corners
-                // --- Corner 0 --- // 
-                _selectionBoxVertices.Add(new VertexPositionColor(boundingBoxCorners[0], lineColor));
-                _selectionBoxVertices.Add(new VertexPositionColor(boundingBoxCorners[0] +
-                                                                  new Vector3(0,
-                                                                              (boundingBoxCorners[3].Y - boundingBoxCorners[0].Y) /
-                                                                              lineLength, 0), lineColor));
-
-                _selectionBoxVertices.Add(new VertexPositionColor(boundingBoxCorners[0], lineColor));
-                _selectionBoxVertices.Add(new VertexPositionColor(boundingBoxCorners[0] +
-                                                                  new Vector3(0, 0,
-                                                                              (boundingBoxCorners[4].Z - boundingBoxCorners[0].Z) /
-                                                                              lineLength), lineColor));
-
-                _selectionBoxVertices.Add(new VertexPositionColor(boundingBoxCorners[0], lineColor));
-                _selectionBoxVertices.Add(new VertexPositionColor(boundingBoxCorners[0] +
-                                                                  new Vector3(
-                                                                    (boundingBoxCorners[1].X - boundingBoxCorners[0].X) / lineLength,
-                                                                    0, 0), lineColor));
-
-
-                // --- Corner 1 --- // 
-                _selectionBoxVertices.Add(new VertexPositionColor(boundingBoxCorners[1], lineColor));
-                _selectionBoxVertices.Add(new VertexPositionColor(boundingBoxCorners[1] +
-                                                                  new Vector3(0,
-                                                                              (boundingBoxCorners[2].Y - boundingBoxCorners[1].Y) /
-                                                                              lineLength, 0), lineColor));
-
-                _selectionBoxVertices.Add(new VertexPositionColor(boundingBoxCorners[1], lineColor));
-                _selectionBoxVertices.Add(new VertexPositionColor(boundingBoxCorners[1] +
-                                                                  new Vector3(0, 0,
-                                                                              (boundingBoxCorners[5].Z - boundingBoxCorners[1].Z) /
-                                                                              lineLength), lineColor));
-
-                _selectionBoxVertices.Add(new VertexPositionColor(boundingBoxCorners[1], lineColor));
-                _selectionBoxVertices.Add(new VertexPositionColor(boundingBoxCorners[1] +
-                                                                  new Vector3(
-                                                                    (boundingBoxCorners[0].X - boundingBoxCorners[1].X) / lineLength,
-                                                                    0, 0), lineColor));
-
-
-                // --- Corner 2 --- // 
-                _selectionBoxVertices.Add(new VertexPositionColor(boundingBoxCorners[2], lineColor));
-                _selectionBoxVertices.Add(new VertexPositionColor(boundingBoxCorners[2] +
-                                                                  new Vector3(0,
-                                                                              (boundingBoxCorners[1].Y - boundingBoxCorners[2].Y) /
-                                                                              lineLength, 0), lineColor));
-
-                _selectionBoxVertices.Add(new VertexPositionColor(boundingBoxCorners[2], lineColor));
-                _selectionBoxVertices.Add(new VertexPositionColor(boundingBoxCorners[2] +
-                                                                  new Vector3(0, 0,
-                                                                              (boundingBoxCorners[6].Z - boundingBoxCorners[2].Z) /
-                                                                              lineLength), lineColor));
-
-                _selectionBoxVertices.Add(new VertexPositionColor(boundingBoxCorners[2], lineColor));
-                _selectionBoxVertices.Add(new VertexPositionColor(boundingBoxCorners[2] +
-                                                                  new Vector3(
-                                                                    (boundingBoxCorners[3].X - boundingBoxCorners[2].X) / lineLength,
-                                                                    0, 0), lineColor));
-
-
-                // --- Corner 3 --- // 
-                _selectionBoxVertices.Add(new VertexPositionColor(boundingBoxCorners[3], lineColor));
-                _selectionBoxVertices.Add(new VertexPositionColor(boundingBoxCorners[3] +
-                                                                  new Vector3(0,
-                                                                              (boundingBoxCorners[0].Y - boundingBoxCorners[3].Y) /
-                                                                              lineLength, 0), lineColor));
-
-                _selectionBoxVertices.Add(new VertexPositionColor(boundingBoxCorners[3], lineColor));
-                _selectionBoxVertices.Add(new VertexPositionColor(boundingBoxCorners[3] +
-                                                                  new Vector3(0, 0,
-                                                                              (boundingBoxCorners[7].Z - boundingBoxCorners[3].Z) /
-                                                                              lineLength), lineColor));
-
-                _selectionBoxVertices.Add(new VertexPositionColor(boundingBoxCorners[3], lineColor));
-                _selectionBoxVertices.Add(new VertexPositionColor(boundingBoxCorners[3] +
-                                                                  new Vector3(
-                                                                    (boundingBoxCorners[2].X - boundingBoxCorners[3].X) / lineLength,
-                                                                    0, 0), lineColor));
-
-
-                // --- Corner 4 --- // 
-                _selectionBoxVertices.Add(new VertexPositionColor(boundingBoxCorners[4], lineColor));
-                _selectionBoxVertices.Add(new VertexPositionColor(boundingBoxCorners[4] +
-                                                                  new Vector3(0,
-                                                                              (boundingBoxCorners[7].Y - boundingBoxCorners[4].Y) /
-                                                                              lineLength, 0), lineColor));
-
-                _selectionBoxVertices.Add(new VertexPositionColor(boundingBoxCorners[4], lineColor));
-                _selectionBoxVertices.Add(new VertexPositionColor(boundingBoxCorners[4] +
-                                                                  new Vector3(0, 0,
-                                                                              (boundingBoxCorners[0].Z - boundingBoxCorners[4].Z) /
-                                                                              lineLength), lineColor));
-
-                _selectionBoxVertices.Add(new VertexPositionColor(boundingBoxCorners[4], lineColor));
-                _selectionBoxVertices.Add(new VertexPositionColor(boundingBoxCorners[4] +
-                                                                  new Vector3(
-                                                                    (boundingBoxCorners[5].X - boundingBoxCorners[4].X) / lineLength,
-                                                                    0, 0), lineColor));
-
-
-                // --- Corner 5 --- // 
-                _selectionBoxVertices.Add(new VertexPositionColor(boundingBoxCorners[5], lineColor));
-                _selectionBoxVertices.Add(new VertexPositionColor(boundingBoxCorners[5] +
-                                                                  new Vector3(0,
-                                                                              (boundingBoxCorners[6].Y - boundingBoxCorners[5].Y) /
-                                                                              lineLength, 0), lineColor));
-
-                _selectionBoxVertices.Add(new VertexPositionColor(boundingBoxCorners[5], lineColor));
-                _selectionBoxVertices.Add(new VertexPositionColor(boundingBoxCorners[5] +
-                                                                  new Vector3(0, 0,
-                                                                              (boundingBoxCorners[1].Z - boundingBoxCorners[5].Z) /
-                                                                              lineLength), lineColor));
-
-                _selectionBoxVertices.Add(new VertexPositionColor(boundingBoxCorners[5], lineColor));
-                _selectionBoxVertices.Add(new VertexPositionColor(boundingBoxCorners[5] +
-                                                                  new Vector3(
-                                                                    (boundingBoxCorners[4].X - boundingBoxCorners[5].X) / lineLength,
-                                                                    0, 0), lineColor));
-
-                // --- Corner 6 --- // 
-                _selectionBoxVertices.Add(new VertexPositionColor(boundingBoxCorners[6], lineColor));
-                _selectionBoxVertices.Add(new VertexPositionColor(boundingBoxCorners[6] +
-                                                                  new Vector3(0,
-                                                                              (boundingBoxCorners[5].Y - boundingBoxCorners[6].Y) /
-                                                                              lineLength, 0), lineColor));
-
-                _selectionBoxVertices.Add(new VertexPositionColor(boundingBoxCorners[6], lineColor));
-                _selectionBoxVertices.Add(new VertexPositionColor(boundingBoxCorners[6] +
-                                                                  new Vector3(0, 0,
-                                                                              (boundingBoxCorners[2].Z - boundingBoxCorners[6].Z) /
-                                                                              lineLength), lineColor));
-
-                _selectionBoxVertices.Add(new VertexPositionColor(boundingBoxCorners[6], lineColor));
-                _selectionBoxVertices.Add(new VertexPositionColor(boundingBoxCorners[6] +
-                                                                  new Vector3(
-                                                                    (boundingBoxCorners[7].X - boundingBoxCorners[6].X) / lineLength,
-                                                                    0, 0), lineColor));
-
-
-                // --- Corner 7 --- // 
-                _selectionBoxVertices.Add(new VertexPositionColor(boundingBoxCorners[7], lineColor));
-                _selectionBoxVertices.Add(new VertexPositionColor(boundingBoxCorners[7] +
-                                                                  new Vector3(0,
-                                                                              (boundingBoxCorners[4].Y - boundingBoxCorners[7].Y) /
-                                                                              lineLength, 0), lineColor));
-
-                _selectionBoxVertices.Add(new VertexPositionColor(boundingBoxCorners[7], lineColor));
-                _selectionBoxVertices.Add(new VertexPositionColor(boundingBoxCorners[7] +
-                                                                  new Vector3(0, 0,
-                                                                              (boundingBoxCorners[3].Z - boundingBoxCorners[7].Z) /
-                                                                              lineLength), lineColor));
-
-                _selectionBoxVertices.Add(new VertexPositionColor(boundingBoxCorners[7], lineColor));
-                _selectionBoxVertices.Add(new VertexPositionColor(boundingBoxCorners[7] +
-                                                                  new Vector3(
-                                                                    (boundingBoxCorners[6].X - boundingBoxCorners[7].X) / lineLength,
-                                                                    0, 0), lineColor));
-                #endregion
-            }
-        }
-
-        private void DrawSelectionBox()
-        {
-            CreateSelectionBox();
-
-            const float boxScale = 1.02f;
-
-            if (Selection.Count > 0)
-            {
-                _selectionBoxEffect.View = _view;
-                _selectionBoxEffect.Projection = _projection;
-                _selectionBoxEffect.World = Matrix.Identity;
-
-                _selectionBoxEffect.CurrentTechnique.Passes[0].Apply();
-                _graphics.DrawUserPrimitives(PrimitiveType.LineList, _selectionBoxVertices.ToArray(), 0,
-                                             _selectionBoxVertices.Count / 2);
-            }
-        }
-        #endregion
 
         #region Event Triggers
+
         public event TransformationEventHandler TranslateEvent;
         public event TransformationEventHandler RotateEvent;
         public event TransformationEventHandler ScaleEvent;

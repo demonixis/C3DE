@@ -367,12 +367,7 @@ namespace C3DE.Editor.Core
 
         private void UnselectObject(BasicMessage m = null)
         {
-            if (_selectedObject.SceneObject != null)
-            {
-                var renderer = _selectedObject.SceneObject.GetComponent<Renderer>();
-                if (renderer != null)
-                    _gizmo.Selection.Remove(renderer);
-            }
+            _gizmo.Clear();
 
             _selectedObject.Select(false);
             _editionSceneObject.Reset();
