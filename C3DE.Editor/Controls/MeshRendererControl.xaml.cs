@@ -1,8 +1,6 @@
 ﻿using C3DE.Components.Renderers;
-using C3DE.Editor.Core;
 using C3DE.Geometries;
 using System;
-using System.Collections.Generic;
 using System.Windows.Controls;
 
 namespace C3DE.Editor.Controls

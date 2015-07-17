@@ -8,8 +8,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "C3DE.Demo", "C3DE.Demo\C3DE
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "C3DE.Editor", "C3DE.Editor\C3DE.Editor.csproj", "{BDFCE17A-2E64-4D11-9AFA-E7C2A97AAE9B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "C3DE.Test", "C3DE.Test\C3DE.Test.csproj", "{88C84DB3-E490-4363-BC05-DDC11AF309A5}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -28,10 +26,6 @@ Global
 		{BDFCE17A-2E64-4D11-9AFA-E7C2A97AAE9B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BDFCE17A-2E64-4D11-9AFA-E7C2A97AAE9B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BDFCE17A-2E64-4D11-9AFA-E7C2A97AAE9B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{88C84DB3-E490-4363-BC05-DDC11AF309A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{88C84DB3-E490-4363-BC05-DDC11AF309A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{88C84DB3-E490-4363-BC05-DDC11AF309A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{88C84DB3-E490-4363-BC05-DDC11AF309A5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

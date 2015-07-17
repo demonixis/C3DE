@@ -1,5 +1,4 @@
 ﻿using C3DE.Components.Renderers;
-using C3DE.Editor.Events;
 
 namespace C3DE.Editor.Core
 {

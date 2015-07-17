@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using C3DE;
+using C3DE.Components.Renderers;
+using C3DE.Editor.Core;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using C3DE.Components.Renderers;
-using C3DE;
-using C3DE.Editor.Core;
+using System;
+using System.Collections.Generic;
 
 // -------------------------------------------------------------
 // -- XNA 3D Gizmo (Component)
@@ -31,8 +31,8 @@ using C3DE.Editor.Core;
 
 namespace XNAGizmo
 {
-    using WinInput = System.Windows.Input;
     using C3DE.Inputs;
+    using WinInput = System.Windows.Input;
 
     public class GizmoComponent
     {

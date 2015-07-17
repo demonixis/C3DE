@@ -1,7 +1,5 @@
-﻿using C3DE.Components;
-using C3DE.Components.Controllers;
+﻿using C3DE.Components.Controllers;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
 
 namespace C3DE.Editor.Core.Components
 {

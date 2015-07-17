@@ -3,19 +3,17 @@ using System.Windows.Controls;
 
 namespace C3DE.Editor
 {
-    using C3DE.Editor.MonoGameBridge;
-    using System.IO;
-    using System.Windows.Input;
-    using WPFApplication = System.Windows.Application;
-    using Winforms = System.Windows.Forms;
-    using C3DE.Editor.Events;
-    using C3DE.Editor.Core;
-    using C3DE.Editor.Core.Components;
-    using C3DE.Editor.Controls;
-    using C3DE.Components.Renderers;
-    using C3DE.Components.Colliders;
     using C3DE.Components;
     using C3DE.Components.Lights;
+    using C3DE.Components.Renderers;
+    using C3DE.Editor.Controls;
+    using C3DE.Editor.Core;
+    using C3DE.Editor.Core.Components;
+    using C3DE.Editor.Events;
+    using System.IO;
+    using System.Windows.Input;
+    using Winforms = System.Windows.Forms;
+    using WPFApplication = System.Windows.Application;
 
     /// <summary>
     /// Logique d'interaction pour MainWindow.xaml
