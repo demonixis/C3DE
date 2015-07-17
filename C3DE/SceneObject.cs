@@ -393,9 +393,20 @@ namespace C3DE
         public object Clone()
         {
             SceneObject clone = new SceneObject(Name.Replace(" (Clone)", "") + " (Clone)");
+            Component cpnClone = null;
+            Transform trClone = null;
 
             foreach (Component component in components)
-                clone.AddComponent((Component)component.Clone());
+            {
+                cpnClone = clone.AddComponent((Component)component.Clone());
+                cpnClone.sceneObject = clone;
+
+                if (cpnClone is Transform)
+                    trClone = (Transform)cpnClone;
+
+                if (trClone != null)
+                    cpnClone.transform = trClone;
+            }
 
             // Fixme
             clone.Id = "SO-" + Guid.NewGuid();

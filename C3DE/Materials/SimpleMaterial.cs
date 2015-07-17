@@ -72,7 +72,7 @@ namespace C3DE.Materials
             effect.Parameters["TextureOffset"].SetValue(Offset);
             effect.Parameters["Alpha"].SetValue(_alpha);
             effect.Parameters["MainTexture"].SetValue(diffuseTexture);
-            effect.Parameters["World"].SetValue(renderable.Transform.world);
+            effect.Parameters["World"].SetValue(renderable.transform.world);
             effect.CurrentTechnique.Passes[AlphaEnabled ? 0 : 1].Apply();
         }
     }

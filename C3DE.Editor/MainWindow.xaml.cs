@@ -42,7 +42,14 @@ namespace C3DE.Editor
             MaterialsList.Items.Clear();
 
             TextBlock item = null;
-            foreach (var material in Scene.current.Materials)
+
+            var materials = EDScene.current.Materials.ToArray();
+            System.Array.Sort(materials, (m1, m2) =>
+            {
+                return string.Compare(m1.Name, m2.Name);
+            });
+            
+            foreach (var material in materials)
             {
                 item = new TextBlock();
                 item.Text = material.Name;
@@ -238,6 +245,26 @@ namespace C3DE.Editor
         {
             var renderSettings = new RenderSettingsWindow(editorGameHost.Scene.RenderSettings);
             renderSettings.Show();
+        }
+
+        private void OnActionBarClick(object sender, RoutedEventArgs e)
+        {
+            var button = sender as Button;
+            var tag = button != null ? button.Tag.ToString() : null;
+            
+            if (tag != null)
+            {
+                if (tag == "Translation")
+                    editorGameHost.gizmoComponent.ActiveMode = XNAGizmo.GizmoMode.Translate;
+                else if (tag == "Rotation")
+                    editorGameHost.gizmoComponent.ActiveMode = XNAGizmo.GizmoMode.Rotate;
+                else if (tag == "Scale")
+                    editorGameHost.gizmoComponent.ActiveMode = XNAGizmo.GizmoMode.NonUniformScale;
+                else if (tag == "UScale")
+                    editorGameHost.gizmoComponent.ActiveMode = XNAGizmo.GizmoMode.UniformScale;
+                else if (tag == "Precision")
+                    editorGameHost.gizmoComponent.PrecisionModeEnabled = !editorGameHost.gizmoComponent.PrecisionModeEnabled;
+            }
         }
     }
 }

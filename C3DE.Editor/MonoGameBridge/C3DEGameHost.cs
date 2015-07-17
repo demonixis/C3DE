@@ -23,7 +23,7 @@ namespace C3DE.Editor.MonoGameBridge
         private ForwardRenderer _renderer;
         private ContentManager _content;
         private EDScene _scene;
-        private GizmoComponent _gizmo;
+        internal GizmoComponent gizmoComponent;
 
         public Action EngineReady = null;
 
@@ -84,10 +84,10 @@ namespace C3DE.Editor.MonoGameBridge
             foreach (var component in _gameComponents)
                 component.Initialize();
 
-            _gizmo = new GizmoComponent(GraphicsDevice);
-            _gizmo.ActiveMode = GizmoMode.Translate;
+            gizmoComponent = new GizmoComponent(GraphicsDevice);
+            gizmoComponent.ActiveMode = GizmoMode.Translate;
 
-            _scene = new EDScene("Root", _gizmo);
+            _scene = new EDScene("Root", gizmoComponent);
             _scene.Initialize();
             _scene.RenderSettings.Skybox.Generate();
             
@@ -106,14 +106,14 @@ namespace C3DE.Editor.MonoGameBridge
                 component.Update(_gameTime);
 
             _scene.Update();
-            _gizmo.Update();
+            gizmoComponent.Update();
         }
 
         protected override void Draw(RenderTarget2D renderTarget)
         {
             graphicsDevice.Clear(Color.CornflowerBlue);
             _renderer.RenderEditor(_scene, _scene.camera, renderTarget);
-            _gizmo.Draw();
+            gizmoComponent.Draw();
         }
 
         #endregion
@@ -123,8 +123,8 @@ namespace C3DE.Editor.MonoGameBridge
         public void NewScene()
         {
             _scene.Unload();
-            _gizmo.Selection.Clear();
-            _scene = new EDScene("Root", _gizmo);
+            gizmoComponent.Selection.Clear();
+            _scene = new EDScene("Root", gizmoComponent);
             _scene.Initialize();
             _scene.RenderSettings.Skybox.Generate();
         }

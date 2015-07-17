@@ -915,9 +915,6 @@ namespace XNAGizmo
             return center / Selection.Count;
         }
 
-
-        #region Draw
-
         public void Draw()
         {
             if (!_isActive)
@@ -931,8 +928,6 @@ namespace XNAGizmo
             _lineEffect.Projection = _projection;
             _lineEffect.CurrentTechnique.Passes[0].Apply();
             _graphics.DrawUserPrimitives(PrimitiveType.LineList, _translationLineVertices, 0, _translationLineVertices.Length / 2);
-
-        #endregion
 
             switch (ActiveMode)
             {
@@ -1053,7 +1048,6 @@ namespace XNAGizmo
         }
 
         #endregion
-
 
         #region Event Triggers
 

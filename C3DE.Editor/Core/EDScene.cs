@@ -50,8 +50,7 @@ namespace C3DE.Editor.Core
         {
             base.Initialize();
 
-            DefaultMaterial = new UnlitColorMaterial(this, "DefaultMaterial");
-            DefaultMaterial.DiffuseColor = Color.DarkBlue;
+            DefaultMaterial.Texture = GraphicsHelper.CreateBorderTexture(Color.DimGray, Color.LightGray, 128, 128, 2);
 
             camera = CreateAddSceneObject<Camera>("EditorCamera.Main");
             camera.Setup(new Vector3(0.0f, 10.0f, -30.0f), Vector3.Zero, Vector3.Up);
@@ -107,37 +106,40 @@ namespace C3DE.Editor.Core
         private void CreateMaterialCollection()
         {
             // TODO: It's here for testing unitil the material creator is created.
-            CreateMaterial("Border Red", GraphicsHelper.CreateBorderTexture(Color.Red, Color.LightGray, 64, 64, 1));
-            CreateMaterial("Border Green", GraphicsHelper.CreateBorderTexture(Color.Green, Color.LightGray, 64, 64, 1));
-            CreateMaterial("Border Blue", GraphicsHelper.CreateBorderTexture(Color.Blue, Color.LightGray, 64, 64, 1));
 
-            CreateMaterial("Checkboard Red", GraphicsHelper.CreateCheckboardTexture(Color.Red, Color.LightGray, 64, 64));
-            CreateMaterial("Checkboard Green", GraphicsHelper.CreateCheckboardTexture(Color.Green, Color.LightGray, 64, 64));
-            CreateMaterial("Checkboard Blue", GraphicsHelper.CreateCheckboardTexture(Color.Blue, Color.LightGray, 64, 64));
+            var colors = new Color[]
+            {
+                Color.Red, Color.Green, Color.Blue, Color.Yellow, Color.Purple
+            };
 
-            CreateMaterial("Circle Red", GraphicsHelper.CreateCircleTexture(Color.Red, Color.LightGray, 64));
-            CreateMaterial("Circle Green", GraphicsHelper.CreateCircleTexture(Color.Green, Color.LightGray, 64));
-            CreateMaterial("Circle Blue", GraphicsHelper.CreateCircleTexture(Color.Blue, Color.LightGray, 64));
+            var names = new string[]
+            {
+                "Red", "Green", "Blue", "Yellow", "Purple"
+            };
 
-            CreateMaterial("Random 1", GraphicsHelper.CreateRandomTexture(64));
-            CreateMaterial("Random 2", GraphicsHelper.CreateRandomTexture(64));
-            CreateMaterial("Random 3", GraphicsHelper.CreateRandomTexture(64));
+            for (int i = 0, l = colors.Length; i < l; i++)
+            {
+                CreateMaterial(string.Format("Border {0}", names[i]), GraphicsHelper.CreateBorderTexture(colors[i], Color.LightGray, 64, 64, 1));
+                CreateMaterial(string.Format("Checkboard {0}", names[i]), GraphicsHelper.CreateCheckboardTexture(colors[i], Color.LightGray, 64, 64));
+                CreateMaterial(string.Format("Circle {0}", names[i]), GraphicsHelper.CreateCircleTexture(colors[i], Color.LightGray, 64));
+            }
 
-            CreateMaterial("Grass", "Textures/Terrain/Grass");
-            CreateMaterial("Rock", "Textures/Terrain/Rock");
-            CreateMaterial("Sand", "Textures/Terrain/Sand");
-            CreateMaterial("Snow", "Textures/Terrain/Snow");
-            CreateMaterial("Hexa", "Textures/hexa_tex");
+            CreateMaterial("Terrain Grass", "Textures/Terrain/Grass");
+            CreateMaterial("Terrain Rock", "Textures/Terrain/Rock");
+            CreateMaterial("Terrain Sand", "Textures/Terrain/Sand");
+            CreateMaterial("Terrain Snow", "Textures/Terrain/Snow");
+
+            CreateMaterial("Hexagonal", "Textures/hexa_tex");
 
             var camMaterial = new BillboardMaterial(this, "Camera");
-            camMaterial.Texture = Application.Content.Load<Texture2D>("Textures/Camera_Icon");
+            camMaterial.Texture = Asset.LoadTexture("Textures/Camera_Icon");
 
             var lightMaterial = new BillboardMaterial(this, "Light");
-            lightMaterial.Texture = Application.Content.Load<Texture2D>("Textures/Light_Icon");
+            lightMaterial.Texture = Asset.LoadTexture("Textures/Light_Icon");
 
             var waterMaterial = new WaterMaterial(this, "WaterMaterial");
-            waterMaterial.Texture = Application.Content.Load<Texture2D>("Textures/water");
-            waterMaterial.NormalMap = Application.Content.Load<Texture2D>("Textures/wavesbump");
+            waterMaterial.Texture = Asset.LoadTexture("Textures/water");
+            waterMaterial.NormalMap = Asset.LoadTexture("Textures/wavesbump");
         }
 
         private void CreateMaterial(string name, string path)
@@ -211,13 +213,13 @@ namespace C3DE.Editor.Core
         private void GizmoTranslateEvent(Renderer renderer, TransformationEventArgs e)
         {
             renderer.Transform.Position += (Vector3)e.Value;
-            Messenger.Notify(EditorEvent.TransformUpdated, new TransformChanged(TransformChangeType.Position, _selectedObject.SceneObject.Transform.Position));
+            Messenger.Notify(EditorEvent.TransformUpdated);
         }
 
         private void GizmoRotateEvent(Renderer renderer, TransformationEventArgs e)
         {
             _gizmo.RotationHelper(renderer, e);
-            Messenger.Notify(EditorEvent.TransformUpdated, new TransformChanged(TransformChangeType.Position, _selectedObject.SceneObject.Transform.Position));
+            Messenger.Notify(EditorEvent.TransformUpdated);
         }
 
         private void GizmoScaleEvent(Renderer renderer, TransformationEventArgs e)
@@ -231,7 +233,7 @@ namespace C3DE.Editor.Core
 
             renderer.Transform.LocalScale = Vector3.Clamp(renderer.Transform.LocalScale, Vector3.Zero, renderer.Transform.LocalScale);
 
-            Messenger.Notify(EditorEvent.TransformUpdated, new TransformChanged(TransformChangeType.Position, _selectedObject.SceneObject.Transform.Position));
+            Messenger.Notify(EditorEvent.TransformUpdated);
         }
 
         #endregion

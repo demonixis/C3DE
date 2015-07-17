@@ -66,10 +66,10 @@ namespace C3DE.Rendering
 
             // Pass, Update matrix, material attributes, etc.
             // Note: The renderList contains ONLY enabled components/objects.
-            for (int i = 0; i < scene.RenderList.Count; i++)
+            for (int i = 0; i < scene.renderList.Count; i++)
             {
-                scene.RenderList[i].Material.Pass(scene.RenderList[i]);
-                scene.RenderList[i].Draw(graphicsDevice);
+                scene.renderList[i].Material.Pass(scene.RenderList[i]);
+                scene.renderList[i].Draw(graphicsDevice);
             }
         }
 

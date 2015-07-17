@@ -197,8 +197,6 @@ namespace C3DE
 
             for (int i = 0; i < sceneObjects.Count; i++)
                 sceneObjects[i].Initialize();
-
-            //sceneObjects.CheckRequired = true;
         }
 
         /// <summary>
