@@ -160,13 +160,13 @@ namespace C3DE.Editor.Core.Components
 
         private void OnMouseMove(object sender, WpfMouseEventArgs e)
         {
-            var position = WpfMouse.GetPosition(WpfApplication.Current.MainWindow);
+            var position = WpfMouse.GetPosition(_uiElement);
 
             LastX = X;
             LastY = Y;
             
             X = (int)position.X;
-            Y = (int)position.Y - 20;
+            Y = (int)position.Y;
 
             _needsUpdate = true;
         }

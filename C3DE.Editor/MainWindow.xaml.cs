@@ -27,7 +27,7 @@ namespace C3DE.Editor
             editorGameHost.EngineReady += InitializeUI;
 
             EDRegistry.Keys = new EDKeyboardComponent(null, this);
-            EDRegistry.Mouse = new EDMouseComponent(null, this);
+            EDRegistry.Mouse = new EDMouseComponent(null, editorGameHost);
 
             Messenger.Register(EditorEvent.SceneObjectSelected, OnSceneObjectSelected);
             Messenger.Register(EditorEvent.SceneObjectUnSelected, OnSceneObjectUnselected);
