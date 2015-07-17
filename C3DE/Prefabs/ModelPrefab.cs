@@ -43,12 +43,17 @@ namespace C3DE.Prefabs
 
         public void LoadModel(string modelPath)
         {
-            renderer.Model = Application.Content.Load<Model>(modelPath);
+            SetModel(Application.Content.Load<Model>(modelPath));
+        }
+
+        public void SetModel(Model model)
+        {
+            renderer.Model = model;
 
             BoundingSphere sphere = new BoundingSphere();
 
             foreach (ModelMesh mesh in renderer.Model.Meshes)
-               sphere = BoundingSphere.CreateMerged(sphere, mesh.BoundingSphere);
+                sphere = BoundingSphere.CreateMerged(sphere, mesh.BoundingSphere);
 
             sphere.Center = transform.Position;
 

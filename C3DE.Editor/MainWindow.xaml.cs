@@ -10,6 +10,7 @@ namespace C3DE.Editor
     using C3DE.Editor.Core;
     using C3DE.Editor.Core.Components;
     using C3DE.Editor.Events;
+    using System;
     using System.IO;
     using System.Windows.Input;
     using Winforms = System.Windows.Forms;
@@ -20,6 +21,8 @@ namespace C3DE.Editor
     /// </summary>
     public partial class MainWindow : Window
     {
+        private Microsoft.Xna.Framework.Content.ContentManager _customContent;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -31,6 +34,11 @@ namespace C3DE.Editor
 
             Messenger.Register(EditorEvent.SceneObjectSelected, OnSceneObjectSelected);
             Messenger.Register(EditorEvent.SceneObjectUnSelected, OnSceneObjectUnselected);
+
+            if (!Directory.Exists("Temp"))
+                Directory.CreateDirectory("Temp");
+
+            _customContent = new Microsoft.Xna.Framework.Content.ContentManager(editorGameHost, "Temp");
 
             componentContainer.Children.Clear();
         }
@@ -48,7 +56,7 @@ namespace C3DE.Editor
             {
                 return string.Compare(m1.Name, m2.Name);
             });
-            
+
             foreach (var material in materials)
             {
                 item = new TextBlock();
@@ -173,7 +181,7 @@ namespace C3DE.Editor
                         openFileDialog.Filter = "C3DE Scene (*.scene)|*.scene";
 
                         if (openFileDialog.ShowDialog() == Winforms.DialogResult.OK)
-                        { 
+                        {
                             if (!editorGameHost.LoadScene(openFileDialog.FileName))
                                 MessageBox.Show("This scene can't be loaded. Please contact the developer with the error file", "Load error", MessageBoxButton.OK, MessageBoxImage.Error);
                         }
@@ -233,7 +241,30 @@ namespace C3DE.Editor
 
         private void OnDrop(object sender, DragEventArgs e)
         {
-            Debug.Log("drop");
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                var files = (string[])e.Data.GetData(DataFormats.FileDrop);
+
+                foreach (var file in files)
+                {
+                    var filename = Path.GetFileName(file);
+
+                    if (!File.Exists("Temp/" + filename))
+                        File.Copy(file, "Temp/" + filename);
+
+                    var so = new C3DE.Prefabs.ModelPrefab("Import");
+                    try
+                    {
+                        var model = _customContent.Load<Microsoft.Xna.Framework.Graphics.Model>(filename.Replace(".xnb", ""));
+                        so.SetModel(model);
+                        editorGameHost.Scene.Add(so);
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.Log(ex.Message);
+                    }
+                }
+            }
         }
 
         private void sceneListControl_MouseEnter(object sender, MouseEventArgs e)
@@ -251,7 +282,7 @@ namespace C3DE.Editor
         {
             var button = sender as Button;
             var tag = button != null ? button.Tag.ToString() : null;
-            
+
             if (tag != null)
             {
                 if (tag == "Translation")
