@@ -2,6 +2,7 @@
 using C3DE.Components.Renderers;
 using C3DE.Editor.Core;
 using C3DE.Editor.Exporters;
+using C3DE.Prefabs;
 using C3DE.Rendering;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
@@ -9,6 +10,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using XNAGizmo;
 
 namespace C3DE.Editor.MonoGameBridge
@@ -22,6 +24,7 @@ namespace C3DE.Editor.MonoGameBridge
         private List<GameComponent> _gameComponents;
         private ForwardRenderer _renderer;
         private ContentManager _content;
+        private ContentManager _tempContent;
         private EDScene _scene;
         internal GizmoComponent gizmoComponent;
 
@@ -69,6 +72,19 @@ namespace C3DE.Editor.MonoGameBridge
             _content = new ContentManager(this);
             _content.RootDirectory = "Content";
 
+            _tempContent = new ContentManager(this);
+            _tempContent.RootDirectory = EDRegistry.ContentTempPath;
+
+            if (!Directory.Exists(_tempContent.RootDirectory))
+                Directory.CreateDirectory(_tempContent.RootDirectory);
+
+            var folders = new string[] { "Audio/Sounds", "Audio/Musics", "Effects", "Fonts", "Models", "Textures" };
+            for (int i = 0; i < folders.Length; i++)
+            {
+                if (!Directory.Exists(Path.Combine(EDRegistry.ContentTempPath, folders[i])))
+                    Directory.CreateDirectory(Path.Combine(EDRegistry.ContentTempPath, folders[i]));
+            }
+
             Application.Content = _content;
             Application.GraphicsDevice = GraphicsDevice;
 
@@ -90,7 +106,7 @@ namespace C3DE.Editor.MonoGameBridge
             _scene = new EDScene("Root", gizmoComponent);
             _scene.Initialize();
             _scene.RenderSettings.Skybox.Generate();
-            
+
             if (EngineReady != null)
                 EngineReady();
         }
@@ -164,7 +180,7 @@ namespace C3DE.Editor.MonoGameBridge
                 if (serializedScene != null)
                 {
                     NewScene();
-                    
+
                     foreach (var mat in serializedScene.Materials)
                         _scene.Add(mat);
 
@@ -184,6 +200,48 @@ namespace C3DE.Editor.MonoGameBridge
             }
 
             return result;
+        }
+
+        #endregion
+
+        #region Live import
+
+        public Texture2D LoadTempTexture(string assetName)
+        {
+            return _tempContent.Load<Texture2D>(assetName);
+        }
+
+        public Model LoadTempModel(string assetName)
+        {
+            return _tempContent.Load<Model>(assetName);
+        }
+
+        public SpriteFont LoadTempFont(string assetName)
+        {
+            return _tempContent.Load<SpriteFont>(assetName);
+        }
+
+        public Effect LoadTempEffect(string assetName)
+        {
+            return _tempContent.Load<Effect>(assetName);
+        }
+
+        public ModelPrefab AddModelFromTemp(string assetName)
+        {
+            var sceneObject = new ModelPrefab(assetName);
+
+            try
+            {
+                var model = LoadTempModel(assetName);
+                sceneObject.SetModel(model);
+                _scene.Add(sceneObject);
+            }
+            catch (Exception ex)
+            {
+                Debug.Log(ex.Message);
+            }
+
+            return sceneObject;
         }
 
         #endregion

@@ -92,6 +92,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="AskXnbWindow.xaml.cs">
+      <DependentUpon>AskXnbWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Core\BasicEditionSceneObject.cs" />
     <Compile Include="Core\Components\EDFirstPersonCamera.cs" />
     <Compile Include="Core\Components\EDKeyboardComponent.cs" />
@@ -129,6 +132,10 @@
     <Compile Include="XNAGizmo\Geometry.cs" />
     <Compile Include="XNAGizmo\GizmoComponent.cs" />
     <Compile Include="XNAGizmo\Quad.cs" />
+    <Page Include="AskXnbWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\CameraControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

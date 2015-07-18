@@ -21,8 +21,6 @@ namespace C3DE.Editor
     /// </summary>
     public partial class MainWindow : Window
     {
-        private Microsoft.Xna.Framework.Content.ContentManager _customContent;
-
         public MainWindow()
         {
             InitializeComponent();
@@ -35,14 +33,8 @@ namespace C3DE.Editor
             Messenger.Register(EditorEvent.SceneObjectSelected, OnSceneObjectSelected);
             Messenger.Register(EditorEvent.SceneObjectUnSelected, OnSceneObjectUnselected);
 
-            if (!Directory.Exists("Temp"))
-                Directory.CreateDirectory("Temp");
-
-            _customContent = new Microsoft.Xna.Framework.Content.ContentManager(editorGameHost, "Temp");
-
             componentContainer.Children.Clear();
         }
-
 
         private void InitializeUI()
         {
@@ -244,25 +236,37 @@ namespace C3DE.Editor
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
                 var files = (string[])e.Data.GetData(DataFormats.FileDrop);
+                AskXnbWindow dialog = null;
 
                 foreach (var file in files)
                 {
                     var filename = Path.GetFileName(file);
 
-                    if (!File.Exists("Temp/" + filename))
-                        File.Copy(file, "Temp/" + filename);
+                    dialog = new AskXnbWindow(filename);
+                    dialog.TypeSelected += (s, evt) =>
+                    {
+                        if (evt.Type == typeof(Microsoft.Xna.Framework.Graphics.Effect))
+                            File.Copy(file, Path.Combine(EDRegistry.ContentTempPath + "/Effects/", filename), true);
+                        
+                        else if (evt.Type == typeof(Microsoft.Xna.Framework.Graphics.SpriteFont))
+                            File.Copy(file, Path.Combine(EDRegistry.ContentTempPath + "/Fonts/", filename), true);
 
-                    var so = new C3DE.Prefabs.ModelPrefab("Import");
-                    try
-                    {
-                        var model = _customContent.Load<Microsoft.Xna.Framework.Graphics.Model>(filename.Replace(".xnb", ""));
-                        so.SetModel(model);
-                        editorGameHost.Scene.Add(so);
-                    }
-                    catch (Exception ex)
-                    {
-                        Debug.Log(ex.Message);
-                    }
+                        else if (evt.Type == typeof(Microsoft.Xna.Framework.Graphics.Model))
+                        {
+                            File.Copy(file, Path.Combine(EDRegistry.ContentTempPath + "/Models/", filename), true);
+                            editorGameHost.AddModelFromTemp("Models/" + filename.Replace(".xnb", ""));
+                        }
+
+                        else if (evt.Type == typeof(Microsoft.Xna.Framework.Audio.SoundEffect))
+                            File.Copy(file, Path.Combine(EDRegistry.ContentTempPath + "/Audio/Sounds/", filename), true);
+
+                        else if (evt.Type == typeof(Microsoft.Xna.Framework.Media.Song))
+                            File.Copy(file, Path.Combine(EDRegistry.ContentTempPath + "/Audio/Music/", filename), true);
+
+                        else if (evt.Type == typeof(Microsoft.Xna.Framework.Graphics.Texture2D))
+                            File.Copy(file, Path.Combine(EDRegistry.ContentTempPath + "/Textures/", filename), true);
+                    };
+                    dialog.Show();
                 }
             }
         }
