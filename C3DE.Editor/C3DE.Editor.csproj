@@ -116,6 +116,9 @@
     <Compile Include="Controls\FileExplorerControl.xaml.cs">
       <DependentUpon>FileExplorerControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\TerrainControl.xaml.cs">
+      <DependentUpon>TerrainControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Core\AssetImporter.cs" />
     <Compile Include="Core\BasicEditionSceneObject.cs" />
     <Compile Include="Core\Components\EDFirstPersonCamera.cs" />
@@ -180,6 +183,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\SceneObjectControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\TerrainControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

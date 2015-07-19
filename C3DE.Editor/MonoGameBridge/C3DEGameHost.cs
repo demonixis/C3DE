@@ -24,16 +24,13 @@ namespace C3DE.Editor.MonoGameBridge
         private List<GameComponent> _gameComponents;
         private ForwardRenderer _renderer;
         private ContentManager _content;
-        private ContentManager _tempContent;
+        private ContentManager _projectContent;
         private EDScene _scene;
         internal GizmoComponent gizmoComponent;
 
         public Action EngineReady = null;
 
-        public Scene Scene
-        {
-            get { return _scene; }
-        }
+        public Scene Scene { get { return _scene; } }
 
         #region GameHost implementation
 
@@ -72,8 +69,8 @@ namespace C3DE.Editor.MonoGameBridge
             _content = new ContentManager(this);
             _content.RootDirectory = "Content";
 
-            _tempContent = new ContentManager(this);
-            _tempContent.RootDirectory = EDRegistry.ContentTempPath;
+            _projectContent = new ContentManager(this);
+            _projectContent.RootDirectory = EDRegistry.ContentTempPath;
 
             AssetImporter.CreateFolderStructure("Temp");
 
@@ -200,22 +197,22 @@ namespace C3DE.Editor.MonoGameBridge
 
         public Texture2D LoadTempTexture(string assetName)
         {
-            return _tempContent.Load<Texture2D>(assetName);
+            return _projectContent.Load<Texture2D>(assetName);
         }
 
         public Model LoadTempModel(string assetName)
         {
-            return _tempContent.Load<Model>(assetName);
+            return _projectContent.Load<Model>(assetName);
         }
 
         public SpriteFont LoadTempFont(string assetName)
         {
-            return _tempContent.Load<SpriteFont>(assetName);
+            return _projectContent.Load<SpriteFont>(assetName);
         }
 
         public Effect LoadTempEffect(string assetName)
         {
-            return _tempContent.Load<Effect>(assetName);
+            return _projectContent.Load<Effect>(assetName);
         }
 
         public ModelPrefab AddModelFromTemp(string assetName)
