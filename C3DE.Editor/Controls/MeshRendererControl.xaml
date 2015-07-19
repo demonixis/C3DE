@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             mc:Ignorable="d" d:DesignHeight="250" d:DesignWidth="250">
+             mc:Ignorable="d" d:DesignHeight="200" d:DesignWidth="250">
     <Border BorderThickness="1" BorderBrush="LightGray" Margin="2">
         <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch">
             <StackPanel Orientation="Horizontal">
@@ -36,17 +36,17 @@
                 </ComboBox>
                 <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal">
                     <Label Content="X" />
-                    <TextBox Width="30" Text="{Binding GeometrySizeX}" />
+                    <TextBox Width="25" VerticalAlignment="Center" Text="{Binding GeometrySizeX}" />
                     <Label Content="Y" />
-                    <TextBox Width="30" Text="{Binding GeometrySizeY}" />
+                    <TextBox Width="25" VerticalAlignment="Center" Text="{Binding GeometrySizeY}" />
                     <Label Content="Z" />
-                    <TextBox Width="30" Text="{Binding GeometrySizeZ}" />
+                    <TextBox Width="25" VerticalAlignment="Center" Text="{Binding GeometrySizeZ}" />
                 </StackPanel>
                 <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal">
                     <Label Content="X" />
-                    <TextBox Width="30" Text="{Binding GeometryUVX}" />
+                    <TextBox Width="25" VerticalAlignment="Center" Text="{Binding GeometryUVX}" />
                     <Label Content="Y" />
-                    <TextBox Width="30" Text="{Binding GeometryUVY}" />
+                    <TextBox Width="25" VerticalAlignment="Center" Text="{Binding GeometryUVY}" />
                 </StackPanel>
                 <CheckBox Grid.Row="3" Grid.Column="1" IsChecked="{Binding CastShadow}" Style="{ StaticResource MR_Checkbox }" />
                 <CheckBox Grid.Row="4" Grid.Column="1" IsChecked="{Binding ReceiveShadow}" Style="{ StaticResource MR_Checkbox }" />

@@ -59,27 +59,19 @@ namespace C3DE.Editor.Controls
             }
         }
 
-        public string LightColor
+        public Color LightColor
         {
             get
             {
                 if (light != null)
-                {
-                    var color = Color.FromArgb(light.DiffuseColor.A, light.DiffuseColor.R, light.DiffuseColor.G, light.DiffuseColor.B);
-                    return string.Format("#{0}{1}{2}", color.R.ToString("X2"), color.G.ToString("X2"), color.B.ToString("X2"));
-                }
-
-                return "#ffffff";
+                    return Color.FromArgb(light.Color.A, light.Color.R, light.Color.G, light.Color.B);
+                    
+                return Color.FromArgb(1, 0, 0, 0);
             }
             set
             {
                 if (light != null)
-                {
-                    var strColor = value;
-                    var color = (Color)ColorConverter.ConvertFromString(strColor);
-                    light.DiffuseColor = new Microsoft.Xna.Framework.Color(color.R, color.G, color.B, color.A);
-                    LightColorRect.Fill = new SolidColorBrush(color);
-                }
+                    light.Color = new Microsoft.Xna.Framework.Color(value.R, value.G, value.B, value.A);
             }
         }
 

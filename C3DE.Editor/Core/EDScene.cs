@@ -62,7 +62,7 @@ namespace C3DE.Editor.Core
             light.Direction = new Vector3(-0.5f, 0.75f, -0.5f);
             light.TypeLight = LightType.Directional;
             light.Backing = LightRenderMode.RealTime;
-            light.DiffuseColor = Color.White;
+            light.Color = Color.White;
             light.EnableShadow = true;
             light.Intensity = 1.0f;
             light.ShadowGenerator.ShadowMapSize = 1024;
@@ -243,9 +243,12 @@ namespace C3DE.Editor.Core
         private T CreateAddSceneObject<T>(string name, bool tag = true) where T : Component, new()
         {
             var sceneObject = new SceneObject(name);
+            
             if (tag)
                 sceneObject.Tag = EditorTag;
+
             Add(sceneObject);
+
             return sceneObject.AddComponent<T>();
         }
 
@@ -298,9 +301,9 @@ namespace C3DE.Editor.Core
 
                 case "Camera":
                     sceneObject = new CameraPrefab(type);
-                    sceneObject.AddComponent<BoxCollider>();
+                    sceneObject.AddComponent<EDBoxCollider>();
 
-                    var camRenderer = sceneObject.AddComponent<MeshRenderer>();
+                    var camRenderer = sceneObject.AddComponent<EDMeshRenderer>();
                     camRenderer.CastShadow = false;
                     camRenderer.ReceiveShadow = false;
                     camRenderer.Geometry = new QuadGeometry();
@@ -316,12 +319,12 @@ namespace C3DE.Editor.Core
         private SceneObject CreateLightNode(string name, LightType type)
         {
             var sceneObject = new SceneObject(name);
-            sceneObject.AddComponent<BoxCollider>();
+            sceneObject.AddComponent<EDBoxCollider>();
 
             var light = sceneObject.AddComponent<Light>();
             light.TypeLight = type;
 
-            var lightRenderer = sceneObject.AddComponent<MeshRenderer>();
+            var lightRenderer = sceneObject.AddComponent<EDMeshRenderer>();
             lightRenderer.CastShadow = false;
             lightRenderer.ReceiveShadow = false;
             lightRenderer.Geometry = new QuadGeometry();

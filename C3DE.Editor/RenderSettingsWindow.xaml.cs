@@ -7,19 +7,15 @@ namespace C3DE.Editor
     {
         private RenderSettings renderSettings;
 
-        public string AmbientColor
+        public Color AmbientColor
         {
             get
             {
-                var color = Color.FromArgb(renderSettings.AmbientColor.A, renderSettings.AmbientColor.R, renderSettings.AmbientColor.G, renderSettings.AmbientColor.B);
-                return string.Format("#{0}{1}{2}", color.R.ToString("X2"), color.G.ToString("X2"), color.B.ToString("X2"));
+                return Color.FromArgb(renderSettings.AmbientColor.A, renderSettings.AmbientColor.R, renderSettings.AmbientColor.G, renderSettings.AmbientColor.B);
             }
             set
             {
-                var strColor = value;
-                var color = (Color)ColorConverter.ConvertFromString(strColor);
-                renderSettings.AmbientColor = new Microsoft.Xna.Framework.Color(color.R, color.G, color.B, color.A);
-                AmbientColorRect.Fill = new SolidColorBrush(color);
+                renderSettings.AmbientColor = new Microsoft.Xna.Framework.Color(value.R, value.G, value.B, value.A);
             }
         }
 
@@ -35,19 +31,15 @@ namespace C3DE.Editor
             set { renderSettings.FogMode = (FogMode)value; }
         }
 
-        public string FogColor
+        public Color FogColor
         {
             get
             {
-                var color = Color.FromArgb(renderSettings.FogColor.A, renderSettings.FogColor.R, renderSettings.FogColor.G, renderSettings.FogColor.B);
-                return string.Format("#{0}{1}{2}", color.R.ToString("X2"), color.G.ToString("X2"), color.B.ToString("X2"));
+                return Color.FromArgb(renderSettings.FogColor.A, renderSettings.FogColor.R, renderSettings.FogColor.G, renderSettings.FogColor.B);
             }
             set
             {
-                var strColor = value;
-                var color = (Color)ColorConverter.ConvertFromString(strColor);
-                renderSettings.FogColor = new Microsoft.Xna.Framework.Color(color.R, color.G, color.B, color.A);
-                FogColorRect.Fill = new SolidColorBrush(color);
+                renderSettings.FogColor = new Microsoft.Xna.Framework.Color(value.R, value.G, value.B, value.A);
             }
         }
 

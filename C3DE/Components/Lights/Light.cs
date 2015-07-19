@@ -50,7 +50,7 @@ namespace C3DE.Components.Lights
         /// The color of the light.
         /// </summary>
         [DataMember]
-        public Color DiffuseColor
+        public Color Color
         {
             get { return new Color(diffuseColor); }
             set { diffuseColor = value.ToVector3(); }

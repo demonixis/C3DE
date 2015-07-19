@@ -133,7 +133,7 @@ namespace C3DE.Demo.Scenes
             light.FallOf = 10f;
             light.Intensity = 1.5f;
             light.Range = range;
-            light.DiffuseColor = color;
+            light.Color = color;
             light.Backing = LightRenderMode.Backed;
 
             Add(sceneObject);
