@@ -95,6 +95,9 @@
     <Compile Include="AskXnbWindow.xaml.cs">
       <DependentUpon>AskXnbWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\FileExplorerControl.xaml.cs">
+      <DependentUpon>FileExplorerControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Core\AssetImporter.cs" />
     <Compile Include="Core\BasicEditionSceneObject.cs" />
     <Compile Include="Core\Components\EDFirstPersonCamera.cs" />
@@ -138,6 +141,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\CameraControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\FileExplorerControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -107,6 +107,9 @@
                     <TabItem Header="Scene">
                         <c3de:SceneListControl x:Name="sceneListControl" MouseEnter="sceneListControl_MouseEnter" />
                     </TabItem>
+                    <TabItem Header="Project">
+                        <c3de:FileExplorerControl x:Name="projectExplorer" />
+                    </TabItem>
                     <TabItem Header="Materials">
                         <ListBox x:Name="MaterialsList">
                             <TextBlock Text="Material 1" />

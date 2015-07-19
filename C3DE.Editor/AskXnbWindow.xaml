@@ -1,7 +1,7 @@
 ﻿<Window x:Class="C3DE.Editor.AskXnbWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="XNB Type Selector" Height="240" Width="200" WindowStyle="ToolWindow" ResizeMode="NoResize" Icon="Icon.ico" ShowInTaskbar="False" Topmost="True" WindowStartupLocation="CenterScreen" ToolTip="Choose the type of this asset">
+        Title="XNB Type Selector" Height="250" Width="200" WindowStyle="ToolWindow" ResizeMode="NoResize" Icon="Icon.ico" ShowInTaskbar="False" Topmost="True" WindowStartupLocation="CenterScreen" ToolTip="Choose the type of this asset">
     <Window.Resources>
         <Style TargetType="ListBoxItem" BasedOn="{ StaticResource { x:Type ListBoxItem}}">
             <Setter Property="Height" Value="30" />

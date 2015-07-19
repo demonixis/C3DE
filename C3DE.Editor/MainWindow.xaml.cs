@@ -57,6 +57,8 @@ namespace C3DE.Editor
             }
 
             sceneListControl.UpdateList();
+
+            projectExplorer.ShowFilesForDirectory("temp");
         }
 
         private void OnSceneObjectSelected(BasicMessage m)
