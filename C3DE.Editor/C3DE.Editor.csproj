@@ -95,6 +95,7 @@
     <Compile Include="AskXnbWindow.xaml.cs">
       <DependentUpon>AskXnbWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Core\AssetImporter.cs" />
     <Compile Include="Core\BasicEditionSceneObject.cs" />
     <Compile Include="Core\Components\EDFirstPersonCamera.cs" />
     <Compile Include="Core\Components\EDKeyboardComponent.cs" />

@@ -75,15 +75,7 @@ namespace C3DE.Editor.MonoGameBridge
             _tempContent = new ContentManager(this);
             _tempContent.RootDirectory = EDRegistry.ContentTempPath;
 
-            if (!Directory.Exists(_tempContent.RootDirectory))
-                Directory.CreateDirectory(_tempContent.RootDirectory);
-
-            var folders = new string[] { "Audio/Sounds", "Audio/Musics", "Effects", "Fonts", "Models", "Textures" };
-            for (int i = 0; i < folders.Length; i++)
-            {
-                if (!Directory.Exists(Path.Combine(EDRegistry.ContentTempPath, folders[i])))
-                    Directory.CreateDirectory(Path.Combine(EDRegistry.ContentTempPath, folders[i]));
-            }
+            AssetImporter.CreateFolderStructure("Temp");
 
             Application.Content = _content;
             Application.GraphicsDevice = GraphicsDevice;

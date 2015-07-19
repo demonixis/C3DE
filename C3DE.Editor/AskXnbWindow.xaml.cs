@@ -10,55 +10,55 @@ namespace C3DE.Editor
     public class TypeSelectedEventArgs : EventArgs
     {
         public Type Type { get; protected set; }
+        public string Path { get; protected set; }
 
-        public TypeSelectedEventArgs(Type type)
+        public TypeSelectedEventArgs(Type type, string path)
             : base()
         {
             Type = type;
+            Path = path;
         }
     }
 
     public partial class AskXnbWindow : Window
     {
-        public EventHandler<TypeSelectedEventArgs> TypeSelected = null;
+        private string _filepath;
 
-        public AskXnbWindow(string assetName)
+        public string Filepath
         {
-            InitializeComponent();
-            AskTitle.Text = assetName;
+            get { return _filepath; }
+            set { _filepath = value; AskTitle.Text = System.IO.Path.GetFileName(value); }
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        public EventHandler<TypeSelectedEventArgs> TypeSelected = null;
+
+        public AskXnbWindow(string root = "", string path = "")
+        {
+            InitializeComponent();
+            Filepath = path;
+        }
+
+        private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             Type type = null;
 
-            if (IsChecked(AskEffect))
-                type = typeof(Effect);
-            else if (IsChecked(AskModel))
-                type = typeof(Model);
-            else if (IsChecked(AskSpriteFont))
-                type = typeof(SpriteFont);
-            else if (IsChecked(AskSoundEffect))
-                type = typeof(SoundEffect);
-            else if (IsChecked(AskSong))
-                type = typeof(Song);
-            else if (IsChecked(AskTexture2D))
-                type = typeof(Texture2D);
-            else
-                MessageBox.Show("You must select a type", "Error", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+            var listView = (ListBox)sender;
+            var item = (ListBoxItem)listView.SelectedItem;
 
-            if (TypeSelected != null)
-                TypeSelected(this, new TypeSelectedEventArgs(type));
+            switch (item.Content.ToString())
+            {
+                case "Effect": type = typeof(Effect); break;
+                case "Model": type = typeof(Model); break;
+                case "SpriteFont": type = typeof(SpriteFont); break;
+                case "SoundEffect": type = typeof(SoundEffect); break;
+                case "Song": type = typeof(Song); break;
+                case "Texture2D": type = typeof(Texture2D); break;
+            }
+
+            if (TypeSelected != null && type != null)
+                TypeSelected(this, new TypeSelectedEventArgs(type, Filepath));
 
             Close();
-        }
-
-        private bool IsChecked(RadioButton radio)
-        {
-            if (radio.IsChecked.HasValue)
-                return radio.IsChecked.Value;
-
-            return false;
         }
     }
 }

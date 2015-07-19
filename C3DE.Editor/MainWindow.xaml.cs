@@ -242,7 +242,7 @@ namespace C3DE.Editor
                 {
                     var filename = Path.GetFileName(file);
 
-                    dialog = new AskXnbWindow(filename);
+                    dialog = new AskXnbWindow(EDRegistry.ContentTempPath, filename);
                     dialog.TypeSelected += (s, evt) =>
                     {
                         if (evt.Type == typeof(Microsoft.Xna.Framework.Graphics.Effect))
