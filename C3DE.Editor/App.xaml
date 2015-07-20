@@ -21,5 +21,15 @@
         <Style x:Key="Control_TextBox" TargetType="TextBox" BasedOn="{StaticResource { x:Type TextBox}}">
             <Setter Property="VerticalAlignment" Value="Center" />
         </Style>
+
+        <Style x:Key="Vector3Input" TargetType="TextBox" BasedOn="{ StaticResource { x:Type TextBox}}">
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Width" Value="55" />
+            <Setter Property="Height" Value="20" />
+            <Setter Property="Text" Value="0" />
+            <Setter Property="Margin" Value="0, 0, 5, 0" />
+            <Setter Property="Focusable" Value="True" />
+        </Style>
     </Application.Resources>
 </Application>

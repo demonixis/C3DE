@@ -13,11 +13,14 @@ namespace C3DE.Components.Renderers
     [DataContract]
     public abstract class Renderer : Component
     {
-        protected internal BoundingSphere boundingSphere;
-        protected internal BoundingBox boundingBox;
+        [DataMember]
+        internal protected BoundingSphere boundingSphere;
+        
+        [DataMember]
+        internal protected BoundingBox boundingBox;
 
         [DataMember]
-        protected internal int materialIndex;
+        internal protected int materialIndex;
 
         /// <summary>
         /// Indicates whether the object can cast shadow. 

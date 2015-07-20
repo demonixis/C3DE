@@ -64,7 +64,7 @@ namespace C3DE.Prefabs
             renderer.Material = material;
             renderer.Geometry.Size = size;
             renderer.Geometry.Build();
-            collider.Box = new BoundingBox(transform.Position, size);
+            //collider.BoundingBox = new BoundingBox(transform.Position, size);
         }
     }
 }

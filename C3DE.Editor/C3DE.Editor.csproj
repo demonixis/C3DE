@@ -113,6 +113,9 @@
     <Compile Include="AskXnbWindow.xaml.cs">
       <DependentUpon>AskXnbWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\ColliderControl.xaml.cs">
+      <DependentUpon>ColliderControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\FileExplorerControl.xaml.cs">
       <DependentUpon>FileExplorerControl.xaml</DependentUpon>
     </Compile>
@@ -159,6 +162,10 @@
     <Compile Include="XNAGizmo\GizmoComponent.cs" />
     <Compile Include="XNAGizmo\Quad.cs" />
     <Page Include="AskXnbWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\ColliderControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

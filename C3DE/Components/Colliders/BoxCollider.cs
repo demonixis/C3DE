@@ -10,16 +10,22 @@ namespace C3DE.Components.Colliders
     [DataContract]
     public class BoxCollider : Collider
     {
-        private BoundingBox _box;
+        [DataMember]
+        private Vector3 _min;
+
+        [DataMember]
+        private Vector3 _max;
+
+        [DataMember]
+        private BoundingBox _boundingBox;
 
         /// <summary>
         /// Gets the bounding box.
         /// </summary>
-        [DataMember]
-        public BoundingBox Box
+        public BoundingBox BoundingBox
         {
-            get { return _box; }
-            set { _box = value; }
+            get { return _boundingBox; }
+            protected set { _boundingBox = value; }
         }
 
         /// <summary>
@@ -28,31 +34,43 @@ namespace C3DE.Components.Colliders
         public BoxCollider()
             : base()
         {
-            _box = new BoundingBox();
+            _boundingBox = new BoundingBox();
+            _min = Vector3.Zero;
+            _max = Vector3.Zero;
+        }
+
+        public override void Update()
+        {
+            base.Update();
+
+            _boundingBox.Min = (transform.Position - _min) - Center;
+            _boundingBox.Max = _max + Size;
         }
 
         public override void Compute()
         {
-            var renderable = GetComponent<Renderer>();
-
-            if (renderable != null)
-                _box = new BoundingBox(transform.Position, new Vector3(renderable.boundingSphere.Radius));
+            var renderer = GetComponent<Renderer>();
+            if (renderer != null)
+            {
+                _min = renderer.boundingBox.Min;
+                _max = renderer.boundingBox.Max;
+            }
         }
 
         public override bool Collides(Collider other)
         {
             if (other is SphereCollider)
-                return _box.Intersects((other as SphereCollider).Sphere);
+                return _boundingBox.Intersects((other as SphereCollider).Sphere);
 
             if (other is BoxCollider)
-                return _box.Intersects((other as BoxCollider).Box);
+                return _boundingBox.Intersects((other as BoxCollider).BoundingBox);
 
             return false;
         }
 
         public override float? IntersectedBy(ref Ray ray)
         {
-            return ray.Intersects(_box);
+            return ray.Intersects(_boundingBox);
         }
     }
 }

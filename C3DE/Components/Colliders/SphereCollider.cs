@@ -50,7 +50,7 @@ namespace C3DE.Components.Colliders
                 return _sphere.Intersects((other as SphereCollider).Sphere);
 
             if (other is BoxCollider)
-                return _sphere.Intersects((other as BoxCollider).Box);
+                return _sphere.Intersects((other as BoxCollider).BoundingBox);
 
             return false;
         }

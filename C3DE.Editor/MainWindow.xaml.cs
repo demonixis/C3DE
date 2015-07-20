@@ -4,6 +4,7 @@ using System.Windows.Controls;
 namespace C3DE.Editor
 {
     using C3DE.Components;
+    using C3DE.Components.Colliders;
     using C3DE.Components.Lights;
     using C3DE.Components.Renderers;
     using C3DE.Editor.Controls;
@@ -78,6 +79,7 @@ namespace C3DE.Editor
                 MeshRenderer meshRenderer = null;
                 Camera camera = null;
                 Light light = null;
+                Collider collider = null;
 
                 foreach (var component in sceneObject.Components)
                 {
@@ -101,6 +103,14 @@ namespace C3DE.Editor
                     if (light != null)
                     {
                         control = new LightControl(light);
+                        componentContainer.Children.Add(control);
+                        continue;
+                    }
+
+                    collider = component as Collider;
+                    if (collider != null)
+                    {
+                        control = new ColliderControl(collider);
                         componentContainer.Children.Add(control);
                         continue;
                     }

@@ -9,6 +9,12 @@ namespace C3DE.Components.Colliders
     [DataContract]
     public abstract class Collider : Component
     {
+        [DataMember]
+        protected Vector3 center;
+
+        [DataMember]
+        protected Vector3 size;
+
         /// <summary>
         /// Allow or not the collider to be picked by a ray cast.
         /// </summary>
@@ -21,6 +27,18 @@ namespace C3DE.Components.Colliders
         [DataMember]
         public bool IsTrigger { get; set; }
 
+        public Vector3 Center
+        {
+            get { return center; }
+            set { center = value; }
+        }
+
+        public Vector3 Size
+        {
+            get { return size; }
+            set { size = value; }
+        }
+
         /// <summary>
         /// Create an emtpy collider.
         /// </summary>
@@ -29,6 +47,8 @@ namespace C3DE.Components.Colliders
         {
             IsPickable = true;
             IsTrigger = false;
+            center = Vector3.Zero;
+            size = Vector3.One;
         }
 
         public override void Start()
@@ -55,5 +75,29 @@ namespace C3DE.Components.Colliders
         /// <param name="ray">A ray</param>
         /// <returns>Returns true if it collides, otherwise it returns false.</returns>
         public abstract float? IntersectedBy(ref Ray ray);
+
+        public void SetSize(float? x, float? y, float? z)
+        {
+            if (x.HasValue)
+                size.X = x.Value;
+
+            if (y.HasValue)
+                size.Y = y.Value;
+
+            if (z.HasValue)
+                size.Z = z.Value;
+        }
+
+        public void SetCenter(float? x, float? y, float? z)
+        {
+            if (x.HasValue)
+                center.X = x.Value;
+
+            if (y.HasValue)
+                center.Y = y.Value;
+
+            if (z.HasValue)
+                center.Z = z.Value;
+        }
     }
 }
