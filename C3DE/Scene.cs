@@ -41,7 +41,6 @@ namespace C3DE
     {
         public static Scene current { get; internal set; }
 
-        private int _mainCameraIndex;
         private List<Component> _componentsToDestroy;
         private bool _needRemoveCheck;
 
@@ -164,7 +163,6 @@ namespace C3DE
             postProcessPasses = new List<PostProcessPass>();
             _componentsToDestroy = new List<Component>();
             _needRemoveCheck = false;
-            _mainCameraIndex = -1;
             defaultMaterial = new SimpleMaterial(this, "Default Material");
             RenderSettings = new RenderSettings();
         }

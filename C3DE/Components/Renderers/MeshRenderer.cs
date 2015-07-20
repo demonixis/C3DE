@@ -58,15 +58,14 @@ namespace C3DE.Components.Renderers
                 max.Z = Math.Max(vertices[i].Z, max.Z);
             }
 
-            min *= transform.LocalScale;
-            max *= transform.LocalScale;
+            boundingBox.Min = min;
+            boundingBox.Max = max;
 
-            boundingBox = new BoundingBox(min, max);
+            var dx = max.X - min.X;
+            var dy = max.Y - min.Y;
+            var dz = max.Z - min.Z;
 
-            var mx = max.X - min.X;
-            var my = max.Y - min.Y;
-            var mz = max.Z - min.Z;
-            boundingSphere.Radius = (float)Math.Max(Math.Max(mx, my), mz) / 2.0f;
+            boundingSphere.Radius = (float)Math.Max(Math.Max(dx, dy), dz) / 2.0f;
             boundingSphere.Center = transform.Position;
 
             UpdateColliders();

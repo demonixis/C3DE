@@ -11,12 +11,6 @@ namespace C3DE.Components.Colliders
     public class BoxCollider : Collider
     {
         [DataMember]
-        private Vector3 _min;
-
-        [DataMember]
-        private Vector3 _max;
-
-        [DataMember]
         private BoundingBox _boundingBox;
 
         /// <summary>
@@ -35,25 +29,24 @@ namespace C3DE.Components.Colliders
             : base()
         {
             _boundingBox = new BoundingBox();
-            _min = Vector3.Zero;
-            _max = Vector3.Zero;
+            center = Vector3.Zero;
         }
 
         public override void Update()
         {
             base.Update();
-
-            _boundingBox.Min = (transform.Position - _min) - Center;
-            _boundingBox.Max = _max + Size;
+            _boundingBox.Min = minimum + (center + transform.Position);
+            _boundingBox.Max = maximum + (center + transform.Position);
         }
 
         public override void Compute()
         {
             var renderer = GetComponent<Renderer>();
-            if (renderer != null)
+            if (renderer != null && autoCompute)
             {
-                _min = renderer.boundingBox.Min;
-                _max = renderer.boundingBox.Max;
+                minimum = renderer.boundingBox.Min * transform.LocalScale;
+                maximum = renderer.boundingBox.Max * transform.LocalScale;
+                center = maximum + minimum;
             }
         }
 

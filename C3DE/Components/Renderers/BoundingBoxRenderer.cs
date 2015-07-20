@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using C3DE.Components.Colliders;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Runtime.Serialization;
 
@@ -15,6 +16,18 @@ namespace C3DE.Components.Renderers
 
         private static BasicEffect _effect;
         private Renderer _renderer;
+        private BoxCollider _boxCollider;
+        private Vector3[] _corners;
+
+        public Color LineColor { get; set; }
+
+        public BoundingBoxRenderer()
+            : base()
+        {
+            LineColor = Color.Green;
+            CastShadow = false;
+            ReceiveShadow = false;
+        }
 
         public override void Awake()
         {
@@ -26,9 +39,6 @@ namespace C3DE.Components.Renderers
                 _effect.VertexColorEnabled = true;
                 _effect.LightingEnabled = false;
             }
-
-            CastShadow = false;
-            ReceiveShadow = false;
         }
 
         public override void Start()
@@ -38,7 +48,12 @@ namespace C3DE.Components.Renderers
             _renderer = GetComponent<Renderer>();
 
             if (_renderer == null)
+            {
+                sceneObject.RemoveComponent(this);
                 return;
+            }
+
+            _boxCollider = GetComponent<BoxCollider>();
         }
 
         public override void ComputeBoundingInfos()
@@ -47,24 +62,37 @@ namespace C3DE.Components.Renderers
 
         public override void Draw(GraphicsDevice device)
         {
-            _renderer.ComputeBoundingInfos();
-
-            var corners = _renderer.boundingBox.GetCorners();
-            for (int i = 0; i < 8; i++)
+            if (_boxCollider == null)
             {
-                _vertices[i].Position = corners[i];
-                _vertices[i].Color = Color.Green;
+                _renderer.ComputeBoundingInfos();
+                _corners = _renderer.boundingBox.GetCorners();
+
+                for (int i = 0; i < 8; i++)
+                {
+                    _vertices[i].Position = _corners[i] * transform.LocalScale;
+                    _vertices[i].Color = LineColor;
+                }
+
+                _effect.World = Matrix.CreateFromYawPitchRoll(transform.Rotation.Y, transform.Rotation.X, transform.Rotation.Z) * Matrix.CreateTranslation(transform.Position);
+            }
+            else
+            {
+                _corners = _boxCollider.BoundingBox.GetCorners();
+
+                for (int i = 0; i < 8; i++)
+                {
+                    _vertices[i].Position = _corners[i];
+                    _vertices[i].Color = LineColor;
+                }
+
+                _effect.World = Matrix.CreateFromYawPitchRoll(transform.Rotation.Y, transform.Rotation.X, transform.Rotation.Z);
             }
 
-            _effect.World = Matrix.CreateFromYawPitchRoll(transform.Rotation.Y, transform.Rotation.X, transform.Rotation.Z) * Matrix.CreateTranslation(transform.Position);
             _effect.View = Camera.main.view;
             _effect.Projection = Camera.main.projection;
+            _effect.CurrentTechnique.Passes[0].Apply();
 
-            foreach (EffectPass pass in _effect.CurrentTechnique.Passes)
-            {
-                pass.Apply();
-                device.DrawUserIndexedPrimitives(PrimitiveType.LineList, _vertices, 0, 8, _indices, 0, _indices.Length / 2);
-            }
+            device.DrawUserIndexedPrimitives(PrimitiveType.LineList, _vertices, 0, 8, _indices, 0, _indices.Length / 2);
         }
     }
 }

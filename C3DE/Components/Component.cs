@@ -157,6 +157,10 @@ namespace C3DE.Components
             return sceneObject.GetComponents<T>();
         }
 
+        public virtual void Reset()
+        {
+        }
+
         public virtual object Clone()
         {
             return MemberwiseClone();

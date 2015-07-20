@@ -10,10 +10,16 @@ namespace C3DE.Components.Colliders
     public abstract class Collider : Component
     {
         [DataMember]
-        protected Vector3 center;
+        protected bool autoCompute;
 
         [DataMember]
-        protected Vector3 size;
+        protected Vector3 minimum;
+
+        [DataMember]
+        protected Vector3 maximum;
+
+        [DataMember]
+        protected Vector3 center;
 
         /// <summary>
         /// Allow or not the collider to be picked by a ray cast.
@@ -30,13 +36,32 @@ namespace C3DE.Components.Colliders
         public Vector3 Center
         {
             get { return center; }
-            set { center = value; }
+            set
+            {
+                center = value;
+                minimum = maximum - value;
+                autoCompute = false;
+            }
         }
 
         public Vector3 Size
         {
-            get { return size; }
-            set { size = value; }
+            get { return maximum; }
+            set
+            {
+                maximum = value;
+                autoCompute = false;
+            }
+        }
+
+        public Vector3 Minimum
+        {
+            get { return minimum; }
+        }
+
+        public Vector3 Maximum
+        {
+            get { return maximum; }
         }
 
         /// <summary>
@@ -48,12 +73,20 @@ namespace C3DE.Components.Colliders
             IsPickable = true;
             IsTrigger = false;
             center = Vector3.Zero;
-            size = Vector3.One;
+            minimum = Vector3.Zero;
+            maximum = Vector3.Zero;
+            autoCompute = true;
         }
 
         public override void Start()
         {
             Compute();
+        }
+
+        public override void Reset()
+        {
+            autoCompute = true;
+            Update();
         }
 
         /// <summary>
@@ -79,13 +112,21 @@ namespace C3DE.Components.Colliders
         public void SetSize(float? x, float? y, float? z)
         {
             if (x.HasValue)
-                size.X = x.Value;
-
+            {
+                maximum.X = x.Value;
+                minimum.X = -x.Value;
+            }
             if (y.HasValue)
-                size.Y = y.Value;
+            {
+                maximum.Y = y.Value;
+                minimum.Y = -y.Value;
+            }
 
             if (z.HasValue)
-                size.Z = z.Value;
+            {
+                maximum.Z = z.Value;
+                minimum.Z = -z.Value;
+            }
         }
 
         public void SetCenter(float? x, float? y, float? z)

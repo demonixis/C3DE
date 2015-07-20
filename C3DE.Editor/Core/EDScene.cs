@@ -132,10 +132,10 @@ namespace C3DE.Editor.Core
             CreateMaterial("Hexagonal", "Textures/hexa_tex");
 
             var camMaterial = new BillboardMaterial(this, "Camera");
-            camMaterial.Texture = Asset.LoadTexture("Textures/Camera_Icon");
+            camMaterial.Texture = Asset.LoadTexture("Icons/Camera_Icon");
 
             var lightMaterial = new BillboardMaterial(this, "Light");
-            lightMaterial.Texture = Asset.LoadTexture("Textures/Light_Icon");
+            lightMaterial.Texture = Asset.LoadTexture("Icons/Light_Icon");
 
             var waterMaterial = new WaterMaterial(this, "WaterMaterial");
             waterMaterial.Texture = Asset.LoadTexture("Textures/water");
