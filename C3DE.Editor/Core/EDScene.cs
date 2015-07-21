@@ -13,6 +13,7 @@ using C3DE.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
+using System.IO;
 using System.Runtime.Serialization;
 using XNAGizmo;
 
@@ -59,7 +60,7 @@ namespace C3DE.Editor.Core
 
             light = CreateAddSceneObject<Light>("Directional Light", false);
             light.Transform.Position = new Vector3(0, 150, 150);
-            light.Direction = new Vector3(-0.5f, 0.75f, -0.5f);
+            light.Direction = new Vector3(0.75f, 0.75f, 0.75f);
             light.TypeLight = LightType.Directional;
             light.Backing = LightRenderMode.RealTime;
             light.Color = Color.White;
@@ -105,38 +106,41 @@ namespace C3DE.Editor.Core
 
         private void CreateMaterialCollection()
         {
-            // TODO: It's here for testing unitil the material creator is created.
+            var i = 0;
+            var colors = new Color[] { Color.Red, Color.Green, Color.Blue, Color.Yellow, Color.Purple };
+            var names = new string[] { "Red", "Green", "Blue", "Yellow", "Purple" };
+            var size = colors.Length;
 
-            var colors = new Color[]
-            {
-                Color.Red, Color.Green, Color.Blue, Color.Yellow, Color.Purple
-            };
-
-            var names = new string[]
-            {
-                "Red", "Green", "Blue", "Yellow", "Purple"
-            };
-
-            for (int i = 0, l = colors.Length; i < l; i++)
-            {
+            // Procedurales textures.
+            for (i = 0; i < size; i++)
                 CreateMaterial(string.Format("Border {0}", names[i]), GraphicsHelper.CreateBorderTexture(colors[i], Color.LightGray, 64, 64, 1));
+
+            for (i = 0; i < size; i++)
                 CreateMaterial(string.Format("Checkboard {0}", names[i]), GraphicsHelper.CreateCheckboardTexture(colors[i], Color.LightGray, 64, 64));
-                CreateMaterial(string.Format("Circle {0}", names[i]), GraphicsHelper.CreateCircleTexture(colors[i], Color.LightGray, 64));
+
+            // Voxel pack by Kenney Vleugels for Kenney (www.kenney.nl) / License (Creative Commons Zero, CC0)
+            var files = Directory.GetFiles(Path.Combine("Content", "Textures", "VoxelPack"));
+            var name = string.Empty;
+            for (i = 0; i < files.Length; i++)
+            {
+                name = Path.GetFileNameWithoutExtension(files[i]);
+                CreateMaterial(name, "Textures/VoxelPack/" + name);
             }
 
+            // Terrain textures
             CreateMaterial("Terrain Grass", "Textures/Terrain/Grass");
             CreateMaterial("Terrain Rock", "Textures/Terrain/Rock");
             CreateMaterial("Terrain Sand", "Textures/Terrain/Sand");
             CreateMaterial("Terrain Snow", "Textures/Terrain/Snow");
 
-            CreateMaterial("Hexagonal", "Textures/hexa_tex");
-
+            // Billboards for the editor
             var camMaterial = new BillboardMaterial(this, "Camera");
             camMaterial.Texture = Asset.LoadTexture("Icons/Camera_Icon");
 
             var lightMaterial = new BillboardMaterial(this, "Light");
             lightMaterial.Texture = Asset.LoadTexture("Icons/Light_Icon");
 
+            // Water material
             var waterMaterial = new WaterMaterial(this, "WaterMaterial");
             waterMaterial.Texture = Asset.LoadTexture("Textures/water");
             waterMaterial.NormalMap = Asset.LoadTexture("Textures/wavesbump");
@@ -243,7 +247,7 @@ namespace C3DE.Editor.Core
         private T CreateAddSceneObject<T>(string name, bool tag = true) where T : Component, new()
         {
             var sceneObject = new SceneObject(name);
-            
+
             if (tag)
                 sceneObject.Tag = EditorTag;
 

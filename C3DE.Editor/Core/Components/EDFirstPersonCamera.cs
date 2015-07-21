@@ -81,12 +81,14 @@ namespace C3DE.Editor.Core.Components
             {
                 rotation.Y -= EDRegistry.Mouse.Delta.X * LookSpeed * MouseSensibility.Y * Time.DeltaTime;
                 rotation.X -= EDRegistry.Mouse.Delta.Y * LookSpeed * MouseSensibility.X * Time.DeltaTime;
+                Screen.LockCursor = true;
             }
 
             if (EDRegistry.Mouse.Down(Inputs.MouseButton.Middle))
             {
                 translation.Y += EDRegistry.Mouse.Delta.Y * StrafeSpeed * MouseSensibility.Y * Time.DeltaTime;
-                translation.X += EDRegistry.Mouse.Delta.X * StrafeSpeed * MouseSensibility.X * Time.DeltaTime;
+                translation.X -= EDRegistry.Mouse.Delta.X * StrafeSpeed * MouseSensibility.X * Time.DeltaTime;
+                Screen.LockCursor = true;
             }
 
             translation.Z -= MoveSpeed * EDRegistry.Mouse.Wheel * Time.DeltaTime;

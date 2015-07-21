@@ -110,6 +110,9 @@ namespace C3DE.Editor.MonoGameBridge
 
         void C3DEGameHost_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
+            if (e.LeftButton == System.Windows.Input.MouseButtonState.Pressed)
+                return;
+
             Focus();
             CaptureMouse();
             Screen.LockCursor = true;

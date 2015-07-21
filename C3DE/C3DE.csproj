@@ -94,6 +94,7 @@
     <Compile Include="Materials\PreLightMaterial.cs" />
     <Compile Include="Materials\UnlitColorMaterial.cs" />
     <Compile Include="Materials\UnlitMaterial.cs" />
+    <Compile Include="PostProcess\PostProcessManager.cs" />
     <Compile Include="Prefabs\LavaPrefab.cs" />
     <Compile Include="Rendering\IRenderer.cs" />
     <Compile Include="Materials\FresnelMaterial.cs" />
