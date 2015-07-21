@@ -12,6 +12,7 @@ namespace C3DE.Editor.Core.Components
     using WpfMouseWheelEventArgs = System.Windows.Input.MouseWheelEventArgs;
     using System.Windows;
     using System.Timers;
+    using System.Runtime.InteropServices;
 
     public class EDMouseComponent : MouseComponent
     {
@@ -52,6 +53,9 @@ namespace C3DE.Editor.Core.Components
         }
 
         #endregion
+
+        [DllImport("User32.dll")]
+        private static extern bool SetCursorPos(int x, int y);
 
         public EDMouseComponent(Game game, UIElement uiElement)
             : base(game)
@@ -97,6 +101,13 @@ namespace C3DE.Editor.Core.Components
                 LastY = Y;
                 _needsUpdate = false;
             }
+        }
+
+        public override void SetPosition(int x, int y)
+        {
+            var xL = (int)WpfApplication.Current.MainWindow.Left;
+            var yT = (int)WpfApplication.Current.MainWindow.Top;
+            SetCursorPos(x + xL, y + yT);
         }
 
         #region Mouse click

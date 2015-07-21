@@ -48,7 +48,7 @@ namespace C3DE.Editor.Core.Components
             transform.Rotate(ref rotation);
 
             // Update target
-            EDRegistry.Camera.Target = transform.Position + Vector3.Transform(EDRegistry.Camera.Reference, _rotationMatrix);
+            EDRegistry.Camera.Target = transform.Position + Vector3.Transform(Vector3.Forward, _rotationMatrix);
 
             translation *= Velocity;
             rotation *= AngularVelocity;
@@ -63,16 +63,16 @@ namespace C3DE.Editor.Core.Components
         protected override void UpdateKeyboardInput()
         {
             if (EDRegistry.Keys.Pressed(WinInput.Key.Up))
-                translation.Z += MoveSpeed * Time.DeltaTime;
-
-            else if (EDRegistry.Keys.Pressed(WinInput.Key.Down))
                 translation.Z -= MoveSpeed * Time.DeltaTime;
 
+            else if (EDRegistry.Keys.Pressed(WinInput.Key.Down))
+                translation.Z += MoveSpeed * Time.DeltaTime;
+
             if (EDRegistry.Keys.Pressed(WinInput.Key.Left))
-                translation.X += MoveSpeed * Time.DeltaTime / 2.0f;
+                translation.X -= MoveSpeed * Time.DeltaTime / 2.0f;
 
             else if (EDRegistry.Keys.Pressed(WinInput.Key.Right))
-                translation.X -= MoveSpeed * Time.DeltaTime / 2.0f;
+                translation.X += MoveSpeed * Time.DeltaTime / 2.0f;
         }
 
         protected override void UpdateMouseInput()
@@ -80,7 +80,7 @@ namespace C3DE.Editor.Core.Components
             if (EDRegistry.Mouse.Down(Inputs.MouseButton.Right))
             {
                 rotation.Y -= EDRegistry.Mouse.Delta.X * LookSpeed * MouseSensibility.Y * Time.DeltaTime;
-                rotation.X += EDRegistry.Mouse.Delta.Y * LookSpeed * MouseSensibility.X * Time.DeltaTime;
+                rotation.X -= EDRegistry.Mouse.Delta.Y * LookSpeed * MouseSensibility.X * Time.DeltaTime;
             }
 
             if (EDRegistry.Mouse.Down(Inputs.MouseButton.Middle))
@@ -89,7 +89,7 @@ namespace C3DE.Editor.Core.Components
                 translation.X += EDRegistry.Mouse.Delta.X * StrafeSpeed * MouseSensibility.X * Time.DeltaTime;
             }
 
-            translation.Z += MoveSpeed * EDRegistry.Mouse.Wheel * Time.DeltaTime;
+            translation.Z -= MoveSpeed * EDRegistry.Mouse.Wheel * Time.DeltaTime;
         }
 
         protected override void UpdateGamepadInput()

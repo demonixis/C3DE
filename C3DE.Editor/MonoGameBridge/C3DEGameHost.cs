@@ -96,8 +96,26 @@ namespace C3DE.Editor.MonoGameBridge
             _scene.Initialize();
             _scene.RenderSettings.Skybox.Generate();
 
+            MouseDown += C3DEGameHost_MouseDown;
+            MouseUp += C3DEGameHost_MouseUp;
+
             if (EngineReady != null)
                 EngineReady();
+        }
+
+        void C3DEGameHost_MouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            ReleaseMouseCapture();
+            Screen.LockCursor = false;
+            Cursor = System.Windows.Input.Cursors.Arrow;
+        }
+
+        void C3DEGameHost_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            Focus();
+            CaptureMouse();
+            Screen.LockCursor = true;
+            Cursor = System.Windows.Input.Cursors.None;
         }
 
         protected override void Update(Stopwatch timer)
@@ -119,6 +137,9 @@ namespace C3DE.Editor.MonoGameBridge
             graphicsDevice.Clear(Color.CornflowerBlue);
             _renderer.RenderEditor(_scene, _scene.camera, renderTarget);
             gizmoComponent.Draw();
+
+            if (Screen.LockCursor)
+                EDRegistry.Mouse.SetPosition(Screen.WidthPerTwo, Screen.HeightPerTwo);
         }
 
         #endregion

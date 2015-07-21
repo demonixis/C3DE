@@ -53,8 +53,8 @@ namespace C3DE.Editor.Core
             DefaultMaterial.Texture = GraphicsHelper.CreateBorderTexture(Color.DimGray, Color.LightGray, 128, 128, 2);
 
             camera = CreateAddSceneObject<Camera>("EditorCamera.Main");
-            camera.Setup(new Vector3(0.0f, 10.0f, -30.0f), Vector3.Zero, Vector3.Up);
-            camera.Transform.Rotation = new Vector3(MathHelper.Pi / 6, 0.0f, 0.0f);
+            camera.Setup(new Vector3(0.0f, 10.0f, 30.0f), Vector3.Zero, Vector3.Up);
+            camera.Transform.Rotation = new Vector3(-MathHelper.Pi / 6, 0.0f, 0.0f);
             camera.AddComponent<EDFirstPersonCamera>();
 
             light = CreateAddSceneObject<Light>("Directional Light", false);
