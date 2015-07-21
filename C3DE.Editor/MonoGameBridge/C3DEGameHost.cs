@@ -81,8 +81,6 @@ namespace C3DE.Editor.MonoGameBridge
             _gameComponents.Add(EDRegistry.Keys);
             _gameComponents.Add(new Time());
 
-            Screen.Setup((int)ActualWidth, (int)ActualHeight, null, null);
-
             _renderer = new ForwardRenderer();
             _renderer.Initialize(_content);
 

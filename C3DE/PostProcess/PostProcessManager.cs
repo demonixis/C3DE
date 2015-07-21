@@ -36,16 +36,20 @@ namespace C3DE.PostProcess
 
         public void Apply(RenderTarget2D sceneRT)
         {
+            var previousRTs = Application.GraphicsDevice.GetRenderTargets();
+
             _source = sceneRT;
+
             for (int i = 0, l = _postProcesses.Count; i < l; i++)
             {
                 if (_postProcesses[i].Enabled)
                 {
-                    _postProcesses[i].Pass(_spriteBatch, _source, _destination);
+                    _postProcesses[i].Apply(_spriteBatch, _source, _destination);
                     _source = _destination;
-                    _destination = new RenderTarget2D(Application.GraphicsDevice, Application.GraphicsDevice.Viewport.Width, Application.GraphicsDevice.Viewport.Height);
                 }
             }
+
+            Application.GraphicsDevice.SetRenderTargets(previousRTs);
         }
     }
 }
