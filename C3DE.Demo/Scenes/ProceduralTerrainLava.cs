@@ -26,7 +26,7 @@ namespace C3DE.Demo.Scenes
 
             // A light is required to illuminate objects.
             var lightPrefab = new LightPrefab("light", LightType.Directional);
-            lightPrefab.Transform.Translate(0, 10, 0);
+            lightPrefab.Transform.Rotation = new Vector3(-1, 1, 0);
             lightPrefab.Light.ShadowGenerator.SetShadowMapSize(Application.GraphicsDevice, 1024);
             lightPrefab.EnableShadows = true;
             Add(lightPrefab);

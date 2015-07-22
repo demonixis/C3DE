@@ -30,7 +30,7 @@ namespace C3DE.Demo.Scenes
 
             // Light
             var lightPrefab = new LightPrefab("light", LightType.Directional);
-            lightPrefab.Light.Direction = new Vector3(0, 1, -1);
+            lightPrefab.Transform.Rotation = new Vector3(-1, 1, 0);
             lightPrefab.Light.ShadowGenerator.SetShadowMapSize(Application.GraphicsDevice, 1024);
             lightPrefab.EnableShadows = true;
             lightPrefab.Light.Intensity = 0.5f;

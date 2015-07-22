@@ -30,7 +30,7 @@ namespace C3DE.Demo.Scenes
             lightPrefab.Light.Range = 25;
             lightPrefab.Light.Intensity = 1.0f;
             lightPrefab.Light.FallOf = 5f;
-            lightPrefab.Light.Direction = new Vector3(0, 0.5f, 1);
+            lightPrefab.Transform.Rotation = new Vector3(-1, 1, 0);
             lightPrefab.Light.Angle = MathHelper.PiOver4;
             lightPrefab.Light.ShadowGenerator.ShadowStrength = 0.6f;
             lightPrefab.Light.ShadowGenerator.SetShadowMapSize(Application.GraphicsDevice, 1024);

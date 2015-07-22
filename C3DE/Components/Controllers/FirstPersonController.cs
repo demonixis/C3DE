@@ -125,7 +125,7 @@ namespace C3DE.Components.Controllers
             transform.Rotate(ref rotation);
 
             // Update target
-            _camera.Target = transform.Position + Vector3.Transform(_camera.Reference, _rotationMatrix);
+            _camera.Target = transform.Position + Vector3.Transform(Vector3.Forward, _rotationMatrix);
 
             translation *= Velocity;
             rotation *= AngularVelocity;

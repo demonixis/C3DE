@@ -66,28 +66,22 @@ namespace C3DE.Components.Renderers
             {
                 _renderer.ComputeBoundingInfos();
                 _corners = _renderer.boundingBox.GetCorners();
-
-                for (int i = 0; i < 8; i++)
-                {
-                    _vertices[i].Position = _corners[i] * transform.LocalScale;
-                    _vertices[i].Color = LineColor;
-                }
-
-                _effect.World = Matrix.CreateFromYawPitchRoll(transform.Rotation.Y, transform.Rotation.X, transform.Rotation.Z) * Matrix.CreateTranslation(transform.Position);
             }
             else
             {
-                _corners = _boxCollider.BoundingBox.GetCorners();
-
-                for (int i = 0; i < 8; i++)
-                {
-                    _vertices[i].Position = _corners[i];
-                    _vertices[i].Color = LineColor;
-                }
-
-                _effect.World = Matrix.CreateFromYawPitchRoll(transform.Rotation.Y, transform.Rotation.X, transform.Rotation.Z);
+                var box = new BoundingBox();
+                box.Min = _boxCollider.Minimum;
+                box.Max = _boxCollider.Maximum;
+                _corners = box.GetCorners();
             }
 
+            for (int i = 0; i < 8; i++)
+            {
+                _vertices[i].Position = _corners[i] * transform.LocalScale;
+                _vertices[i].Color = LineColor;
+            }
+
+            _effect.World = Matrix.CreateFromYawPitchRoll(transform.Rotation.Y, transform.Rotation.X, transform.Rotation.Z) * Matrix.CreateTranslation(transform.Position);
             _effect.View = Camera.main.view;
             _effect.Projection = Camera.main.projection;
             _effect.CurrentTechnique.Passes[0].Apply();

@@ -18,8 +18,8 @@ namespace C3DE.Editor.Core.Components
     {
         private UIElement _uiElement;
         private float _wheel = 0;
-        private bool _needsUpdate;
         private Vector2 _sensibility;
+        private Timer _timer;
 
         #region Fields
 
@@ -62,13 +62,25 @@ namespace C3DE.Editor.Core.Components
             MouseButtons = new bool[3];
             LastMouseButtons = new bool[3];
             _sensibility = new Vector2(0.05f);
-            _needsUpdate = false;
             _uiElement = uiElement;
             _uiElement.MouseDown += CheckMouseState;
             _uiElement.MouseUp += CheckMouseState;
             _uiElement.MouseMove += CheckMouseState;
             _uiElement.MouseWheel += OnMouseWheel;
             _uiElement.MouseLeave += CheckMouseState;
+            _timer = new Timer(50);
+            _timer.Elapsed += _timer_Elapsed;
+            _timer.Start();
+        }
+
+        private void _timer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            LastX = X;
+            LastY = Y;
+            LastMouseButtons[0] = MouseButtons[0];
+            LastMouseButtons[1] = MouseButtons[1];
+            LastMouseButtons[2] = MouseButtons[2];
+            _timer.Start();
         }
 
         protected override void Dispose(bool disposing)
@@ -91,51 +103,30 @@ namespace C3DE.Editor.Core.Components
             _delta.X = (X - LastX) * _sensibility.X;
             _delta.Y = (Y - LastY) * _sensibility.Y;
             _wheel *= 0.8f;
-
-            if (_needsUpdate)
-            {
-                LastX = X;
-                LastY = Y;
-                _needsUpdate = false;
-            }
         }
 
         public override void SetPosition(int x, int y)
         {
             var xL = (int)WpfApplication.Current.MainWindow.Left;
             var yT = (int)WpfApplication.Current.MainWindow.Top;
+            _delta = Vector2.Zero;
             SetCursorPos(x + xL, y + yT);
         }
 
         #region Mouse click
 
-        public override bool Clicked(MouseButton button = MouseButton.Left)
+        public override bool JustClicked(MouseButton button = MouseButton.Left)
         {
-            bool clicked = false;
+            if (button == MouseButton.Any)
+                return JustClicked(MouseButton.Left) || JustClicked(MouseButton.Middle) || JustClicked(MouseButton.Right);
 
-            if (button == MouseButton.Left)
-                clicked = !MouseButtons[0] && LastMouseButtons[0];
-            else if (button == MouseButton.Middle)
-                clicked = !MouseButtons[1] && LastMouseButtons[1];
-            else if (button == MouseButton.Right)
-                clicked = !MouseButtons[2] && LastMouseButtons[2];
-
-            return clicked;
+            return !MouseButtons[(int)button] && LastMouseButtons[(int)button];
         }
 
         protected override bool MouseButtonState(MouseButton button, ButtonState state)
         {
-            bool value = state == ButtonState.Pressed ? true : false;
-            bool result = false;
-
-            switch (button)
-            {
-                case MouseButton.Left: result = MouseButtons[0] == value; break;
-                case MouseButton.Middle: result = MouseButtons[1] == value; break;
-                case MouseButton.Right: result = MouseButtons[2] == value; break;
-            }
-
-            return result;
+            var value = state == ButtonState.Pressed ? true : false;
+            return MouseButtons[(int)button] == value;
         }
 
         #endregion
@@ -144,19 +135,15 @@ namespace C3DE.Editor.Core.Components
 
         private void OnMouseWheel(object sender, WpfMouseWheelEventArgs e)
         {
-            _wheel += (float)e.Delta * 0.01f;
+            _wheel += e.Delta * 0.01f;
         }
 
         private void CheckMouseState(object sender, WpfMouseEventArgs e)
         {
-            LastMouseButtons[0] = MouseButtons[0];
-            LastMouseButtons[1] = MouseButtons[1];
-            LastMouseButtons[2] = MouseButtons[2];
-
             MouseButtons[0] = e.LeftButton == WpfMouseButtonState.Pressed;
             MouseButtons[1] = e.MiddleButton == WpfMouseButtonState.Pressed;
             MouseButtons[2] = e.RightButton == WpfMouseButtonState.Pressed;
-
+            
             var position = WpfMouse.GetPosition(_uiElement);
 
             LastX = X;
@@ -164,8 +151,6 @@ namespace C3DE.Editor.Core.Components
 
             X = (int)position.X;
             Y = (int)position.Y;
-
-            _needsUpdate = true;
         }
 
         #endregion

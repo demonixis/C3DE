@@ -77,9 +77,9 @@ namespace C3DE.Materials
                 }
 
                 // Lighting infos.
-                effect.Parameters["LightColor"].SetValue(light0.diffuseColor);
-                effect.Parameters["LightDirection"].SetValue(light0.Direction);
-                effect.Parameters["LightPosition"].SetValue(light0.Transform.Position);
+                effect.Parameters["LightColor"].SetValue(light0.color);
+                effect.Parameters["LightDirection"].SetValue(light0.transform.Rotation);
+                effect.Parameters["LightPosition"].SetValue(light0.transform.Position);
                 effect.Parameters["LightIntensity"].SetValue(light0.Intensity);
                 effect.Parameters["LightRange"].SetValue(light0.Range);
                 effect.Parameters["LightFallOff"].SetValue((int)light0.FallOf);

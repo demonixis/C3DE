@@ -20,7 +20,7 @@ namespace C3DE.Demo.Scripts
         {
             base.Update();
 
-            if (Input.Mouse.Clicked())
+            if (Input.Mouse.JustClicked())
             {
                 //FIXME
                 var raycastInfo = new RaycastInfo[0];

@@ -105,7 +105,7 @@ namespace C3DE.Rendering
                 {
                     worldViewProjection = (Matrix.CreateScale(light.Range) * light.Transform.world) * viewProjection;
                     _lightingFX.Parameters["WorldViewProjection"].SetValue(worldViewProjection);
-                    _lightingFX.Parameters["LightColor"].SetValue(light.diffuseColor);
+                    _lightingFX.Parameters["LightColor"].SetValue(light.color);
                     _lightingFX.Parameters["LightAttenuation"].SetValue(light.FallOf);
                     _lightingFX.Parameters["LightPosition"].SetValue(light.Transform.Position);
                     _lightingFX.Parameters["LightRange"].SetValue(light.Range);

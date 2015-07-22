@@ -101,8 +101,8 @@ namespace C3DE.Materials
             if (scene.lights.Count > 0)
             {
                 var light0 = scene.Lights[0];
-                effect.Parameters["LightColor"].SetValue(light0.diffuseColor);
-                effect.Parameters["LightDirection"].SetValue(light0.Direction);
+                effect.Parameters["LightColor"].SetValue(light0.color);
+                effect.Parameters["LightDirection"].SetValue(light0.transform.Rotation);
                 effect.Parameters["LightIntensity"].SetValue(light0.Intensity);
             }
 

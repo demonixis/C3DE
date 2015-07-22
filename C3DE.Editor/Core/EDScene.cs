@@ -60,7 +60,7 @@ namespace C3DE.Editor.Core
 
             light = CreateAddSceneObject<Light>("Directional Light", false);
             light.Transform.Position = new Vector3(0, 150, 150);
-            light.Direction = new Vector3(0.75f, 0.75f, 0.75f);
+            light.Transform.Rotation = new Vector3(-0.6f, 1, 0.6f);
             light.TypeLight = LightType.Directional;
             light.Backing = LightRenderMode.RealTime;
             light.Color = Color.White;
@@ -207,7 +207,7 @@ namespace C3DE.Editor.Core
                 _addList.Clear();
             }
 
-            if (EDRegistry.Mouse.Clicked(MouseButton.Left))
+            if (EDRegistry.Mouse.JustClicked(MouseButton.Left))
             {
                 var ray = camera.GetRay(EDRegistry.Mouse.Position);
                 RaycastInfo info;

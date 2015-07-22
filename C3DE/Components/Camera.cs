@@ -17,7 +17,6 @@ namespace C3DE.Components
         protected internal Matrix projection;
         protected internal Color clearColor;
 		protected internal short depth;
-        protected Vector3 reference;
         private Vector3 _target;
         private Vector3 _upVector;
         private float _fieldOfView;
@@ -99,13 +98,6 @@ namespace C3DE.Components
         }
 
         [DataMember]
-        public Vector3 Reference
-        {
-            get { return reference; }
-            set { reference = value; }
-        }
-
-        [DataMember]
         public Vector3 Target
         {
             get { return _target; }
@@ -146,7 +138,6 @@ namespace C3DE.Components
             _projectionType = CameraProjectionType.Perspective;
             clearColor = Color.Black;
             depth = 0;
-            reference = new Vector3(0.0f, 0.0f, 1.0f);
         }
 
         public override void Start()

@@ -1,12 +1,11 @@
-﻿using C3DE.Components.Lights;
-using C3DE.Components.Renderers;
+﻿using C3DE.Components.Renderers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
-namespace C3DE
+namespace C3DE.Components.Lights
 {
     /// <summary>
     /// A generator of shadow for a specified light.

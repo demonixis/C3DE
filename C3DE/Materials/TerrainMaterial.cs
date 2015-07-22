@@ -42,8 +42,8 @@ namespace C3DE.Materials
                 var light0 = scene.lights[0];
 
                 // Light
-                effect.Parameters["LightColor"].SetValue(light0.diffuseColor);
-                effect.Parameters["LightDirection"].SetValue(light0.Direction);
+                effect.Parameters["LightColor"].SetValue(light0.color);
+                effect.Parameters["LightDirection"].SetValue(light0.transform.Rotation);
                 effect.Parameters["LightIntensity"].SetValue(light0.Intensity);
 
                 // Update shadow data.

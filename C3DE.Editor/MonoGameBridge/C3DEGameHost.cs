@@ -130,6 +130,7 @@ namespace C3DE.Editor.MonoGameBridge
                 component.Update(_gameTime);
 
             _scene.Update();
+
             gizmoComponent.Update();
         }
 

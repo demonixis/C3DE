@@ -24,9 +24,9 @@ namespace C3DE.Demo.Scenes
             // And a light
             var lightPrefab = new LightPrefab("light", LightType.Directional);
             Add(lightPrefab);
-            lightPrefab.Light.Direction = new Vector3(1, 1, 0);
+            lightPrefab.Transform.Rotation = new Vector3(-1, 1, 0);
             lightPrefab.Light.Color = Color.LightSkyBlue;
-            lightPrefab.Light.Intensity = 1.5f;
+            lightPrefab.Light.Intensity = 1.0f;
             lightPrefab.AddComponent<DemoBehaviour>();
             lightPrefab.EnableShadows = true;
 

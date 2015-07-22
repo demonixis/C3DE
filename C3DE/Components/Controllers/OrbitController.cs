@@ -96,7 +96,7 @@ namespace C3DE.Components.Controllers
             CheckAngle();
             CheckDistance();
 
-            _position = Vector3.Transform(Vector3.Backward, Matrix.CreateFromYawPitchRoll(_angle.X, _angle.Y, 0));
+            _position = Vector3.Transform(Vector3.Forward, Matrix.CreateFromYawPitchRoll(_angle.X, _angle.Y, 0));
             _position *= _distance;
             _position += _camera.Target;
 

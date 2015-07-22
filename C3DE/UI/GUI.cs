@@ -118,7 +118,7 @@ namespace C3DE.UI
             if (rect.Contains(_cacheVec2))
             {
                 index = 1;
-                if (Input.Mouse.Clicked() || Input.Touch.JustPressed())
+                if (Input.Mouse.JustClicked() || Input.Touch.JustPressed())
                     index = 2;
             }
 
@@ -178,7 +178,7 @@ namespace C3DE.UI
             {
                 index = 1;
 
-                if (Input.Mouse.Clicked() || Input.Touch.JustPressed())
+                if (Input.Mouse.JustClicked() || Input.Touch.JustPressed())
                     index = isChecked ? 0 : 2;
 
                 _cacheRect.X = rect.X + 4;

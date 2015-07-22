@@ -351,7 +351,7 @@ namespace XNAGizmo
             {
                 _lastIntersectionPosition = _intersectPosition;
 
-                if (EDRegistry.Mouse.Clicked())
+                if (EDRegistry.Mouse.JustClicked())
                     ResetDeltas();
 
                 if (WasButtonHeld(MouseButton.Left) && ActiveAxis != GizmoAxis.None)

@@ -2,6 +2,7 @@
 using C3DE.Components.Lights;
 using C3DE.Demo.Scripts;
 using C3DE.Prefabs;
+using Microsoft.Xna.Framework;
 
 namespace C3DE.Demo.Scenes
 {
@@ -21,6 +22,7 @@ namespace C3DE.Demo.Scenes
 
             // Light
             var lightPrefab = new LightPrefab("lightPrefab", LightType.Directional);
+            lightPrefab.Transform.Rotation = new Vector3(-1, 1, 0);
             Add(lightPrefab);
 
             var sceneObject = new SceneObject("HexaGrid");

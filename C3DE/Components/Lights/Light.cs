@@ -1,5 +1,4 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using System.Runtime.Serialization;
 
 namespace C3DE.Components.Lights
@@ -20,7 +19,7 @@ namespace C3DE.Components.Lights
         internal protected Matrix viewMatrix;
         internal protected Matrix projectionMatrix;
         internal protected ShadowGenerator shadowGenerator;
-        internal protected Vector3 diffuseColor;
+        internal protected Vector3 color;
 
         public Matrix View
         {
@@ -52,8 +51,8 @@ namespace C3DE.Components.Lights
         [DataMember]
         public Color Color
         {
-            get { return new Color(diffuseColor); }
-            set { diffuseColor = value.ToVector3(); }
+            get { return new Color(color); }
+            set { color = value.ToVector3(); }
         }
 
         /// <summary>
@@ -81,12 +80,6 @@ namespace C3DE.Components.Lights
         public LightType TypeLight { get; set; }
 
         /// <summary>
-        /// The direction of the directional light.
-        /// </summary>
-        [DataMember]
-        public Vector3 Direction { get; set; }
-
-        /// <summary>
         /// The angle used by the Spot light.
         /// </summary>
         [DataMember]
@@ -98,9 +91,8 @@ namespace C3DE.Components.Lights
             viewMatrix = Matrix.Identity;
             projectionMatrix = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45), 1, 1, 500);
             viewMatrix = Matrix.CreateLookAt(Vector3.Zero, Vector3.Zero, Vector3.Up);
-            diffuseColor = new Vector3(1.0f, 1.0f, 1.0f);
+            color = new Vector3(1.0f, 1.0f, 1.0f);
             Intensity = 1.0f;
-            Direction = new Vector3(1, 1, 0);
             TypeLight = LightType.Ambient;
             Range = 5000.0f;
             FallOf = 2.0f;
@@ -119,10 +111,10 @@ namespace C3DE.Components.Lights
             Vector3 dir = sphere.Center - sceneObject.Transform.Position;
             dir.Normalize();
 
-            viewMatrix = Matrix.CreateLookAt(sceneObject.Transform.Position, sphere.Center, Vector3.Up);
+            viewMatrix = Matrix.CreateLookAt(transform.Position, sphere.Center, Vector3.Up);
             float size = sphere.Radius;
 
-            float dist = Vector3.Distance(sceneObject.Transform.Position, sphere.Center);
+            float dist = Vector3.Distance(transform.Position, sphere.Center);
             projectionMatrix = Matrix.CreateOrthographicOffCenter(-size, size, size, -size, dist - sphere.Radius, dist + sphere.Radius * 2);
         }
 

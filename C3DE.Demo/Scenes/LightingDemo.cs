@@ -34,7 +34,7 @@ namespace C3DE.Demo.Scenes
             lightPrefab.Light.Intensity = 2.0f;
             lightPrefab.Light.FallOf = 5f;
             lightPrefab.Light.Color = Color.Violet;
-            lightPrefab.Light.Direction = new Vector3(-1, 1, -1);
+            lightPrefab.Transform.Rotation = new Vector3(-1, 1, 0);
             lightPrefab.Light.Angle = 0.1f;
             lightPrefab.Light.ShadowGenerator.ShadowStrength = 0.6f; // FIXME need to be inverted
             lightPrefab.Light.ShadowGenerator.SetShadowMapSize(Application.GraphicsDevice, 1024);
