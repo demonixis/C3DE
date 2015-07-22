@@ -190,7 +190,8 @@ namespace XNAGizmo
         private float _rotationSnapDelta;
 
         public GizmoComponent(GraphicsDevice graphics)
-            : this(graphics, Matrix.Identity) { }
+            : this(graphics, Matrix.Identity)
+        { }
 
         public GizmoComponent(GraphicsDevice graphics, Matrix world)
         {
@@ -331,7 +332,7 @@ namespace XNAGizmo
                 Selection.Clear();
         }
 
-        protected void ResetDeltas()
+        public void ResetDeltas()
         {
             _tDelta = Vector3.Zero;
             _lastIntersectionPosition = Vector3.Zero;
@@ -349,6 +350,9 @@ namespace XNAGizmo
             if (_isActive)
             {
                 _lastIntersectionPosition = _intersectPosition;
+
+                if (EDRegistry.Mouse.Clicked())
+                    ResetDeltas();
 
                 if (WasButtonHeld(MouseButton.Left) && ActiveAxis != GizmoAxis.None)
                 {
@@ -590,10 +594,7 @@ namespace XNAGizmo
             _axisAlignedWorld = _screenScaleMatrix * Matrix.CreateWorld(_position, SceneWorld.Forward, SceneWorld.Up);
 
             // Assign World
-            if (ActiveSpace == TransformSpace.World ||
-                ActiveMode == GizmoMode.Rotate ||
-                ActiveMode == GizmoMode.NonUniformScale ||
-                ActiveMode == GizmoMode.UniformScale)
+            if (ActiveSpace == TransformSpace.World || ActiveMode == GizmoMode.Rotate || ActiveMode == GizmoMode.NonUniformScale || ActiveMode == GizmoMode.UniformScale)
             {
                 _gizmoWorld = _axisAlignedWorld;
 

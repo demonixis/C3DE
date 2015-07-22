@@ -8,6 +8,7 @@ Thumbs.db
 *.userprefs
 *.DS_Store
 *.directory
+*.vs
 ipch/
 obj/
 [Bb]in

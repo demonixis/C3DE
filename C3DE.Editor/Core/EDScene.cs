@@ -119,12 +119,20 @@ namespace C3DE.Editor.Core
                 CreateMaterial(string.Format("Checkboard {0}", names[i]), GraphicsHelper.CreateCheckboardTexture(colors[i], Color.LightGray, 64, 64));
 
             // Voxel pack by Kenney Vleugels for Kenney (www.kenney.nl) / License (Creative Commons Zero, CC0)
-            var files = Directory.GetFiles(Path.Combine("Content", "Textures", "VoxelPack"));
+            var path = Path.Combine("Content", "Textures", "VoxelPack");
+            var files = Directory.GetFiles(path);
             var name = string.Empty;
             for (i = 0; i < files.Length; i++)
             {
                 name = Path.GetFileNameWithoutExtension(files[i]);
                 CreateMaterial(name, "Textures/VoxelPack/" + name);
+            }
+
+            files = Directory.GetFiles(Path.Combine(path, "Details"));
+            for (i = 0; i < files.Length; i++)
+            {
+                name = Path.GetFileNameWithoutExtension(files[i]);
+                CreateBillboardMaterial(name, "Textures/VoxelPack/Details/" + name);
             }
 
             // Terrain textures
@@ -134,11 +142,8 @@ namespace C3DE.Editor.Core
             CreateMaterial("Terrain Snow", "Textures/Terrain/Snow");
 
             // Billboards for the editor
-            var camMaterial = new BillboardMaterial(this, "Camera");
-            camMaterial.Texture = Asset.LoadTexture("Icons/Camera_Icon");
-
-            var lightMaterial = new BillboardMaterial(this, "Light");
-            lightMaterial.Texture = Asset.LoadTexture("Icons/Light_Icon");
+            CreateBillboardMaterial("ED_Camera", "Icons/Camera_Icon");
+            CreateBillboardMaterial("ED_Light", "Icons/Light_Icon");
 
             // Water material
             var waterMaterial = new WaterMaterial(this, "WaterMaterial");
@@ -148,12 +153,23 @@ namespace C3DE.Editor.Core
 
         private void CreateMaterial(string name, string path)
         {
-            CreateMaterial(name, Application.Content.Load<Texture2D>(path));
+            CreateMaterial(name, Asset.LoadTexture(path));
+        }
+
+        private void CreateBillboardMaterial(string name, string path)
+        {
+            CreateBillboardMaterial(name, Asset.LoadTexture(path));
         }
 
         private void CreateMaterial(string name, Texture2D texture)
         {
             var mat = new StandardMaterial(this, name);
+            mat.Texture = texture;
+        }
+
+        private void CreateBillboardMaterial(string name, Texture2D texture)
+        {
+            var mat = new BillboardMaterial(this, name);
             mat.Texture = texture;
         }
 

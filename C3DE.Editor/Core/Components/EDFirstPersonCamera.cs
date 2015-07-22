@@ -77,18 +77,18 @@ namespace C3DE.Editor.Core.Components
 
         protected override void UpdateMouseInput()
         {
+            var delta = EDRegistry.Mouse.Delta;
+
             if (EDRegistry.Mouse.Down(Inputs.MouseButton.Right))
             {
-                rotation.Y -= EDRegistry.Mouse.Delta.X * LookSpeed * MouseSensibility.Y * Time.DeltaTime;
-                rotation.X -= EDRegistry.Mouse.Delta.Y * LookSpeed * MouseSensibility.X * Time.DeltaTime;
-                Screen.LockCursor = true;
+                rotation.Y -= delta.X * LookSpeed * MouseSensibility.Y * Time.DeltaTime;
+                rotation.X -= delta.Y * LookSpeed * MouseSensibility.X * Time.DeltaTime;
             }
 
             if (EDRegistry.Mouse.Down(Inputs.MouseButton.Middle))
             {
-                translation.Y += EDRegistry.Mouse.Delta.Y * StrafeSpeed * MouseSensibility.Y * Time.DeltaTime;
-                translation.X -= EDRegistry.Mouse.Delta.X * StrafeSpeed * MouseSensibility.X * Time.DeltaTime;
-                Screen.LockCursor = true;
+                translation.Y += delta.Y * StrafeSpeed * MouseSensibility.Y * Time.DeltaTime;
+                translation.X -= delta.X * StrafeSpeed * MouseSensibility.X * Time.DeltaTime;
             }
 
             translation.Z -= MoveSpeed * EDRegistry.Mouse.Wheel * Time.DeltaTime;

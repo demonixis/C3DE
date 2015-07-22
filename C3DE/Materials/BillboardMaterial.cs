@@ -6,7 +6,7 @@ using System.Runtime.Serialization;
 namespace C3DE.Materials
 {
     [DataContract]
-    public class BillboardMaterial : UnlitMaterial
+    public class BillboardMaterial : TransparentMaterial
     {
         public BillboardMaterial()
             : this(null)

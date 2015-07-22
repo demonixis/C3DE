@@ -32,33 +32,12 @@ namespace C3DE.Editor
             EDRegistry.Mouse = new EDMouseComponent(null, editorGameHost);
 
             Messenger.Register(EditorEvent.SceneObjectSelected, OnSceneObjectSelected);
-            Messenger.Register(EditorEvent.SceneObjectUnSelected, OnSceneObjectUnselected);
-
-            componentContainer.Children.Clear();
+            Messenger.Register(EditorEvent.SceneObjectUnSelected, OnSceneObjectUnselected);         
         }
 
         private void InitializeUI()
         {
-            // List all materials
-            MaterialsList.Items.Clear();
-
-            TextBlock item = null;
-
-            var materials = EDScene.current.Materials.ToArray();
-            System.Array.Sort(materials, (m1, m2) =>
-            {
-                return string.Compare(m1.Name, m2.Name);
-            });
-
-            foreach (var material in materials)
-            {
-                item = new TextBlock();
-                item.Text = material.Name;
-                MaterialsList.Items.Add(item);
-            }
-
             sceneListControl.UpdateList();
-
             projectExplorer.ShowFilesForDirectory("temp");
         }
 
@@ -115,6 +94,8 @@ namespace C3DE.Editor
                         continue;
                     }
                 }
+
+                MainTabControl.SelectedItem = MainTabControl.Items[0];
             }
         }
 

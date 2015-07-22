@@ -19,7 +19,6 @@ namespace C3DE.Editor.Core.Components
         private UIElement _uiElement;
         private float _wheel = 0;
         private bool _needsUpdate;
-        private Timer _clickTimer;
         private Vector2 _sensibility;
 
         #region Fields
@@ -64,14 +63,12 @@ namespace C3DE.Editor.Core.Components
             LastMouseButtons = new bool[3];
             _sensibility = new Vector2(0.05f);
             _needsUpdate = false;
-            _clickTimer = new Timer(0.2);
-            _clickTimer.Elapsed += OnClickTimerDone;
             _uiElement = uiElement;
-            _uiElement.MouseDown += OnMouseDown;
-            _uiElement.MouseUp += OnMouseDown;
-            _uiElement.MouseMove += OnMouseMove;
+            _uiElement.MouseDown += CheckMouseState;
+            _uiElement.MouseUp += CheckMouseState;
+            _uiElement.MouseMove += CheckMouseState;
             _uiElement.MouseWheel += OnMouseWheel;
-            _uiElement.MouseLeave += OnMouseLeave;
+            _uiElement.MouseLeave += CheckMouseState;
         }
 
         protected override void Dispose(bool disposing)
@@ -80,11 +77,11 @@ namespace C3DE.Editor.Core.Components
 
             if (disposing)
             {
-                _uiElement.MouseDown -= OnMouseDown;
-                _uiElement.MouseUp -= OnMouseDown;
-                _uiElement.MouseMove -= OnMouseMove;
+                _uiElement.MouseDown -= CheckMouseState;
+                _uiElement.MouseUp -= CheckMouseState;
+                _uiElement.MouseMove -= CheckMouseState;
                 _uiElement.MouseWheel -= OnMouseWheel;
-                _uiElement.MouseLeave -= OnMouseLeave;
+                _uiElement.MouseLeave -= CheckMouseState;
             }
         }
 
@@ -145,46 +142,30 @@ namespace C3DE.Editor.Core.Components
 
         #region Event handlers
 
-        private void OnClickTimerDone(object sender, ElapsedEventArgs e)
+        private void OnMouseWheel(object sender, WpfMouseWheelEventArgs e)
+        {
+            _wheel += (float)e.Delta * 0.01f;
+        }
+
+        private void CheckMouseState(object sender, WpfMouseEventArgs e)
         {
             LastMouseButtons[0] = MouseButtons[0];
             LastMouseButtons[1] = MouseButtons[1];
             LastMouseButtons[2] = MouseButtons[2];
-        }
-
-        private void OnMouseDown(object sender, WpfMouseButtonEventArgs e)
-        {
-            OnMouseMove(sender, e);
 
             MouseButtons[0] = e.LeftButton == WpfMouseButtonState.Pressed;
             MouseButtons[1] = e.MiddleButton == WpfMouseButtonState.Pressed;
             MouseButtons[2] = e.RightButton == WpfMouseButtonState.Pressed;
-            _clickTimer.Start();
-        }
 
-        private void OnMouseLeave(object sender, WpfMouseEventArgs e)
-        {
-            MouseButtons[0] = false;
-            MouseButtons[1] = false;
-            MouseButtons[2] = false;
-        }
-
-        private void OnMouseMove(object sender, WpfMouseEventArgs e)
-        {
             var position = WpfMouse.GetPosition(_uiElement);
 
             LastX = X;
             LastY = Y;
-            
+
             X = (int)position.X;
             Y = (int)position.Y;
 
             _needsUpdate = true;
-        }
-
-        private void OnMouseWheel(object sender, WpfMouseWheelEventArgs e)
-        {
-            _wheel += (float)e.Delta * 0.01f;
         }
 
         #endregion

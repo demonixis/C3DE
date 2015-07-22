@@ -66,7 +66,7 @@
                 <MenuItem Header="About" Click="OnAboutClick" />
             </MenuItem>
         </Menu>
-        
+
         <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="0">
             <Button Tag="Translation" Margin="2, 2, 5, 2" ToolTip="Translate mode" Click="OnActionBarClick">
                 <Image Source="Resources/Images/Icon_Translation.png" />
@@ -95,28 +95,22 @@
             </Grid.ColumnDefinitions>
             <local:C3DEGameHost Grid.Row="0" Grid.Column="0" x:Name="editorGameHost" Margin="0" SnapsToDevicePixels="True" Stretch="Fill" Drop="OnDrop" />
         </Grid>
-        <ScrollViewer Grid.Row="1" Grid.RowSpan="2" Grid.Column="1" x:Name="ComponentsScrollViewer" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" CanContentScroll="True">
-            <StackPanel x:Name="Inspector" Orientation="Vertical">
-                <TextBlock Text="Inspector" Margin="10, 5, 10, 5" />
-                <Separator />
-                <StackPanel Orientation="Vertical" x:Name="componentContainer">
-                    <c3de:SceneObjectControl Margin="0, 0, 0, 5" />
-                    <c3de:TransformControl Margin="0, 0, 0, 5" />
-                </StackPanel>
-                <TabControl>
-                    <TabItem Header="Scene">
-                        <c3de:SceneListControl x:Name="sceneListControl" MouseEnter="sceneListControl_MouseEnter" />
-                    </TabItem>
-                    <TabItem Header="Project">
-                        <c3de:FileExplorerControl x:Name="projectExplorer" />
-                    </TabItem>
-                    <TabItem Header="Materials">
-                        <ListBox x:Name="MaterialsList">
-                            <TextBlock Text="Material 1" />
-                        </ListBox>
-                    </TabItem>
-                </TabControl>
-            </StackPanel>
-        </ScrollViewer>
+        <TabControl Grid.Row="1" Grid.RowSpan="2" Grid.Column="1" x:Name="MainTabControl">
+            <TabItem Header="Inspector">
+                <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" CanContentScroll="True">
+                    <StackPanel Orientation="Vertical" x:Name="componentContainer"></StackPanel>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem Header="Scene">
+                <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" CanContentScroll="True">
+                    <c3de:SceneListControl x:Name="sceneListControl" MouseEnter="sceneListControl_MouseEnter" />
+                </ScrollViewer>
+            </TabItem>
+            <TabItem Header="Project">
+                <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" CanContentScroll="True">
+                    <c3de:FileExplorerControl x:Name="projectExplorer" />
+                </ScrollViewer>
+            </TabItem>
+        </TabControl>
     </Grid>
 </Window>

@@ -14,6 +14,7 @@ namespace C3DE.Materials
             : base(scene)
         {
             diffuseColor = new Vector3(1.0f, 1.0f, 1.0f);
+            hasAlpha = true;
         }
 
         public override void LoadContent(ContentManager content)
