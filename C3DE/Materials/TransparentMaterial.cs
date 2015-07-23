@@ -15,6 +15,7 @@ namespace C3DE.Materials
         {
             diffuseColor = new Vector3(1.0f, 1.0f, 1.0f);
             hasAlpha = true;
+            Name = name;
         }
 
         public override void LoadContent(ContentManager content)

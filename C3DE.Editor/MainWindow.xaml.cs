@@ -271,7 +271,7 @@ namespace C3DE.Editor
 
         private void ShowRenderSettings(object sender, RoutedEventArgs e)
         {
-            var renderSettings = new RenderSettingsWindow(editorGameHost.Scene.RenderSettings);
+            var renderSettings = new RenderSettingsWindow(Scene.current.RenderSettings);
             renderSettings.Show();
         }
 
@@ -292,6 +292,8 @@ namespace C3DE.Editor
                     editorGameHost.gizmoComponent.ActiveMode = XNAGizmo.GizmoMode.UniformScale;
                 else if (tag == "Precision")
                     editorGameHost.gizmoComponent.PrecisionModeEnabled = !editorGameHost.gizmoComponent.PrecisionModeEnabled;
+                else if (tag == "Grid")
+                    ((EDScene)Scene.current).GridVisible = !((EDScene)Scene.current).GridVisible;
             }
         }
     }

@@ -34,6 +34,12 @@ namespace C3DE.Editor.Core
         private bool pendingRemove = false;
         private GizmoComponent _gizmo;
 
+        public bool GridVisible
+        {
+            get { return grid.Enabled; }
+            set { grid.Enabled = value; }
+        }
+
         public EDScene(string name, GizmoComponent gizmo)
             : base(name)
         {
@@ -120,19 +126,19 @@ namespace C3DE.Editor.Core
 
             // Voxel pack by Kenney Vleugels for Kenney (www.kenney.nl) / License (Creative Commons Zero, CC0)
             var path = Path.Combine("Content", "Textures", "VoxelPack");
-            var files = Directory.GetFiles(path);
+            var files = Directory.GetFiles(Path.Combine(path, "Tiles"));
             var name = string.Empty;
             for (i = 0; i < files.Length; i++)
             {
                 name = Path.GetFileNameWithoutExtension(files[i]);
-                CreateMaterial(name, "Textures/VoxelPack/" + name);
+                CreateMaterial(name, "Textures/VoxelPack/Tiles/" + name);
             }
 
-            files = Directory.GetFiles(Path.Combine(path, "Details"));
+            files = Directory.GetFiles(Path.Combine(path, "Tiles", "Details"));
             for (i = 0; i < files.Length; i++)
             {
                 name = Path.GetFileNameWithoutExtension(files[i]);
-                CreateBillboardMaterial(name, "Textures/VoxelPack/Details/" + name);
+                CreateBillboardMaterial(name, "Textures/VoxelPack/Tiles/Details/" + name);
             }
 
             // Terrain textures
@@ -163,8 +169,14 @@ namespace C3DE.Editor.Core
 
         private void CreateMaterial(string name, Texture2D texture)
         {
-            var mat = new StandardMaterial(this, name);
-            mat.Texture = texture;
+            Material material = null;
+
+            if (name.Contains("_alpha"))
+                material = new TransparentMaterial(this, name.Replace("_alpha", ""));
+            else
+                material = new StandardMaterial(this, name);
+
+            material.Texture = texture;
         }
 
         private void CreateBillboardMaterial(string name, Texture2D texture)
