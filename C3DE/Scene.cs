@@ -767,6 +767,8 @@ namespace C3DE
             int size = colliders.Count;
             bool collide = false;
 
+            List<RaycastInfo> candidates = new List<RaycastInfo>(5);
+
             // A quadtree and even an octree could be very cool in the future :)
             while (i < size && collide == false)
             {
@@ -776,14 +778,38 @@ namespace C3DE
 
                     if (val.HasValue && val.Value <= distance)
                     {
-                        info.Collider = colliders[i];
-                        info.Distance = val.Value;
-                        info.Ray = ray;
-                        collide = true;
+                        candidates.Add(new RaycastInfo()
+                        {
+                            Collider = colliders[i],
+                            Distance = val.Value,
+                            Ray = ray
+                        });
                     }
                 }
 
                 i++;
+            }
+
+            size = candidates.Count;
+            if (size > 0)
+            {
+                var min = float.MaxValue;
+                var index = -1;
+
+                for (i = 0; i < size; i++)
+                {
+                    if (candidates[i].Distance < min)
+                    {
+                        min = candidates[i].Distance;
+                        index = i;
+                    }
+                }
+
+                if (index > -1)
+                {
+                    info = candidates[index];
+                    collide = true;
+                }
             }
 
             return collide;

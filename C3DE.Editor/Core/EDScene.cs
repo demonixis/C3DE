@@ -219,7 +219,7 @@ namespace C3DE.Editor.Core
                 _addList.Clear();
             }
 
-            if (EDRegistry.Mouse.JustClicked(MouseButton.Left))
+            if (EDRegistry.Mouse.JustClicked(MouseButton.Left) && _gizmo.ActiveAxis == GizmoAxis.None)
             {
                 var ray = camera.GetRay(EDRegistry.Mouse.Position);
                 RaycastInfo info;
@@ -244,7 +244,16 @@ namespace C3DE.Editor.Core
 
         private void GizmoTranslateEvent(Renderer renderer, TransformationEventArgs e)
         {
-            renderer.Transform.Position += (Vector3)e.Value;
+            if(System.Windows.Input.Keyboard.Modifiers == System.Windows.Input.ModifierKeys.Control)
+            {
+                var delta = Vector3.Distance((Vector3)e.Value, renderer.Transform.Position);
+
+                if (delta > 0.05f)
+                    renderer.Transform.Position += (Vector3)e.Value;
+            }
+            else
+                renderer.Transform.Position += (Vector3)e.Value;
+
             Messenger.Notify(EditorEvent.TransformUpdated);
         }
 
