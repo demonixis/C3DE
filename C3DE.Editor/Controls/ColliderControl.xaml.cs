@@ -135,7 +135,7 @@ namespace C3DE.Editor.Controls
             }
         }
 
-        public bool IsTriger
+        public bool IsTrigger
         {
             get
             {

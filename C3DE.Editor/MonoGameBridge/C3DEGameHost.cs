@@ -138,8 +138,8 @@ namespace C3DE.Editor.MonoGameBridge
             _renderer.RenderEditor(_scene, _scene.camera, renderTarget);
             gizmoComponent.Draw();
 
-            if (Screen.LockCursor)
-                EDRegistry.Mouse.SetPosition(Screen.WidthPerTwo, Screen.HeightPerTwo);
+            /*if (Screen.LockCursor)
+                EDRegistry.Mouse.SetPosition(Screen.WidthPerTwo, Screen.HeightPerTwo);*/
         }
 
         #endregion

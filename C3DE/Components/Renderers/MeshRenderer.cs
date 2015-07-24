@@ -98,8 +98,15 @@ namespace C3DE.Components.Renderers
             var clone = (MeshRenderer)base.Clone();
 
             if (geometry != null)
-                clone.geometry = (Geometry)geometry.Clone();
-                
+            {
+                clone.geometry = (Geometry)Activator.CreateInstance(geometry.GetType());
+                clone.geometry.Size = geometry.Size;
+                clone.geometry.TextureRepeat = geometry.TextureRepeat;
+
+                if (geometry.Built)
+                    clone.geometry.Build();
+            }
+              
             return clone;
         }
     }

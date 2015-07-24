@@ -10,7 +10,6 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using System.Threading.Tasks;
 
 namespace C3DE
 {
@@ -80,9 +79,6 @@ namespace C3DE
                 defaultMaterial.Name = "Default Material";
             }
         }
-
-        [DataMember]
-        public bool UseMultiThreading { get; set; }
 
         /// <summary>
         /// Gets the collection of renderable scene objects.
@@ -169,7 +165,6 @@ namespace C3DE
             _needRemoveCheck = false;
             defaultMaterial = new SimpleMaterial(this, "Default Material");
             RenderSettings = new RenderSettings();
-            UseMultiThreading = true;
         }
 
         public Scene(string name)
@@ -735,30 +730,10 @@ namespace C3DE
 
         public Collider Collides(Collider collider)
         {
-            if (UseMultiThreading)
+            for (int i = 0, l = colliders.Count; i < l; i++)
             {
-                var index = -1;
-
-                Parallel.For(0, colliders.Count, (i, loopState) =>
-                {
-                    if (collider.Collides(colliders[(int)i]))
-                    {
-                        loopState.Stop();
-                        index = (int)i;
-                        return;
-                    }
-                });
-
-                if (index > -1)
-                    return colliders[index];
-            }
-            else
-            {
-                for (int i = 0, l = colliders.Count; i < l; i++)
-                {
-                    if (collider.Collides(colliders[i]))
-                        return colliders[i];
-                }
+                if (collider.Collides(colliders[i]))
+                    return colliders[i];
             }
 
             return null;
@@ -824,15 +799,9 @@ namespace C3DE
         public bool RaycastAll(Ray ray, float distance, out RaycastInfo[] raycastInfos)
         {
             var infos = new List<RaycastInfo>();
-            var size = colliders.Count;
 
-            if (!UseMultiThreading)
-            {
-                for (int i = 0, l = colliders.Count; i < l; i++)
-                    TestCollision(ref ray, colliders[i], distance, infos);
-            }
-            else
-                Parallel.For(0, size, i => TestCollision(ref ray, colliders[i], distance, infos));
+            for (int i = 0, l = colliders.Count; i < l; i++)
+                TestCollision(ref ray, colliders[i], distance, infos);
 
             raycastInfos = infos.ToArray();
 
