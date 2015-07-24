@@ -294,6 +294,8 @@ namespace C3DE.Editor
                     editorGameHost.gizmoComponent.PrecisionModeEnabled = !editorGameHost.gizmoComponent.PrecisionModeEnabled;
                 else if (tag == "Grid")
                     ((EDScene)Scene.current).GridVisible = !((EDScene)Scene.current).GridVisible;
+                else if (tag == "Lock")
+                    EDSettings.current.AllowLockCursor = !EDSettings.current.AllowLockCursor;
             }
         }
     }

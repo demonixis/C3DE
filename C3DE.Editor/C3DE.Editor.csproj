@@ -116,6 +116,7 @@
     <Compile Include="Core\EDComponents.cs" />
     <Compile Include="Core\EDRegistry.cs" />
     <Compile Include="Core\EDScene.cs" />
+    <Compile Include="Core\EDSettings.cs" />
     <Compile Include="Core\SceneObjectSelector.cs" />
     <Compile Include="Exporters\MeshMerger.cs" />
     <Compile Include="Exporters\OBJExporter.cs" />
@@ -268,6 +269,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Images\Icon_Grid.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\Icon_Lock.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Content.Builder.targets" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

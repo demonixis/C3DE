@@ -87,6 +87,10 @@
             <Button Tag="Grid" Margin="2, 2, 5, 2" ToolTip="Show/Hide the grid" Click="OnActionBarClick">
                 <Image Source="Resources/Images/Icon_Grid.png" />
             </Button>
+
+            <Button Tag="Lock" Margin="2, 2, 5, 2" ToolTip="Lock/Unlock the cursor" Click="OnActionBarClick">
+                <Image Source="Resources/Images/Icon_Lock.png" />
+            </Button>
         </StackPanel>
 
         <Grid Grid.Row="2" Grid.Column="0">

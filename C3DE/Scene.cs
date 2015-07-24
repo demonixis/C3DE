@@ -819,7 +819,7 @@ namespace C3DE
                     infos.Add(new RaycastInfo()
                     {
                         Collider = collider,
-                        Distance = distance,
+                        Distance = val.Value,
                         Ray = ray
                     });
                 }
