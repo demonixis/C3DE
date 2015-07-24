@@ -11,7 +11,7 @@ namespace C3DE.Geometries
     }
 
     [DataContract]
-    public class Geometry : IDisposable
+    public class Geometry : IDisposable, ICloneable
     {
         private VertexPositionNormalTexture[] _vertices;
         private ushort[] _indices;
@@ -210,6 +210,16 @@ namespace C3DE.Geometries
                 if (_indexBuffer != null)
                     _indexBuffer.Dispose();
             }
+        }
+
+        public object Clone()
+        {
+            var clone = (Geometry)MemberwiseClone();
+
+            if (Built)
+                Build();
+
+            return clone;
         }
     }
 }

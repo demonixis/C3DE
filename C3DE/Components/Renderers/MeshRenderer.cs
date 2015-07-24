@@ -92,5 +92,15 @@ namespace C3DE.Components.Renderers
             if (geometry != null && geometry.Built)
                 geometry.Build();
         }
+
+        public override object Clone()
+        {
+            var clone = (MeshRenderer)base.Clone();
+
+            if (geometry != null)
+                clone.geometry = (Geometry)geometry.Clone();
+                
+            return clone;
+        }
     }
 }

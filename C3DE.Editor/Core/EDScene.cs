@@ -12,6 +12,7 @@ using C3DE.Prefabs.Meshes;
 using C3DE.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization;
@@ -242,37 +243,42 @@ namespace C3DE.Editor.Core
 
         #region Gizmo Handlers
 
-        private void GizmoTranslateEvent(Renderer renderer, TransformationEventArgs e)
+        private void GizmoTranslateEvent(Transform target, TransformationEventArgs e)
         {
-            if(System.Windows.Input.Keyboard.Modifiers == System.Windows.Input.ModifierKeys.Control)
-            {
-                var delta = Vector3.Distance((Vector3)e.Value, renderer.Transform.Position);
+            var value = (Vector3)e.Value;
 
-                if (delta > 0.05f)
-                    renderer.Transform.Position += (Vector3)e.Value;
+            if (System.Windows.Input.Keyboard.Modifiers == System.Windows.Input.ModifierKeys.Control)
+            {
+                if (Vector3.Distance((Vector3)e.Value, target.Position) > 0.05f)
+                {
+                    var x = target.Position.X + Math.Sign(value.X);
+                    var y = target.Position.Y + Math.Sign(value.Y);
+                    var z = target.Position.Z + Math.Sign(value.Z);
+                    target.SetPosition(x, y, z);
+                }
             }
             else
-                renderer.Transform.Position += (Vector3)e.Value;
+                target.Position += value;
 
             Messenger.Notify(EditorEvent.TransformUpdated);
         }
 
-        private void GizmoRotateEvent(Renderer renderer, TransformationEventArgs e)
+        private void GizmoRotateEvent(Transform target, TransformationEventArgs e)
         {
-            _gizmo.RotationHelper(renderer, e);
+            _gizmo.RotationHelper(target, e);
             Messenger.Notify(EditorEvent.TransformUpdated);
         }
 
-        private void GizmoScaleEvent(Renderer renderer, TransformationEventArgs e)
+        private void GizmoScaleEvent(Transform target, TransformationEventArgs e)
         {
             Vector3 delta = (Vector3)e.Value;
 
             if (_gizmo.ActiveMode == GizmoMode.UniformScale)
-                renderer.Transform.LocalScale *= 1 + ((delta.X + delta.Y + delta.Z) / 3);
+                target.LocalScale *= 1 + ((delta.X + delta.Y + delta.Z) / 3);
             else
-                renderer.Transform.LocalScale += delta;
+                target.LocalScale += delta;
 
-            renderer.Transform.LocalScale = Vector3.Clamp(renderer.Transform.LocalScale, Vector3.Zero, renderer.Transform.LocalScale);
+            target.LocalScale = Vector3.Clamp(target.LocalScale, Vector3.Zero, target.LocalScale);
 
             Messenger.Notify(EditorEvent.TransformUpdated);
         }
@@ -403,20 +409,15 @@ namespace C3DE.Editor.Core
             _selectedObject.Set(sceneObject);
             _selectedObject.Select(true);
             _editionSceneObject.Selected = sceneObject;
-
-            var renderer = sceneObject.GetComponent<Renderer>();
-            if (renderer != null)
-                _gizmo.Selection.Add(renderer);
+            _gizmo.Selection.Add(sceneObject.Transform);
             Messenger.Notify(EditorEvent.SceneObjectSelected, new GenericMessage<SceneObject>(sceneObject));
         }
 
         private void UnselectObject(BasicMessage m = null)
         {
             _gizmo.Clear();
-
             _selectedObject.Select(false);
             _editionSceneObject.Reset();
-
             Messenger.Notify(EditorEvent.SceneObjectUnSelected);
         }
 

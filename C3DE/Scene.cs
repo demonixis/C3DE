@@ -10,6 +10,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using System.Threading.Tasks;
 
 namespace C3DE
 {
@@ -79,6 +80,9 @@ namespace C3DE
                 defaultMaterial.Name = "Default Material";
             }
         }
+
+        [DataMember]
+        public bool UseMultiThreading { get; set; }
 
         /// <summary>
         /// Gets the collection of renderable scene objects.
@@ -165,6 +169,7 @@ namespace C3DE
             _needRemoveCheck = false;
             defaultMaterial = new SimpleMaterial(this, "Default Material");
             RenderSettings = new RenderSettings();
+            UseMultiThreading = true;
         }
 
         public Scene(string name)
@@ -730,10 +735,30 @@ namespace C3DE
 
         public Collider Collides(Collider collider)
         {
-            for (int i = 0, l = colliders.Count; i < l; i++)
+            if (UseMultiThreading)
             {
-                if (collider.Collides(colliders[i]))
-                    return colliders[i];
+                var index = -1;
+
+                Parallel.For(0, colliders.Count, (i, loopState) =>
+                {
+                    if (collider.Collides(colliders[(int)i]))
+                    {
+                        loopState.Stop();
+                        index = (int)i;
+                        return;
+                    }
+                });
+
+                if (index > -1)
+                    return colliders[index];
+            }
+            else
+            {
+                for (int i = 0, l = colliders.Count; i < l; i++)
+                {
+                    if (collider.Collides(colliders[i]))
+                        return colliders[i];
+                }
             }
 
             return null;
@@ -761,58 +786,29 @@ namespace C3DE
         public bool Raycast(Ray ray, float distance, out RaycastInfo info)
         {
             info = new RaycastInfo();
+            RaycastInfo[] infos;
+            RaycastAll(ray, distance, out infos);
 
-            float? val;
-            int i = 0;
-            int size = colliders.Count;
-            bool collide = false;
-
-            List<RaycastInfo> candidates = new List<RaycastInfo>(5);
-
-            // A quadtree and even an octree could be very cool in the future :)
-            while (i < size && collide == false)
-            {
-                if (colliders[i].IsPickable)
-                {
-                    val = colliders[i].IntersectedBy(ref ray);
-
-                    if (val.HasValue && val.Value <= distance)
-                    {
-                        candidates.Add(new RaycastInfo()
-                        {
-                            Collider = colliders[i],
-                            Distance = val.Value,
-                            Ray = ray
-                        });
-                    }
-                }
-
-                i++;
-            }
-
-            size = candidates.Count;
+            var size = infos.Length;
             if (size > 0)
             {
                 var min = float.MaxValue;
                 var index = -1;
 
-                for (i = 0; i < size; i++)
+                for (int i = 0; i < size; i++)
                 {
-                    if (candidates[i].Distance < min)
+                    if (infos[i].Distance < min)
                     {
-                        min = candidates[i].Distance;
+                        min = infos[i].Distance;
                         index = i;
                     }
                 }
 
                 if (index > -1)
-                {
-                    info = candidates[index];
-                    collide = true;
-                }
+                    info = infos[index];
             }
 
-            return collide;
+            return size > 0;
         }
 
         public bool Raycast(Vector3 origin, Vector3 direction, float distance = 1000.0f)
@@ -827,29 +823,38 @@ namespace C3DE
 
         public bool RaycastAll(Ray ray, float distance, out RaycastInfo[] raycastInfos)
         {
-            List<RaycastInfo> infos = new List<RaycastInfo>();
-            RaycastInfo info = new RaycastInfo();
-            float? val;
+            var infos = new List<RaycastInfo>();
+            var size = colliders.Count;
 
-            for (int i = 0, l = colliders.Count; i < l; i++)
+            if (!UseMultiThreading)
             {
-                if (colliders[i].IsPickable)
-                {
-                    val = colliders[i].IntersectedBy(ref ray);
-
-                    if (val.HasValue && val.Value <= distance)
-                    {
-                        info.Collider = colliders[i];
-                        info.Distance = val.Value;
-                        info.Ray = ray;
-                        infos.Add(info);
-                    }
-                }
+                for (int i = 0, l = colliders.Count; i < l; i++)
+                    TestCollision(ref ray, colliders[i], distance, infos);
             }
+            else
+                Parallel.For(0, size, i => TestCollision(ref ray, colliders[i], distance, infos));
 
             raycastInfos = infos.ToArray();
 
             return raycastInfos.Length > 0;
+        }
+
+        private void TestCollision(ref Ray ray, Collider collider, float distance, List<RaycastInfo> infos)
+        {
+            if (collider.IsPickable)
+            {
+                var val = collider.IntersectedBy(ref ray);
+
+                if (val.HasValue && val.Value <= distance)
+                {
+                    infos.Add(new RaycastInfo()
+                    {
+                        Collider = collider,
+                        Distance = distance,
+                        Ray = ray
+                    });
+                }
+            }
         }
 
         public bool RaycastAll(Vector3 origin, Vector3 direction, float distance, out RaycastInfo[] infos)

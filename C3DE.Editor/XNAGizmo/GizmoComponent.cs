@@ -1,5 +1,4 @@
 ﻿using C3DE;
-using C3DE.Components.Renderers;
 using C3DE.Editor.Core;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -31,6 +30,7 @@ using System.Collections.Generic;
 
 namespace XNAGizmo
 {
+    using C3DE.Components;
     using C3DE.Inputs;
     using WinInput = System.Windows.Input;
 
@@ -168,8 +168,7 @@ namespace XNAGizmo
         private const float PRECISION_MODE_SCALE = 0.1f;
 
         // -- Selection -- //
-        public List<Renderer> Selection = new List<Renderer>();
-        private IEnumerable<Renderer> _selectionPool = null;
+        public List<Transform> Selection = new List<Transform>();
 
         private Vector3 _translationDelta = Vector3.Zero;
         private Matrix _rotationDelta = Matrix.Identity;
@@ -299,20 +298,6 @@ namespace XNAGizmo
             _translationLineVertices = vertexList.ToArray();
 
             #endregion
-        }
-
-        /// <summary>
-        /// Sets a pool of Renderer-objects for the gizmo.
-        /// </summary>
-        /// <param name="selectables"></param>
-        public void SetSelectionPool(IEnumerable<Renderer> selectables)
-        {
-            _selectionPool = selectables;
-        }
-
-        public IEnumerable<Renderer> GetSelectionPool()
-        {
-            return _selectionPool;
         }
 
         public void NextPivotType()
@@ -848,37 +833,6 @@ namespace XNAGizmo
         }
 
         /// <summary>
-        /// Select objects inside the scene.
-        /// </summary>
-        protected void PickObject(Vector2 mousePosition, bool removeFromSelection)
-        {
-            if (_selectionPool == null)
-                throw new Exception("SelectionPool is null, please set the pool by calling .SetSelectionPool()");
-
-            Ray ray = ConvertMouseToRay(mousePosition);
-            float closest = float.MaxValue;
-            Renderer obj = null;
-            foreach (var entity in _selectionPool)
-            {
-                entity.ComputeBoundingInfos();
-                float? intersection = ray.Intersects(entity.BoundingSphere);
-                if (intersection.HasValue && intersection < closest)
-                {
-                    if (!Selection.Contains(entity))
-                    {
-                        obj = entity;
-                        closest = intersection.Value;
-                    }
-                    if (removeFromSelection)
-                        Selection.Remove(entity);
-                }
-            }
-
-            if (obj != null)
-                Selection.Add(obj);
-        }
-
-        /// <summary>
         /// Set position of the gizmo, position will be center of all selected entities.
         /// </summary>
         private void SetGizmoPosition()
@@ -1056,22 +1010,22 @@ namespace XNAGizmo
         public event TransformationEventHandler RotateEvent;
         public event TransformationEventHandler ScaleEvent;
 
-        private void OnTranslateEvent(Renderer renderer, Vector3 delta)
+        private void OnTranslateEvent(Transform Transform, Vector3 delta)
         {
             if (TranslateEvent != null)
-                TranslateEvent(renderer, new TransformationEventArgs(delta));
+                TranslateEvent(Transform, new TransformationEventArgs(delta));
         }
 
-        private void OnRotateEvent(Renderer renderer, Matrix delta)
+        private void OnRotateEvent(Transform Transform, Matrix delta)
         {
             if (RotateEvent != null)
-                RotateEvent(renderer, new TransformationEventArgs(delta));
+                RotateEvent(Transform, new TransformationEventArgs(delta));
         }
 
-        private void OnScaleEvent(Renderer renderer, Vector3 delta)
+        private void OnScaleEvent(Transform Transform, Vector3 delta)
         {
             if (ScaleEvent != null)
-                ScaleEvent(renderer, new TransformationEventArgs(delta));
+                ScaleEvent(Transform, new TransformationEventArgs(delta));
         }
 
         #endregion
@@ -1080,7 +1034,7 @@ namespace XNAGizmo
         /// <summary>
         /// Helper function to apply rotation to objects using the built-in method.
         /// </summary>
-        public void RotationHelper(Renderer entity, TransformationEventArgs e)
+        public void RotationHelper(Transform entity, TransformationEventArgs e)
         {
             Vector3 pos = _position;
             if (ActivePivot == PivotType.ObjectCenter)
@@ -1119,7 +1073,7 @@ namespace XNAGizmo
             Value = value;
         }
     }
-    public delegate void TransformationEventHandler(Renderer renderer, TransformationEventArgs e);
+    public delegate void TransformationEventHandler(Transform Transform, TransformationEventArgs e);
 
     #endregion
 
