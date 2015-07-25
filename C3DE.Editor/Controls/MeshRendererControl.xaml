@@ -2,6 +2,7 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" d:DesignHeight="200" d:DesignWidth="250">
     <Border BorderThickness="1" BorderBrush="LightGray" Margin="2">
@@ -34,19 +35,19 @@
                     <ComboBoxItem>Cube</ComboBoxItem>
                     <ComboBoxItem>Sphere</ComboBoxItem>
                 </ComboBox>
-                <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal">
+                <StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="60, 1, 0, 1" Orientation="Horizontal">
                     <Label Content="X" />
-                    <TextBox Width="25" VerticalAlignment="Center" Text="{Binding GeometrySizeX}" />
+                    <xctk:DoubleUpDown Value="{Binding GeometrySizeX}" Increment="0.1" Width="40" />
                     <Label Content="Y" />
-                    <TextBox Width="25" VerticalAlignment="Center" Text="{Binding GeometrySizeY}" />
+                    <xctk:DoubleUpDown Value="{Binding GeometrySizeY}" Increment="0.1" Width="40" />
                     <Label Content="Z" />
-                    <TextBox Width="25" VerticalAlignment="Center" Text="{Binding GeometrySizeZ}" />
+                    <xctk:DoubleUpDown Value="{Binding GeometrySizeZ}" Increment="0.1" Width="40"  />
                 </StackPanel>
-                <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal">
+                <StackPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Margin="60, 1, 0, 1" Orientation="Horizontal">
                     <Label Content="X" />
-                    <TextBox Width="25" VerticalAlignment="Center" Text="{Binding GeometryUVX}" />
+                    <xctk:DoubleUpDown Value="{Binding Binding}" Increment="0.1" Width="40" />
                     <Label Content="Y" />
-                    <TextBox Width="25" VerticalAlignment="Center" Text="{Binding GeometryUVY}" />
+                    <xctk:DoubleUpDown Value="{Binding GeometryUVY}" Increment="0.1" Width="40" />
                 </StackPanel>
                 <CheckBox Grid.Row="3" Grid.Column="1" IsChecked="{Binding CastShadow}" Style="{ StaticResource MR_Checkbox }" />
                 <CheckBox Grid.Row="4" Grid.Column="1" IsChecked="{Binding ReceiveShadow}" Style="{ StaticResource MR_Checkbox }" />

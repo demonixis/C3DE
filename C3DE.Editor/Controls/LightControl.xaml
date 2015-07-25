@@ -39,9 +39,9 @@
                     <ComboBoxItem>Point</ComboBoxItem>
                     <ComboBoxItem>Spot</ComboBoxItem>
                 </ComboBox>
-                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding LightRange}" Width="115" />
+                <xctk:DoubleUpDown Grid.Row="1" Grid.Column="1" Value="{Binding LightRange}" Increment="0.1" />
                 <xctk:ColorPicker Grid.Row="2" Grid.Column="1" SelectedColor="{Binding LightColor}" DisplayColorAndName="False" />
-                <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding LightIntensity}" />
+                <xctk:DoubleUpDown Grid.Row="3" Grid.Column="1" Value="{Binding LightIntensity}" Increment="0.1" />
                 <ComboBox x:Name="SelectShadowType" Grid.Row="4" Grid.Column="1" SelectedIndex="{Binding LightShadowType}">
                     <ComboBoxItem>None</ComboBoxItem>
                     <ComboBoxItem>Hard Shadow</ComboBoxItem>

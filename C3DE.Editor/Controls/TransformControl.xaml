@@ -3,28 +3,29 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              mc:Ignorable="d" d:DesignHeight="130" d:DesignWidth="250">
     <Border BorderThickness="1" BorderBrush="LightGray" Margin="2">
         <StackPanel HorizontalAlignment="Stretch">
             <Label Content="Transform" />
             <Separator Margin="5, 2, 5, 2" />
-            <StackPanel Orientation="Horizontal">
-                <Label Style="{StaticResource Control_LeftText}" Content="Position" Width="65" />
-                <TextBox Style="{StaticResource Vector3Input}" Text="{Binding PositionX}" />
-                <TextBox Style="{StaticResource Vector3Input}" Text="{Binding PositionY}" />
-                <TextBox Style="{StaticResource Vector3Input}" Text="{Binding PositionZ}" />
+            <StackPanel Orientation="Horizontal" Margin="0, 0, 0, 2">
+                <Label Style="{StaticResource Control_LeftText}" Content="Position" Width="55" />
+                <xctk:DoubleUpDown Value="{Binding PositionX}" Width="58" Increment="0.1" Margin="0, 0, 5, 0" />
+                <xctk:DoubleUpDown Value="{Binding PositionY}" Width="58" Increment="0.1" Margin="0, 0, 5, 0" />
+                <xctk:DoubleUpDown Value="{Binding PositionZ}" Width="58" Increment="0.1" />
             </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <Label Style="{StaticResource Control_LeftText}" Content="Rotation" Width="65" />
-                <TextBox Style="{StaticResource Vector3Input}" Text="{Binding RotationX}" />
-                <TextBox Style="{StaticResource Vector3Input}" Text="{Binding RotationY}" />
-                <TextBox Style="{StaticResource Vector3Input}" Text="{Binding RotationZ}" />
+            <StackPanel Orientation="Horizontal" Margin="0, 0, 0, 2">
+                <Label Style="{StaticResource Control_LeftText}" Content="Rotation" Width="55" />
+                <xctk:DoubleUpDown Value="{Binding RotationX}" Width="58" Increment="0.1" Margin="0, 0, 5, 0" />
+                <xctk:DoubleUpDown Value="{Binding RotationY}" Width="58" Increment="0.1" Margin="0, 0, 5, 0" />
+                <xctk:DoubleUpDown Value="{Binding RotationZ}" Width="58" Increment="0.1" />
             </StackPanel>
             <StackPanel Orientation="Horizontal" Margin="0, 0, 0, 15">
-                <Label Style="{StaticResource Control_LeftText}" Content="Scale" Width="65" />
-                <TextBox Style="{StaticResource Vector3Input}" Text="{Binding ScaleX}" />
-                <TextBox Style="{StaticResource Vector3Input}" Text="{Binding ScaleY}" />
-                <TextBox Style="{StaticResource Vector3Input}" Text="{Binding ScaleZ}" />
+                <Label Style="{StaticResource Control_LeftText}" Content="Scale" Width="55" />
+                <xctk:DoubleUpDown Value="{Binding ScaleX}" Width="58" Increment="0.1" Margin="0, 0, 5, 0" />
+                <xctk:DoubleUpDown Value="{Binding ScaleY}" Width="58" Increment="0.1" Margin="0, 0, 5, 0" />
+                <xctk:DoubleUpDown Value="{Binding ScaleZ}" Width="58" Increment="0.1" />
             </StackPanel>
         </StackPanel>
     </Border>

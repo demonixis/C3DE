@@ -3,7 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             mc:Ignorable="d" d:DesignWidth="250" Height="180">
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             mc:Ignorable="d" d:DesignWidth="250" Height="190">
     <Border BorderThickness="1" BorderBrush="LightGray" Margin="2">
         <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch">
             <StackPanel Orientation="Horizontal">
@@ -18,17 +19,17 @@
                     <ComboBoxItem>Sphere Collider</ComboBoxItem>
                 </ComboBox>
             </StackPanel>
-            <StackPanel Orientation="Horizontal">
+            <StackPanel Orientation="Horizontal" Margin="0, 5, 0, 5">
                 <Label Style="{StaticResource Control_LeftText}" Content="Size" Width="65" />
-                <TextBox Style="{StaticResource Vector3Input}" Text="{Binding SizeX}" />
-                <TextBox Style="{StaticResource Vector3Input}" Text="{Binding SizeY}" />
-                <TextBox Style="{StaticResource Vector3Input}" Text="{Binding SizeZ}" />
+                <xctk:DoubleUpDown Value="{Binding SizeX}" Increment="0.1" Width="55" Margin="0, 0, 5, 0" />
+                <xctk:DoubleUpDown Value="{Binding SizeY}" Increment="0.1" Width="55" Margin="0, 0, 5, 0" />
+                <xctk:DoubleUpDown Value="{Binding SizeZ}" Increment="0.1" Width="55" />
             </StackPanel>
-            <StackPanel Orientation="Horizontal">
+            <StackPanel Orientation="Horizontal" Margin="0, 0, 5, 0">
                 <Label Style="{StaticResource Control_LeftText}" Content="Center" Width="65" />
-                <TextBox Style="{StaticResource Vector3Input}" Text="{Binding CenterX}" />
-                <TextBox Style="{StaticResource Vector3Input}" Text="{Binding CenterY}" />
-                <TextBox Style="{StaticResource Vector3Input}" Text="{Binding CenterZ}" />
+                <xctk:DoubleUpDown Value="{Binding CenterX}" Increment="0.1" Width="55" Margin="0, 0, 5, 0" />
+                <xctk:DoubleUpDown Value="{Binding CenterY}" Increment="0.1" Width="55" Margin="0, 0, 5, 0" />
+                <xctk:DoubleUpDown Value="{Binding CenterZ}" Increment="0.1" Width="55" />
             </StackPanel>
             <Separator Margin="5" />
             <StackPanel Orientation="Vertical" Margin="5">
