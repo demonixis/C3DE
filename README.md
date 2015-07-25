@@ -1,4 +1,4 @@
-C3DE : Cool 3D Engine
+C3DE : Cool 3D Engine ![](https://api.travis-ci.org/demonixis/C3DE.svg)
 =====================
 
 ### What is it ?

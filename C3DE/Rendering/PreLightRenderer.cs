@@ -22,7 +22,7 @@ namespace C3DE.Rendering
         private Effect _lightingFX;
 
         public PreLightRenderer()
-			base()
+            : base()
         {
         }
 
