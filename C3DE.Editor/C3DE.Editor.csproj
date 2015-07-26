@@ -112,7 +112,6 @@
     <Compile Include="Core\BasicEditionSceneObject.cs" />
     <Compile Include="Core\Components\EDFirstPersonCamera.cs" />
     <Compile Include="Core\Components\EDKeyboardComponent.cs" />
-    <Compile Include="Core\Components\EDOrbitController.cs" />
     <Compile Include="Core\Components\EDMouseComponent.cs" />
     <Compile Include="Core\EDComponents.cs" />
     <Compile Include="Core\EDRegistry.cs" />
