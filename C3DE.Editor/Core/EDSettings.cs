@@ -24,7 +24,7 @@ namespace C3DE.Editor.Core
         private const string Filename = "Settings.xml";
 
         [DataMember]
-        public bool AllowLockCursor = true;
+        public bool AllowLockCursor = false;
 
         [DataMember]
         public string LastProjectPath = "";
