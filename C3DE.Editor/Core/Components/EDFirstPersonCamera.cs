@@ -15,13 +15,11 @@ namespace C3DE.Editor.Core.Components
         public EDFirstPersonCamera()
             : base()
         {
-            Velocity = 0.7f;
-            AngularVelocity = 0.7f;
             MoveSpeed = 0.25f;
-            RotationSpeed = 0.5f;
+            RotationSpeed = 0.45f;
             LookSpeed = 0.25f;
             StrafeSpeed = 1.5f;
-            MouseSensibility = new Vector2(0.2f);
+            MouseSensibility = new Vector2(1.0f);
         }
 
         public override void Update()
@@ -50,8 +48,8 @@ namespace C3DE.Editor.Core.Components
             // Update target
             EDRegistry.Camera.Target = transform.Position + Vector3.Transform(Vector3.Forward, _rotationMatrix);
 
-            translation *= Velocity;
-            rotation *= AngularVelocity;
+            translation = Vector3.Zero;
+            rotation = Vector3.Zero;
         }
 
         protected override void UpdateInputs()
@@ -89,7 +87,7 @@ namespace C3DE.Editor.Core.Components
                     if (System.Math.Abs(delta.Y) > 2)
                         delta.Y = 0;
                 }
-
+                
                 rotation.Y -= delta.X * LookSpeed * MouseSensibility.Y * Time.DeltaTime;
                 rotation.X -= delta.Y * LookSpeed * MouseSensibility.X * Time.DeltaTime;
             }
