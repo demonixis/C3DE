@@ -60,7 +60,7 @@ namespace C3DE.Components.Controllers
         public OrbitController()
             : base()
         {
-            _angle = new Vector2(0.0f, -MathHelper.Pi / 6.0f);
+            _angle = new Vector2(0.0f, MathHelper.Pi / 6.0f);
             _distance = 35;
 
             MinAngle = -MathHelper.PiOver2 + 0.1f;
@@ -144,7 +144,7 @@ namespace C3DE.Components.Controllers
             if (Input.Mouse.Down(Inputs.MouseButton.Left) && Input.Mouse.Drag())
             {
                 angleVelocity.X -= RotationSpeed * Input.Mouse.Delta.X * MouseSensibility.X * Time.DeltaTime;
-                angleVelocity.Y -= RotationSpeed * Input.Mouse.Delta.Y * MouseSensibility.Y * Time.DeltaTime;
+                angleVelocity.Y += RotationSpeed * Input.Mouse.Delta.Y * MouseSensibility.Y * Time.DeltaTime;
             }
 
             if (Input.Mouse.Down(Inputs.MouseButton.Right))
