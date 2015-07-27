@@ -119,7 +119,7 @@ namespace C3DE.Components.Lights
             {
                 if (renderList[i].CastShadow)
                 {
-                    _shadowEffect.Parameters["World"].SetValue(renderList[i].SceneObject.Transform.world);
+                    _shadowEffect.Parameters["World"].SetValue(renderList[i].transform.world);
                     _shadowEffect.CurrentTechnique.Passes[0].Apply();
                     renderList[i].Draw(device);
                 }
