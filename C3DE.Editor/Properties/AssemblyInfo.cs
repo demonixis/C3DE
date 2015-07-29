@@ -7,13 +7,13 @@ using System.Windows;
 // Les informations générales relatives à un assembly dépendent de 
 // l'ensemble d'attributs suivant. Changez les valeurs de ces attributs pour modifier les informations
 // associées à un assembly.
-[assembly: AssemblyTitle("Yna.Editor")]
-[assembly: AssemblyDescription("Editor for YnaEngine")]
+[assembly: AssemblyTitle("C3DE Editor")]
+[assembly: AssemblyDescription("An editor for C3DE engine")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("YnaEngine team")]
-[assembly: AssemblyProduct("Yna.Editor")]
-[assembly: AssemblyCopyright("Copyright ©  2013")]
-[assembly: AssemblyTrademark("YnaEngine")]
+[assembly: AssemblyCompany("The C3DE Team")]
+[assembly: AssemblyProduct("C3DE Editor")]
+[assembly: AssemblyCopyright("Copyright © C3DE 2015")]
+[assembly: AssemblyTrademark("C3DE")]
 [assembly: AssemblyCulture("")]
 
 // L'affectation de la valeur false à ComVisible rend les types invisibles dans cet assembly 
