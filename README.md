@@ -9,7 +9,7 @@ C3DE is a research/learning project. The aim is to create a modest but powerful 
 
 ![](http://38.media.tumblr.com/88d6831c96fbdc0dcac7e90654f193ae/tumblr_naltfbT5uf1s15knro1_1280.jpg)
 
-### Some features
+### Features
 
 - Scene (parent/child)
 - Component based
@@ -20,7 +20,8 @@ C3DE is a research/learning project. The aim is to create a modest but powerful 
 - Shadow mapping (Hard shadow)
 - Input management: Keyboard, Mouse, Gamepad, Touch
 - Procedural texture generation
-- Post Processing support
+- Post Processing support (need rewrite)
+- Multiple cameras
 - UI management (Button, Checkbox, Label, Slider, Texture) 
 
 * Models support is not yet complete because the engine uses its own format for rendering things. It's planned later in the roadmap to convert an XNA model into a C3DE model.
@@ -51,11 +52,6 @@ public class SuperCoolGame : Scene
         terrain.Renderer.Material = new StandardMaterial(this);
         terrain.Renderer.Material.MainTexture = Content.Load<Texture2D>("Textures/terrain");
 		Add(terrain);
-		
-		// Bloom Post Process
-		var bloomPass = new BloomPass();
-		bloomPass.Settings = new BloomSettings("Bloom Custom", 0.15f, 1f, 4.0f, 1.0f, 1f, 1f);
-		Add(bloomPass);
     }
 }
 ```
@@ -64,7 +60,6 @@ public class SuperCoolGame : Scene
 - Post processing (manager to allow chaining)
 - More light types (Spot, Area)
 - PreLightRenderer (in progress)
-- Multiple cameras
 - True collision system / Physics engine
 - Network (Check the network branch)
 - Player for loading a game made with the editor
