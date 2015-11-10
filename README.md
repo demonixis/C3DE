@@ -7,7 +7,7 @@ C3DE is a research/learning project. The aim is to create a modest but powerful 
 * An editor (Windows only for now)
 * A player (later)
 
-![](http://38.media.tumblr.com/88d6831c96fbdc0dcac7e90654f193ae/tumblr_naltfbT5uf1s15knro1_1280.jpg)
+![](http://41.media.tumblr.com/f184d022630b0bc245246b146ace8cc7/tumblr_nrzrcmzCLo1s15knro1_1280.png)
 
 ### Features
 
