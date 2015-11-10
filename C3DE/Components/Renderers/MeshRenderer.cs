@@ -1,16 +1,18 @@
-﻿using C3DE.Components.Colliders;
-using C3DE.Geometries;
+﻿using C3DE.Geometries;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using System.Runtime.Serialization;
 
 namespace C3DE.Components.Renderers
 {
-    public class MeshRenderer : RenderableComponent
+    [DataContract]
+    public class MeshRenderer : Renderer
     {
         private bool _haveListener;
         protected Geometry geometry;
-        
+
+        [DataMember]
         public Geometry Geometry
         {
             get { return geometry; }
@@ -20,21 +22,16 @@ namespace C3DE.Components.Renderers
                 {
                     if (geometry != null && _haveListener)
                     {
-                        geometry.ConstructionDone -= OnGeometryConstructionDone;
+                        geometry.ConstructionDone -= ComputeBoundingInfos;
                         _haveListener = false;
                     }
 
                     geometry = value;
 
-                    geometry.ConstructionDone += OnGeometryConstructionDone;
+                    geometry.ConstructionDone += ComputeBoundingInfos;
                     _haveListener = true;
                 }
             }
-        }
-
-        private void OnGeometryConstructionDone(object sender, EventArgs e)
-        {
-            ComputeBoundingSphere();
         }
 
         public MeshRenderer()
@@ -42,14 +39,35 @@ namespace C3DE.Components.Renderers
         {
         }
 
-        public override void ComputeBoundingSphere()
+        public override void ComputeBoundingInfos()
         {
             if (geometry == null)
                 return;
 
-            boundingSphere = BoundingSphere.CreateFromPoints(geometry.GetVertices(VertexType.Position));
-            boundingSphere.Center = sceneObject.Transform.Position;
-      
+            var min = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
+            var max = new Vector3(float.MinValue, float.MinValue, float.MinValue);
+            var vertices = geometry.GetVertices(VertexType.Position);
+
+            for (int i = 0, l = vertices.Length; i < l; i++)
+            {
+                min.X = Math.Min(vertices[i].X, min.X);
+                min.Y = Math.Min(vertices[i].Y, min.Y);
+                min.Z = Math.Min(vertices[i].Z, min.Z);
+                max.X = Math.Max(vertices[i].X, max.X);
+                max.Y = Math.Max(vertices[i].Y, max.Y);
+                max.Z = Math.Max(vertices[i].Z, max.Z);
+            }
+
+            boundingBox.Min = min;
+            boundingBox.Max = max;
+
+            var dx = max.X - min.X;
+            var dy = max.Y - min.Y;
+            var dz = max.Z - min.Z;
+
+            boundingSphere.Radius = (float)Math.Max(Math.Max(dx, dy), dz) / 2.0f;
+            boundingSphere.Center = transform.Position;
+
             UpdateColliders();
         }
 
@@ -67,6 +85,29 @@ namespace C3DE.Components.Renderers
                 geometry.Dispose();
                 geometry = null;
             }
+        }
+
+        public override void PostDeserialize()
+        {
+            if (geometry != null && geometry.Built)
+                geometry.Build();
+        }
+
+        public override object Clone()
+        {
+            var clone = (MeshRenderer)base.Clone();
+
+            if (geometry != null)
+            {
+                clone.geometry = (Geometry)Activator.CreateInstance(geometry.GetType());
+                clone.geometry.Size = geometry.Size;
+                clone.geometry.TextureRepeat = geometry.TextureRepeat;
+
+                if (geometry.Built)
+                    clone.geometry.Build();
+            }
+              
+            return clone;
         }
     }
 }

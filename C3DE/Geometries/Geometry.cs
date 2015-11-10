@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
-using System.Collections.Generic;
+using System.Runtime.Serialization;
 
 namespace C3DE.Geometries
 {
@@ -10,13 +10,14 @@ namespace C3DE.Geometries
         Position = 0, Normal
     }
 
-    public class Geometry : IDisposable
+    [DataContract]
+    public class Geometry : IDisposable, ICloneable
     {
         private VertexPositionNormalTexture[] _vertices;
         private ushort[] _indices;
         private VertexBuffer _vertexBuffer;
         private IndexBuffer _indexBuffer;
-        private bool _constructed;
+        private bool _built;
         protected Vector3 size = Vector3.One;
         protected Vector2 repeatTexture = Vector2.One;
         protected bool invertFaces = false;
@@ -24,13 +25,13 @@ namespace C3DE.Geometries
         public VertexPositionNormalTexture[] Vertices
         {
             get { return _vertices; }
-            internal protected set { _vertices = value; }
+            set { _vertices = value; }
         }
 
         public ushort[] Indices
         {
             get { return _indices; }
-            internal protected set { _indices = value; }
+            set { _indices = value; }
         }
 
         public VertexBuffer VertexBuffer
@@ -45,34 +46,37 @@ namespace C3DE.Geometries
             internal protected set { _indexBuffer = value; }
         }
 
+        [DataMember]
         public Vector3 Size
         {
             get { return size; }
             set { size = value; }
         }
 
+        [DataMember]
         public Vector2 TextureRepeat
         {
             get { return repeatTexture; }
             set { repeatTexture = value; }
         }
 
-        public bool Constructed
+        [DataMember]
+        public bool Built
         {
-            get { return _constructed; }
+            get { return _built; }
             internal protected set
             {
-                _constructed = value;
+                _built = value;
                 NotifyConstructionDone();
             }
         }
 
-        public event EventHandler<EventArgs> ConstructionDone = null;
+        public Action ConstructionDone = null;
 
         public void NotifyConstructionDone()
         {
             if (ConstructionDone != null)
-                ConstructionDone(this, EventArgs.Empty);
+                ConstructionDone();
         }
 
         protected virtual void CreateGeometry() { }
@@ -95,19 +99,13 @@ namespace C3DE.Geometries
             _indexBuffer.SetData(_indices);
         }
 
-        public void Generate()
+        public void Build()
         {
-            if (Constructed)
-            {
-                _vertexBuffer.Dispose();
-                _indexBuffer.Dispose();
-            }
-
+            Dispose();
             CreateGeometry();
-
             ApplyParameters();
             CreateBuffers(Application.GraphicsDevice);
-            Constructed = true;
+            Built = true;
         }
 
         public void ComputeNormals()
@@ -135,13 +133,24 @@ namespace C3DE.Geometries
                 _vertices[i].Normal.Normalize();
         }
 
+        public void SetVertices(VertexType type, Vector3[] vertices)
+        {
+            for (int i = 0, l = vertices.Length; i < l; i++)
+            {
+                if (type == VertexType.Normal)
+                    Vertices[i].Normal = vertices[i];
+                else
+                    Vertices[i].Position = vertices[i];
+            }
+        }
+
         public Vector3[] GetVertices(VertexType type)
         {
             int size = Vertices.Length;
 
             Vector3[] vertices = new Vector3[size];
 
-            for (int i = 0; i < size ; i++)
+            for (int i = 0; i < size; i++)
             {
                 if (type == VertexType.Normal)
                     vertices[i] = Vertices[i].Normal;
@@ -152,13 +161,65 @@ namespace C3DE.Geometries
             return vertices;
         }
 
+        public void SetUVs(Vector2[] uvs)
+        {
+            for (int i = 0, l = uvs.Length; i < l; i++)
+                Vertices[i].TextureCoordinate = uvs[i];
+        }
+
+        public Vector2[] GetUVs()
+        {
+            int size = Vertices.Length;
+
+            Vector2[] uvs = new Vector2[Vertices.Length];
+
+            for (int i = 0; i < size; i++)
+                uvs[i] = Vertices[i].TextureCoordinate;
+
+            return uvs;
+        }
+
+        public void SetSize(float? x, float? y, float? z)
+        {
+            if (x.HasValue)
+                size.X = x.Value;
+
+            if (y.HasValue)
+                size.Y = y.Value;
+
+            if (z.HasValue)
+                size.Z = z.Value;
+        }
+
+        public void SetTextureRepeat(float? x, float? y)
+        {
+            if (x.HasValue)
+                repeatTexture.X = x.Value;
+
+            if (y.HasValue)
+                repeatTexture.Y = y.Value;
+        }
+
         public void Dispose()
         {
-            if (Constructed)
+            if (Built)
             {
-                _vertexBuffer.Dispose();
-                _indexBuffer.Dispose();
+                if (_vertexBuffer != null)
+                    _vertexBuffer.Dispose();
+
+                if (_indexBuffer != null)
+                    _indexBuffer.Dispose();
             }
+        }
+
+        public object Clone()
+        {
+            var clone = (Geometry)MemberwiseClone();
+
+            if (Built)
+                Build();
+
+            return clone;
         }
     }
 }

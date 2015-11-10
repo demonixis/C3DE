@@ -1,11 +1,13 @@
 ﻿using C3DE.Components.Renderers;
 using Microsoft.Xna.Framework;
+using System.Runtime.Serialization;
 
 namespace C3DE.Components.Colliders
 {
     /// <summary>
     /// A sphere collider component used to handle collisions by sphere.
     /// </summary>
+    [DataContract]
     public class SphereCollider : Collider
     {
         private BoundingSphere _sphere;
@@ -13,6 +15,7 @@ namespace C3DE.Components.Colliders
         /// <summary>
         /// Gets the bounding sphere.
         /// </summary>
+        [DataMember]
         public BoundingSphere Sphere
         {
             get { return _sphere; }
@@ -36,12 +39,9 @@ namespace C3DE.Components.Colliders
 
         public override void Compute()
         {
-            var renderable = GetComponent<RenderableComponent>();
-
+            var renderable = GetComponent<Renderer>();
             if (renderable != null)
-            {
                 _sphere = renderable.boundingSphere;
-            }
         }
 
         public override bool Collides(Collider other)
@@ -50,7 +50,7 @@ namespace C3DE.Components.Colliders
                 return _sphere.Intersects((other as SphereCollider).Sphere);
 
             if (other is BoxCollider)
-                return _sphere.Intersects((other as BoxCollider).Box);
+                return _sphere.Intersects((other as BoxCollider).BoundingBox);
 
             return false;
         }

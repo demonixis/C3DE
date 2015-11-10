@@ -1,29 +1,41 @@
 ﻿using Microsoft.Xna.Framework.Content;
 using System;
+using System.Collections.Generic;
+using System.Runtime.Serialization;
 
 namespace C3DE.Components
 {
     /// <summary>
     /// A component is a part of a scene object.
     /// </summary>
+    [DataContract]
     public abstract class Component : IComparable, ICloneable, IDisposable
     {
-        private static int ComponentCounter = 0;
         internal protected bool initialized;
         protected bool enabled;
         protected int order = 1;
-        protected SceneObject sceneObject;
-        protected Transform transform;
+        internal protected SceneObject sceneObject;
+        internal protected Transform transform;
 
         #region Fields
 
+        [DataMember]
         public bool Enabled
         {
             get { return enabled; }
             set
             {
-                if (SetActive(value))
+                if (value != enabled)
+                {
+                    enabled = value;
+
+                    if (enabled)
+                        OnEnabled();
+                    else
+                        OnDisabled();
+
                     NotifyPropertyChanged("Enabled");
+                }  
             }
         }
 
@@ -32,11 +44,9 @@ namespace C3DE.Components
             get { return initialized; }
         }
 
-        public int Id { get; private set; }
+        [DataMember]
+        public string Id { get; set; }
 
-        /// <summary>
-        /// Gets the scene object of this component.
-        /// </summary>
         public SceneObject SceneObject
         {
             get { return sceneObject; }
@@ -49,10 +59,11 @@ namespace C3DE.Components
             internal set { transform = value; }
         }
 
+        [DataMember]
         public int Order
         {
             get { return order; }
-            protected set 
+            protected set
             {
                 if (value != order)
                 {
@@ -83,7 +94,7 @@ namespace C3DE.Components
         {
             initialized = false;
             enabled = true;
-            Id = ++ComponentCounter;
+            Id = "CPN-" + Guid.NewGuid();
         }
 
         public virtual void OnEnabled()
@@ -94,26 +105,10 @@ namespace C3DE.Components
         {
         }
 
-        public virtual bool SetActive(bool value)
-        {
-            if (value != enabled)
-            {
-                enabled = value;
-
-                if (enabled)
-                    OnEnabled();
-                else
-                    OnDisabled();
-
-				return true;
-            }
-
-			return false;
-        }
-
         public virtual void Awake()
         {
-            transform = GetComponent<Transform>();
+            if (transform == null)
+                transform = GetComponent<Transform>();
         }
 
         /// <summary>
@@ -132,7 +127,7 @@ namespace C3DE.Components
         {
         }
 
-        public int CompareTo(object obj)
+        public virtual int CompareTo(object obj)
         {
             var component = obj as Component;
 
@@ -162,12 +157,20 @@ namespace C3DE.Components
             return sceneObject.GetComponents<T>();
         }
 
+        public virtual void Reset()
+        {
+        }
+
         public virtual object Clone()
         {
             return MemberwiseClone();
         }
 
         public virtual void Dispose()
+        {
+        }
+
+        public virtual void PostDeserialize()
         {
         }
     }

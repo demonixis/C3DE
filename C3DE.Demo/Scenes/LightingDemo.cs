@@ -25,7 +25,7 @@ namespace C3DE.Demo.Scenes
             camera.AddComponent<OrbitController>();
             camera.AddComponent<RayPickingTester>();
             Add(camera);
-            
+
             // Light
             var lightPrefab = new LightPrefab("lightPrefab", LightType.Point);
             Add(lightPrefab);
@@ -33,8 +33,8 @@ namespace C3DE.Demo.Scenes
             lightPrefab.Light.Range = 105;
             lightPrefab.Light.Intensity = 2.0f;
             lightPrefab.Light.FallOf = 5f;
-            lightPrefab.Light.DiffuseColor = Color.Violet;
-            lightPrefab.Light.Direction = new Vector3(-1, 1, -1);
+            lightPrefab.Light.Color = Color.Violet;
+            lightPrefab.Transform.Rotation = new Vector3(-1, 1, 0);
             lightPrefab.Light.Angle = 0.1f;
             lightPrefab.Light.ShadowGenerator.ShadowStrength = 0.6f; // FIXME need to be inverted
             lightPrefab.Light.ShadowGenerator.SetShadowMapSize(Application.GraphicsDevice, 1024);
@@ -45,27 +45,29 @@ namespace C3DE.Demo.Scenes
 
             var lightPrefabSphere = lightPrefab.AddComponent<MeshRenderer>();
             lightPrefabSphere.Geometry = new SphereGeometry(2f, 4);
-            lightPrefabSphere.Geometry.Generate();
+            lightPrefabSphere.Geometry.Build();
             lightPrefabSphere.CastShadow = false;
             lightPrefabSphere.ReceiveShadow = false;
             lightPrefabSphere.Material = new SimpleMaterial(scene);
-            lightPrefabSphere.Material.MainTexture = GraphicsHelper.CreateTexture(Color.Yellow, 1, 1);
+            lightPrefabSphere.Material.Texture = GraphicsHelper.CreateTexture(Color.Yellow, 1, 1);
 
             // Terrain
             var terrainMaterial = new StandardMaterial(scene);
-            terrainMaterial.MainTexture = GraphicsHelper.CreateBorderTexture(Color.LightGreen, Color.LightSeaGreen, 128, 128, 1);
+            terrainMaterial.Texture = GraphicsHelper.CreateBorderTexture(Color.LightGreen, Color.LightSeaGreen, 128, 128, 4);
             terrainMaterial.Shininess = 10;
             terrainMaterial.Tiling = new Vector2(16);
 
             var terrain = new TerrainPrefab("terrain");
-            terrain.Flat();
+            terrain.Renderer.Geometry.Size = new Vector3(4);
+            terrain.Renderer.Geometry.Build();
+            terrain.Flatten();
             terrain.Renderer.Material = terrainMaterial;
             terrain.Transform.Translate(-terrain.Width >> 1, 0, -terrain.Depth / 2);
             Add(terrain);
 
             // Cube
             var cubeSuperMaterial = new StandardMaterial(scene);
-            cubeSuperMaterial.MainTexture = GraphicsHelper.CreateTriangleTexture(Color.Red, Color.White);  //GraphicsHelper.CreateCheckboardTexture(Color.FloralWhite, Color.DodgerBlue); //Content.Load<Texture2D>("Textures/tech_box2");
+            cubeSuperMaterial.Texture = GraphicsHelper.CreateCheckboardTexture(Color.FloralWhite, Color.DodgerBlue);
             cubeSuperMaterial.DiffuseColor = Color.WhiteSmoke;
             cubeSuperMaterial.SpecularColor = new Color(0.8f, 0.8f, 0.8f, 1.0f);
             cubeSuperMaterial.Shininess = 10;
@@ -82,13 +84,13 @@ namespace C3DE.Demo.Scenes
             var cube = cubeScene.AddComponent<MeshRenderer>();
             cube.ReceiveShadow = false;
             cube.Geometry = new CubeGeometry();
-            cube.Geometry.Generate();
+            cube.Geometry.Build();
             cube.Material = cubeSuperMaterial;
 
             cubeScene.AddComponent<BoxCollider>();
 
             // Skybox
-            RenderSettings.Skybox.Generate(Application.GraphicsDevice, Application.Content, DemoGame.StarsSkybox);
+            RenderSettings.Skybox.Generate(Application.GraphicsDevice, Application.Content, DemoGame.StarsSkybox, 500);
 
             Screen.ShowCursor = true;
         }

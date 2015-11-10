@@ -1,4 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
+using System;
+using System.Collections.Generic;
+using System.Runtime.Serialization;
 
 namespace C3DE
 {
@@ -10,6 +13,7 @@ namespace C3DE
     /// <summary>
     /// Define settings used by the renderer.
     /// </summary>
+    [DataContract]
     public class RenderSettings
     {
         internal Vector3 fogColor;
@@ -20,6 +24,7 @@ namespace C3DE
         /// <summary>
         /// Gets or sets the global ambient color.
         /// </summary>
+        [DataMember]
         public Color AmbientColor
         {
             get { return new Color(ambientColor); }
@@ -29,6 +34,7 @@ namespace C3DE
         /// <summary>
         /// Gets or sets the fog color.
         /// </summary>
+        [DataMember]
         public Color FogColor
         {
             get { return new Color(fogColor); }
@@ -38,11 +44,13 @@ namespace C3DE
         /// <summary>
         /// Enable or disable the fog.
         /// </summary>
+        [DataMember]
         public bool FogEnabled { get; set; }
 
         /// <summary>
         /// Gets or sets the type of fog.
         /// </summary>
+        [DataMember]
         public FogMode FogMode
         {
             get { return (FogMode)(int)fogData.X; }
@@ -52,6 +60,7 @@ namespace C3DE
         /// <summary>
         /// Gets or sets the fog density.
         /// </summary>
+        [DataMember]
         public float FogDensity
         {
             get { return fogData.Y; }
@@ -61,6 +70,7 @@ namespace C3DE
         /// <summary>
         /// Gets or sets the fog start.
         /// </summary>
+        [DataMember]
         public float FogStart
         {
             get { return fogData.Z; }
@@ -70,15 +80,18 @@ namespace C3DE
         /// <summary>
         /// Gets or sets the fog end.
         /// </summary>
+        [DataMember]
         public float FogEnd
         {
             get { return fogData.W; }
             set { fogData.W = value; }
         }
 
+        [DataMember]
         public Skybox Skybox
         {
             get { return skybox; }
+            set { skybox = value; }
         }
 
         /// <summary>
@@ -95,6 +108,15 @@ namespace C3DE
             FogEnd = 150.0f;
             fogColor = Vector3.One;
             skybox = new Skybox();
+        }
+
+        public void Set(RenderSettings settings)
+        {
+            ambientColor = settings.ambientColor;
+            fogData = settings.fogData;
+            fogColor = settings.fogColor;
+            FogEnabled = settings.FogEnabled;
+            skybox = new Skybox(); // FIXME
         }
     }
 }

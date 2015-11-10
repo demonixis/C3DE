@@ -118,7 +118,7 @@ namespace C3DE.Components.Controllers.Mobile
             ui.DrawTexture(ref _movePosition, _texture, GamepadColor);
         }
 
-        private void Reset()
+        public override void Reset()
         {
             _movePosition.X = _startPosition.X;
             _movePosition.Y = _startPosition.Y;

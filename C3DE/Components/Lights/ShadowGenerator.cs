@@ -1,79 +1,71 @@
-﻿using C3DE.Components.Lights;
-using C3DE.Components.Renderers;
+﻿using C3DE.Components.Renderers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 
-namespace C3DE
+namespace C3DE.Components.Lights
 {
     /// <summary>
     /// A generator of shadow for a specified light.
     /// </summary>
+    [DataContract]
     public class ShadowGenerator : IDisposable
     {
         private Light _light;
         private RenderTarget2D shadowMap;
         private Effect _shadowEffect;
-        private float _shadowMapSize;
-        private float _shadowBias;
-        private float _shadowStrength;
         private BoundingSphere _boundingSphere;
-        private bool _enabled;
-        private Vector3 _shadowData;
+
+        [DataMember]
+        protected internal Vector3 shadowData;
 
         public RenderTarget2D ShadowMap
         {
             get { return shadowMap; }
         }
 
-        public float ShadowMapSize
+        public int ShadowMapSize
         {
-            get { return _shadowMapSize; }
+            get { return (int)shadowData.X; }
+            set
+            {
+                if (value > 0)
+                    SetShadowMapSize(Application.GraphicsDevice, value);
+
+                shadowData.X = value;
+            }
         }
 
         public float ShadowBias
         {
-            get { return _shadowBias; }
-            set
-            {
-                _shadowBias = value;
-                _shadowData.Y = value;
-            }
+            get { return shadowData.Y; }
+            set { shadowData.Y = value; }
         }
 
         public float ShadowStrength
         {
-            get { return 1 - _shadowStrength; }
-            set
-            {
-                _shadowStrength = Math.Min(1.0f, Math.Max(0.0f, value));
-                _shadowData.Z = _shadowStrength;
-            }
+            get { return 1 - shadowData.Z; }
+            set { shadowData.Z = Math.Min(1.0f, Math.Max(0.0f, value)); }
         }
 
+        // FIXME
         public bool Enabled
         {
-            get { return _enabled; }
-            set
-            {
-                _enabled = value;
-                _shadowData.X = value ? _shadowMapSize : 0;
-            }
+            get { return shadowData.X > 0; }
+            set { shadowData.X = value ? Math.Max(shadowData.X, 256) : 0; }
         }
 
         public Vector3 Data
         {
-            get { return _shadowData; }
+            get { return shadowData; }
         }
 
         public ShadowGenerator(Light light)
         {
-            _enabled = false;
-            _shadowBias = 0.005f;
-            _shadowStrength = 0.8f;
             _light = light;
-            _shadowData = new Vector3(0, 0, 0);
+            shadowData = new Vector3(0, 0.005f, 0.8f);
         }
 
         public void Initialize()
@@ -90,20 +82,16 @@ namespace C3DE
 #if ANDROID
 			shadowMap = new RenderTarget2D (device, size, size);
 #else
-			shadowMap = new RenderTarget2D (device, size, size, false, SurfaceFormat.Single, DepthFormat.Depth24, 0, RenderTargetUsage.DiscardContents);
+            shadowMap = new RenderTarget2D(device, size, size, false, SurfaceFormat.Single, DepthFormat.Depth24, 0, RenderTargetUsage.DiscardContents);
 #endif
-            _shadowMapSize = size;
-
-            _shadowData.X = _enabled ? _shadowMapSize : 0;
-            _shadowData.Y = _shadowBias;
-            _shadowData.Z = _shadowStrength;
+            shadowData.X = size;
         }
 
         /// <summary>
         /// Render shadows for the specified camera into a renderTarget.
         /// </summary>
         /// <param name="camera"></param>
-        public void RenderShadows(GraphicsDevice device, List<RenderableComponent> renderList)
+        public void RenderShadows(GraphicsDevice device, List<Renderer> renderList)
         {
             _boundingSphere = new BoundingSphere();
 
@@ -131,7 +119,7 @@ namespace C3DE
             {
                 if (renderList[i].CastShadow)
                 {
-                    _shadowEffect.Parameters["World"].SetValue(renderList[i].SceneObject.Transform.world);
+                    _shadowEffect.Parameters["World"].SetValue(renderList[i].transform.world);
                     _shadowEffect.CurrentTechnique.Passes[0].Apply();
                     renderList[i].Draw(device);
                 }

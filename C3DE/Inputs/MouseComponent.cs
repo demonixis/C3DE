@@ -5,7 +5,7 @@ namespace C3DE.Inputs
 {
     public enum MouseButton
     {
-        Left, Middle, Right
+        Left = 0, Middle, Right, Any
     }
 
     public class MouseComponent : GameComponent
@@ -102,7 +102,7 @@ namespace C3DE.Inputs
 
         #region Mouse click
 
-        public virtual bool Clicked(MouseButton button = MouseButton.Left)
+        public virtual bool JustClicked(MouseButton button = MouseButton.Left)
         {
             bool clicked = false;
 

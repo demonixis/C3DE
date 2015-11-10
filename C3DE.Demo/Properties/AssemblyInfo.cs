@@ -5,18 +5,13 @@ using System.Runtime.InteropServices;
 // Les informations générales relatives à un assembly dépendent de 
 // l'ensemble d'attributs suivant. Changez les valeurs de ces attributs pour modifier les informations
 // associées à un assembly.
-#if KINECT
-[assembly: AssemblyTitle("C3DE.Demo.Kinect")]
-[assembly: AssemblyDescription("C3DE Demo with Kinect Sensor")]
-#else
 [assembly: AssemblyTitle("C3DE.Demo")]
 [assembly: AssemblyDescription("C3DE Demo")]
-#endif
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Demonixis Games")]
-[assembly: AssemblyProduct("C3DE")]
-[assembly: AssemblyCopyright("Copyright ©  2014")]
-[assembly: AssemblyTrademark("Demonixis Games")]
+[assembly: AssemblyCompany("The C3DE Team")]
+[assembly: AssemblyProduct("C3DE Demos")]
+[assembly: AssemblyCopyright("Copyright © C3DE 2014-2015")]
+[assembly: AssemblyTrademark("C3DE")]
 [assembly: AssemblyCulture("")]
 
 // L'affectation de la valeur false à ComVisible rend les types invisibles dans cet assembly 

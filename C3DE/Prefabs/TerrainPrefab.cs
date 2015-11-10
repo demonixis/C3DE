@@ -4,9 +4,11 @@ using C3DE.Geometries;
 using C3DE.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Runtime.Serialization;
 
 namespace C3DE.Prefabs
 {
+    [DataContract]
     public struct TerrainWeightData
     {
         public float SandLayer { get; set; }
@@ -15,6 +17,7 @@ namespace C3DE.Prefabs
         public float SnowLayer { get; set; }
     }
 
+    [DataContract]
     public class TerrainPrefab : SceneObject
     {
         protected MeshRenderer renderer;
@@ -48,8 +51,15 @@ namespace C3DE.Prefabs
         }
 
         public TerrainPrefab(string name)
-            : base(name)
+            : this()
         {
+            Name = name;
+        }
+
+        public TerrainPrefab()
+            : base()
+        {
+            Name = "TerrainPrefab-" + System.Guid.NewGuid();
             geometry = new TerrainGeometry(100, 100, 1);
 
             renderer = AddComponent<MeshRenderer>();
@@ -112,14 +122,14 @@ namespace C3DE.Prefabs
             Build();
         }
 
-        public void Flat()
+        public void Flatten()
         {
             Build();
         }
 
-        private void Build()
+        public void Build()
         {
-            renderer.Geometry.Generate();
+            renderer.Geometry.Build();
         }
 
         public void ApplyCollision(Transform tr)

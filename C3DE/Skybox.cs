@@ -5,15 +5,17 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using System.Runtime.Serialization;
 
 namespace C3DE
 {
+    [DataContract]
     public class Skybox
     {
+        private static Effect SkyboxEffect = null;
         private Matrix _world;
         private CubeGeometry _geometry;
         private TextureCube _texture;
-        private Effect _effect;
         private RasterizerState _skyboxRasterizerState;
         private RasterizerState _currentRasterizerState;
 
@@ -23,6 +25,7 @@ namespace C3DE
             set { _texture = value; }
         }
 
+        [DataMember]
         public bool Enabled { get; set; }
 
         public Skybox()
@@ -38,10 +41,11 @@ namespace C3DE
             if (textures.Length != 6)
                 throw new Exception("The array of texture names must contains 6 elements.");
 
-            _effect = content.Load<Effect>("FX/SkyboxEffect");
+            if (SkyboxEffect == null)
+                SkyboxEffect = content.Load<Effect>("FX/SkyboxEffect");
 
             _geometry.Size = new Vector3(size);
-            _geometry.Generate();
+            _geometry.Build();
 
             _texture = new TextureCube(device, textures[0].Width, false, SurfaceFormat.Color);
             Color[] textureData;
@@ -89,12 +93,12 @@ namespace C3DE
 
             _world = Matrix.CreateScale(1) * Matrix.CreateTranslation(camera.SceneObject.Transform.Position);
 
-            _effect.Parameters["World"].SetValue(_world);
-            _effect.Parameters["View"].SetValue(camera.view);
-            _effect.Parameters["Projection"].SetValue(camera.projection);
-            _effect.Parameters["SkyboxTexture"].SetValue(_texture);
-            _effect.Parameters["CameraPosition"].SetValue(camera.SceneObject.Transform.Position);
-            _effect.CurrentTechnique.Passes[0].Apply();
+            SkyboxEffect.Parameters["World"].SetValue(_world);
+            SkyboxEffect.Parameters["View"].SetValue(camera.view);
+            SkyboxEffect.Parameters["Projection"].SetValue(camera.projection);
+            SkyboxEffect.Parameters["SkyboxTexture"].SetValue(_texture);
+            SkyboxEffect.Parameters["CameraPosition"].SetValue(camera.SceneObject.Transform.Position);
+            SkyboxEffect.CurrentTechnique.Passes[0].Apply();
 
             device.SetVertexBuffer(_geometry.VertexBuffer);
             device.Indices = _geometry.IndexBuffer;

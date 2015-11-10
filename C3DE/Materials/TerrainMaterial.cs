@@ -1,10 +1,13 @@
-﻿using C3DE.Components.Renderers;
+﻿using C3DE.Components;
+using C3DE.Components.Renderers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using System.Runtime.Serialization;
 
 namespace C3DE.Materials
 {
+    [DataContract]
     public class TerrainMaterial : Material
     {
         public Texture2D SnowTexture { get; set; }
@@ -12,11 +15,12 @@ namespace C3DE.Materials
         public Texture2D RockTexture { get; set; }
         public Texture2D WeightTexture { get; set; }
 
-        public TerrainMaterial(Scene scene)
+        public TerrainMaterial(Scene scene, string name = "Terrain Material")
             : base(scene)
         {
             diffuseColor = new Vector3(1.0f, 1.0f, 1.0f);
             Tiling = Vector2.One;
+            Name = name;
         }
 
         public override void LoadContent(ContentManager content)
@@ -27,22 +31,25 @@ namespace C3DE.Materials
                 effect = content.Load<Effect>("FX/TerrainEffect");
         }
 
-        public override void PrePass()
+        public override void PrePass(Camera camera)
         {
-            effect.Parameters["View"].SetValue(scene.MainCamera.view);
-            effect.Parameters["Projection"].SetValue(scene.MainCamera.projection);
-            effect.Parameters["EyePosition"].SetValue(scene.MainCamera.SceneObject.Transform.Position);
+            effect.Parameters["View"].SetValue(camera.view);
+            effect.Parameters["Projection"].SetValue(camera.projection);
+            effect.Parameters["EyePosition"].SetValue(camera.Transform.Position);
 
-            var light0 = scene.lights[0];
+            if (scene.lights.Count > 0)
+            {
+                var light0 = scene.lights[0];
 
-            // Light
-            effect.Parameters["LightColor"].SetValue(light0.diffuseColor);
-            effect.Parameters["LightDirection"].SetValue(light0.Direction);
-            effect.Parameters["LightIntensity"].SetValue(light0.Intensity);
+                // Light
+                effect.Parameters["LightColor"].SetValue(light0.color);
+                effect.Parameters["LightDirection"].SetValue(light0.transform.Rotation);
+                effect.Parameters["LightIntensity"].SetValue(light0.Intensity);
 
-            // Update shadow data.
-            effect.Parameters["ShadowData"].SetValue(light0.shadowGenerator.Data);
-            effect.Parameters["ShadowMap"].SetValue(light0.shadowGenerator.ShadowMap);
+                // Update shadow data.
+                effect.Parameters["ShadowData"].SetValue(light0.shadowGenerator.shadowData);
+                effect.Parameters["ShadowMap"].SetValue(light0.shadowGenerator.ShadowMap);
+            }
 
             if (ShaderQuality == ShaderQuality.Normal)
             {
@@ -50,23 +57,23 @@ namespace C3DE.Materials
                 effect.Parameters["FogColor"].SetValue(scene.RenderSettings.fogColor);
                 effect.Parameters["FogData"].SetValue(scene.RenderSettings.fogData);
             }
+
+            effect.Parameters["AmbientColor"].SetValue(scene.RenderSettings.ambientColor);
         }
 
-        public override void Pass(RenderableComponent renderable)
+        public override void Pass(Renderer renderable)
         {
             // Material
-            effect.Parameters["AmbientColor"].SetValue(scene.RenderSettings.ambientColor);
             effect.Parameters["DiffuseColor"].SetValue(diffuseColor);
             effect.Parameters["TextureTiling"].SetValue(Tiling);
             effect.Parameters["TextureOffset"].SetValue(Offset);
-
-            effect.Parameters["MainTexture"].SetValue(mainTexture);
+            effect.Parameters["MainTexture"].SetValue(diffuseTexture);
             effect.Parameters["SnowTexture"].SetValue(SnowTexture);
             effect.Parameters["SandTexture"].SetValue(SandTexture);
             effect.Parameters["RockTexture"].SetValue(RockTexture);
             effect.Parameters["WeightMap"].SetValue(WeightTexture);
             effect.Parameters["RecieveShadow"].SetValue(renderable.ReceiveShadow);
-            effect.Parameters["World"].SetValue(renderable.SceneObject.Transform.world);
+            effect.Parameters["World"].SetValue(renderable.Transform.world);
             effect.CurrentTechnique.Passes[0].Apply();
         }
     }

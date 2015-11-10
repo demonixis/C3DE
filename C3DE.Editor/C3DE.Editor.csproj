@@ -28,6 +28,9 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <MonoGamePlatform>Windows</MonoGamePlatform>
+    <MonoGameContentBuilderExe>
+    </MonoGameContentBuilderExe>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -52,70 +55,135 @@
     <StartupObject>Editor.App</StartupObject>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Game.ico</ApplicationIcon>
+    <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework">
-      <HintPath>..\Libs\MonoGame.Framework.dll</HintPath>
+      <HintPath>$(MSBuildProgramFiles32)\MonoGame\v3.0\Assemblies\Windows\MonoGame.Framework.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="SharpDX">
-      <HintPath>..\Libs\SharpDX.dll</HintPath>
+      <HintPath>$(MSBuildProgramFiles32)\MonoGame\v3.0\Assemblies\Windows\SharpDX.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.Direct3D11">
-      <HintPath>..\Libs\SharpDX.Direct3D11.dll</HintPath>
+      <HintPath>$(MSBuildProgramFiles32)\MonoGame\v3.0\Assemblies\Windows\SharpDX.Direct3D11.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.Direct3D9">
-      <HintPath>..\Libs\SharpDX.Direct3D9.dll</HintPath>
+      <HintPath>$(MSBuildProgramFiles32)\MonoGame\v3.0\Assemblies\Windows\SharpDX.Direct3D9.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.DXGI">
-      <HintPath>..\Libs\SharpDX.DXGI.dll</HintPath>
+      <HintPath>$(MSBuildProgramFiles32)\MonoGame\v3.0\Assemblies\Windows\SharpDX.DXGI.dll</HintPath>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Xml.Serialization" />
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="Xceed.Wpf.Toolkit">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.2.5\lib\net40\Xceed.Wpf.Toolkit.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Components\EditorOrbitController.cs" />
-    <Compile Include="Components\EditorMouseComponent.cs" />
-    <Compile Include="MonoGameBridge\C3DEGameHost.cs" />
-    <Compile Include="MonoGameBridge\GraphicsDeviceService.cs" />
-    <Compile Include="Views\Components\ColliderControl.xaml.cs">
+    <Compile Include="AskXnbWindow.xaml.cs">
+      <DependentUpon>AskXnbWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ColliderControl.xaml.cs">
       <DependentUpon>ColliderControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Components\SceneObjectControl.xaml.cs">
+    <Compile Include="Controls\FileExplorerControl.xaml.cs">
+      <DependentUpon>FileExplorerControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\TerrainControl.xaml.cs">
+      <DependentUpon>TerrainControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Core\AssetImporter.cs" />
+    <Compile Include="Core\BasicEditionSceneObject.cs" />
+    <Compile Include="Core\Components\EDFirstPersonCamera.cs" />
+    <Compile Include="Core\Components\EDKeyboardComponent.cs" />
+    <Compile Include="Core\Components\EDMouseComponent.cs" />
+    <Compile Include="Core\EDComponents.cs" />
+    <Compile Include="Core\EDRegistry.cs" />
+    <Compile Include="Core\EDScene.cs" />
+    <Compile Include="Core\EDSettings.cs" />
+    <Compile Include="Core\SceneObjectSelector.cs" />
+    <Compile Include="Exporters\MeshMerger.cs" />
+    <Compile Include="Exporters\OBJExporter.cs" />
+    <Compile Include="Exporters\STLExporter.cs" />
+    <Compile Include="Core\Events\BasicMessage.cs" />
+    <Compile Include="Core\Events\CustomMessage.cs" />
+    <Compile Include="Core\Events\Messenger.cs" />
+    <Compile Include="MonoGameBridge\C3DEGameHost.cs" />
+    <Compile Include="MonoGameBridge\GraphicsDeviceService.cs" />
+    <Compile Include="Controls\CameraControl.xaml.cs">
+      <DependentUpon>CameraControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\LightControl.xaml.cs">
+      <DependentUpon>LightControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\MeshRendererControl.xaml.cs">
+      <DependentUpon>MeshRendererControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SceneListControl.xaml.cs">
+      <DependentUpon>SceneListControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SceneObjectControl.xaml.cs">
       <DependentUpon>SceneObjectControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Components\Vector3LineControl.xaml.cs">
-      <DependentUpon>Vector3LineControl.xaml</DependentUpon>
+    <Compile Include="RenderSettingsWindow.xaml.cs">
+      <DependentUpon>RenderSettingsWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\SceneSettingsWindow.xaml.cs">
-      <DependentUpon>SceneSettingsWindow.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Views\Components\ColliderControl.xaml">
+    <Compile Include="XNAGizmo\Geometry.cs" />
+    <Compile Include="XNAGizmo\GizmoComponent.cs" />
+    <Compile Include="XNAGizmo\Quad.cs" />
+    <Page Include="AskXnbWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Components\SceneObjectControl.xaml">
+    <Page Include="Controls\ColliderControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Components\TransformControl.xaml">
+    <Page Include="Controls\CameraControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\FileExplorerControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\LightControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\MeshRendererControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\SceneListControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\SceneObjectControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\TerrainControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\TransformControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -127,18 +195,14 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Views\Components\TransformControl.xaml.cs">
+    <Compile Include="Controls\TransformControl.xaml.cs">
       <DependentUpon>TransformControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Views\Components\Vector3LineControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\SceneSettingsWindow.xaml">
+    <Page Include="RenderSettingsWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -155,6 +219,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -165,10 +230,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Game.ico" />
-    <Content Include="Content\**\*.*">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <Resource Include="Icon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <MonoGameContentReference Include="Content\Content.mgcb" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\C3DE\C3DE.csproj">
@@ -193,6 +258,22 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\Icon_Rotation.png" />
+    <Resource Include="Resources\Images\Icon_Scale.png" />
+    <Resource Include="Resources\Images\Icon_Translation.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\Icon_Precision.png" />
+    <Resource Include="Resources\Images\Icon_UScale.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\Icon_Grid.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\Icon_Lock.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Content.Builder.targets" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

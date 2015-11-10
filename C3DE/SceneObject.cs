@@ -1,38 +1,48 @@
 ﻿using C3DE.Components;
 using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 
 namespace C3DE
 {
     /// <summary>
     /// A scene object is the base object on the scene.
     /// </summary>
+    [DataContract]
     public class SceneObject : ICloneable, IDisposable
     {
         #region Private/protected declarations
 
-        private static int SceneObjectCounter = 0;
-
         protected Transform transform;
         protected Scene scene;
         protected bool enabled;
+
+        [DataMember]
         protected List<Component> components;
+
+        [DataMember]
         protected bool initialized;
 
         #endregion
 
         #region Fields
 
-        public int Id { get; private set; }
+        [DataMember]
+        public string Id { get; set; }
 
+        [DataMember]
         public string Name { get; set; }
 
+        [DataMember]
         public string Tag { get; set; }
 
+        [DataMember]
         public bool IsStatic { get; set; }
 
+        [DataMember]
         public bool IsPrefab { get; set; }
 
+        [DataMember]
         public bool Enabled
         {
             get { return enabled; }
@@ -40,8 +50,15 @@ namespace C3DE
             {
                 if (value != enabled)
                 {
-                    NotifyPropertyChanged("Enabled");
                     enabled = value;
+
+                    NotifyPropertyChanged("Enabled");
+
+                    if (transform != null)
+                    {
+                        for (int i = 0, l = transform.Transforms.Count; i < l; i++)
+                            transform.Transforms[i].SceneObject.Enabled = value;
+                    }                  
                 }
             }
         }
@@ -82,24 +99,26 @@ namespace C3DE
         /// </summary>
         public event EventHandler<PropertyChangedEventArgs> PropertyChanged = null;
 
-        private void NotifyComponentChanged(Component component, ComponentChangeType type = ComponentChangeType.Add)
-        {
-            if (ComponentChanged != null)
-                ComponentChanged(this, new ComponentChangedEventArgs(component, type));
-        }
-
         private void NotifyPropertyChanged(string property)
         {
             if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(property));
         }
 
+        private void NotifyComponentChanged(Component component, string propertyName, ComponentChangeType type)
+        {
+            if (ComponentChanged != null)
+                ComponentChanged(this, new ComponentChangedEventArgs(component, propertyName, type));
+        }
+
         #endregion
+
+        #region Constructors
 
         /// <summary>
         /// Create a basic scene object.
         /// </summary>
-        public SceneObject(string name = "")
+        public SceneObject()
         {
             transform = new Transform();
             transform.SceneObject = this;
@@ -114,9 +133,17 @@ namespace C3DE
             IsStatic = false;
             IsPrefab = false;
 
-            Id = SceneObjectCounter++;
-            Name = !string.IsNullOrEmpty(name) ? name : "SceneObject_" + Id;
+            Id = "SO_" + Guid.NewGuid();
+            Name = "SceneObject-" + Guid.NewGuid();
         }
+
+        public SceneObject(string name)
+            : this()
+        {
+            Name = name;
+        }
+
+        #endregion
 
         /// <summary>
         /// Initialize and load specific content.
@@ -133,7 +160,7 @@ namespace C3DE
 
                 for (int i = 0; i < components.Count; i++)
                 {
-					components[i].initialized = true;
+                    components[i].initialized = true;
                     components[i].Start();
                 }
             }
@@ -179,6 +206,7 @@ namespace C3DE
                 sceneObject.transform.Parent = transform;
                 sceneObject.transform.Root = transform.Root;
                 transform.Transforms.Add(sceneObject.transform);
+                sceneObject.Enabled = enabled;
 
                 return true;
             }
@@ -207,29 +235,48 @@ namespace C3DE
 
         #region Component collection
 
-        internal Component AddComponent(Component component)
+        public Component AddComponent(Component component)
         {
+            if (component == null)
+                return null;
+
             if (component is Transform)
             {
-                component = null;
+                // Deserialization case
+                var tr = (Transform)component;
+
+                if (transform != null)
+                {
+                    transform.Position = tr.Position;
+                    transform.Rotation = tr.Rotation;
+                    transform.LocalScale = tr.LocalScale;
+                }
+                else
+                    transform = tr;
+
+                // Deserialization
+                if (components.Count == 0)
+                    components.Add(transform);
+
                 return transform;
             }
 
             component.SceneObject = this;
             component.Awake();
+            component.PropertyChanged += OnComponentChanged;
 
             components.Add(component);
 
-			if (initialized && !component.Initialized) 
-			{
-				component.initialized = true;
-				component.Start ();
+            if (initialized && !component.Initialized)
+            {
+                component.initialized = true;
+                component.Start();
 
                 // Sort components here only if the SceneObject is already initialized.
                 components.Sort();
-			}
+            }
 
-            NotifyComponentChanged(component);
+            NotifyComponentChanged(component, string.Empty, ComponentChangeType.Add);
 
             return component;
         }
@@ -238,7 +285,7 @@ namespace C3DE
         /// Add a component of the specified type. Note that you can't add another Transform component.
         /// </summary>
         /// <typeparam name="T">The component's type.</typeparam>
-        /// <returns>Return true if the component has been added, otherwise return false.</returns>
+        /// <returns></returns>
         public T AddComponent<T>() where T : Component, new()
         {
             var component = new T();
@@ -275,6 +322,47 @@ namespace C3DE
             return comps.ToArray();
         }
 
+        public T GetComponentInChildren<T>() where T : Component
+        {
+            T component = null;
+
+            for (int i = 0, l = transform.Transforms.Count; i < l; i++)
+            {
+                component = transform.Transforms[i].GetComponent<T>();
+
+                if (component != null)
+                    return component;
+            }
+
+            return null;
+        }
+
+        public T[] GetComponentsInChildren<T>() where T : Component
+        {
+            var list = new List<T>();
+            T[] cpns;
+
+            for (int i = 0, l = transform.Transforms.Count; i < l; i++)
+            {
+                cpns = transform.Transforms[i].GetComponents<T>();
+
+                if (cpns != null && cpns.Length > 0)
+                    list.AddRange(cpns);
+            }
+
+            return list.ToArray();
+        }
+
+        public T GetComponentInParent<T>() where T : Component
+        {
+            return transform.Parent.GetComponent<T>();
+        }
+
+        public T[] GetComponentsInParent<T>() where T : Component
+        {
+            return transform.Parent.GetComponents<T>();
+        }
+
         /// <summary>
         /// Remove the component and update the scene.
         /// </summary>
@@ -282,62 +370,84 @@ namespace C3DE
         /// <returns>Return true if the component has been removed, otherwise return false.</returns>
         public bool RemoveComponent(Component component)
         {
-            int index = -1;
-            int i = 0;
+            if (component == transform)
+                return false;
 
-            while (i < components.Count && index == -1)
-                index = (components[i] == component) ? i : index;
-
-            if (index > -1)
+            var result = components.Remove(component);
+            if (result)
             {
-                components.Remove(component);
-                NotifyComponentChanged(component, ComponentChangeType.Remove);
+                component.PropertyChanged -= OnComponentChanged;
+                NotifyComponentChanged(component, string.Empty, ComponentChangeType.Remove);
             }
 
-            return index > -1;
+            return result;
+        }
+
+        protected virtual void OnComponentChanged(object sender, PropertyChangedEventArgs e)
+        {
+            NotifyComponentChanged((Component)sender, e.Name, ComponentChangeType.Update);
         }
 
         #endregion
 
-        public static SceneObject FindById(int id)
-        {
-            for (int i = 0; i < Application.SceneManager.ActiveScene.sceneObjects.Size; i++)
-                if (Application.SceneManager.ActiveScene.sceneObjects[i].Id == id)
-                    return Application.SceneManager.ActiveScene.sceneObjects[i];
-
-            return null;
-        }
-
-        public static SceneObject[] FindSceneObjectsById(int id)
-        {
-            List<SceneObject> sceneObjects = new List<SceneObject>();
-
-            for (int i = 0; i < Application.SceneManager.ActiveScene.sceneObjects.Size; i++)
-                if (Application.SceneManager.ActiveScene.sceneObjects[i].Id == id)
-                    sceneObjects.Add(Application.SceneManager.ActiveScene.sceneObjects[i]);
-
-            return sceneObjects.ToArray();
-        }
-
         public object Clone()
         {
-            SceneObject sceneObject = new SceneObject(Name + " (Clone)");
+            SceneObject clone = new SceneObject(Name.Replace(" (Clone)", "") + " (Clone)");
+            Component cpnClone = null;
+            Transform trClone = null;
 
             foreach (Component component in components)
-                sceneObject.AddComponent((Component)component.Clone());
+            {
+                cpnClone = clone.AddComponent((Component)component.Clone());
+                cpnClone.sceneObject = clone;
+
+                if (cpnClone is Transform)
+                    trClone = (Transform)cpnClone;
+
+                if (trClone != null)
+                    cpnClone.transform = trClone;
+            }
 
             // Fixme
-            sceneObject.Transform.Position = transform.Position;
-            sceneObject.Transform.Rotation = transform.Rotation;
-            sceneObject.Transform.LocalScale = transform.LocalScale;
+            clone.Id = "SO-" + Guid.NewGuid();
+            clone.Tag = Tag;
 
-            return sceneObject;
+            return clone;
         }
 
         public void Dispose()
         {
             foreach (Component component in components)
                 component.Dispose();
+        }
+
+        public virtual void PostDeserialize()
+        {
+            var size = components.Count;
+            var i = 0;
+
+            if (size > 0)
+            {
+                transform = GetComponent<Transform>();
+
+                for (i = 0; i < size; i++)
+                {
+                    components[i].sceneObject = this;
+                    components[i].transform = transform;
+                }
+
+                for (i = 0; i < size; i++)
+                {
+                    components[i].PostDeserialize();
+                    components[i].Awake();
+
+                    if (initialized)
+                        components[i].Start();
+                }
+
+                // Refresh children
+                Enabled = enabled;
+            }
         }
     }
 }

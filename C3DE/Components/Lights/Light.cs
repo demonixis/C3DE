@@ -1,20 +1,25 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Graphics;
+using System.Runtime.Serialization;
 
 namespace C3DE.Components.Lights
 {
     public enum LightType
     {
-        Ambient = 0, Directional, Point, Spot, Area
+        Ambient = 0, Directional, Point, Spot
     }
 
+	public enum LightRenderMode
+	{
+		RealTime = 0, Backed
+	}
+
+    [DataContract]
     public class Light : Component
     {
         internal protected Matrix viewMatrix;
         internal protected Matrix projectionMatrix;
         internal protected ShadowGenerator shadowGenerator;
-        internal protected Vector3 diffuseColor;
+        internal protected Vector3 color;
 
         public Matrix View
         {
@@ -26,51 +31,58 @@ namespace C3DE.Components.Lights
             get { return projectionMatrix; }
         }
 
+        [DataMember]
         public bool EnableShadow
         {
             get { return shadowGenerator.Enabled; }
             set { shadowGenerator.Enabled = value; }
         }
 
+        [DataMember]
         public ShadowGenerator ShadowGenerator
         {
             get { return shadowGenerator; }
+            protected set { shadowGenerator = value; }
         }
 
         /// <summary>
         /// The color of the light.
         /// </summary>
-        public Color DiffuseColor
+        [DataMember]
+        public Color Color
         {
-            get { return new Color(diffuseColor); }
-            set { diffuseColor = value.ToVector3(); }
+            get { return new Color(color); }
+            set { color = value.ToVector3(); }
         }
 
         /// <summary>
         /// The intensity of the light.
         /// </summary>
+        [DataMember]
         public float Intensity { get; set; }
 
         /// <summary>
         /// The maximum distance of emission.
         /// </summary>
+        [DataMember]
         public float Range { get; set; }
 
+        [DataMember]
+		public LightRenderMode Backing { get; set; }
+
+        [DataMember]
         public float FallOf { get; set; }
 
         /// <summary>
         /// The type of the light.
         /// </summary>
-        public LightType Type { get; set; }
-
-        /// <summary>
-        /// The direction of the directional light.
-        /// </summary>
-        public Vector3 Direction { get; set; }
+        [DataMember]
+        public LightType TypeLight { get; set; }
 
         /// <summary>
         /// The angle used by the Spot light.
         /// </summary>
+        [DataMember]
         public float Angle { get; set; }
 
         public Light()
@@ -79,12 +91,12 @@ namespace C3DE.Components.Lights
             viewMatrix = Matrix.Identity;
             projectionMatrix = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45), 1, 1, 500);
             viewMatrix = Matrix.CreateLookAt(Vector3.Zero, Vector3.Zero, Vector3.Up);
-            diffuseColor = new Vector3(1.0f, 1.0f, 1.0f);
+            color = new Vector3(1.0f, 1.0f, 1.0f);
             Intensity = 1.0f;
-            Direction = new Vector3(1, 1, 0);
-            Type = LightType.Ambient;
+            TypeLight = LightType.Ambient;
             Range = 5000.0f;
             FallOf = 2.0f;
+			Backing = LightRenderMode.RealTime;
             shadowGenerator = new ShadowGenerator(this);
         }
 
@@ -99,23 +111,31 @@ namespace C3DE.Components.Lights
             Vector3 dir = sphere.Center - sceneObject.Transform.Position;
             dir.Normalize();
 
-            viewMatrix = Matrix.CreateLookAt(sceneObject.Transform.Position, sphere.Center, Vector3.Up);
+            viewMatrix = Matrix.CreateLookAt(transform.Position, sphere.Center, Vector3.Up);
             float size = sphere.Radius;
 
-            float dist = Vector3.Distance(sceneObject.Transform.Position, sphere.Center);
+            float dist = Vector3.Distance(transform.Position, sphere.Center);
             projectionMatrix = Matrix.CreateOrthographicOffCenter(-size, size, size, -size, dist - sphere.Radius, dist + sphere.Radius * 2);
-        }
-
-        public void DrawShadowMap(SpriteBatch sb)
-        {
-            sb.Begin(SpriteSortMode.Deferred, BlendState.Opaque, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone, null);
-            sb.Draw(shadowGenerator.ShadowMap, new Rectangle(0, 0, 100, 100), Color.White);
-            sb.End();
         }
 
         public override void Dispose()
         {
             shadowGenerator.Dispose();
+        }
+
+        public override int CompareTo(object obj)
+        {
+            var light = obj as Light;
+
+            if (light == null)
+                return 1;
+
+            if (TypeLight == light.TypeLight)
+                return 0;
+            else if (Backing == LightRenderMode.RealTime && light.Backing == LightRenderMode.Backed)
+                return 1;
+            else
+                return -1;
         }
     }
 }

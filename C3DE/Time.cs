@@ -38,7 +38,7 @@ namespace C3DE
             get { return __time / 1000.0f; }
         }
         
-        public Time(Game game)
+        public Time(Game game = null)
             : base (game)
         {
         }

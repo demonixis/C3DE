@@ -13,8 +13,8 @@ namespace C3DE.Prefabs
 
         public LightType Type
         {
-            get { return _light.Type; }
-            set { _light.Type = value; }
+            get { return _light.TypeLight; }
+            set { _light.TypeLight = value; }
         }
 
         public bool EnableShadows
@@ -23,12 +23,19 @@ namespace C3DE.Prefabs
             set { _light.shadowGenerator.Enabled = value; }
         }
 
-        public LightPrefab(string name, LightType type)
-            : base(name)
+        public LightPrefab()
+            : base()
         {
+            Name = "LightPrefab-" + System.Guid.NewGuid();
             _light = AddComponent<Light>();
-            _light.Type = type;
+            _light.TypeLight = LightType.Directional;
             _light.shadowGenerator.SetShadowMapSize(Application.GraphicsDevice, 1024);
+        }
+
+        public LightPrefab(string name, LightType type)
+            : this()
+        {
+            Name = name;
         }
     }
 }

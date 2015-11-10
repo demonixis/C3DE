@@ -3,12 +3,14 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Input;
 using System;
+using System.Runtime.Serialization;
 
 namespace C3DE.Components.Controllers
 {
     /// <summary>
     /// A first person camera controller component.
     /// </summary>
+    [DataContract]
     public class FirstPersonController : Controller
     {
         private Camera _camera;
@@ -23,9 +25,11 @@ namespace C3DE.Components.Controllers
 
         /// <summary>
         /// Enable or disable the flying mode. Default is false.
-        /// </summary>
+        /// </summar>
+        [DataMember]
         public bool Fly { get; set; }
 
+        [DataMember]
         public bool VirtualInputEnabled
         {
             get { return _virtualInputEnabled; }
@@ -35,6 +39,7 @@ namespace C3DE.Components.Controllers
             }
         }
 
+        [DataMember]
         public bool LockCursor
         {
             get { return _lockCursor; }
@@ -120,7 +125,7 @@ namespace C3DE.Components.Controllers
             transform.Rotate(ref rotation);
 
             // Update target
-            _camera.Target = transform.Position + Vector3.Transform(_camera.Reference, _rotationMatrix);
+            _camera.Target = transform.Position + Vector3.Transform(Vector3.Forward, _rotationMatrix);
 
             translation *= Velocity;
             rotation *= AngularVelocity;

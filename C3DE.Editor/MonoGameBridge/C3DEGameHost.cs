@@ -1,61 +1,62 @@
-﻿using C3DE.Components.Lights;
-using C3DE.Editor.Components;
-using C3DE.Inputs;
-using C3DE.Materials;
+﻿using C3DE.Components;
+using C3DE.Components.Renderers;
+using C3DE.Editor.Core;
+using C3DE.Editor.Exporters;
 using C3DE.Prefabs;
-using C3DE.Utils;
+using C3DE.Rendering;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Windows;
+using System.IO;
+using XNAGizmo;
 
 namespace C3DE.Editor.MonoGameBridge
 {
-    using C3DE.Components;
-    using C3DE.Components.Colliders;
-    using C3DE.Components.Renderers;
-    using C3DE.Geometries;
-    using C3DE.Prefabs.Meshes;
-    using C3DE.Rendering;
-    using XnaColor = Microsoft.Xna.Framework.Color;
-    using XnaVector2 = Microsoft.Xna.Framework.Vector2;
-    using XnaVector3 = Microsoft.Xna.Framework.Vector3;
-
-    public class SceneObjectAddedEventArgs : EventArgs
-    {
-        public SceneObject SceneObject { get; private set; }
-
-        public SceneObjectAddedEventArgs(SceneObject sceneObject)
-        {
-            SceneObject = sceneObject;
-        }
-    }
-
     public sealed class C3DEGameHost : D3D11Host, IServiceProvider
     {
+        public const string EditorTag = "C3DE_Editor";
+
         private GameTime _gameTime;
         private GameServiceContainer _services;
         private List<GameComponent> _gameComponents;
-        private EditorMouseComponent _mouse;
-        private SpriteBatch _spriteBatch;
-        private Renderer _renderer;
+        private ForwardRenderer _renderer;
         private ContentManager _content;
-        private Scene _scene;
-        private Camera _mainCamera;
-        private List<string> _sceneObjectToAdd;
-        private SceneObject _selectedObject;
+        private ContentManager _projectContent;
+        private EDScene _scene;
+        internal GizmoComponent gizmoComponent;
 
-        public event EventHandler<SceneObjectAddedEventArgs> SceneObjectAdded = null;
-        public event EventHandler<EventArgs> SceneObjectRemoved = null;
+        public Action EngineReady = null;
+
+        #region GameHost implementation
+
+        public object GetService(Type serviceType)
+        {
+            return _services.GetService(serviceType);
+        }
+
+        protected override void OnRenderSizeChanged(System.Windows.SizeChangedInfo sizeInfo)
+        {
+            base.OnRenderSizeChanged(sizeInfo);
+
+            int width = (int)sizeInfo.NewSize.Width;
+            int height = (int)sizeInfo.NewSize.Height;
+
+            Screen.Setup(width, height, null, null);
+            Camera.main.ComputeProjectionMatrix(MathHelper.PiOver4, (float)width / (float)height, 1, 2000);
+
+            _renderer.NeedsBufferUpdate = true;
+        }
+
+        #endregion
+
+        #region Life cycle
 
         protected override void Initialize()
         {
             base.Initialize();
-
-            _sceneObjectToAdd = new List<string>();
 
             _gameTime = new GameTime(TimeSpan.Zero, TimeSpan.Zero);
             _gameComponents = new List<GameComponent>();
@@ -65,70 +66,55 @@ namespace C3DE.Editor.MonoGameBridge
 
             _content = new ContentManager(this);
             _content.RootDirectory = "Content";
-            _scene = new Scene("Root");
+
+            _projectContent = new ContentManager(this);
+            _projectContent.RootDirectory = EDRegistry.ContentTempPath;
+
+            AssetImporter.CreateFolderStructure("Temp");
 
             Application.Content = _content;
             Application.GraphicsDevice = GraphicsDevice;
 
-            _mouse = new EditorMouseComponent(null, this);
-            Input.Mouse = _mouse;
+            _gameComponents.Add(EDRegistry.Mouse);
+            _gameComponents.Add(EDRegistry.Keys);
+            _gameComponents.Add(new Time());
 
-            _gameComponents.Add(new Time(null));
-            _gameComponents.Add(Input.Mouse);
-
-            Screen.Setup((int)ActualWidth, (int)ActualHeight, null, null);
-
-            _spriteBatch = new SpriteBatch(GraphicsDevice);
-            _renderer = new Renderer();
+            _renderer = new ForwardRenderer();
             _renderer.Initialize(_content);
-            _scene.Initialize();
 
             foreach (var component in _gameComponents)
                 component.Initialize();
 
-            PopulateSceneWithThings();
-        }
+            gizmoComponent = new GizmoComponent(GraphicsDevice);
+            gizmoComponent.ActiveMode = GizmoMode.Translate;
 
-        private void PopulateSceneWithThings()
-        {
-            _scene.DefaultMaterial.MainTexture = GraphicsHelper.CreateCheckboardTexture(Color.Blue, Color.White, 64, 64);
-
-            var camera = new CameraPrefab("Editor_MainCamera");
-            _scene.Add(camera);
-            camera.AddComponent<EditorOrbitController>();
-            _mainCamera = camera.Camera;
-
-            var lightPrefab = new LightPrefab("Editor_MainLight", LightType.Directional);
-            _scene.Add(lightPrefab);
-            lightPrefab.Transform.Position = new XnaVector3(0, 15, 15);
-            lightPrefab.Light.Direction = new XnaVector3(0, 1, -1);
-
-            // Grid
-            var terrain = new TerrainPrefab("terrain");
-            _scene.Add(terrain);
-            terrain.Flat();
-            terrain.Renderer.Material = new TransparentMaterial(_scene);
-            terrain.Renderer.Material.MainTexture = GraphicsHelper.CreateBorderTexture(XnaColor.Gray, XnaColor.Transparent, 256, 256, 2);
-            terrain.Renderer.Material.Tiling = new XnaVector2(16); ;
-            terrain.Transform.Translate(-terrain.Width >> 1, 0, -terrain.Depth / 2);
-
-            camera.Transform.Position = new XnaVector3(-terrain.Width >> 1, 2, -terrain.Depth / 2);
-
+            _scene = new EDScene("Root", gizmoComponent);
+            _scene.Initialize();
             _scene.RenderSettings.Skybox.Generate();
+
+            MouseDown += C3DEGameHost_MouseDown;
+            MouseUp += C3DEGameHost_MouseUp;
+
+            if (EngineReady != null)
+                EngineReady();
         }
 
-        protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo)
+        void C3DEGameHost_MouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            base.OnRenderSizeChanged(sizeInfo);
+            ReleaseMouseCapture();
+            Screen.LockCursor = false;
+            Cursor = System.Windows.Input.Cursors.Arrow;
+        }
 
-            int width = (int)sizeInfo.NewSize.Width;
-            int height = (int)sizeInfo.NewSize.Height;
+        void C3DEGameHost_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (e.LeftButton == System.Windows.Input.MouseButtonState.Pressed)
+                return;
 
-            Screen.Setup(width, height, null, null);
-
-            _mainCamera.ComputeProjectionMatrix(MathHelper.PiOver4, (float)width / (float)height, 1, 2000);
-
-            _renderer.NeedsBufferUpdate = true;
+            Focus();
+            CaptureMouse();
+            Screen.LockCursor = true;
+            Cursor = System.Windows.Input.Cursors.None;
         }
 
         protected override void Update(Stopwatch timer)
@@ -138,119 +124,161 @@ namespace C3DE.Editor.MonoGameBridge
             _gameTime.ElapsedGameTime = timer.Elapsed;
             _gameTime.TotalGameTime += timer.Elapsed;
 
-            if (_sceneObjectToAdd.Count > 0)
-            {
-                foreach (var type in _sceneObjectToAdd)
-                    InternalAddSceneObject(type);
-
-                _sceneObjectToAdd.Clear();
-            }
-
             foreach (var component in _gameComponents)
                 component.Update(_gameTime);
 
-            if (Input.Mouse.Clicked(MouseButton.Left))
-            {
-                var ray = _mainCamera.GetRay((Input.Mouse as EditorMouseComponent).Position);
-                RaycastInfo info;
-
-                if (_scene.Raycast(ray, 100, out info))
-                {
-                    if (info.Collider.SceneObject == _selectedObject)
-                        return;
-
-                    if (info.Collider.SceneObject != _selectedObject)
-                        UnselectSceneObject();
-
-                    _selectedObject = info.Collider.SceneObject;
-
-                    /*var boxRenderer = _selectedObject.GetComponent<BoundingBoxRenderer>();
-
-                    if (boxRenderer == null)
-                        boxRenderer = _selectedObject.AddComponent<BoundingBoxRenderer>();
-
-                    boxRenderer.Enabled = true;*/
-                }
-            }
-
-            if (_selectedObject != null)
-            {
-                if (Input.Mouse.Down(MouseButton.Left))
-                    _selectedObject.Transform.Translate(Input.Mouse.Delta.X, 0, Input.Mouse.Delta.Y);
-            }
-
             _scene.Update();
-        }
 
-        private void UnselectSceneObject()
-        {
-            if (_selectedObject != null)
-            {
-                //_selectedObject.GetComponent<BoundingBoxRenderer>().Enabled = false;
-            }
+            gizmoComponent.Update();
         }
 
         protected override void Draw(RenderTarget2D renderTarget)
         {
-            graphicsDevice.Clear(XnaColor.CornflowerBlue);
-            _renderer.RenderEditor(_scene, _scene.MainCamera, renderTarget);
+            graphicsDevice.Clear(Color.CornflowerBlue);
+            _renderer.RenderEditor(_scene, _scene.camera, renderTarget);
+            gizmoComponent.Draw();
+
+            if (Screen.LockCursor && EDSettings.current.AllowLockCursor)
+                EDRegistry.Mouse.SetPosition(Screen.WidthPerTwo, Screen.HeightPerTwo);
         }
 
-        public object GetService(Type serviceType)
+        #endregion
+
+        #region New / Save and Load scene
+
+        public void NewScene()
         {
-            return _services.GetService(serviceType);
+            _scene.Unload();
+            gizmoComponent.Selection.Clear();
+            _scene = new EDScene("Root", gizmoComponent);
+            _scene.Initialize();
+            _scene.RenderSettings.Skybox.Generate();
         }
 
-        public void Add(string type)
+        public bool SaveScene(string path)
         {
-            _sceneObjectToAdd.Add(type);
-        }
+            var result = true;
 
-        private void InternalAddSceneObject(string type)
-        {
-            SceneObject sceneObject = null;
-
-            switch (type)
+            try
             {
-                case "Cube": sceneObject = new MeshPrefab<CubeGeometry>(type); break;
-                case "Cylinder": sceneObject = new MeshPrefab<CylinderGeometry>(type); break;
-                case "Quad": sceneObject = new MeshPrefab<QuadGeometry>(type); break;
-                case "Plane": sceneObject = new MeshPrefab<PlaneGeometry>(type); break;
-                case "Pyramid": sceneObject = new MeshPrefab<PyramidGeometry>(type); break;
-                case "Sphere": sceneObject = new MeshPrefab<SphereGeometry>(type); break;
-                case "Torus": sceneObject = new MeshPrefab<TorusGeometry>(type); break;
+                var serScene = new SerializedScene()
+                {
+                    Materials = _scene.GetUsedMaterials(),
+                    SceneObjects = _scene.GetUsedSceneObjects(),
+                    RenderSettings = _scene.RenderSettings
+                };
 
-                case "Terrain":
-                    var terrain = new TerrainPrefab(type);
-                    terrain.Flat();
-                    terrain.Renderer.Material = _scene.DefaultMaterial;
-                    sceneObject = terrain;
-                    break;
-
-                case "Water":
-                    var water = new WaterPrefab(type);
-                    _scene.Add(water);
-                    water.Generate(string.Empty, string.Empty, new XnaVector3(10));
-                    water.Renderer.Material.MainTexture = GraphicsHelper.CreateTexture(XnaColor.LightSeaGreen, 1, 1);
-                    sceneObject = water;
-                    break;
-
-                case "Directional": sceneObject = new LightPrefab(type, LightType.Directional); break;
-                case "Point": sceneObject = new LightPrefab(type, LightType.Point); break;
-                case "Spot": sceneObject = new LightPrefab(type, LightType.Spot); break;
-
-                case "Camera": sceneObject = new CameraPrefab(type); break;
-                default: break;
+                Serializr.Serialize(path, serScene);
             }
-            
-            var collider = sceneObject.GetComponent<Collider>();
-            if (collider != null)
-                collider.IsPickable = true;
+            catch (Exception ex)
+            {
+                result = false;
+                Debug.Log(ex.Message);
+            }
 
-            _scene.Add(sceneObject);
-
-            if (SceneObjectAdded != null)
-                SceneObjectAdded(this, new SceneObjectAddedEventArgs(sceneObject));
+            return result;
         }
+
+        public bool LoadScene(string path)
+        {
+            var result = true;
+
+            try
+            {
+                var data = Serializr.Deserialize(path, typeof(SerializedScene));
+                var serializedScene = data as SerializedScene;
+                if (serializedScene != null)
+                {
+                    NewScene();
+
+                    foreach (var mat in serializedScene.Materials)
+                        _scene.Add(mat);
+
+                    foreach (var so in serializedScene.SceneObjects)
+                    {
+                        so.PostDeserialize();
+                        _scene.Add(so);
+                    }
+
+                    _scene.RenderSettings.Set(serializedScene.RenderSettings);
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.Log(ex.Message);
+                result = false;
+            }
+
+            return result;
+        }
+
+        #endregion
+
+        #region Live import
+
+        public Texture2D LoadTempTexture(string assetName)
+        {
+            return _projectContent.Load<Texture2D>(assetName);
+        }
+
+        public Model LoadTempModel(string assetName)
+        {
+            return _projectContent.Load<Model>(assetName);
+        }
+
+        public SpriteFont LoadTempFont(string assetName)
+        {
+            return _projectContent.Load<SpriteFont>(assetName);
+        }
+
+        public Effect LoadTempEffect(string assetName)
+        {
+            return _projectContent.Load<Effect>(assetName);
+        }
+
+        public ModelPrefab AddModelFromTemp(string assetName)
+        {
+            var sceneObject = new ModelPrefab(assetName);
+
+            try
+            {
+                var model = LoadTempModel(assetName);
+                sceneObject.SetModel(model);
+                _scene.Add(sceneObject);
+            }
+            catch (Exception ex)
+            {
+                Debug.Log(ex.Message);
+            }
+
+            return sceneObject;
+        }
+
+        #endregion
+
+        #region Export
+
+        public string[] ExportSceneTo(string format)
+        {
+            string[] result = null;
+
+            var renderers = Scene.FindObjectsOfType<MeshRenderer>();
+
+            if (format == "stl")
+            {
+                result = new string[1];
+                result[0] = STLExporter.ExportMeshes(renderers);
+            }
+            else if (format == "obj")
+            {
+                result = new string[2];
+                //result[0] = OBJExporter.ExportMesh(_selectedObject.SceneObject.GetComponent<MeshRenderer>());
+                result[1] = string.Empty;
+            }
+
+            return result;
+        }
+
+        #endregion
     }
 }

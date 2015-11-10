@@ -18,6 +18,10 @@ namespace C3DE.PostProcess
         public abstract void Initialize(ContentManager content);
         public abstract void Apply(SpriteBatch spriteBatch, RenderTarget2D renderTarget);
 
+        public virtual void Apply(SpriteBatch spriteBatch, RenderTarget2D source, RenderTarget2D destination)
+        {
+        }
+
         public int CompareTo(object obj)
         {
             var pass = obj as PostProcessPass;

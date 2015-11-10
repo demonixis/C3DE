@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("C3DE")]
 [assembly: AssemblyDescription("Cool 3D Engine - A research project to make a Cool 3D Engine")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Demonixis Games")]
+[assembly: AssemblyCompany("The C3DE Team")]
 [assembly: AssemblyProduct("C3DE : Cool 3D Engine")]
-[assembly: AssemblyCopyright("Copyright ©  2014")]
+[assembly: AssemblyCopyright("Copyright © C3DE 2014-2015")]
 [assembly: AssemblyTrademark("C3DE")]
 [assembly: AssemblyCulture("")]
 

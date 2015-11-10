@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
+using System.Runtime.Serialization;
 
 namespace C3DE.Components
 {
@@ -8,14 +9,14 @@ namespace C3DE.Components
         Perspective = 0, Orthographic
     }
 
+    [DataContract]
     public class Camera : Component
     {
-        public static Camera Main { get; internal set; }
-
+        public static Camera main { get; internal set; }
         protected internal Matrix view;
         protected internal Matrix projection;
         protected internal Color clearColor;
-        protected Vector3 reference;
+		protected internal short depth;
         private Vector3 _target;
         private Vector3 _upVector;
         private float _fieldOfView;
@@ -26,6 +27,7 @@ namespace C3DE.Components
         private bool _needUpdate;
         private bool _needProjectionUpdate;
 
+        [DataMember]
         public float Aspect
         {
             get { return _aspectRatio; }
@@ -39,12 +41,21 @@ namespace C3DE.Components
             }
         }
 
+        [DataMember]
         public Color ClearColor
         {
             get { return clearColor; }
             set { clearColor = value; }
         }
 
+        [DataMember]
+		public short Depth
+		{
+			get { return depth; }
+			set { depth = value; }
+		}
+
+        [DataMember]
         public float FieldOfView
         {
             get { return _fieldOfView; }
@@ -58,6 +69,7 @@ namespace C3DE.Components
             }
         }
 
+        [DataMember]
         public float Near
         {
             get { return _nearPlane; }
@@ -71,6 +83,7 @@ namespace C3DE.Components
             }
         }
 
+        [DataMember]
         public float Far
         {
             get { return _farPlane; }
@@ -84,17 +97,14 @@ namespace C3DE.Components
             }
         }
 
-        public Vector3 Reference
-        {
-            get { return reference; }
-        }
-
+        [DataMember]
         public Vector3 Target
         {
             get { return _target; }
             set { _target = value; }
         }
 
+        [DataMember]
         public CameraProjectionType ProjectionType
         {
             get { return _projectionType; }
@@ -127,7 +137,7 @@ namespace C3DE.Components
             _farPlane = 500.0f;
             _projectionType = CameraProjectionType.Perspective;
             clearColor = Color.Black;
-            reference = new Vector3(0.0f, 0.0f, 1.0f);
+            depth = 0;
         }
 
         public override void Start()
@@ -207,6 +217,21 @@ namespace C3DE.Components
             direction.Normalize();
 
             return new Ray(nearPoint, direction);
+        }
+
+        public override int CompareTo(object obj)
+        {
+            var camera = obj as Camera;
+
+            if (camera == null)
+                return 1;
+
+            if (depth == camera.depth)
+                return 0;
+            else if (depth > camera.depth)
+                return 1;
+            else
+                return -1;
         }
     }
 }

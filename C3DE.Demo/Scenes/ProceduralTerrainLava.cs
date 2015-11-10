@@ -26,14 +26,14 @@ namespace C3DE.Demo.Scenes
 
             // A light is required to illuminate objects.
             var lightPrefab = new LightPrefab("light", LightType.Directional);
-            lightPrefab.Transform.Translate(0, 10, 0);
+            lightPrefab.Transform.Rotation = new Vector3(-1, 1, 0);
             lightPrefab.Light.ShadowGenerator.SetShadowMapSize(Application.GraphicsDevice, 1024);
             lightPrefab.EnableShadows = true;
             Add(lightPrefab);
 
             // A terrain with its material.
             var terrainMaterial = new StandardMaterial(scene);
-            terrainMaterial.MainTexture = Application.Content.Load<Texture2D>("Textures/Terrain/Rock");
+            terrainMaterial.Texture = Application.Content.Load<Texture2D>("Textures/Terrain/Rock");
             terrainMaterial.Shininess = 150;
             terrainMaterial.Tiling = new Vector2(8);
 
@@ -47,14 +47,14 @@ namespace C3DE.Demo.Scenes
 
             // Lava !
             var lavaMaterial = new LavaMaterial(this);
-            lavaMaterial.MainTexture = Application.Content.Load<Texture2D>("Textures/lava_texture");
+            lavaMaterial.Texture = Application.Content.Load<Texture2D>("Textures/lava_texture");
             lavaMaterial.NormalMap = Application.Content.Load<Texture2D>("Textures/lava_bump");
 
             var lava = new WaterPrefab("water");
             lava.Renderer.Material = lavaMaterial;
             lava.Renderer.ReceiveShadow = true;
             lava.Renderer.Geometry.Size = new Vector3(terrain.Width * 0.5f);
-            lava.Renderer.Geometry.Generate();
+            lava.Renderer.Geometry.Build();
             Add(lava);
         }
     }

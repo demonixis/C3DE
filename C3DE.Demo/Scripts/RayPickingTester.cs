@@ -12,7 +12,7 @@ namespace C3DE.Demo.Scripts
         public override void Start()
         {
             scene = sceneObject.Scene;
-            camera = scene.MainCamera;
+            camera = Camera.main; ;
             _hit = "Nothing";
         }
 
@@ -20,7 +20,7 @@ namespace C3DE.Demo.Scripts
         {
             base.Update();
 
-            if (Input.Mouse.Clicked())
+            if (Input.Mouse.JustClicked())
             {
                 //FIXME
                 var raycastInfo = new RaycastInfo[0];

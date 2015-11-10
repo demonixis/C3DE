@@ -1,11 +1,13 @@
 ﻿using Microsoft.Xna.Framework;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 
 namespace C3DE.Components
 {
     /// <summary>
     /// A component responible to manage transform operations (translation, rotation and scaling).
     /// </summary>
+    [DataContract]
     public class Transform : Component
     {
         internal Matrix world;
@@ -36,18 +38,21 @@ namespace C3DE.Components
             protected set { _transforms = value; }
         }
 
+        [DataMember]
         public Vector3 Position
         {
             get { return _localPosition; }
             set { _localPosition = value; }
         }
 
+        [DataMember]
         public Vector3 Rotation
         {
             get { return _localRotation; }
             set { _localRotation = value; }
         }
 
+        [DataMember]
         public Vector3 LocalScale
         {
             get { return _localScale; }
@@ -150,6 +155,13 @@ namespace C3DE.Components
             _localRotation.Z = z.HasValue ? z.Value : _localRotation.Z;
         }
 
+        public void SetScale(float? x, float? y, float? z)
+        {
+            _localScale.X = x.HasValue ? x.Value : _localScale.X;
+            _localScale.Y = y.HasValue ? y.Value : _localScale.Y;
+            _localScale.Z = z.HasValue ? z.Value : _localScale.Z;
+        }
+
         public override void Update()
         {
             if (!sceneObject.IsStatic || _dirty)
@@ -171,6 +183,24 @@ namespace C3DE.Components
         private Vector3 GetTransformedVector(Vector3 direction)
         {
             return Vector3.Transform(direction, Matrix.CreateFromYawPitchRoll(_localRotation.Y, _localRotation.X, _localRotation.Z));
+        }
+
+        public override object Clone()
+        {
+            var tr = new Transform();
+            tr._parent = Parent;
+            tr._root = _root;
+            tr.sceneObject = sceneObject;
+
+            foreach (var t in _transforms)
+                tr._transforms.Add(t);
+
+            tr._localPosition = _localPosition;
+            tr._localRotation = _localRotation;
+            tr._localScale = _localScale;
+            tr._dirty = true;
+
+            return tr;
         }
     }
 }

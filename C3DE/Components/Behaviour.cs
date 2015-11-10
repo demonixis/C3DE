@@ -1,12 +1,14 @@
 ﻿using C3DE.UI;
+using System.Runtime.Serialization;
 
 namespace C3DE.Components
 {
+    [DataContract]
     public class Behaviour : Component
     {
         public Behaviour() : base() { }
 
-        public virtual void OnGUI(GUI gui) { }
+        public virtual void OnGUI(GUI ui) { }
 
         public virtual void OnDestroy() { }
 

@@ -24,9 +24,9 @@ namespace C3DE.Demo.Scenes
             // And a light
             var lightPrefab = new LightPrefab("light", LightType.Directional);
             Add(lightPrefab);
-            lightPrefab.Light.Direction = new Vector3(1, 1, 0);
-            lightPrefab.Light.DiffuseColor = Color.LightSkyBlue;
-            lightPrefab.Light.Intensity = 1.5f;
+            lightPrefab.Transform.Rotation = new Vector3(-1, 1, 0);
+            lightPrefab.Light.Color = Color.LightSkyBlue;
+            lightPrefab.Light.Intensity = 1.0f;
             lightPrefab.AddComponent<DemoBehaviour>();
             lightPrefab.EnableShadows = true;
 
@@ -41,7 +41,7 @@ namespace C3DE.Demo.Scenes
             terrain.AddComponent<WeightMapViewer>();
             var map = terrain.GenerateWeightMap();
 
-            terrainMat.MainTexture = Application.Content.Load<Texture2D>("Textures/Terrain/Grass");
+            terrainMat.Texture = Application.Content.Load<Texture2D>("Textures/Terrain/Grass");
             terrainMat.SandTexture = Application.Content.Load<Texture2D>("Textures/Terrain/Sand");
             terrainMat.SnowTexture = Application.Content.Load<Texture2D>("Textures/Terrain/Snow");
             terrainMat.RockTexture = Application.Content.Load<Texture2D>("Textures/Terrain/Rock");

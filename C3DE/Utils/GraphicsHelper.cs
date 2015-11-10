@@ -48,7 +48,7 @@ namespace C3DE.Utils
             return texture;
         }
 
-        public static Texture2D CreateCircleTexture(Color circleColor, int radius)
+        public static Texture2D CreateCircleTexture(Color circleColor, Color exteriorColor, int radius)
         {
             Texture2D texture = new Texture2D(Application.GraphicsDevice, radius, radius);
             Color[] colors = new Color[radius * radius];
@@ -70,13 +70,18 @@ namespace C3DE.Utils
                     if (pos.LengthSquared() <= diamsq)
                         colors[index] = circleColor;
                     else
-                        colors[index] = Color.Transparent;
+                        colors[index] = exteriorColor;
                 }
             }
 
             texture.SetData(colors);
 
             return texture;
+        }
+
+        public static Texture2D CreateCircleTexture(Color circleColor, int radius)
+        {
+            return CreateCircleTexture(circleColor, Color.Transparent, radius);
         }
 
         public static Texture2D CreateBorderTexture(Color borderColor, Color color, int width, int height, int thickness)

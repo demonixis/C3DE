@@ -3,7 +3,6 @@ using C3DE.Components.Renderers;
 using C3DE.Materials;
 using C3DE.UI;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using System;
 
 namespace C3DE.Demo.Scripts

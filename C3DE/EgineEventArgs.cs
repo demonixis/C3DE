@@ -10,13 +10,15 @@ namespace C3DE
 
     public class ComponentChangedEventArgs : EventArgs
     {
-        public Component Component { get; protected set; }
-        public ComponentChangeType ChangeType { get; protected set; }
+        public Component Component { get; set; }
+        public string PropertyName { get; set; }
+        public ComponentChangeType ChangeType { get; set; }
 
-        public ComponentChangedEventArgs(Component component, ComponentChangeType changeType)
+        public ComponentChangedEventArgs(Component component, string propertyName, ComponentChangeType changeType)
         {
             Component = component;
             ChangeType = changeType;
+            PropertyName = propertyName;
         }
     }
 

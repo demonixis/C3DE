@@ -1,6 +1,8 @@
 ﻿using C3DE.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
+
 namespace C3DE
 {
     /// <summary>
@@ -8,6 +10,8 @@ namespace C3DE
     /// </summary>
     public class Screen
     {
+        public static event EventHandler<EventArgs> ScreenSizeChanged = null;
+
         /// <summary>
         /// Gets the rectangle that represent the screen size
         /// </summary>
@@ -103,6 +107,11 @@ namespace C3DE
         /// <param name="showCursor">Indicates whether the cursor is visible.</param>
         public static void Setup(int width, int height, bool? lockCursor, bool? showCursor)
         {
+            if (width == 0)
+                width = 800;
+            if (height == 0)
+                height = 480;
+
             ScreenRect = new Rectangle(0, 0, width, height);
 
             WidthPerTwo = width >> 1;
@@ -116,6 +125,9 @@ namespace C3DE
 
             if (showCursor.HasValue)
                 ShowCursor = showCursor.Value;
+
+            if (ScreenSizeChanged != null)
+                ScreenSizeChanged(Application.Engine, EventArgs.Empty);
         }
 
         public static void SetVirtualResolution(int width, int height, bool applyToGUI = true)

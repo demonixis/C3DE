@@ -30,7 +30,7 @@ namespace C3DE.Demo.Scenes
 
             // Light
             var lightPrefab = new LightPrefab("light", LightType.Directional);
-            lightPrefab.Light.Direction = new Vector3(0, 1, -1);
+            lightPrefab.Transform.Rotation = new Vector3(-1, 1, 0);
             lightPrefab.Light.ShadowGenerator.SetShadowMapSize(Application.GraphicsDevice, 1024);
             lightPrefab.EnableShadows = true;
             lightPrefab.Light.Intensity = 0.5f;
@@ -39,7 +39,7 @@ namespace C3DE.Demo.Scenes
 
             // Terrain
             var terrainMaterial = new StandardMaterial(scene);
-            terrainMaterial.MainTexture = Application.Content.Load<Texture2D>("Textures/Terrain/Rock");
+            terrainMaterial.Texture = Application.Content.Load<Texture2D>("Textures/Terrain/Rock");
             terrainMaterial.Shininess = 50;
             terrainMaterial.Tiling = new Vector2(8);
 
@@ -64,8 +64,8 @@ namespace C3DE.Demo.Scenes
             jack.LoadModel("Models/Jack/JackOLantern");
             var jackMaterial = new StandardMaterial(this);
             jackMaterial.EmissiveColor = new Color(0.2f, 0.005f, 0);
-            jackMaterial.MainTexture = Application.Content.Load<Texture2D>("Models/Jack/PumpkinColor");
-            jack.Renderer.MainMaterial = jackMaterial;
+            jackMaterial.Texture = Application.Content.Load<Texture2D>("Models/Jack/PumpkinColor");
+            jack.Renderer.Material = jackMaterial;
             Add(jack);
 
             orbitController.LookAt(jack.Transform);

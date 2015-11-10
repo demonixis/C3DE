@@ -2,9 +2,11 @@
 using C3DE.Components.Renderers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Runtime.Serialization;
 
 namespace C3DE.Prefabs
 {
+    [DataContract]
     public class ModelPrefab : SceneObject
     {
         protected ModelRenderer renderer;
@@ -25,21 +27,33 @@ namespace C3DE.Prefabs
             get { return collider; }
         }
 
-        public ModelPrefab(string name)
-            : base(name)
+        public ModelPrefab()
+            : base()
         {
+            Name = "ModelPrefab-" + System.Guid.NewGuid();
             renderer = AddComponent<ModelRenderer>();
             collider = AddComponent<SphereCollider>();
         }
 
+        public ModelPrefab(string name)
+            : this()
+        {
+            Name = name;
+        }
+
         public void LoadModel(string modelPath)
         {
-            renderer.Model = Application.Content.Load<Model>(modelPath);
+            SetModel(Application.Content.Load<Model>(modelPath));
+        }
+
+        public void SetModel(Model model)
+        {
+            renderer.Model = model;
 
             BoundingSphere sphere = new BoundingSphere();
 
             foreach (ModelMesh mesh in renderer.Model.Meshes)
-               sphere = BoundingSphere.CreateMerged(sphere, mesh.BoundingSphere);
+                sphere = BoundingSphere.CreateMerged(sphere, mesh.BoundingSphere);
 
             sphere.Center = transform.Position;
 

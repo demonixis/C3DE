@@ -4,14 +4,28 @@ using C3DE.Components.Lights;
 using C3DE.Components.Renderers;
 using C3DE.Materials;
 using C3DE.PostProcess;
-using C3DE.Rendering;
 using C3DE.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 
 namespace C3DE
 {
+    [DataContract]
+    public class SerializedScene
+    {
+        [DataMember]
+        public RenderSettings RenderSettings { get; set; }
+
+        [DataMember]
+        public SceneObject[] SceneObjects { get; set; }
+
+        [DataMember]
+        public Material[] Materials { get; set; }
+    }
+
     public struct RaycastInfo
     {
         public Ray Ray;
@@ -22,18 +36,22 @@ namespace C3DE
     /// <summary>
     /// The scene is responsible to store scene objects, components.
     /// </summary>
+    [DataContract]
     public class Scene : SceneObject
     {
-        public static Scene Main { get; internal set; }
+        public static Scene current { get; internal set; }
 
-        public readonly Material DefaultMaterial;
-
-        private int _mainCameraIndex;
         private List<Component> _componentsToDestroy;
         private bool _needRemoveCheck;
 
-        internal protected SmartList<SceneObject> sceneObjects;
-        internal protected List<RenderableComponent> renderList;
+        internal protected Material defaultMaterial;
+
+        [DataMember]
+        internal protected List<SceneObject> sceneObjects;
+
+        internal protected List<Renderer> renderList;
+
+        [DataMember]
         internal protected List<Material> materials;
         internal protected List<Effect> effects;
         internal protected Dictionary<int, int> materialsEffectIndex;
@@ -41,27 +59,31 @@ namespace C3DE
         internal protected List<Camera> cameras;
         internal protected List<Light> lights;
         internal protected List<Behaviour> scripts;
+
+        [DataMember]
         internal protected List<SceneObject> prefabs;
         internal protected List<PostProcessPass> postProcessPasses;
 
         public RenderSettings RenderSettings { get; private set; }
 
-        public Camera MainCamera
+        public Material DefaultMaterial
         {
-            get { return _mainCameraIndex > -1 ? cameras[_mainCameraIndex] : null; }
+            get { return defaultMaterial; }
             set
             {
-                _mainCameraIndex = Add(value);
+                if (value == null)
+                    throw new Exception("The default material can't be null");
 
-                if (_mainCameraIndex > -1 && cameras[_mainCameraIndex] != Camera.Main)
-                    Camera.Main = cameras[_mainCameraIndex];
+                scene.Remove(value);
+                defaultMaterial = value;
+                defaultMaterial.Name = "Default Material";
             }
         }
 
         /// <summary>
         /// Gets the collection of renderable scene objects.
         /// </summary>
-        public List<RenderableComponent> RenderList
+        public List<Renderer> RenderList
         {
             get { return renderList; }
         }
@@ -122,14 +144,14 @@ namespace C3DE
         /// <summary>
         /// The root scene object which contains all scene objects.
         /// </summary>
-        public Scene(string name)
+        public Scene()
             : base()
         {
-            Name = name;
+            Name = "SCENE-" + Guid.NewGuid();
             transform.Root = transform;
-            sceneObjects = new SmartList<SceneObject>();
+            sceneObjects = new List<SceneObject>();
             scene = this;
-            renderList = new List<RenderableComponent>(10);
+            renderList = new List<Renderer>(10);
             materials = new List<Material>(5);
             effects = new List<Effect>(5);
             materialsEffectIndex = new Dictionary<int, int>(5);
@@ -141,9 +163,15 @@ namespace C3DE
             postProcessPasses = new List<PostProcessPass>();
             _componentsToDestroy = new List<Component>();
             _needRemoveCheck = false;
-            _mainCameraIndex = -1;
-            DefaultMaterial = new SimpleMaterial(this);
+            defaultMaterial = new SimpleMaterial(this, "Default Material");
             RenderSettings = new RenderSettings();
+        }
+
+        public Scene(string name)
+            : this()
+        {
+            if (!string.IsNullOrEmpty(name))
+                Name = name;
         }
 
         #region Lifecycle
@@ -155,19 +183,18 @@ namespace C3DE
         /// <param name="content"></param>
         public override void Initialize()
         {
+            current = this;
             initialized = true;
 
-            DefaultMaterial.MainTexture = GraphicsHelper.CreateTexture(Color.AntiqueWhite, 1, 1);
+            DefaultMaterial.Texture = GraphicsHelper.CreateTexture(Color.AntiqueWhite, 1, 1);
 
             for (int i = 0, l = materials.Count; i < l; i++)
                 materials[i].LoadContent(Application.Content);
 
             UpdateEffectMaterialMatching();
 
-            for (int i = 0; i < sceneObjects.Size; i++)
+            for (int i = 0; i < sceneObjects.Count; i++)
                 sceneObjects[i].Initialize();
-
-            sceneObjects.CheckRequired = true;
         }
 
         /// <summary>
@@ -193,10 +220,10 @@ namespace C3DE
             }
 
             // Second - Check if we need to remove some SceneObjectlists.
-            sceneObjects.Check();
+            //sceneObjects.Check();
 
             // Third - Safe update
-            for (int i = 0; i < sceneObjects.Size; i++)
+            for (int i = 0; i < sceneObjects.Count; i++)
             {
                 if (sceneObjects[i].Enabled)
                     sceneObjects[i].Update();
@@ -206,7 +233,7 @@ namespace C3DE
         /// <summary>
         /// Unload the scene.
         /// </summary>
-        public void Unload()
+        public virtual void Unload()
         {
             foreach (Behaviour script in Behaviours)
                 script.OnDestroy();
@@ -221,6 +248,7 @@ namespace C3DE
                 pass.Dispose();
 
             Clear();
+            current = null;
         }
 
         /// <summary>
@@ -247,12 +275,12 @@ namespace C3DE
 
         #region SceneObjects/Components management
 
-        /// <summary>
-        /// Add a scene object to the scene.
-        /// </summary>
-        /// <param name="sceneObject">The scene object to add.</param>
-        /// <returns>Return true if the scene object is added, otherwise return false.</returns>
         public override bool Add(SceneObject sceneObject)
+        {
+            return Add(sceneObject, false);
+        }
+
+        public bool Add(SceneObject sceneObject, bool noCheck)
         {
             bool canAdd = base.Add(sceneObject);
 
@@ -264,17 +292,15 @@ namespace C3DE
                     sceneObject.Scene = this;
                     sceneObject.Transform.Root = transform;
 
-					if (initialized && !sceneObject.Initialized) 
-					{
-						sceneObject.Initialize ();
-					}
-
                     if (sceneObject.Enabled)
                     {
                         CheckComponents(sceneObject, ComponentChangeType.Add);
-                        sceneObject.PropertyChanged += OnComponentPropertyChanged;
-                        sceneObject.ComponentChanged += OnComponentChanged;
+                        sceneObject.PropertyChanged += OnSceneObjectPropertyChanged;
+                        sceneObject.ComponentChanged += OnSceneObjectComponentChanged;
                     }
+
+                    if (initialized && !sceneObject.Initialized)
+                        sceneObject.Initialize();
                 }
                 else
                     AddPrefab(sceneObject);
@@ -317,9 +343,9 @@ namespace C3DE
         /// <param name="type"></param>
         protected void CheckComponent(Component component, ComponentChangeType type)
         {
-            if (component is RenderableComponent)
+            if (component is Renderer)
             {
-                var renderable = component as RenderableComponent;
+                var renderable = component as Renderer;
 
                 if (type == ComponentChangeType.Add)
                     Add(renderable);
@@ -369,23 +395,20 @@ namespace C3DE
             }
         }
 
-        private void OnComponentPropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void OnSceneObjectPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.Name == "Enabled")
             {
-                var sceneObject = sender as SceneObject;
-
+                var sceneObject = (SceneObject)sender;
                 if (sceneObject.Enabled)
                 {
                     CheckComponents(sceneObject, ComponentChangeType.Add);
-                    sceneObject.PropertyChanged += OnComponentPropertyChanged;
-                    sceneObject.ComponentChanged += OnComponentChanged;
+                    sceneObject.ComponentChanged += OnSceneObjectComponentChanged;
                 }
                 else
                 {
                     CheckComponents(sceneObject, ComponentChangeType.Remove);
-                    sceneObject.PropertyChanged -= OnComponentPropertyChanged;
-                    sceneObject.ComponentChanged -= OnComponentChanged;
+                    sceneObject.ComponentChanged -= OnSceneObjectComponentChanged;
                 }
             }
         }
@@ -396,14 +419,20 @@ namespace C3DE
         /// </summary>
         /// <param name="sender">The scene object which as added or removed a component.</param>
         /// <param name="e">An object which contains the component and a flag to know if it's added or removed.</param>
-        private void OnComponentChanged(object sender, ComponentChangedEventArgs e)
+        private void OnSceneObjectComponentChanged(object sender, ComponentChangedEventArgs e)
         {
-            CheckComponent(e.Component, e.ChangeType);
+            if (e.ChangeType == ComponentChangeType.Update)
+            {
+                if (e.PropertyName == "Enabled")
+                    CheckComponent(e.Component, e.Component.Enabled ? ComponentChangeType.Add : ComponentChangeType.Remove);
+            }
+            else
+                CheckComponent(e.Component, e.ChangeType);
         }
 
         #endregion
 
-        #region Add/Remove materials
+        #region Add / Get / Remove materials
 
         /// <summary>
         /// Add a new material.
@@ -426,6 +455,15 @@ namespace C3DE
                     }
                 }
             }
+        }
+
+        public int GetMaterialIndexByName(string name)
+        {
+            for (int i = 0, l = materials.Count; i < l; i++)
+                if (materials[i].Name == name)
+                    return i;
+
+            return -1;
         }
 
         /// <summary>
@@ -464,28 +502,32 @@ namespace C3DE
             if (index == -1)
             {
                 cameras.Add(camera);
+                cameras.Sort();
                 index = cameras.Count - 1;
-            }
 
-            if (_mainCameraIndex == -1)
-            {
-                _mainCameraIndex = index;
-                Camera.Main = camera;
+                if (Camera.main == null)
+                    Camera.main = camera;
             }
 
             return index;
         }
 
-        protected void Add(RenderableComponent renderable)
+        protected void Add(Renderer renderer)
         {
-            if (!renderList.Contains(renderable))
-                renderList.Add(renderable);
+            if (!renderList.Contains(renderer))
+            {
+                renderList.Add(renderer);
+                renderList.Sort();
+            }
         }
 
         protected void Add(Light light)
         {
             if (!lights.Contains(light))
+            {
                 lights.Add(light);
+                lights.Sort();
+            }
         }
 
         protected void Add(Collider collider)
@@ -500,7 +542,7 @@ namespace C3DE
                 scripts.Add(script);
         }
 
-        protected void Remove(RenderableComponent renderable)
+        protected void Remove(Renderer renderable)
         {
             if (renderList.Contains(renderable))
                 renderList.Remove(renderable);
@@ -556,27 +598,32 @@ namespace C3DE
             clone.Transform.Position = position;
             clone.Transform.Rotation = rotation;
 
-            Application.SceneManager.ActiveScene.Add(clone);
+            Scene.current.Add(clone);
 
             return clone;
         }
 
         public static void Destroy(SceneObject sceneObject)
         {
-            Application.SceneManager.ActiveScene.Remove(sceneObject);
+            Scene.current.Remove(sceneObject);
         }
 
         public override bool Remove(SceneObject sceneObject)
         {
+            return Remove(sceneObject, false);
+        }
+
+        public bool Remove(SceneObject sceneObject, bool noCheck = false)
+        {
             bool canRemove = base.Remove(sceneObject);
 
             if (canRemove)
-                DestroyObject(sceneObject);
-            
+                DestroyObject(sceneObject, noCheck);
+
             return canRemove;
         }
 
-        public void DestroyObject(SceneObject sceneObject)
+        public void DestroyObject(SceneObject sceneObject, bool noCheck = false)
         {
             for (int i = 0, l = sceneObject.Components.Count; i < l; i++)
                 this.DestroyComponent(sceneObject.Components[i]);
@@ -599,7 +646,7 @@ namespace C3DE
         #endregion
 
         #region Add/Remove PostProcess
-            
+
         public void Add(PostProcessPass pass)
         {
             if (!postProcessPasses.Contains(pass))
@@ -617,31 +664,63 @@ namespace C3DE
 
         #endregion
 
-        #region SceneObject search
+        #region Search methods
 
-        public SceneObject Find(string name)
+        public static SceneObject FindById(string id)
         {
-            for (int i = 0; i < sceneObjects.Size; i++)
+            if (current != null)
             {
-                if (sceneObjects[i].Name == name)
-                    return sceneObjects[i];
+                for (int i = 0; i < current.sceneObjects.Count; i++)
+                    if (current.sceneObjects[i].Id == id)
+                        return current.sceneObjects[i];
             }
-
             return null;
         }
 
-        public SceneObject FindObjectOfType<T>() where T : Component, new()
+        public static SceneObject[] FindSceneObjectsById(string id)
         {
-            Component component = null;
+            var sceneObjects = new List<SceneObject>();
 
-            for (int i = 0; i < sceneObjects.Size; i++)
+            if (current != null)
             {
-                component = sceneObjects[i].GetComponent<T>();
-
-                if (component != null)
-                    return sceneObjects[i];
+                for (int i = 0; i < current.sceneObjects.Count; i++)
+                    if (current.sceneObjects[i].Id == id)
+                        sceneObjects.Add(current.sceneObjects[i]);
             }
 
+            return sceneObjects.ToArray();
+        }
+
+        public static T[] FindObjectsOfType<T>() where T : Component
+        {
+            var scripts = new List<T>();
+
+            if (current != null)
+            {
+                foreach (SceneObject so in current.sceneObjects)
+                {
+                    var components = so.GetComponents<T>();
+                    if (components.Length > 0)
+                        scripts.AddRange(components);
+                }
+            }
+
+            return scripts.ToArray();
+        }
+
+        public Material GetMaterialById(string id)
+        {
+            foreach (var mat in materials)
+                if (mat.Id == id)
+                    return mat;
+            return null;
+        }
+
+        public Material GetMaterialByName(string name)
+        {
+            foreach (var mat in materials)
+                if (mat.Name == name)
+                    return mat;
             return null;
         }
 
@@ -682,32 +761,29 @@ namespace C3DE
         public bool Raycast(Ray ray, float distance, out RaycastInfo info)
         {
             info = new RaycastInfo();
+            RaycastInfo[] infos;
+            RaycastAll(ray, distance, out infos);
 
-            float? val;
-            int i = 0;
-            int size = colliders.Count;
-            bool collide = false;
-
-            // A quadtree and even an octree could be very cool in the future :)
-            while (i < size && collide == false)
+            var size = infos.Length;
+            if (size > 0)
             {
-                if (colliders[i].IsPickable)
-                {
-                    val = colliders[i].IntersectedBy(ref ray);
+                var min = float.MaxValue;
+                var index = -1;
 
-                    if (val.HasValue && val.Value <= distance)
+                for (int i = 0; i < size; i++)
+                {
+                    if (infos[i].Distance < min)
                     {
-                        info.Collider = colliders[i];
-                        info.Distance = val.Value;
-                        info.Ray = ray;
-                        collide = true;
+                        min = infos[i].Distance;
+                        index = i;
                     }
                 }
 
-                i++;
+                if (index > -1)
+                    info = infos[index];
             }
 
-            return collide;
+            return size > 0;
         }
 
         public bool Raycast(Vector3 origin, Vector3 direction, float distance = 1000.0f)
@@ -722,29 +798,32 @@ namespace C3DE
 
         public bool RaycastAll(Ray ray, float distance, out RaycastInfo[] raycastInfos)
         {
-            List<RaycastInfo> infos = new List<RaycastInfo>();
-            RaycastInfo info = new RaycastInfo();
-            float? val;
+            var infos = new List<RaycastInfo>();
 
             for (int i = 0, l = colliders.Count; i < l; i++)
-            {
-                if (colliders[i].IsPickable)
-                {
-                    val = colliders[i].IntersectedBy(ref ray);
-
-                    if (val.HasValue && val.Value <= distance)
-                    {
-                        info.Collider = colliders[i];
-                        info.Distance = val.Value;
-                        info.Ray = ray;
-                        infos.Add(info);
-                    }
-                }
-            }
+                TestCollision(ref ray, colliders[i], distance, infos);
 
             raycastInfos = infos.ToArray();
 
             return raycastInfos.Length > 0;
+        }
+
+        private void TestCollision(ref Ray ray, Collider collider, float distance, List<RaycastInfo> infos)
+        {
+            if (collider.IsPickable)
+            {
+                var val = collider.IntersectedBy(ref ray);
+
+                if (val.HasValue && val.Value <= distance)
+                {
+                    infos.Add(new RaycastInfo()
+                    {
+                        Collider = collider,
+                        Distance = val.Value,
+                        Ray = ray
+                    });
+                }
+            }
         }
 
         public bool RaycastAll(Vector3 origin, Vector3 direction, float distance, out RaycastInfo[] infos)

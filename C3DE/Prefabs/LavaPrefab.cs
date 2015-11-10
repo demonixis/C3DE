@@ -5,9 +5,11 @@ using C3DE.Materials;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using System.Runtime.Serialization;
 
 namespace C3DE.Prefabs
 {
+    [DataContract]
     public class LavaPrefab : SceneObject
     {
         protected MeshRenderer renderer;
@@ -30,7 +32,13 @@ namespace C3DE.Prefabs
         }
 
         public LavaPrefab(string name)
-            : base(name)
+            : this()
+        {
+            Name = name;
+        }
+
+        public LavaPrefab()
+            : base()
         {
             renderer = AddComponent<MeshRenderer>();
             renderer.CastShadow = false;
@@ -48,15 +56,15 @@ namespace C3DE.Prefabs
             material = new LavaMaterial(scene);
 
             if (!string.IsNullOrEmpty(lavaTexture))
-                material.MainTexture = Application.Content.Load<Texture2D>(lavaTexture);
+                material.Texture = Application.Content.Load<Texture2D>(lavaTexture);
 
             if (!string.IsNullOrEmpty(bumpTexture))
                 material.NormalMap = Application.Content.Load<Texture2D>(bumpTexture);
 
             renderer.Material = material;
             renderer.Geometry.Size = size;
-            renderer.Geometry.Generate();
-            collider.Box = new BoundingBox(transform.Position, size);
+            renderer.Geometry.Build();
+            //collider.BoundingBox = new BoundingBox(transform.Position, size);
         }
     }
 }

@@ -75,7 +75,6 @@ namespace C3DE
         {
             int width = e.GraphicsDeviceInformation.PresentationParameters.BackBufferWidth;
             int height = e.GraphicsDeviceInformation.PresentationParameters.BackBufferHeight;
-
             Screen.Setup(width, height, null, null);
         }
 
@@ -111,9 +110,11 @@ namespace C3DE
                 Screen.SetBestResolution(_requestFullscreen);
 
             if (renderer == null)
-                renderer = new Renderer();
+                renderer = new ForwardRenderer();
 
             renderer.Initialize(Content);
+
+            Serializr.AddTypes(typeof(Engine));
 
             Input.Keys = new KeyboardComponent(this);
             Input.Mouse = new MouseComponent(this);
@@ -131,11 +132,6 @@ namespace C3DE
             base.Initialize();
         }
 
-        protected override void LoadContent()
-        {
-            sceneManager.Initialize();
-        }
-
         protected override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
@@ -145,8 +141,8 @@ namespace C3DE
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.Black);
-            renderer.render(sceneManager.ActiveScene, sceneManager.ActiveScene.MainCamera);
-            base.Draw(gameTime);
+            renderer.Render(Scene.current);
+			base.Draw(gameTime);
         }
 
         protected override void EndDraw()

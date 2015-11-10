@@ -24,7 +24,7 @@ namespace C3DE.Demo.Scripts
         {
             GridWidth = 10;
             GridDepth = 10;
-            Margin = 1.05f;
+            Margin = 0.86f;
             TileScale = 0.5f;
         }
 
@@ -34,8 +34,8 @@ namespace C3DE.Demo.Scripts
             _gridPrefab.Transform.LocalScale = new Vector3(TileScale, 0.5f * TileScale, TileScale);
             _gridPrefab.Transform.Rotation = new Vector3(0, MathHelper.Pi / 6, 0);
             _gridPrefab.LoadModel("Models/hexagone");
-            _gridPrefab.Renderer.MainMaterial = new SimpleMaterial(sceneObject.Scene);
-            _gridPrefab.Renderer.MainMaterial.MainTexture = Application.Content.Load<Texture2D>("Models/hexagone_basic");
+            _gridPrefab.Renderer.Material = new SimpleMaterial(sceneObject.Scene);
+            _gridPrefab.Renderer.Material.Texture = Application.Content.Load<Texture2D>("Models/hexagone_basic");
             _gridPrefab.Enabled = false;
             sceneObject.Scene.Add(_gridPrefab);
 
@@ -73,13 +73,13 @@ namespace C3DE.Demo.Scripts
         {
             SceneObject cache = null;
 
-            var waterMaterial = _gridPrefab.Renderer.MainMaterial;
-            
-            var groundMaterial = new StandardMaterial(Scene.Main);
-            groundMaterial.MainTexture = Application.Content.Load<Texture2D>("Models/hexagone_green");
+            var waterMaterial = _gridPrefab.Renderer.Material;
 
-            var montainMaterial = new StandardMaterial(Scene.Main);
-            montainMaterial.MainTexture = Application.Content.Load<Texture2D>("Models/hexagone_brown");
+            var groundMaterial = new StandardMaterial(Scene.current);
+            groundMaterial.Texture = Application.Content.Load<Texture2D>("Models/hexagone_green");
+
+            var montainMaterial = new StandardMaterial(Scene.current);
+            montainMaterial.Texture = Application.Content.Load<Texture2D>("Models/hexagone_brown");
             montainMaterial.DiffuseColor = Color.Red;
 
             int rand = 0;
@@ -99,12 +99,12 @@ namespace C3DE.Demo.Scripts
 
                     if (rand % 2 == 0)
                     {
-                        mRenderer.MainMaterial = groundMaterial;
+                        mRenderer.Material = groundMaterial;
                         cache.Transform.LocalScale  += new Vector3(0, 0.5f, 0);
                     }
                     else if (rand % 5 == 0)
                     {
-                        mRenderer.MainMaterial = montainMaterial;
+                        mRenderer.Material = montainMaterial;
                         cache.Transform.LocalScale += new Vector3(0.0f, 1.5f, 0.0f);
                     }
 

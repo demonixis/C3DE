@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Input;
 using System;
+using System.Runtime.Serialization;
 
 namespace C3DE.Components.Controllers
 {
@@ -9,6 +10,7 @@ namespace C3DE.Components.Controllers
     /// An orbit controller component.
     /// It allows user to move and rotate the camera around a point.
     /// </summary>
+    [DataContract]
     public class OrbitController : Controller
     {
         private Camera _camera;
@@ -24,23 +26,28 @@ namespace C3DE.Components.Controllers
         /// <summary>
         /// Gets or sets the min angle on y-axis.
         /// </summary>
+        [DataMember]
         public float MinAngle { get; set; }
 
         /// <summary>
         /// Gets or sets the max angle on y-axis.
         /// </summary>
+        [DataMember]
         public float MaxAngle { get; set; }
 
         /// <summary>
         /// Gets or sets the min distance from the target.
         /// </summary>
+        [DataMember]
         public float MinDistance { get; set; }
 
         /// <summary>
         /// Gets or sets the max distance from the target.
         /// </summary>
+        [DataMember]
         public float MaxDistance { get; set; }
 
+        [DataMember]
         public float Distance
         {
             get { return _distance; }
@@ -53,7 +60,7 @@ namespace C3DE.Components.Controllers
         public OrbitController()
             : base()
         {
-            _angle = new Vector2(0.0f, -MathHelper.Pi / 6.0f);
+            _angle = new Vector2(0.0f, MathHelper.Pi / 6.0f);
             _distance = 35;
 
             MinAngle = -MathHelper.PiOver2 + 0.1f;
@@ -89,7 +96,7 @@ namespace C3DE.Components.Controllers
             CheckAngle();
             CheckDistance();
 
-            _position = Vector3.Transform(Vector3.Backward, Matrix.CreateFromYawPitchRoll(_angle.X, _angle.Y, 0));
+            _position = Vector3.Transform(Vector3.Forward, Matrix.CreateFromYawPitchRoll(_angle.X, _angle.Y, 0));
             _position *= _distance;
             _position += _camera.Target;
 
@@ -137,7 +144,7 @@ namespace C3DE.Components.Controllers
             if (Input.Mouse.Down(Inputs.MouseButton.Left) && Input.Mouse.Drag())
             {
                 angleVelocity.X -= RotationSpeed * Input.Mouse.Delta.X * MouseSensibility.X * Time.DeltaTime;
-                angleVelocity.Y -= RotationSpeed * Input.Mouse.Delta.Y * MouseSensibility.Y * Time.DeltaTime;
+                angleVelocity.Y += RotationSpeed * Input.Mouse.Delta.Y * MouseSensibility.Y * Time.DeltaTime;
             }
 
             if (Input.Mouse.Down(Inputs.MouseButton.Right))

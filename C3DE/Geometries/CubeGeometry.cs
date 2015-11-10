@@ -1,8 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Runtime.Serialization;
 
 namespace C3DE.Geometries
 {
+    [DataContract]
     public class CubeGeometry : Geometry
     {
         protected override void CreateGeometry()
@@ -54,7 +56,7 @@ namespace C3DE.Geometries
             Vector3 rightNormal = new Vector3(1, 0, 0);
             Vector3 topNormal = new Vector3(0, 1, 0);
             Vector3 bottomNormal = new Vector3(0, -1, 0);
-            
+
             Vertices = new VertexPositionNormalTexture[]
             {
                 // Front Surface

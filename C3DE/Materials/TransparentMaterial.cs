@@ -1,25 +1,21 @@
-﻿using C3DE.Components.Renderers;
+﻿using C3DE.Components;
+using C3DE.Components.Renderers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using System.Runtime.Serialization;
 
 namespace C3DE.Materials
 {
+    [DataContract]
     public class TransparentMaterial : Material
     {
-        private Vector3 _emissiveColor;
-
-        public Color EmissiveColor
-        {
-            get { return new Color(_emissiveColor); }
-            set { _emissiveColor = value.ToVector3(); }
-        }
-
-        public TransparentMaterial(Scene scene)
+        public TransparentMaterial(Scene scene, string name = "Transparent Material")
             : base(scene)
         {
             diffuseColor = new Vector3(1.0f, 1.0f, 1.0f);
-            _emissiveColor = new Vector3(0.0f, 0.0f, 0.0f);
+            hasAlpha = true;
+            Name = name;
         }
 
         public override void LoadContent(ContentManager content)
@@ -27,21 +23,20 @@ namespace C3DE.Materials
             effect = content.Load<Effect>("FX/TransparentEffect");
         }
 
-        public override void PrePass()
+        public override void PrePass(Camera camera)
         {
-            effect.Parameters["View"].SetValue(scene.MainCamera.view);
-            effect.Parameters["Projection"].SetValue(scene.MainCamera.projection);
+            effect.Parameters["View"].SetValue(camera.view);
+            effect.Parameters["Projection"].SetValue(camera.projection);
         }
 
-        public override void Pass(RenderableComponent renderable)
+        public override void Pass(Renderer renderable)
         {
             // Material
             effect.Parameters["TextureTiling"].SetValue(Tiling);
             effect.Parameters["TextureOffset"].SetValue(Offset);
             effect.Parameters["AmbientColor"].SetValue(scene.RenderSettings.ambientColor);
             effect.Parameters["DiffuseColor"].SetValue(diffuseColor);
-            effect.Parameters["EmissiveColor"].SetValue(_emissiveColor);
-            effect.Parameters["MainTexture"].SetValue(mainTexture);
+            effect.Parameters["MainTexture"].SetValue(diffuseTexture);
             effect.Parameters["World"].SetValue(renderable.SceneObject.Transform.world);
             effect.CurrentTechnique.Passes[0].Apply();
         }
