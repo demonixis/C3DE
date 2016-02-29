@@ -2,6 +2,7 @@
 using C3DE.Demo.Scripts;
 using C3DE.Materials;
 using C3DE.Prefabs;
+using C3DE.Rendering;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -14,6 +15,11 @@ namespace C3DE.Demo.Scenes
         public override void Initialize()
         {
             base.Initialize();
+
+            var vrRenderer = new VRRenderer();
+            vrRenderer.DistortionCorrection = false;
+
+            Application.Engine.Renderer = vrRenderer;
 
             // Add a camera with a FPS controller
             var camera = new CameraPrefab("camera");
@@ -61,6 +67,12 @@ namespace C3DE.Demo.Scenes
             // And fog
             RenderSettings.FogDensity = 0.0085f;
             RenderSettings.FogMode = FogMode.Exp2;
+        }
+
+        public override void Unload()
+        {
+            base.Unload();
+            Application.Engine.Renderer = new ForwardRenderer();
         }
     }
 }

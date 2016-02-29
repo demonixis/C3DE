@@ -125,6 +125,8 @@
     <Compile Include="Materials\SimpleMaterial.cs" />
     <Compile Include="Materials\TransparentMaterial.cs" />
     <Compile Include="PostProcess\SimpleBlurPass.cs" />
+    <Compile Include="Rendering\Renderer.cs" />
+    <Compile Include="Rendering\VRRenderer.cs" />
     <Compile Include="RenderSettings.cs" />
     <Compile Include="Resources\ResourcesHelper.cs" />
     <Compile Include="SceneManager.cs" />
@@ -162,6 +164,7 @@
     <Compile Include="Utils\NoiseGenerator.cs" />
     <Compile Include="Utils\RandomHelper.cs" />
     <Compile Include="Rendering\PreLightRenderer.cs" />
+    <Compile Include="VR\OculusRiftDK2013_Metric.cs" />
   </ItemGroup>
   <!--
   <ItemGroup>

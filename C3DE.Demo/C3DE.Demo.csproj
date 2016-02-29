@@ -37,6 +37,9 @@
   <PropertyGroup>
     <StartupObject>C3DE.Demo.DemoGame</StartupObject>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Icon.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Content Include="Icon.ico" />
   </ItemGroup>
