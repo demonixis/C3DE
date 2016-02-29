@@ -60,7 +60,7 @@ namespace C3DE.Components.Renderers
                 {
                     device.SetVertexBuffer(meshPart.VertexBuffer);
                     device.Indices = meshPart.IndexBuffer;
-                    device.DrawIndexedPrimitives(PrimitiveType.TriangleList, meshPart.VertexOffset, 0, meshPart.NumVertices, meshPart.StartIndex, meshPart.PrimitiveCount);
+                    device.DrawIndexedPrimitives(PrimitiveType.TriangleList, meshPart.VertexOffset, meshPart.StartIndex, meshPart.PrimitiveCount);
                 }
             }
         }

@@ -123,8 +123,11 @@ namespace C3DE.Rendering
         /// <param name="camera">The camera to use for render.</param>
         public virtual void Render(Scene scene)
         {
-            RebuildRenderTargets();
-            RenderSceneForCamera(scene, scene.cameras[0]);
+            if (scene != null)
+            {
+                RebuildRenderTargets();
+                RenderSceneForCamera(scene, scene.cameras[0]);
+            }
         }
 
         protected virtual void RebuildRenderTargets()

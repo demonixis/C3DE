@@ -85,7 +85,7 @@ namespace C3DE
                 _scenes.Add(scene);
 
                 if (isActive)
-                    _activeSceneIndex = _scenes.Count - 1;
+                    _levelToLoad = _scenes.Count - 1;
             }
         }
 
@@ -121,13 +121,14 @@ namespace C3DE
                 if (_activeSceneIndex > -1)
                     _scenes[_activeSceneIndex].Unload();
 
+                _activeSceneIndex = _levelToLoad;
+
                 Camera.main = null;
                 GUI.Enabled = true;
                 GUI.Effect = null;
+                Scene.current = _scenes[_activeSceneIndex];
 
-                _activeSceneIndex = _levelToLoad;
                 _levelToLoad = -1;
-
                 _scenes[_activeSceneIndex].Initialize();
             }
 

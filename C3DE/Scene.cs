@@ -183,7 +183,6 @@ namespace C3DE
         /// <param name="content"></param>
         public override void Initialize()
         {
-            current = this;
             initialized = true;
 
             DefaultMaterial.Texture = GraphicsHelper.CreateTexture(Color.AntiqueWhite, 1, 1);

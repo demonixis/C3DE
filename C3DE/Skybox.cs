@@ -102,7 +102,7 @@ namespace C3DE
 
             device.SetVertexBuffer(_geometry.VertexBuffer);
             device.Indices = _geometry.IndexBuffer;
-            device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, _geometry.Vertices.Length, 0, _geometry.Indices.Length / 3);
+            device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, _geometry.Indices.Length / 3);
 
             device.RasterizerState = _currentRasterizerState;
         }

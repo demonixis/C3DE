@@ -75,7 +75,7 @@ namespace C3DE.Components.Renderers
         {
             device.SetVertexBuffer(geometry.VertexBuffer);
             device.Indices = geometry.IndexBuffer;
-            device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, geometry.Vertices.Length, 0, geometry.Indices.Length / 3);
+            device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, geometry.Indices.Length / 3);
         }
 
         public override void Dispose()
