@@ -16,11 +16,6 @@ namespace C3DE.Demo.Scenes
         {
             base.Initialize();
 
-            var vrRenderer = new VRRenderer();
-            vrRenderer.DistortionCorrection = false;
-
-            Application.Engine.Renderer = vrRenderer;
-
             // Add a camera with a FPS controller
             var camera = new CameraPrefab("camera");
             camera.Setup(new Vector3(0, 2, -10), new Vector3(0, 0, 0), Vector3.Up);
@@ -45,8 +40,8 @@ namespace C3DE.Demo.Scenes
             terrain.Renderer.Material = terrainMat;
             terrain.Transform.Translate(-terrain.Width >> 1, -10, -terrain.Depth >> 1);
             terrain.AddComponent<WeightMapViewer>();
-            var map = terrain.GenerateWeightMap();
 
+            var map = terrain.GenerateWeightMap();
             terrainMat.Texture = Application.Content.Load<Texture2D>("Textures/Terrain/Grass");
             terrainMat.SandTexture = Application.Content.Load<Texture2D>("Textures/Terrain/Sand");
             terrainMat.SnowTexture = Application.Content.Load<Texture2D>("Textures/Terrain/Snow");
@@ -67,12 +62,6 @@ namespace C3DE.Demo.Scenes
             // And fog
             RenderSettings.FogDensity = 0.0085f;
             RenderSettings.FogMode = FogMode.Exp2;
-        }
-
-        public override void Unload()
-        {
-            base.Unload();
-            Application.Engine.Renderer = new ForwardRenderer();
         }
     }
 }

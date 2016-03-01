@@ -43,9 +43,10 @@ namespace C3DE.Rendering
             get; set;
         }
 
-        public VRRenderer()
+        public VRRenderer(bool enabledDistortionCorrection = false)
         {
             _needsBufferUpdate = false;
+            DistortionCorrection = enabledDistortionCorrection;
         }
 
         public void Initialize(ContentManager content)

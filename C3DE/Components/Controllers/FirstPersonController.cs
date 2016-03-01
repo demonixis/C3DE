@@ -13,6 +13,7 @@ namespace C3DE.Components.Controllers
     [DataContract]
     public class FirstPersonController : Controller
     {
+        private bool _azertyKeyboard = false;
         private Camera _camera;
         private Matrix _rotationMatrix;
         private Vector3 _transformedReference;
@@ -68,6 +69,7 @@ namespace C3DE.Components.Controllers
             Fly = false;
             _virtualInputEnabled = false;
             _lockCursor = false;
+            _azertyKeyboard = System.Globalization.CultureInfo.CurrentCulture.TwoLetterISOLanguageName == "fr";
         }
 
         public override void OnDisabled()
@@ -141,19 +143,19 @@ namespace C3DE.Components.Controllers
 
         protected override void UpdateKeyboardInput()
         {
-            if (Input.Keys.Up || Input.Keys.Pressed(Keys.W))
-                translation.Z += MoveSpeed * Time.DeltaTime;
-
-            else if (Input.Keys.Pressed(Keys.Down) || Input.Keys.Pressed(Keys.S))
+            if (Input.Keys.Up || (_azertyKeyboard ? Input.Keys.Pressed(Keys.Z) : Input.Keys.Pressed(Keys.W)))
                 translation.Z -= MoveSpeed * Time.DeltaTime;
 
-            if (Input.Keys.Pressed(Keys.A))
-                translation.X += MoveSpeed * Time.DeltaTime / 2.0f;
+            else if (Input.Keys.Pressed(Keys.Down) || Input.Keys.Pressed(Keys.S))
+                translation.Z += MoveSpeed * Time.DeltaTime;
 
-            else if (Input.Keys.Pressed(Keys.D))
+            if (_azertyKeyboard ? Input.Keys.Pressed(Keys.Q) : Input.Keys.Pressed(Keys.A))
                 translation.X -= MoveSpeed * Time.DeltaTime / 2.0f;
 
-            if (Input.Keys.Pressed(Keys.A))
+            else if (Input.Keys.Pressed(Keys.D))
+                translation.X += MoveSpeed * Time.DeltaTime / 2.0f;
+
+            if (_azertyKeyboard ? Input.Keys.Pressed(Keys.A) : Input.Keys.Pressed(Keys.Q))
                 translation.Y += StrafeSpeed * Time.DeltaTime;
 
             else if (Input.Keys.Pressed(Keys.E))
@@ -180,12 +182,12 @@ namespace C3DE.Components.Controllers
             if (!_lockCursor && Input.Mouse.Drag())
             {
                 rotation.Y -= Input.Mouse.Delta.X * RotationSpeed * MouseSensibility.Y * Time.DeltaTime;
-                rotation.X += Input.Mouse.Delta.Y * RotationSpeed * MouseSensibility.X * Time.DeltaTime;
+                rotation.X -= Input.Mouse.Delta.Y * RotationSpeed * MouseSensibility.X * Time.DeltaTime;
             }
             else if (_lockCursor)
             {
                 rotation.Y -= Input.Mouse.Delta.X * RotationSpeed * MouseSensibility.Y * Time.DeltaTime;
-                rotation.X += Input.Mouse.Delta.Y * LookSpeed * MouseSensibility.X * Time.DeltaTime;
+                rotation.X -= Input.Mouse.Delta.Y * LookSpeed * MouseSensibility.X * Time.DeltaTime;
             }
 
             if (Input.Mouse.Drag(Inputs.MouseButton.Middle))
