@@ -19,6 +19,11 @@ namespace C3DE.Rendering
             get; set;
         }
 
+        public Renderer()
+        {
+            NeedsBufferUpdate = false;
+        }
+
         public virtual void Initialize(ContentManager content)
         {
             m_graphicsDevice = Application.GraphicsDevice;
@@ -27,14 +32,14 @@ namespace C3DE.Rendering
             uiManager.LoadContent(content);
         }
 
-        protected virtual void renderShadowMaps(Scene scene)
+        protected virtual void RenderShadowMaps(Scene scene)
         {
             for (int i = 0, l = scene.Lights.Count; i < l; i++)
                 if (scene.Lights[i].shadowGenerator.Enabled)
                     scene.Lights[i].shadowGenerator.RenderShadows(m_graphicsDevice, scene.renderList);
         }
 
-        protected virtual void renderObjects(Scene scene, Camera camera)
+        protected virtual void RenderObjects(Scene scene, Camera camera)
         {
             if (scene.RenderSettings.Skybox.Enabled)
                 scene.RenderSettings.Skybox.Draw(m_graphicsDevice, camera);
@@ -54,7 +59,7 @@ namespace C3DE.Rendering
 
         protected abstract void renderPostProcess(List<PostProcessPass> passes);
 
-        protected virtual void renderUI(List<Behaviour> scripts)
+        protected virtual void RenderUI(List<Behaviour> scripts)
         {
             var size = scripts.Count;
             if (size > 0 && GUI.Enabled)
@@ -68,11 +73,6 @@ namespace C3DE.Rendering
                 m_spriteBatch.End();
             }
         }
-
-        /// <summary>
-        /// Render buffers to screen.
-        /// </summary>
-        protected abstract void renderBuffers();
 
         /// <summary>
         /// Render the scene.

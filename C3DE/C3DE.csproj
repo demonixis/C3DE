@@ -96,7 +96,6 @@
     <Compile Include="Materials\UnlitMaterial.cs" />
     <Compile Include="PostProcess\PostProcessManager.cs" />
     <Compile Include="Prefabs\LavaPrefab.cs" />
-    <Compile Include="Rendering\IRenderer.cs" />
     <Compile Include="Materials\FresnelMaterial.cs" />
     <Compile Include="Materials\LavaMaterial.cs" />
     <Compile Include="Materials\TerrainMaterial.cs" />

@@ -1,5 +1,5 @@
 ﻿using C3DE.Components;
-using C3DE.UI;
+using C3DE.PostProcess;
 using C3DE.VR;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
@@ -9,17 +9,13 @@ using System.Collections.Generic;
 
 namespace C3DE.Rendering
 {
-    public class VRRenderer : IRenderer
+    public class VRRenderer : Renderer
     {
-        private Effect oculusRiftDistortionShader;
-        private RenderTarget2D _renderTargetLeft;
-        private RenderTarget2D _renderTargetRight;
-        private Rectangle _sideBySideLeftSpriteSize;
-        private Rectangle _sideBySideRightSpriteSize;
-        private Matrix _projectionMatrixLeft;
-        private Matrix _projectionMatrixRight;
-        private Matrix _viewMatrixLeft;
-        private Matrix _viewMatrixRight;
+        private Effect _correctionFX;
+        private RenderTarget2D[] _renderTargets;
+        private Rectangle[] _sideBySideRects;
+        private Matrix[] _projectionsMatrix;
+        private Matrix[] _viewsMatrix;
         private Vector4 _hmdWarpParam;
         private Vector2 _scale;
         private Vector2 _scaleIn;
@@ -27,48 +23,35 @@ namespace C3DE.Rendering
         private Vector2 _lensCenterRight;
         private bool _projectionUpdated;
 
-        private GraphicsDevice _device;
-        private SpriteBatch _spriteBatch;
-        private bool _needsBufferUpdate;
-        internal GUI _guiManager;
-
-        public bool NeedsBufferUpdate
-        {
-            get { return _needsBufferUpdate; }
-            set { _needsBufferUpdate = value; }
-        }
-
         public bool DistortionCorrection
         {
             get; set;
         }
 
         public VRRenderer(bool enabledDistortionCorrection = false)
+            : base()
         {
-            _needsBufferUpdate = false;
             DistortionCorrection = enabledDistortionCorrection;
         }
 
-        public void Initialize(ContentManager content)
+        public override void Initialize(ContentManager content)
         {
-            Initialize();
+            base.Initialize(content);
 
-            _guiManager = new GUI(_spriteBatch);
-            _guiManager.LoadContent(content);
-        }
-
-        private void Initialize()
-        {
-            _device = Application.GraphicsDevice;
-            _spriteBatch = new SpriteBatch(_device);
-
-            oculusRiftDistortionShader = Application.Content.Load<Effect>("FX/PostProcess/OculusDistortionCorrection");
+            _correctionFX = Application.Content.Load<Effect>("FX/PostProcess/OculusDistortionCorrection");
 
             // Left and right RenderTarget
-            _renderTargetLeft = new RenderTarget2D(_device, OculusRiftDK2013_Metric.HResolution / 2, OculusRiftDK2013_Metric.VResolution, false, SurfaceFormat.Color, DepthFormat.Depth24, 0, RenderTargetUsage.DiscardContents);
-            _renderTargetRight = new RenderTarget2D(_device, OculusRiftDK2013_Metric.HResolution / 2, OculusRiftDK2013_Metric.VResolution, false, SurfaceFormat.Color, DepthFormat.Depth24, 0, RenderTargetUsage.DiscardContents);
+            _renderTargets = new RenderTarget2D[]
+            {
+                new RenderTarget2D(m_graphicsDevice, OculusRiftDK2013_Metric.HResolution / 2, OculusRiftDK2013_Metric.VResolution, false, SurfaceFormat.Color, DepthFormat.Depth24, 0, RenderTargetUsage.DiscardContents),
+                new RenderTarget2D(m_graphicsDevice, OculusRiftDK2013_Metric.HResolution / 2, OculusRiftDK2013_Metric.VResolution, false, SurfaceFormat.Color, DepthFormat.Depth24, 0, RenderTargetUsage.DiscardContents)
+            };
 
-            var aspect = (float)_renderTargetLeft.Width / (float)_renderTargetLeft.Height;
+            _sideBySideRects = new Rectangle[2];
+            _projectionsMatrix = new Matrix[2];
+            _viewsMatrix = new Matrix[2];
+
+            var aspect = (float)_renderTargets[0].Width / (float)_renderTargets[0].Height;
             _scale = new Vector2(0.5f * (1.0f / OculusRiftDK2013_Metric.PostProcessScaleFactor), 0.5f * (1.0f / OculusRiftDK2013_Metric.PostProcessScaleFactor) * aspect);
             _scaleIn = new Vector2(2.0f, 2.0f / aspect);
             _lensCenterLeft = new Vector2(0.5f + OculusRiftDK2013_Metric.LensCenterOffset * 0.5f, 0.5f);
@@ -97,81 +80,39 @@ namespace C3DE.Rendering
             var projectionCenterOffset = 4.0f * eyeProjectionShift / OculusRiftDK2013_Metric.HScreenSize;
 
             var projCenter = projection;
-            _projectionMatrixLeft = Matrix.CreateTranslation(projectionCenterOffset, 0, 0) * projCenter;
-            _projectionMatrixRight = Matrix.CreateTranslation(-projectionCenterOffset, 0, 0) * projCenter;
+            _projectionsMatrix[0] = Matrix.CreateTranslation(projectionCenterOffset, 0, 0) * projCenter;
+            _projectionsMatrix[1] = Matrix.CreateTranslation(-projectionCenterOffset, 0, 0) * projCenter;
 
             var halfIPD = OculusRiftDK2013_Metric.InterpupillaryDistance * 0.5f;
-            _viewMatrixLeft = Matrix.CreateTranslation(halfIPD, 0, 0) * view;
-            _viewMatrixRight = Matrix.CreateTranslation(-halfIPD, 0, 0) * view;
+            _viewsMatrix[0] = Matrix.CreateTranslation(halfIPD, 0, 0) * view;
+            _viewsMatrix[1] = Matrix.CreateTranslation(-halfIPD, 0, 0) * view;
         }
 
         private void UpdateResolutionAndRenderTargets()
         {
-			var viewportWidth = Screen.Width;
+            var viewportWidth = Screen.Width;
             var viewportHeight = Screen.Height;
 
-            _sideBySideLeftSpriteSize = new Rectangle(0, 0, viewportWidth / 2, viewportHeight);
-            _sideBySideRightSpriteSize = new Rectangle(viewportWidth / 2, 0, viewportWidth / 2, viewportHeight);
+            _sideBySideRects[0] = new Rectangle(0, 0, viewportWidth / 2, viewportHeight);
+            _sideBySideRects[1] = new Rectangle(viewportWidth / 2, 0, viewportWidth / 2, viewportHeight);
 
-            Screen.Setup(_sideBySideLeftSpriteSize.Width, _sideBySideLeftSpriteSize.Height, null, null);
+            Screen.Setup(_sideBySideRects[0].Width, _sideBySideRects[0].Height, null, null);
         }
 
-        /// <summary>
-        /// Render renderable objects
-        /// </summary>
-        /// <param name="camera">The camera to use.</param>
-        private void renderObjects(Scene scene, Camera camera)
-        {
-            if (scene.RenderSettings.Skybox.Enabled)
-                scene.RenderSettings.Skybox.Draw(_device, camera);
-
-            // Prepass, Update light, eye position, etc.
-            for (int i = 0; i < scene.effects.Count; i++)
-                scene.materials[scene.materialsEffectIndex[i]].PrePass(camera);
-
-            // Pass, Update matrix, material attributes, etc.
-            // Note: The renderList contains ONLY enabled components/objects.
-            for (int i = 0; i < scene.renderList.Count; i++)
-            {
-                scene.renderList[i].Material.Pass(scene.RenderList[i]);
-                scene.renderList[i].Draw(_device);
-            }
-        }
-
-        private void renderUI(List<Behaviour> scripts)
-        {
-            var size = scripts.Count;
-
-            if (size > 0)
-            {
-                _spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone);
-
-                for (int i = 0; i < size; i++)
-                    if (scripts[i].Enabled)
-                        scripts[i].OnGUI(_guiManager);
-
-                _spriteBatch.End();
-            }
-        }
-
-        private void renderPostProcess() { }
+        protected override void renderPostProcess(List<PostProcessPass> passes) { }
+        public override void RenderEditor(Scene scene, Camera camera, RenderTarget2D target) { }
 
         private void BaseDraw(Scene scene, Camera camera)
         {
-            for (int i = 0, l = scene.Lights.Count; i < l; i++)
-                if (scene.Lights[i].ShadowGenerator.Enabled)
-                    scene.Lights[i].ShadowGenerator.RenderShadows(_device, scene.RenderList);
-
-            renderObjects(scene, camera);
-            renderUI(scene.Behaviours);
+            RenderShadowMaps(scene);
+            RenderObjects(scene, camera);
+            RenderUI(scene.Behaviours);
         }
-
-        public void RenderEditor(Scene scene, Camera camera, RenderTarget2D target) { }
 
         /// <summary>
         /// Render the scene with the specified camera.
         /// </summary>
-        public void Render(Scene scene)
+        public override void Render(Scene scene)
         {
             var camera = scene.cameras[0];
 
@@ -180,17 +121,14 @@ namespace C3DE.Rendering
 
             ComputeViewProjMatrix(ref camera.projection, ref camera.view);
 
-            _device.SetRenderTarget(_renderTargetLeft);
-            _device.Clear(Color.Black);
-            camera.projection = _projectionMatrixLeft;
-            camera.view = _viewMatrixLeft;
-            BaseDraw(scene, camera);
-
-            _device.SetRenderTarget(_renderTargetRight);
-            _device.Clear(Color.Black);
-            camera.projection = _projectionMatrixRight;
-            camera.view = _viewMatrixRight;
-            BaseDraw(scene, camera);
+            for (int i = 0; i < 2; i++)
+            {
+                m_graphicsDevice.SetRenderTarget(_renderTargets[i]);
+                m_graphicsDevice.Clear(Color.Black);
+                camera.projection = _projectionsMatrix[i];
+                camera.view = _viewsMatrix[i];
+                BaseDraw(scene, camera);
+            }
 
             if (DistortionCorrection)
                 DrawRenderTargetsWithCorrection(camera);
@@ -201,41 +139,38 @@ namespace C3DE.Rendering
         private void DrawRenderTargets(Camera camera)
         {
             // Set RenderTargets
-            _device.SetRenderTarget(null);
-            _device.Clear(Color.Black);
+            m_graphicsDevice.SetRenderTarget(null);
+            m_graphicsDevice.Clear(Color.Black);
 
-            // Pass for left lens
-            _spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Opaque, null, null, null, null);
-            _spriteBatch.Draw(_renderTargetLeft, _sideBySideLeftSpriteSize, Color.White);
-            _spriteBatch.End();
-
-            // Pass for right lens
-            _spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Opaque, null, null, null, null);
-            _spriteBatch.Draw(_renderTargetRight, _sideBySideRightSpriteSize, Color.White);
-            _spriteBatch.End();
+            for (int i = 0; i < 2; i++)
+            {
+                m_spriteBatch.Begin(i == 0 ? SpriteSortMode.Immediate : SpriteSortMode.Deferred, BlendState.Opaque, null, null, null, null);
+                m_spriteBatch.Draw(_renderTargets[i], _sideBySideRects[i], Color.White);
+                m_spriteBatch.End();
+            }
         }
 
         private void DrawRenderTargetsWithCorrection(Camera camera)
         {
             // Set RenderTargets
-            _device.SetRenderTarget(null);
-            _device.Clear(Color.Black);
+            m_graphicsDevice.SetRenderTarget(null);
+            m_graphicsDevice.Clear(Color.Black);
 
-            oculusRiftDistortionShader.Parameters["HmdWarpParam"].SetValue(_hmdWarpParam);
-            oculusRiftDistortionShader.Parameters["Scale"].SetValue(_scale);
-            oculusRiftDistortionShader.Parameters["ScaleIn"].SetValue(_scaleIn);
+            _correctionFX.Parameters["HmdWarpParam"].SetValue(_hmdWarpParam);
+            _correctionFX.Parameters["Scale"].SetValue(_scale);
+            _correctionFX.Parameters["ScaleIn"].SetValue(_scaleIn);
 
             // Pass for left lens
-            oculusRiftDistortionShader.Parameters["LensCenter"].SetValue(_lensCenterLeft);
-            _spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Opaque, null, null, null, oculusRiftDistortionShader);
-            _spriteBatch.Draw(_renderTargetLeft, _sideBySideLeftSpriteSize, Color.White);
-            _spriteBatch.End();
+            _correctionFX.Parameters["LensCenter"].SetValue(_lensCenterLeft);
+            m_spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Opaque, null, null, null, _correctionFX);
+            m_spriteBatch.Draw(_renderTargets[0], _sideBySideRects[0], Color.White);
+            m_spriteBatch.End();
 
             // Pass for right lens
-            oculusRiftDistortionShader.Parameters["LensCenter"].SetValue(_lensCenterRight);
-            _spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Opaque, null, null, null, oculusRiftDistortionShader);
-            _spriteBatch.Draw(_renderTargetRight, _sideBySideRightSpriteSize, Color.White);
-            _spriteBatch.End();
+            _correctionFX.Parameters["LensCenter"].SetValue(_lensCenterRight);
+            m_spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Opaque, null, null, null, _correctionFX);
+            m_spriteBatch.Draw(_renderTargets[1], _sideBySideRects[1], Color.White);
+            m_spriteBatch.End();
         }
     }
 }

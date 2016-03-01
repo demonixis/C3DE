@@ -11,16 +11,16 @@ namespace C3DE
     /// </summary>
     public class Engine : Game
     {
-        private IRenderer _rendererToChange;
+        private Renderer _rendererToChange;
         private bool _needRendererChange;
         private bool _autoDetectResolution;
         private bool _requestFullscreen;
         protected GraphicsDeviceManager graphics;
-        protected IRenderer renderer;
+        protected Renderer renderer;
         protected SceneManager sceneManager;
         protected bool initialized;
 
-        public IRenderer Renderer
+        public Renderer Renderer
         {
             get { return renderer; }
             set
@@ -28,6 +28,11 @@ namespace C3DE
                 _rendererToChange = value;
                 _needRendererChange = true;
             }
+        }
+
+        public bool VREnabled
+        {
+            get { return renderer is VRRenderer; }
         }
 
         /// <summary>
@@ -68,7 +73,7 @@ namespace C3DE
             }
 #endif
 
-            Screen.Setup(width, height, false, true); 
+            Screen.Setup(width, height, false, true);
         }
 
         private void OnResize(object sender, PreparingDeviceSettingsEventArgs e)
@@ -78,7 +83,7 @@ namespace C3DE
             Screen.Setup(width, height, null, null);
         }
 
-        protected void SetRenderer(IRenderer iRenderer)
+        protected void SetRenderer(Renderer iRenderer)
         {
             renderer = iRenderer;
 
@@ -142,7 +147,7 @@ namespace C3DE
         {
             GraphicsDevice.Clear(Color.Black);
             renderer.Render(Scene.current);
-			base.Draw(gameTime);
+            base.Draw(gameTime);
         }
 
         protected override void EndDraw()

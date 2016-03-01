@@ -3,7 +3,6 @@ using C3DE.Components.Lights;
 using C3DE.Components.Renderers;
 using C3DE.Geometries;
 using C3DE.Materials;
-using C3DE.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -30,9 +29,9 @@ namespace C3DE.Rendering
         {
             base.Initialize(content);
 
-            _viewport.X = graphicsDevice.Viewport.Width;
-            _viewport.Y = graphicsDevice.Viewport.Height;
-            CreateRenderTargets(graphicsDevice);
+            _viewport.X = m_graphicsDevice.Viewport.Width;
+            _viewport.Y = m_graphicsDevice.Viewport.Height;
+            CreateRenderTargets(m_graphicsDevice);
 
             _depthNormalFX = content.Load<Effect>("FX/PreLighting/PL_DepthNormal");
             _lightingFX = content.Load<Effect>("FX/PreLighting/PL_LightMap");
@@ -148,7 +147,7 @@ namespace C3DE.Rendering
         public override void Render(Scene scene)
         {
             RebuildRenderTargets();
-            PreLightingPass(graphicsDevice, scene, scene.cameras[0]);
+            PreLightingPass(m_graphicsDevice, scene, scene.cameras[0]);
             RenderSceneForCamera(scene, scene.cameras[0]);
         }
     }

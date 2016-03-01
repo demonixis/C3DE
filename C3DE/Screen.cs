@@ -117,8 +117,7 @@ namespace C3DE
             WidthPerTwo = width >> 1;
             HeightPerTwo = height >> 1;
 
-            if (VirtualWidth == 0 || VirtualHeight == 0)
-                SetVirtualResolution(width, height);
+            SetVirtualResolution(width, height);
 
             if (lockCursor.HasValue)
                 LockCursor = lockCursor.Value;
@@ -166,9 +165,11 @@ namespace C3DE
         /// <returns>The scale difference between the current resolution and the reference resolution of the screen</returns>
         public static Vector2 GetScale()
         {
-            return new Vector2(
+            var scale = new Vector2(
                 (float)((float)Width / (float)VirtualWidth),
                 (float)((float)Height / (float)VirtualHeight));
+
+            return scale;
         }
 
         /// <summary>
