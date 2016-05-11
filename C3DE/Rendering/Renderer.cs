@@ -11,13 +11,9 @@ namespace C3DE.Rendering
     {
         protected GraphicsDevice m_graphicsDevice;
         protected SpriteBatch m_spriteBatch;
-        protected bool needsBufferUpdate;
         protected internal GUI uiManager;
 
-        public bool NeedsBufferUpdate
-        {
-            get; set;
-        }
+        public bool NeedsBufferUpdate { get; set; }
 
         public Renderer()
         {

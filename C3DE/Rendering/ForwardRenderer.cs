@@ -77,10 +77,10 @@ namespace C3DE.Rendering
 
         protected virtual void RebuildRenderTargets()
         {
-            if (needsBufferUpdate)
+            if (NeedsBufferUpdate)
             {
                 sceneRT = new RenderTarget2D(m_graphicsDevice, m_graphicsDevice.Viewport.Width, m_graphicsDevice.Viewport.Height, false, SurfaceFormat.Color, DepthFormat.Depth24, 0, RenderTargetUsage.DiscardContents);
-                needsBufferUpdate = false;
+                NeedsBufferUpdate = false;
             }
         }
 

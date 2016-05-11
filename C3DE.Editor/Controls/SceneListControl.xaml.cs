@@ -34,7 +34,7 @@ namespace C3DE.Editor.Controls
             if (index > -1)
             {
                 var item = sceneTreeView.Items[index] as TreeViewItem;
-                if (item != null)
+                if (item != null && item.Tag != null)
                     scene.SetSeletected(item.Tag.ToString());
             }
         }

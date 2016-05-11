@@ -49,7 +49,7 @@ namespace C3DE.Components.Renderers
         /// </summary>
         public Material Material
         {
-            get { return materialIndex > -1 ? Scene.current.materials[materialIndex] : Scene.current.defaultMaterial; }
+            get { return materialIndex > -1 ? sceneObject.Scene.materials[materialIndex] : sceneObject.Scene.defaultMaterial; }
             set { materialIndex = value.Index; }
         }
 
