@@ -7,7 +7,7 @@ using System.Runtime.Serialization;
 namespace C3DE.Prefabs.Meshes
 {
     [DataContract]
-    public class MeshPrefab : SceneObject
+    public class MeshPrefab : GameObject
     {
         private MeshRenderer _renderer;
         private Collider _collider;

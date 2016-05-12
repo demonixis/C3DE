@@ -4,7 +4,7 @@ namespace C3DE.Editor.Core
 {
     public class SceneObjectSelector
     {
-        public SceneObject SceneObject { get; private set; }
+        public GameObject SceneObject { get; private set; }
         private BoundingBoxRenderer _boundingBoxRenderer;
         private Renderer _renderer;
 
@@ -12,7 +12,7 @@ namespace C3DE.Editor.Core
         {
         }
 
-        public void Set(SceneObject sceneObject)
+        public void Set(GameObject sceneObject)
         {
             SceneObject = sceneObject;
 
@@ -38,7 +38,7 @@ namespace C3DE.Editor.Core
             }
         }
 
-        public bool IsEqualTo(SceneObject other)
+        public bool IsEqualTo(GameObject other)
         {
             if (SceneObject == null)
                 return false;

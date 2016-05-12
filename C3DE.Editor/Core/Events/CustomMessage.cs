@@ -64,13 +64,13 @@ namespace C3DE.Editor.Events
 
     public class SceneObjectSelectedMessage : BasicMessage
     {
-        public SceneObject SceneObject { get; set; }
+        public GameObject SceneObject { get; set; }
 
         public SceneObjectSelectedMessage()
         {
         }
 
-        public SceneObjectSelectedMessage(SceneObject sceneObject)
+        public SceneObjectSelectedMessage(GameObject sceneObject)
         {
             SceneObject = sceneObject;
         }

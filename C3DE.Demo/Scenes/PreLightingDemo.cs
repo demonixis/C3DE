@@ -83,7 +83,7 @@ namespace C3DE.Demo.Scenes
 
         private void AddObject()
         {
-            var sceneObject = new SceneObject();
+            var sceneObject = new GameObject();
             var cube = sceneObject.AddComponent<MeshRenderer>();
             cube.ReceiveShadow = false;
             cube.Geometry = new CubeGeometry();
@@ -113,7 +113,7 @@ namespace C3DE.Demo.Scenes
 
         private MeshRenderer CreateCube(Vector3 size, Vector3 position)
         {
-            var sceneObject = new SceneObject("Cube");
+            var sceneObject = new GameObject("Cube");
             sceneObject.Transform.Position = position;
 
             var renderer = sceneObject.AddComponent<MeshRenderer>();
@@ -126,7 +126,7 @@ namespace C3DE.Demo.Scenes
 
         private void AddBackedLight(Vector3 position, Color color, float range = 65f)
         {
-            var sceneObject = new SceneObject("Light_" + color.ToString());
+            var sceneObject = new GameObject("Light_" + color.ToString());
             sceneObject.Transform.Position = position;
 
             var light = sceneObject.AddComponent<Light>();

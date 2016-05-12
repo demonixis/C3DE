@@ -14,6 +14,7 @@ namespace C3DE
     {
         private static Effect SkyboxEffect = null;
         private Matrix _world;
+        private Matrix _scaleMatrix;
         private CubeGeometry _geometry;
         private TextureCube _texture;
         private RasterizerState _skyboxRasterizerState;
@@ -32,6 +33,7 @@ namespace C3DE
         {
             _geometry = new CubeGeometry();
             _world = Matrix.Identity;
+            _scaleMatrix = Matrix.CreateScale(1.0f);
             _skyboxRasterizerState = new RasterizerState();
             _skyboxRasterizerState.CullMode = CullMode.None;
         }
@@ -91,13 +93,13 @@ namespace C3DE
             _currentRasterizerState = device.RasterizerState;
             device.RasterizerState = _skyboxRasterizerState;
 
-            _world = Matrix.CreateScale(1) * Matrix.CreateTranslation(camera.SceneObject.Transform.Position);
+            _world = _scaleMatrix * Matrix.CreateTranslation(camera.Transform.Position);
 
             SkyboxEffect.Parameters["World"].SetValue(_world);
             SkyboxEffect.Parameters["View"].SetValue(camera.view);
             SkyboxEffect.Parameters["Projection"].SetValue(camera.projection);
             SkyboxEffect.Parameters["SkyboxTexture"].SetValue(_texture);
-            SkyboxEffect.Parameters["CameraPosition"].SetValue(camera.SceneObject.Transform.Position);
+            SkyboxEffect.Parameters["CameraPosition"].SetValue(camera.Transform.Position);
             SkyboxEffect.CurrentTechnique.Passes[0].Apply();
 
             device.SetVertexBuffer(_geometry.VertexBuffer);

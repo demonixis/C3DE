@@ -71,7 +71,7 @@ namespace C3DE.Demo.Scripts
 
         private void GenerateHexaGrid()
         {
-            SceneObject cache = null;
+            GameObject cache = null;
 
             var waterMaterial = _gridPrefab.Renderer.Material;
 

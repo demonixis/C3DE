@@ -18,7 +18,7 @@ namespace C3DE.Prefabs
     }
 
     [DataContract]
-    public class TerrainPrefab : SceneObject
+    public class TerrainPrefab : GameObject
     {
         protected MeshRenderer renderer;
         protected TerrainGeometry geometry;

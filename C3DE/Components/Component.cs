@@ -11,10 +11,10 @@ namespace C3DE.Components
     [DataContract]
     public abstract class Component : IComparable, ICloneable, IDisposable
     {
-        internal protected bool initialized;
+        internal protected bool started;
         protected bool enabled;
         protected int order = 1;
-        internal protected SceneObject sceneObject;
+        internal protected GameObject sceneObject;
         internal protected Transform transform;
 
         #region Fields
@@ -41,13 +41,13 @@ namespace C3DE.Components
 
         public bool Initialized
         {
-            get { return initialized; }
+            get { return started; }
         }
 
         [DataMember]
         public string Id { get; set; }
 
-        public SceneObject SceneObject
+        public GameObject SceneObject
         {
             get { return sceneObject; }
             internal set { sceneObject = value; }
@@ -92,7 +92,7 @@ namespace C3DE.Components
         /// </summary>
         public Component()
         {
-            initialized = false;
+            started = false;
             enabled = true;
             Id = "CPN-" + Guid.NewGuid();
         }
@@ -117,7 +117,7 @@ namespace C3DE.Components
         /// <param name="content"></param>
         public virtual void Start()
         {
-            initialized = true;
+            started = true;
         }
 
         /// <summary>

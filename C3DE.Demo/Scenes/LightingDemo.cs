@@ -73,7 +73,7 @@ namespace C3DE.Demo.Scenes
             cubeSuperMaterial.Shininess = 10;
             cubeSuperMaterial.EmissiveColor = new Color(0f, 0.0f, 0.2f, 1.0f);
 
-            var cubeScene = new SceneObject();
+            var cubeScene = new GameObject();
             cubeScene.Transform.Translate(0, 6f, 0);
             cubeScene.Transform.LocalScale = new Vector3(4.0f);
             cubeScene.Transform.Rotate((float)Math.PI / 4, 0, (float)Math.PI / 4);

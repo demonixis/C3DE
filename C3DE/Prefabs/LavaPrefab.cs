@@ -10,7 +10,7 @@ using System.Runtime.Serialization;
 namespace C3DE.Prefabs
 {
     [DataContract]
-    public class LavaPrefab : SceneObject
+    public class LavaPrefab : GameObject
     {
         protected MeshRenderer renderer;
         protected LavaMaterial material;

@@ -6,8 +6,8 @@ namespace C3DE.Editor.Core
 {
     public class BasicEditionSceneObject
     {
-        public SceneObject Selected { get; set; }
-        public SceneObject Copy { get; set; }
+        public GameObject Selected { get; set; }
+        public GameObject Copy { get; set; }
 
         public void Reset()
         {
@@ -20,17 +20,17 @@ namespace C3DE.Editor.Core
             Copy = Selected;
         }
 
-        public void DuplicateSelection(Action<SceneObject> addCallback)
+        public void DuplicateSelection(Action<GameObject> addCallback)
         {
             Copy = Selected;
             PastSelection(addCallback);
         }
 
-        public void PastSelection(Action<SceneObject> addCallback)
+        public void PastSelection(Action<GameObject> addCallback)
         {
             if (Copy != null)
             {
-                var sceneObject = (SceneObject)Copy.Clone();
+                var sceneObject = (GameObject)Copy.Clone();
 
                 var previous = Copy;
 

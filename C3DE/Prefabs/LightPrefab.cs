@@ -2,7 +2,7 @@
 
 namespace C3DE.Prefabs
 {
-    public class LightPrefab : SceneObject
+    public class LightPrefab : GameObject
     {
         private Light _light;
         

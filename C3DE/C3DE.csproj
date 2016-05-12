@@ -118,7 +118,7 @@
     <Compile Include="Prefabs\TerrainPrefab.cs" />
     <Compile Include="Prefabs\WaterPrefab.cs" />
     <Compile Include="Scene.cs" />
-    <Compile Include="SceneObject.cs" />
+    <Compile Include="GameObject.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Rendering\ForwardRenderer.cs" />
     <Compile Include="Components\Lights\ShadowGenerator.cs" />

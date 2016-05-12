@@ -36,7 +36,7 @@ namespace C3DE.Rendering
             _depthNormalFX = content.Load<Effect>("FX/PreLighting/PL_DepthNormal");
             _lightingFX = content.Load<Effect>("FX/PreLighting/PL_LightMap");
 
-            var so = new SceneObject("LightMesh");
+            var so = new GameObject("LightMesh");
             _lightMesh = so.AddComponent<MeshRenderer>();
             _lightMesh.Geometry = new SphereGeometry();
             _lightMesh.Geometry.Build();

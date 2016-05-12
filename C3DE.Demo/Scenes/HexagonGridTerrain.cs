@@ -25,7 +25,7 @@ namespace C3DE.Demo.Scenes
             lightPrefab.Transform.Rotation = new Vector3(-1, 1, 0);
             Add(lightPrefab);
 
-            var sceneObject = new SceneObject("HexaGrid");
+            var sceneObject = new GameObject("HexaGrid");
             sceneObject.AddComponent<HexaGridBuilder>();
             Add(sceneObject);
 

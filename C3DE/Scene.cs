@@ -20,7 +20,7 @@ namespace C3DE
         public RenderSettings RenderSettings { get; set; }
 
         [DataMember]
-        public SceneObject[] SceneObjects { get; set; }
+        public GameObject[] SceneObjects { get; set; }
 
         [DataMember]
         public Material[] Materials { get; set; }
@@ -37,7 +37,7 @@ namespace C3DE
     /// The scene is responsible to store scene objects, components.
     /// </summary>
     [DataContract]
-    public class Scene : SceneObject
+    public class Scene : GameObject
     {
         public static Scene current { get; internal set; }
 
@@ -47,7 +47,7 @@ namespace C3DE
         internal protected Material defaultMaterial;
 
         [DataMember]
-        internal protected List<SceneObject> sceneObjects;
+        internal protected List<GameObject> sceneObjects;
 
         internal protected List<Renderer> renderList;
 
@@ -61,7 +61,7 @@ namespace C3DE
         internal protected List<Behaviour> scripts;
 
         [DataMember]
-        internal protected List<SceneObject> prefabs;
+        internal protected List<GameObject> prefabs;
         internal protected List<PostProcessPass> postProcessPasses;
 
         public RenderSettings RenderSettings { get; private set; }
@@ -131,7 +131,7 @@ namespace C3DE
         /// <summary>
         /// Gets prefabs.
         /// </summary>
-        public List<SceneObject> Prefabs
+        public List<GameObject> Prefabs
         {
             get { return prefabs; }
         }
@@ -149,7 +149,7 @@ namespace C3DE
         {
             Name = "SCENE-" + Guid.NewGuid();
             transform.Root = transform;
-            sceneObjects = new List<SceneObject>();
+            sceneObjects = new List<GameObject>();
             scene = this;
             renderList = new List<Renderer>(10);
             materials = new List<Material>(5);
@@ -159,7 +159,7 @@ namespace C3DE
             cameras = new List<Camera>(1);
             scripts = new List<Behaviour>(5);
             lights = new List<Light>(2);
-            prefabs = new List<SceneObject>();
+            prefabs = new List<GameObject>();
             postProcessPasses = new List<PostProcessPass>();
             _componentsToDestroy = new List<Component>();
             _needRemoveCheck = false;
@@ -237,7 +237,7 @@ namespace C3DE
             foreach (Behaviour script in Behaviours)
                 script.OnDestroy();
 
-            foreach (SceneObject sceneObject in sceneObjects)
+            foreach (GameObject sceneObject in sceneObjects)
                 sceneObject.Dispose();
 
             foreach (Material material in materials)
@@ -274,12 +274,12 @@ namespace C3DE
 
         #region SceneObjects/Components management
 
-        public override bool Add(SceneObject sceneObject)
+        public override bool Add(GameObject sceneObject)
         {
             return Add(sceneObject, false);
         }
 
-        public bool Add(SceneObject sceneObject, bool noCheck)
+        public bool Add(GameObject sceneObject, bool noCheck)
         {
             bool canAdd = base.Add(sceneObject);
 
@@ -312,13 +312,13 @@ namespace C3DE
         /// Add a prefab only before the scene is started.
         /// </summary>
         /// <param name="prefab"></param>
-        protected void AddPrefab(SceneObject prefab)
+        protected void AddPrefab(GameObject prefab)
         {
             if (!prefabs.Contains(prefab))
                 prefabs.Add(prefab);
         }
 
-        protected void RemovePrefab(SceneObject prefab)
+        protected void RemovePrefab(GameObject prefab)
         {
             if (prefabs.Contains(prefab))
                 prefabs.Remove(prefab);
@@ -329,7 +329,7 @@ namespace C3DE
         /// </summary>
         /// <param name="sceneObject">The scene object.</param>
         /// <param name="type">Type of change.</param>
-        protected void CheckComponents(SceneObject sceneObject, ComponentChangeType type)
+        protected void CheckComponents(GameObject sceneObject, ComponentChangeType type)
         {
             for (int i = 0; i < sceneObject.Components.Count; i++)
                 CheckComponent(sceneObject.Components[i], type);
@@ -398,7 +398,7 @@ namespace C3DE
         {
             if (e.Name == "Enabled")
             {
-                var sceneObject = (SceneObject)sender;
+                var sceneObject = (GameObject)sender;
                 if (sceneObject.Enabled)
                 {
                     CheckComponents(sceneObject, ComponentChangeType.Add);
@@ -586,14 +586,14 @@ namespace C3DE
             return -1;
         }
 
-        public static SceneObject Instanciate(SceneObject sceneObject)
+        public static GameObject Instanciate(GameObject sceneObject)
         {
             return Instanciate(sceneObject, sceneObject.Transform.Position, sceneObject.Transform.Rotation);
         }
 
-        public static SceneObject Instanciate(SceneObject sceneObject, Vector3 position, Vector3 rotation)
+        public static GameObject Instanciate(GameObject sceneObject, Vector3 position, Vector3 rotation)
         {
-            SceneObject clone = (SceneObject)sceneObject.Clone();
+            GameObject clone = (GameObject)sceneObject.Clone();
             clone.Transform.Position = position;
             clone.Transform.Rotation = rotation;
 
@@ -602,17 +602,17 @@ namespace C3DE
             return clone;
         }
 
-        public static void Destroy(SceneObject sceneObject)
+        public static void Destroy(GameObject sceneObject)
         {
             Scene.current.Remove(sceneObject);
         }
 
-        public override bool Remove(SceneObject sceneObject)
+        public override bool Remove(GameObject sceneObject)
         {
             return Remove(sceneObject, false);
         }
 
-        public bool Remove(SceneObject sceneObject, bool noCheck = false)
+        public bool Remove(GameObject sceneObject, bool noCheck = false)
         {
             bool canRemove = base.Remove(sceneObject);
 
@@ -622,7 +622,7 @@ namespace C3DE
             return canRemove;
         }
 
-        public void DestroyObject(SceneObject sceneObject, bool noCheck = false)
+        public void DestroyObject(GameObject sceneObject, bool noCheck = false)
         {
             for (int i = 0, l = sceneObject.Components.Count; i < l; i++)
                 this.DestroyComponent(sceneObject.Components[i]);
@@ -665,7 +665,7 @@ namespace C3DE
 
         #region Search methods
 
-        public static SceneObject FindById(string id)
+        public static GameObject FindById(string id)
         {
             if (current != null)
             {
@@ -676,9 +676,9 @@ namespace C3DE
             return null;
         }
 
-        public static SceneObject[] FindSceneObjectsById(string id)
+        public static GameObject[] FindSceneObjectsById(string id)
         {
-            var sceneObjects = new List<SceneObject>();
+            var sceneObjects = new List<GameObject>();
 
             if (current != null)
             {
@@ -696,7 +696,7 @@ namespace C3DE
 
             if (current != null)
             {
-                foreach (SceneObject so in current.sceneObjects)
+                foreach (GameObject so in current.sceneObjects)
                 {
                     var components = so.GetComponents<T>();
                     if (components.Length > 0)

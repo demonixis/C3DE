@@ -6,7 +6,7 @@ using System.Runtime.Serialization;
 namespace C3DE.Prefabs
 {
     [DataContract]
-    public class CameraPrefab : SceneObject
+    public class CameraPrefab : GameObject
     {
         protected Camera camera;
         

@@ -43,7 +43,7 @@ namespace C3DE.Editor
 
         private void OnSceneObjectSelected(BasicMessage m)
         {
-            var soMessage = m as GenericMessage<SceneObject>;
+            var soMessage = m as GenericMessage<GameObject>;
             var sceneObject = soMessage != null ? soMessage.Value : null;
 
             if (sceneObject != null)

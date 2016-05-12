@@ -12,7 +12,7 @@ namespace C3DE.Editor.Exporters
 
         public static string ExportMeshes(MeshRenderer[] renderers)
         {
-            var sceneObject = new SceneObject("MergedObject");
+            var sceneObject = new GameObject("MergedObject");
             var renderer = sceneObject.AddComponent<MeshRenderer>();
             renderer.Geometry = MeshMerger.Merge(renderers);
             return Export(renderer);

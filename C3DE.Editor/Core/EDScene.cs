@@ -28,7 +28,7 @@ namespace C3DE.Editor.Core
         internal Light light;
         internal TerrainPrefab grid;
         private List<string> _addList;
-        private List<SceneObject> _removeList;
+        private List<GameObject> _removeList;
         private SceneObjectSelector _selectedObject;
         private BasicEditionSceneObject _editionSceneObject;
         private bool pendingAdd = false;
@@ -45,7 +45,7 @@ namespace C3DE.Editor.Core
             : base(name)
         {
             _addList = new List<string>();
-            _removeList = new List<SceneObject>();
+            _removeList = new List<GameObject>();
             _selectedObject = new SceneObjectSelector();
             _editionSceneObject = new BasicEditionSceneObject();
             _gizmo = gizmo;
@@ -289,7 +289,7 @@ namespace C3DE.Editor.Core
 
         private T CreateAddSceneObject<T>(string name, bool tag = true) where T : Component, new()
         {
-            var sceneObject = new SceneObject(name);
+            var sceneObject = new GameObject(name);
 
             if (tag)
                 sceneObject.Tag = EditorTag;
@@ -315,7 +315,7 @@ namespace C3DE.Editor.Core
 
         private void InternalAddSceneObject(string type)
         {
-            SceneObject sceneObject = null;
+            GameObject sceneObject = null;
 
             switch (type)
             {
@@ -363,9 +363,9 @@ namespace C3DE.Editor.Core
             InternalAddSceneObject(sceneObject);
         }
 
-        private SceneObject CreateLightNode(string name, LightType type)
+        private GameObject CreateLightNode(string name, LightType type)
         {
-            var sceneObject = new SceneObject(name);
+            var sceneObject = new GameObject(name);
             sceneObject.AddComponent<EDBoxCollider>();
 
             var light = sceneObject.AddComponent<Light>();
@@ -381,7 +381,7 @@ namespace C3DE.Editor.Core
             return sceneObject;
         }
 
-        private void InternalAddSceneObject(SceneObject sceneObject)
+        private void InternalAddSceneObject(GameObject sceneObject)
         {
             var collider = sceneObject.GetComponent<Collider>();
             if (collider != null)
@@ -392,7 +392,7 @@ namespace C3DE.Editor.Core
             SelectObject(sceneObject);
         }
 
-        private void InternalRemoveSceneObject(SceneObject sceneObject)
+        private void InternalRemoveSceneObject(GameObject sceneObject)
         {
             Messenger.Notify(EditorEvent.SceneObjectRemoved, sceneObject.Id);
             Remove(sceneObject, true);
@@ -402,7 +402,7 @@ namespace C3DE.Editor.Core
 
         #region Select / Unselect a SceneObject
 
-        private void SelectObject(SceneObject sceneObject)
+        private void SelectObject(GameObject sceneObject)
         {
             UnselectObject();
 
@@ -410,7 +410,7 @@ namespace C3DE.Editor.Core
             _selectedObject.Select(true);
             _editionSceneObject.Selected = sceneObject;
             _gizmo.Selection.Add(sceneObject.Transform);
-            Messenger.Notify(EditorEvent.SceneObjectSelected, new GenericMessage<SceneObject>(sceneObject));
+            Messenger.Notify(EditorEvent.SceneObjectSelected, new GenericMessage<GameObject>(sceneObject));
         }
 
         private void UnselectObject(BasicMessage m = null)
@@ -426,7 +426,7 @@ namespace C3DE.Editor.Core
             SetSelected(FindById(id));
         }
 
-        private void SetSelected(SceneObject sceneObject)
+        private void SetSelected(GameObject sceneObject)
         {
             if (sceneObject != null)
             {
@@ -439,7 +439,7 @@ namespace C3DE.Editor.Core
                 _selectedObject.Select(true);
                 _editionSceneObject.Selected = sceneObject;
 
-                Messenger.Notify(EditorEvent.SceneObjectSelected, new GenericMessage<SceneObject>(sceneObject));
+                Messenger.Notify(EditorEvent.SceneObjectSelected, new GenericMessage<GameObject>(sceneObject));
             }
         }
 
@@ -476,7 +476,7 @@ namespace C3DE.Editor.Core
 
         #region Utility / Misc
 
-        public SceneObject[] GetSceneObjects()
+        public GameObject[] GetSceneObjects()
         {
             return sceneObjects.ToArray();
         }
@@ -493,9 +493,9 @@ namespace C3DE.Editor.Core
             return list.ToArray();
         }
 
-        public SceneObject[] GetUsedSceneObjects()
+        public GameObject[] GetUsedSceneObjects()
         {
-            var list = new List<SceneObject>();
+            var list = new List<GameObject>();
 
             for (int i = 0, l = sceneObjects.Count; i < l; i++)
                 if (sceneObjects[i].Tag != EditorTag)

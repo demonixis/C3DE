@@ -10,7 +10,7 @@ using System.Runtime.Serialization;
 namespace C3DE.Prefabs
 {
     [DataContract]
-    public class WaterPrefab : SceneObject
+    public class WaterPrefab : GameObject
     {
         protected MeshRenderer renderer;
         protected WaterMaterial material;

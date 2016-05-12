@@ -8,7 +8,7 @@ namespace C3DE.Editor.Controls
     /// </summary>
     public partial class SceneObjectControl : UserControl
     {
-        private SceneObject sceneObject;
+        private GameObject sceneObject;
 
         public bool SceneObjectEnabled
         {
@@ -50,14 +50,14 @@ namespace C3DE.Editor.Controls
             InitializeComponent();
         }
 
-        public SceneObjectControl(SceneObject so)
+        public SceneObjectControl(GameObject so)
             : this()
         {
             sceneObject = so;
             DataContext = this;
         }
 
-        public void Set(SceneObject so)
+        public void Set(GameObject so)
         {
             sceneObject = so;
             DataContext = this;

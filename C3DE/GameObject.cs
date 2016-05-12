@@ -9,7 +9,7 @@ namespace C3DE
     /// A scene object is the base object on the scene.
     /// </summary>
     [DataContract]
-    public class SceneObject : ICloneable, IDisposable
+    public class GameObject : ICloneable, IDisposable
     {
         #region Private/protected declarations
 
@@ -58,7 +58,7 @@ namespace C3DE
                     {
                         for (int i = 0, l = transform.Transforms.Count; i < l; i++)
                             transform.Transforms[i].SceneObject.Enabled = value;
-                    }                  
+                    }
                 }
             }
         }
@@ -118,29 +118,39 @@ namespace C3DE
         /// <summary>
         /// Create a basic scene object.
         /// </summary>
-        public SceneObject()
+        public GameObject()
         {
-            transform = new Transform();
-            transform.SceneObject = this;
-
-            components = new List<Component>(5);
-            components.Add(transform);
-
-            transform.Awake();
-
-            enabled = true;
-            initialized = false;
-            IsStatic = false;
-            IsPrefab = false;
-
-            Id = "SO_" + Guid.NewGuid();
-            Name = "SceneObject-" + Guid.NewGuid();
+            InternalConstructor();
         }
 
-        public SceneObject(string name)
+        public GameObject(string name)
             : this()
         {
-            Name = name;
+            InternalConstructor(name);
+        }
+
+        private void InternalConstructor(string name = "")
+        {
+            if (transform == null)
+            {
+                transform = new Transform();
+                transform.SceneObject = this;
+                transform.PropertyChanged += OnComponentChanged;
+                transform.Awake();
+
+                components = new List<Component>(5);
+                components.Add(transform);
+
+                transform.Awake();
+
+                enabled = true;
+                initialized = false;
+                IsStatic = false;
+                IsPrefab = false;
+
+                Id = "SO_" + Guid.NewGuid();
+                Name = string.IsNullOrEmpty(name) ? "SceneObject-" + Guid.NewGuid() : name;
+            }
         }
 
         #endregion
@@ -160,7 +170,7 @@ namespace C3DE
 
                 for (int i = 0; i < components.Count; i++)
                 {
-                    components[i].initialized = true;
+                    components[i].started = true;
                     components[i].Start();
                 }
             }
@@ -185,7 +195,7 @@ namespace C3DE
         /// </summary>
         /// <param name="sceneObject">The scene object to add.</param>
         /// <returns>Return true if added, otherwise return false.</returns>
-        public virtual bool Add(SceneObject sceneObject)
+        public virtual bool Add(GameObject sceneObject)
         {
             if (!transform.Transforms.Contains(sceneObject.transform) && sceneObject != this)
             {
@@ -219,7 +229,7 @@ namespace C3DE
         /// </summary>
         /// <param name="sceneObject">The scene object to remove.</param>
         /// <returns>Return true if succed, otherwise return false.</returns>
-        public virtual bool Remove(SceneObject sceneObject)
+        public virtual bool Remove(GameObject sceneObject)
         {
             if (sceneObject.transform.Parent == transform)
             {
@@ -240,38 +250,29 @@ namespace C3DE
             if (component == null)
                 return null;
 
-            if (component is Transform)
+            var serializedTransform = component as Transform;
+
+            // Called during the deserialization.
+            if (serializedTransform != null)
             {
-                // Deserialization case
-                var tr = (Transform)component;
-
-                if (transform != null)
-                {
-                    transform.Position = tr.Position;
-                    transform.Rotation = tr.Rotation;
-                    transform.LocalScale = tr.LocalScale;
-                }
-                else
-                    transform = tr;
-
-                // Deserialization
-                if (components.Count == 0)
-                    components.Add(transform);
-
-                return transform;
+                // The constructor hasn't be called
+                InternalConstructor(Name);
+                transform.Position = serializedTransform.Position;
+                transform.Rotation = serializedTransform.Rotation;
+                transform.LocalScale = serializedTransform.LocalScale;
             }
-
-            component.SceneObject = this;
-            component.Awake();
-            component.PropertyChanged += OnComponentChanged;
-
-            components.Add(component);
+            else
+            {
+                component.SceneObject = this;
+                component.Awake();
+                component.PropertyChanged += OnComponentChanged;
+                components.Add(component);
+            }
 
             if (initialized && !component.Initialized)
             {
-                component.initialized = true;
                 component.Start();
-
+                component.started = true;
                 // Sort components here only if the SceneObject is already initialized.
                 components.Sort();
             }
@@ -392,24 +393,22 @@ namespace C3DE
 
         public object Clone()
         {
-            SceneObject clone = new SceneObject(Name.Replace(" (Clone)", "") + " (Clone)");
-            Component cpnClone = null;
-            Transform trClone = null;
+            var clone = new GameObject(Name.Replace(" (Clone)", "") + " (Clone)");
+            Component clonedComponent = null;
+            Transform clonedTransform = null;
 
             foreach (Component component in components)
             {
-                cpnClone = clone.AddComponent((Component)component.Clone());
-                cpnClone.sceneObject = clone;
+                clonedComponent = clone.AddComponent((Component)component.Clone());
+                clonedComponent.sceneObject = clone;
 
-                if (cpnClone is Transform)
-                    trClone = (Transform)cpnClone;
+                clonedTransform = clonedComponent as Transform;
 
-                if (trClone != null)
-                    cpnClone.transform = trClone;
+                if (clonedTransform != null)
+                    clonedComponent.transform = clonedTransform;
             }
 
-            // Fixme
-            clone.Id = "SO-" + Guid.NewGuid();
+            clone.Id = "GameObject_" + Guid.NewGuid();
             clone.Tag = Tag;
 
             return clone;

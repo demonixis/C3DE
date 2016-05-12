@@ -109,6 +109,7 @@ namespace C3DE
         {
             if (width == 0)
                 width = 800;
+
             if (height == 0)
                 height = 480;
 
@@ -144,7 +145,7 @@ namespace C3DE
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        public static float GetScaleX(float value)
+        public static float ScaleX(float value)
         {
             return (((float)Width * value) / (float)VirtualWidth);
         }
@@ -154,7 +155,7 @@ namespace C3DE
         /// </summary>
         /// <param name="value">The default Y coordinate used with the reference height</param>
         /// <returns>A scaled Y coordinate</returns>
-        public static float GetScaleY(float value)
+        public static float ScaleY(float value)
         {
             return (((float)Height * value) / (float)VirtualHeight);
         }
