@@ -133,15 +133,14 @@ namespace C3DE
         {
             if (transform == null)
             {
+                components = new List<Component>(5);
+                
                 transform = new Transform();
+                transform.transform = transform;
                 transform.SceneObject = this;
                 transform.PropertyChanged += OnComponentChanged;
                 transform.Awake();
-
-                components = new List<Component>(5);
                 components.Add(transform);
-
-                transform.Awake();
 
                 enabled = true;
                 initialized = false;
@@ -264,6 +263,7 @@ namespace C3DE
             else
             {
                 component.SceneObject = this;
+                component.transform = transform;
                 component.Awake();
                 component.PropertyChanged += OnComponentChanged;
                 components.Add(component);
