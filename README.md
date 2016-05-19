@@ -1,7 +1,7 @@
 C3DE : Cool 3D Engine
 =====================
 
-### What is it ?
+### The project
 C3DE is a research/learning project. The aim is to create a modest but powerful enough 3D engine powered by the MonoGame Framework. This project is composed of
 * An engine
 * An editor (Windows only for now)
@@ -25,6 +25,9 @@ C3DE is a research/learning project. The aim is to create a modest but powerful 
 - UI management (Button, Checkbox, Label, Slider, Texture) 
 
 * Models support is not yet complete because the engine uses its own format for rendering things. It's planned later in the roadmap to convert an XNA model into a C3DE model.
+
+### This feature is broken
+As I already said, it's a **reseach project**, but you are **free** to fix it by sending a pull request. However you've to follow the [coding convention](https://msdn.microsoft.com/en-US/library/ff926074.aspx). 
 
 ### Sample
 
@@ -66,18 +69,21 @@ public class SuperCoolGame : Scene
 
 ### Supported Platforms
 - Windows (DirectX)
-
-I'm currently in a big refactoring step. Due to the complexity of managing multiples solutions, the develop branch only supports Windows. When the refactoring will be done, I'll re add support for
-- Desktop GL (Linux, Mac, Windows)
-- Android
-- Windows Universal Apps
+- Other: later
 
 ### Requirement
-You must install the [MonoGame Framework](http://www.monogame.net/downloads/) from the installer or update the solution with your custom build of the Framework.
-If you want to build the editor or the demos, you must install MonoGame because projects uses the new Content Build System.
+You **must** install the [MonoGame Framework](http://www.monogame.net/downloads/) from the installer.
 
 ### Editor
-First you have to build the demo project and copy the content folder with all xnb into the generated build folder of the editor.
+The editor is in **early stage** and can't be used to create level or anything for now. The project uses the **Nuget package system** for dependency management.
+If you don't want to use `Nuget`, you've to install the [Extended WPF Toolkit](http://wpftoolkit.codeplex.com/) 2.5.
+If you really want to try the editor, you've to follow this procedure
+1. Compile the assets of the demo project using [MGCB](http://www.monogame.net/documentation/?page=MGCB) or [Pipeline](http://www.monogame.net/documentation/?page=Pipeline)
+2. Compile the assets of the editor [MGCB](http://www.monogame.net/documentation/?page=MGCB) or [Pipeline](http://www.monogame.net/documentation/?page=Pipeline)
+3. Compile the editor
+4. Create a folder named `Content` and copy the compiled assets of the editor and the demos in it.
+5. Move this folder into the build folder of the editor (`Release/bin` or `Debug/bin`)
+6. Start the editor (from Visual Studio or the executable).
 
-### Licence
+### License
 C3DE is released under the MIT License, please take your time to read the LICENSE file for more informations.
