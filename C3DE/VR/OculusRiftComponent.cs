@@ -10,8 +10,13 @@ namespace C3DE.VR
             : base(game)
         {
             rift = new OculusRift();
-            rift.Init(game.GraphicsDevice);
             game.Components.Add(this);
+        }
+
+        public override void Initialize()
+        {
+            base.Initialize();
+            rift.Init(Game.GraphicsDevice);
         }
 
         public override void Update(GameTime gameTime)
