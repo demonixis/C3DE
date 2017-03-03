@@ -1,5 +1,6 @@
 ﻿using C3DE.Demo.Scripts;
 using C3DE.Prefabs;
+using C3DE.Rendering;
 using C3DE.UI;
 
 namespace C3DE.Demo.Scenes
@@ -18,6 +19,8 @@ namespace C3DE.Demo.Scenes
             camera.AddComponent<MenuBehaviour>();
             camera.AddComponent<PointerCoordDebug>();
             Add(camera);
+
+            Application.Engine.Renderer = new OculusRiftRenderer();
         }
     }
 }
