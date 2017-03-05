@@ -55,17 +55,17 @@ namespace C3DE.Materials
         [DataMember]
         public ShaderQuality ShaderQuality { get; set; }
 
-        public Material()
-        {
-            diffuseColor = Color.White.ToVector3();
-            Id = "MAT-" + Guid.NewGuid();
-            Name = "Material_" + Id;
-            Tiling = Vector2.One;
-            Offset = Vector2.Zero;
-            ShaderQuality = ShaderQuality.Normal;
-            hasAlpha = false;
+		public Material()
+		{
+			diffuseColor = Color.White.ToVector3();
+			Id = "MAT-" + Guid.NewGuid();
+			Name = "Material_" + Id;
+			Tiling = Vector2.One;
+			Offset = Vector2.Zero;
+			ShaderQuality = ShaderQuality.Normal;
+			hasAlpha = false;
 
-#if ANDROID || OPENGL
+#if ANDROID || OPENGL || DESKTOP
             ShaderQuality = ShaderQuality.Low;
 #endif
         }
