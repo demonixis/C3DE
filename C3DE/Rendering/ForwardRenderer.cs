@@ -14,10 +14,15 @@ namespace C3DE.Rendering
     {
         protected RenderTarget2D sceneRT;
 
+        public ForwardRenderer(GraphicsDevice graphics)
+           : base(graphics)
+        {
+        }
+
         public override void Initialize(ContentManager content)
         {
             base.Initialize(content);
-            sceneRT = new RenderTarget2D(m_graphicsDevice, m_graphicsDevice.Viewport.Width, m_graphicsDevice.Viewport.Height, false, SurfaceFormat.Color, DepthFormat.Depth24, 0, RenderTargetUsage.DiscardContents);
+            RebuildRenderTargets();
         }
 
         /// <summary>
@@ -29,7 +34,6 @@ namespace C3DE.Rendering
             m_graphicsDevice.SetRenderTarget(sceneRT);
             m_graphicsDevice.Clear(camera.clearColor);
             m_graphicsDevice.DepthStencilState = DepthStencilState.Default;
-
             base.RenderObjects(scene, camera);
         }
 
@@ -46,14 +50,14 @@ namespace C3DE.Rendering
 
         protected override void renderPostProcess(List<PostProcessPass> passes)
         {
-            if (passes.Count > 0)
-            {
-                for (int i = 0, l = passes.Count; i < l; i++)
-                {
-                    if (passes[i].Enabled)
-                        passes[i].Apply(m_spriteBatch, sceneRT);
-                }
-            }
+            if (passes.Count == 0)
+                return;
+
+            m_graphicsDevice.SetRenderTarget(sceneRT);
+
+            for (int i = 0, l = passes.Count; i < l; i++)
+                if (passes[i].Enabled) 
+                    passes[i].Apply(m_spriteBatch, sceneRT);
         }
 
         /// <summary>
@@ -68,28 +72,28 @@ namespace C3DE.Rendering
         /// <param name="camera">The camera to use for render.</param>
         public override void Render(Scene scene)
         {
-            if (scene != null)
-            {
-                RebuildRenderTargets();
-                RenderSceneForCamera(scene, scene.cameras[0]);
-            }
+            if (scene == null)
+                return;
+
+            RebuildRenderTargets();
+            RenderSceneForCamera(scene, scene.cameras[0]);
         }
 
         protected virtual void RebuildRenderTargets()
         {
-            if (NeedsBufferUpdate)
-            {
-                sceneRT = new RenderTarget2D(m_graphicsDevice, m_graphicsDevice.Viewport.Width, m_graphicsDevice.Viewport.Height, false, SurfaceFormat.Color, DepthFormat.Depth24, 0, RenderTargetUsage.DiscardContents);
-                NeedsBufferUpdate = false;
-            }
+            if (!NeedsBufferUpdate)
+                return;
+
+            sceneRT = new RenderTarget2D(m_graphicsDevice, m_graphicsDevice.Viewport.Width, m_graphicsDevice.Viewport.Height, false, SurfaceFormat.Color, DepthFormat.Depth24, 0, RenderTargetUsage.DiscardContents);
+            NeedsBufferUpdate = false;
         }
 
         protected virtual void RenderSceneForCamera(Scene scene, Camera camera)
         {
             RenderShadowMaps(scene);
             RenderObjects(scene, camera);
-            renderBuffers();
             renderPostProcess(scene.postProcessPasses);
+            renderBuffers();
             RenderUI(scene.Behaviours);
         }
 

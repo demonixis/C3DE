@@ -1,6 +1,7 @@
 ﻿using C3DE.Components;
 using C3DE.PostProcess;
 using C3DE.UI;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
@@ -13,21 +14,24 @@ namespace C3DE.Rendering
         protected SpriteBatch m_spriteBatch;
         protected internal GUI uiManager;
 
-        public bool NeedsBufferUpdate { get; set; }
+        public bool NeedsBufferUpdate { get; set; } = true;
 
-        public Renderer()
+        public Renderer(GraphicsDevice graphics)
         {
-            NeedsBufferUpdate = false;
+            m_graphicsDevice = graphics;
         }
 
         public virtual void Initialize(ContentManager content)
         {
-            m_graphicsDevice = Application.GraphicsDevice;
             m_spriteBatch = new SpriteBatch(m_graphicsDevice);
             uiManager = new GUI(m_spriteBatch);
             uiManager.LoadContent(content);
         }
 
+        /// <summary>
+        /// Renders shadowmaps.
+        /// </summary>
+        /// <param name="scene"></param>
         protected virtual void RenderShadowMaps(Scene scene)
         {
             for (int i = 0, l = scene.Lights.Count; i < l; i++)
@@ -45,7 +49,6 @@ namespace C3DE.Rendering
                 scene.materials[scene.materialsEffectIndex[i]].PrePass(camera);
 
             // Pass, Update matrix, material attributes, etc.
-            // Note: The renderList contains ONLY enabled components/objects.
             for (int i = 0; i < scene.renderList.Count; i++)
             {
                 scene.renderList[i].Material.Pass(scene.RenderList[i]);

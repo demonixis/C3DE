@@ -16,13 +16,17 @@ namespace C3DE.Demo.Scenes
 {
     public class PreLightingDemo : Scene
     {
+        private Rendering.Renderer _prevRenderer;
+
         public PreLightingDemo() : base("PrelLighting Renderer") { }
 
         public override void Initialize()
         {
             base.Initialize();
 
-            Application.Engine.Renderer = new PreLightRenderer();
+            _prevRenderer = Application.Engine.Renderer;
+
+            Application.Engine.Renderer = new PreLightRenderer(Application.GraphicsDevice);
 
             // Camera
             var camPrefab = new CameraPrefab("camera");
@@ -68,16 +72,16 @@ namespace C3DE.Demo.Scenes
             Screen.ShowCursor = true;
 
             var margin = 80;
-            AddBackedLight(new Vector3(0, 15, 0), Color.DarkCyan, 35);
-            AddBackedLight(new Vector3(margin, 15, margin), Color.Red);
-            AddBackedLight(new Vector3(-margin, 15, margin), Color.Blue);
-            AddBackedLight(new Vector3(margin, 15, -margin), Color.Green);
-            AddBackedLight(new Vector3(-margin, 15, -margin), Color.Yellow);
+            AddLight(new Vector3(0, 15, 0), Color.DarkCyan, 35);
+            AddLight(new Vector3(margin, 15, margin), Color.Red);
+            AddLight(new Vector3(-margin, 15, margin), Color.Blue);
+            AddLight(new Vector3(margin, 15, -margin), Color.Green);
+            AddLight(new Vector3(-margin, 15, -margin), Color.Yellow);
         }
 
         public override void Unload()
         {
-            Application.Engine.Renderer = new ForwardRenderer();
+            Application.Engine.Renderer = _prevRenderer;
             base.Unload();
         }
 
@@ -124,7 +128,7 @@ namespace C3DE.Demo.Scenes
             return renderer;
         }
 
-        private void AddBackedLight(Vector3 position, Color color, float range = 65f)
+        private void AddLight(Vector3 position, Color color, float range = 65f)
         {
             var sceneObject = new GameObject("Light_" + color.ToString());
             sceneObject.Transform.Position = position;

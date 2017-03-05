@@ -93,7 +93,8 @@ namespace C3DE.Components.Lights
         /// <param name="camera"></param>
         public void RenderShadows(GraphicsDevice device, List<Renderer> renderList)
         {
-            _boundingSphere = new BoundingSphere();
+            _boundingSphere.Center = Vector3.Zero;
+            _boundingSphere.Radius = 0.0f;
 
             if (renderList.Count > 0)
             {
