@@ -29,8 +29,8 @@ namespace C3DE.PostProcess
             _covolutionEffect = content.Load<Effect>("FX/PostProcess/Convolution");
 			_screenSize = new Vector2(Screen.Width, Screen.Height);
 
-            if (Application.Engine.VREnabled)
-                _screenSize.X *= 0.5f;
+            /*if (Application.Engine.VREnabled)
+                _screenSize.X *= 0.5f;*/
         }
 
         public override void Apply(SpriteBatch spriteBatch, RenderTarget2D renderTarget)

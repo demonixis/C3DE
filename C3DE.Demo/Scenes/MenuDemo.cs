@@ -16,7 +16,6 @@ namespace C3DE.Demo.Scenes
 
             var camera = new CameraPrefab("cam");
             camera.AddComponent<MenuBehaviour>();
-            camera.AddComponent<PointerCoordDebug>();
             Add(camera);
         }
     }

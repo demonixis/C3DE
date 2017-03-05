@@ -20,7 +20,7 @@ namespace C3DE
         public RenderSettings RenderSettings { get; set; }
 
         [DataMember]
-        public GameObject[] SceneObjects { get; set; }
+        public GameObject[] GameObjects { get; set; }
 
         [DataMember]
         public Material[] Materials { get; set; }
@@ -218,7 +218,7 @@ namespace C3DE
                 _needRemoveCheck = false;
             }
 
-            // Second - Check if we need to remove some SceneObjectlists.
+            // Second - Check if we need to remove some GameObjectlists.
             //sceneObjects.Check();
 
             // Third - Safe update
@@ -272,7 +272,7 @@ namespace C3DE
 
         #endregion
 
-        #region SceneObjects/Components management
+        #region GameObjects/Components management
 
         public override bool Add(GameObject sceneObject)
         {
@@ -294,8 +294,8 @@ namespace C3DE
                     if (sceneObject.Enabled)
                     {
                         CheckComponents(sceneObject, ComponentChangeType.Add);
-                        sceneObject.PropertyChanged += OnSceneObjectPropertyChanged;
-                        sceneObject.ComponentChanged += OnSceneObjectComponentChanged;
+                        sceneObject.PropertyChanged += OnGameObjectPropertyChanged;
+                        sceneObject.ComponentChanged += OnGameObjectComponentChanged;
                     }
 
                     if (initialized && !sceneObject.Initialized)
@@ -394,7 +394,7 @@ namespace C3DE
             }
         }
 
-        private void OnSceneObjectPropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void OnGameObjectPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.Name == "Enabled")
             {
@@ -402,12 +402,12 @@ namespace C3DE
                 if (sceneObject.Enabled)
                 {
                     CheckComponents(sceneObject, ComponentChangeType.Add);
-                    sceneObject.ComponentChanged += OnSceneObjectComponentChanged;
+                    sceneObject.ComponentChanged += OnGameObjectComponentChanged;
                 }
                 else
                 {
                     CheckComponents(sceneObject, ComponentChangeType.Remove);
-                    sceneObject.ComponentChanged -= OnSceneObjectComponentChanged;
+                    sceneObject.ComponentChanged -= OnGameObjectComponentChanged;
                 }
             }
         }
@@ -418,7 +418,7 @@ namespace C3DE
         /// </summary>
         /// <param name="sender">The scene object which as added or removed a component.</param>
         /// <param name="e">An object which contains the component and a flag to know if it's added or removed.</param>
-        private void OnSceneObjectComponentChanged(object sender, ComponentChangedEventArgs e)
+        private void OnGameObjectComponentChanged(object sender, ComponentChangedEventArgs e)
         {
             if (e.ChangeType == ComponentChangeType.Update)
             {
@@ -573,7 +573,7 @@ namespace C3DE
 
         #endregion
 
-        #region Destroy SceneObjects/Components
+        #region Destroy GameObjects/Components
 
         private int GetFirstNullRemovedComponent()
         {
@@ -676,7 +676,7 @@ namespace C3DE
             return null;
         }
 
-        public static GameObject[] FindSceneObjectsById(string id)
+        public static GameObject[] FindGameObjectsById(string id)
         {
             var sceneObjects = new List<GameObject>();
 

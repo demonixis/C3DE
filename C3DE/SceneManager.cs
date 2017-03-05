@@ -18,6 +18,11 @@ namespace C3DE
             get { return _scenes[index]; }
         }
 
+        public Scene ActiveScene
+        {
+            get { return _activeSceneIndex >= 0 ? _scenes[_activeSceneIndex] : null; }
+        }
+
         public int Count
         {
             get { return _scenes.Count; }

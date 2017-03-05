@@ -52,6 +52,7 @@
     <Compile Include="Components\Controllers\Mobile\VirtualGamepad.cs" />
     <Compile Include="Components\Lights\Light.cs" />
     <Compile Include="Components\Renderers\MeshRenderer.cs" />
+    <Compile Include="Rendering\VRRenderer.cs" />
     <Compile Include="Extensions\QuaternionExtensions.cs" />
     <Compile Include="Input.cs" />
     <Compile Include="Materials\BillboardMaterial.cs" />
@@ -89,7 +90,6 @@
     <Compile Include="Materials\TransparentMaterial.cs" />
     <Compile Include="PostProcess\SimpleBlurPass.cs" />
     <Compile Include="Rendering\Renderer.cs" />
-    <Compile Include="Rendering\VRRenderer.cs" />
     <Compile Include="RenderSettings.cs" />
     <Compile Include="Resources\ResourcesHelper.cs" />
     <Compile Include="SceneManager.cs" />
@@ -127,7 +127,9 @@
     <Compile Include="Utils\NoiseGenerator.cs" />
     <Compile Include="Utils\RandomHelper.cs" />
     <Compile Include="Rendering\PreLightRenderer.cs" />
-    <Compile Include="VR\OculusRiftDK2013_Metric.cs" />
+    <Compile Include="VR\IVRDevice.cs" />
+    <Compile Include="VR\OculusRift.cs" />
+    <Compile Include="VR\OculusRiftService.cs" />
   </ItemGroup>
   <!--
   <ItemGroup>

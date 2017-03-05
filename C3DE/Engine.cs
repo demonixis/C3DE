@@ -11,28 +11,18 @@ namespace C3DE
     /// </summary>
     public class Engine : Game
     {
-        private Renderer _rendererToChange;
-        private bool _needRendererChange;
         private bool _autoDetectResolution;
         private bool _requestFullscreen;
         protected GraphicsDeviceManager graphics;
         protected Renderer renderer;
+        private Renderer m_nextRenderer;
         protected SceneManager sceneManager;
         protected bool initialized;
 
         public Renderer Renderer
         {
             get { return renderer; }
-            set
-            {
-                _rendererToChange = value;
-                _needRendererChange = true;
-            }
-        }
-
-        public bool VREnabled
-        {
-            get { return renderer is VRRenderer; }
+            set { m_nextRenderer = value; }
         }
 
         /// <summary>
@@ -43,7 +33,7 @@ namespace C3DE
         /// <param name="width">Desired screen width.</param>
         /// <param name="height">Desired screen height.</param>
         /// <param name="fullscreen">Sets to true to use the fullscreen mode.</param>
-        public Engine(string title = "C3DE Game Demo", int width = 0, int height = 0, bool fullscreen = false)
+        public Engine(string title = "C3DE Game", int width = 0, int height = 0, bool fullscreen = false)
             : base()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -55,7 +45,6 @@ namespace C3DE
             initialized = false;
             _autoDetectResolution = false;
             _requestFullscreen = false;
-            _needRendererChange = false;
 
             Application.Content = Content;
             Application.Engine = this;
@@ -83,22 +72,6 @@ namespace C3DE
             Screen.Setup(width, height, null, null);
         }
 
-        protected void SetRenderer(Renderer iRenderer)
-        {
-            renderer = iRenderer;
-
-            if (initialized)
-            {
-#if ANDROID
-                Screen.Setup (GraphicsDevice.Adapter.CurrentDisplayMode.Width, GraphicsDevice.Adapter.CurrentDisplayMode.Height, null, null);
-#elif LINUX
-                Screen.Setup(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight, null, null);
-                GraphicsDevice.Viewport = new Viewport(0, 0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
-#endif
-                renderer.Initialize(Content);
-            }
-        }
-
         protected override void Initialize()
         {
             if (Application.GraphicsDevice == null)
@@ -115,9 +88,10 @@ namespace C3DE
                 Screen.SetBestResolution(_requestFullscreen);
 
             if (renderer == null)
-                renderer = new ForwardRenderer();
-
-            renderer.Initialize(Content);
+            {
+                renderer = new ForwardRenderer(GraphicsDevice);
+                renderer.Initialize(Content);
+            }
 
             Serializr.AddTypes(typeof(Engine));
 
@@ -146,7 +120,7 @@ namespace C3DE
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.Black);
-            renderer.Render(Scene.current);
+            renderer.Render(sceneManager.ActiveScene);
             base.Draw(gameTime);
         }
 
@@ -155,10 +129,11 @@ namespace C3DE
             if (Screen.LockCursor)
                 Mouse.SetPosition(Screen.WidthPerTwo, Screen.HeightPerTwo);
 
-            if (_needRendererChange)
+            if (m_nextRenderer != null)
             {
-                SetRenderer(_rendererToChange);
-                _needRendererChange = false;
+                renderer = m_nextRenderer;
+                renderer.Initialize(Content);
+                m_nextRenderer = null;
             }
 
             base.EndDraw();

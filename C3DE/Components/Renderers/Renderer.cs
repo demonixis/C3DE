@@ -15,12 +15,12 @@ namespace C3DE.Components.Renderers
     {
         [DataMember]
         internal protected BoundingSphere boundingSphere;
-        
         [DataMember]
         internal protected BoundingBox boundingBox;
-
         [DataMember]
         internal protected int materialIndex;
+        [DataMember]
+        internal protected Material material;
 
         /// <summary>
         /// Indicates whether the object can cast shadow. 
@@ -49,8 +49,8 @@ namespace C3DE.Components.Renderers
         /// </summary>
         public Material Material
         {
-            get { return materialIndex > -1 ? sceneObject.Scene.materials[materialIndex] : sceneObject.Scene.defaultMaterial; }
-            set { materialIndex = value.Index; }
+            get { return material; }
+            set { material = value; }
         }
 
         /// <summary>

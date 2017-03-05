@@ -20,8 +20,8 @@ namespace C3DE.Rendering
         private Effect _depthNormalFX;
         private Effect _lightingFX;
 
-        public PreLightRenderer()
-            : base()
+        public PreLightRenderer(GraphicsDevice graphics)
+            : base(graphics)
         {
         }
 
