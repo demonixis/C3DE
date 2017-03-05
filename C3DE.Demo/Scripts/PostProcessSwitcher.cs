@@ -120,15 +120,6 @@ namespace C3DE.Demo.Scripts
 
         private void SetPassActive(int index)
         {
-            if (index == 0)
-                foreach (var pass in _passes)
-                    pass.Enabled = false;
-
-            if (index > 0)
-                _passes[index - 1].Enabled = true;
-
-            return;
-
             if (_activePassIndex > 0)
                 _passes[_activePassIndex - 1].Enabled = false;
 
