@@ -69,7 +69,7 @@ namespace C3DE.Rendering
             var pp = m_graphicsDevice.PresentationParameters;
 
             int height = pp.BackBufferHeight;
-            int width = Math.Min(pp.BackBufferWidth, (int)(height * rift.GetRenderTargetAspectRatio(eye)));
+            int width = Math.Min(pp.BackBufferWidth, (int)(height * vrDevice.GetRenderTargetAspectRatio(eye)));
             int offset = (pp.BackBufferWidth - width) / 2;
 
             m_spriteBatch.Begin();

@@ -35,6 +35,11 @@ namespace C3DE.VR
             return _oculusRift.SubmitRenderTargets(leftRT, rightRT);
         }
 
+		public float GetRenderTargetAspectRatio(int eye)
+		{
+			return _oculusRift.GetRenderTargetAspectRatio(eye);
+		}
+
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);

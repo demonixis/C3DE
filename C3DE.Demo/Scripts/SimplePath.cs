@@ -92,7 +92,7 @@ public class SimplePath : Behaviour
         Vector3 direction = Vector3.Normalize(target - transform.Position);
         transform.Position += direction * MoveSpeed * elapsedTime;
 
-        Vector3 lookDirection = target - transform.Position;
+        //Vector3 lookDirection = target - transform.Position;
 
 //        if (updateRotation)
   //          transform.Rotation = Quaternion.Slerp(transform.Rotation, Quaternion.LookRotation(lookDirection), rotationSpeed * Time.DeltaTime);

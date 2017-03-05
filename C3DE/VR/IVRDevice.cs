@@ -9,5 +9,6 @@ namespace C3DE.VR
         Matrix GetProjectionMatrix(int eye);
         Matrix GetViewMatrix(int eye, Matrix playerScale);
         int SubmitRenderTargets(RenderTarget2D leftRT, RenderTarget2D rightRT);
+		float GetRenderTargetAspectRatio(int eye);
     }
 }

@@ -5,54 +5,56 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace C3DE.VR
 {
-    public struct HmdInfo
-    {
-        public int Type;
-        public int VendorId;
-        public int ProductId;
-        public int FirmwareMajor;
-        public int FirmwareMinor;
-        public Point DisplayResolution;
-        public float DisplayRefreshRate;
-        public FovPort DefaultFovLeft;
-        public FovPort DefaultFovRight;
-        public FovPort MaxFovLeft;
-        public FovPort MaxFovRight;
-        public uint AvailableHmdCaps;
-        public uint DefaultHmdCaps;
-        public uint AvailableTrackingCap;
-        public uint DefaultTrackingCaps;
-    };
+	public struct HmdInfo
+	{
+		public int Type;
+		public int VendorId;
+		public int ProductId;
+		public int FirmwareMajor;
+		public int FirmwareMinor;
+		public Point DisplayResolution;
+		public float DisplayRefreshRate;
+		public FovPort DefaultFovLeft;
+		public FovPort DefaultFovRight;
+		public FovPort MaxFovLeft;
+		public FovPort MaxFovRight;
+		public uint AvailableHmdCaps;
+		public uint DefaultHmdCaps;
+		public uint AvailableTrackingCap;
+		public uint DefaultTrackingCaps;
+	};
 
-    public struct HeadTracking
-    {
-        public uint StatusFlags;
-        public Matrix HeadPose;
-        public Matrix EyePoseLeft;
-        public Matrix EyePoseRight;
-    };
+	public struct HeadTracking
+	{
+		public uint StatusFlags;
+		public Matrix HeadPose;
+		public Matrix EyePoseLeft;
+		public Matrix EyePoseRight;
+	};
 
-    public struct FovPort
-    {
-        public float UpTan;    // The tangent of the angle between the viewing vector and the top edge of the field of view.
-        public float DownTan;  // The tangent of the angle between the viewing vector and the bottom edge of the field of view.
-        public float LeftTan;  // The tangent of the angle between the viewing vector and the left edge of the field of view.
-        public float RightTan; // The tangent of the angle between the viewing vector and the right edge of the field of view.
-    }
+	public struct FovPort
+	{
+		public float UpTan;    // The tangent of the angle between the viewing vector and the top edge of the field of view.
+		public float DownTan;  // The tangent of the angle between the viewing vector and the bottom edge of the field of view.
+		public float LeftTan;  // The tangent of the angle between the viewing vector and the left edge of the field of view.
+		public float RightTan; // The tangent of the angle between the viewing vector and the right edge of the field of view.
+	}
 
 
-    public class OculusRift
-    {
-        private Matrix[] ProjectionMatrix = new Matrix[2];     // one for each eye
-        private Point[] RenderTargetRes = new Point[2]; // one for each eye
-        private HmdInfo HmdInfo;
-        private HeadTracking HeadTracking;
-        private GraphicsDevice _graphicsDevice;
-
-        // the following functions should be called in order
-        public int Initialize(GraphicsDevice graphics)
-        {
-            _graphicsDevice = graphics;
+	public class OculusRift
+	{
+		private Matrix[] ProjectionMatrix = new Matrix[2];     // one for each eye
+		private Point[] RenderTargetRes = new Point[2]; // one for each eye
+		private HeadTracking HeadTracking;
+#if WINDOWS
+		private HmdInfo HmdInfo;
+		private GraphicsDevice _graphicsDevice;
+#endif
+		// the following functions should be called in order
+		public int Initialize(GraphicsDevice graphics)
+		{
+#if WINDOWS
+			_graphicsDevice = graphics;
 
             IntPtr dxDevice, dxContext;
             _graphicsDevice.GetNativeDxDeviceAndContext(out dxDevice, out dxContext);
@@ -87,25 +89,36 @@ namespace C3DE.VR
                 ProjectionMatrix[eye] = NativeRift.GetProjectionMatrix(eye, 0.1f, 1000, 0);
 
             return 0;
-        }
+#else
+			return -1;
+#endif
+		}
 
-        public RenderTarget2D CreateRenderTargetForEye(int eye, SurfaceFormat surfaceFormat = SurfaceFormat.ColorSRgb, DepthFormat depthFormat = DepthFormat.Depth24Stencil8)
-        {
-            Point res = RenderTargetRes[eye];
-            return new RenderTarget2D(_graphicsDevice, res.X, res.Y, false, surfaceFormat, depthFormat);
-        }
+		public RenderTarget2D CreateRenderTargetForEye(int eye, SurfaceFormat surfaceFormat = SurfaceFormat.ColorSRgb, DepthFormat depthFormat = DepthFormat.Depth24Stencil8)
+		{
+#if WINDOWS
+			Point res = RenderTargetRes[eye];
+			return new RenderTarget2D(_graphicsDevice, res.X, res.Y, false, surfaceFormat, depthFormat);
+#else
+			return null;
+#endif
+		}
 
-        public HeadTracking TrackHead(int frame = 0)
-        {
-            return HeadTracking = NativeRift.TrackHead(frame);
-        }
+		public HeadTracking TrackHead(int frame = 0)
+		{
+			return HeadTracking = NativeRift.TrackHead(frame);
+		}
 
-        public int SubmitRenderTargets(RenderTarget2D rtLeft, RenderTarget2D rtRight, int frame = 0)
-        {
+		public int SubmitRenderTargets(RenderTarget2D rtLeft, RenderTarget2D rtRight, int frame = 0)
+		{
+#if WINDOWS
             var dxTexLeft = rtLeft.GetNativeDxResource();
             var dxTexRight = rtRight.GetNativeDxResource();
             return NativeRift.SubmitRenderTargets(dxTexLeft, dxTexRight, frame);
-        }
+#else
+			return -1;
+#endif
+		}
 
         public void Shutdown()
         {

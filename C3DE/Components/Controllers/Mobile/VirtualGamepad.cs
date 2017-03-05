@@ -20,8 +20,7 @@ namespace C3DE.Components.Controllers.Mobile
         private float _scale;
         private float _tdx;
         private float _tdy;
-        private bool _tTouched;
-        private bool _tReleased;
+		private bool _tReleased;
         private int _i;
         private bool _exitLoop;
 
@@ -99,7 +98,6 @@ namespace C3DE.Components.Controllers.Mobile
                 {
                     _tdx = Input.Touch.Delta(_i).X;
                     _tdy = Input.Touch.Delta(_i).Y;
-                    _tTouched = Input.Touch.Pressed(_i);
                     _tReleased = Input.Touch.Released(_i);
                     _exitLoop = true;
                 }

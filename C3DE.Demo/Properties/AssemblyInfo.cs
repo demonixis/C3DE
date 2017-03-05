@@ -1,33 +1,29 @@
 ﻿using System.Reflection;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
+#if __ANDROID__
+using Android.App;
+#endif
 
-// Les informations générales relatives à un assembly dépendent de 
-// l'ensemble d'attributs suivant. Changez les valeurs de ces attributs pour modifier les informations
-// associées à un assembly.
+// Information about this assembly is defined by the following attributes. 
+// Change them to the values specific to your project.
+
 [assembly: AssemblyTitle("C3DE.Demo")]
 [assembly: AssemblyDescription("C3DE Demo")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("The C3DE Team")]
 [assembly: AssemblyProduct("C3DE Demos")]
-[assembly: AssemblyCopyright("Copyright © C3DE 2014-2015")]
+[assembly: AssemblyCopyright("Copyright © C3DE 2014-2017")]
 [assembly: AssemblyTrademark("C3DE")]
 [assembly: AssemblyCulture("")]
 
-// L'affectation de la valeur false à ComVisible rend les types invisibles dans cet assembly 
-// aux composants COM.  Si vous devez accéder à un type dans cet assembly à partir de 
-// COM, affectez la valeur true à l'attribut ComVisible sur ce type.
-[assembly: ComVisible(false)]
+// The assembly version has the format "{Major}.{Minor}.{Build}.{Revision}".
+// The form "{Major}.{Minor}.*" will automatically update the build and revision,
+// and "{Major}.{Minor}.{Build}.*" will update just the revision.
 
-// Le GUID suivant est pour l'ID de la typelib si ce projet est exposé à COM
-[assembly: Guid("79266768-da4f-49e4-bea4-fd7fd82fbb15")]
+[assembly: AssemblyVersion("1.0.0")]
 
-// Les informations de version pour un assembly se composent des quatre valeurs suivantes :
-//
-//      Version principale
-//      Version secondaire 
-//      Numéro de build
-//      Révision
-//
-[assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("1.0.0.0")]
+// The following attributes are used to specify the signing key for the assembly, 
+// if desired. See the Mono documentation for more information about signing.
+
+//[assembly: AssemblyDelaySign(false)]
+//[assembly: AssemblyKeyFile("")]

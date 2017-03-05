@@ -159,7 +159,6 @@ namespace C3DE.Prefabs
             float terrainHeigth = 0.0f;
 
             float sizedPosX = (x / geometry.Size.X) / transform.LocalScale.X;
-            float sizedPosY = (y / geometry.Size.Y) / transform.LocalScale.Y;
             float sizedPosZ = (z / geometry.Size.Z) / transform.LocalScale.Z;
 
             int px = (int)((x / geometry.Size.X) / transform.LocalScale.X);

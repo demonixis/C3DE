@@ -9,7 +9,6 @@ namespace C3DE.Geometries
     {
         protected override void CreateGeometry()
         {
-            Vector2 topLeft = new Vector2(0.0f, 0.0f);
             Vector2 topRight = new Vector2(1.0f, 0.0f);
             Vector2 bottomLeft = new Vector2(0.0f, 1.0f);
             Vector2 bottomRight = new Vector2(1.0f, 1.0f);
