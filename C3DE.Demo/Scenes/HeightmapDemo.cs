@@ -3,6 +3,7 @@ using C3DE.Demo.Scripts;
 using C3DE.Materials;
 using C3DE.Prefabs;
 using C3DE.Rendering;
+using C3DE.VR;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -62,6 +63,11 @@ namespace C3DE.Demo.Scenes
             // And fog
             RenderSettings.FogDensity = 0.0085f;
             RenderSettings.FogMode = FogMode.Exp2;
+
+            var openVRDevice = new OpenVRService(Application.Engine);
+            var vrRenderer = new VRRenderer(Application.GraphicsDevice, openVRDevice);
+
+            Application.Engine.Renderer = vrRenderer;
         }
     }
 }

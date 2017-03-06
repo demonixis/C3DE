@@ -130,6 +130,8 @@
     <Compile Include="VR\IVRDevice.cs" />
     <Compile Include="VR\OculusRift.cs" />
     <Compile Include="VR\OculusRiftService.cs" />
+    <Compile Include="VR\OpenVRService.cs" />
+    <Compile Include="VR\openvr_api.cs" />
   </ItemGroup>
   <!--
   <ItemGroup>
