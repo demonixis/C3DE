@@ -2,12 +2,7 @@ C3DE : Cool 3D Engine
 =====================
 
 ### The project
-C3DE is a research/learning project. The aim is to create a modest but powerful enough 3D engine powered by the MonoGame Framework. This project is composed of
-* An engine
-* An editor (Windows only for now)
-* A player (later)
-
-![](http://41.media.tumblr.com/f184d022630b0bc245246b146ace8cc7/tumblr_nrzrcmzCLo1s15knro1_1280.png)
+C3DE is a research/learning project. The aim is to create a modest but powerful enough 3D engine powered by the MonoGame Framework.
 
 ### Features
 
@@ -69,7 +64,8 @@ public class SuperCoolGame : Scene
 
 ### Supported Platforms
 - Windows (DirectX)
-- Other: later
+- Windows, Linux, Mac (OpenGL/SDL2)
+- Android (Partial)
 
 ### Requirement
 You **must** install the [MonoGame Framework](http://www.monogame.net/downloads/) from the installer.
