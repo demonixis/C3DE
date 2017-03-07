@@ -40,12 +40,12 @@ namespace C3DE.VR
 		public float RightTan; // The tangent of the angle between the viewing vector and the right edge of the field of view.
 	}
 
-
 	public class OculusRift
 	{
 		private Matrix[] ProjectionMatrix = new Matrix[2];     // one for each eye
 		private Point[] RenderTargetRes = new Point[2]; // one for each eye
 		private HeadTracking HeadTracking;
+        private IntPtr[] renderTargetPtrs = new IntPtr[2];
 #if WINDOWS
 		private HmdInfo HmdInfo;
 		private GraphicsDevice _graphicsDevice;
@@ -97,8 +97,12 @@ namespace C3DE.VR
 		public RenderTarget2D CreateRenderTargetForEye(int eye, SurfaceFormat surfaceFormat = SurfaceFormat.ColorSRgb, DepthFormat depthFormat = DepthFormat.Depth24Stencil8)
 		{
 #if WINDOWS
-			Point res = RenderTargetRes[eye];
-			return new RenderTarget2D(_graphicsDevice, res.X, res.Y, false, surfaceFormat, depthFormat);
+			var renderTarget = new RenderTarget2D(_graphicsDevice, RenderTargetRes[eye].X, RenderTargetRes[eye].Y, false, surfaceFormat, depthFormat);
+            var info = typeof(RenderTarget2D).GetField("_texture", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
+            var value = (SharpDX.Direct3D11.Resource)info.GetValue(renderTarget);
+            renderTargetPtrs[eye] = value.NativePointer;
+
+            return renderTarget;
 #else
 			return null;
 #endif
@@ -112,9 +116,7 @@ namespace C3DE.VR
 		public int SubmitRenderTargets(RenderTarget2D rtLeft, RenderTarget2D rtRight, int frame = 0)
 		{
 #if WINDOWS
-            var dxTexLeft = rtLeft.GetNativeDxResource();
-            var dxTexRight = rtRight.GetNativeDxResource();
-            return NativeRift.SubmitRenderTargets(dxTexLeft, dxTexRight, frame);
+            return NativeRift.SubmitRenderTargets(renderTargetPtrs[0], renderTargetPtrs[1], frame);
 #else
 			return -1;
 #endif

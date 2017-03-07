@@ -20,6 +20,7 @@ namespace C3DE.VR
             var error = EVRInitError.None;
             _hmd = OpenVR.Init(ref error);
 
+            _textures = new Texture_t[2];
             _trackedDevices = new TrackedDevicePose_t[OpenVR.k_unMaxTrackedDeviceCount];
             _gamePose = new TrackedDevicePose_t[OpenVR.k_unMaxTrackedDeviceCount];
 
@@ -53,6 +54,11 @@ namespace C3DE.VR
             game.Components.Add(this);
         }
 
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+        }
+
         public RenderTarget2D CreateRenderTargetForEye(int eye)
         {
             uint width = 0;
@@ -62,10 +68,16 @@ namespace C3DE.VR
             var renderTarget = new RenderTarget2D(Game.GraphicsDevice, (int)width, (int)height);
 
             _textures[eye] = new Texture_t();
-            _textures[eye].handle = renderTarget.GetSharedHandle();
+
 #if WINDOWS
+            var info = typeof(RenderTarget2D).GetField("_texture", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
+            var handle = info.GetValue(renderTarget) as SharpDX.Direct3D11.Resource;
+            _textures[eye].handle = handle.NativePointer;
             _textures[eye].eType = ETextureType.DirectX;
 #else
+            var info = typeof(RenderTarget2D).GetField("glTexture", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
+            var glTexture = (int)info.GetValue(renderTarget);
+            _textures[eye].handle = new IntPtr(glTexture);
             _textures[eye].eType = ETextureType.OpenGL;
 #endif
             _textures[eye].eColorSpace = EColorSpace.Auto;
@@ -76,8 +88,16 @@ namespace C3DE.VR
         public Matrix GetProjectionMatrix(int eye)
         {
             var mat = _hmd.GetProjectionMatrix((EVREye)eye, 0.1f, 1000.0f);
-            var n = new RigidTransform(mat);
-            return Matrix.CreateScale(1) * Matrix.CreateFromQuaternion(n.rot) * Matrix.CreateTranslation(n.pos);
+
+            if (Input.Keys.Up)
+            {
+                Debug.Log(mat.m0 + " : " + mat.m1 + " : " + mat.m2 + " : " + mat.m3);
+                Debug.Log(mat.m4 + " : " + mat.m5 + " : " + mat.m6 + " : " + mat.m7);
+                Debug.Log(mat.m8 + " : " + mat.m9 + " : " + mat.m10 + " : " + mat.m11);
+                Debug.Log(mat.m12 + " : " + mat.m13 + " : " + mat.m14 + " : " + mat.m15);
+            }
+
+            return Matrix.Transpose(Matrix44ToXNA(ref mat));
         }
 
         public float GetRenderTargetAspectRatio(int eye)
@@ -88,8 +108,15 @@ namespace C3DE.VR
         public Matrix GetViewMatrix(int eye, Matrix playerScale)
         {
             var mat = _hmd.GetEyeToHeadTransform((EVREye)eye);
-            var n = new RigidTransform(mat);
-            return Matrix.CreateScale(1) * Matrix.CreateFromQuaternion(n.rot) * Matrix.CreateTranslation(n.pos);
+      
+            if (Input.Keys.Down)
+            {
+                Debug.Log(mat.m0 + " : " + mat.m1 + " : " + mat.m2 + " : " + mat.m3);
+                Debug.Log(mat.m4 + " : " + mat.m5 + " : " + mat.m6 + " : " + mat.m7);
+                Debug.Log(mat.m8 + " : " + mat.m9 + " : " + mat.m10 + " : " + mat.m11);
+            }
+
+            return Matrix.Transpose(Matrix34ToXNA(ref mat));
         }
 
         public int SubmitRenderTargets(RenderTarget2D leftRT, RenderTarget2D rightRT)
@@ -129,162 +156,6 @@ namespace C3DE.VR
                 mat.m4, mat.m5, mat.m6, mat.m7,
                 mat.m8, mat.m9, mat.m10, mat.m11,
                 mat.m12, mat.m13, mat.m14, mat.m15);
-        }
-    }
-
-    [System.Serializable]
-    public struct RigidTransform
-    {
-        public Vector3 pos;
-        public Quaternion rot;
-
-        public static RigidTransform identity
-        {
-            get { return new RigidTransform(Vector3.Zero, Quaternion.Identity); }
-        }
-
-        public static RigidTransform FromLocal(Transform t)
-        {
-            return new RigidTransform(t.Position, Quaternion.CreateFromYawPitchRoll(t.Rotation.Y, t.Rotation.X, t.Rotation.Z));
-        }
-
-        public RigidTransform(Vector3 pos, Quaternion rot)
-        {
-            this.pos = pos;
-            this.rot = rot;
-        }
-
-        public RigidTransform(Transform t)
-        {
-            this.pos = t.Position;
-            this.rot = Quaternion.CreateFromYawPitchRoll(t.Rotation.Y, t.Rotation.X, t.Rotation.Z);
-        }
-
-        public RigidTransform(HmdMatrix34_t pose)
-        {
-            var m = Matrix.Identity;
-
-            m[0, 0] = pose.m0;
-            m[0, 1] = pose.m1;
-            m[0, 2] = -pose.m2;
-            m[0, 3] = pose.m3;
-
-            m[1, 0] = pose.m4;
-            m[1, 1] = pose.m5;
-            m[1, 2] = -pose.m6;
-            m[1, 3] = pose.m7;
-
-            m[2, 0] = -pose.m8;
-            m[2, 1] = -pose.m9;
-            m[2, 2] = pose.m10;
-            m[2, 3] = -pose.m11;
-
-            this.pos = m.Translation;
-            this.rot = m.Rotation;
-        }
-
-        public RigidTransform(HmdMatrix44_t pose)
-        {
-            var m = Matrix.Identity;
-
-            m[0, 0] = pose.m0;
-            m[0, 1] = pose.m1;
-            m[0, 2] = -pose.m2;
-            m[0, 3] = pose.m3;
-
-            m[1, 0] = pose.m4;
-            m[1, 1] = pose.m5;
-            m[1, 2] = -pose.m6;
-            m[1, 3] = pose.m7;
-
-            m[2, 0] = -pose.m8;
-            m[2, 1] = -pose.m9;
-            m[2, 2] = pose.m10;
-            m[2, 3] = -pose.m11;
-
-            m[3, 0] = pose.m12;
-            m[3, 1] = pose.m13;
-            m[3, 2] = -pose.m14;
-            m[3, 3] = pose.m15;
-           
-            this.pos = m.Translation;
-            this.rot = m.Rotation;
-        }
-
-        public HmdMatrix44_t ToHmdMatrix44()
-        {
-            var m = Matrix.CreateScale(1) * Matrix.CreateFromQuaternion(rot) * Matrix.CreateTranslation(pos);
-            var pose = new HmdMatrix44_t();
-
-            pose.m0 = m[0, 0];
-            pose.m1 = m[0, 1];
-            pose.m2 = -m[0, 2];
-            pose.m3 = m[0, 3];
-
-            pose.m4 = m[1, 0];
-            pose.m5 = m[1, 1];
-            pose.m6 = -m[1, 2];
-            pose.m7 = m[1, 3];
-
-            pose.m8 = -m[2, 0];
-            pose.m9 = -m[2, 1];
-            pose.m10 = m[2, 2];
-            pose.m11 = -m[2, 3];
-
-            pose.m12 = m[3, 0];
-            pose.m13 = m[3, 1];
-            pose.m14 = -m[3, 2];
-            pose.m15 = m[3, 3];
-
-            return pose;
-        }
-
-        public HmdMatrix34_t ToHmdMatrix34()
-        {
-            var m = Matrix.CreateScale(1) * Matrix.CreateFromQuaternion(rot) * Matrix.CreateTranslation(pos);
-            var pose = new HmdMatrix34_t();
-            
-            pose.m0 = m[0, 0];
-            pose.m1 = m[0, 1];
-            pose.m2 = -m[0, 2];
-            pose.m3 = m[0, 3];
-
-            pose.m4 = m[1, 0];
-            pose.m5 = m[1, 1];
-            pose.m6 = -m[1, 2];
-            pose.m7 = m[1, 3];
-
-            pose.m8 = -m[2, 0];
-            pose.m9 = -m[2, 1];
-            pose.m10 = m[2, 2];
-            pose.m11 = -m[2, 3];
-
-            return pose;
-        }
-
-        public override bool Equals(object o)
-        {
-            if (o is RigidTransform)
-            {
-                RigidTransform t = (RigidTransform)o;
-                return pos == t.pos && rot == t.rot;
-            }
-            return false;
-        }
-
-        public override int GetHashCode()
-        {
-            return pos.GetHashCode() ^ rot.GetHashCode();
-        }
-
-        public static bool operator ==(RigidTransform a, RigidTransform b)
-        {
-            return a.pos == b.pos && a.rot == b.rot;
-        }
-
-        public static bool operator !=(RigidTransform a, RigidTransform b)
-        {
-            return a.pos != b.pos || a.rot != b.rot;
         }
     }
 }

@@ -10,5 +10,10 @@ namespace C3DE.VR
         Matrix GetViewMatrix(int eye, Matrix playerScale);
         int SubmitRenderTargets(RenderTarget2D leftRT, RenderTarget2D rightRT);
 		float GetRenderTargetAspectRatio(int eye);
+
+        //Vector3 GetHeadPosition(int eye);
+        //Quaternion GetHeadRotation(int eye);
+        //Vector3 GetControllerPosition(bool left);
+        //Quaternion GetControllerRotation(bool left);
     }
 }
