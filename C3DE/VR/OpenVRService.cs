@@ -11,6 +11,7 @@ namespace C3DE.VR
         private CVRSystem _hmd;
         private TrackedDevicePose_t[] _trackedDevices;
         private TrackedDevicePose_t[] _gamePose;
+        private Texture_t[] _textures;
         private VRTextureBounds_t[] textureBounds;
 
         public OpenVRService(Game game)
@@ -28,7 +29,7 @@ namespace C3DE.VR
             strDriver = GetTrackedDeviceString(OpenVR.k_unTrackedDeviceIndex_Hmd, ETrackedDeviceProperty.Prop_TrackingSystemName_String);
             strDisplay = GetTrackedDeviceString(OpenVR.k_unTrackedDeviceIndex_Hmd, ETrackedDeviceProperty.Prop_SerialNumber_String);
 
-            Debug.Log("Driver: {0} - Display {1}", strDriver, strDisplay);
+            Debug.LogFormat("Driver: {0} - Display {1}", strDriver, strDisplay);
 
             float l_left = 0.0f, l_right = 0.0f, l_top = 0.0f, l_bottom = 0.0f;
             _hmd.GetProjectionRaw(EVREye.Eye_Left, ref l_left, ref l_right, ref l_top, ref l_bottom);
@@ -58,7 +59,18 @@ namespace C3DE.VR
             uint height = 0;
             _hmd.GetRecommendedRenderTargetSize(ref width, ref height);
 
-            return new RenderTarget2D(Game.GraphicsDevice, (int)width, (int)height);
+            var renderTarget = new RenderTarget2D(Game.GraphicsDevice, (int)width, (int)height);
+
+            _textures[eye] = new Texture_t();
+            _textures[eye].handle = renderTarget.GetSharedHandle();
+#if WINDOWS
+            _textures[eye].eType = ETextureType.DirectX;
+#else
+            _textures[eye].eType = ETextureType.OpenGL;
+#endif
+            _textures[eye].eColorSpace = EColorSpace.Auto;
+
+            return renderTarget;
         }
 
         public Matrix GetProjectionMatrix(int eye)
@@ -82,22 +94,9 @@ namespace C3DE.VR
 
         public int SubmitRenderTargets(RenderTarget2D leftRT, RenderTarget2D rightRT)
         {
-            Texture_t texture0;
-            texture0.handle = leftRT.GetSharedHandle();
-            texture0.eType = ETextureType.DirectX;
-            texture0.eColorSpace = EColorSpace.Auto;
-
-            OpenVR.Compositor.Submit(EVREye.Eye_Left, ref texture0, ref textureBounds[0], EVRSubmitFlags.Submit_Default);
-
-            Texture_t texture1;
-            texture1.handle = leftRT.GetSharedHandle();
-            texture1.eType = ETextureType.DirectX;
-            texture1.eColorSpace = EColorSpace.Auto;
-
-            OpenVR.Compositor.Submit(EVREye.Eye_Right, ref texture1, ref textureBounds[1], EVRSubmitFlags.Submit_Default);
-
+            OpenVR.Compositor.Submit(EVREye.Eye_Left, ref _textures[0], ref textureBounds[0], EVRSubmitFlags.Submit_Default);
+            OpenVR.Compositor.Submit(EVREye.Eye_Right, ref _textures[1], ref textureBounds[1], EVRSubmitFlags.Submit_Default);
             OpenVR.Compositor.WaitGetPoses(_trackedDevices, _gamePose);
-
             return 0;
         }
 
