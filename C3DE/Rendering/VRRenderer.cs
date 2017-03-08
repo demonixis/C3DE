@@ -15,6 +15,8 @@ namespace C3DE.Rendering
         private RenderTarget2D[] renderTargetEye = new RenderTarget2D[2];
         private Matrix playerMatrix = Matrix.CreateScale(1);
 
+        public bool StereoPreview { get; set; } = false;
+
         public VRRenderer(GraphicsDevice graphics, IVRDevice vrDevice)
             : base(graphics)
         {
@@ -47,7 +49,7 @@ namespace C3DE.Rendering
                 //renderPostProcess(scene.postProcessPasses);
                 //RenderUI(scene.Behaviours);
             }
-  
+
             _vrDevice.SubmitRenderTargets(renderTargetEye[0], renderTargetEye[1]);
 
             // show left eye view also on the monitor screen 
@@ -74,7 +76,16 @@ namespace C3DE.Rendering
             int offset = (pp.BackBufferWidth - width) / 2;
 
             m_spriteBatch.Begin();
-            m_spriteBatch.Draw(renderTargetEye[eye], new Rectangle(offset, 0, width, height), Color.White);
+
+            if (StereoPreview)
+            {
+                width = pp.BackBufferWidth / 2;
+                m_spriteBatch.Draw(renderTargetEye[0], new Rectangle(0, 0, width, height), Color.White);
+                m_spriteBatch.Draw(renderTargetEye[1], new Rectangle(width, 0, width, height), Color.White);
+            }
+            else
+                m_spriteBatch.Draw(renderTargetEye[eye], new Rectangle(offset, 0, width, height), Color.White);
+
             m_spriteBatch.End();
         }
     }

@@ -65,7 +65,7 @@ namespace C3DE.VR
             uint height = 0;
             _hmd.GetRecommendedRenderTargetSize(ref width, ref height);
 
-            var renderTarget = new RenderTarget2D(Game.GraphicsDevice, (int)width, (int)height);
+            var renderTarget = new RenderTarget2D(Game.GraphicsDevice, (int)width, (int)height, false, SurfaceFormat.ColorSRgb, DepthFormat.Depth24Stencil8);
 
             _textures[eye] = new Texture_t();
 

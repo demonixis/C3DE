@@ -46,6 +46,9 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="OSVR.ClientKit">
+      <HintPath>..\Deps\OSVR.ClientKit.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="MonoGame.Framework">
       <HintPath>..\..\..\..\..\Library\Frameworks\Mono.framework\External\xbuild\MonoGame\v3.0\Assemblies\DesktopGL\MonoGame.Framework.dll</HintPath>
@@ -148,10 +151,12 @@
     <Compile Include="Utils\RandomHelper.cs" />
     <Compile Include="Rendering\PreLightRenderer.cs" />
     <Compile Include="VR\IVRDevice.cs" />
+    <Compile Include="VR\NullVRService.cs" />
     <Compile Include="VR\OculusRift.cs" />
     <Compile Include="VR\OculusRiftService.cs" />
     <Compile Include="VR\OpenVRService.cs" />
     <Compile Include="VR\openvr_api.cs" />
+    <Compile Include="VR\OSVRService.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

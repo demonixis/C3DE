@@ -64,9 +64,10 @@ namespace C3DE.Demo.Scenes
             RenderSettings.FogDensity = 0.0085f;
             RenderSettings.FogMode = FogMode.Exp2;
 
-            var openVRDevice = new OpenVRService(Application.Engine);
-            var vrRenderer = new VRRenderer(Application.GraphicsDevice, openVRDevice);
-
+            //var vrDevice = new OpenVRService(Application.Engine);
+            var vrDevice = new NullVRService(Application.Engine);
+            var vrRenderer = new VRRenderer(Application.GraphicsDevice, vrDevice);
+            vrRenderer.StereoPreview = true;
             Application.Engine.Renderer = vrRenderer;
         }
     }
