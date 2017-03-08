@@ -1,5 +1,4 @@
 ﻿using Microsoft.Xna.Framework;
-using System;
 using Microsoft.Xna.Framework.Graphics;
 using C3DE.Components;
 
@@ -7,7 +6,9 @@ namespace C3DE.VR
 {
     public class NullVRService : GameComponent, IVRDevice
     {
-        public NullVRService(Game game) 
+         SpriteEffects IVRDevice.PreviewRenderEffect => SpriteEffects.None;
+
+        public NullVRService(Game game)
             : base(game)
         {
         }

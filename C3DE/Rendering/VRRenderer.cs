@@ -80,11 +80,11 @@ namespace C3DE.Rendering
             if (StereoPreview)
             {
                 width = pp.BackBufferWidth / 2;
-                m_spriteBatch.Draw(renderTargetEye[0], new Rectangle(0, 0, width, height), Color.White);
-                m_spriteBatch.Draw(renderTargetEye[1], new Rectangle(width, 0, width, height), Color.White);
+                m_spriteBatch.Draw(renderTargetEye[0], new Rectangle(0, 0, width, height), null, Color.White, MathHelper.Pi, Vector2.Zero, _vrDevice.PreviewRenderEffect, 0);
+                m_spriteBatch.Draw(renderTargetEye[1], new Rectangle(width, 0, width, height), null, Color.White, MathHelper.Pi, Vector2.Zero, _vrDevice.PreviewRenderEffect, 0);
             }
             else
-                m_spriteBatch.Draw(renderTargetEye[eye], new Rectangle(offset, 0, width, height), Color.White);
+                m_spriteBatch.Draw(renderTargetEye[eye], new Rectangle(offset, 0, width, height), null, Color.White, 0, Vector2.Zero, _vrDevice.PreviewRenderEffect, 0);
 
             m_spriteBatch.End();
         }

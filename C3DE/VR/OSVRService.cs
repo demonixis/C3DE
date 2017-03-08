@@ -43,7 +43,9 @@ namespace C3DE.VR
         private RenderInfoOpenGL[] _renderInfo;
         private RenderParams _renderParams;
 
-        public OSVRService(Game game, string appIdentifier = "net.demonixis.c3de") 
+        SpriteEffects IVRDevice.PreviewRenderEffect => SpriteEffects.None;
+
+        public OSVRService(Game game, string appIdentifier = "net.demonixis.c3de")
             : base(game)
         {
             _context = new ClientContext(appIdentifier);

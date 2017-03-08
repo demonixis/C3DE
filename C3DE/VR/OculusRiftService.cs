@@ -7,6 +7,8 @@ namespace C3DE.VR
     {
         private OculusRift _oculusRift;
 
+        SpriteEffects IVRDevice.PreviewRenderEffect => SpriteEffects.None;
+
         public OculusRiftService(Game game) 
             : base(game)
         {
