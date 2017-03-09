@@ -46,6 +46,9 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="OculusWrap">
+      <HintPath>..\Deps\OculusWrap.dll</HintPath>
+    </Reference>
     <Reference Include="OSVR.ClientKit">
       <HintPath>..\Deps\OSVR.ClientKit.dll</HintPath>
     </Reference>
@@ -154,6 +157,7 @@
     <Compile Include="VR\NullVRService.cs" />
     <Compile Include="VR\OculusRift.cs" />
     <Compile Include="VR\OculusRiftService.cs" />
+    <Compile Include="VR\OculusWrapService.cs" />
     <Compile Include="VR\OpenVRService.cs" />
     <Compile Include="VR\openvr_api.cs" />
     <Compile Include="VR\OSVRService.cs" />

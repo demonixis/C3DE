@@ -64,6 +64,7 @@
     <Compile Include="Scenes\MenuDemo.cs" />
     <Compile Include="Scenes\PreLightingDemo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Scenes\VirtualRealityDemo.cs" />
     <Compile Include="Scripts\AutoRotation.cs" />
     <Compile Include="Scripts\ControllerSwitcher.cs" />
     <Compile Include="Scripts\DemoBehaviour.cs" />

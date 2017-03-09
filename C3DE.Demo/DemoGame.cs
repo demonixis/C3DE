@@ -72,6 +72,7 @@ namespace C3DE.Demo
                 Application.SceneManager.Add(new PreLightingDemo());
                 Application.SceneManager.Add(new HexagonTerrainDemo());
                 Application.SceneManager.Add(new GUIDemo());
+                Application.SceneManager.Add(new VirtualRealityDemo());
                 Application.LoadLevel(0);
                 //Screen.Fullscreen = true;
                 game.Run();

@@ -129,8 +129,8 @@
     <Compile Include="Rendering\PreLightRenderer.cs" />
     <Compile Include="VR\IVRDevice.cs" />
     <Compile Include="VR\OculusRift.cs" />
-    <Compile Include="VR\OculusRiftService_OLD.cs" />
-    <Compile Include="VR\OculusService.cs" />
+    <Compile Include="VR\OculusRiftService.cs" />
+    <Compile Include="VR\OculusWrapService.cs" />
     <Compile Include="VR\OpenVRService.cs" />
     <Compile Include="VR\openvr_api.cs" />
   </ItemGroup>

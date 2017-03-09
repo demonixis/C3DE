@@ -1,22 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using OculusWrap;
-using SharpDX.Direct3D11;
 
 namespace C3DE.VR
 {
-    public class OculusService : GameComponent, IVRDevice
+    public class OculusWrapService : GameComponent, IVRDevice
     {
         private Wrap _wrap;
         private Hmd _hmd;
         private Layers _layers;
 
-        public OculusService(Game game) : base(game)
+        public OculusWrapService(Game game) : base(game)
         {
             _wrap = new Wrap();
 
