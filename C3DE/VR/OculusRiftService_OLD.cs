@@ -3,13 +3,13 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace C3DE.VR
 {
-    public class OculusRiftService : GameComponent, IVRDevice
+    public class OculusRiftService_OLD : GameComponent, IVRDevice
     {
         private OculusRift _oculusRift;
 
         SpriteEffects IVRDevice.PreviewRenderEffect => SpriteEffects.None;
 
-        public OculusRiftService(Game game) 
+        public OculusRiftService_OLD(Game game) 
             : base(game)
         {
             _oculusRift = new OculusRift();

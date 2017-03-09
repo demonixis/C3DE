@@ -95,8 +95,9 @@ namespace C3DE.VR
 
         public Matrix GetViewMatrix(int eye, Matrix playerScale)
         {
+            var view = _hmd.GetEyeToHeadTransform((EVREye)eye).ToXNA();
             var target = _hmdPose.Translation + Vector3.Transform(Vector3.Forward, _hmdPose.Rotation);
-            return Matrix.CreateLookAt(_hmdPose.Translation, target, Vector3.Down);
+            return Matrix.CreateLookAt(_hmdPose.Translation, target, Vector3.Down) * view;
         }
 
         public override void Update(GameTime gameTime)
@@ -174,10 +175,10 @@ namespace C3DE.VR
         public static Matrix ToXNA(this HmdMatrix34_t mat)
         {
             var m = new Matrix(
-                mat.m0, mat.m4, mat.m8, 0.0f,
-                mat.m1, mat.m5, mat.m9, 0.0f,
-                mat.m2, mat.m6, mat.m10, 0.0f,
-                mat.m3, mat.m7, mat.m11, 1.0f);
+                mat.m0, mat.m4, -mat.m8, 0.0f,
+                mat.m1, mat.m5, -mat.m9, 0.0f,
+                -mat.m2, -mat.m6, mat.m10, 0.0f,
+                mat.m3, mat.m7, -mat.m11, 1.0f);
 
             return m;
         }

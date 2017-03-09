@@ -129,7 +129,8 @@
     <Compile Include="Rendering\PreLightRenderer.cs" />
     <Compile Include="VR\IVRDevice.cs" />
     <Compile Include="VR\OculusRift.cs" />
-    <Compile Include="VR\OculusRiftService.cs" />
+    <Compile Include="VR\OculusRiftService_OLD.cs" />
+    <Compile Include="VR\OculusService.cs" />
     <Compile Include="VR\OpenVRService.cs" />
     <Compile Include="VR\openvr_api.cs" />
   </ItemGroup>
@@ -149,6 +150,9 @@
   <ItemGroup>
     <Reference Include="MonoGame.Framework">
       <HintPath>$(MonoGameInstallDirectory)\MonoGame\v3.0\Assemblies\Windows\MonoGame.Framework.dll</HintPath>
+    </Reference>
+    <Reference Include="OculusWrap">
+      <HintPath>..\Deps\OculusWrap.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX, Version=2.6.3.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL" />
     <Reference Include="SharpDX.Direct3D11, Version=2.6.3.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL" />

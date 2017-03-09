@@ -66,6 +66,7 @@ namespace C3DE.Demo.Scenes
 
             var vrDevice = new OpenVRService(Application.Engine);
             //var vrDevice = new NullVRService(Application.Engine);
+            //var vrDevice = new OculusRiftService(Application.Engine);
             var vrRenderer = new VRRenderer(Application.GraphicsDevice, vrDevice);
             //vrRenderer.StereoPreview = true;
             Application.Engine.Renderer = vrRenderer;
