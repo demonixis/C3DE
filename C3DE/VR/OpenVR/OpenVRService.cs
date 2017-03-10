@@ -2,7 +2,6 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Valve.VR;
-using C3DE.Components;
 using System.Runtime.InteropServices;
 
 namespace C3DE.VR
@@ -175,10 +174,10 @@ namespace C3DE.VR
         public static Matrix ToXNA(this HmdMatrix34_t mat)
         {
             var m = new Matrix(
-                mat.m0, mat.m4, -mat.m8, 0.0f,
-                mat.m1, mat.m5, -mat.m9, 0.0f,
-                -mat.m2, -mat.m6, mat.m10, 0.0f,
-                mat.m3, mat.m7, -mat.m11, 1.0f);
+                mat.m0, mat.m4, mat.m8, 0.0f,
+                mat.m1, mat.m5, mat.m9, 0.0f,
+                mat.m2, mat.m6, mat.m10, 0.0f,
+                mat.m3, mat.m7, mat.m11, 1.0f);
 
             return m;
         }

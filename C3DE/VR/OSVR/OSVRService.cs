@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using OSVR.ClientKit;
 using OSVR.RenderManager;
 using C3DE.Components;
+using OSVR.MonoGame;
 
 namespace C3DE.VR
 {
@@ -40,6 +41,7 @@ namespace C3DE.VR
 
     public class OSVRService : GameComponent, IVRDevice
     {
+        private DisplayConfig _displayConfig;
         private RenderManagerOpenGL _renderManager;
         private ClientContext _context;
         private GraphicsLibraryOpenGL _graphicsLibrary;
@@ -47,10 +49,10 @@ namespace C3DE.VR
         private RenderBufferOpenGL[] _buffers;
         private RenderInfoOpenGL[] _renderInfo;
         private RenderParams _renderParams;
-        private int width;
-        private int height;
-        private Matrix projectionMatrix;
-        private Matrix viewMatrix;
+        private int _width;
+        private int _height;
+        private bool _useRenderManager;
+        private VRHead _head;
 
         SpriteEffects IVRDevice.PreviewRenderEffect => SpriteEffects.None;
 
@@ -60,7 +62,20 @@ namespace C3DE.VR
             ClientContext.PreloadNativeLibraries();
 
             _context = new ClientContext(appIdentifier);
+            _useRenderManager = !string.IsNullOrEmpty(_context.getStringParameter("/renderManagerConfig"));
 
+            _head = new VRHead(null, _context, new XnaPoseInterface(_context.GetPoseInterface("/me/head")));
+            _width = Screen.Width / 2;
+            _height = Screen.Height;
+
+            //if (_useRenderManager)
+            //SetupRenderManager();
+
+            game.Components.Add(this);
+        }
+
+        private void SetupRenderManager()
+        {
             _graphicsLibrary = new GraphicsLibraryOpenGL();
             _graphicsLibrary.Toolkit = new MonoGameGraphicsToolkit();
             _renderManager = new RenderManagerOpenGL(_context, "OpenGL", _graphicsLibrary);
@@ -78,14 +93,14 @@ namespace C3DE.VR
             for (var i = 0; i < _renderInfo.Length; i++)
             {
                 w += _renderInfo[i].Viewport.Width;
-                if (height != 0 && height != _renderInfo[i].Viewport.Height)
+                if (_height != 0 && _height != _renderInfo[i].Viewport.Height)
                     throw new InvalidOperationException("All RT must have the same height.");
 
                 h = _renderInfo[i].Viewport.Height;
             }
 
-            width = (int)w;
-            height = (int)h;
+            _width = (int)w;
+            _height = (int)h;
 
             _normalizedCroppingViewports = new ViewportDescription[_renderInfo.Length];
 
@@ -110,51 +125,17 @@ namespace C3DE.VR
         {
             base.Update(gameTime);
             _context.update();
-
-            var displayConfig = _context.GetDisplayConfig();
-
-            if (displayConfig == null || !displayConfig.CheckDisplayStartup())
-                return;
-
-            var numViewers = displayConfig.GetNumViewers();
-            for (uint viewer = 0; viewer < numViewers; viewer++)
-            {
-                var numEyes = displayConfig.GetNumEyesForViewer(viewer);
-                var viewerPose = displayConfig.GetViewerPose(viewer);
-
-                for (byte eye = 0; eye < numEyes; eye++)
-                {
-                    var numSurfaces = displayConfig.GetNumSurfacesForViewerEye(viewer, eye);
-                    var viewerEyePose = displayConfig.GetViewerEyePose(viewer, eye);
-                    var viewerEyeMatrixf = displayConfig.GetViewerEyeViewMatrixf(viewer, eye, MatrixConventionsFlags.Default);
-
-                    for (uint surface = 0; surface < numSurfaces; surface++)
-                    {
-                        var viewport = displayConfig.GetRelativeViewportForViewerEyeSurface(viewer, eye, surface);
-                        var wantsDistortion = displayConfig.DoesViewerEyeSurfaceWantDistortion(viewer, eye, surface);
-
-                        if (wantsDistortion)
-                        {
-                            var radialDistortionPriority = displayConfig.GetViewerEyeSurfaceRadialDistortionPriority(viewer, eye, surface);
-
-                            if (radialDistortionPriority >= 0)
-                            {
-                                var distortionParameters = displayConfig.GetViewerEyeSurfaceRadialDistortion(viewer, eye, surface);
-                            }
-                        }
-
-                        var projectionf = displayConfig.GetProjectionMatrixForViewerEyeSurfacef(viewer, eye, surface, 1.0f, 1000.0f, MatrixConventionsFlags.Default);
-                        var projectionClippingPlanes = displayConfig.GetViewerEyeSurfaceProjectionClippingPlanes(viewer, eye, surface);
-                        var displayInputIndex = displayConfig.GetViewerEyeSurfaceDisplayInputIndex(viewer, eye, surface);
-                    }
-                }
-            }
+            _head.Update();
         }
 
         public RenderTarget2D CreateRenderTargetForEye(int eye)
         {
-            var renderTarget = new RenderTarget2D(Game.GraphicsDevice, (int)width, (int)height, false, SurfaceFormat.ColorSRgb, DepthFormat.Depth24Stencil8);
+            var renderTarget = new RenderTarget2D(Game.GraphicsDevice, (int)_width, (int)_height, false, SurfaceFormat.ColorSRgb, DepthFormat.Depth24Stencil8);
+
 #if DESKTOP
+            if (_buffers == null)
+                _buffers = new RenderBufferOpenGL[2];
+
             var info = typeof(RenderTarget2D).GetField("glTexture", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
             var glTexture = (int)info.GetValue(renderTarget);
             _buffers[eye].ColorBufferName = (uint)glTexture;
@@ -164,7 +145,7 @@ namespace C3DE.VR
 
         public Matrix GetProjectionMatrix(int eye)
         {
-            return Camera.main.projection;
+            return eye == 0 ? _head.LeftEye.Projection : _head.RightEye.Projection;
         }
 
         public float GetRenderTargetAspectRatio(int eye)
@@ -174,12 +155,12 @@ namespace C3DE.VR
 
         public Matrix GetViewMatrix(int eye, Matrix playerScale)
         {
-            return Camera.main.view;
+            return eye == 0 ? _head.LeftEye.Transform : _head.RightEye.Transform;
         }
 
         public int SubmitRenderTargets(RenderTarget2D leftRT, RenderTarget2D rightRT)
         {
-            _renderManager.Present(_buffers, _renderInfo, _normalizedCroppingViewports, _renderParams, false);
+            // _renderManager.Present(_buffers, _renderInfo, _normalizedCroppingViewports, _renderParams, false);
             return 0;
         }
     }

@@ -29,8 +29,10 @@ namespace C3DE.Demo.Scenes
 
             _prevRenderer = Application.Engine.Renderer;
 
-            var vrDevice = new OpenVRService(Application.Engine);
-            Application.Engine.Renderer = new VRRenderer(Application.GraphicsDevice, vrDevice);
+            var vrDevice = new OSVRService(Application.Engine);
+            var vrRenderer = new VRRenderer(Application.GraphicsDevice, vrDevice);
+            vrRenderer.StereoPreview = true;
+            Application.Engine.Renderer = vrRenderer;
         }
 
         public override void Unload()

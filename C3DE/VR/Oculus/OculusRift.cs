@@ -46,24 +46,33 @@ namespace C3DE.VR
         private Point[] RenderTargetRes = new Point[2]; // one for each eye
         private HeadTracking HeadTracking;
         private IntPtr[] renderTargetPtrs = new IntPtr[2];
-#if WINDOWS
+        private int[] renderTargetIds = new int[2];
         private HmdInfo HmdInfo;
         private GraphicsDevice _graphicsDevice;
-#endif
+
         // the following functions should be called in order
         public int Initialize(GraphicsDevice graphics)
         {
-#if WINDOWS
             _graphicsDevice = graphics;
 
+#if !WINDOWS && !DESKTOP
+            return 0;
+#endif
+
+            var result = 0;
+
+#if WINDOWS
             IntPtr dxDevice, dxContext;
             _graphicsDevice.GetNativeDxDeviceAndContext(out dxDevice, out dxContext);
 
-            var result = NativeRift.Initialize(dxDevice, dxContext);
+            result = NativeRift.InitializeDX(dxDevice, dxContext);
             if (result < 0)
                 return result;
-
-
+#elif DESKTOP
+            result = NativeRift.InitializeGL();
+            if (result < 0)
+                return result;
+#endif
             HmdInfo = NativeRift.GetHmdInfo();
 
             var fovLeft = HmdInfo.DefaultFovLeft;
@@ -75,67 +84,78 @@ namespace C3DE.VR
 
             RenderTargetRes[0] = recommendTexResLeft;
             RenderTargetRes[1] = recommendTexResRight;
-
+#if WINDOWS
             result = NativeRift.CreateDXSwapChains(recommendTexResLeft, recommendTexResRight, fovLeft, fovRight);
             if (result < 0)
                 return result;
+#else
+            result = NativeRift.CreateGLSwapChains(recommendTexResLeft, recommendTexResRight, fovLeft, fovRight);
+            if (result < 0)
+                return result;
+#endif
 
-            /*
-            var ret = NativeRift.CreateDXSwapChainsAlt();
-            if (ret != 0)
-                return -1;
-                */
             for (var eye = 0; eye < 2; eye++)
                 ProjectionMatrix[eye] = NativeRift.GetProjectionMatrix(eye, 0.1f, 1000, 0);
 
             return 0;
-#else
-			return -1;
-#endif
         }
 
         public RenderTarget2D CreateRenderTargetForEye(int eye, SurfaceFormat surfaceFormat = SurfaceFormat.ColorSRgb, DepthFormat depthFormat = DepthFormat.Depth24Stencil8)
         {
-#if WINDOWS
             var renderTarget = new RenderTarget2D(_graphicsDevice, RenderTargetRes[eye].X, RenderTargetRes[eye].Y, false, surfaceFormat, depthFormat);
+#if WINDOWS
             var info = typeof(RenderTarget2D).GetField("_texture", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
             var value = (SharpDX.Direct3D11.Resource)info.GetValue(renderTarget);
             renderTargetPtrs[eye] = value.NativePointer;
-
-            return renderTarget;
-#else
-			return null;
+#elif DESKTOP
+            var info = typeof(RenderTarget2D).GetField("glTexture", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
+            renderTargetIds[eye] = (int)info.GetValue(renderTarget);
 #endif
+            return renderTarget;
         }
 
         public HeadTracking TrackHead(int frame = 0)
         {
+#if !WINDOWS && !DESKTOP
+            return HeadTracking;
+#endif
             return HeadTracking = NativeRift.TrackHead(frame);
         }
 
         public int SubmitRenderTargets(RenderTarget2D rtLeft, RenderTarget2D rtRight, int frame = 0)
         {
 #if WINDOWS
-            return NativeRift.SubmitRenderTargets(renderTargetPtrs[0], renderTargetPtrs[1], frame);
+            return NativeRift.SubmitRenderTargetsDX(renderTargetPtrs[0], renderTargetPtrs[1], frame);
+#elif DESKTOP
+            return NativeRift.SubmitRenderTargsGL(renderTargetIds[0], renderTargetIds[1], frame);
 #else
-			return -1;
+            return 0;
 #endif
         }
 
         public void Shutdown()
         {
+#if !WINDOWS && !DESKTOP
+            return;
+#endif
             NativeRift.Shutdown();
         }
 
         // matrices for rendering
         public Matrix GetEyePose(int eye, Matrix playerPose)
         {
-            var mat = Matrix.Transpose(eye == 0 ? HeadTracking.EyePoseLeft : HeadTracking.EyePoseRight);
+#if !WINDOWS && !DESKTOP
+            return Components.Camera.main.view;
+#endif
+            var mat = Matrix.Transpose(eye == 0 ? HeadTracking.EyePoseLeft : HeadTracking.EyePoseRight); 
             return mat * playerPose;
         }
 
         public Matrix GetEyeViewMatrix(int eye, Matrix playerPose)
         {
+#if !WINDOWS && !DESKTOP
+            return Components.Camera.main.projection;
+#endif
             return Matrix.Invert(GetEyePose(eye, playerPose));
         }
 
@@ -155,7 +175,10 @@ namespace C3DE.VR
     public static class NativeRift
     {
         [DllImport("OculusRift.dll", CallingConvention = CallingConvention.Cdecl)]
-        public static extern int Initialize(IntPtr dxDevice, IntPtr dxContext);
+        public static extern int InitializeGL();
+
+        [DllImport("OculusRift.dll", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int InitializeDX(IntPtr dxDevice, IntPtr dxContext);
 
         [DllImport("OculusRift.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern HmdInfo GetHmdInfo();
@@ -164,10 +187,10 @@ namespace C3DE.VR
         public static extern void GetRecommendedRenderTargetRes(FovPort fovLeft, FovPort fovRight, float pixelsPerDisplayPixel, ref Point texResLeft, ref Point texResRight);
 
         [DllImport("OculusRift.dll", CallingConvention = CallingConvention.Cdecl)]
-        public static extern int CreateDXSwapChains(Point texResLeft, Point texResRight, FovPort fovLeft, FovPort fovRight);
+        public static extern int CreateGLSwapChains(Point texResLeft, Point texResRight, FovPort fovLeft, FovPort fovRight);
 
-        [DllImport("OculusRift.dll", CallingConvention = CallingConvention.StdCall)]
-        public static extern int CreateDXSwapChainsAlt();
+        [DllImport("OculusRift.dll", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int CreateDXSwapChains(Point texResLeft, Point texResRight, FovPort fovLeft, FovPort fovRight);
 
         [DllImport("OculusRift.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern Matrix GetProjectionMatrix(int eye, float nearClip, float farClip, uint projectionModeFlags);
@@ -176,7 +199,10 @@ namespace C3DE.VR
         public static extern HeadTracking TrackHead(int frame);
 
         [DllImport("OculusRift.dll", CallingConvention = CallingConvention.Cdecl)]
-        public static extern int SubmitRenderTargets(IntPtr dxTexResourceLeft, IntPtr dxTexResourceRight, int frame);
+        public static extern int SubmitRenderTargsGL(int rtLeft, int rtRight, int frame);
+
+        [DllImport("OculusRift.dll", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int SubmitRenderTargetsDX(IntPtr dxTexResourceLeft, IntPtr dxTexResourceRight, int frame);
 
         [DllImport("OculusRift.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern void Shutdown();

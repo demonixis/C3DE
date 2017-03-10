@@ -46,6 +46,9 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="OculusWrap">
       <HintPath>..\Deps\OculusWrap.dll</HintPath>
     </Reference>
@@ -155,12 +158,28 @@
     <Compile Include="Rendering\PreLightRenderer.cs" />
     <Compile Include="VR\IVRDevice.cs" />
     <Compile Include="VR\NullVRService.cs" />
-    <Compile Include="VR\OculusRift.cs" />
-    <Compile Include="VR\OculusRiftService.cs" />
-    <Compile Include="VR\OculusWrapService.cs" />
-    <Compile Include="VR\OpenVRService.cs" />
-    <Compile Include="VR\openvr_api.cs" />
-    <Compile Include="VR\OSVRService.cs" />
+    <Compile Include="VR\Oculus\OculusRift.cs" />
+    <Compile Include="VR\Oculus\OculusRiftService.cs" />
+    <Compile Include="VR\Oculus\OculusWrapService.cs" />
+    <Compile Include="VR\OpenVR\OpenVRService.cs" />
+    <Compile Include="VR\OpenVR\openvr_api.cs" />
+    <Compile Include="VR\OSVR\OSVR.MonoGame\DeviceDescriptor.cs" />
+    <Compile Include="VR\OSVR\OSVR.MonoGame\Math.cs" />
+    <Compile Include="VR\OSVR\OSVR.MonoGame\Sample\Axes.cs" />
+    <Compile Include="VR\OSVR\OSVR.MonoGame\Sample\MouselookPoseSignal.cs" />
+    <Compile Include="VR\OSVR\OSVR.MonoGame\Sample\SampleGame.cs" />
+    <Compile Include="VR\OSVR\OSVRService.cs" />
+    <Compile Include="VR\OSVR\OSVR.MonoGame\ReportTypes.cs" />
+    <Compile Include="VR\OSVR\OSVR.MonoGame\VREye.cs" />
+    <Compile Include="VR\OSVR\OSVR.MonoGame\VRHead.cs" />
+    <Compile Include="VR\OSVR\OSVR.MonoGame\XnaEyeTracker3DInterface.cs" />
+    <Compile Include="VR\OSVR\OSVR.MonoGame\XnaOrientationInterface.cs" />
+    <Compile Include="VR\OSVR\OSVR.MonoGame\XnaPoseInterface.cs" />
+    <Compile Include="VR\OSVR\OSVR.MonoGame\XnaPosition2DInterface.cs" />
+    <Compile Include="VR\OSVR\OSVR.MonoGame\XnaPositionInterface.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
