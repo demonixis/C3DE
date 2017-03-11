@@ -75,16 +75,22 @@ namespace C3DE.Rendering
             int width = Math.Min(pp.BackBufferWidth, (int)(height * _vrDevice.GetRenderTargetAspectRatio(eye)));
             int offset = (pp.BackBufferWidth - width) / 2;
 
-            m_spriteBatch.Begin();
+            m_spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Opaque, null, null, null, _vrDevice.DistortionCorrectionEffect, null);
 
             if (StereoPreview)
             {
                 width = pp.BackBufferWidth / 2;
                 m_spriteBatch.Draw(renderTargetEye[0], new Rectangle(0, 0, width, height), null, Color.White, 0, Vector2.Zero, _vrDevice.PreviewRenderEffect, 0);
+                _vrDevice.ApplyDistortion(renderTargetEye[0], 0);
+
                 m_spriteBatch.Draw(renderTargetEye[1], new Rectangle(width, 0, width, height), null, Color.White, 0, Vector2.Zero, _vrDevice.PreviewRenderEffect, 0);
+                _vrDevice.ApplyDistortion(renderTargetEye[1], 0);
             }
             else
+            {
                 m_spriteBatch.Draw(renderTargetEye[eye], new Rectangle(offset, 0, width, height), null, Color.White, 0, Vector2.Zero, _vrDevice.PreviewRenderEffect, 0);
+                _vrDevice.ApplyDistortion(renderTargetEye[eye], 0);
+            }
 
             m_spriteBatch.End();
         }

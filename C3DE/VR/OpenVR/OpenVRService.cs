@@ -22,7 +22,8 @@ namespace C3DE.VR
         private Matrix _leftControllerPose;
         private Matrix _rightControllerPose;
 
-        SpriteEffects IVRDevice.PreviewRenderEffect => SpriteEffects.FlipVertically;
+        public SpriteEffects PreviewRenderEffect => SpriteEffects.FlipVertically;
+        public Effect DistortionCorrectionEffect => null;
 
         public OpenVRService(Game game)
             : base(game)
@@ -166,6 +167,10 @@ namespace C3DE.VR
             bufferSize = _hmd.GetStringTrackedDeviceProperty(deviceIndex, prop, buffer, bufferSize, ref error);
 
             return buffer.ToString();
+        }
+
+        public void ApplyDistortion(RenderTarget2D renderTarget, int eye)
+        {
         }
     }
 

@@ -3,7 +3,6 @@ using System;
 using Microsoft.Xna.Framework.Graphics;
 using OSVR.ClientKit;
 using OSVR.RenderManager;
-using C3DE.Components;
 using OSVR.MonoGame;
 
 namespace C3DE.VR
@@ -17,7 +16,7 @@ namespace C3DE.VR
         protected override bool AddOpenGLContext(ref OpenGLContextParams p)
         {
             var window = Application.Engine.Window;
-            window.Position = new Point(p.XPos, p.YPos);
+            //window.Position = new Point(p.XPos, p.YPos);
             window.Title = p.WindowTitle;
             Screen.Setup(p.Width, p.Height, null, null);
             return true;
@@ -41,6 +40,7 @@ namespace C3DE.VR
 
     public class OSVRService : GameComponent, IVRDevice
     {
+        private Effect _effect;
         private DisplayConfig _displayConfig;
         private RenderManagerOpenGL _renderManager;
         private ClientContext _context;
@@ -54,7 +54,9 @@ namespace C3DE.VR
         private bool _useRenderManager;
         private VRHead _head;
 
-        SpriteEffects IVRDevice.PreviewRenderEffect => SpriteEffects.None;
+        public SpriteEffects PreviewRenderEffect => SpriteEffects.None;
+        public Effect DistortionCorrectionEffect => _effect;
+        public bool ShowDistorition { get; set; } = true;
 
         public OSVRService(Game game, string appIdentifier = "net.demonixis.c3de")
             : base(game)
@@ -67,6 +69,8 @@ namespace C3DE.VR
             _head = new VRHead(null, _context, new XnaPoseInterface(_context.GetPoseInterface("/me/head")));
             _width = Screen.Width / 2;
             _height = Screen.Height;
+
+            _effect = game.Content.Load<Effect>("FX/PostProcess/OsvrDistortion");
 
             //if (_useRenderManager)
             //SetupRenderManager();
@@ -162,6 +166,19 @@ namespace C3DE.VR
         {
             // _renderManager.Present(_buffers, _renderInfo, _normalizedCroppingViewports, _renderParams, false);
             return 0;
+        }
+
+        public void ApplyDistortion(RenderTarget2D renderTarget, int eye)
+        {
+            if (!ShowDistorition)
+                return;
+
+            _effect.Parameters["TargetTexture"].SetValue(renderTarget);
+            _effect.Parameters["K1_Red"].SetValue(0.5f);
+            _effect.Parameters["K1_Green"].SetValue(0.5f);
+            _effect.Parameters["K1_Blue"].SetValue(0.5f);
+            _effect.Parameters["Center"].SetValue(new Vector2(0.5f, 0.5f));
+            _effect.Techniques[0].Passes[0].Apply();
         }
     }
 }

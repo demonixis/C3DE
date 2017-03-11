@@ -36,6 +36,13 @@ namespace C3DE.VR
 
         public SpriteEffects PreviewRenderEffect => throw new NotImplementedException();
 
+        public Effect DistortionCorrectionEffect => throw new NotImplementedException();
+
+        public void ApplyDistortion(RenderTarget2D renderTarget, int eye)
+        {
+            throw new NotImplementedException();
+        }
+
         public RenderTarget2D CreateRenderTargetForEye(int eye)
         {
             throw new NotImplementedException();

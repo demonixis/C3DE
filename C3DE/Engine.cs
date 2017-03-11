@@ -115,6 +115,11 @@ namespace C3DE
         {
             base.Update(gameTime);
             sceneManager.Update();
+
+#if WINDOWS || DESKTOP
+            if (Input.Keys.JustPressed(Keys.Enter) && Input.Keys.Pressed(Keys.LeftAlt))
+                Screen.ToggleFullscreen();
+#endif
         }
 
         protected override void Draw(GameTime gameTime)

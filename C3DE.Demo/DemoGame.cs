@@ -74,7 +74,7 @@ namespace C3DE.Demo
                 Application.SceneManager.Add(new GUIDemo());
                 Application.SceneManager.Add(new VirtualRealityDemo());
                 Application.LoadLevel(0);
-                //Screen.Fullscreen = true;
+                Screen.Fullscreen = false; // Set to true in VR
                 game.Run();
             }
         }

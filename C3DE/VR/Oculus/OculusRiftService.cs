@@ -7,7 +7,8 @@ namespace C3DE.VR
     {
         private OculusRift _oculusRift;
 
-        SpriteEffects IVRDevice.PreviewRenderEffect => SpriteEffects.None;
+        public SpriteEffects PreviewRenderEffect => SpriteEffects.None;
+        public Effect DistortionCorrectionEffect => null;
 
         public OculusRiftService(Game game) 
             : base(game)
@@ -46,6 +47,10 @@ namespace C3DE.VR
         {
             base.Update(gameTime);
             _oculusRift.TrackHead();
+        }
+
+        public void ApplyDistortion(RenderTarget2D renderTarget, int eye)
+        {
         }
     }
 }
