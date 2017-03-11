@@ -15,18 +15,8 @@ namespace C3DE.VR
         {
             _oculusRift = new OculusRift();
             _oculusRift.Initialize(game.GraphicsDevice);
-            game.Components.Add(this);
+			game.Components.Add(this);
         }
-
-		public bool Start()
-		{
-			if (_oculusRift.Initialize(Game.GraphicsDevice) != 0)
-				return false;
-			
-			Game.Components.Add(this);
-
-			return true;
-		}
 
         public RenderTarget2D CreateRenderTargetForEye(int eye)
         {

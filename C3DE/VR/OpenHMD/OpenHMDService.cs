@@ -72,6 +72,14 @@ namespace C3DE.VR
 			_projectionMatrix[1] = Matrix.CreatePerspectiveFieldOfView(_hmdDescription.RightEyeFov, _hmdDescription.RightEyeAspect, 0.1f, 1000.0f);
 		}
 
+		protected override void Dispose(bool disposing)
+		{
+			base.Dispose(disposing);
+
+			if (_context != IntPtr.Zero)
+				OpenHMD.ohmd_ctx_destroy(_context);
+		}
+
 		public void ApplyDistortion(RenderTarget2D renderTarget, int eye)
 		{
 			_effect.Parameters["TargetTexture"].SetValue(renderTarget);
