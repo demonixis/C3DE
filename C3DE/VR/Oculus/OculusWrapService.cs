@@ -10,6 +10,7 @@ namespace C3DE.VR
         private Wrap _wrap;
         private Hmd _hmd;
         private Layers _layers;
+		private LayerEyeFov _layerEyeFov;
 
         public OculusWrapService(Game game) : base(game)
         {
@@ -31,42 +32,39 @@ namespace C3DE.VR
                 throw new Exception("Empty product");
 
             _layers = new Layers();
-            LayerEyeFov layerEyeFov = _layers.AddLayerEyeFov();
+            _layerEyeFov = _layers.AddLayerEyeFov();
         }
 
-        public SpriteEffects PreviewRenderEffect => throw new NotImplementedException();
+		public SpriteEffects PreviewRenderEffect => SpriteEffects.None;
+		public Effect DistortionCorrectionEffect => null;
 
-        public Effect DistortionCorrectionEffect => throw new NotImplementedException();
-
-        public void ApplyDistortion(RenderTarget2D renderTarget, int eye)
-        {
-            throw new NotImplementedException();
-        }
+		public void ApplyDistortion(RenderTarget2D renderTarget, int eye)
+		{
+		}
 
         public RenderTarget2D CreateRenderTargetForEye(int eye)
-        {
-            throw new NotImplementedException();
-        }
+		{
+			return new RenderTarget2D(Game.GraphicsDevice, Screen.Width / 2, Screen.Height, false, SurfaceFormat.ColorSRgb, DepthFormat.Depth24Stencil8);
+		}
 
-        public Matrix GetProjectionMatrix(int eye)
-        {
-            throw new NotImplementedException();
-        }
+		public Matrix GetProjectionMatrix(int eye)
+		{
+			return Components.Camera.main.projection;
+		}
 
-        public float GetRenderTargetAspectRatio(int eye)
-        {
-            throw new NotImplementedException();
-        }
+		public float GetRenderTargetAspectRatio(int eye)
+		{
+			return 1.0f;
+		}
 
-        public Matrix GetViewMatrix(int eye, Matrix playerScale)
-        {
-            throw new NotImplementedException();
-        }
+		public Matrix GetViewMatrix(int eye, Matrix playerScale)
+		{
+			return Components.Camera.main.view;
+		}
 
         public int SubmitRenderTargets(RenderTarget2D leftRT, RenderTarget2D rightRT)
         {
-           var result = _hmd.SubmitFrame(0, _layers);
-
+			var result = _hmd.SubmitFrame(0, _layers);
             return result == OVRTypes.Result.Success ? 0 : -1;
         }
     }

@@ -20,7 +20,7 @@ namespace C3DE.VR
 
         public RenderTarget2D CreateRenderTargetForEye(int eye)
         {
-            return new RenderTarget2D(Game.GraphicsDevice, Screen.Width / 2, Screen.Height, false, SurfaceFormat.ColorSRgb, DepthFormat.Depth24Stencil8);
+            return new RenderTarget2D(Game.GraphicsDevice, Screen.Width / 2, Screen.Height, false, SurfaceFormat.Color, DepthFormat.Depth24Stencil8);
         }
 
         public Matrix GetProjectionMatrix(int eye)
@@ -46,9 +46,9 @@ namespace C3DE.VR
         public void ApplyDistortion(RenderTarget2D renderTarget, int eye)
         {
             _effect.Parameters["TargetTexture"].SetValue(renderTarget);
-            _effect.Parameters["K1_Red"].SetValue(0.8f);
-            _effect.Parameters["K1_Green"].SetValue(0.8f);
-            _effect.Parameters["K1_Blue"].SetValue(0.8f);
+            _effect.Parameters["K1_Red"].SetValue(1f);
+            _effect.Parameters["K1_Green"].SetValue(1f);
+            _effect.Parameters["K1_Blue"].SetValue(1f);
             _effect.Parameters["Center"].SetValue(new Vector2(0.5f, 0.5f));
             _effect.Techniques[0].Passes[0].Apply();
         }

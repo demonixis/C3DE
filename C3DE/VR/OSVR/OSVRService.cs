@@ -7,61 +7,53 @@ using OSVR.MonoGame;
 
 namespace C3DE.VR
 {
-    public class MonoGameGraphicsToolkit : OpenGLToolkitFunctions
-    {
-        public MonoGameGraphicsToolkit()
-        {
-        }
+	public class MonoGameGraphicsToolkit : OpenGLToolkitFunctions
+	{
+		public MonoGameGraphicsToolkit() { }
 
-        protected override bool AddOpenGLContext(ref OpenGLContextParams p)
-        {
-            var window = Application.Engine.Window;
-            //window.Position = new Point(p.XPos, p.YPos);
-            window.Title = p.WindowTitle;
-            Screen.Setup(p.Width, p.Height, null, null);
-            return true;
-        }
+		protected override bool AddOpenGLContext(ref OpenGLContextParams p)
+		{
+			var window = Application.Engine.Window;
+			window.Position = new Point(p.XPos, p.YPos);
+			window.Title = p.WindowTitle;
+			Screen.Setup(p.Width, p.Height, null, null);
+			Screen.Fullscreen = p.FullScreen;
+			return true;
+		}
 
-        protected override bool MakeCurrent(UIntPtr display)
-        {
-            return true;
-        }
+		protected override bool MakeCurrent(UIntPtr display) => true;
+		protected override bool SetVerticalSync(bool verticalSync) => true;
+		protected override bool SwapBuffers(UIntPtr display) => true;
+	}
 
-        protected override bool SetVerticalSync(bool verticalSync)
-        {
-            return true;
-        }
+	public class OSVRService : GameComponent, IVRDevice
+	{
+		private Effect _effect;
+		private RenderManagerOpenGL _renderManager;
+		private ClientContext _context;
+		private GraphicsLibraryOpenGL _graphicsLibrary;
+		private ViewportDescription[] _normalizedCroppingViewports;
+		private RenderBufferOpenGL[] _buffers;
+		private RenderInfoOpenGL[] _renderInfo;
+		private RenderParams _renderParams;
+		private int _width;
+		private int _height;
+		private Vector3[] _distortionParams;
+		private Vector2 _distortionCenter;
+		private bool _useRenderManager;
+		private VRHead _head;
 
-        protected override bool SwapBuffers(UIntPtr display)
-        {
-            return true;
-        }
-    }
+		public SpriteEffects PreviewRenderEffect => SpriteEffects.None;
+		public Effect DistortionCorrectionEffect => _effect;
+		public bool ShowDistorition { get; private set; } = true;
 
-    public class OSVRService : GameComponent, IVRDevice
-    {
-        private Effect _effect;
-        private DisplayConfig _displayConfig;
-        private RenderManagerOpenGL _renderManager;
-        private ClientContext _context;
-        private GraphicsLibraryOpenGL _graphicsLibrary;
-        private ViewportDescription[] _normalizedCroppingViewports;
-        private RenderBufferOpenGL[] _buffers;
-        private RenderInfoOpenGL[] _renderInfo;
-        private RenderParams _renderParams;
-        private int _width;
-        private int _height;
-        private bool _useRenderManager;
-        private VRHead _head;
-
-        public SpriteEffects PreviewRenderEffect => SpriteEffects.None;
-        public Effect DistortionCorrectionEffect => _effect;
-        public bool ShowDistorition { get; set; } = true;
-
-        public OSVRService(Game game, string appIdentifier = "net.demonixis.c3de")
-            : base(game)
-        {
-            ClientContext.PreloadNativeLibraries();
+		public OSVRService(Game game, string appIdentifier = "net.demonixis.c3de")
+			: base(game)
+		{
+#if !DESKTOP
+			throw new NotSupportedException("[OSVR] This plugin is not supported on this platform");
+#endif
+			ClientContext.PreloadNativeLibraries();
 
             _context = new ClientContext(appIdentifier);
             _useRenderManager = !string.IsNullOrEmpty(_context.getStringParameter("/renderManagerConfig"));
@@ -69,17 +61,59 @@ namespace C3DE.VR
             _head = new VRHead(null, _context, new XnaPoseInterface(_context.GetPoseInterface("/me/head")));
             _width = Screen.Width / 2;
             _height = Screen.Height;
+			_distortionCenter = new Vector2(0.5f, 0.5f);
 
             _effect = game.Content.Load<Effect>("FX/PostProcess/OsvrDistortion");
 
-            //if (_useRenderManager)
-            //SetupRenderManager();
+			if (_useRenderManager)
+				SetupRenderManager();
+
+			var displayConfig = _context.GetDisplayConfig();
+			var numDisplayInputs = displayConfig.GetNumDisplayInputs();
+			var numViewers = displayConfig.GetNumViewers();
+
+			if (numViewers != 1)
+				throw new NotSupportedException("[OSVR] This plugin doesn't support more than one viewer.");
+
+			for (uint viewer = 0; viewer < numViewers; viewer++)
+			{
+				var numEyes = displayConfig.GetNumEyesForViewer(viewer);
+				if (numEyes != 2)
+					throw new NotSupportedException("[OSVR] This plugin only supports two eyes.");
+
+				_distortionParams = new Vector3[2];
+
+				for (byte eye = 0; eye < numEyes; eye++)
+				{
+					var numSurfaces = displayConfig.GetNumSurfacesForViewerEye(viewer, eye);
+					if (numSurfaces != 1)
+						throw new NotSupportedException("[OSVR] This plugin only supports one surface per eye.");
+					
+					for (uint surface = 0; surface < numSurfaces; surface++)
+					{
+						ShowDistorition = displayConfig.DoesViewerEyeSurfaceWantDistortion(viewer, eye, surface);
+						if (ShowDistorition)
+						{
+							var radialDistortionPriority = displayConfig.GetViewerEyeSurfaceRadialDistortionPriority(viewer, eye, surface);
+							if (radialDistortionPriority >= 0)
+							{
+								var dist = displayConfig.GetViewerEyeSurfaceRadialDistortion(viewer, eye, surface);
+								_distortionParams[eye].X = (float)dist.k1.x;
+								_distortionParams[eye].Y = (float)dist.k1.y;
+								_distortionParams[eye].Z = (float)dist.k1.z;
+							}
+						}
+					}
+				}
+			}
 
             game.Components.Add(this);
         }
 
         private void SetupRenderManager()
         {
+			return;
+
             _graphicsLibrary = new GraphicsLibraryOpenGL();
             _graphicsLibrary.Toolkit = new MonoGameGraphicsToolkit();
             _renderManager = new RenderManagerOpenGL(_context, "OpenGL", _graphicsLibrary);
@@ -170,14 +204,14 @@ namespace C3DE.VR
 
         public void ApplyDistortion(RenderTarget2D renderTarget, int eye)
         {
-            if (!ShowDistorition)
+			if (!ShowDistorition)
                 return;
 
             _effect.Parameters["TargetTexture"].SetValue(renderTarget);
-            _effect.Parameters["K1_Red"].SetValue(0.5f);
-            _effect.Parameters["K1_Green"].SetValue(0.5f);
-            _effect.Parameters["K1_Blue"].SetValue(0.5f);
-            _effect.Parameters["Center"].SetValue(new Vector2(0.5f, 0.5f));
+			_effect.Parameters["K1_Red"].SetValue(_distortionParams[eye].X);
+            _effect.Parameters["K1_Green"].SetValue(_distortionParams[eye].Y);
+            _effect.Parameters["K1_Blue"].SetValue(_distortionParams[eye].Z);
+			_effect.Parameters["Center"].SetValue(_distortionCenter);
             _effect.Techniques[0].Passes[0].Apply();
         }
     }

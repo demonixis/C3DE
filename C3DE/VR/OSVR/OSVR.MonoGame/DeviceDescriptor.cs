@@ -248,9 +248,6 @@ public class DeviceDescriptor
     /// </summary>
     public static DeviceDescriptor Parse(string deviceDescriptorJson)
     {
-        if (deviceDescriptorJson == null)
-            throw new ArgumentNullException("deviceDescriptorJson");
-
         var reader = new JsonTextReader(new StringReader(deviceDescriptorJson));
         if (reader == null)
             return null;
