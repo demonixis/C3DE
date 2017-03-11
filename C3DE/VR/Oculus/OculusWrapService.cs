@@ -12,6 +12,9 @@ namespace C3DE.VR
         private Layers _layers;
 		private LayerEyeFov _layerEyeFov;
 
+		public SpriteEffects PreviewRenderEffect => SpriteEffects.None;
+		public Effect DistortionCorrectionEffect => null;
+
         public OculusWrapService(Game game) : base(game)
         {
             _wrap = new Wrap();
@@ -34,9 +37,6 @@ namespace C3DE.VR
             _layers = new Layers();
             _layerEyeFov = _layers.AddLayerEyeFov();
         }
-
-		public SpriteEffects PreviewRenderEffect => SpriteEffects.None;
-		public Effect DistortionCorrectionEffect => null;
 
 		public void ApplyDistortion(RenderTarget2D renderTarget, int eye)
 		{

@@ -177,9 +177,14 @@
     <Compile Include="VR\OSVR\OSVR.MonoGame\XnaPoseInterface.cs" />
     <Compile Include="VR\OSVR\OSVR.MonoGame\XnaPosition2DInterface.cs" />
     <Compile Include="VR\OSVR\OSVR.MonoGame\XnaPositionInterface.cs" />
+    <Compile Include="VR\OpenHMD\OpenHMD.cs" />
+    <Compile Include="VR\OpenHMD\OpenHMDService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="VR\OpenHMD\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

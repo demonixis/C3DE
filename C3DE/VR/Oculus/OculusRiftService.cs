@@ -18,6 +18,16 @@ namespace C3DE.VR
             game.Components.Add(this);
         }
 
+		public bool Start()
+		{
+			if (_oculusRift.Initialize(Game.GraphicsDevice) != 0)
+				return false;
+			
+			Game.Components.Add(this);
+
+			return true;
+		}
+
         public RenderTarget2D CreateRenderTargetForEye(int eye)
         {
             return _oculusRift.CreateRenderTargetForEye(eye);
