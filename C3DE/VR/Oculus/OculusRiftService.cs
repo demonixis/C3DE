@@ -3,54 +3,66 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace C3DE.VR
 {
-    public class OculusRiftService : GameComponent, IVRDevice
+	public class OculusRiftService : VRService
     {
         private OculusRift _oculusRift;
-
-        public SpriteEffects PreviewRenderEffect => SpriteEffects.None;
-        public Effect DistortionCorrectionEffect => null;
 
         public OculusRiftService(Game game) 
             : base(game)
         {
             _oculusRift = new OculusRift();
-            _oculusRift.Initialize(game.GraphicsDevice);
-			game.Components.Add(this);
         }
 
-        public RenderTarget2D CreateRenderTargetForEye(int eye)
+		public override int TryInitialize()
+		{
+			if (_oculusRift.Initialize(Game.GraphicsDevice) != 0)
+				return -1;
+			
+			Game.Components.Add(this);
+
+			return 0;
+		}
+
+		protected override void Dispose(bool disposing)
+		{
+			base.Dispose(disposing);
+
+			if (_oculusRift != null)
+			{
+				_oculusRift.Shutdown();
+				_oculusRift = null;
+			}
+		}
+
+		public override void Update(GameTime gameTime)
+		{
+			base.Update(gameTime);
+			_oculusRift.TrackHead();
+		}
+
+        public override RenderTarget2D CreateRenderTargetForEye(int eye)
         {
             return _oculusRift.CreateRenderTargetForEye(eye);
         }
 
-        public Matrix GetProjectionMatrix(int eye)
+        public override Matrix GetProjectionMatrix(int eye)
         {
             return _oculusRift.GetProjectionMatrix(eye);
         }
 
-        public Matrix GetViewMatrix(int eye, Matrix playerPose)
+        public override Matrix GetViewMatrix(int eye, Matrix playerPose)
         {
             return _oculusRift.GetEyeViewMatrix(eye, playerPose);
         }
 
-        public int SubmitRenderTargets(RenderTarget2D leftRT, RenderTarget2D rightRT)
-        {
-            return _oculusRift.SubmitRenderTargets(leftRT, rightRT);
-        }
-
-		public float GetRenderTargetAspectRatio(int eye)
+		public override float GetRenderTargetAspectRatio(int eye)
 		{
 			return _oculusRift.GetRenderTargetAspectRatio(eye);
 		}
 
-        public override void Update(GameTime gameTime)
+        public override int SubmitRenderTargets(RenderTarget2D renderTargetLeft, RenderTarget2D renderTargetRight)
         {
-            base.Update(gameTime);
-            _oculusRift.TrackHead();
-        }
-
-        public void ApplyDistortion(RenderTarget2D renderTarget, int eye)
-        {
+			return _oculusRift.SubmitRenderTargets(renderTargetLeft, renderTargetRight);
         }
     }
 }

@@ -156,7 +156,7 @@
     <Compile Include="Utils\NoiseGenerator.cs" />
     <Compile Include="Utils\RandomHelper.cs" />
     <Compile Include="Rendering\PreLightRenderer.cs" />
-    <Compile Include="VR\IVRDevice.cs" />
+    <Compile Include="VR\VRService.cs" />
     <Compile Include="VR\NullVRService.cs" />
     <Compile Include="VR\Oculus\OculusRift.cs" />
     <Compile Include="VR\Oculus\OculusRiftService.cs" />
@@ -179,6 +179,7 @@
     <Compile Include="VR\OSVR\OSVR.MonoGame\XnaPositionInterface.cs" />
     <Compile Include="VR\OpenHMD\OpenHMD.cs" />
     <Compile Include="VR\OpenHMD\OpenHMDService.cs" />
+    <Compile Include="VR\OSVR\MonoGameGraphicsToolkit.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

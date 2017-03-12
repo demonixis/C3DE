@@ -1,5 +1,6 @@
-﻿using C3DE.Components.Colliders;
-using C3DE.Components.Controllers;
+﻿using System;
+using C3DE.Components;
+using C3DE.Components.Colliders;
 using C3DE.Components.Lights;
 using C3DE.Components.Renderers;
 using C3DE.Demo.Scripts;
@@ -10,12 +11,10 @@ using C3DE.Rendering;
 using C3DE.Utils;
 using C3DE.VR;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using System;
 
 namespace C3DE.Demo.Scenes
 {
-    public class VirtualRealityDemo : Scene
+	public class VirtualRealityDemo : Scene
     {
         private Rendering.Renderer _prevRenderer;
 
@@ -25,15 +24,33 @@ namespace C3DE.Demo.Scenes
         {
             base.Initialize();
 
-            BuildScene();
+			var cameraNode = new GameObject();
+			Add(cameraNode);
+			cameraNode.AddComponent<Camera>();
+
+			var trackingSpace = new GameObject();
+			Add(trackingSpace);
+			cameraNode.Transform.Parent = trackingSpace.Transform;
+
+			var head = new GameObject();
+			head.Transform.Position = new Vector3(0, 1.8f, 0);
+			Add(head);
+			trackingSpace.Transform.Parent = head.Transform;
+
+			var player = new GameObject();
+			Add(player);
+			head.Transform.Parent = player.Transform;
 
             _prevRenderer = Application.Engine.Renderer;
 
             var vrDevice = new NullVRService(Application.Engine);
+			vrDevice.TryInitialize();
+
             var vrRenderer = new VRRenderer(Application.GraphicsDevice, vrDevice);
-            vrRenderer.StereoPreview = true;
             Application.Engine.Renderer = vrRenderer;
-        }
+        
+            BuildScene();
+		}
 
         public override void Unload()
         {
@@ -43,51 +60,51 @@ namespace C3DE.Demo.Scenes
 
         private void BuildScene()
         {
-            // Add a camera with a FPS controller
-            var camera = new CameraPrefab("camera");
-            camera.Setup(new Vector3(0, 2, -10), new Vector3(0, 0, 0), Vector3.Up);
-            camera.AddComponent<ControllerSwitcher>();
-            Add(camera);
+			var lightPrefab = new LightPrefab("lightPrefab", LightType.Directional);
+			Add(lightPrefab);
+			lightPrefab.Transform.Position = new Vector3(-15, 15, 15);
+			lightPrefab.Transform.Rotation = new Vector3(0, MathHelper.Pi, 1);
+			lightPrefab.Light.Range = 105;
+			lightPrefab.Light.Intensity = 2.0f;
+			lightPrefab.Light.FallOf = 5f;
+			lightPrefab.Light.Color = Color.Violet;
+			lightPrefab.Transform.Rotation = new Vector3(-1, 1, 0);
+			lightPrefab.Light.ShadowGenerator.ShadowStrength = 0.6f; // FIXME need to be inverted
+			lightPrefab.Light.ShadowGenerator.SetShadowMapSize(Application.GraphicsDevice, 1024);
+			lightPrefab.EnableShadows = true;
+			lightPrefab.AddComponent<DemoBehaviour>();
 
-            // And a light
-            var lightPrefab = new LightPrefab("light", LightType.Directional);
-            Add(lightPrefab);
-            lightPrefab.Transform.Rotation = new Vector3(-1, 1, 0);
-            lightPrefab.Light.Color = Color.LightSkyBlue;
-            lightPrefab.Light.Intensity = 1.0f;
-            lightPrefab.AddComponent<DemoBehaviour>();
-            lightPrefab.EnableShadows = true;
+			// Terrain
+			var terrainMaterial = new StandardMaterial(scene);
+			terrainMaterial.Texture = GraphicsHelper.CreateBorderTexture(Color.LightGreen, Color.LightSeaGreen, 128, 128, 4);
+			terrainMaterial.Shininess = 10;
+			terrainMaterial.Tiling = new Vector2(64);
 
-            // Finally a terrain
-            var terrainMat = new TerrainMaterial(scene);
+			var terrain = new TerrainPrefab("terrain");
+			terrain.Renderer.Geometry.Size = new Vector3(2);
+			terrain.Renderer.Geometry.Build();
+			terrain.Flatten();
+			terrain.Renderer.Material = terrainMaterial;
+			terrain.Transform.Translate(-terrain.Width >> 1, 0, -terrain.Depth / 2);
+			Add(terrain);
 
-            var terrain = new TerrainPrefab("terrain");
-            scene.Add(terrain);
-            terrain.LoadHeightmap("Textures/heightmap");
-            terrain.Renderer.Material = terrainMat;
-            terrain.Transform.Translate(-terrain.Width >> 1, -10, -terrain.Depth >> 1);
+			var cubMat = new StandardMaterial(this);
+			cubMat.Texture = GraphicsHelper.CreateCheckboardTexture(Color.Red, Color.White);
+			cubMat.Tiling = new Vector2(2, 2);
 
-            var map = terrain.GenerateWeightMap();
-            terrainMat.Texture = Application.Content.Load<Texture2D>("Textures/Terrain/Grass");
-            terrainMat.SandTexture = Application.Content.Load<Texture2D>("Textures/Terrain/Sand");
-            terrainMat.SnowTexture = Application.Content.Load<Texture2D>("Textures/Terrain/Snow");
-            terrainMat.RockTexture = Application.Content.Load<Texture2D>("Textures/Terrain/Rock");
-            terrainMat.WeightTexture = map;
-            terrainMat.Tiling = new Vector2(4);
+			for (var i = 0; i < 10; i++)
+			{
+				var go = new GameObject("Cube " + i);
+				go.Transform.Position = RandomHelper.GetVector3(-20, 0.5f, -20, 20, 0.5f, 20);
+				Add(go);
+				var renderer = go.AddComponent<MeshRenderer>();
+				renderer.Geometry = new CubeGeometry();
+				renderer.Geometry.Build();
+				renderer.Material = cubMat;
+			}
 
-            // With water !
-            var water = new WaterPrefab("water");
-            scene.Add(water);
-            water.Generate("Textures/water", "Textures/wavesbump", new Vector3(terrain.Width * 0.5f));
-
-            Screen.ShowCursor = true;
-
-            // Don't miss the Skybox ;)
-            RenderSettings.Skybox.Generate(Application.GraphicsDevice, Application.Content, DemoGame.BlueSkybox);
-
-            // And fog
-            RenderSettings.FogDensity = 0.0085f;
-            RenderSettings.FogMode = FogMode.Exp2;
+			// Skybox
+			RenderSettings.Skybox.Generate(Application.GraphicsDevice, Application.Content, DemoGame.BlueSkybox, 100);
         }
     }
 }

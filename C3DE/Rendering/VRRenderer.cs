@@ -11,13 +11,13 @@ namespace C3DE.Rendering
 {
     public class VRRenderer : Renderer
     {
-        private IVRDevice _vrDevice;
+        private VRService _vrDevice;
         private RenderTarget2D[] renderTargetEye = new RenderTarget2D[2];
         private Matrix playerMatrix = Matrix.CreateScale(1);
 
         public bool StereoPreview { get; set; } = false;
 
-        public VRRenderer(GraphicsDevice graphics, IVRDevice vrDevice)
+        public VRRenderer(GraphicsDevice graphics, VRService vrDevice)
             : base(graphics)
         {
             Application.Engine.IsFixedTimeStep = false;
@@ -42,7 +42,10 @@ namespace C3DE.Rendering
                 m_graphicsDevice.Clear(Color.Black);
 
                 camera.projection = _vrDevice.GetProjectionMatrix(eye);
-                camera.view = _vrDevice.GetViewMatrix(eye, playerMatrix);
+				camera.view = _vrDevice.GetViewMatrix(eye, playerMatrix);
+
+				if (camera.transform.Parent != null)
+					camera.view *= Matrix.Invert(camera.transform.Parent.world);
 
                 RenderShadowMaps(scene);
                 RenderObjects(scene, camera);
@@ -70,14 +73,13 @@ namespace C3DE.Rendering
             m_graphicsDevice.Clear(Color.Black);
 
             var pp = m_graphicsDevice.PresentationParameters;
+            var height = pp.BackBufferHeight;
+            var width = Math.Min(pp.BackBufferWidth, (int)(height * _vrDevice.GetRenderTargetAspectRatio(eye)));
+            var offset = (pp.BackBufferWidth - width) / 2;
 
-            int height = pp.BackBufferHeight;
-            int width = Math.Min(pp.BackBufferWidth, (int)(height * _vrDevice.GetRenderTargetAspectRatio(eye)));
-            int offset = (pp.BackBufferWidth - width) / 2;
+			m_spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Opaque, null, null, null, _vrDevice.DistortionEffect, null);
 
-            m_spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Opaque, null, null, null, _vrDevice.DistortionCorrectionEffect, null);
-
-            if (StereoPreview)
+			if (StereoPreview || _vrDevice.DistortionCorrectionRequired)
             {
                 width = pp.BackBufferWidth / 2;
                 m_spriteBatch.Draw(renderTargetEye[0], new Rectangle(0, 0, width, height), null, Color.White, 0, Vector2.Zero, _vrDevice.PreviewRenderEffect, 0);
@@ -87,10 +89,7 @@ namespace C3DE.Rendering
                 _vrDevice.ApplyDistortion(renderTargetEye[1], 0);
             }
             else
-            {
                 m_spriteBatch.Draw(renderTargetEye[eye], new Rectangle(offset, 0, width, height), null, Color.White, 0, Vector2.Zero, _vrDevice.PreviewRenderEffect, 0);
-                _vrDevice.ApplyDistortion(renderTargetEye[eye], 0);
-            }
 
             m_spriteBatch.End();
         }
