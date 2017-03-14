@@ -4,10 +4,10 @@ C3DE : Cool 3D Engine
 ### The project
 C3DE is a research project. The aim is to create a modest but powerful enough 3D engine powered by the MonoGame Framework.
 
-### Features
+### Some Features
 - Scenegraph
 - Component based
-- 3D Model (FBX/X)*
+- 3D Model (FBX/X) (1)
 - Custom Mesh geometry
 - Terrain: Flat, Random, Heightmap, multi textured
 - Materials: Standard, Simple, Reflective, Water, Lava, Custom
@@ -15,9 +15,12 @@ C3DE is a research project. The aim is to create a modest but powerful enough 3D
 - Input management: Keyboard, Mouse, Gamepad, Touch
 - Procedural texture generation
 - Post Processing support (need rewrite)
-- IMGU
+- Instant GUI system
+- Virtual Reality Support (OSVR, OpenHMD) (2)
 
-* Models support is not yet complete because the engine uses its own format for rendering things. It's planned later in the roadmap to convert an XNA model into a C3DE model.
+(1) Models support is not yet complete because the engine uses its own format for rendering things. It's planned later in the roadmap to convert an XNA model into a C3DE model.
+(2) Other VR vendors are coming.
+
 
 ### Platforms
 C3DE supports Windows using MonoGame/DirectX and Windows, Linux and Mac using MonoGame/DesktopGL. Because of the OpenGL shader compiler, shaders have less features than DirectX ones.
