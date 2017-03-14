@@ -43,12 +43,13 @@ namespace C3DE.Demo.Scenes
 
             _prevRenderer = Application.Engine.Renderer;
 
-            var vrDevice = new NullVRService(Application.Engine);
-			vrDevice.TryInitialize();
+			var vrDevice = new OSVRService(Application.Engine);
+			if (vrDevice.TryInitialize() == 0)
+			{
+				var vrRenderer = new VRRenderer(Application.GraphicsDevice, vrDevice);
+				Application.Engine.Renderer = vrRenderer;
+			}
 
-            var vrRenderer = new VRRenderer(Application.GraphicsDevice, vrDevice);
-            Application.Engine.Renderer = vrRenderer;
-        
             BuildScene();
 		}
 
