@@ -11,9 +11,9 @@ namespace C3DE.Demo
         public const int ScreenWidth = 1280;
         public const int ScreenHeight = 800;
 
-        public static string[] BlueSkybox = new string[6] 
+        public static string[] BlueSkybox = new string[6]
         {
-            "Textures/Skybox/bluesky/px",   
+            "Textures/Skybox/bluesky/px",
             "Textures/Skybox/bluesky/nx",
             "Textures/Skybox/bluesky/py",
             "Textures/Skybox/bluesky/ny",
@@ -21,9 +21,9 @@ namespace C3DE.Demo
             "Textures/Skybox/bluesky/nz"
         };
 
-        public static string[] StarsSkybox = new string[] 
+        public static string[] StarsSkybox = new string[]
         {
-            "Textures/Skybox/starfield/px",   
+            "Textures/Skybox/starfield/px",
             "Textures/Skybox/starfield/nx",
             "Textures/Skybox/starfield/py",
             "Textures/Skybox/starfield/ny",
@@ -73,7 +73,7 @@ namespace C3DE.Demo
                 Application.SceneManager.Add(new HexagonTerrainDemo());
                 Application.SceneManager.Add(new GUIDemo());
                 Application.SceneManager.Add(new VirtualRealityDemo());
-                Application.LoadLevel(0);
+                Application.SceneManager.LoadLevel(0);
                 Screen.Fullscreen = false; // Set to true in VR
                 game.Run();
             }

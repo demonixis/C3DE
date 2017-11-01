@@ -116,7 +116,7 @@ namespace C3DE.PostProcess
             Application.GraphicsDevice.Textures[1] = sceneRenderTarget;
 
             Viewport viewport = Application.GraphicsDevice.Viewport;
-            Application.GraphicsDevice.SetRenderTarget(null);
+            Application.GraphicsDevice.SetRenderTarget(sceneRT);
 
             DrawFullscreenQuad(spriteBatch, renderTarget1, viewport.Width, viewport.Height, bloomCombineEffect, IntermediateBuffer.FinalResult);
         }

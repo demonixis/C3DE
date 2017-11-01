@@ -34,7 +34,7 @@ namespace C3DE.Demo.Scripts
             public void Draw(GUI gui)
             {
                 if (gui.Button(ref _rect, _text))
-                    Application.LoadLevel(_index);
+                    Application.SceneManager.LoadLevel(_index);
             }
         }
 

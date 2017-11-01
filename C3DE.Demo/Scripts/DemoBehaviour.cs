@@ -11,7 +11,7 @@ namespace C3DE.Demo.Scripts
                 Screen.Fullscreen = !Screen.Fullscreen;
 
             if (Input.Keys.JustPressed(Keys.Escape) || Input.Gamepad.JustPressed(Buttons.Back))
-                Application.LoadLevel(0);
+                Application.SceneManager.LoadLevel(0);
         }
     }
 }
