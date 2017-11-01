@@ -1,4 +1,5 @@
-﻿using C3DE.Inputs;
+﻿using C3DE.Coroutines;
+using C3DE.Inputs;
 using C3DE.Rendering;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -16,7 +17,8 @@ namespace C3DE
         protected GraphicsDeviceManager graphics;
         protected Renderer renderer;
         private Renderer m_nextRenderer;
-        protected SceneManager sceneManager;
+        protected SceneManager _sceneManager;
+        protected CoroutineManager _coroutineManager;
         protected bool initialized;
 
         public Renderer Renderer
@@ -41,7 +43,8 @@ namespace C3DE
 
             Window.Title = title;
             Content.RootDirectory = "Content";
-            sceneManager = new SceneManager();
+            _sceneManager = new SceneManager();
+            _coroutineManager = new CoroutineManager();
             initialized = false;
             _autoDetectResolution = false;
             _requestFullscreen = false;
@@ -50,7 +53,8 @@ namespace C3DE
             Application.Engine = this;
             Application.GraphicsDevice = GraphicsDevice;
             Application.GraphicsDeviceManager = graphics;
-            Application.SceneManager = sceneManager;
+            Application.SceneManager = _sceneManager;
+            Application.CoroutineManager = _coroutineManager;
 
 #if !ANDROID && !WINDOWS_APP
             _autoDetectResolution = width == 0 || height == 0;
@@ -114,7 +118,9 @@ namespace C3DE
         protected override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-            sceneManager.Update();
+
+            _sceneManager.Update();
+            _coroutineManager.Update();
 
 #if WINDOWS || DESKTOP
             if (Input.Keys.JustPressed(Keys.Enter) && Input.Keys.Pressed(Keys.LeftAlt))
@@ -125,7 +131,7 @@ namespace C3DE
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.Black);
-            renderer.Render(sceneManager.ActiveScene);
+            renderer.Render(_sceneManager.ActiveScene);
             base.Draw(gameTime);
         }
 

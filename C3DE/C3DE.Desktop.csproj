@@ -8,7 +8,7 @@
     <RootNamespace>C3DE</RootNamespace>
     <AssemblyName>C3DE</AssemblyName>
     <MonoGamePlatform>Desktop</MonoGamePlatform>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -180,12 +180,15 @@
     <Compile Include="VR\OpenHMD\OpenHMD.cs" />
     <Compile Include="VR\OpenHMD\OpenHMDService.cs" />
     <Compile Include="VR\OSVR\MonoGameGraphicsToolkit.cs" />
+    <Compile Include="Coroutines\CoroutineManager.cs" />
+    <Compile Include="Coroutines\Coroutine.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="VR\OpenHMD\" />
+    <Folder Include="Coroutines\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

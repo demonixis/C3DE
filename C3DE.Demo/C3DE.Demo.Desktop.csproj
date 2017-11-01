@@ -8,7 +8,7 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>C3DE.Demo</RootNamespace>
     <AssemblyName>C3DE.Demo</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <MonoGamePlatform>DesktopGL</MonoGamePlatform>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">

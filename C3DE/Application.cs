@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using C3DE.Coroutines;
 
 namespace C3DE
 {
@@ -44,23 +45,7 @@ namespace C3DE
             Engine.TargetElapsedTime = new TimeSpan(10000000L / frameRate);
         }
 
-        /// <summary>
-        /// Load a scene by its name.
-        /// </summary>
-        /// <param name="name">The scene's name to load.</param>
-        public static void LoadLevel(string name)
-        {
-            SceneManager.LoadLevel(name);
-        }
-
-        /// <summary>
-        /// Load a scene by its index.
-        /// </summary>
-        /// <param name="index">The scene's index to load.</param>
-        public static void LoadLevel(int index)
-        {
-            SceneManager.LoadLevel(index);
-        }
+        internal static CoroutineManager CoroutineManager { get; set; }
 
         /// <summary>
         /// Quit the application.

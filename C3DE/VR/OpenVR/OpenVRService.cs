@@ -22,36 +22,36 @@ namespace C3DE.VR
         private Matrix _leftControllerPose;
         private Matrix _rightControllerPose;
 
-		public OpenVRService(Game game)
+        public OpenVRService(Game game)
             : base(game)
         {
-			_textures = new Texture_t[2];
-			_textureBounds = new VRTextureBounds_t[2];
-			_trackedDevices = new TrackedDevicePose_t[OpenVR.k_unMaxTrackedDeviceCount];
-			_gamePose = new TrackedDevicePose_t[OpenVR.k_unMaxTrackedDeviceCount];
-			_devicePoses = new Matrix[OpenVR.k_unMaxTrackedDeviceCount];
+            _textures = new Texture_t[2];
+            _textureBounds = new VRTextureBounds_t[2];
+            _trackedDevices = new TrackedDevicePose_t[OpenVR.k_unMaxTrackedDeviceCount];
+            _gamePose = new TrackedDevicePose_t[OpenVR.k_unMaxTrackedDeviceCount];
+            _devicePoses = new Matrix[OpenVR.k_unMaxTrackedDeviceCount];
         }
 
-		public override int TryInitialize()
-		{
-			var error = EVRInitError.None;
+        public override int TryInitialize()
+        {
+            var error = EVRInitError.None;
 
-			_hmd = OpenVR.Init(ref error);
+            _hmd = OpenVR.Init(ref error);
 
-			if (error != EVRInitError.None)
-				return -1;
+            if (error != EVRInitError.None)
+                return -1;
 
-			var strDriver = GetTrackedDeviceString(OpenVR.k_unTrackedDeviceIndex_Hmd, ETrackedDeviceProperty.Prop_TrackingSystemName_String);
-			var strDisplay = GetTrackedDeviceString(OpenVR.k_unTrackedDeviceIndex_Hmd, ETrackedDeviceProperty.Prop_SerialNumber_String);
+            var strDriver = GetTrackedDeviceString(OpenVR.k_unTrackedDeviceIndex_Hmd, ETrackedDeviceProperty.Prop_TrackingSystemName_String);
+            var strDisplay = GetTrackedDeviceString(OpenVR.k_unTrackedDeviceIndex_Hmd, ETrackedDeviceProperty.Prop_SerialNumber_String);
 
-			Debug.LogFormat("Driver: {0} - Display {1}", strDriver, strDisplay);
+            Debug.LogFormat("Driver: {0} - Display {1}", strDriver, strDisplay);
 
-			PreviewRenderEffect = SpriteEffects.FlipVertically;
+            PreviewRenderEffect = SpriteEffects.FlipVertically;
 
-			Game.Components.Add(this);
+            Game.Components.Add(this);
 
-			return 0;
-		}
+            return 0;
+        }
 
         protected override void Dispose(bool disposing)
         {
@@ -99,11 +99,17 @@ namespace C3DE.VR
         public override Matrix GetViewMatrix(int eye, Matrix playerPose)
         {
             var view = _hmd.GetEyeToHeadTransform((EVREye)eye).ToXNA();
-            var target = _hmdPose.Translation + Vector3.Transform(Vector3.Forward, _hmdPose.Rotation);
-            return Matrix.CreateLookAt(_hmdPose.Translation, target, Vector3.Down) * view;
+            Vector3 translation;
+            Quaternion rotation;
+            Vector3 scale;
+
+            _hmdPose.Decompose(out scale, out rotation, out translation);
+
+            var target = translation + Vector3.Transform(Vector3.Forward, rotation);
+            return Matrix.CreateLookAt(translation, target, Vector3.Down) * view;
         }
 
-		public override float GetRenderTargetAspectRatio(int eye) => 1.0f;
+        public override float GetRenderTargetAspectRatio(int eye) => 1.0f;
 
         public override void Update(GameTime gameTime)
         {
@@ -154,7 +160,7 @@ namespace C3DE.VR
             // Controllers state
         }
 
-		public override int SubmitRenderTargets(RenderTarget2D renderTargetLeft, RenderTarget2D renderTargetRight)
+        public override int SubmitRenderTargets(RenderTarget2D renderTargetLeft, RenderTarget2D renderTargetRight)
         {
             OpenVR.Compositor.Submit(EVREye.Eye_Left, ref _textures[0], ref _textureBounds[0], EVRSubmitFlags.Submit_Default);
             OpenVR.Compositor.Submit(EVREye.Eye_Right, ref _textures[1], ref _textureBounds[1], EVRSubmitFlags.Submit_Default);
@@ -173,7 +179,7 @@ namespace C3DE.VR
 
             return buffer.ToString();
         }
-	}
+    }
 
     public static class OpenVRExtension
     {
