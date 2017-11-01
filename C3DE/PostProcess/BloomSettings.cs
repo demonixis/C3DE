@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace C3DE.PostProcess
 {
     /// <summary>
@@ -6,7 +8,7 @@ namespace C3DE.PostProcess
     public class BloomSettings
     {
         #region Fields
-		
+
         // Name of a preset bloom setting, for display to the user.
         public readonly string Name;
 
@@ -45,7 +47,7 @@ namespace C3DE.PostProcess
             BloomSaturation = bloomSaturation;
             BaseSaturation = baseSaturation;
         }
-        
+
         /// <summary>
         /// Table of preset bloom settings, used by the sample program.
         /// </summary>
@@ -59,5 +61,20 @@ namespace C3DE.PostProcess
             new BloomSettings("Blurry",      0,      2,   1,     0.1f, 1,       1),
             new BloomSettings("Subtle",      0.5f,   2,   1,     1,    1,       1),
         };
+
+        public static Dictionary<BloomPreset, BloomSettings> Presets = new Dictionary<BloomPreset, BloomSettings>()
+        {
+            { BloomPreset.Default, new BloomSettings("Default",     0.25f,  4,   1.25f, 1,    1,       1) },
+            { BloomPreset.Soft, new BloomSettings("",        0,      3,   1,     1,    1,       1) },
+            { BloomPreset.Desaturated, new BloomSettings("Desaturated", 0.5f,   8,   2,     1,    0,       1)},
+            { BloomPreset.Saturated, new BloomSettings("Saturated",   0.25f,  4,   2,     1,    2,       0)},
+            { BloomPreset.Blurry, new BloomSettings("Blurry",      0,      2,   1,     0.1f, 1,       1)},
+            { BloomPreset.Subtle, new BloomSettings("Subtle",      0.5f,   2,   1,     1,    1,       1)}
+        };
+    }
+
+    public enum BloomPreset
+    {
+        Default, Soft, Desaturated, Saturated, Blurry, Subtle
     }
 }
