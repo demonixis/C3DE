@@ -43,8 +43,8 @@ namespace C3DE.Demo.Scenes
 
             _prevRenderer = Application.Engine.Renderer;
 
-			var vrDevice = new OSVRService(Application.Engine);
-			if (vrDevice.TryInitialize() == 0)
+            var vrDevice = GetService();
+            if (vrDevice.TryInitialize() == 0)
 			{
 				var vrRenderer = new VRRenderer(Application.GraphicsDevice, vrDevice);
 				Application.Engine.Renderer = vrRenderer;
@@ -52,6 +52,15 @@ namespace C3DE.Demo.Scenes
 
             BuildScene();
 		}
+
+        private VRService GetService()
+        {
+#if DESKTOPGL
+            return new OSVRService(Application.Engine);
+#else
+            return new NullVRService(Application.Engine);
+#endif
+        }
 
         public override void Unload()
         {

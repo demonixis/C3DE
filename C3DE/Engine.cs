@@ -14,12 +14,11 @@ namespace C3DE
     {
         private bool _autoDetectResolution;
         private bool _requestFullscreen;
-        protected GraphicsDeviceManager graphics;
+        protected GraphicsDeviceManager _graphics;
         protected Renderer renderer;
         private Renderer m_nextRenderer;
         protected SceneManager _sceneManager;
-        protected CoroutineManager _coroutineManager;
-        protected bool initialized;
+        protected bool _initialized;
 
         public Renderer Renderer
         {
@@ -38,31 +37,29 @@ namespace C3DE
         public Engine(string title = "C3DE Game", int width = 0, int height = 0, bool fullscreen = false)
             : base()
         {
-            graphics = new GraphicsDeviceManager(this);
-            graphics.PreparingDeviceSettings += OnResize;
+            _graphics = new GraphicsDeviceManager(this);
+            _graphics.PreparingDeviceSettings += OnResize;
+            _sceneManager = new SceneManager();
+            _initialized = false;
+            _autoDetectResolution = false;
+            _requestFullscreen = false;
 
             Window.Title = title;
             Content.RootDirectory = "Content";
-            _sceneManager = new SceneManager();
-            _coroutineManager = new CoroutineManager();
-            initialized = false;
-            _autoDetectResolution = false;
-            _requestFullscreen = false;
 
             Application.Content = Content;
             Application.Engine = this;
             Application.GraphicsDevice = GraphicsDevice;
-            Application.GraphicsDeviceManager = graphics;
+            Application.GraphicsDeviceManager = _graphics;
             Application.SceneManager = _sceneManager;
-            Application.CoroutineManager = _coroutineManager;
 
 #if !ANDROID && !WINDOWS_APP
             _autoDetectResolution = width == 0 || height == 0;
 
             if (!_autoDetectResolution)
             {
-                graphics.PreferredBackBufferWidth = width;
-                graphics.PreferredBackBufferHeight = height;
+                _graphics.PreferredBackBufferWidth = width;
+                _graphics.PreferredBackBufferHeight = height;
             }
 #endif
 
@@ -110,7 +107,7 @@ namespace C3DE
             Components.Add(Input.Gamepad);
             Components.Add(Input.Touch);
 
-            initialized = true;
+            _initialized = true;
 
             base.Initialize();
         }
@@ -118,14 +115,7 @@ namespace C3DE
         protected override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-
             _sceneManager.Update();
-            _coroutineManager.Update();
-
-#if WINDOWS || DESKTOP
-            if (Input.Keys.JustPressed(Keys.Enter) && Input.Keys.Pressed(Keys.LeftAlt))
-                Screen.ToggleFullscreen();
-#endif
         }
 
         protected override void Draw(GameTime gameTime)

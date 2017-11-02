@@ -1,4 +1,5 @@
-﻿using C3DE.UI;
+﻿using C3DE.Coroutines;
+using C3DE.UI;
 using System.Collections;
 using System.Runtime.Serialization;
 
@@ -7,7 +8,14 @@ namespace C3DE.Components
     [DataContract]
     public class Behaviour : Component
     {
+        private CoroutineManager m_CoroutineManager = new CoroutineManager();
+
         public Behaviour() : base() { }
+
+        public override void Update()
+        {
+            m_CoroutineManager.Update();
+        }
 
         public virtual void OnGUI(GUI ui) { }
 
@@ -23,17 +31,17 @@ namespace C3DE.Components
 
         public void StartCoroutine(IEnumerator coroutine)
         {
-            Application.CoroutineManager.Start(coroutine);
+            m_CoroutineManager.Start(coroutine);
         }
 
         public void StopCoroutine(IEnumerator coroutine)
         {
-            Application.CoroutineManager.Stop(coroutine);
+            m_CoroutineManager.Stop(coroutine);
         }
 
         public void StopAllCoroutine()
         {
-            Application.CoroutineManager.StopAll();
+            m_CoroutineManager.StopAll();
         }
     }
 }

@@ -127,12 +127,14 @@
     <Compile Include="Utils\NoiseGenerator.cs" />
     <Compile Include="Utils\RandomHelper.cs" />
     <Compile Include="Rendering\PreLightRenderer.cs" />
-    <Compile Include="VR\IVRDevice.cs" />
-    <Compile Include="VR\OculusRift.cs" />
-    <Compile Include="VR\OculusRiftService.cs" />
-    <Compile Include="VR\OculusWrapService.cs" />
-    <Compile Include="VR\OpenVRService.cs" />
-    <Compile Include="VR\openvr_api.cs" />
+    <Compile Include="VR\VRService.cs" />
+    <Compile Include="VR\NullVRService.cs" />
+    <Compile Include="VR\OpenVR\OpenVRService.cs" />
+    <Compile Include="VR\OpenVR\openvr_api.cs" />
+    <Compile Include="VR\OpenHMD\OpenHMD.cs" />
+    <Compile Include="VR\OpenHMD\OpenHMDService.cs" />
+    <Compile Include="Coroutines\CoroutineManager.cs" />
+    <Compile Include="Coroutines\Coroutine.cs" />
   </ItemGroup>
   <!--
   <ItemGroup>
@@ -154,11 +156,12 @@
     <Reference Include="OculusWrap">
       <HintPath>..\Deps\OculusWrap.dll</HintPath>
     </Reference>
-    <Reference Include="SharpDX, Version=2.6.3.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL" />
-    <Reference Include="SharpDX.Direct3D11, Version=2.6.3.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL" />
+    <Reference Include="SharpDX, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL" />
+    <Reference Include="SharpDX.Direct3D11, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.XML" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

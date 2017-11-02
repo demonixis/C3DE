@@ -7,6 +7,8 @@ namespace C3DE.Demo.Scripts
     {
         public override void Update()
         {
+            base.Update();
+
             if (Input.Keys.Pressed(Keys.LeftAlt) && Input.Keys.JustPressed(Keys.Enter))
                 Screen.Fullscreen = !Screen.Fullscreen;
 
