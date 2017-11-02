@@ -30,14 +30,14 @@ namespace C3DE.Demo.Scripts
             _passCounter = 0;
 
             // Setup PostProcess.
-           var bloomPass = new BloomPass();
-            bloomPass.Settings = new BloomSettings("Côôl", 0.15f, 1f, 4.0f, 1.0f, 1f, 1f);
-            AddPass(bloomPass);
-            /*
-            var pass = new BloomFilter();
+            //var bloomPass = new BloomPass();
+            //bloomPass.Settings = new BloomSettings("Côôl", 0.15f, 1f, 4.0f, 1.0f, 1f, 1f);
+            //AddPass(bloomPass);
+            
+            var pass = new Bloom();
             pass.Initialize(Application.Content);
-            pass.BloomPreset = BloomFilter.BloomPresets.SuperWide;
-            AddPass(pass);*/
+            pass.BloomPreset = Bloom.BloomPresets.SuperWide;
+            AddPass(pass);
 
             AddPass(new C64FilterPass());
 

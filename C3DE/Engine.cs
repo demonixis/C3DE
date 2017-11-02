@@ -69,8 +69,8 @@ namespace C3DE
 
         private void OnResize(object sender, PreparingDeviceSettingsEventArgs e)
         {
-            int width = e.GraphicsDeviceInformation.PresentationParameters.BackBufferWidth;
-            int height = e.GraphicsDeviceInformation.PresentationParameters.BackBufferHeight;
+            var width = e.GraphicsDeviceInformation.PresentationParameters.BackBufferWidth;
+            var height = e.GraphicsDeviceInformation.PresentationParameters.BackBufferHeight;
             Screen.Setup(width, height, null, null);
         }
 
@@ -78,13 +78,6 @@ namespace C3DE
         {
             if (Application.GraphicsDevice == null)
                 Application.GraphicsDevice = GraphicsDevice;
-
-#if ANDROID
-			Screen.Setup (GraphicsDevice.Adapter.CurrentDisplayMode.Width, GraphicsDevice.Adapter.CurrentDisplayMode.Height, null, null);
-#elif LINUX
-			Screen.Setup(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight, null, null);
-			GraphicsDevice.Viewport = new Viewport(0, 0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
-#endif
 
             if (_autoDetectResolution)
                 Screen.SetBestResolution(_requestFullscreen);
@@ -133,6 +126,8 @@ namespace C3DE
 
             if (m_nextRenderer != null)
             {
+                renderer?.Dispose();
+
                 renderer = m_nextRenderer;
                 renderer.Initialize(Content);
                 m_nextRenderer = null;

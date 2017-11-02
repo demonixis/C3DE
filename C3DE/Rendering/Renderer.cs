@@ -1,18 +1,19 @@
 ﻿using C3DE.Components;
 using C3DE.PostProcessing;
 using C3DE.UI;
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.Collections.Generic;
 
 namespace C3DE.Rendering
 {
-    public abstract class Renderer
+    public abstract class Renderer : IDisposable
     {
         protected GraphicsDevice m_graphicsDevice;
         protected SpriteBatch m_spriteBatch;
         protected internal GUI uiManager;
+        protected bool isDisposed;
 
         public bool NeedsBufferUpdate { get; set; } = true;
 
@@ -80,5 +81,26 @@ namespace C3DE.Rendering
         public abstract void Render(Scene scene);
 
         public abstract void RenderEditor(Scene scene, Camera camera, RenderTarget2D target);
+
+        #region IDisposable
+
+        public virtual void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        public abstract void Dispose(bool disposing);
+
+        protected void DisposeObject(IDisposable obj)
+        {
+            if (obj != null)
+            {
+                obj.Dispose();
+                obj = null;
+            }
+        }
+
+        #endregion
     }
 }

@@ -25,6 +25,17 @@ namespace C3DE.Rendering
             RebuildRenderTargets();
         }
 
+        public override void Dispose(bool disposing)
+        {
+            if (!isDisposed)
+            {
+                if (disposing)
+                    DisposeObject(sceneRT);
+
+                isDisposed = true;
+            }
+        }
+
         /// <summary>
         /// Render renderable objects
         /// </summary>
@@ -56,7 +67,7 @@ namespace C3DE.Rendering
             m_graphicsDevice.SetRenderTarget(sceneRT);
 
             for (int i = 0, l = passes.Count; i < l; i++)
-                if (passes[i].Enabled) 
+                if (passes[i].Enabled)
                     passes[i].Apply(m_spriteBatch, sceneRT);
         }
 

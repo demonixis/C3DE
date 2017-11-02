@@ -16,33 +16,25 @@ namespace C3DE.PostProcessing
     /// You can use Draw() to apply the color grading / color correction to an image and use the returned texture for output.
     /// You can use CreateLUT to create default Look-up tables with unmodified colors.
     /// </summary>
-    public class ColorGradingFilter : PostProcessPass, IDisposable
+    public class ColorGrading : PostProcessPass, IDisposable
     {
-
-        #region fields & properties
-
-        #region fields
         private Effect _shaderEffect;
         private FullScreenQuadRenderer _fsq;
-
         private RenderTarget2D _renderTarget;
-
         private EffectParameter _sizeParam;
         private EffectParameter _sizeRootParam;
         private EffectParameter _inputTextureParam;
         private EffectParameter _lutParam;
         private EffectPass _createLUTPass;
         private EffectPass _applyLUTPass;
-
         private int _size;
         private Texture2D _inputTexture;
         private Texture2D _lookupTable;
 
         public enum LUTSizes { Size16, Size32, Size64, Size4 };
 
-        #endregion
-
         #region properties
+
         private int Size
         {
             get { return _size; }
@@ -85,10 +77,6 @@ namespace C3DE.PostProcessing
         }
         #endregion
 
-        #endregion
-
-        #region initialize
-
         public override void Dispose()
         {
             _shaderEffect?.Dispose();
@@ -96,29 +84,20 @@ namespace C3DE.PostProcessing
             _renderTarget?.Dispose();
         }
 
-        #endregion
-
-        #region main functions
-
-        public RenderTarget2D Draw(GraphicsDevice graphics, Texture2D input, Texture2D lookupTable)
+        public override void Initialize(ContentManager content)
         {
-            //Set up rendertarget
-            if (_renderTarget == null || _renderTarget.Width != input.Width || _renderTarget.Height != input.Height)
-            {
-                _renderTarget?.Dispose();
-                _renderTarget = new RenderTarget2D(graphics, input.Width, input.Height, false, SurfaceFormat.Color, DepthFormat.None);
-            }
+            if (_shaderEffect != null)
+                return;
 
-            InputTexture = input;
-            LookUpTable = lookupTable;
-            Size = ((lookupTable.Width == 512) ? 64 : (lookupTable.Width == 256) ? 32 : (lookupTable.Width == 64) ? 16 : 4);
+            _shaderEffect = content.Load<Effect>("Shaders/PostProcessing/ColorGrading");
+            _sizeParam = _shaderEffect.Parameters["Size"];
+            _sizeRootParam = _shaderEffect.Parameters["SizeRoot"];
+            _inputTextureParam = _shaderEffect.Parameters["InputTexture"];
+            _lutParam = _shaderEffect.Parameters["LUT"];
 
-            graphics.SetRenderTarget(_renderTarget);
-            graphics.BlendState = BlendState.Opaque;
-
-            _applyLUTPass.Apply();
-            _fsq.RenderFullscreenQuad(graphics);
-            return _renderTarget;
+            _applyLUTPass = _shaderEffect.Techniques["ApplyLUT"].Passes[0];
+            _createLUTPass = _shaderEffect.Techniques["CreateLUT"].Passes[0];
+            _fsq = new FullScreenQuadRenderer(Application.GraphicsDevice);
         }
 
         /// <summary>
@@ -150,30 +129,27 @@ namespace C3DE.PostProcessing
             stream.Dispose();
         }
 
-        public override void Initialize(ContentManager content)
-        {
-            if (_shaderEffect != null)
-                return;
-
-            _shaderEffect = content.Load<Effect>("Shaders/PostProcessing/ColorGrading");
-            _sizeParam = _shaderEffect.Parameters["Size"];
-            _sizeRootParam = _shaderEffect.Parameters["SizeRoot"];
-            _inputTextureParam = _shaderEffect.Parameters["InputTexture"];
-            _lutParam = _shaderEffect.Parameters["LUT"];
-
-            _applyLUTPass = _shaderEffect.Techniques["ApplyLUT"].Passes[0];
-            _createLUTPass = _shaderEffect.Techniques["CreateLUT"].Passes[0];
-            _fsq = new FullScreenQuadRenderer(Application.GraphicsDevice);
-        }
-
         public override void Apply(SpriteBatch spriteBatch, RenderTarget2D renderTarget)
         {
-            Draw(Application.GraphicsDevice, renderTarget, LUT);
+            var graphics = Application.GraphicsDevice;
+
+            //Set up rendertarget
+            if (_renderTarget == null || _renderTarget.Width != renderTarget.Width || _renderTarget.Height != renderTarget.Height)
+            {
+                _renderTarget?.Dispose();
+                _renderTarget = new RenderTarget2D(graphics, renderTarget.Width, renderTarget.Height, false, SurfaceFormat.Color, DepthFormat.None);
+            }
+
+            InputTexture = renderTarget;
+            //LookUpTable = _lookupTable;
+            Size = ((renderTarget.Width == 512) ? 64 : (renderTarget.Width == 256) ? 32 : (renderTarget.Width == 64) ? 16 : 4);
+
+            graphics.SetRenderTarget(_renderTarget);
+            graphics.BlendState = BlendState.Opaque;
+
+            _applyLUTPass.Apply();
+            _fsq.RenderFullscreenQuad(graphics);
+            //return _renderTarget;
         }
-
-        public Texture2D LUT { get; set; }
-
-        #endregion
-
     }
 }

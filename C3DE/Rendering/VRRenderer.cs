@@ -93,5 +93,19 @@ namespace C3DE.Rendering
 
             m_spriteBatch.End();
         }
+
+        public override void Dispose(bool disposing)
+        {
+            if (!isDisposed)
+            {
+                if (disposing)
+                {
+                    DisposeObject(renderTargetEye[0]);
+                    DisposeObject(renderTargetEye[1]);
+                }
+
+                isDisposed = true;
+            }
+        }
     }
 }

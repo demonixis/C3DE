@@ -9,11 +9,17 @@ namespace C3DE.PostProcessing
     /// Version 1.1, 16. Dez. 2016
     /// Bloom / Blur, 2016 TheKosmonaut
     /// </summary>
-    public class BloomFilter : PostProcessPass, IDisposable
+    public class Bloom : PostProcessPass, IDisposable
     {
-        #region fields & properties
-
-        #region private fields
+        public enum BloomPresets
+        {
+            Wide,
+            Focussed,
+            Small,
+            SuperWide,
+            Cheap,
+            One
+        };
 
         //resolution
         private int _width;
@@ -26,22 +32,18 @@ namespace C3DE.PostProcessing
         private RenderTarget2D _bloomRenderTarget2DMip3;
         private RenderTarget2D _bloomRenderTarget2DMip4;
         private RenderTarget2D _bloomRenderTarget2DMip5;
-
         private SurfaceFormat _renderTargetFormat;
 
         //Objects
         private GraphicsDevice _graphicsDevice;
         private QuadRenderer _quadRenderer;
 
-        //Shader + variables
         private Effect _bloomEffect;
-
         private EffectPass _bloomPassExtract;
         private EffectPass _bloomPassExtractLuminance;
         private EffectPass _bloomPassDownsample;
         private EffectPass _bloomPassUpsample;
         private EffectPass _bloomPassUpsampleLuminance;
-
         private EffectParameter _bloomParameterScreenTexture;
         private EffectParameter _bloomInverseResolutionParameter;
         private EffectParameter _bloomRadiusParameter;
@@ -55,39 +57,27 @@ namespace C3DE.PostProcessing
         private float _bloomRadius3 = 1.0f;
         private float _bloomRadius4 = 1.0f;
         private float _bloomRadius5 = 1.0f;
-
         private float _bloomStrength1 = 1.0f;
         private float _bloomStrength2 = 1.0f;
         private float _bloomStrength3 = 1.0f;
         private float _bloomStrength4 = 1.0f;
         private float _bloomStrength5 = 1.0f;
-
         public float BloomStrengthMultiplier = 1.0f;
-
         private float _radiusMultiplier = 1.0f;
 
-
-        #endregion
-
-        #region public fields + enums
+        // Properties
+        private BloomPresets _bloomPreset;
+        private Vector2 _bloomInverseResolutionField;
+        private float _bloomRadius;
+        private float _bloomStrength;
+        private float _bloomStreakLength;
+        private float _bloomThreshold;
 
         public bool BloomUseLuminance = true;
         public int BloomDownsamplePasses = 5;
 
-        //enums
-        public enum BloomPresets
-        {
-            Wide,
-            Focussed,
-            Small,
-            SuperWide,
-            Cheap,
-            One
-        };
+        #region Properties
 
-        #endregion
-
-        #region properties
         public BloomPresets BloomPreset
         {
             get { return _bloomPreset; }
@@ -99,10 +89,12 @@ namespace C3DE.PostProcessing
                 SetBloomPreset(_bloomPreset);
             }
         }
-        private BloomPresets _bloomPreset;
 
+        private Texture2D BloomScreenTexture
+        {
+            set { _bloomParameterScreenTexture.SetValue(value); }
+        }
 
-        private Texture2D BloomScreenTexture { set { _bloomParameterScreenTexture.SetValue(value); } }
         private Vector2 BloomInverseResolution
         {
             get { return _bloomInverseResolutionField; }
@@ -115,15 +107,10 @@ namespace C3DE.PostProcessing
                 }
             }
         }
-        private Vector2 _bloomInverseResolutionField;
 
         private float BloomRadius
         {
-            get
-            {
-                return _bloomRadius;
-            }
-
+            get { return _bloomRadius; }
             set
             {
                 if (Math.Abs(_bloomRadius - value) > 0.001f)
@@ -131,10 +118,8 @@ namespace C3DE.PostProcessing
                     _bloomRadius = value;
                     _bloomRadiusParameter.SetValue(_bloomRadius * _radiusMultiplier);
                 }
-
             }
         }
-        private float _bloomRadius;
 
         private float BloomStrength
         {
@@ -149,7 +134,6 @@ namespace C3DE.PostProcessing
 
             }
         }
-        private float _bloomStrength;
 
         public float BloomStreakLength
         {
@@ -163,7 +147,6 @@ namespace C3DE.PostProcessing
                 }
             }
         }
-        private float _bloomStreakLength;
 
         public float BloomThreshold
         {
@@ -177,64 +160,8 @@ namespace C3DE.PostProcessing
                 }
             }
         }
-        private float _bloomThreshold;
 
         #endregion
-
-        #endregion
-
-        #region initialize
-
-        public void Load(GraphicsDevice graphicsDevice, ContentManager content, int width, int height, SurfaceFormat renderTargetFormat = SurfaceFormat.Color, QuadRenderer quadRenderer = null)
-        {
-            if (_graphicsDevice != null)
-                return;
-
-            _graphicsDevice = graphicsDevice;
-            UpdateResolution(width, height);
-
-            //if quadRenderer == null -> new, otherwise not
-            _quadRenderer = quadRenderer ?? new QuadRenderer(graphicsDevice);
-
-            _renderTargetFormat = renderTargetFormat;
-
-            //Load the shader parameters and passes for cheap and easy access
-            _bloomEffect = content.Load<Effect>("Shaders/PostProcessing/Bloom");
-            _bloomInverseResolutionParameter = _bloomEffect.Parameters["InverseResolution"];
-            _bloomRadiusParameter = _bloomEffect.Parameters["Radius"];
-            _bloomStrengthParameter = _bloomEffect.Parameters["Strength"];
-            _bloomStreakLengthParameter = _bloomEffect.Parameters["StreakLength"];
-            _bloomThresholdParameter = _bloomEffect.Parameters["Threshold"];
-
-            //For DirectX / Windows
-            _bloomParameterScreenTexture = _bloomEffect.Parameters["ScreenTexture"];
-
-            //If we are on OpenGL it's different, load the other one then!
-            if (_bloomParameterScreenTexture == null)
-            {
-                //for OpenGL / CrossPlatform
-                _bloomParameterScreenTexture = _bloomEffect.Parameters["LinearSampler+ScreenTexture"];
-            }
-
-            _bloomPassExtract = _bloomEffect.Techniques["Extract"].Passes[0];
-            _bloomPassExtractLuminance = _bloomEffect.Techniques["ExtractLuminance"].Passes[0];
-            _bloomPassDownsample = _bloomEffect.Techniques["Downsample"].Passes[0];
-            _bloomPassUpsample = _bloomEffect.Techniques["Upsample"].Passes[0];
-            _bloomPassUpsampleLuminance = _bloomEffect.Techniques["UpsampleLuminance"].Passes[0];
-
-            //An interesting blendstate for merging the initial image with the bloom.
-            //BlendStateBloom = new BlendState();
-            //BlendStateBloom.ColorBlendFunction = BlendFunction.Add;
-            //BlendStateBloom.ColorSourceBlend = Blend.BlendFactor;
-            //BlendStateBloom.ColorDestinationBlend = Blend.BlendFactor;
-            //BlendStateBloom.BlendFactor = new Color(0.5f, 0.5f, 0.5f);
-
-            //Default threshold.
-            BloomThreshold = 0.2f;
-            //Setup the default preset values.
-            //BloomPreset = BloomPresets.One;
-            SetBloomPreset(BloomPreset);
-        }
 
         private void SetBloomPreset(BloomPresets preset)
         {
@@ -333,13 +260,100 @@ namespace C3DE.PostProcessing
             }
         }
 
-        #endregion
+        private void ChangeBlendState()
+        {
+            _graphicsDevice.BlendState = BlendState.AlphaBlend;
+        }
 
-        public Texture2D Draw(Texture2D inputTexture, int width, int height)
+        public void UpdateResolution(int width, int height)
+        {
+            _width = width;
+            _height = height;
+
+            if (_bloomRenderTarget2DMip0 != null)
+            {
+                Dispose();
+            }
+
+            _bloomRenderTarget2DMip0 = new RenderTarget2D(_graphicsDevice,
+                (int)(width),
+                (int)(height), false, _renderTargetFormat, DepthFormat.None, 0, RenderTargetUsage.DiscardContents);
+            _bloomRenderTarget2DMip1 = new RenderTarget2D(_graphicsDevice,
+                (int)(width / 2),
+                (int)(height / 2), false, _renderTargetFormat, DepthFormat.None, 0, RenderTargetUsage.PreserveContents);
+            _bloomRenderTarget2DMip2 = new RenderTarget2D(_graphicsDevice,
+                (int)(width / 4),
+                (int)(height / 4), false, _renderTargetFormat, DepthFormat.None, 0, RenderTargetUsage.PreserveContents);
+            _bloomRenderTarget2DMip3 = new RenderTarget2D(_graphicsDevice,
+                (int)(width / 8),
+                (int)(height / 8), false, _renderTargetFormat, DepthFormat.None, 0, RenderTargetUsage.PreserveContents);
+            _bloomRenderTarget2DMip4 = new RenderTarget2D(_graphicsDevice,
+                (int)(width / 16),
+                (int)(height / 16), false, _renderTargetFormat, DepthFormat.None, 0, RenderTargetUsage.PreserveContents);
+            _bloomRenderTarget2DMip5 = new RenderTarget2D(_graphicsDevice,
+                (int)(width / 32),
+                (int)(height / 32), false, _renderTargetFormat, DepthFormat.None, 0, RenderTargetUsage.PreserveContents);
+        }
+
+        public override void Dispose()
+        {
+            _bloomRenderTarget2DMip0.Dispose();
+            _bloomRenderTarget2DMip1.Dispose();
+            _bloomRenderTarget2DMip2.Dispose();
+            _bloomRenderTarget2DMip3.Dispose();
+            _bloomRenderTarget2DMip4.Dispose();
+            _bloomRenderTarget2DMip5.Dispose();
+        }
+
+        public override void Initialize(ContentManager content)
+        {
+            if (_graphicsDevice != null)
+                return;
+
+            _graphicsDevice = Application.GraphicsDevice;
+            UpdateResolution(Screen.Width, Screen.Height);
+
+            //if quadRenderer == null -> new, otherwise not
+            _quadRenderer = new QuadRenderer(_graphicsDevice);
+            _renderTargetFormat = SurfaceFormat.Color;
+
+            //Load the shader parameters and passes for cheap and easy access
+            _bloomEffect = content.Load<Effect>("Shaders/PostProcessing/Bloom");
+            _bloomInverseResolutionParameter = _bloomEffect.Parameters["InverseResolution"];
+            _bloomRadiusParameter = _bloomEffect.Parameters["Radius"];
+            _bloomStrengthParameter = _bloomEffect.Parameters["Strength"];
+            _bloomStreakLengthParameter = _bloomEffect.Parameters["StreakLength"];
+            _bloomThresholdParameter = _bloomEffect.Parameters["Threshold"];
+
+            //For DirectX / Windows
+            _bloomParameterScreenTexture = _bloomEffect.Parameters["ScreenTexture"];
+
+            //If we are on OpenGL it's different, load the other one then!
+            if (_bloomParameterScreenTexture == null)
+            {
+                //for OpenGL / CrossPlatform
+                _bloomParameterScreenTexture = _bloomEffect.Parameters["LinearSampler+ScreenTexture"];
+            }
+
+            _bloomPassExtract = _bloomEffect.Techniques["Extract"].Passes[0];
+            _bloomPassExtractLuminance = _bloomEffect.Techniques["ExtractLuminance"].Passes[0];
+            _bloomPassDownsample = _bloomEffect.Techniques["Downsample"].Passes[0];
+            _bloomPassUpsample = _bloomEffect.Techniques["Upsample"].Passes[0];
+            _bloomPassUpsampleLuminance = _bloomEffect.Techniques["UpsampleLuminance"].Passes[0];
+
+            //Default threshold.
+            BloomThreshold = 0.2f;
+            SetBloomPreset(BloomPreset);
+        }
+
+        public override void Apply(SpriteBatch spriteBatch, RenderTarget2D renderTarget)
         {
             //Check if we are initialized
             if (_graphicsDevice == null)
                 throw new Exception("Module not yet Loaded / Initialized. Use Load() first");
+
+            var width = Screen.Width;
+            var height = Screen.Height;
 
             //Change renderTarget resolution if different from what we expected. If lower than the inputTexture we gain performance.
             if (width != _width || height != _height)
@@ -347,7 +361,7 @@ namespace C3DE.PostProcessing
                 UpdateResolution(width, height);
 
                 //Adjust the blur so it looks consistent across diferrent scalings
-                _radiusMultiplier = (float)width / inputTexture.Width;
+                _radiusMultiplier = (float)width / renderTarget.Width;
 
                 //Update our variables with the multiplier
                 SetBloomPreset(BloomPreset);
@@ -360,7 +374,7 @@ namespace C3DE.PostProcessing
             //We extract the bright values which are above the Threshold and save them to Mip0
             _graphicsDevice.SetRenderTarget(_bloomRenderTarget2DMip0);
 
-            BloomScreenTexture = inputTexture;
+            BloomScreenTexture = renderTarget;
             BloomInverseResolution = new Vector2(1.0f / _width, 1.0f / _height);
 
             if (BloomUseLuminance) _bloomPassExtractLuminance.Apply();
@@ -455,7 +469,6 @@ namespace C3DE.PostProcessing
                             _quadRenderer.RenderQuad(_graphicsDevice, Vector2.One * -1, Vector2.One);
 
                             BloomInverseResolution /= 2;
-
                         }
 
                         ChangeBlendState();
@@ -471,7 +484,6 @@ namespace C3DE.PostProcessing
                         _quadRenderer.RenderQuad(_graphicsDevice, Vector2.One * -1, Vector2.One);
 
                         BloomInverseResolution /= 2;
-
                     }
 
                     ChangeBlendState();
@@ -504,63 +516,7 @@ namespace C3DE.PostProcessing
             }
 
             //Note the final step could be done as a blend to the final texture.
-
-            return _bloomRenderTarget2DMip0;
-        }
-
-        private void ChangeBlendState()
-        {
-            _graphicsDevice.BlendState = BlendState.AlphaBlend;
-        }
-
-        public void UpdateResolution(int width, int height)
-        {
-            _width = width;
-            _height = height;
-
-            if (_bloomRenderTarget2DMip0 != null)
-            {
-                Dispose();
-            }
-
-            _bloomRenderTarget2DMip0 = new RenderTarget2D(_graphicsDevice,
-                (int)(width),
-                (int)(height), false, _renderTargetFormat, DepthFormat.None, 0, RenderTargetUsage.DiscardContents);
-            _bloomRenderTarget2DMip1 = new RenderTarget2D(_graphicsDevice,
-                (int)(width / 2),
-                (int)(height / 2), false, _renderTargetFormat, DepthFormat.None, 0, RenderTargetUsage.PreserveContents);
-            _bloomRenderTarget2DMip2 = new RenderTarget2D(_graphicsDevice,
-                (int)(width / 4),
-                (int)(height / 4), false, _renderTargetFormat, DepthFormat.None, 0, RenderTargetUsage.PreserveContents);
-            _bloomRenderTarget2DMip3 = new RenderTarget2D(_graphicsDevice,
-                (int)(width / 8),
-                (int)(height / 8), false, _renderTargetFormat, DepthFormat.None, 0, RenderTargetUsage.PreserveContents);
-            _bloomRenderTarget2DMip4 = new RenderTarget2D(_graphicsDevice,
-                (int)(width / 16),
-                (int)(height / 16), false, _renderTargetFormat, DepthFormat.None, 0, RenderTargetUsage.PreserveContents);
-            _bloomRenderTarget2DMip5 = new RenderTarget2D(_graphicsDevice,
-                (int)(width / 32),
-                (int)(height / 32), false, _renderTargetFormat, DepthFormat.None, 0, RenderTargetUsage.PreserveContents);
-        }
-
-        public override void Dispose()
-        {
-            _bloomRenderTarget2DMip0.Dispose();
-            _bloomRenderTarget2DMip1.Dispose();
-            _bloomRenderTarget2DMip2.Dispose();
-            _bloomRenderTarget2DMip3.Dispose();
-            _bloomRenderTarget2DMip4.Dispose();
-            _bloomRenderTarget2DMip5.Dispose();
-        }
-
-        public override void Initialize(ContentManager content)
-        {
-            Load(Application.GraphicsDevice, content, Screen.Width, Screen.Height);
-        }
-
-        public override void Apply(SpriteBatch spriteBatch, RenderTarget2D renderTarget)
-        {
-            Draw(renderTarget, Screen.Width, Screen.Height);
+            //return _bloomRenderTarget2DMip0;
         }
     }
 }

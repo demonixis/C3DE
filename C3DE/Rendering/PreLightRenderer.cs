@@ -6,6 +6,7 @@ using C3DE.Materials;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.Collections.Generic;
 
 namespace C3DE.Rendering
@@ -40,6 +41,22 @@ namespace C3DE.Rendering
             _lightMesh = so.AddComponent<MeshRenderer>();
             _lightMesh.Geometry = new SphereGeometry();
             _lightMesh.Geometry.Build();
+        }
+
+        public override void Dispose(bool disposing)
+        {
+            if (!isDisposed)
+            {
+                if (disposing)
+                {
+                    DisposeObject(_depthRT);
+                    DisposeObject(_normalRT);
+                    DisposeObject(_lightRT);
+                    DisposeObject(_depthNormalFX);
+                    DisposeObject(_lightingFX);
+                }
+                isDisposed = true;
+            }
         }
 
         public void CreateRenderTargets(GraphicsDevice device)

@@ -52,8 +52,8 @@
     <Compile Include="Components\Controllers\Mobile\VirtualGamepad.cs" />
     <Compile Include="Components\Lights\Light.cs" />
     <Compile Include="Components\Renderers\MeshRenderer.cs" />
-    <Compile Include="PostProcessing\BloomFilter.cs" />
-    <Compile Include="PostProcessing\ColorGradingFilter.cs" />
+    <Compile Include="PostProcessing\Bloom.cs" />
+    <Compile Include="PostProcessing\ColorGrading.cs" />
     <Compile Include="PostProcessing\FullScreenQuadRenderer.cs" />
     <Compile Include="PostProcessing\QuadRenderer.cs" />
     <Compile Include="Rendering\VRRenderer.cs" />
