@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace C3DE.PostProcess
+namespace C3DE.PostProcessing
 {
     public class ConvolutionPass : PostProcessPass
     {
@@ -26,7 +26,7 @@ namespace C3DE.PostProcess
 
         public override void Initialize(ContentManager content)
         {
-            _covolutionEffect = content.Load<Effect>("FX/PostProcess/Convolution");
+            _covolutionEffect = content.Load<Effect>("Shaders/PostProcessing/Convolution");
 			_screenSize = new Vector2(Screen.Width, Screen.Height);
 
             /*if (Application.Engine.VREnabled)

@@ -22,7 +22,7 @@ namespace C3DE.Materials
 
         public override void LoadContent(ContentManager content)
         {
-            effect = content.Load<Effect>("FX/UnlitColor");
+            effect = content.Load<Effect>("Shaders/UnlitColor");
         }
 
         public override void PrePass(Camera camera)

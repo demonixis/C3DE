@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace C3DE.PostProcess
+namespace C3DE.PostProcessing
 {
     public class RefractionPass : PostProcessPass
     {
@@ -52,7 +52,7 @@ namespace C3DE.PostProcess
 
         public override void Initialize(ContentManager content)
         {
-            _refractionEffect = content.Load<Effect>("FX/PostProcess/Refraction");
+            _refractionEffect = content.Load<Effect>("Shaders/PostProcessing/Refraction");
         }
 
         public override void Apply(SpriteBatch spriteBatch, RenderTarget2D renderTarget)

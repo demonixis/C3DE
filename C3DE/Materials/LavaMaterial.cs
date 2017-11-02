@@ -24,7 +24,7 @@ namespace C3DE.Materials
 
         public override void LoadContent(ContentManager content)
         {
-            effect = content.Load<Effect>("FX/LavaEffect");
+            effect = content.Load<Effect>("Shaders/LavaEffect");
         }
 
         public override void PrePass(Camera camera)

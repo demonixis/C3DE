@@ -26,9 +26,9 @@ namespace C3DE.Materials
         public override void LoadContent(ContentManager content)
         {
             if (ShaderQuality == ShaderQuality.Low)
-                effect = content.Load<Effect>("FX/TerrainEffect.Low");
+                effect = content.Load<Effect>("Shaders/TerrainEffect.Low");
             else
-                effect = content.Load<Effect>("FX/TerrainEffect");
+                effect = content.Load<Effect>("Shaders/TerrainEffect");
         }
 
         public override void PrePass(Camera camera)

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace C3DE.PostProcess
+namespace C3DE.PostProcessing
 {
     class PostProcessManager
     {

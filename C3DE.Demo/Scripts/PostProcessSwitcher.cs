@@ -1,6 +1,6 @@
 ﻿using C3DE.Components;
 using C3DE.Materials;
-using C3DE.PostProcess;
+using C3DE.PostProcessing;
 using C3DE.Prefabs;
 using C3DE.UI;
 using Microsoft.Xna.Framework;
@@ -30,9 +30,14 @@ namespace C3DE.Demo.Scripts
             _passCounter = 0;
 
             // Setup PostProcess.
-            var bloomPass = new BloomPass();
+           var bloomPass = new BloomPass();
             bloomPass.Settings = new BloomSettings("Côôl", 0.15f, 1f, 4.0f, 1.0f, 1f, 1f);
             AddPass(bloomPass);
+            /*
+            var pass = new BloomFilter();
+            pass.Initialize(Application.Content);
+            pass.BloomPreset = BloomFilter.BloomPresets.SuperWide;
+            AddPass(pass);*/
 
             AddPass(new C64FilterPass());
 

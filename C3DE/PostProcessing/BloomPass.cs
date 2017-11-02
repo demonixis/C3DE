@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 
-namespace C3DE.PostProcess
+namespace C3DE.PostProcessing
 {
     public class BloomPass : PostProcessPass
     {
@@ -48,9 +48,9 @@ namespace C3DE.PostProcess
         /// </summary>
         public override void Initialize(ContentManager content)
         {
-            bloomExtractEffect = content.Load<Effect>("FX/PostProcess/BloomExtract");
-            bloomCombineEffect = content.Load<Effect>("FX/PostProcess/BloomCombine");
-            gaussianBlurEffect = content.Load<Effect>("FX/PostProcess/GaussianBlur");
+            bloomExtractEffect = content.Load<Effect>("Shaders/PostProcessing/BloomExtract");
+            bloomCombineEffect = content.Load<Effect>("Shaders/PostProcessing/BloomCombine");
+            gaussianBlurEffect = content.Load<Effect>("Shaders/PostProcessing/GaussianBlur");
 
             // Look up the resolution and format of our main backbuffer.
             PresentationParameters pp = Application.GraphicsDevice.PresentationParameters;

@@ -3,7 +3,7 @@ using C3DE.Components.Colliders;
 using C3DE.Components.Lights;
 using C3DE.Components.Renderers;
 using C3DE.Materials;
-using C3DE.PostProcess;
+using C3DE.PostProcessing;
 using C3DE.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;

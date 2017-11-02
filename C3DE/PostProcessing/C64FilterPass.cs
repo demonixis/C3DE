@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 
-namespace C3DE.PostProcess
+namespace C3DE.PostProcessing
 {
     public class C64FilterPass : PostProcessPass
     {
@@ -46,7 +46,7 @@ namespace C3DE.PostProcess
 
         public override void Initialize(ContentManager content)
         {
-            _c64filterEffect = content.Load<Effect>("FX/PostProcess/C64Filter");
+            _c64filterEffect = content.Load<Effect>("Shaders/PostProcessing/C64Filter");
 
             if (_palette == null)
                 SetPalette(C64Palette);

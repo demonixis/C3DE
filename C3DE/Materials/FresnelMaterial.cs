@@ -19,7 +19,7 @@ namespace C3DE.Materials
 
         public override void LoadContent(ContentManager content)
         {
-            effect = content.Load<Effect>("FX/FresnelEffect");
+            effect = content.Load<Effect>("Shaders/FresnelEffect");
         }
 
         public override void PrePass(Camera camera)

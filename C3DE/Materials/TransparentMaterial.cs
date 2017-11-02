@@ -20,7 +20,7 @@ namespace C3DE.Materials
 
         public override void LoadContent(ContentManager content)
         {
-            effect = content.Load<Effect>("FX/TransparentEffect");
+            effect = content.Load<Effect>("Shaders/TransparentEffect");
         }
 
         public override void PrePass(Camera camera)

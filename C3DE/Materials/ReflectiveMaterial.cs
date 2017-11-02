@@ -29,7 +29,7 @@ namespace C3DE.Materials
 
         public override void LoadContent(ContentManager content)
         {
-            effect = content.Load<Effect>("FX/ReflectionEffect");
+            effect = content.Load<Effect>("Shaders/ReflectionEffect");
         }
 
         public override void PrePass(Camera camera)

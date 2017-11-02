@@ -44,7 +44,7 @@ namespace C3DE
                 throw new Exception("The array of texture names must contains 6 elements.");
 
             if (SkyboxEffect == null)
-                SkyboxEffect = content.Load<Effect>("FX/SkyboxEffect");
+                SkyboxEffect = content.Load<Effect>("Shaders/SkyboxEffect");
 
             _geometry.Size = new Vector3(size);
             _geometry.Build();

@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace C3DE.PostProcess
+namespace C3DE.PostProcessing
 {
     /// <summary>
     /// Class holds all the settings used to tweak the bloom effect.

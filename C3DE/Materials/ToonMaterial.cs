@@ -29,7 +29,7 @@ namespace C3DE.Materials
 
         public override void LoadContent(ContentManager content)
         {
-            effect = content.Load<Effect>("FX/ToonEffect");
+            effect = content.Load<Effect>("Shaders/ToonEffect");
         }
 
         public override void PrePass(Camera camera)

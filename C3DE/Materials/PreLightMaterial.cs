@@ -21,7 +21,7 @@ namespace C3DE.Materials
 
         public override void LoadContent(ContentManager content)
         {
-            effect = content.Load<Effect>("FX/PreLighting/PL_StandardFX");
+            effect = content.Load<Effect>("Shaders/PreLighting/PL_StandardFX");
         }
 
         public override void PrePass(Camera camera)

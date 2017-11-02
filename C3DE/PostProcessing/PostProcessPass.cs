@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using System;
 
-namespace C3DE.PostProcess
+namespace C3DE.PostProcessing
 {
     public abstract class PostProcessPass : IComparable, IDisposable
     {

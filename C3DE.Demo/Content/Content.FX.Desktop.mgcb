@@ -13,201 +13,213 @@
 
 #---------------------------------- Content ---------------------------------#
 
-#begin FX/PostProcess/AverageColor.fx
+#begin Shaders/FresnelEffect.fx
 /importer:EffectImporter
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
-/build:FX/PostProcess/AverageColor.fx
+/build:Shaders/FresnelEffect.fx
 
-#begin FX/PostProcess/BloomCombine.fx
+#begin Shaders/LavaEffect.fx
 /importer:EffectImporter
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
-/build:FX/PostProcess/BloomCombine.fx
+/build:Shaders/LavaEffect.fx
 
-#begin FX/PostProcess/BloomExtract.fx
+#begin Shaders/PostProcessing/AverageColor.fx
 /importer:EffectImporter
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
-/build:FX/PostProcess/BloomExtract.fx
+/build:Shaders/PostProcessing/AverageColor.fx
 
-#begin FX/PostProcess/C64Filter.fx
+#begin Shaders/PostProcessing/Bloom.fx
 /importer:EffectImporter
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
-/build:FX/PostProcess/C64Filter.fx
+/build:Shaders/PostProcessing/Bloom.fx
 
-#begin FX/PostProcess/CGAFilter.fx
+#begin Shaders/PostProcessing/BloomCombine.fx
 /importer:EffectImporter
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
-/build:FX/PostProcess/CGAFilter.fx
+/build:Shaders/PostProcessing/BloomCombine.fx
 
-#begin FX/PostProcess/Convolution.fx
+#begin Shaders/PostProcessing/BloomExtract.fx
 /importer:EffectImporter
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
-/build:FX/PostProcess/Convolution.fx
+/build:Shaders/PostProcessing/BloomExtract.fx
 
-#begin FX/PostProcess/Film.fx
+#begin Shaders/PostProcessing/C64Filter.fx
 /importer:EffectImporter
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
-/build:FX/PostProcess/Film.fx
+/build:Shaders/PostProcessing/C64Filter.fx
 
-#begin FX/PostProcess/FXAA.fx
+#begin Shaders/PostProcessing/CGAFilter.fx
 /importer:EffectImporter
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
-/build:FX/PostProcess/FXAA.fx
+/build:Shaders/PostProcessing/CGAFilter.fx
 
-#begin FX/PostProcess/GaussianBlur.fx
+#begin Shaders/PostProcessing/ColorGrading.fx
 /importer:EffectImporter
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
-/build:FX/PostProcess/GaussianBlur.fx
+/build:Shaders/PostProcessing/ColorGrading.fx
 
-#begin FX/PostProcess/GrayScale.fx
+#begin Shaders/PostProcessing/Convolution.fx
 /importer:EffectImporter
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
-/build:FX/PostProcess/GrayScale.fx
+/build:Shaders/PostProcessing/Convolution.fx
 
-#begin FX/PostProcess/OculusDistortionCorrection.fx
+#begin Shaders/PostProcessing/Film.fx
 /importer:EffectImporter
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
-/build:FX/PostProcess/OculusDistortionCorrection.fx
+/build:Shaders/PostProcessing/Film.fx
 
-#begin FX/PostProcess/Refraction.fx
+#begin Shaders/PostProcessing/FXAA.fx
 /importer:EffectImporter
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
-/build:FX/PostProcess/Refraction.fx
+/build:Shaders/PostProcessing/FXAA.fx
 
-#begin FX/PostProcess/SimpleBlur.fx
+#begin Shaders/PostProcessing/GaussianBlur.fx
 /importer:EffectImporter
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
-/build:FX/PostProcess/SimpleBlur.fx
+/build:Shaders/PostProcessing/GaussianBlur.fx
 
-#begin FX/PreLighting/PL_DepthNormal.fx
+#begin Shaders/PostProcessing/GrayScale.fx
 /importer:EffectImporter
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
-/build:FX/PreLighting/PL_DepthNormal.fx
+/build:Shaders/PostProcessing/GrayScale.fx
 
-#begin FX/PreLighting/PL_Lightmap.fx
+#begin Shaders/PostProcessing/OculusDistortionCorrection.fx
 /importer:EffectImporter
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
-/build:FX/PreLighting/PL_Lightmap.fx
+/build:Shaders/PostProcessing/OculusDistortionCorrection.fx
 
-#begin FX/PreLighting/PL_StandardFX.fx
+#begin Shaders/PostProcessing/OsvrDistortion.fx
 /importer:EffectImporter
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
-/build:FX/PreLighting/PL_StandardFX.fx
+/build:Shaders/PostProcessing/OsvrDistortion.fx
 
-#begin FX/FresnelEffect.fx
+#begin Shaders/PostProcessing/Refraction.fx
 /importer:EffectImporter
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
-/build:FX/FresnelEffect.fx
+/build:Shaders/PostProcessing/Refraction.fx
 
-#begin FX/LavaEffect.fx
+#begin Shaders/PostProcessing/SimpleBlur.fx
 /importer:EffectImporter
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
-/build:FX/LavaEffect.fx
+/build:Shaders/PostProcessing/SimpleBlur.fx
 
-#begin FX/ReflectionEffect.fx
+#begin Shaders/PreLighting/PL_DepthNormal.fx
 /importer:EffectImporter
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
-/build:FX/ReflectionEffect.fx
+/build:Shaders/PreLighting/PL_DepthNormal.fx
 
-#begin FX/ShadowMapEffect.fx
+#begin Shaders/PreLighting/PL_Lightmap.fx
 /importer:EffectImporter
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
-/build:FX/ShadowMapEffect.fx
+/build:Shaders/PreLighting/PL_Lightmap.fx
 
-#begin FX/SimpleEffect.fx
+#begin Shaders/PreLighting/PL_StandardFX.fx
 /importer:EffectImporter
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
-/build:FX/SimpleEffect.fx
+/build:Shaders/PreLighting/PL_StandardFX.fx
 
-#begin FX/SkyboxEffect.fx
+#begin Shaders/ReflectionEffect.fx
 /importer:EffectImporter
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
-/build:FX/SkyboxEffect.fx
+/build:Shaders/ReflectionEffect.fx
 
-#begin FX/StandardEffect.fx
+#begin Shaders/ShadowMapEffect.fx
 /importer:EffectImporter
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
-/build:FX/StandardEffect.fx
+/build:Shaders/ShadowMapEffect.fx
 
-#begin FX/StandardEffect.Low.fx
+#begin Shaders/SimpleEffect.fx
 /importer:EffectImporter
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
-/build:FX/StandardEffect.Low.fx
+/build:Shaders/SimpleEffect.fx
 
-#begin FX/TerrainEffect.fx
+#begin Shaders/SkyboxEffect.fx
 /importer:EffectImporter
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
-/build:FX/TerrainEffect.fx
+/build:Shaders/SkyboxEffect.fx
 
-#begin FX/TerrainEffect.Low.fx
+#begin Shaders/StandardEffect.fx
 /importer:EffectImporter
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
-/build:FX/TerrainEffect.Low.fx
+/build:Shaders/StandardEffect.fx
 
-#begin FX/ToonEffect.fx
+#begin Shaders/StandardEffect.Low.fx
 /importer:EffectImporter
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
-/build:FX/ToonEffect.fx
+/build:Shaders/StandardEffect.Low.fx
 
-#begin FX/TransparentEffect.fx
+#begin Shaders/TerrainEffect.fx
 /importer:EffectImporter
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
-/build:FX/TransparentEffect.fx
+/build:Shaders/TerrainEffect.fx
 
-#begin FX/Unlit.fx
+#begin Shaders/TerrainEffect.Low.fx
 /importer:EffectImporter
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
-/build:FX/Unlit.fx
+/build:Shaders/TerrainEffect.Low.fx
 
-#begin FX/UnlitColor.fx
+#begin Shaders/ToonEffect.fx
 /importer:EffectImporter
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
-/build:FX/UnlitColor.fx
+/build:Shaders/ToonEffect.fx
 
-#begin FX/WaterEffect.fx
+#begin Shaders/TransparentEffect.fx
 /importer:EffectImporter
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
-/build:FX/WaterEffect.fx
+/build:Shaders/TransparentEffect.fx
 
-#begin FX/WaterEffect.Low.fx
+#begin Shaders/Unlit.fx
 /importer:EffectImporter
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
-/build:FX/WaterEffect.Low.fx
+/build:Shaders/Unlit.fx
 
-#begin FX/PostProcess/OsvrDistortion.fx
+#begin Shaders/UnlitColor.fx
 /importer:EffectImporter
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
-/build:FX/PostProcess/OsvrDistortion.fx
+/build:Shaders/UnlitColor.fx
+
+#begin Shaders/WaterEffect.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Shaders/WaterEffect.fx
+
+#begin Shaders/WaterEffect.Low.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Shaders/WaterEffect.Low.fx
 

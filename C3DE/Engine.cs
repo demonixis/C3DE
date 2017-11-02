@@ -39,6 +39,7 @@ namespace C3DE
         {
             _graphics = new GraphicsDeviceManager(this);
             _graphics.PreparingDeviceSettings += OnResize;
+            _graphics.GraphicsProfile = GraphicsProfile.HiDef;
             _sceneManager = new SceneManager();
             _initialized = false;
             _autoDetectResolution = false;

@@ -52,7 +52,7 @@ namespace C3DE.Materials
 
         public override void LoadContent(ContentManager content)
         {
-            effect = content.Load<Effect>("FX/SimpleEffect");
+            effect = content.Load<Effect>("Shaders/SimpleEffect");
         }
 
         public override void PrePass(Camera camera)

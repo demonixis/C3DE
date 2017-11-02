@@ -76,9 +76,9 @@ namespace C3DE.Materials
         public override void LoadContent(ContentManager content)
         {
             if (ShaderQuality == ShaderQuality.Low)
-                effect = content.Load<Effect>("FX/WaterEffect.Low");
+                effect = content.Load<Effect>("Shaders/WaterEffect.Low");
             else
-                effect = content.Load<Effect>("FX/WaterEffect");
+                effect = content.Load<Effect>("Shaders/WaterEffect");
         }
 
         public override void PrePass(Camera camera)

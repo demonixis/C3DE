@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace C3DE.PostProcess
+namespace C3DE.PostProcessing
 {
     public class SimpleBlurPass : PostProcessPass
     {
@@ -18,7 +18,7 @@ namespace C3DE.PostProcess
 
         public override void Initialize(ContentManager content)
         {
-            _blurEffect = content.Load<Effect>("FX/PostProcess/SimpleBlur");
+            _blurEffect = content.Load<Effect>("Shaders/PostProcessing/SimpleBlur");
         }
 
         public override void Apply(SpriteBatch spriteBatch, RenderTarget2D renderTarget)

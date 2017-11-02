@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 
-namespace C3DE.PostProcess
+namespace C3DE.PostProcessing
 {
     public class CGAFilterPass : PostProcessPass
     {
@@ -80,7 +80,7 @@ namespace C3DE.PostProcess
 
         public override void Initialize(ContentManager content)
         {
-            _cgafilterEffect = content.Load<Effect>("FX/PostProcess/CGAFilter");
+            _cgafilterEffect = content.Load<Effect>("Shaders/PostProcessing/CGAFilter");
 
             if (_palette == null)
                 SetPalette(Palette0HI);

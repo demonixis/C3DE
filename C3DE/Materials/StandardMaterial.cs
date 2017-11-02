@@ -44,9 +44,9 @@ namespace C3DE.Materials
         public override void LoadContent(ContentManager content)
         {
             if (ShaderQuality == ShaderQuality.Low)
-                effect = content.Load<Effect>("FX/StandardEffect.Low");
+                effect = content.Load<Effect>("Shaders/StandardEffect.Low");
             else
-                effect = content.Load<Effect>("FX/StandardEffect");
+                effect = content.Load<Effect>("Shaders/StandardEffect");
         }
 
         public override void PrePass(Camera camera)

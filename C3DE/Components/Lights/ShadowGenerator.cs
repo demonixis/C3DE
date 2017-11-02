@@ -70,7 +70,7 @@ namespace C3DE.Components.Lights
 
         public void Initialize()
         {
-            _shadowEffect = Application.Content.Load<Effect>("FX/ShadowMapEffect");
+            _shadowEffect = Application.Content.Load<Effect>("Shaders/ShadowMapEffect");
         }
 
         /// <summary>
