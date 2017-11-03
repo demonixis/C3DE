@@ -13,35 +13,43 @@ namespace C3DE.PostProcessing
         public static float[] Emboss = new float[9] { -2, -1, 0, -1, 1, 1, 0, 1, 2 };
         public static float[] Gaussian = new float[9] { 0, 1, 0, 1, 1, 1, 0, 1, 0 };
 	
-        private Effect _covolutionEffect;
-		private Vector2 _screenSize;
+        private Effect m_Effect;
+		private Vector2 m_ScreenSize;
+        private RenderTarget2D m_SceneRenderTarget;
 
-		public float[] Kernel { get; set; }
+        public float[] Kernel { get; set; } = EdgeDetect0;
 
-        public ConvolutionPass() 
-			: base() 
-		{ 
-			Kernel = EdgeDetect0;
-		}
+        public ConvolutionPass(GraphicsDevice graphics) : base(graphics)
+        {
+        }
 
         public override void Initialize(ContentManager content)
         {
-            _covolutionEffect = content.Load<Effect>("Shaders/PostProcessing/Convolution");
-			_screenSize = new Vector2(Screen.Width, Screen.Height);
+            m_Effect = content.Load<Effect>("Shaders/PostProcessing/Convolution");
+			m_ScreenSize = new Vector2(Screen.Width, Screen.Height);
+            m_SceneRenderTarget = GetRenderTarget();
 
             /*if (Application.Engine.VREnabled)
                 _screenSize.X *= 0.5f;*/
         }
 
-        public override void Apply(SpriteBatch spriteBatch, RenderTarget2D renderTarget)
+        public override void Apply(SpriteBatch spriteBatch, RenderTarget2D sceneRT)
         {
-            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone, _covolutionEffect);
-            spriteBatch.Draw(renderTarget, Vector2.Zero, Color.White);
-            _covolutionEffect.Parameters["TargetTexture"].SetValue(renderTarget);
-            _covolutionEffect.Parameters["ScreenSize"].SetValue(_screenSize);
-            _covolutionEffect.Parameters["Kernel"].SetValue(Kernel);
-            _covolutionEffect.CurrentTechnique.Passes[0].Apply();
-            spriteBatch.End();
+            m_GraphicsDevice.SetRenderTarget(m_SceneRenderTarget);
+            m_GraphicsDevice.SamplerStates[1] = SamplerState.LinearClamp;
+
+            m_Effect.Parameters["ScreenSize"].SetValue(m_ScreenSize);
+            m_Effect.Parameters["Kernel"].SetValue(Kernel);
+
+            DrawFullscreenQuad(spriteBatch, sceneRT, m_SceneRenderTarget, m_Effect);
+
+            m_GraphicsDevice.SetRenderTarget(null);
+            m_GraphicsDevice.Textures[1] = m_SceneRenderTarget;
+
+            var viewport = m_GraphicsDevice.Viewport;
+            m_GraphicsDevice.SetRenderTarget(sceneRT);
+
+            DrawFullscreenQuad(spriteBatch, m_SceneRenderTarget, viewport.Width, viewport.Height, null);
         }
     }
 }

@@ -76,6 +76,10 @@ namespace C3DE.PostProcessing
         public bool BloomUseLuminance = true;
         public int BloomDownsamplePasses = 5;
 
+        public Bloom(GraphicsDevice graphics) : base(graphics)
+        {
+        }
+
         #region Properties
 
         public BloomPresets BloomPreset
@@ -517,6 +521,14 @@ namespace C3DE.PostProcessing
 
             //Note the final step could be done as a blend to the final texture.
             //return _bloomRenderTarget2DMip0;
+
+            m_GraphicsDevice.SetRenderTarget(null);
+            m_GraphicsDevice.Textures[1] = _bloomRenderTarget2DMip0;
+
+            var viewport = m_GraphicsDevice.Viewport;
+            m_GraphicsDevice.SetRenderTarget(renderTarget);
+
+            DrawFullscreenQuad(spriteBatch, _bloomRenderTarget2DMip0, viewport.Width, viewport.Height, null);
         }
     }
 }

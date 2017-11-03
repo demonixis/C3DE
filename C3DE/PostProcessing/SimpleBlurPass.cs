@@ -6,29 +6,38 @@ namespace C3DE.PostProcessing
 {
     public class SimpleBlurPass : PostProcessPass
     {
-        private Effect _blurEffect;
+        private Effect m_Effect;
+        private RenderTarget2D m_SceneRenderTarget;
 
-        public float BlurDistance;
+        public float BlurDistance { get; set; } = 0;
 
-        public SimpleBlurPass()
-             : base()
+        public SimpleBlurPass(GraphicsDevice graphics)
+             : base(graphics)
         {
-            BlurDistance = 0;
         }
 
         public override void Initialize(ContentManager content)
         {
-            _blurEffect = content.Load<Effect>("Shaders/PostProcessing/SimpleBlur");
+            m_Effect = content.Load<Effect>("Shaders/PostProcessing/SimpleBlur");
+            m_SceneRenderTarget = GetRenderTarget();
         }
 
-        public override void Apply(SpriteBatch spriteBatch, RenderTarget2D renderTarget)
+        public override void Apply(SpriteBatch spriteBatch, RenderTarget2D sceneRT)
         {
-            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone, _blurEffect);
-            spriteBatch.Draw(renderTarget, Vector2.Zero, Color.White);
-            _blurEffect.Parameters["TargetTexture"].SetValue(renderTarget);
-            _blurEffect.Parameters["BlurDistance"].SetValue(BlurDistance);
-            _blurEffect.CurrentTechnique.Passes[0].Apply();
-            spriteBatch.End();
+            m_GraphicsDevice.SetRenderTarget(m_SceneRenderTarget);
+            m_GraphicsDevice.SamplerStates[1] = SamplerState.LinearClamp;
+
+            m_Effect.Parameters["BlurDistance"].SetValue(BlurDistance);
+
+            DrawFullscreenQuad(spriteBatch, sceneRT, m_SceneRenderTarget, m_Effect);
+
+            m_GraphicsDevice.SetRenderTarget(null);
+            m_GraphicsDevice.Textures[1] = m_SceneRenderTarget;
+
+            var viewport = m_GraphicsDevice.Viewport;
+            m_GraphicsDevice.SetRenderTarget(sceneRT);
+
+            DrawFullscreenQuad(spriteBatch, m_SceneRenderTarget, viewport.Width, viewport.Height, null);
         }
     }
 }

@@ -128,7 +128,7 @@ namespace C3DE
 
                 _activeSceneIndex = _levelToLoad;
 
-                Camera.main = null;
+                Camera.Main = null;
                 GUI.Enabled = true;
                 GUI.Effect = null;
                 Scene.current = _scenes[_activeSceneIndex];

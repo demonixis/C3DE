@@ -26,47 +26,53 @@ namespace C3DE.Demo.Scripts
 
         public override void Start()
         {
-            _passes = new PostProcessPass[9];
+            var graphics = Application.GraphicsDevice;
+            _passes = new PostProcessPass[11];
             _passCounter = 0;
 
             // Setup PostProcess.
-            //var bloomPass = new BloomPass();
-            //bloomPass.Settings = new BloomSettings("Côôl", 0.15f, 1f, 4.0f, 1.0f, 1f, 1f);
-            //AddPass(bloomPass);
+            var bloomPass = new BloomPass(graphics);
+            bloomPass.Settings = new BloomSettings("Côôl", 0.15f, 1f, 4.0f, 1.0f, 1f, 1f);
+            AddPass(bloomPass);
             
-            var pass = new Bloom();
+            var pass = new Bloom(graphics);
             pass.Initialize(Application.Content);
-            pass.BloomPreset = Bloom.BloomPresets.SuperWide;
+            pass.BloomPreset = Bloom.BloomPresets.Wide;
             AddPass(pass);
 
-            AddPass(new C64FilterPass());
+            var colorGrading = new ColorGrading(graphics);
+            colorGrading.Initialize(Application.Content);
+            colorGrading.LookUpTable = Application.Content.Load<Texture2D>("Textures/Luts/lut_ver4");
+            AddPass(colorGrading);
 
-            var cgaPass = new CGAFilterPass();
+            AddPass(new C64FilterPass(graphics));
+
+            var cgaPass = new CGAFilterPass(graphics);
             cgaPass.SetPalette(cgaPass.Palette2LI);
             AddPass(cgaPass);
 
-            var convolutionPass = new ConvolutionPass();
+            var convolutionPass = new ConvolutionPass(graphics);
             AddPass(convolutionPass);
 
-            var filmPass = new FilmPass();
+            var filmPass = new FilmPass(graphics);
             AddPass(filmPass);
 
-            var fxaaPass = new FXAAPass();
+            var fxaaPass = new FXAAPass(graphics);
             AddPass(fxaaPass);
 
-            AddPass(new GrayScalePass());
+            AddPass(new GrayScalePass(graphics));
 
-            var refractionPass = new RefractionPass();
+            var refractionPass = new RefractionPass(graphics);
             refractionPass.RefractionTexture = Application.Content.Load<Texture2D>("Textures/hexagrid");
             refractionPass.TextureTiling = new Vector2(0.5f);
             AddPass(refractionPass);
 
-            _simpleBlurPass = new SimpleBlurPass();
+            _simpleBlurPass = new SimpleBlurPass(graphics);
             AddPass(_simpleBlurPass);
 
             // Setup UI
             var elementsCount = _passes.Length + 1;
-            var titles = new string[] { "None", "Bloom", "C64 Filter", "CGA Filter", "Convolution", "Film", "FXAA", "GrayScale", "Refraction", "Simple Blur" };
+            var titles = new string[] { "None", "Old Bloom", "New Bloom", "Color Grading", "C64 Filter", "CGA Filter", "Convolution", "Film", "FXAA", "GrayScale", "Refraction", "Simple Blur" };
 
             _boxRect = new Rectangle(Screen.VirtualWidth - 190, 10, 180, 45 * (_passes.Length + 1));
 
@@ -125,11 +131,11 @@ namespace C3DE.Demo.Scripts
 
         private void SetPassActive(int index)
         {
-            if (_activePassIndex > 0)
-                _passes[_activePassIndex - 1].Enabled = false;
+            //if (_activePassIndex > 0)
+                //_passes[_activePassIndex - 1].Enabled = false;
 
             if (index > 0)
-                _passes[index - 1].Enabled = true;
+                _passes[index - 1].Enabled = !_passes[index - 1].Enabled;
 
             _activePassIndex = index;
         }

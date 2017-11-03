@@ -12,7 +12,7 @@ namespace C3DE.Demo.Scripts
         public override void Start()
         {
             scene = sceneObject.Scene;
-            camera = Camera.main; ;
+            camera = Camera.Main; ;
             _hit = "Nothing";
         }
 

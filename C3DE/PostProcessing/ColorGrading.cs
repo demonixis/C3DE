@@ -31,6 +31,10 @@ namespace C3DE.PostProcessing
         private Texture2D _inputTexture;
         private Texture2D _lookupTable;
 
+        public ColorGrading(GraphicsDevice graphics) : base(graphics)
+        {
+        }
+
         public enum LUTSizes { Size16, Size32, Size64, Size4 };
 
         #region properties
@@ -63,7 +67,7 @@ namespace C3DE.PostProcessing
             }
         }
 
-        private Texture2D LookUpTable
+        public Texture2D LookUpTable
         {
             get { return _lookupTable; }
             set
@@ -150,6 +154,14 @@ namespace C3DE.PostProcessing
             _applyLUTPass.Apply();
             _fsq.RenderFullscreenQuad(graphics);
             //return _renderTarget;
+
+            m_GraphicsDevice.SetRenderTarget(null);
+            m_GraphicsDevice.Textures[1] = _renderTarget;
+
+            var viewport = m_GraphicsDevice.Viewport;
+            m_GraphicsDevice.SetRenderTarget(renderTarget);
+
+            DrawFullscreenQuad(spriteBatch, _renderTarget, viewport.Width, viewport.Height, null);
         }
     }
 }

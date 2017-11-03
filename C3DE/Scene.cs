@@ -504,8 +504,8 @@ namespace C3DE
                 cameras.Sort();
                 index = cameras.Count - 1;
 
-                if (Camera.main == null)
-                    Camera.main = camera;
+                if (Camera.Main == null)
+                    Camera.Main = camera;
             }
 
             return index;

@@ -6,66 +6,55 @@ namespace C3DE.PostProcessing
 {
     public class RefractionPass : PostProcessPass
     {
-        private Effect _refractionEffect;
-        private float _colorLevel;
-        private float _depth;
-        private Vector2 _tiling;
-        private Texture2D _refractionTexture;
+        private Effect m_Effect;
+        private RenderTarget2D m_SceneRenderTarget;
+        private Texture2D m_RefractionTexture;
 
-        public float ColorLevel
-        {
-            get { return _colorLevel; }
-            set { _colorLevel = value; }
-        }
-
-        public float Depth
-        {
-            get { return _depth; }
-            set { _depth = value; }
-        }
+        public float ColorLevel { get; set; } = 0.5f;
+        public float Depth { get; set; } = 0.5f;
+        public Vector2 TextureTiling { get; set; } = Vector2.One;
 
         public Texture2D RefractionTexture
         {
-            get { return _refractionTexture; }
-            set
-            {
-                _refractionTexture = value;
-                Enabled = _refractionTexture != null;
-            }
+            get { return m_RefractionTexture; }
+            set { m_RefractionTexture = value; }
         }
 
-        public Vector2 TextureTiling
+        public RefractionPass(GraphicsDevice graphics)
+                : base(graphics)
         {
-            get { return _tiling; }
-            set { _tiling = value; }
         }
 
-        public RefractionPass() : this(null) { }
-
-        public RefractionPass(Texture2D refractionTexture)
+        public RefractionPass(GraphicsDevice graphics, Texture2D refractionTexture)
+                : base(graphics)
         {
-            RefractionTexture = refractionTexture;
-            _colorLevel = 0.5f;
-            _depth = 0.5f;
-            _tiling = Vector2.One;
+            m_RefractionTexture = refractionTexture;
         }
 
         public override void Initialize(ContentManager content)
         {
-            _refractionEffect = content.Load<Effect>("Shaders/PostProcessing/Refraction");
+            m_Effect = content.Load<Effect>("Shaders/PostProcessing/Refraction");
+            m_SceneRenderTarget = GetRenderTarget();
         }
 
-        public override void Apply(SpriteBatch spriteBatch, RenderTarget2D renderTarget)
+        public override void Apply(SpriteBatch spriteBatch, RenderTarget2D sceneRT)
         {
-            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone, _refractionEffect);
-            spriteBatch.Draw(renderTarget, Vector2.Zero, Color.White);
-            _refractionEffect.Parameters["TargetTexture"].SetValue(renderTarget);
-            _refractionEffect.Parameters["RefractionTexture"].SetValue(_refractionTexture);
-            _refractionEffect.Parameters["ColorLevel"].SetValue(_colorLevel);
-            _refractionEffect.Parameters["Depth"].SetValue(_depth);
-            _refractionEffect.Parameters["TextureTiling"].SetValue(_tiling);
-            _refractionEffect.CurrentTechnique.Passes[0].Apply();
-            spriteBatch.End();
+            m_GraphicsDevice.SetRenderTarget(m_SceneRenderTarget);
+            m_GraphicsDevice.SamplerStates[1] = SamplerState.LinearClamp;
+
+            m_Effect.Parameters["RefractionTexture"].SetValue(m_RefractionTexture);
+            m_Effect.Parameters["ColorLevel"].SetValue(ColorLevel);
+            m_Effect.Parameters["Depth"].SetValue(Depth);
+
+            DrawFullscreenQuad(spriteBatch, sceneRT, m_SceneRenderTarget, m_Effect);
+
+            m_GraphicsDevice.SetRenderTarget(null);
+            m_GraphicsDevice.Textures[1] = m_SceneRenderTarget;
+
+            var viewport = m_GraphicsDevice.Viewport;
+            m_GraphicsDevice.SetRenderTarget(sceneRT);
+
+            DrawFullscreenQuad(spriteBatch, m_SceneRenderTarget, viewport.Width, viewport.Height, null);
         }
     }
 }

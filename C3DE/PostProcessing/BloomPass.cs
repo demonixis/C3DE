@@ -43,6 +43,10 @@ namespace C3DE.PostProcessing
 
         IntermediateBuffer showBuffer = IntermediateBuffer.FinalResult;
 
+        public BloomPass(GraphicsDevice graphics) : base(graphics)
+        {
+        }
+
         /// <summary>
         /// Load your graphics content.
         /// </summary>
@@ -121,22 +125,13 @@ namespace C3DE.PostProcessing
             DrawFullscreenQuad(spriteBatch, renderTarget1, viewport.Width, viewport.Height, bloomCombineEffect, IntermediateBuffer.FinalResult);
         }
 
-
-        /// <summary>
-        /// Helper for drawing a texture into a rendertarget, using
-        /// a custom shader to apply postprocessing effects.
-        /// </summary>
-        void DrawFullscreenQuad(SpriteBatch spriteBatch, Texture2D texture, RenderTarget2D renderTarget, Effect effect, IntermediateBuffer currentBuffer)
+        private void DrawFullscreenQuad(SpriteBatch spriteBatch, Texture2D texture, RenderTarget2D renderTarget, Effect effect, IntermediateBuffer currentBuffer)
         {
             Application.GraphicsDevice.SetRenderTarget(renderTarget);
             DrawFullscreenQuad(spriteBatch, texture, renderTarget.Width, renderTarget.Height, effect, currentBuffer);
         }
 
-        /// <summary>
-        /// Helper for drawing a texture into the current rendertarget,
-        /// using a custom shader to apply postprocessing effects.
-        /// </summary>
-        void DrawFullscreenQuad(SpriteBatch spriteBatch, Texture2D texture, int width, int height, Effect effect, IntermediateBuffer currentBuffer)
+        private void DrawFullscreenQuad(SpriteBatch spriteBatch, Texture2D texture, int width, int height, Effect effect, IntermediateBuffer currentBuffer)
         {
             // If the user has selected one of the show intermediate buffer options,
             // we still draw the quad to make sure the image will end up on the screen,
@@ -181,7 +176,6 @@ namespace C3DE.PostProcessing
             // along a line in both directions from the center.
             for (int i = 0; i < sampleCount / 2; i++)
             {
-                // Store weights for the positive and negative taps.
                 float weight = ComputeGaussian(i + 1);
 
                 sampleWeights[i * 2 + 1] = weight;
@@ -189,14 +183,6 @@ namespace C3DE.PostProcessing
 
                 totalWeights += weight * 2;
 
-                // To get the maximum amount of blurring from a limited number of
-                // pixel shader samples, we take advantage of the bilinear filtering
-                // hardware inside the texture fetch unit. If we position our texture
-                // coordinates exactly halfway between two texels, the filtering unit
-                // will average them for us, giving two samples for the price of one.
-                // This allows us to step in units of two texels per sample, rather
-                // than just one at a time. The 1.5 offset kicks things off by
-                // positioning us nicely in between two texels.
                 float sampleOffset = i * 2 + 1.5f;
 
                 Vector2 delta = new Vector2(dx, dy) * sampleOffset;
@@ -217,10 +203,6 @@ namespace C3DE.PostProcessing
             offsetsParameter.SetValue(sampleOffsets);
         }
 
-        /// <summary>
-        /// Evaluates a single point on the gaussian falloff curve.
-        /// Used for setting up the blur filter weightings.
-        /// </summary>
         float ComputeGaussian(float n)
         {
             float theta = Settings.BlurAmount;

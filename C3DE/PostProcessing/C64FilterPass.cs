@@ -27,40 +27,54 @@ namespace C3DE.PostProcessing
 	        new float[3] { 255.0f, 255.0f, 255.0f }
         };
 
-        private Effect _c64filterEffect;
-        private Vector3[] _palette;
+        private Effect m_Effect;
+        private RenderTarget2D m_SceneRenderTarget;
+        private Vector3[] m_Palette;
+
+        public C64FilterPass(GraphicsDevice graphics) : base(graphics)
+        {
+        }
 
         public void SetPalette(float[][] palette)
         {
             if (palette.Length != 16)
                 throw new Exception("The palette must contains 16 colors");
 
-            _palette = new Vector3[16];
+            m_Palette = new Vector3[16];
 
             for (int i = 0; i < 16; i++)
-                _palette[i] = new Vector3(palette[i][0], palette[i][1], palette[i][2]);
+                m_Palette[i] = new Vector3(palette[i][0], palette[i][1], palette[i][2]);
 
-            if (_c64filterEffect != null)
-                _c64filterEffect.Parameters["Palette"].SetValue(_palette);
+            if (m_Effect != null)
+                m_Effect.Parameters["Palette"].SetValue(m_Palette);
         }
 
         public override void Initialize(ContentManager content)
         {
-            _c64filterEffect = content.Load<Effect>("Shaders/PostProcessing/C64Filter");
+            m_Effect = content.Load<Effect>("Shaders/PostProcessing/C64Filter");
 
-            if (_palette == null)
+            if (m_Palette == null)
                 SetPalette(C64Palette);
             else
-                _c64filterEffect.Parameters["Palette"].SetValue(_palette);
+                m_Effect.Parameters["Palette"].SetValue(m_Palette);
+
+            m_SceneRenderTarget = GetRenderTarget();
         }
 
-        public override void Apply(SpriteBatch spriteBatch, RenderTarget2D renderTarget)
+        public override void Apply(SpriteBatch spriteBatch, RenderTarget2D sceneRT)
         {
-            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone, _c64filterEffect);
-            spriteBatch.Draw(renderTarget, Vector2.Zero, Color.White);
-            _c64filterEffect.Parameters["TargetTexture"].SetValue(renderTarget);
-            _c64filterEffect.CurrentTechnique.Passes[0].Apply();
-            spriteBatch.End();
+            m_GraphicsDevice.SetRenderTarget(m_SceneRenderTarget);
+            m_GraphicsDevice.SamplerStates[1] = SamplerState.LinearClamp;
+
+            DrawFullscreenQuad(spriteBatch, sceneRT, m_SceneRenderTarget, m_Effect);
+
+            m_GraphicsDevice.SetRenderTarget(null);
+            m_GraphicsDevice.Textures[1] = m_SceneRenderTarget;
+
+            var viewport = m_GraphicsDevice.Viewport;
+            m_GraphicsDevice.SetRenderTarget(sceneRT);
+
+            DrawFullscreenQuad(spriteBatch, m_SceneRenderTarget, viewport.Width, viewport.Height, null);
         }
     }
 }

@@ -1,7 +1,6 @@
 ﻿using C3DE.Components.Lights;
 using C3DE.Demo.Scripts;
 using C3DE.Materials;
-using C3DE.PostProcessing;
 using C3DE.Prefabs;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;

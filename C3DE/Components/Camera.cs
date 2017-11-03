@@ -12,7 +12,7 @@ namespace C3DE.Components
     [DataContract]
     public class Camera : Component
     {
-        public static Camera main { get; internal set; }
+        public static Camera Main { get; internal set; }
         protected internal Matrix view;
         protected internal Matrix projection;
         protected internal Color clearColor;
@@ -28,7 +28,7 @@ namespace C3DE.Components
         private bool _needProjectionUpdate;
 
         [DataMember]
-        public float Aspect
+        public float AspectRatio
         {
             get { return _aspectRatio; }
             set

@@ -7,66 +7,62 @@ namespace C3DE.PostProcessing
 {
     public class FilmPass : PostProcessPass
     {
-        private Effect _filmEffect;
-        private float _noiseIntensity;
-        private float _scanlineIntensity;
-        private float _scanlineCount;
+        private Effect m_Effect;
+        private float _noiseIntensity = 1.0f;
+        private float _scanlineIntensity = 0.5f;
+        private float _scanlineCount = 1024.0f;
+        private RenderTarget2D m_SceneRenderTarget;
 
-        public bool GrayScaleEnabled { get; set; }
+        public bool GrayScaleEnabled { get; set; } = false;
 
         public float NoiseIntensity
         {
             get { return _noiseIntensity; }
-            set
-            {
-                _noiseIntensity = MathHelper.Clamp(value, 0.0f, 1.0f);
-            }
+            set { _noiseIntensity = MathHelper.Clamp(value, 0.0f, 1.0f); }
         }
 
         public float ScanlineIntensity
         {
             get { return _scanlineIntensity; }
-            set
-            {
-                _scanlineIntensity = MathHelper.Clamp(value, 0.0f, 1.0f);
-            }
+            set { _scanlineIntensity = MathHelper.Clamp(value, 0.0f, 1.0f); }
         }
 
         public float ScanlineCount
         {
             get { return _scanlineCount; }
-            set
-            {
-                _scanlineCount = MathHelper.Clamp(value, 0.0f, 4096.0f);
-            }
+            set { _scanlineCount = MathHelper.Clamp(value, 0.0f, 4096.0f); }
         }
 
-        public FilmPass()
-            : base()
+        public FilmPass(GraphicsDevice graphics) : base(graphics)
         {
-            GrayScaleEnabled = false;
-            _noiseIntensity = 1.0f;
-            _scanlineIntensity = 0.5f;
-            _scanlineCount = 1024.0f;
         }
 
         public override void Initialize(ContentManager content)
         {
-            _filmEffect = content.Load<Effect>("Shaders/PostProcessing/Film");
+            m_Effect = content.Load<Effect>("Shaders/PostProcessing/Film");
+            m_SceneRenderTarget = GetRenderTarget();
         }
 
-        public override void Apply(SpriteBatch spriteBatch, RenderTarget2D renderTarget)
+        public override void Apply(SpriteBatch spriteBatch, RenderTarget2D sceneRT)
         {
-            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone, _filmEffect);
-            spriteBatch.Draw(renderTarget, Vector2.Zero, Color.White);
-            _filmEffect.Parameters["TargetTexture"].SetValue(renderTarget);
-            _filmEffect.Parameters["Time"].SetValue(Time.TotalTime);
-            _filmEffect.Parameters["GrayScaleEnabled"].SetValue(GrayScaleEnabled);
-            _filmEffect.Parameters["NoiseIntensity"].SetValue(_noiseIntensity);
-            _filmEffect.Parameters["ScanlineIntensity"].SetValue(_scanlineIntensity);
-            _filmEffect.Parameters["ScanlineCount"].SetValue(_scanlineCount);
-            _filmEffect.CurrentTechnique.Passes[0].Apply();
-            spriteBatch.End();
+            m_GraphicsDevice.SetRenderTarget(m_SceneRenderTarget);
+            m_GraphicsDevice.SamplerStates[1] = SamplerState.LinearClamp;
+
+            m_Effect.Parameters["Time"].SetValue(Time.TotalTime);
+            m_Effect.Parameters["GrayScaleEnabled"].SetValue(GrayScaleEnabled);
+            m_Effect.Parameters["NoiseIntensity"].SetValue(_noiseIntensity);
+            m_Effect.Parameters["ScanlineIntensity"].SetValue(_scanlineIntensity);
+            m_Effect.Parameters["ScanlineCount"].SetValue(_scanlineCount);
+
+            DrawFullscreenQuad(spriteBatch, sceneRT, m_SceneRenderTarget, m_Effect);
+
+            m_GraphicsDevice.SetRenderTarget(null);
+            m_GraphicsDevice.Textures[1] = m_SceneRenderTarget;
+
+            var viewport = m_GraphicsDevice.Viewport;
+            m_GraphicsDevice.SetRenderTarget(sceneRT);
+
+            DrawFullscreenQuad(spriteBatch, m_SceneRenderTarget, viewport.Width, viewport.Height, null);
         }
     }
 }

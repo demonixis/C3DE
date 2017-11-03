@@ -7,8 +7,10 @@ namespace C3DE.PostProcessing
 {
     public class CGAFilterPass : PostProcessPass
     {
+        #region Palettes
+
         // Palette 0 Higth Intensity
-        public readonly float[][] Palette0HI = new float[4][] 
+        public readonly float[][] Palette0HI = new float[4][]
         {
             new float[3] { 0, 0, 0 },
             new float[3] { 100, 255, 100 },
@@ -17,7 +19,7 @@ namespace C3DE.PostProcessing
         };
 
         // Palette 0 Low Intensity
-        public readonly float[][] Palette0LI = new float[4][] 
+        public readonly float[][] Palette0LI = new float[4][]
         {
             new float[3] { 0, 0, 0 },
             new float[3] { 0, 180, 0 },
@@ -61,40 +63,55 @@ namespace C3DE.PostProcessing
             new float[3] { 170, 170, 170 }
         };
 
-        private Effect _cgafilterEffect;
-        private Vector3[] _palette;
+        #endregion
+
+        private Effect m_Effect;
+        private Vector3[] m_Palette;
+        private RenderTarget2D m_SceneRenderTarget;
+
+        public CGAFilterPass(GraphicsDevice graphics) : base(graphics)
+        {
+        }
 
         public void SetPalette(float[][] palette)
         {
             if (palette.Length != 4)
                 throw new Exception("The palette must contains four colors");
 
-            _palette = new Vector3[4];
+            m_Palette = new Vector3[4];
 
             for (int i = 0; i < 4; i++)
-                _palette[i] = new Vector3(palette[i][0], palette[i][1], palette[i][2]);
+                m_Palette[i] = new Vector3(palette[i][0], palette[i][1], palette[i][2]);
 
-            if (_cgafilterEffect != null)
-                _cgafilterEffect.Parameters["Palette"].SetValue(_palette);
+            m_Effect?.Parameters["Palette"].SetValue(m_Palette);
         }
 
         public override void Initialize(ContentManager content)
         {
-            _cgafilterEffect = content.Load<Effect>("Shaders/PostProcessing/CGAFilter");
+            m_Effect = content.Load<Effect>("Shaders/PostProcessing/CGAFilter");
 
-            if (_palette == null)
+            if (m_Palette == null)
                 SetPalette(Palette0HI);
             else
-                _cgafilterEffect.Parameters["Palette"].SetValue(_palette);
+                m_Effect.Parameters["Palette"].SetValue(m_Palette);
+
+            m_SceneRenderTarget = GetRenderTarget();
         }
 
-        public override void Apply(SpriteBatch spriteBatch, RenderTarget2D renderTarget)
+        public override void Apply(SpriteBatch spriteBatch, RenderTarget2D sceneRT)
         {
-            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone, _cgafilterEffect);
-            spriteBatch.Draw(renderTarget, Vector2.Zero, Color.White);
-            _cgafilterEffect.Parameters["TargetTexture"].SetValue(renderTarget);
-            _cgafilterEffect.CurrentTechnique.Passes[0].Apply();
-            spriteBatch.End();
+            m_GraphicsDevice.SetRenderTarget(m_SceneRenderTarget);
+            m_GraphicsDevice.SamplerStates[1] = SamplerState.LinearClamp;
+
+            DrawFullscreenQuad(spriteBatch, sceneRT, m_SceneRenderTarget, m_Effect);
+
+            m_GraphicsDevice.SetRenderTarget(null);
+            m_GraphicsDevice.Textures[1] = m_SceneRenderTarget;
+
+            var viewport = m_GraphicsDevice.Viewport;
+            m_GraphicsDevice.SetRenderTarget(sceneRT);
+
+            DrawFullscreenQuad(spriteBatch, m_SceneRenderTarget, viewport.Width, viewport.Height, null);
         }
     }
 }
