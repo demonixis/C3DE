@@ -14,7 +14,7 @@ namespace C3DE.Demo.Scenes
 {
     public class LightingDemo : Scene
     {
-        public LightingDemo() : base("Lighting demo") { }
+        public LightingDemo() : base("Realtime Lighting") { }
 
         public override void Initialize()
         {

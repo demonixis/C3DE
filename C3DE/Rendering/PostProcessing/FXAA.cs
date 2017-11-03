@@ -2,32 +2,31 @@
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace C3DE.PostProcessing
+namespace C3DE.Rendering.PostProcessing
 {
-    public class SimpleBlurPass : PostProcessPass
+    public class FXAA : PostProcessPass
     {
         private Effect m_Effect;
         private RenderTarget2D m_SceneRenderTarget;
 
-        public float BlurDistance { get; set; } = 0;
+        public Vector2 TexelSize { get; set; } = Vector2.One;
 
-        public SimpleBlurPass(GraphicsDevice graphics)
-             : base(graphics)
+        public FXAA(GraphicsDevice graphics) : base(graphics)
         {
         }
 
         public override void Initialize(ContentManager content)
         {
-            m_Effect = content.Load<Effect>("Shaders/PostProcessing/SimpleBlur");
+            m_Effect = content.Load<Effect>("Shaders/PostProcessing/FXAA");
             m_SceneRenderTarget = GetRenderTarget();
         }
 
-        public override void Apply(SpriteBatch spriteBatch, RenderTarget2D sceneRT)
+        public override void Draw(SpriteBatch spriteBatch, RenderTarget2D sceneRT)
         {
             m_GraphicsDevice.SetRenderTarget(m_SceneRenderTarget);
             m_GraphicsDevice.SamplerStates[1] = SamplerState.LinearClamp;
 
-            m_Effect.Parameters["BlurDistance"].SetValue(BlurDistance);
+            m_Effect.Parameters["TexelSize"].SetValue(TexelSize);
 
             DrawFullscreenQuad(spriteBatch, sceneRT, m_SceneRenderTarget, m_Effect);
 

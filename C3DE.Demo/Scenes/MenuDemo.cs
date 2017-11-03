@@ -7,7 +7,7 @@ namespace C3DE.Demo.Scenes
 {
     public class MenuDemo : Scene
     {
-        public MenuDemo() : base("Menu demo") { }
+        public MenuDemo() : base("Menu") { }
 
         public override void Initialize()
         {

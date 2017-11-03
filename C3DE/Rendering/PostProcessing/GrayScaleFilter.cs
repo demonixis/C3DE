@@ -2,31 +2,27 @@
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace C3DE.PostProcessing
+namespace C3DE.Rendering.PostProcessing
 {
-    public class FXAAPass : PostProcessPass
+    public class GrayScaleFilter : PostProcessPass
     {
         private Effect m_Effect;
         private RenderTarget2D m_SceneRenderTarget;
 
-        public Vector2 TexelSize { get; set; } = Vector2.One;
-
-        public FXAAPass(GraphicsDevice graphics) : base(graphics)
+        public GrayScaleFilter(GraphicsDevice graphics) : base(graphics)
         {
         }
 
         public override void Initialize(ContentManager content)
         {
-            m_Effect = content.Load<Effect>("Shaders/PostProcessing/FXAA");
+            m_Effect = content.Load<Effect>("Shaders/PostProcessing/GrayScale");
             m_SceneRenderTarget = GetRenderTarget();
         }
 
-        public override void Apply(SpriteBatch spriteBatch, RenderTarget2D sceneRT)
+        public override void Draw(SpriteBatch spriteBatch, RenderTarget2D sceneRT)
         {
             m_GraphicsDevice.SetRenderTarget(m_SceneRenderTarget);
             m_GraphicsDevice.SamplerStates[1] = SamplerState.LinearClamp;
-
-            m_Effect.Parameters["TexelSize"].SetValue(TexelSize);
 
             DrawFullscreenQuad(spriteBatch, sceneRT, m_SceneRenderTarget, m_Effect);
 

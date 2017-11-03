@@ -33,7 +33,7 @@ struct VertexShaderOutput
 {
 	float4 Position : POSITION0;
 	float2 UV : TEXCOORD0;
-	float4 CopyPosition : TEXCOORD1;
+	float4 PositionCopy : TEXCOORD1;
 };
 
 VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
@@ -42,7 +42,7 @@ VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
 
 	float4x4 worldViewProjection = mul(World, mul(View, Projection));
 	output.Position = mul(input.Position, worldViewProjection);
-	output.CopyPosition = output.Position;
+	output.PositionCopy = output.Position;
 	output.UV = input.UV;
 	return output;
 }
@@ -50,7 +50,8 @@ VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
 float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 {
 	float3 texColor = tex2D(mainSampler, input.UV * TextureTiling);
-	float3 light = GetLightingValue(input.CopyPosition);
+	float2 texCoord = PostProjToScreen(input.PositionCopy) + HalfPixel();
+	float3 light = tex2D(lightSampler, texCoord);
 	light += AmbientColor;
 	return float4(texColor * DiffuseColor * light, 1);
 }

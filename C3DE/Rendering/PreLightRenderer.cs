@@ -34,8 +34,8 @@ namespace C3DE.Rendering
             _viewport.Y = m_graphicsDevice.Viewport.Height;
             CreateRenderTargets(m_graphicsDevice);
 
-            _depthNormalFX = content.Load<Effect>("FX/PreLighting/PL_DepthNormal");
-            _lightingFX = content.Load<Effect>("FX/PreLighting/PL_LightMap");
+            _depthNormalFX = content.Load<Effect>("Shaders/PreLighting/PL_DepthNormal");
+            _lightingFX = content.Load<Effect>("Shaders/PreLighting/PL_LightMap");
 
             var so = new GameObject("LightMesh");
             _lightMesh = so.AddComponent<MeshRenderer>();
@@ -111,7 +111,7 @@ namespace C3DE.Rendering
 
             device.SetRenderTarget(_lightRT);
             device.Clear(Color.Black);
-            device.BlendState = BlendState.Additive;
+            device.BlendState = BlendState.AlphaBlend;
             device.DepthStencilState = DepthStencilState.None;
 
             for (i = 0, l = scene.lights.Count; i < l; i++)

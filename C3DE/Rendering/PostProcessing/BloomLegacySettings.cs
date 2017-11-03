@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 
-namespace C3DE.PostProcessing
+namespace C3DE.Rendering.PostProcessing
 {
     /// <summary>
     /// Class holds all the settings used to tweak the bloom effect.
     /// </summary>
-    public class BloomSettings
+    public class BloomLegacySettings
     {
         #region Fields
 
@@ -37,7 +37,7 @@ namespace C3DE.PostProcessing
         /// <summary>
         /// Constructs a new bloom settings descriptor.
         /// </summary>
-        public BloomSettings(string name, float bloomThreshold, float blurAmount, float bloomIntensity, float baseIntensity, float bloomSaturation, float baseSaturation)
+        public BloomLegacySettings(string name, float bloomThreshold, float blurAmount, float bloomIntensity, float baseIntensity, float bloomSaturation, float baseSaturation)
         {
             Name = name;
             BloomThreshold = bloomThreshold;
@@ -51,25 +51,25 @@ namespace C3DE.PostProcessing
         /// <summary>
         /// Table of preset bloom settings, used by the sample program.
         /// </summary>
-        public static BloomSettings[] PresetSettings =
+        public static BloomLegacySettings[] PresetSettings =
         {
             //                Name           Thresh  Blur Bloom  Base  BloomSat BaseSat
-            new BloomSettings("Default",     0.25f,  4,   1.25f, 1,    1,       1),
-            new BloomSettings("Soft",        0,      3,   1,     1,    1,       1),
-            new BloomSettings("Desaturated", 0.5f,   8,   2,     1,    0,       1),
-            new BloomSettings("Saturated",   0.25f,  4,   2,     1,    2,       0),
-            new BloomSettings("Blurry",      0,      2,   1,     0.1f, 1,       1),
-            new BloomSettings("Subtle",      0.5f,   2,   1,     1,    1,       1),
+            new BloomLegacySettings("Default",     0.25f,  4,   1.25f, 1,    1,       1),
+            new BloomLegacySettings("Soft",        0,      3,   1,     1,    1,       1),
+            new BloomLegacySettings("Desaturated", 0.5f,   8,   2,     1,    0,       1),
+            new BloomLegacySettings("Saturated",   0.25f,  4,   2,     1,    2,       0),
+            new BloomLegacySettings("Blurry",      0,      2,   1,     0.1f, 1,       1),
+            new BloomLegacySettings("Subtle",      0.5f,   2,   1,     1,    1,       1),
         };
 
-        public static Dictionary<BloomPreset, BloomSettings> Presets = new Dictionary<BloomPreset, BloomSettings>()
+        public static Dictionary<BloomPreset, BloomLegacySettings> Presets = new Dictionary<BloomPreset, BloomLegacySettings>()
         {
-            { BloomPreset.Default, new BloomSettings("Default",     0.25f,  4,   1.25f, 1,    1,       1) },
-            { BloomPreset.Soft, new BloomSettings("",        0,      3,   1,     1,    1,       1) },
-            { BloomPreset.Desaturated, new BloomSettings("Desaturated", 0.5f,   8,   2,     1,    0,       1)},
-            { BloomPreset.Saturated, new BloomSettings("Saturated",   0.25f,  4,   2,     1,    2,       0)},
-            { BloomPreset.Blurry, new BloomSettings("Blurry",      0,      2,   1,     0.1f, 1,       1)},
-            { BloomPreset.Subtle, new BloomSettings("Subtle",      0.5f,   2,   1,     1,    1,       1)}
+            { BloomPreset.Default, new BloomLegacySettings("Default",     0.25f,  4,   1.25f, 1,    1,       1) },
+            { BloomPreset.Soft, new BloomLegacySettings("",        0,      3,   1,     1,    1,       1) },
+            { BloomPreset.Desaturated, new BloomLegacySettings("Desaturated", 0.5f,   8,   2,     1,    0,       1)},
+            { BloomPreset.Saturated, new BloomLegacySettings("Saturated",   0.25f,  4,   2,     1,    2,       0)},
+            { BloomPreset.Blurry, new BloomLegacySettings("Blurry",      0,      2,   1,     0.1f, 1,       1)},
+            { BloomPreset.Subtle, new BloomLegacySettings("Subtle",      0.5f,   2,   1,     1,    1,       1)}
         };
     }
 

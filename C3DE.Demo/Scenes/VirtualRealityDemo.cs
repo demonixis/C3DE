@@ -16,9 +16,7 @@ namespace C3DE.Demo.Scenes
 {
 	public class VirtualRealityDemo : Scene
     {
-        private Rendering.Renderer _prevRenderer;
-
-        public VirtualRealityDemo() : base("Virtual Reality demo") { }
+        public VirtualRealityDemo() : base("Virtual Reality") { }
 
         public override void Initialize()
         {
@@ -41,8 +39,6 @@ namespace C3DE.Demo.Scenes
 			Add(player);
 			head.Transform.Parent = player.Transform;
 
-            _prevRenderer = Application.Engine.Renderer;
-
             var vrDevice = GetService();
             if (vrDevice.TryInitialize() == 0)
 			{
@@ -64,7 +60,7 @@ namespace C3DE.Demo.Scenes
 
         public override void Unload()
         {
-            Application.Engine.Renderer = _prevRenderer;
+            Application.Engine.Renderer = new ForwardRenderer(Application.GraphicsDevice);
             base.Unload();
         }
 

@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 #endregion
 
-namespace C3DE.PostProcessing
+namespace C3DE.Rendering.PostProcessing
 {
     public class FullScreenQuadRenderer : IDisposable
     {
@@ -31,21 +31,6 @@ namespace C3DE.PostProcessing
             _indexBuffer.SetData(indexBufferTemp);
         }
 
-        /// <summary>
-        /* 
-        //FULLSCREENQUAD
-        //Pass a v4 position and v2 texcoord from only v2 input
-        VertexShaderFSQOutput VertexShaderFSQFunction(VertexShaderFSQInput input)
-        {
-            VertexShaderFSQOutput output;
-
-            output.Position = float4(input.Position.xy, 1, 1);
-            output.TexCoord = input.Position.xy * 0.5f + 0.5f;
-            output.TexCoord.y = 1 - output.TexCoord.y;
-
-            return output;
-        }
-        */
         /// </summary>
         /// <param name="graphicsDevice"></param>
         public void RenderFullscreenQuad(GraphicsDevice graphicsDevice)

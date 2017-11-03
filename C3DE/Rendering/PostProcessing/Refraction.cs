@@ -2,9 +2,9 @@
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace C3DE.PostProcessing
+namespace C3DE.Rendering.PostProcessing
 {
-    public class RefractionPass : PostProcessPass
+    public class Refraction : PostProcessPass
     {
         private Effect m_Effect;
         private RenderTarget2D m_SceneRenderTarget;
@@ -20,12 +20,12 @@ namespace C3DE.PostProcessing
             set { m_RefractionTexture = value; }
         }
 
-        public RefractionPass(GraphicsDevice graphics)
+        public Refraction(GraphicsDevice graphics)
                 : base(graphics)
         {
         }
 
-        public RefractionPass(GraphicsDevice graphics, Texture2D refractionTexture)
+        public Refraction(GraphicsDevice graphics, Texture2D refractionTexture)
                 : base(graphics)
         {
             m_RefractionTexture = refractionTexture;
@@ -37,7 +37,7 @@ namespace C3DE.PostProcessing
             m_SceneRenderTarget = GetRenderTarget();
         }
 
-        public override void Apply(SpriteBatch spriteBatch, RenderTarget2D sceneRT)
+        public override void Draw(SpriteBatch spriteBatch, RenderTarget2D sceneRT)
         {
             m_GraphicsDevice.SetRenderTarget(m_SceneRenderTarget);
             m_GraphicsDevice.SamplerStates[1] = SamplerState.LinearClamp;

@@ -2,9 +2,9 @@
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace C3DE.PostProcessing
+namespace C3DE.Rendering.PostProcessing
 {
-    public class ConvolutionPass : PostProcessPass
+    public class ConvolutionFilter : PostProcessPass
     {
         public static float[] EdgeDetect0 = new float[9] { 1, 0, -1, 0, 0, 0, -1, 0, 1 };
         public static float[] EdgeDetect1 = new float[9] { 0, 1, 0, 1, -4, 1, 0, 1, 0 };
@@ -19,7 +19,7 @@ namespace C3DE.PostProcessing
 
         public float[] Kernel { get; set; } = EdgeDetect0;
 
-        public ConvolutionPass(GraphicsDevice graphics) : base(graphics)
+        public ConvolutionFilter(GraphicsDevice graphics) : base(graphics)
         {
         }
 
@@ -33,7 +33,7 @@ namespace C3DE.PostProcessing
                 _screenSize.X *= 0.5f;*/
         }
 
-        public override void Apply(SpriteBatch spriteBatch, RenderTarget2D sceneRT)
+        public override void Draw(SpriteBatch spriteBatch, RenderTarget2D sceneRT)
         {
             m_GraphicsDevice.SetRenderTarget(m_SceneRenderTarget);
             m_GraphicsDevice.SamplerStates[1] = SamplerState.LinearClamp;

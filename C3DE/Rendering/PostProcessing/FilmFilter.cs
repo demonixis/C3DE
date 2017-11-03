@@ -3,9 +3,9 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 
-namespace C3DE.PostProcessing
+namespace C3DE.Rendering.PostProcessing
 {
-    public class FilmPass : PostProcessPass
+    public class FilmFilter : PostProcessPass
     {
         private Effect m_Effect;
         private float _noiseIntensity = 1.0f;
@@ -33,7 +33,7 @@ namespace C3DE.PostProcessing
             set { _scanlineCount = MathHelper.Clamp(value, 0.0f, 4096.0f); }
         }
 
-        public FilmPass(GraphicsDevice graphics) : base(graphics)
+        public FilmFilter(GraphicsDevice graphics) : base(graphics)
         {
         }
 
@@ -43,7 +43,7 @@ namespace C3DE.PostProcessing
             m_SceneRenderTarget = GetRenderTarget();
         }
 
-        public override void Apply(SpriteBatch spriteBatch, RenderTarget2D sceneRT)
+        public override void Draw(SpriteBatch spriteBatch, RenderTarget2D sceneRT)
         {
             m_GraphicsDevice.SetRenderTarget(m_SceneRenderTarget);
             m_GraphicsDevice.SamplerStates[1] = SamplerState.LinearClamp;

@@ -3,9 +3,9 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 
-namespace C3DE.PostProcessing
+namespace C3DE.Rendering.PostProcessing
 {
-    public class CGAFilterPass : PostProcessPass
+    public class CGAFilter : PostProcessPass
     {
         #region Palettes
 
@@ -69,7 +69,7 @@ namespace C3DE.PostProcessing
         private Vector3[] m_Palette;
         private RenderTarget2D m_SceneRenderTarget;
 
-        public CGAFilterPass(GraphicsDevice graphics) : base(graphics)
+        public CGAFilter(GraphicsDevice graphics) : base(graphics)
         {
         }
 
@@ -98,7 +98,7 @@ namespace C3DE.PostProcessing
             m_SceneRenderTarget = GetRenderTarget();
         }
 
-        public override void Apply(SpriteBatch spriteBatch, RenderTarget2D sceneRT)
+        public override void Draw(SpriteBatch spriteBatch, RenderTarget2D sceneRT)
         {
             m_GraphicsDevice.SetRenderTarget(m_SceneRenderTarget);
             m_GraphicsDevice.SamplerStates[1] = SamplerState.LinearClamp;

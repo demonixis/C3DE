@@ -9,7 +9,7 @@ namespace C3DE.Demo.Scenes
 {
     public class ProceduralTerrainWater : Scene
     {
-        public ProceduralTerrainWater() : base("Procedural Terrain + Water") { }  
+        public ProceduralTerrainWater() : base("Procedural Terrain (Water)") { }  
 
         public override void Initialize()
         {

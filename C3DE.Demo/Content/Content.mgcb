@@ -215,6 +215,12 @@
 /processorParam:DebugMode=Auto
 /build:Shaders/PostProcessing/OculusDistortionCorrection.fx
 
+#begin Shaders/PostProcessing/OsvrDistortion.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Shaders/PostProcessing/OsvrDistortion.fx
+
 #begin Shaders/PostProcessing/Refraction.fx
 /importer:EffectImporter
 /processor:EffectProcessor

@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace C3DE.PostProcessing
+namespace C3DE.Rendering.PostProcessing
 {
     /// <summary>
     /// Version 1.1, 16. Dez. 2016
@@ -166,6 +166,25 @@ namespace C3DE.PostProcessing
         }
 
         #endregion
+
+        public void SetPreset(float[] strengths, float[] raduis, float streakLength, int downsamplePasses)
+        {
+            if (strengths.Length != 5 || raduis.Length != 5)
+                return;
+
+            _bloomStrength1 = strengths[0];
+            _bloomStrength2 = strengths[1];
+            _bloomStrength3 = strengths[2];
+            _bloomStrength4 = strengths[3];
+            _bloomStrength5 = strengths[4];
+            _bloomRadius5 = raduis[4];
+            _bloomRadius4 = raduis[3];
+            _bloomRadius3 = raduis[2];
+            _bloomRadius2 = raduis[1];
+            _bloomRadius1 = raduis[0];
+            BloomStreakLength = streakLength;
+            BloomDownsamplePasses = downsamplePasses;
+        }
 
         private void SetBloomPreset(BloomPresets preset)
         {
@@ -350,7 +369,7 @@ namespace C3DE.PostProcessing
             SetBloomPreset(BloomPreset);
         }
 
-        public override void Apply(SpriteBatch spriteBatch, RenderTarget2D renderTarget)
+        public override void Draw(SpriteBatch spriteBatch, RenderTarget2D renderTarget)
         {
             //Check if we are initialized
             if (_graphicsDevice == null)

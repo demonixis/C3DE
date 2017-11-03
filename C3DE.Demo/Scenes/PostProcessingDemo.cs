@@ -8,9 +8,9 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace C3DE.Demo.Scenes
 {
-    public class HalloweenDemo : Scene
+    public class PostProcessingDemo : Scene
     {
-        public HalloweenDemo() : base("Post Process Demo") { }
+        public PostProcessingDemo() : base("Post Processing") { }
 
         public override void Initialize()
         {
@@ -58,7 +58,7 @@ namespace C3DE.Demo.Scenes
             lava.Generate("Textures/lava_texture", "Textures/lava_bump", new Vector3(terrain.Width * 0.5f));
 
             var jack = new ModelPrefab("Jack");
-            jack.Transform.Rotate(-MathHelper.PiOver2, MathHelper.Pi, 0);
+            jack.Transform.Rotate(-MathHelper.PiOver2, 0, 0);
             jack.Transform.Translate(0, 35, 0);
             jack.Transform.LocalScale = new Vector3(4);
             jack.LoadModel("Models/Jack/JackOLantern");

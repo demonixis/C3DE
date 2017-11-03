@@ -9,14 +9,13 @@ sampler2D lightSampler = sampler_state
 	MipFilter = Point;
 };
 
-float3 GetLightingValue(float4 position)
+float2 PostProjToScreen(float4 position)
+{		
+	float2 screenPos = position.xy / position.w;
+	return 0.5f * (float2(screenPos.x, -screenPos.y) + 1);
+}
+
+float2 HalfPixel()
 {
-	if (Viewport.x <= 0 || Viewport.y <= 0)
-		return float3(1, 1, 1);
-		
-	float2 texCoord = position.xy / position.w;
-	texCoord.y *= -1.0;
-	texCoord = 0.5f * (texCoord + 1.0);
-	texCoord += 0.5f / Viewport;
-	return tex2D(lightSampler, texCoord).xyz;
+	return 0.5f / Viewport;
 }

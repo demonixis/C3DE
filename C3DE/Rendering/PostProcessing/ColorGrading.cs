@@ -3,7 +3,7 @@ using System.IO;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace C3DE.PostProcessing
+namespace C3DE.Rendering.PostProcessing
 {
     /// <summary>
     /// 
@@ -133,7 +133,7 @@ namespace C3DE.PostProcessing
             stream.Dispose();
         }
 
-        public override void Apply(SpriteBatch spriteBatch, RenderTarget2D renderTarget)
+        public override void Draw(SpriteBatch spriteBatch, RenderTarget2D renderTarget)
         {
             var graphics = Application.GraphicsDevice;
 

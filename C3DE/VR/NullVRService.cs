@@ -16,7 +16,7 @@ namespace C3DE.VR
 
 		public override int TryInitialize()
 		{
-			DistortionEffect = Game.Content.Load<Effect>("FX/PostProcess/OsvrDistortion");
+			DistortionEffect = Game.Content.Load<Effect>("Shaders/PostProcessing/OsvrDistortion");
 			DistortionCorrectionRequired = true;
 			Game.Components.Add(this);
 			return 0;
@@ -27,8 +27,8 @@ namespace C3DE.VR
 			base.Update(gameTime);
 
 			// Rotation.
-			_headRotation.X -= Input.Mouse.Delta.Y * Time.DeltaTime;
-			_headRotation.Y -= Input.Mouse.Delta.X * Time.DeltaTime;
+			_headRotation.X -= Input.Mouse.Delta.Y * Time.DeltaTime * 0.25f;
+			_headRotation.Y -= Input.Mouse.Delta.X * Time.DeltaTime * 0.25f;
 		}
 
         public override RenderTarget2D CreateRenderTargetForEye(int eye)

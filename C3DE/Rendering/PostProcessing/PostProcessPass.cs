@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 
-namespace C3DE.PostProcessing
+namespace C3DE.Rendering.PostProcessing
 {
     public abstract class PostProcessPass : IComparable, IDisposable
     {
@@ -18,7 +18,7 @@ namespace C3DE.PostProcessing
         }
 
         public abstract void Initialize(ContentManager content);
-        public abstract void Apply(SpriteBatch spriteBatch, RenderTarget2D renderTarget);
+        public abstract void Draw(SpriteBatch spriteBatch, RenderTarget2D renderTarget);
 
         public virtual void Apply(SpriteBatch spriteBatch, RenderTarget2D source, RenderTarget2D destination)
         {

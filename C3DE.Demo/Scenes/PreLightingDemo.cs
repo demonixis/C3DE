@@ -14,15 +14,11 @@ namespace C3DE.Demo.Scenes
 {
     public class PreLightingDemo : Scene
     {
-        private Rendering.Renderer _prevRenderer;
-
-        public PreLightingDemo() : base("PrelLighting Renderer") { }
+        public PreLightingDemo() : base("PreLight Renderer") { }
 
         public override void Initialize()
         {
             base.Initialize();
-
-            _prevRenderer = Application.Engine.Renderer;
 
             Application.Engine.Renderer = new PreLightRenderer(Application.GraphicsDevice);
 
@@ -79,7 +75,7 @@ namespace C3DE.Demo.Scenes
 
         public override void Unload()
         {
-            Application.Engine.Renderer = _prevRenderer;
+            Application.Engine.Renderer = new ForwardRenderer(Application.GraphicsDevice);
             base.Unload();
         }
 

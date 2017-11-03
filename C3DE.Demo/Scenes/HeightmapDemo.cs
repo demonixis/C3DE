@@ -9,7 +9,7 @@ namespace C3DE.Demo.Scenes
 {
     public class HeightmapDemo : Scene
     {
-        public HeightmapDemo() : base("Heightmap terrrain") { }
+        public HeightmapDemo() : base("Heightmap Terrain") { }
 
         public override void Initialize()
         {

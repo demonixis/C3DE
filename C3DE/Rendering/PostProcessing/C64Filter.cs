@@ -3,9 +3,9 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 
-namespace C3DE.PostProcessing
+namespace C3DE.Rendering.PostProcessing
 {
-    public class C64FilterPass : PostProcessPass
+    public class C64Filter : PostProcessPass
     {
         public readonly float[][] C64Palette = new float[16][]
         {
@@ -31,7 +31,7 @@ namespace C3DE.PostProcessing
         private RenderTarget2D m_SceneRenderTarget;
         private Vector3[] m_Palette;
 
-        public C64FilterPass(GraphicsDevice graphics) : base(graphics)
+        public C64Filter(GraphicsDevice graphics) : base(graphics)
         {
         }
 
@@ -61,7 +61,7 @@ namespace C3DE.PostProcessing
             m_SceneRenderTarget = GetRenderTarget();
         }
 
-        public override void Apply(SpriteBatch spriteBatch, RenderTarget2D sceneRT)
+        public override void Draw(SpriteBatch spriteBatch, RenderTarget2D sceneRT)
         {
             m_GraphicsDevice.SetRenderTarget(m_SceneRenderTarget);
             m_GraphicsDevice.SamplerStates[1] = SamplerState.LinearClamp;

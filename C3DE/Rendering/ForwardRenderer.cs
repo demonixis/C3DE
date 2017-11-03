@@ -1,5 +1,5 @@
 ﻿using C3DE.Components;
-using C3DE.PostProcessing;
+using C3DE.Rendering.PostProcessing;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -68,7 +68,7 @@ namespace C3DE.Rendering
 
             for (int i = 0, l = passes.Count; i < l; i++)
                 if (passes[i].Enabled)
-                    passes[i].Apply(m_spriteBatch, sceneRT);
+                    passes[i].Draw(m_spriteBatch, sceneRT);
         }
 
         /// <summary>

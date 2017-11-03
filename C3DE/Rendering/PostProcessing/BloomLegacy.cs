@@ -3,9 +3,9 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 
-namespace C3DE.PostProcessing
+namespace C3DE.Rendering.PostProcessing
 {
-    public class BloomPass : PostProcessPass
+    public class BloomLegacy : PostProcessPass
     {
         Effect bloomExtractEffect;
         Effect bloomCombineEffect;
@@ -16,13 +16,13 @@ namespace C3DE.PostProcessing
         RenderTarget2D renderTarget2;
 
         // Choose what display settings the bloom should use.
-        public BloomSettings Settings
+        public BloomLegacySettings Settings
         {
             get { return settings; }
             set { settings = value; }
         }
 
-        BloomSettings settings = BloomSettings.PresetSettings[0];
+        BloomLegacySettings settings = BloomLegacySettings.PresetSettings[0];
 
         // Optionally displays one of the intermediate buffers used
         // by the bloom postprocess, so you can see exactly what is
@@ -43,7 +43,7 @@ namespace C3DE.PostProcessing
 
         IntermediateBuffer showBuffer = IntermediateBuffer.FinalResult;
 
-        public BloomPass(GraphicsDevice graphics) : base(graphics)
+        public BloomLegacy(GraphicsDevice graphics) : base(graphics)
         {
         }
 
@@ -82,7 +82,7 @@ namespace C3DE.PostProcessing
         /// This is where it all happens. Grabs a scene that has already been rendered,
         /// and uses postprocess magic to add a glowing bloom effect over the top of it.
         /// </summary>
-        public override void Apply(SpriteBatch spriteBatch, RenderTarget2D sceneRT)
+        public override void Draw(SpriteBatch spriteBatch, RenderTarget2D sceneRT)
         {
             Application.GraphicsDevice.SetRenderTarget(sceneRenderTarget);
             Application.GraphicsDevice.SamplerStates[1] = SamplerState.LinearClamp;
