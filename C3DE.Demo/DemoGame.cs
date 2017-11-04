@@ -8,8 +8,8 @@ namespace C3DE.Demo
 {
     public static class DemoGame
     {
-        public const int ScreenWidth = 1280;
-        public const int ScreenHeight = 720;
+        public const int ScreenWidth = 1024;
+        public const int ScreenHeight = 600;
 
         public static string[] BlueSkybox = new string[6]
         {
@@ -50,8 +50,6 @@ namespace C3DE.Demo
                 skin.TextColor = Color.Black;
             }
 
-            //GUI.Scale = Screen.GetScale();
-
             return skin;
         }
 
@@ -62,7 +60,6 @@ namespace C3DE.Demo
         {
             using (var game = new Engine("C3DE Game Engine", ScreenWidth, ScreenHeight))
             {
-                //Screen.SetVirtualResolution(1280, 800);
                 Application.SceneManager.Add(new MenuDemo(), true);
                 Application.SceneManager.Add(new HeightmapDemo());
                 Application.SceneManager.Add(new ProceduralTerrainWater());

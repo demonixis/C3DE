@@ -123,6 +123,9 @@ namespace C3DE.Components.Controllers
 
         protected override void UpdateKeyboardInput()
         {
+            if (!KeyboardEnabled)
+                return;
+
             if (Input.Keys.Pressed(Keys.PageDown))
                 distanceVelocity += MoveSpeed * Time.DeltaTime;
             else if (Input.Keys.Pressed(Keys.PageUp))
@@ -141,6 +144,9 @@ namespace C3DE.Components.Controllers
 
         protected override void UpdateMouseInput()
         {
+            if (!MouseEnabled)
+                return;
+
             if (Input.Mouse.Down(Inputs.MouseButton.Left) && Input.Mouse.Drag())
             {
                 angleVelocity.X -= RotationSpeed * Input.Mouse.Delta.X * MouseSensibility.X * Time.DeltaTime;
@@ -158,7 +164,10 @@ namespace C3DE.Components.Controllers
 
         protected override void UpdateGamepadInput()
         {
-			angleVelocity += Input.Gamepad.LeftStickValue() * RotationSpeed * Time.DeltaTime * GamepadSensibility * 25.0f;
+            if (!GamepadEnabled)
+                return;
+
+            angleVelocity += Input.Gamepad.LeftStickValue() * RotationSpeed * Time.DeltaTime * GamepadSensibility * 25.0f;
 
             positionVelicoty.X += Input.Gamepad.RightStickValue().X * StrafeSpeed * Time.DeltaTime * GamepadSensibility.X;
             positionVelicoty.Y += Input.Gamepad.RightStickValue().Y * StrafeSpeed * Time.DeltaTime * GamepadSensibility.Y;
@@ -171,7 +180,10 @@ namespace C3DE.Components.Controllers
 
 		protected override void UpdateTouchInput()
         {
-			if (Input.Touch.TouchCount == 1)
+            if (!TouchEnabled)
+                return;
+
+            if (Input.Touch.TouchCount == 1)
 				angleVelocity -= Input.Touch.Delta () * RotationSpeed * Time.DeltaTime * TouchSensibility;
 			else if (Input.Touch.TouchCount == 2)
 				distanceVelocity += Input.Touch.Delta ().X * MoveSpeed * Time.DeltaTime;

@@ -1,8 +1,11 @@
 ﻿using C3DE.Components.Controllers;
 using C3DE.Components.Lights;
+using C3DE.Components.Renderers;
 using C3DE.Demo.Scripts;
+using C3DE.Geometries;
 using C3DE.Materials;
 using C3DE.Prefabs;
+using C3DE.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -27,15 +30,35 @@ namespace C3DE.Demo.Scenes
             Add(camera);
 
             var orbitController = camera.AddComponent<OrbitController>();
+            orbitController.KeyboardEnabled = false;
 
             // Light
-            var lightPrefab = new LightPrefab("light", LightType.Directional);
+            var lightPrefab = new LightPrefab("lightPrefab", LightType.Point);
+            Add(lightPrefab);
+            lightPrefab.Transform.Position = new Vector3(0, 15, 15);
+            lightPrefab.Light.Range = 105;
+            lightPrefab.Light.Intensity = 2.0f;
+            lightPrefab.Light.FallOf = 5f;
+            lightPrefab.Light.Color = Color.Violet;
             lightPrefab.Transform.Rotation = new Vector3(-1, 1, 0);
+            lightPrefab.Light.Angle = 0.1f;
+            lightPrefab.Light.ShadowGenerator.ShadowStrength = 0.6f; // FIXME need to be inverted
             lightPrefab.Light.ShadowGenerator.SetShadowMapSize(Application.GraphicsDevice, 1024);
             lightPrefab.EnableShadows = true;
-            lightPrefab.Light.Intensity = 0.5f;
-            lightPrefab.Light.FallOf = 5.0f;
-            Add(lightPrefab);
+
+            var ls = lightPrefab.AddComponent<LightSwitcher>();
+            ls.SetBoxAlign(true);
+
+            lightPrefab.AddComponent<LightMover>();
+            lightPrefab.AddComponent<DemoBehaviour>();
+
+            var lightPrefabSphere = lightPrefab.AddComponent<MeshRenderer>();
+            lightPrefabSphere.Geometry = new SphereGeometry(2f, 4);
+            lightPrefabSphere.Geometry.Build();
+            lightPrefabSphere.CastShadow = false;
+            lightPrefabSphere.ReceiveShadow = false;
+            lightPrefabSphere.Material = new SimpleMaterial(scene);
+            lightPrefabSphere.Material.Texture = GraphicsHelper.CreateTexture(Color.Yellow, 1, 1);
 
             // Terrain
             var terrainMaterial = new StandardMaterial(scene);
@@ -62,6 +85,8 @@ namespace C3DE.Demo.Scenes
             jack.Transform.Translate(0, 35, 0);
             jack.Transform.LocalScale = new Vector3(4);
             jack.LoadModel("Models/Jack/JackOLantern");
+            jack.Renderer.ReceiveShadow = true;
+            jack.Renderer.CastShadow = true;
             var jackMaterial = new StandardMaterial(this);
             jackMaterial.EmissiveColor = new Color(0.2f, 0.005f, 0);
             jackMaterial.Texture = Application.Content.Load<Texture2D>("Models/Jack/PumpkinColor");

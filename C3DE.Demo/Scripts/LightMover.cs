@@ -19,9 +19,20 @@ namespace C3DE.Demo.Scripts
         {
             translation = Vector3.Zero;
 
-            translation.Z += Input.Mouse.Delta.Y * 0.1f;
+            if (Input.Keys.Pressed(Keys.Up))
+                translation.Z++;
+            else if (Input.Keys.Pressed(Keys.Down))
+                translation.Z--;
 
-            translation.X += Input.Mouse.Delta.X * 0.1f;
+            if (Input.Keys.Pressed(Keys.Left))
+                translation.X++;
+            else if (Input.Keys.Pressed(Keys.Right))
+                translation.X--;
+
+            if (Input.Keys.Pressed(Keys.A))
+                translation.Y++;
+            else if (Input.Keys.Pressed(Keys.E))
+                translation.Y--;
 
             if (Input.Keys.Pressed(Keys.Add))
                 _light.Range += 0.1f;

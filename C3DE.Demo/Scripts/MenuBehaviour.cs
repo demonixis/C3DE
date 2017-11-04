@@ -4,6 +4,7 @@ using C3DE.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.Collections;
 
 namespace C3DE.Demo.Scripts
 {
@@ -74,6 +75,8 @@ namespace C3DE.Demo.Scripts
 
         public override void Update()
         {
+            base.Update();
+
             if (Input.Keys.Pressed(Keys.LeftAlt) && Input.Keys.JustPressed(Keys.Enter))
                 Screen.Fullscreen = !Screen.Fullscreen;
 
