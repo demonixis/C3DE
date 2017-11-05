@@ -1,12 +1,11 @@
 ﻿using C3DE.Components;
 using C3DE.Components.Controllers;
-using C3DE.Components.Lights;
-using C3DE.Components.Renderers;
+using C3DE.Components.Lighting;
+using C3DE.Components.Rendering;
 using C3DE.Demo.Scripts;
-using C3DE.Geometries;
-using C3DE.Materials;
-using C3DE.Prefabs;
-using C3DE.Rendering;
+using C3DE.Graphics.Geometries;
+using C3DE.Graphics.Materials;
+using C3DE.Graphics.Rendering;
 using C3DE.Utils;
 using Microsoft.Xna.Framework;
 
@@ -23,25 +22,26 @@ namespace C3DE.Demo.Scenes
             Application.Engine.Renderer = new PreLightRenderer(Application.GraphicsDevice);
 
             // Camera
-            var camPrefab = new CameraPrefab("camera");
-            camPrefab.AddComponent<DemoBehaviour>();
-            var camera = camPrefab.GetComponent<Camera>();
+            var cameraGo = GameObjectFactory.CreateCamera();
+            cameraGo.AddComponent<DemoBehaviour>();
+            var camera = cameraGo.GetComponent<Camera>();
             camera.Far = 50000;
 
-            var orbit = camPrefab.AddComponent<OrbitController>();
+            var orbit = cameraGo.AddComponent<OrbitController>();
             orbit.MaxDistance = 250;
-            Add(camPrefab);
+            Add(cameraGo);
 
             // Terrain
             var groundMaterial = new PreLightMaterial(scene);
             groundMaterial.Texture = GraphicsHelper.CreateCheckboardTexture(Color.LightGreen, Color.LightSeaGreen, 128, 128);
             groundMaterial.Tiling = new Vector2(16);
 
-            var ground = new TerrainPrefab("terrain");
-            ground.Renderer.Geometry.Size = new Vector3(4, 1, 4);
-            ground.Flatten();
-            ground.Renderer.Material = groundMaterial;
-            ground.Transform.Translate(-ground.Width >> 1, 0, -ground.Depth / 2);
+            var ground = GameObjectFactory.CreateTerrain();
+            var terrain = ground.GetComponent<Terrain>();
+            terrain.Renderer.Geometry.Size = new Vector3(4, 1, 4);
+            terrain.Flatten();
+            terrain.Renderer.Material = groundMaterial;
+            ground.Transform.Translate(-terrain.Width >> 1, 0, -terrain.Depth / 2);
             Add(ground);
 
             MeshRenderer cube = null;
@@ -53,7 +53,7 @@ namespace C3DE.Demo.Scenes
                 cube = CreateCube(size, RandomHelper.GetVector3(-limits, size.Y, -limits, limits, size.Y, limits));
                 cube.Material = new PreLightMaterial(this);
                 cube.Material.Texture = GraphicsHelper.CreateCheckboardTexture(RandomHelper.GetColor(), RandomHelper.GetColor());
-                Add(cube.SceneObject);
+                Add(cube.GameObject);
             }
 
             for (int i = 0; i < 4; i++)

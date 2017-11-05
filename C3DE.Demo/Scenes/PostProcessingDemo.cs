@@ -1,10 +1,9 @@
 ﻿using C3DE.Components.Controllers;
-using C3DE.Components.Lights;
-using C3DE.Components.Renderers;
+using C3DE.Components.Lighting;
+using C3DE.Components.Rendering;
 using C3DE.Demo.Scripts;
-using C3DE.Geometries;
-using C3DE.Materials;
-using C3DE.Prefabs;
+using C3DE.Graphics.Geometries;
+using C3DE.Graphics.Materials;
 using C3DE.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -23,42 +22,42 @@ namespace C3DE.Demo.Scenes
             RenderSettings.Skybox.Generate(Application.GraphicsDevice, Application.Content, DemoGame.StarsSkybox);
 
             // Camera
-            var camera = new CameraPrefab("camera");
-            camera.Transform.Translate(0, 25, 0);
-            camera.AddComponent<DemoBehaviour>();
-            camera.AddComponent<PostProcessSwitcher>();
-            Add(camera);
+            var cameraGo = GameObjectFactory.CreateCamera();
+            cameraGo.AddComponent<DemoBehaviour>();
+            cameraGo.AddComponent<PostProcessSwitcher>();
+            Add(cameraGo);
 
-            var orbitController = camera.AddComponent<OrbitController>();
+            var orbitController = cameraGo.AddComponent<OrbitController>();
             orbitController.KeyboardEnabled = false;
 
             // Light
-            var lightPrefab = new LightPrefab("lightPrefab", LightType.Point);
-            Add(lightPrefab);
-            lightPrefab.Transform.Position = new Vector3(0, 15, 15);
-            lightPrefab.Light.Range = 105;
-            lightPrefab.Light.Intensity = 2.0f;
-            lightPrefab.Light.FallOf = 5f;
-            lightPrefab.Light.Color = Color.Violet;
-            lightPrefab.Transform.Rotation = new Vector3(-1, 1, 0);
-            lightPrefab.Light.Angle = 0.1f;
-            lightPrefab.Light.ShadowGenerator.ShadowStrength = 0.6f; // FIXME need to be inverted
-            lightPrefab.Light.ShadowGenerator.SetShadowMapSize(Application.GraphicsDevice, 1024);
-            lightPrefab.EnableShadows = true;
+            var lightGo = GameObjectFactory.CreateLight(LightType.Point);
+            lightGo.Transform.Position = new Vector3(0, 15, 15);
+            lightGo.Transform.Rotation = new Vector3(-1, 1, 0);
+            Add(lightGo);
 
-            var ls = lightPrefab.AddComponent<LightSwitcher>();
+            var light = lightGo.GetComponent<Light>();
+            light.Range = 105;
+            light.Intensity = 2.0f;
+            light.FallOf = 5f;
+            light.Color = Color.Violet;
+            light.Angle = 0.1f;
+            light.ShadowGenerator.ShadowStrength = 0.6f; // FIXME need to be inverted
+            light.ShadowGenerator.SetShadowMapSize(Application.GraphicsDevice, 1024);
+
+            var ls = lightGo.AddComponent<LightSwitcher>();
             ls.SetBoxAlign(true);
 
-            lightPrefab.AddComponent<LightMover>();
-            lightPrefab.AddComponent<DemoBehaviour>();
+            lightGo.AddComponent<LightMover>();
+            lightGo.AddComponent<DemoBehaviour>();
 
-            var lightPrefabSphere = lightPrefab.AddComponent<MeshRenderer>();
-            lightPrefabSphere.Geometry = new SphereGeometry(2f, 4);
-            lightPrefabSphere.Geometry.Build();
-            lightPrefabSphere.CastShadow = false;
-            lightPrefabSphere.ReceiveShadow = false;
-            lightPrefabSphere.Material = new SimpleMaterial(scene);
-            lightPrefabSphere.Material.Texture = GraphicsHelper.CreateTexture(Color.Yellow, 1, 1);
+            var ligthSphere = lightGo.AddComponent<MeshRenderer>();
+            ligthSphere.Geometry = new SphereGeometry(2f, 4);
+            ligthSphere.Geometry.Build();
+            ligthSphere.CastShadow = false;
+            ligthSphere.ReceiveShadow = false;
+            ligthSphere.Material = new SimpleMaterial(scene);
+            ligthSphere.Material.Texture = GraphicsHelper.CreateTexture(Color.Yellow, 1, 1);
 
             // Terrain
             var terrainMaterial = new StandardMaterial(scene);
@@ -66,34 +65,38 @@ namespace C3DE.Demo.Scenes
             terrainMaterial.Shininess = 50;
             terrainMaterial.Tiling = new Vector2(8);
 
-            var terrain = new TerrainPrefab("terrain");
+            var terrainGo = GameObjectFactory.CreateTerrain();
+            var terrain = terrainGo.GetComponent<Terrain>();
             terrain.Renderer.Geometry.Size = new Vector3(2);
             terrain.Renderer.ReceiveShadow = true;
             terrain.Randomize(4, 15, 0.086, 0.25, true);
             terrain.Renderer.Material = terrainMaterial;
             terrain.Transform.Translate(-terrain.Width >> 1, 0, -terrain.Depth / 2);
-            Add(terrain);
+            Add(terrainGo);
 
             // Lava
-            var lava = new LavaPrefab("water");
+            var lavaTexture = Application.Content.Load<Texture2D>("Textures/lava_texture");
+            var lavaNormal = Application.Content.Load<Texture2D>("Textures/lava_bump");
+            var lava = GameObjectFactory.CreateLava(lavaTexture, lavaNormal, new Vector3(terrain.Width * 0.5f));
             Add(lava);
 
-            lava.Generate("Textures/lava_texture", "Textures/lava_bump", new Vector3(terrain.Width * 0.5f));
+            var jackModel = Application.Content.Load<Model>("Models/Jack/JackOLantern");
+            var jackOLenternGo = GameObjectFactory.CreateXNAModel(jackModel);
+            jackOLenternGo.Transform.Rotate(-MathHelper.PiOver2, 0, 0);
+            jackOLenternGo.Transform.Translate(0, 35, 0);
+            jackOLenternGo.Transform.LocalScale = new Vector3(4);
 
-            var jack = new ModelPrefab("Jack");
-            jack.Transform.Rotate(-MathHelper.PiOver2, 0, 0);
-            jack.Transform.Translate(0, 35, 0);
-            jack.Transform.LocalScale = new Vector3(4);
-            jack.LoadModel("Models/Jack/JackOLantern");
-            jack.Renderer.ReceiveShadow = true;
-            jack.Renderer.CastShadow = true;
+            var jackRenderer = jackOLenternGo.GetComponent<ModelRenderer>();
+            jackRenderer.ReceiveShadow = true;
+            jackRenderer.CastShadow = true;
+
             var jackMaterial = new StandardMaterial(this);
             jackMaterial.EmissiveColor = new Color(0.2f, 0.005f, 0);
             jackMaterial.Texture = Application.Content.Load<Texture2D>("Models/Jack/PumpkinColor");
-            jack.Renderer.Material = jackMaterial;
-            Add(jack);
+            jackRenderer.Material = jackMaterial;
+            Add(jackOLenternGo);
 
-            orbitController.LookAt(jack.Transform);
+            orbitController.LookAt(jackOLenternGo.Transform);
             orbitController.Distance = 150.0f;
         }
     }

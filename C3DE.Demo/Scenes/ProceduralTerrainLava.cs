@@ -1,7 +1,7 @@
-﻿using C3DE.Components.Lights;
+﻿using C3DE.Components.Lighting;
+using C3DE.Components.Rendering;
 using C3DE.Demo.Scripts;
-using C3DE.Materials;
-using C3DE.Prefabs;
+using C3DE.Graphics.Materials;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -19,17 +19,15 @@ namespace C3DE.Demo.Scenes
             RenderSettings.Skybox.Generate(Application.GraphicsDevice, Application.Content, DemoGame.StarsSkybox);
 
             // And a camera with some components
-            var camera = new CameraPrefab("camera");
-            camera.AddComponent<ControllerSwitcher>();
-            camera.AddComponent<DemoBehaviour>();
-            Add(camera);
+            var cameraGo = GameObjectFactory.CreateCamera();
+            cameraGo.AddComponent<ControllerSwitcher>();
+            cameraGo.AddComponent<DemoBehaviour>();
+            Add(cameraGo);
 
             // A light is required to illuminate objects.
-            var lightPrefab = new LightPrefab("light", LightType.Directional);
-            lightPrefab.Transform.Rotation = new Vector3(-1, 1, 0);
-            lightPrefab.Light.ShadowGenerator.SetShadowMapSize(Application.GraphicsDevice, 1024);
-            lightPrefab.EnableShadows = true;
-            Add(lightPrefab);
+            var lightGo = GameObjectFactory.CreateLight(LightType.Directional);
+            lightGo.Transform.Rotation = new Vector3(-1, 1, 0);
+            Add(lightGo);
 
             // A terrain with its material.
             var terrainMaterial = new StandardMaterial(scene);
@@ -37,24 +35,19 @@ namespace C3DE.Demo.Scenes
             terrainMaterial.Shininess = 150;
             terrainMaterial.Tiling = new Vector2(8);
 
-            var terrain = new TerrainPrefab("terrain");
+            var terrainGo = GameObjectFactory.CreateTerrain();
+            var terrain = terrainGo.GetComponent<Terrain>();
             terrain.Renderer.Geometry.Size = new Vector3(2);
             terrain.Renderer.ReceiveShadow = true;
             terrain.Randomize(4, 12);
             terrain.Renderer.Material = terrainMaterial;
             terrain.Transform.Translate(-terrain.Width >> 1, 0, -terrain.Depth / 2);
-            Add(terrain);
+            Add(terrainGo);
 
-            // Lava !
-            var lavaMaterial = new LavaMaterial(this);
-            lavaMaterial.Texture = Application.Content.Load<Texture2D>("Textures/lava_texture");
-            lavaMaterial.NormalMap = Application.Content.Load<Texture2D>("Textures/lava_bump");
-
-            var lava = new WaterPrefab("water");
-            lava.Renderer.Material = lavaMaterial;
-            lava.Renderer.ReceiveShadow = true;
-            lava.Renderer.Geometry.Size = new Vector3(terrain.Width * 0.5f);
-            lava.Renderer.Geometry.Build();
+            // Lava
+            var lavaTexture = Application.Content.Load<Texture2D>("Textures/lava_texture");
+            var lavaNormal = Application.Content.Load<Texture2D>("Textures/lava_bump");
+            var lava = GameObjectFactory.CreateLava(lavaTexture, lavaNormal, new Vector3(terrain.Width * 0.5f));
             Add(lava);
         }
     }

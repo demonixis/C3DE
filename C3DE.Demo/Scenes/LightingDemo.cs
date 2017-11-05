@@ -1,11 +1,10 @@
-﻿using C3DE.Components.Colliders;
+﻿using C3DE.Components.Physics;
 using C3DE.Components.Controllers;
-using C3DE.Components.Lights;
-using C3DE.Components.Renderers;
+using C3DE.Components.Lighting;
+using C3DE.Components.Rendering;
 using C3DE.Demo.Scripts;
-using C3DE.Geometries;
-using C3DE.Materials;
-using C3DE.Prefabs;
+using C3DE.Graphics.Geometries;
+using C3DE.Graphics.Materials;
 using C3DE.Utils;
 using Microsoft.Xna.Framework;
 using System;
@@ -21,35 +20,37 @@ namespace C3DE.Demo.Scenes
             base.Initialize();
 
             // Camera
-            var camera = new CameraPrefab("camera");
-            camera.AddComponent<OrbitController>();
-            camera.AddComponent<RayPickingTester>();
-            Add(camera);
+            var cameraGo = GameObjectFactory.CreateCamera();
+            cameraGo.AddComponent<OrbitController>();
+            cameraGo.AddComponent<RayPickingTester>();
+            Add(cameraGo);
 
             // Light
-            var lightPrefab = new LightPrefab("lightPrefab", LightType.Point);
-            Add(lightPrefab);
-            lightPrefab.Transform.Position = new Vector3(0, 15, 15);
-            lightPrefab.Light.Range = 105;
-            lightPrefab.Light.Intensity = 2.0f;
-            lightPrefab.Light.FallOf = 5f;
-            lightPrefab.Light.Color = Color.Violet;
-            lightPrefab.Transform.Rotation = new Vector3(-1, 1, 0);
-            lightPrefab.Light.Angle = 0.1f;
-            lightPrefab.Light.ShadowGenerator.ShadowStrength = 0.6f; // FIXME need to be inverted
-            lightPrefab.Light.ShadowGenerator.SetShadowMapSize(Application.GraphicsDevice, 1024);
-            lightPrefab.EnableShadows = true;
-            lightPrefab.AddComponent<LightSwitcher>();
-            lightPrefab.AddComponent<LightMover>();
-            lightPrefab.AddComponent<DemoBehaviour>();
+            var lightGo = GameObjectFactory.CreateLight(LightType.Point);
+            lightGo.Transform.Position = new Vector3(0, 15, 15);
+            lightGo.Transform.Rotation = new Vector3(-1, 1, 0);
+            Add(lightGo);
 
-            var lightPrefabSphere = lightPrefab.AddComponent<MeshRenderer>();
-            lightPrefabSphere.Geometry = new SphereGeometry(2f, 4);
-            lightPrefabSphere.Geometry.Build();
-            lightPrefabSphere.CastShadow = false;
-            lightPrefabSphere.ReceiveShadow = false;
-            lightPrefabSphere.Material = new SimpleMaterial(scene);
-            lightPrefabSphere.Material.Texture = GraphicsHelper.CreateTexture(Color.Yellow, 1, 1);
+            var light = lightGo.GetComponent<Light>();
+            light.Range = 105;
+            light.Intensity = 2.0f;
+            light.FallOf = 5f;
+            light.Color = Color.Violet;
+            light.Angle = 0.1f;
+            light.ShadowGenerator.ShadowStrength = 0.6f; // FIXME need to be inverted
+            light.ShadowGenerator.SetShadowMapSize(Application.GraphicsDevice, 1024);
+
+            lightGo.AddComponent<LightSwitcher>();
+            lightGo.AddComponent<LightMover>();
+            lightGo.AddComponent<DemoBehaviour>();
+
+            var ligthSphere = lightGo.AddComponent<MeshRenderer>();
+            ligthSphere.Geometry = new SphereGeometry(2f, 4);
+            ligthSphere.Geometry.Build();
+            ligthSphere.CastShadow = false;
+            ligthSphere.ReceiveShadow = false;
+            ligthSphere.Material = new SimpleMaterial(scene);
+            ligthSphere.Material.Texture = GraphicsHelper.CreateTexture(Color.Yellow, 1, 1);
 
             // Terrain
             var terrainMaterial = new StandardMaterial(scene);
@@ -57,13 +58,14 @@ namespace C3DE.Demo.Scenes
             terrainMaterial.Shininess = 10;
             terrainMaterial.Tiling = new Vector2(16);
 
-            var terrain = new TerrainPrefab("terrain");
-            terrain.Renderer.Geometry.Size = new Vector3(4);
-            terrain.Renderer.Geometry.Build();
+            var terrainGo = GameObjectFactory.CreateTerrain();
+            var terrain = terrainGo.GetComponent<Terrain>();
+            terrain.Geometry.Size = new Vector3(4);
+            terrain.Geometry.Build();
             terrain.Flatten();
             terrain.Renderer.Material = terrainMaterial;
-            terrain.Transform.Translate(-terrain.Width >> 1, 0, -terrain.Depth / 2);
-            Add(terrain);
+            terrainGo.Transform.Translate(-terrain.Width >> 1, 0, -terrain.Depth / 2);
+            Add(terrainGo);
 
             // Cube
             var cubeSuperMaterial = new StandardMaterial(scene);

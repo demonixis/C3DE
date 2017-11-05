@@ -1,9 +1,9 @@
 ﻿using C3DE.Components;
-using C3DE.Components.Colliders;
-using C3DE.Components.Lights;
-using C3DE.Components.Renderers;
-using C3DE.Materials;
-using C3DE.Rendering.PostProcessing;
+using C3DE.Components.Physics;
+using C3DE.Components.Lighting;
+using C3DE.Components.Rendering;
+using C3DE.Graphics.Materials;
+using C3DE.Graphics.PostProcessing;
 using C3DE.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;

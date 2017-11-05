@@ -1,5 +1,5 @@
 ﻿using C3DE.Components;
-using C3DE.Rendering.PostProcessing;
+using C3DE.Graphics.PostProcessing;
 using C3DE.UI;
 using C3DE.Utils;
 using Microsoft.Xna.Framework;

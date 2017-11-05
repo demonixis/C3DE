@@ -57,7 +57,7 @@ namespace C3DE
                     if (transform != null)
                     {
                         for (int i = 0, l = transform.Transforms.Count; i < l; i++)
-                            transform.Transforms[i].SceneObject.Enabled = value;
+                            transform.Transforms[i].GameObject.Enabled = value;
                     }
                 }
             }
@@ -137,7 +137,7 @@ namespace C3DE
                 
                 transform = new Transform();
                 transform.transform = transform;
-                transform.SceneObject = this;
+                transform.GameObject = this;
                 transform.PropertyChanged += OnComponentChanged;
                 transform.Awake();
                 components.Add(transform);
@@ -262,7 +262,7 @@ namespace C3DE
             }
             else
             {
-                component.SceneObject = this;
+                component.GameObject = this;
                 component.transform = transform;
                 component.Awake();
                 component.PropertyChanged += OnComponentChanged;

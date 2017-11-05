@@ -25,7 +25,7 @@ namespace C3DE.Demo.Scripts
                 //FIXME
                 var raycastInfo = new RaycastInfo[0];
                 if (scene.RaycastAll(camera.GetRay(Input.Mouse.Position), 250, out raycastInfo))
-                    _hit = raycastInfo[0].Collider.SceneObject.Name;
+                    _hit = raycastInfo[0].Collider.GameObject.Name;
                 else
                     _hit = "Nothing";
             }

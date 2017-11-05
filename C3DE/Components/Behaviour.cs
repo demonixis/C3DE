@@ -1,5 +1,4 @@
-﻿using C3DE.Coroutines;
-using C3DE.UI;
+﻿using C3DE.UI;
 using System.Collections;
 using System.Runtime.Serialization;
 

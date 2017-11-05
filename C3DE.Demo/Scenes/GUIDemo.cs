@@ -1,5 +1,4 @@
 ﻿using C3DE.Demo.Scripts;
-using C3DE.Prefabs;
 
 namespace C3DE.Demo.Scenes
 {
@@ -11,10 +10,10 @@ namespace C3DE.Demo.Scenes
         {
             base.Initialize();
 
-            var camera = new CameraPrefab("Camera");
-            camera.AddComponent<UIWidgetDemo>();
-            camera.AddComponent<DemoBehaviour>();
-            Add(camera);
+            var cameraGo = GameObjectFactory.CreateCamera();
+            cameraGo.AddComponent<UIWidgetDemo>();
+            cameraGo.AddComponent<DemoBehaviour>();
+            Add(cameraGo);
         }
     }
 }

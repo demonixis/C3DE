@@ -11,7 +11,6 @@ namespace C3DE.VR
 		protected override bool AddOpenGLContext(ref OpenGLContextParams p)
 		{
 			var window = Application.Engine.Window;
-			window.Position = new Point(p.XPos, p.YPos);
 			window.Title = p.WindowTitle;
 			Screen.Setup(p.Width, p.Height, null, null);
 			Screen.Fullscreen = p.FullScreen;

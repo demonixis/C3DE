@@ -47,7 +47,7 @@ namespace C3DE.Components
         [DataMember]
         public string Id { get; set; }
 
-        public GameObject SceneObject
+        public GameObject GameObject
         {
             get { return sceneObject; }
             internal set { sceneObject = value; }

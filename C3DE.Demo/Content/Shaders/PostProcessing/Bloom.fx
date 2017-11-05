@@ -184,8 +184,13 @@ technique Extract
 {
 	pass Pass1
 	{
+#if SM4
 		VertexShader = compile vs_4_0 VertexShaderFunction();
 		PixelShader = compile ps_4_0 ExtractPS();
+#else
+		VertexShader = compile vs_3_0 VertexShaderFunction();
+		PixelShader = compile ps_3_0 ExtractPS();
+#endif
 	}
 }
 
@@ -193,8 +198,13 @@ technique ExtractLuminance
 {
 	pass Pass1
 	{
+#if SM4
 		VertexShader = compile vs_4_0 VertexShaderFunction();
 		PixelShader = compile ps_4_0 ExtractLuminancePS();
+#else
+		VertexShader = compile vs_3_0 VertexShaderFunction();
+		PixelShader = compile ps_3_0 ExtractLuminancePS();
+#endif
 	}
 }
 
@@ -202,8 +212,13 @@ technique Downsample
 {
     pass Pass1
     {
+#if SM4
 		VertexShader = compile vs_4_0 VertexShaderFunction();
         PixelShader = compile ps_4_0 DownsamplePS();
+#else
+		VertexShader = compile vs_3_0 VertexShaderFunction();
+        PixelShader = compile ps_3_0 DownsamplePS();
+#endif
     }
 }
 
@@ -211,8 +226,13 @@ technique Upsample
 {
     pass Pass1
     {
+#if SM4
 		VertexShader = compile vs_4_0 VertexShaderFunction();
         PixelShader = compile ps_4_0 UpsamplePS();
+#else
+		VertexShader = compile vs_3_0 VertexShaderFunction();
+        PixelShader = compile ps_3_0 UpsamplePS();
+#endif
     }
 }
 
@@ -221,7 +241,12 @@ technique UpsampleLuminance
 {
     pass Pass1
     {
+#if SM4
 		VertexShader = compile vs_4_0 VertexShaderFunction();
         PixelShader = compile ps_4_0 UpsampleLuminancePS();
+#else
+		VertexShader = compile vs_3_0 VertexShaderFunction();
+        PixelShader = compile ps_3_0 UpsampleLuminancePS();
+#endif
     }
 }

@@ -1,13 +1,9 @@
-﻿using System;
-using C3DE.Components;
-using C3DE.Components.Colliders;
-using C3DE.Components.Lights;
-using C3DE.Components.Renderers;
+﻿using C3DE.Components.Lighting;
+using C3DE.Components.Rendering;
 using C3DE.Demo.Scripts;
-using C3DE.Geometries;
-using C3DE.Materials;
-using C3DE.Prefabs;
-using C3DE.Rendering;
+using C3DE.Graphics.Geometries;
+using C3DE.Graphics.Materials;
+using C3DE.Graphics.Rendering;
 using C3DE.Utils;
 using C3DE.VR;
 using Microsoft.Xna.Framework;
@@ -22,13 +18,12 @@ namespace C3DE.Demo.Scenes
         {
             base.Initialize();
 
-			var cameraNode = new GameObject();
-			Add(cameraNode);
-			cameraNode.AddComponent<Camera>();
+            var cameraGo = GameObjectFactory.CreateCamera();
+			Add(cameraGo);
 
 			var trackingSpace = new GameObject();
 			Add(trackingSpace);
-			cameraNode.Transform.Parent = trackingSpace.Transform;
+			cameraGo.Transform.Parent = trackingSpace.Transform;
 
 			var head = new GameObject();
 			head.Transform.Position = new Vector3(0, 1.8f, 0);
@@ -66,19 +61,19 @@ namespace C3DE.Demo.Scenes
 
         private void BuildScene()
         {
-			var lightPrefab = new LightPrefab("lightPrefab", LightType.Directional);
-			Add(lightPrefab);
-			lightPrefab.Transform.Position = new Vector3(-15, 15, 15);
-			lightPrefab.Transform.Rotation = new Vector3(0, MathHelper.Pi, 1);
-			lightPrefab.Light.Range = 105;
-			lightPrefab.Light.Intensity = 2.0f;
-			lightPrefab.Light.FallOf = 5f;
-			lightPrefab.Light.Color = Color.Violet;
-			lightPrefab.Transform.Rotation = new Vector3(-1, 1, 0);
-			lightPrefab.Light.ShadowGenerator.ShadowStrength = 0.6f; // FIXME need to be inverted
-			lightPrefab.Light.ShadowGenerator.SetShadowMapSize(Application.GraphicsDevice, 1024);
-			lightPrefab.EnableShadows = true;
-			lightPrefab.AddComponent<DemoBehaviour>();
+            var lightGo = GameObjectFactory.CreateLight(LightType.Directional);
+            lightGo.Transform.Position = new Vector3(-15, 15, 15);
+            lightGo.Transform.Rotation = new Vector3(0, MathHelper.Pi, 1);
+            lightGo.Transform.Rotation = new Vector3(-1, 1, 0);
+            lightGo.AddComponent<DemoBehaviour>();
+            Add(lightGo);
+
+            var light = lightGo.GetComponent<Light>();
+            light.Range = 105;
+            light.Intensity = 2.0f;
+            light.FallOf = 5f;
+            light.Color = Color.Violet;
+            light.ShadowGenerator.ShadowStrength = 0.6f; // FIXME need to be inverted
 
 			// Terrain
 			var terrainMaterial = new StandardMaterial(scene);
@@ -86,13 +81,14 @@ namespace C3DE.Demo.Scenes
 			terrainMaterial.Shininess = 10;
 			terrainMaterial.Tiling = new Vector2(64);
 
-			var terrain = new TerrainPrefab("terrain");
-			terrain.Renderer.Geometry.Size = new Vector3(2);
-			terrain.Renderer.Geometry.Build();
-			terrain.Flatten();
-			terrain.Renderer.Material = terrainMaterial;
-			terrain.Transform.Translate(-terrain.Width >> 1, 0, -terrain.Depth / 2);
-			Add(terrain);
+            var terrainGo = GameObjectFactory.CreateTerrain();
+            var terrain = terrainGo.GetComponent<Terrain>();
+            terrain.Renderer.Geometry.Size = new Vector3(2);
+            terrain.Renderer.Geometry.Build();
+            terrain.Flatten();
+            terrain.Renderer.Material = terrainMaterial;
+            terrain.Transform.Translate(-terrain.Width >> 1, 0, -terrain.Depth / 2);
+			Add(terrainGo);
 
 			var cubMat = new StandardMaterial(this);
 			cubMat.Texture = GraphicsHelper.CreateCheckboardTexture(Color.Red, Color.White);

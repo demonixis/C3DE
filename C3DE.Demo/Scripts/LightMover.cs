@@ -1,5 +1,5 @@
 ﻿using C3DE.Components;
-using C3DE.Components.Lights;
+using C3DE.Components.Lighting;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 

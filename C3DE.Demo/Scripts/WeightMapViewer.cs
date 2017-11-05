@@ -1,6 +1,6 @@
 ﻿using C3DE.Components;
-using C3DE.Components.Renderers;
-using C3DE.Materials;
+using C3DE.Components.Rendering;
+using C3DE.Graphics.Materials;
 using C3DE.UI;
 using Microsoft.Xna.Framework;
 using System;

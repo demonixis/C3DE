@@ -1,6 +1,5 @@
-﻿using C3DE.Coroutines;
-using C3DE.Inputs;
-using C3DE.Rendering;
+﻿using C3DE.Inputs;
+using C3DE.Graphics.Rendering;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -88,7 +87,7 @@ namespace C3DE
                 renderer.Initialize(Content);
             }
 
-            Serializr.AddTypes(typeof(Engine));
+            Serializer.AddTypes(typeof(Engine));
 
             Input.Keys = new KeyboardComponent(this);
             Input.Mouse = new MouseComponent(this);

@@ -219,8 +219,13 @@ technique ApplyLUT
 {
 	pass Pass1
 	{
+#if SM4
 		VertexShader = compile vs_4_0 VertexShaderFSQFunction();
 		PixelShader = compile ps_4_0 PixelShaderApplyLUT();
+#else
+		VertexShader = compile vs_3_0 VertexShaderFSQFunction();
+		PixelShader = compile ps_3_0 PixelShaderApplyLUT();	
+#endif
 	}
 }
 
@@ -228,7 +233,12 @@ technique CreateLUT
 {
     pass Pass1
     {
+#if SM4
 		VertexShader = compile vs_4_0 VertexShaderFSQFunction();
         PixelShader = compile ps_4_0 PixelShaderCreateLUT();
+#else
+		VertexShader = compile vs_3_0 VertexShaderFSQFunction();
+        PixelShader = compile ps_3_0 PixelShaderCreateLUT();	
+#endif
     }
 }
