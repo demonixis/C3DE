@@ -52,7 +52,7 @@ namespace C3DE.Graphics.Rendering
             // Pass, Update matrix, material attributes, etc.
             for (int i = 0; i < scene.renderList.Count; i++)
             {
-                scene.renderList[i].Material.Pass(scene.RenderList[i]);
+                scene.renderList[i].Material?.Pass(scene.RenderList[i]);
                 scene.renderList[i].Draw(m_graphicsDevice);
             }
         }

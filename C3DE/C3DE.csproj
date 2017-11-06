@@ -38,7 +38,10 @@
     <Compile Include="Application.cs" />
     <Compile Include="Asset.cs" />
     <Compile Include="AudioManager.cs" />
+    <Compile Include="Components\AudioListener.cs" />
+    <Compile Include="Components\AudioSource.cs" />
     <Compile Include="Components\Behaviour.cs" />
+    <Compile Include="Components\Rendering\LensFlare.cs" />
     <Compile Include="Components\Rendering\BoundingBoxRenderer.cs" />
     <Compile Include="Components\Controllers\Controller.cs" />
     <Compile Include="Components\Controllers\OrbitController.cs" />
@@ -160,8 +163,6 @@
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.XML" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Components\LenseFlare\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

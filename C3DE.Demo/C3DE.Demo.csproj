@@ -63,6 +63,7 @@
     <Compile Include="Scenes\PostProcessingDemo.cs" />
     <Compile Include="Scenes\HexagonGridTerrain.cs" />
     <Compile Include="Scenes\LightingDemo.cs" />
+    <Compile Include="Scenes\ProceduralTerrainBase.cs" />
     <Compile Include="Scenes\ProceduralTerrainLava.cs" />
     <Compile Include="Scenes\MenuDemo.cs" />
     <Compile Include="Scenes\PreLightingDemo.cs" />

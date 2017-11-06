@@ -34,17 +34,19 @@ namespace C3DE.Demo.Scripts
             var graphics = Application.GraphicsDevice;
 
             // Setup PostProcess.
+#if !DESKTOP
+            var colorGrading = new ColorGrading(graphics);
+            AddPass(colorGrading);
+            colorGrading.LookUpTable = Application.Content.Load<Texture2D>("Textures/Luts/lut_ver4");
+#endif
+
             var oldBloom = new BloomLegacy(graphics);
             AddPass(oldBloom);
             oldBloom.Settings = new BloomLegacySettings("Profile", 0.15f, 1f, 4.0f, 1.0f, 1f, 1f);
 
             var newBloom = new Bloom(graphics);
             AddPass(newBloom);
-            newBloom.SetPreset(new float[] { 10, 1, 1, 1, 1 }, new float[] { 1, 1, 1, 1, 1}, 1, 5);
-
-            var colorGrading = new ColorGrading(graphics);
-            AddPass(colorGrading);
-            colorGrading.LookUpTable = Application.Content.Load<Texture2D>("Textures/Luts/lut_ver4");
+            newBloom.SetPreset(new float[] { 10, 1, 1, 1, 1 }, new float[] { 1, 1, 1, 1, 1 }, 1, 5);
 
             AddPass(new C64Filter(graphics));
             AddPass(new CGAFilter(graphics));
@@ -61,17 +63,21 @@ namespace C3DE.Demo.Scripts
             refractionPass.TextureTiling = new Vector2(0.5f);
 
             // Setup UI
-            var titles = new string[] 
-            {
-                "Old Bloom", "New Bloom",
-                "Color Grading", "C64 Filter",
-                "CGA Filter", "Convolution",
-                "Film", "FXAA", "GrayScale",
-                "Average Color", "Motion Blur",
-                "Refraction"
-            };
+            var titles = new List<string>();
 
-            var count = titles.Length;
+#if !DESKTOP
+            titles.Add("Color Grading");
+#endif
+
+            titles.AddRange(new string[]
+            {
+                "Old Bloom", "New Bloom", "C64 Filter",
+                "CGA Filter", "Convolution", "Film",
+                "FXAA", "GrayScale", "Average Color",
+                "Motion Blur", "Refraction"
+            });
+
+            var count = titles.Count;
             _boxRect = new Rectangle(Screen.VirtualWidth - 190, 10, 180, 45 * count);
             _widgets = new Widget[count];
 

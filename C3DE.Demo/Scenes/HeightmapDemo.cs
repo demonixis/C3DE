@@ -1,4 +1,5 @@
-﻿using C3DE.Components.Lighting;
+﻿using C3DE.Components;
+using C3DE.Components.Lighting;
 using C3DE.Components.Rendering;
 using C3DE.Demo.Scripts;
 using C3DE.Graphics.Materials;
@@ -15,6 +16,8 @@ namespace C3DE.Demo.Scenes
         {
             base.Initialize();
 
+            var content = Application.Content;
+
             // Add a camera with a FPS controller
             var cameraGo = GameObjectFactory.CreateCamera(new Vector3(0, 2, -10), new Vector3(0, 0, 0), Vector3.Up);
             cameraGo.AddComponent<ControllerSwitcher>();
@@ -28,10 +31,10 @@ namespace C3DE.Demo.Scenes
 
             // Finally a terrain
             var terrainMaterial = new TerrainMaterial(scene);
-            terrainMaterial.Texture = Application.Content.Load<Texture2D>("Textures/Terrain/Grass");
-            terrainMaterial.SandTexture = Application.Content.Load<Texture2D>("Textures/Terrain/Sand");
-            terrainMaterial.SnowTexture = Application.Content.Load<Texture2D>("Textures/Terrain/Snow");
-            terrainMaterial.RockTexture = Application.Content.Load<Texture2D>("Textures/Terrain/Rock");
+            terrainMaterial.Texture = content.Load<Texture2D>("Textures/Terrain/Grass");
+            terrainMaterial.SandTexture = content.Load<Texture2D>("Textures/Terrain/Sand");
+            terrainMaterial.SnowTexture = content.Load<Texture2D>("Textures/Terrain/Snow");
+            terrainMaterial.RockTexture = content.Load<Texture2D>("Textures/Terrain/Rock");
 
             var terrainGo = GameObjectFactory.CreateTerrain();
             
@@ -49,10 +52,25 @@ namespace C3DE.Demo.Scenes
             terrainGo.Transform.Translate(-terrain.Width >> 1, -10, -terrain.Depth >> 1);
 
             // With water !
-            var waterTexture = Application.Content.Load<Texture2D>("Textures/water");
-            var bumpTexture = Application.Content.Load<Texture2D>("Textures/wavesbump");
+            var waterTexture = content.Load<Texture2D>("Textures/water");
+            var bumpTexture = content.Load<Texture2D>("Textures/wavesbump");
             var water = GameObjectFactory.CreateWater(waterTexture, bumpTexture, new Vector3(terrain.Width * 0.5f));
             scene.Add(water);
+
+            // Sun Flares
+            var glowTexture = content.Load<Texture2D>("Textures/Flares/glow");
+            var flareTextures = new Texture2D[]
+            {
+                content.Load<Texture2D>("Textures/Flares/flare1"),
+                content.Load<Texture2D>("Textures/Flares/flare2"),
+                content.Load<Texture2D>("Textures/Flares/flare3")
+            };
+            var direction = lightGo.Transform.Rotation;
+            direction.Normalize();
+
+            var sunflares = cameraGo.AddComponent<LensFlare>();
+            sunflares.LightDirection = direction; 
+            sunflares.Setup(glowTexture, flareTextures);
 
             Screen.ShowCursor = true;
 

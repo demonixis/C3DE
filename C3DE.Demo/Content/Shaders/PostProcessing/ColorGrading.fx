@@ -1,4 +1,4 @@
-﻿//Color Grading Shader with LUTs, TheKosmonaut 2017 ( kosmonaut3d@googlemail.com )
+//Color Grading Shader with LUTs, TheKosmonaut 2017 ( kosmonaut3d@googlemail.com )
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //  VARIABLES
