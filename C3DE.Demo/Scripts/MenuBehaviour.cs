@@ -4,14 +4,13 @@ using C3DE.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using System.Collections;
 
 namespace C3DE.Demo.Scripts
 {
     public class MenuBehaviour : Behaviour
     {
-        public static int ButtonWidth = 240;
-        public static int ButtonHeight = 55;
+        public static int ButtonWidth = 300;
+        public static int ButtonHeight = 40;
 
         class DemoWidget
         {
@@ -55,8 +54,9 @@ namespace C3DE.Demo.Scripts
             _backgroundRect = new Rectangle(0, 0, Screen.VirtualWidth, Screen.VirtualHeight);
 
             var tempVec2 = GUI.Skin.Font.MeasureString("C3DE Demos");
-            _titleSize = 2.0f;
-            _titleRect = new Vector2(Screen.VirtualWidthPerTwo - tempVec2.X * _titleSize / 2, tempVec2.Y);
+
+            _titleSize = 2.5f;
+            _titleRect = new Vector2(Screen.VirtualWidthPerTwo - tempVec2.X * _titleSize / 2, tempVec2.Y + 5);
 
             tempVec2 = GUI.Skin.Font.MeasureString("Gets the source : https://github.com/demonixis/C3DE");
             _footerRect = new Vector2(Screen.VirtualWidthPerTwo - tempVec2.X / 2, Screen.VirtualHeight - tempVec2.Y - 5);
@@ -87,12 +87,16 @@ namespace C3DE.Demo.Scripts
         public override void OnGUI(GUI gui)
         {
             gui.DrawTexture(ref _backgroundRect, _background);
-            gui.Label(ref _titleRect, "C3DE Demos", _titleSize);
 
+            // Draw the header and the footer.
+            GUI.Skin.TextColor = Color.Black;
+            gui.Label(ref _titleRect, "C3DE Demos", _titleSize);
+            gui.Label(ref _footerRect, "Gets the source : https://github.com/demonixis/C3DE");
+
+            // Draw buttons.
+            GUI.Skin.TextColor = Color.White;
             for (int i = 0, l = _demos.Length; i < l; i++)
                 _demos[i].Draw(gui);
-
-            gui.Label(ref _footerRect, "Gets the source : https://github.com/demonixis/C3DE");
         }
     }
 }

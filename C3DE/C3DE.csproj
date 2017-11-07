@@ -93,6 +93,7 @@
     <Compile Include="Graphics\Geometries\SphereGeometry.cs" />
     <Compile Include="Graphics\Geometries\TerrainGeometry.cs" />
     <Compile Include="Graphics\Geometries\TorusGeometry.cs" />
+    <Compile Include="Inputs\InputDevice.cs" />
     <Compile Include="Inputs\TouchComponent.cs" />
     <Compile Include="Graphics\Materials\ReflectiveMaterial.cs" />
     <Compile Include="Graphics\Materials\SimpleMaterial.cs" />

@@ -28,9 +28,6 @@ namespace C3DE.Components.Rendering
         }
 
         private BlendState ColorWriteDisable;
-        public static float GlowSize = 400;
-        public static float QuerySize = 100;
-
         private GraphicsDevice m_GraphicsDevice;
         private SpriteBatch m_SpriteBatch;
         private Camera m_Camera;
@@ -59,6 +56,8 @@ namespace C3DE.Components.Rendering
         public Vector3 LightDirection = Vector3.Normalize(new Vector3(-1, -0.1f, 0.3f));
         public Texture2D GlowTexture { get; set; }
         public Texture2D[] FlareTextures { get; set; }
+        public float GlowSize { get; set; } = 400;
+        public float QuerySize { get; set; } = 100;
 
         public override void Start()
         {
@@ -163,11 +162,10 @@ namespace C3DE.Components.Rendering
             var origin = new Vector2(GlowTexture.Width, GlowTexture.Height) / 2;
             var scale = GlowSize * 2 / GlowTexture.Width;
 
-            m_SpriteBatch.Begin();
+            m_SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive);
             m_SpriteBatch.Draw(GlowTexture, m_LightPosition, null, color, 0, origin, scale, SpriteEffects.None, 0);
             m_SpriteBatch.End();
         }
-
 
         /// <summary>
         /// Draws the lensflare sprites, computing the position

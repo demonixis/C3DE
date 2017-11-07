@@ -14,6 +14,8 @@ namespace C3DE.Components.Rendering
         protected Model model;
         protected Matrix[] boneTransforms;
 
+        public bool DrawWithBasicEffect { get; set; } = false;
+
         public Model Model
         {
             get { return model; }
@@ -26,6 +28,7 @@ namespace C3DE.Components.Rendering
                     if (model != null)
                     {
                         boneTransforms = new Matrix[model.Bones.Count];
+                        model.CopyAbsoluteBoneTransformsTo(boneTransforms);
                         ComputeBoundingInfos();
                     }
                 }
@@ -54,6 +57,14 @@ namespace C3DE.Components.Rendering
 
         public override void Draw(GraphicsDevice device)
         {
+            if (DrawWithBasicEffect)
+                DrawBasicEffect(Camera.Main, device);
+            else
+                DrawNative(device);
+        }
+
+        public void DrawNative(GraphicsDevice device)
+        {
             foreach (ModelMesh mesh in model.Meshes)
             {
                 foreach (ModelMeshPart meshPart in mesh.MeshParts)
@@ -65,7 +76,7 @@ namespace C3DE.Components.Rendering
             }
         }
 
-        public void DrawWithBasicEffect(Camera camera, GraphicsDevice device)
+        public void DrawBasicEffect(Camera camera, GraphicsDevice device)
         {
             foreach (ModelMesh mesh in model.Meshes)
             {
@@ -75,6 +86,7 @@ namespace C3DE.Components.Rendering
                     effect.View = camera.view;
                     effect.Projection = camera.projection;
                     effect.EnableDefaultLighting();
+                    effect.CurrentTechnique.Passes[0].Apply();
                 }
                 mesh.Draw();
             }

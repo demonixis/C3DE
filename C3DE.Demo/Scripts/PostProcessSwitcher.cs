@@ -37,7 +37,7 @@ namespace C3DE.Demo.Scripts
 #if !DESKTOP
             var colorGrading = new ColorGrading(graphics);
             AddPass(colorGrading);
-            colorGrading.LookUpTable = Application.Content.Load<Texture2D>("Textures/Luts/lut_ver4");
+            colorGrading.LookUpTable = Application.Content.Load<Texture2D>("Textures/Luts/lut_default");
 #endif
 
             var oldBloom = new BloomLegacy(graphics);
@@ -46,7 +46,7 @@ namespace C3DE.Demo.Scripts
 
             var newBloom = new Bloom(graphics);
             AddPass(newBloom);
-            newBloom.SetPreset(new float[] { 10, 1, 1, 1, 1 }, new float[] { 1, 1, 1, 1, 1 }, 1, 5);
+            newBloom.SetPreset(new float[] { 5, 1, 1, 1, 1 }, new float[] { 1, 1, 1, 1, 1 }, 1, 5);
 
             AddPass(new C64Filter(graphics));
             AddPass(new CGAFilter(graphics));

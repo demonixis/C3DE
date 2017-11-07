@@ -1,4 +1,6 @@
 ﻿using C3DE.Inputs;
+using XNAKeys = Microsoft.Xna.Framework.Input.Keys;
+using XNAButtons = Microsoft.Xna.Framework.Input.Buttons;
 
 namespace C3DE
 {
