@@ -1,5 +1,6 @@
 using C3DE.Demo.Scenes;
 using C3DE.UI;
+using C3DE.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -8,8 +9,8 @@ namespace C3DE.Demo
 {
     public static class DemoGame
     {
-        public const int ScreenWidth = 1280;
-        public const int ScreenHeight = 800;
+        public const int ScreenWidth = 800;
+        public const int ScreenHeight = 600;
 
         public static string[] BlueSkybox = new string[6]
         {

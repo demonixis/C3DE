@@ -1,4 +1,5 @@
 ﻿using C3DE.Components;
+using C3DE.Components.Lighting;
 using C3DE.Components.Rendering;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
@@ -86,6 +87,8 @@ namespace C3DE.Graphics.Materials
         public abstract void PrePass(Camera camera);
 
         public abstract void Pass(Renderer renderable);
+
+        public virtual void PassLighting(Renderer renderer, Light light) { }
 
         public virtual void Dispose() { }
     }

@@ -1,4 +1,5 @@
 ﻿using C3DE.Components;
+using C3DE.Components.Lighting;
 using C3DE.Components.Rendering;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
@@ -56,53 +57,46 @@ namespace C3DE.Graphics.Materials
             effect.Parameters["Projection"].SetValue(camera.projection);
             effect.Parameters["EyePosition"].SetValue(camera.Transform.Position);
             effect.Parameters["AmbientColor"].SetValue(scene.RenderSettings.ambientColor);
-
-            if (scene.lights.Count > 0)
-            {
-                var light0 = scene.Lights[0]; // FIXME
-
-                if (ShaderQuality == ShaderQuality.Normal)
-                {
-                    // Update shadow data.
-                    effect.Parameters["ShadowData"].SetValue(light0.shadowGenerator.shadowData);
-                    effect.Parameters["ShadowMap"].SetValue(light0.shadowGenerator.ShadowMap);
-
-                    // Fog
-                    effect.Parameters["FogColor"].SetValue(scene.RenderSettings.fogColor);
-                    effect.Parameters["FogData"].SetValue(scene.RenderSettings.fogData);
-
-                    // Light
-                    effect.Parameters["LightView"].SetValue(light0.viewMatrix);
-                    effect.Parameters["LightProjection"].SetValue(light0.projectionMatrix);
-                }
-
-                // Lighting infos.
-                effect.Parameters["LightColor"].SetValue(light0.color);
-                effect.Parameters["LightDirection"].SetValue(light0.transform.Rotation);
-                effect.Parameters["LightPosition"].SetValue(light0.transform.Position);
-                effect.Parameters["LightIntensity"].SetValue(light0.Intensity);
-                effect.Parameters["LightRange"].SetValue(light0.Range);
-                effect.Parameters["LightFallOff"].SetValue((int)light0.FallOf);
-                effect.Parameters["LightType"].SetValue((int)light0.TypeLight);
-            }
         }
 
         public override void Pass(Renderer renderable)
         {
-            if (ShaderQuality == Materials.ShaderQuality.Normal)
-                effect.Parameters["RecieveShadow"].SetValue(renderable.ReceiveShadow);
-
-            // Material properties.
             effect.Parameters["DiffuseColor"].SetValue(_diffuseColor);
-            effect.Parameters["EmissiveColor"].SetValue(_emissiveColor);
-            effect.Parameters["SpecularColor"].SetValue(_specularColor);
-            effect.Parameters["Shininess"].SetValue(Shininess);
             effect.Parameters["TextureTiling"].SetValue(Tiling);
-            effect.Parameters["TextureOffset"].SetValue(Offset);
             effect.Parameters["MainTexture"].SetValue(diffuseTexture);
             effect.Parameters["World"].SetValue(renderable.Transform.world);
 
-            effect.CurrentTechnique.Passes[0].Apply();
+            effect.CurrentTechnique.Passes["AmbientPass"].Apply();
+        }
+
+        public override void PassLighting(Renderer renderer, Light light)
+        {
+            effect.Parameters["DiffuseColor"].SetValue(_diffuseColor);
+            effect.Parameters["SpecularColor"].SetValue(_specularColor);
+            effect.Parameters["Shininess"].SetValue(Shininess);
+            effect.Parameters["TextureTiling"].SetValue(Tiling);
+            effect.Parameters["MainTexture"].SetValue(diffuseTexture);
+            effect.Parameters["World"].SetValue(renderer.Transform.world);
+
+            if (ShaderQuality == ShaderQuality.Normal)
+            {
+                effect.Parameters["ShadowData"].SetValue(light.shadowGenerator.shadowData);
+                effect.Parameters["ShadowMap"].SetValue(light.shadowGenerator.ShadowMap);
+                effect.Parameters["FogColor"].SetValue(scene.RenderSettings.fogColor);
+                effect.Parameters["FogData"].SetValue(scene.RenderSettings.fogData);
+                effect.Parameters["LightView"].SetValue(light.viewMatrix);
+                effect.Parameters["LightProjection"].SetValue(light.projectionMatrix);
+            }
+
+            effect.Parameters["LightColor"].SetValue(light.color);
+            effect.Parameters["LightDirection"].SetValue(light.transform.Rotation);
+            effect.Parameters["LightPosition"].SetValue(light.transform.Position);
+            effect.Parameters["LightIntensity"].SetValue(light.Intensity);
+            effect.Parameters["LightRange"].SetValue(light.Range);
+            effect.Parameters["LightFallOff"].SetValue((int)light.FallOf);
+            effect.Parameters["LightType"].SetValue((int)light.TypeLight);
+
+            effect.CurrentTechnique.Passes["LightPass"].Apply();
         }
     }
 }

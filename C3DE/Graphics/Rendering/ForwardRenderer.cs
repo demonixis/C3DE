@@ -45,7 +45,42 @@ namespace C3DE.Graphics.Rendering
             m_graphicsDevice.SetRenderTarget(sceneRT);
             m_graphicsDevice.Clear(camera.clearColor);
             m_graphicsDevice.DepthStencilState = DepthStencilState.Default;
-            base.RenderObjects(scene, camera);
+            m_graphicsDevice.BlendState = BlendState.Opaque;
+
+            if (scene.RenderSettings.Skybox.Enabled)
+                scene.RenderSettings.Skybox.Draw(m_graphicsDevice, camera);
+
+            var renderCount = scene.renderList.Count;
+
+            // Prepass, Update light, eye position, etc.
+            for (var i = 0; i < scene.effects.Count; i++)
+                scene.materials[scene.materialsEffectIndex[i]].PrePass(camera);
+
+            // Pass, Update matrix, material attributes, etc.
+            for (var i = 0; i < renderCount; i++)
+            {
+                var mat = scene.RenderList[i].Material as Materials.StandardMaterial;
+                if (mat != null)
+                {
+                    scene.renderList[i].Material?.Pass(scene.RenderList[i]);
+                    scene.renderList[i].Draw(m_graphicsDevice);
+
+                    m_graphicsDevice.BlendState = BlendState.Additive;
+
+                    for (var l = 0; l < scene.lights.Count; l++)
+                    {
+                        mat.PassLighting(scene.RenderList[i], scene.lights[l]);
+                        scene.renderList[i].Draw(m_graphicsDevice);
+                    }
+
+                    m_graphicsDevice.BlendState = BlendState.Opaque;
+                }
+                else
+                {
+                    scene.renderList[i].Material?.Pass(scene.RenderList[i]);
+                    scene.renderList[i].Draw(m_graphicsDevice);
+                }
+            }
         }
 
         /// <summary>
@@ -95,7 +130,7 @@ namespace C3DE.Graphics.Rendering
             if (!NeedsBufferUpdate)
                 return;
 
-            sceneRT = new RenderTarget2D(m_graphicsDevice, m_graphicsDevice.Viewport.Width, m_graphicsDevice.Viewport.Height, false, m_HDRSupport ? SurfaceFormat.HdrBlendable : SurfaceFormat.Color, DepthFormat.Depth24, 0, RenderTargetUsage.DiscardContents);
+            sceneRT = new RenderTarget2D(m_graphicsDevice, m_graphicsDevice.Viewport.Width, m_graphicsDevice.Viewport.Height, false, m_HDRSupport ? SurfaceFormat.HdrBlendable : SurfaceFormat.Color, DepthFormat.Depth24Stencil8, 0, RenderTargetUsage.PreserveContents);
             NeedsBufferUpdate = false;
         }
 

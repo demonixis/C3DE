@@ -9,7 +9,6 @@ float4x4 Projection;
 // Material
 float3 AmbientColor = float3(0.1, 0.1, 0.1);
 float3 DiffuseColor = float3(1.0, 1.0, 1.0);
-float3 EmissiveColor = float3(0.0, 0.0, 0.0);
 float3 SpecularColor = float3(0.8, 0.8, 0.8);
 float Shininess = 200.0;
 
@@ -27,7 +26,6 @@ int LightType = 0;
 // Misc
 float3 EyePosition = float3(1, 1, 0);
 float2 TextureTiling = float2(1, 1);
-float2 TextureOffset = float2(0, 0);
 
 texture MainTexture;
 sampler2D textureSampler = sampler_state
@@ -125,9 +123,14 @@ VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
 	return output;
 }
 
+float4 PixelShaderAmbient(VertexShaderOutput input) : COLOR0
+{
+	float3 baseDiffuse = DiffuseColor * tex2D(textureSampler, input.UV  * TextureTiling);
+	return float4(baseDiffuse, 1.0);
+}
+
 float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 {
-	float3 baseDiffuse = DiffuseColor * tex2D(textureSampler, (input.UV + TextureOffset) * TextureTiling);
 	float3 lightFactor = float3(1, 1, 1);
 	float3 normal = normalize(input.Normal);
 	float shadowTerm = CalcShadow(input.WorldPosition);
@@ -140,22 +143,31 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 	else if (LightType == 3)
 		lightFactor = CalcSpotLightColor(normal, input.WorldPosition);
 
-	float3 finalDiffuse = baseDiffuse * lightFactor * shadowTerm;
+	float3 finalDiffuse = lightFactor * shadowTerm;
 	float3 finalSpecular = CalcSpecularColor(normal, input.WorldPosition, finalDiffuse, LightType);
-	float4 finalCompose = float4(AmbientColor + finalDiffuse + finalSpecular + EmissiveColor, 1.0);
+	float4 finalCompose = float4(AmbientColor + finalDiffuse + finalSpecular, 1.0);
 	
 	return ApplyFog(finalCompose, input.FogDistance);
 }
 
 technique Textured
 {
-	pass Pass1
+	pass AmbientPass
 	{
 #if SM4
 		VertexShader = compile vs_4_0_level_9_3 VertexShaderFunction();
-		PixelShader = compile ps_4_0_level_9_3 PixelShaderFunction();
+		PixelShader = compile ps_4_0_level_9_3 PixelShaderAmbient();
 #else
 		VertexShader = compile vs_3_0 VertexShaderFunction();
+		PixelShader = compile ps_3_0 PixelShaderAmbient();
+#endif
+	}
+	
+	pass LightPass
+	{
+#if SM4
+		PixelShader = compile ps_4_0_level_9_3 PixelShaderFunction();
+#else
 		PixelShader = compile ps_3_0 PixelShaderFunction();
 #endif
 	}
