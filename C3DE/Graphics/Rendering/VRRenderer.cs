@@ -63,7 +63,7 @@ namespace C3DE.Graphics.Rendering
         {
         }
 
-        protected override void renderPostProcess(List<PostProcessPass> passes)
+        protected override void RenderPostProcess(List<PostProcessPass> passes)
         {
         }
 

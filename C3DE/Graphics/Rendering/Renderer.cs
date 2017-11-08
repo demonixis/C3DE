@@ -14,9 +14,19 @@ namespace C3DE.Graphics.Rendering
         protected SpriteBatch m_spriteBatch;
         protected internal GUI uiManager;
         protected bool isDisposed;
-        protected bool m_HDRSupport;
+        protected bool m_HDRSupport = false;
 
         public bool NeedsBufferUpdate { get; set; } = true;
+
+        public bool HDRSupport
+        {
+            get => m_HDRSupport;
+            set
+            {
+                m_HDRSupport = value;
+                NeedsBufferUpdate = true;
+            }
+        }
 
         public Renderer(GraphicsDevice graphics)
         {
@@ -46,19 +56,21 @@ namespace C3DE.Graphics.Rendering
             if (scene.RenderSettings.Skybox.Enabled)
                 scene.RenderSettings.Skybox.Draw(m_graphicsDevice, camera);
 
+            var renderCount = scene.renderList.Count;
+
             // Prepass, Update light, eye position, etc.
-            for (int i = 0; i < scene.effects.Count; i++)
+            for (var i = 0; i < scene.effects.Count; i++)
                 scene.materials[scene.materialsEffectIndex[i]].PrePass(camera);
 
             // Pass, Update matrix, material attributes, etc.
-            for (int i = 0; i < scene.renderList.Count; i++)
+            for (var i = 0; i < renderCount; i++)
             {
                 scene.renderList[i].Material?.Pass(scene.RenderList[i]);
                 scene.renderList[i].Draw(m_graphicsDevice);
             }
         }
 
-        protected abstract void renderPostProcess(List<PostProcessPass> passes);
+        protected abstract void RenderPostProcess(List<PostProcessPass> passes);
 
         protected virtual void RenderUI(List<Behaviour> scripts)
         {

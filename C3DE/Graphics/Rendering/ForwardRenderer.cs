@@ -59,7 +59,7 @@ namespace C3DE.Graphics.Rendering
             m_spriteBatch.End();
         }
 
-        protected override void renderPostProcess(List<PostProcessPass> passes)
+        protected override void RenderPostProcess(List<PostProcessPass> passes)
         {
             if (passes.Count == 0)
                 return;
@@ -95,7 +95,7 @@ namespace C3DE.Graphics.Rendering
             if (!NeedsBufferUpdate)
                 return;
 
-            sceneRT = new RenderTarget2D(m_graphicsDevice, m_graphicsDevice.Viewport.Width, m_graphicsDevice.Viewport.Height, false, SurfaceFormat.Color, DepthFormat.Depth24, 0, RenderTargetUsage.DiscardContents);
+            sceneRT = new RenderTarget2D(m_graphicsDevice, m_graphicsDevice.Viewport.Width, m_graphicsDevice.Viewport.Height, false, m_HDRSupport ? SurfaceFormat.HdrBlendable : SurfaceFormat.Color, DepthFormat.Depth24, 0, RenderTargetUsage.DiscardContents);
             NeedsBufferUpdate = false;
         }
 
@@ -103,7 +103,7 @@ namespace C3DE.Graphics.Rendering
         {
             RenderShadowMaps(scene);
             RenderObjects(scene, camera);
-            renderPostProcess(scene.postProcessPasses);
+            RenderPostProcess(scene.postProcessPasses);
             renderBuffers();
             RenderUI(scene.Behaviours);
         }
