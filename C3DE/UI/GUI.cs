@@ -8,7 +8,7 @@ namespace C3DE.UI
     public class GUI
     {
         internal static Effect uiEffect;
-        internal static Matrix uiMatrix;
+        internal static Matrix uiMatrix = Matrix.Identity;
         private SpriteBatch _spriteBatch;
         private bool _loaded;
         private Vector2 _cacheVec2;
@@ -17,7 +17,7 @@ namespace C3DE.UI
         /// <summary>
         /// Enable or disable the UI rendering.
         /// </summary>
-        public static bool Enabled { get; set; }
+        public static bool Enabled { get; set; } = true;
 
         /// <summary>
         /// Gets or sets the Skin used to draw the UI.
@@ -32,7 +32,8 @@ namespace C3DE.UI
             get { return new Vector2(uiMatrix[0], uiMatrix[5]); }
             set
             {
-                uiMatrix = Matrix.CreateScale(new Vector3(value.X, value.Y, 1));
+                uiMatrix[0] = value.X;
+                uiMatrix[5] = value.Y;
             }
         }
 
@@ -44,7 +45,7 @@ namespace C3DE.UI
 
         public static Matrix Matrix
         {
-            get { return uiMatrix; }
+            get => uiMatrix;
             set { uiMatrix = value; }
         }
 
@@ -54,9 +55,9 @@ namespace C3DE.UI
             _loaded = false;
             _cacheRect = Rectangle.Empty;
             _cacheVec2 = Vector2.Zero;
-            uiMatrix = Matrix.CreateScale(1.0f);
-            uiEffect = null;
-            Enabled = true;
+
+            if (uiMatrix[0] == 1 && uiMatrix[5] == 1)
+                uiMatrix = Matrix.Identity;
         }
 
         public void LoadContent(ContentManager content)

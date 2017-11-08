@@ -75,6 +75,7 @@ namespace C3DE.Components.Controllers
             Velocity = 0.95f;
             AngularVelocity = 0.95f;
 			TouchSensibility = 0.45f;
+            KeyboardEnabled = false;
         }
 
         public override void Start()

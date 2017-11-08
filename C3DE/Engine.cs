@@ -63,14 +63,15 @@ namespace C3DE
             }
 #endif
 
-            Screen.Setup(width, height, true, false, true);
+            Screen.Setup(width, height, false, true);
+            Screen.SetVirtualResolution(width, height, false);
         }
 
         private void OnResize(object sender, PreparingDeviceSettingsEventArgs e)
         {
             var width = e.GraphicsDeviceInformation.PresentationParameters.BackBufferWidth;
             var height = e.GraphicsDeviceInformation.PresentationParameters.BackBufferHeight;
-            Screen.Setup(width, height, false, null, null);
+            Screen.Setup(width, height, null, null);
         }
 
         protected override void Initialize()
