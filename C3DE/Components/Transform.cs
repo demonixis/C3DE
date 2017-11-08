@@ -29,7 +29,16 @@ namespace C3DE.Components
         public Transform Parent
         {
             get { return _parent; }
-            set { _parent = value; }
+            set
+            {
+                if (_parent != null)
+                    _parent.Transforms.Remove(this);
+
+                _parent = value;
+
+                if (_parent != null)
+                    _parent.Transforms.Add(this);
+            }
         }
 
         public List<Transform> Transforms

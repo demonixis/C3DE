@@ -14,6 +14,7 @@ namespace C3DE.Graphics.Rendering
         protected SpriteBatch m_spriteBatch;
         protected internal GUI uiManager;
         protected bool isDisposed;
+        protected bool m_HDRSupport;
 
         public bool NeedsBufferUpdate { get; set; } = true;
 

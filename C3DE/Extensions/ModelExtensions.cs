@@ -21,8 +21,9 @@ namespace C3DE.Extensions
                 var meshPartIndex = 0;
 
                 var parent = new GameObject(mesh.Name);
+                scene.Add(parent);
                 parent.Transform.Parent = gameObject.Transform;
-
+                
                 var matrix = boneTransforms[mesh.ParentBone.Index];
                 Vector3 position;
                 Quaternion rotation;
@@ -37,6 +38,7 @@ namespace C3DE.Extensions
                 foreach (var part in mesh.MeshParts)
                 {
                     var effect = (BasicEffect)part.Effect;
+                    Debug.Log($"Texture for mesh {mesh.Name} for part {meshPartIndex}: {effect.Texture?.Name}");
                     var material = new StandardMaterial(scene);
                     material.Texture = effect.Texture;
                     material.DiffuseColor = new Color(effect.DiffuseColor.X, effect.DiffuseColor.Y, effect.DiffuseColor.Z);
@@ -45,9 +47,12 @@ namespace C3DE.Extensions
                     material.EmissiveColor = new Color(effect.EmissiveColor.X, effect.EmissiveColor.Y, effect.EmissiveColor.Z);
 
                     var child = new GameObject($"{mesh.Name}_{meshPartIndex}");
+                    scene.Add(child);
                     var renderer = child.AddComponent<MeshRenderer>();
                     renderer.material = material;
-                    
+                    renderer.CastShadow = true;
+                    renderer.ReceiveShadow = true;
+
                     var geometry = new Geometry();
                     geometry.VertexBuffer = part.VertexBuffer;
                     geometry.IndexBuffer = part.IndexBuffer;

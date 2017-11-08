@@ -101,14 +101,12 @@ namespace C3DE
 
         private void NotifyPropertyChanged(string property)
         {
-            if (PropertyChanged != null)
-                PropertyChanged(this, new PropertyChangedEventArgs(property));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(property));
         }
 
         private void NotifyComponentChanged(Component component, string propertyName, ComponentChangeType type)
         {
-            if (ComponentChanged != null)
-                ComponentChanged(this, new ComponentChangedEventArgs(component, propertyName, type));
+            ComponentChanged?.Invoke(this, new ComponentChangedEventArgs(component, propertyName, type));
         }
 
         #endregion
@@ -134,7 +132,7 @@ namespace C3DE
             if (transform == null)
             {
                 components = new List<Component>(5);
-                
+
                 transform = new Transform();
                 transform.transform = transform;
                 transform.GameObject = this;
@@ -327,9 +325,27 @@ namespace C3DE
         {
             T component = null;
 
-            for (int i = 0, l = transform.Transforms.Count; i < l; i++)
+            var transforms = transform.Transforms;
+            var size = transforms.Count;
+
+            for (var i = 0; i < size; i++)
             {
-                component = transform.Transforms[i].GetComponent<T>();
+                foreach (var cpn in components)
+                {
+                    Debug.Log(cpn);
+                    if (cpn is T)
+                        component = (T)cpn;
+                }
+                if (component != null)
+                    return component;
+
+                var cpns = transforms[i].GameObject.GetComponentsInChildren<T>();
+                foreach (var cpn in cpns)
+                {
+                    Debug.Log(cpn);
+                    if (cpn is T)
+                        component = (T)cpn;
+                }
 
                 if (component != null)
                     return component;
