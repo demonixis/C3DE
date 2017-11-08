@@ -103,9 +103,10 @@ namespace C3DE
         /// </summary>
         /// <param name="width">The width of the screen.</param>
         /// <param name="height">The height of the screen.</param>
+        /// <param name="changeVirtualResolution">Change the virtual resolution.</param>
         /// <param name="lockCursor">Indicates whether the cursor is locked.</param>
         /// <param name="showCursor">Indicates whether the cursor is visible.</param>
-        public static void Setup(int width, int height, bool? lockCursor, bool? showCursor)
+        public static void Setup(int width, int height, bool changeVirtualResolution, bool? lockCursor, bool? showCursor)
         {
             if (width == 0)
                 width = 800;
@@ -193,7 +194,7 @@ namespace C3DE
             Application.GraphicsDeviceManager.PreferredBackBufferHeight = height;
             Application.GraphicsDeviceManager.ApplyChanges();
 
-            Setup(width, height, null, null);
+            Setup(width, height, false, null, null);
 
             if (Application.GraphicsDeviceManager.IsFullScreen && fullscreen)
                 Application.GraphicsDeviceManager.ToggleFullScreen();

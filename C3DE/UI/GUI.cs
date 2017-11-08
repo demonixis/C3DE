@@ -32,9 +32,7 @@ namespace C3DE.UI
             get { return new Vector2(uiMatrix[0], uiMatrix[5]); }
             set
             {
-                uiMatrix.M11 = value.X;
-                uiMatrix.M22 = value.Y;
-                uiMatrix.M33 = 1.0f;
+                uiMatrix = Matrix.CreateScale(new Vector3(value.X, value.Y, 1));
             }
         }
 
