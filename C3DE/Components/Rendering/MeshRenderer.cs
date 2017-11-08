@@ -9,27 +9,27 @@ namespace C3DE.Components.Rendering
     [DataContract]
     public class MeshRenderer : Renderer
     {
-        private bool _haveListener;
-        protected Geometry geometry;
+        private bool m_HaveListener;
+        protected Geometry m_Geometry;
 
         [DataMember]
         public Geometry Geometry
         {
-            get { return geometry; }
+            get { return m_Geometry; }
             set
             {
-                if (value != geometry && value != null)
+                if (value != m_Geometry && value != null)
                 {
-                    if (geometry != null && _haveListener)
+                    if (m_Geometry != null && m_HaveListener)
                     {
-                        geometry.ConstructionDone -= ComputeBoundingInfos;
-                        _haveListener = false;
+                        m_Geometry.ConstructionDone -= ComputeBoundingInfos;
+                        m_HaveListener = false;
                     }
 
-                    geometry = value;
+                    m_Geometry = value;
 
-                    geometry.ConstructionDone += ComputeBoundingInfos;
-                    _haveListener = true;
+                    m_Geometry.ConstructionDone += ComputeBoundingInfos;
+                    m_HaveListener = true;
                 }
             }
         }
@@ -41,12 +41,12 @@ namespace C3DE.Components.Rendering
 
         public override void ComputeBoundingInfos()
         {
-            if (geometry == null)
+            if (m_Geometry == null)
                 return;
 
             var min = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
             var max = new Vector3(float.MinValue, float.MinValue, float.MinValue);
-            var vertices = geometry.GetVertices(VertexType.Position);
+            var vertices = m_Geometry.GetVertices(VertexType.Position);
 
             for (int i = 0, l = vertices.Length; i < l; i++)
             {
@@ -73,38 +73,38 @@ namespace C3DE.Components.Rendering
 
         public override void Draw(GraphicsDevice device)
         {
-            device.SetVertexBuffer(geometry.VertexBuffer);
-            device.Indices = geometry.IndexBuffer;
-            device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, geometry.Indices.Length / 3);
+            device.SetVertexBuffer(m_Geometry.VertexBuffer);
+            device.Indices = m_Geometry.IndexBuffer;
+            device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, m_Geometry.Indices.Length / 3);
         }
 
         public override void Dispose()
         {
-            if (geometry != null)
+            if (m_Geometry != null)
             {
-                geometry.Dispose();
-                geometry = null;
+                m_Geometry.Dispose();
+                m_Geometry = null;
             }
         }
 
         public override void PostDeserialize()
         {
-            if (geometry != null && geometry.Built)
-                geometry.Build();
+            if (m_Geometry != null && m_Geometry.Built)
+                m_Geometry.Build();
         }
 
         public override object Clone()
         {
             var clone = (MeshRenderer)base.Clone();
 
-            if (geometry != null)
+            if (m_Geometry != null)
             {
-                clone.geometry = (Geometry)Activator.CreateInstance(geometry.GetType());
-                clone.geometry.Size = geometry.Size;
-                clone.geometry.TextureRepeat = geometry.TextureRepeat;
+                clone.m_Geometry = (Geometry)Activator.CreateInstance(m_Geometry.GetType());
+                clone.m_Geometry.Size = m_Geometry.Size;
+                clone.m_Geometry.TextureRepeat = m_Geometry.TextureRepeat;
 
-                if (geometry.Built)
-                    clone.geometry.Build();
+                if (m_Geometry.Built)
+                    clone.m_Geometry.Build();
             }
               
             return clone;

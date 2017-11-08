@@ -56,6 +56,7 @@
     <Compile Include="Components\Lighting\Light.cs" />
     <Compile Include="Components\Rendering\MeshRenderer.cs" />
     <Compile Include="Components\Rendering\Terrain.cs" />
+    <Compile Include="Extensions\ModelExtensions.cs" />
     <Compile Include="GameObjectFactory.cs" />
     <Compile Include="Graphics\PostProcessing\AverageColorFilter.cs" />
     <Compile Include="Graphics\PostProcessing\Bloom.cs" />

@@ -71,6 +71,7 @@ namespace C3DE.Demo
                 Application.SceneManager.Add(new HexagonTerrainDemo());
                 Application.SceneManager.Add(new GUIDemo());
                 Application.SceneManager.Add(new VirtualRealityDemo());
+                Application.SceneManager.Add(new TestDemo());
                 Application.SceneManager.LoadLevel(0);
                 Screen.Fullscreen = false; // Set to true in VR
                 game.Run();
