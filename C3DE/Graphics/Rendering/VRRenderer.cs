@@ -96,7 +96,7 @@ namespace C3DE.Graphics.Rendering
 
         public override void Dispose(bool disposing)
         {
-            if (!isDisposed)
+            if (!m_IsDisposed)
             {
                 if (disposing)
                 {
@@ -104,7 +104,7 @@ namespace C3DE.Graphics.Rendering
                     DisposeObject(renderTargetEye[1]);
                 }
 
-                isDisposed = true;
+                m_IsDisposed = true;
             }
         }
     }

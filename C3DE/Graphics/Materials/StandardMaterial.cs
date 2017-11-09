@@ -9,7 +9,7 @@ using System.Runtime.Serialization;
 namespace C3DE.Graphics.Materials
 {
     [DataContract]
-    public class StandardMaterial : Material
+    public class StandardMaterial : Material, IMultipassLightingMaterial, IEmissiveMaterial
     {
         private Vector3 _diffuseColor;
         private Vector3 _emissiveColor;
@@ -31,6 +31,9 @@ namespace C3DE.Graphics.Materials
 
         [DataMember]
         public float Shininess { get; set; }
+
+        public string LightPassName => "LightPass";
+        public string EmissivePassName => "EmissivePass";
 
         public StandardMaterial(Scene scene, string name = "Standard Material")
             : base(scene)
@@ -61,11 +64,7 @@ namespace C3DE.Graphics.Materials
 
         public override void Pass(Renderer renderable)
         {
-            effect.Parameters["DiffuseColor"].SetValue(_diffuseColor);
-            effect.Parameters["TextureTiling"].SetValue(Tiling);
-            effect.Parameters["MainTexture"].SetValue(diffuseTexture);
             effect.Parameters["World"].SetValue(renderable.Transform.world);
-
             effect.CurrentTechnique.Passes["AmbientPass"].Apply();
         }
 
@@ -97,6 +96,40 @@ namespace C3DE.Graphics.Materials
             effect.Parameters["LightType"].SetValue((int)light.TypeLight);
 
             effect.CurrentTechnique.Passes["LightPass"].Apply();
+        }
+
+        public void LightPass(Renderer renderer, Light light)
+        {
+            effect.Parameters["DiffuseColor"].SetValue(_diffuseColor);
+            effect.Parameters["SpecularColor"].SetValue(_specularColor);
+            effect.Parameters["Shininess"].SetValue(Shininess);
+            effect.Parameters["TextureTiling"].SetValue(Tiling);
+            effect.Parameters["MainTexture"].SetValue(diffuseTexture);
+            effect.Parameters["World"].SetValue(renderer.Transform.world);
+
+            if (ShaderQuality == ShaderQuality.Normal)
+            {
+                effect.Parameters["ShadowData"].SetValue(light.shadowGenerator.shadowData);
+                effect.Parameters["ShadowMap"].SetValue(light.shadowGenerator.ShadowMap);
+                effect.Parameters["FogColor"].SetValue(scene.RenderSettings.fogColor);
+                effect.Parameters["FogData"].SetValue(scene.RenderSettings.fogData);
+                effect.Parameters["LightView"].SetValue(light.viewMatrix);
+                effect.Parameters["LightProjection"].SetValue(light.projectionMatrix);
+            }
+
+            effect.Parameters["LightColor"].SetValue(light.color);
+            effect.Parameters["LightDirection"].SetValue(light.transform.Rotation);
+            effect.Parameters["LightPosition"].SetValue(light.transform.Position);
+            effect.Parameters["LightIntensity"].SetValue(light.Intensity);
+            effect.Parameters["LightRange"].SetValue(light.Range);
+            effect.Parameters["LightFallOff"].SetValue((int)light.FallOf);
+            effect.Parameters["LightType"].SetValue((int)light.TypeLight);
+
+            effect.CurrentTechnique.Passes["LightPass"].Apply();
+        }
+
+        public void EmissivePass(Renderer renderer)
+        {
         }
     }
 }

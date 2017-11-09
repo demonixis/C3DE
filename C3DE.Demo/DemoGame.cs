@@ -9,10 +9,10 @@ namespace C3DE.Demo
 {
     public static class DemoGame
     {
-        public const int ScreenWidth = 800;
-        public const int ScreenHeight = 600;
-        public const int UIWidth = 1024;
-        public const int UIHeight = 768;
+        public const int ScreenWidth = 1280;
+        public const int ScreenHeight = 800;
+        public const int UIWidth = 1280;
+        public const int UIHeight = 800;
 
         public static string[] BlueSkybox = new string[6]
         {
@@ -73,11 +73,11 @@ namespace C3DE.Demo
                 Application.SceneManager.Add(new HexagonTerrainDemo());
                 Application.SceneManager.Add(new GUIDemo());
                 Application.SceneManager.Add(new VirtualRealityDemo());
-                Application.SceneManager.Add(new TestDemo());
                 Application.SceneManager.LoadLevel(0);
 
                 Screen.SetVirtualResolution(UIWidth, UIHeight, true);
                 Screen.Fullscreen = false; // Set to true in VR
+
                 game.Run();
             }
         }

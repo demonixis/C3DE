@@ -12,8 +12,10 @@ namespace C3DE.Graphics.Rendering
     {
         protected GraphicsDevice m_graphicsDevice;
         protected SpriteBatch m_spriteBatch;
-        protected internal GUI uiManager;
-        protected bool isDisposed;
+        protected RenderTarget2D m_SceneRenderTarget;
+        protected RenderTarget2D m_EmissiveRenderTarget;
+        protected internal GUI m_uiManager;
+        protected bool m_IsDisposed;
         protected bool m_HDRSupport = false;
 
         public bool NeedsBufferUpdate { get; set; } = true;
@@ -36,8 +38,8 @@ namespace C3DE.Graphics.Rendering
         public virtual void Initialize(ContentManager content)
         {
             m_spriteBatch = new SpriteBatch(m_graphicsDevice);
-            uiManager = new GUI(m_spriteBatch);
-            uiManager.LoadContent(content);
+            m_uiManager = new GUI(m_spriteBatch);
+            m_uiManager.LoadContent(content);
         }
 
         /// <summary>
@@ -81,7 +83,7 @@ namespace C3DE.Graphics.Rendering
 
                 for (int i = 0; i < size; i++)
                     if (scripts[i].Enabled)
-                        scripts[i].OnGUI(uiManager);
+                        scripts[i].OnGUI(m_uiManager);
 
                 m_spriteBatch.End();
             }

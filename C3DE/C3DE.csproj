@@ -58,6 +58,8 @@
     <Compile Include="Components\Rendering\Terrain.cs" />
     <Compile Include="Extensions\ModelExtensions.cs" />
     <Compile Include="GameObjectFactory.cs" />
+    <Compile Include="Graphics\Materials\IEmissiveMaterial.cs" />
+    <Compile Include="Graphics\Materials\IMultipassLightingMaterial.cs" />
     <Compile Include="Graphics\PostProcessing\AverageColorFilter.cs" />
     <Compile Include="Graphics\PostProcessing\Bloom.cs" />
     <Compile Include="Graphics\PostProcessing\ColorGrading.cs" />
@@ -68,7 +70,6 @@
     <Compile Include="Extensions\QuaternionExtensions.cs" />
     <Compile Include="Input.cs" />
     <Compile Include="Graphics\Materials\BillboardMaterial.cs" />
-    <Compile Include="Graphics\Materials\PreLightMaterial.cs" />
     <Compile Include="Graphics\Materials\UnlitColorMaterial.cs" />
     <Compile Include="Graphics\Materials\UnlitMaterial.cs" />
     <Compile Include="Graphics\PostProcessing\PostProcessManager.cs" />

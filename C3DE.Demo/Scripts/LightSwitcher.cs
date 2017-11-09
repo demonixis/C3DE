@@ -12,6 +12,7 @@ namespace C3DE.Demo.Scripts
         private Rectangle _btn1;
         private Rectangle _btn2;
         private Rectangle _btn3;
+        private Rectangle _btn4;
         private Light _light;
 
         public override void Start()
@@ -24,10 +25,11 @@ namespace C3DE.Demo.Scripts
 
         public void SetBoxAlign(bool left)
         {
-            _box = new Rectangle(left ? 10 : Screen.VirtualWidth - 150, 10, 140, 150);
+            _box = new Rectangle(left ? 10 : Screen.VirtualWidth - 150, 10, 140, 200);
             _btn1 = new Rectangle(_box.X + 10, _box.Y + 30, _box.Width - 20, 30);
             _btn2 = new Rectangle(_box.X + 10, _btn1.Y + 40, _box.Width - 20, 30);
             _btn3 = new Rectangle(_box.X + 10, _btn2.Y + 40, _box.Width - 20, 30);
+            _btn4 = new Rectangle(_box.X + 10, _btn3.Y + 40, _box.Width - 20, 30);
         }
 
         public override void OnGUI(GUI gui)
@@ -42,6 +44,9 @@ namespace C3DE.Demo.Scripts
 
             if (gui.Button(_btn3, "Point"))
                 _light.TypeLight = LightType.Point;
+
+            if (gui.Button(_btn4, "Spot"))
+                _light.TypeLight = LightType.Spot;
         }
     }
 }

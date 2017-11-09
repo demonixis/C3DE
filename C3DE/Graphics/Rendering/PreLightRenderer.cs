@@ -45,7 +45,7 @@ namespace C3DE.Graphics.Rendering
 
         public override void Dispose(bool disposing)
         {
-            if (!isDisposed)
+            if (!m_IsDisposed)
             {
                 if (disposing)
                 {
@@ -55,7 +55,7 @@ namespace C3DE.Graphics.Rendering
                     DisposeObject(_depthNormalFX);
                     DisposeObject(_lightingFX);
                 }
-                isDisposed = true;
+                m_IsDisposed = true;
             }
         }
 

@@ -1,9 +1,11 @@
 ﻿using C3DE.Components;
+using C3DE.Graphics.Materials;
 using C3DE.Graphics.PostProcessing;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
+using RendererComponent = C3DE.Components.Rendering.Renderer;
 
 namespace C3DE.Graphics.Rendering
 {
@@ -12,8 +14,6 @@ namespace C3DE.Graphics.Rendering
     /// </summary>
     public class ForwardRenderer : Renderer
     {
-        protected RenderTarget2D sceneRT;
-
         public ForwardRenderer(GraphicsDevice graphics)
            : base(graphics)
         {
@@ -27,12 +27,12 @@ namespace C3DE.Graphics.Rendering
 
         public override void Dispose(bool disposing)
         {
-            if (!isDisposed)
+            if (!m_IsDisposed)
             {
                 if (disposing)
-                    DisposeObject(sceneRT);
+                    DisposeObject(m_SceneRenderTarget);
 
-                isDisposed = true;
+                m_IsDisposed = true;
             }
         }
 
@@ -42,7 +42,10 @@ namespace C3DE.Graphics.Rendering
         /// <param name="camera">The camera to use.</param>
         protected override void RenderObjects(Scene scene, Camera camera)
         {
-            m_graphicsDevice.SetRenderTarget(sceneRT);
+            m_graphicsDevice.SetRenderTarget(m_EmissiveRenderTarget);
+            m_graphicsDevice.Clear(Color.Black);
+
+            m_graphicsDevice.SetRenderTarget(m_SceneRenderTarget);
             m_graphicsDevice.Clear(camera.clearColor);
             m_graphicsDevice.DepthStencilState = DepthStencilState.Default;
             m_graphicsDevice.BlendState = BlendState.Opaque;
@@ -56,29 +59,45 @@ namespace C3DE.Graphics.Rendering
             for (var i = 0; i < scene.effects.Count; i++)
                 scene.materials[scene.materialsEffectIndex[i]].PrePass(camera);
 
+            RendererComponent renderer;
+            Material material;
+            IMultipassLightingMaterial lightMaterial;
+            IEmissiveMaterial emissiveMaterial;
+
             // Pass, Update matrix, material attributes, etc.
             for (var i = 0; i < renderCount; i++)
             {
-                var mat = scene.RenderList[i].Material as Materials.StandardMaterial;
-                if (mat != null)
+                renderer = scene.renderList[i];
+                material = scene.renderList[i].Material;
+
+                // Ambient pass
+                material?.Pass(scene.RenderList[i]);
+                renderer.Draw(m_graphicsDevice);
+
+                // Lightpass
+                if (material is IMultipassLightingMaterial)
                 {
-                    scene.renderList[i].Material?.Pass(scene.RenderList[i]);
-                    scene.renderList[i].Draw(m_graphicsDevice);
+                    lightMaterial = (IMultipassLightingMaterial)material;
 
                     m_graphicsDevice.BlendState = BlendState.Additive;
 
                     for (var l = 0; l < scene.lights.Count; l++)
                     {
-                        mat.PassLighting(scene.RenderList[i], scene.lights[l]);
-                        scene.renderList[i].Draw(m_graphicsDevice);
+                        lightMaterial.LightPass(scene.RenderList[i], scene.lights[l]);
+                        renderer.Draw(m_graphicsDevice);
                     }
 
                     m_graphicsDevice.BlendState = BlendState.Opaque;
                 }
-                else
+                
+                // Emissive
+                if (material is IEmissiveMaterial)
                 {
-                    scene.renderList[i].Material?.Pass(scene.RenderList[i]);
-                    scene.renderList[i].Draw(m_graphicsDevice);
+                    m_graphicsDevice.SetRenderTarget(m_EmissiveRenderTarget);
+                    emissiveMaterial = (IEmissiveMaterial)material;
+                    emissiveMaterial.EmissivePass(scene.renderList[i]);
+                    renderer.Draw(m_graphicsDevice);
+                    m_graphicsDevice.SetRenderTarget(m_SceneRenderTarget);
                 }
             }
         }
@@ -90,7 +109,7 @@ namespace C3DE.Graphics.Rendering
         {
             m_graphicsDevice.SetRenderTarget(null);
             m_spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Opaque, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone);
-            m_spriteBatch.Draw(sceneRT, Vector2.Zero, Color.White);
+            m_spriteBatch.Draw(m_SceneRenderTarget, Vector2.Zero, Color.White);
             m_spriteBatch.End();
         }
 
@@ -99,11 +118,11 @@ namespace C3DE.Graphics.Rendering
             if (passes.Count == 0)
                 return;
 
-            m_graphicsDevice.SetRenderTarget(sceneRT);
+            m_graphicsDevice.SetRenderTarget(m_SceneRenderTarget);
 
             for (int i = 0, l = passes.Count; i < l; i++)
                 if (passes[i].Enabled)
-                    passes[i].Draw(m_spriteBatch, sceneRT);
+                    passes[i].Draw(m_spriteBatch, m_SceneRenderTarget);
         }
 
         /// <summary>
@@ -130,7 +149,8 @@ namespace C3DE.Graphics.Rendering
             if (!NeedsBufferUpdate)
                 return;
 
-            sceneRT = new RenderTarget2D(m_graphicsDevice, m_graphicsDevice.Viewport.Width, m_graphicsDevice.Viewport.Height, false, m_HDRSupport ? SurfaceFormat.HdrBlendable : SurfaceFormat.Color, DepthFormat.Depth24Stencil8, 0, RenderTargetUsage.PreserveContents);
+            m_SceneRenderTarget = new RenderTarget2D(m_graphicsDevice, m_graphicsDevice.Viewport.Width, m_graphicsDevice.Viewport.Height, false, m_HDRSupport ? SurfaceFormat.HdrBlendable : SurfaceFormat.Color, DepthFormat.Depth24Stencil8, 0, RenderTargetUsage.PreserveContents);
+            m_EmissiveRenderTarget = new RenderTarget2D(m_graphicsDevice, m_graphicsDevice.Viewport.Width, m_graphicsDevice.Viewport.Height, false, m_HDRSupport ? SurfaceFormat.HdrBlendable : SurfaceFormat.Color, DepthFormat.Depth24Stencil8, 0, RenderTargetUsage.PreserveContents);
             NeedsBufferUpdate = false;
         }
 
@@ -155,7 +175,7 @@ namespace C3DE.Graphics.Rendering
 
             m_graphicsDevice.SetRenderTarget(target);
             m_spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Opaque, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone);
-            m_spriteBatch.Draw(sceneRT, Vector2.Zero, Color.White);
+            m_spriteBatch.Draw(m_SceneRenderTarget, Vector2.Zero, Color.White);
             m_spriteBatch.End();
         }
     }

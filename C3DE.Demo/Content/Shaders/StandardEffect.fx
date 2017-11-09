@@ -20,7 +20,6 @@ float LightIntensity;
 float LightSpotAngle;
 float LightRange;
 int LightFallOff;
-int NbLights;
 int LightType = 0;
 
 // Misc
@@ -125,12 +124,12 @@ VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
 
 float4 PixelShaderAmbient(VertexShaderOutput input) : COLOR0
 {
-	float3 baseDiffuse = DiffuseColor * tex2D(textureSampler, input.UV  * TextureTiling);
-	return float4(baseDiffuse, 1.0);
+	return float4(0, 0, 0, 1);
 }
 
 float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 {
+	float3 baseDiffuse = DiffuseColor * tex2D(textureSampler, input.UV  * TextureTiling);
 	float3 lightFactor = float3(1, 1, 1);
 	float3 normal = normalize(input.Normal);
 	float shadowTerm = CalcShadow(input.WorldPosition);
@@ -143,7 +142,7 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 	else if (LightType == 3)
 		lightFactor = CalcSpotLightColor(normal, input.WorldPosition);
 
-	float3 finalDiffuse = lightFactor * shadowTerm;
+	float3 finalDiffuse = baseDiffuse * lightFactor * shadowTerm;
 	float3 finalSpecular = CalcSpecularColor(normal, input.WorldPosition, finalDiffuse, LightType);
 	float4 finalCompose = float4(AmbientColor + finalDiffuse + finalSpecular, 1.0);
 	
