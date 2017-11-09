@@ -19,7 +19,6 @@ namespace C3DE.Graphics.Materials
     {
         protected internal Scene scene;
         protected Vector3 diffuseColor;
-        protected Texture2D diffuseTexture;
         protected internal Effect effect;
         protected internal bool hasAlpha;
 
@@ -41,11 +40,7 @@ namespace C3DE.Graphics.Materials
             set { diffuseColor = value.ToVector3(); }
         }
 
-        public Texture2D Texture
-        {
-            get { return diffuseTexture; }
-            set { diffuseTexture = value; }
-        }
+        public Texture2D MainTexture { get;set; }
 
         [DataMember]
         public Vector2 Tiling { get; set; }

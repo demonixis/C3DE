@@ -15,6 +15,10 @@ namespace C3DE.Graphics.Materials
         private Vector3 _emissiveColor;
         private Vector3 _specularColor;
 
+        public Texture2D EmissiveTexture { get; set; }
+
+        public float EmissiveIntensity { get; set; } = 1.0f;
+
         [DataMember]
         public Color EmissiveColor
         {
@@ -31,9 +35,6 @@ namespace C3DE.Graphics.Materials
 
         [DataMember]
         public float Shininess { get; set; }
-
-        public string LightPassName => "LightPass";
-        public string EmissivePassName => "EmissivePass";
 
         public StandardMaterial(Scene scene, string name = "Standard Material")
             : base(scene)
@@ -65,47 +66,16 @@ namespace C3DE.Graphics.Materials
         public override void Pass(Renderer renderable)
         {
             effect.Parameters["World"].SetValue(renderable.Transform.world);
-            effect.CurrentTechnique.Passes["AmbientPass"].Apply();
-        }
-
-        public override void PassLighting(Renderer renderer, Light light)
-        {
-            effect.Parameters["DiffuseColor"].SetValue(_diffuseColor);
-            effect.Parameters["SpecularColor"].SetValue(_specularColor);
-            effect.Parameters["Shininess"].SetValue(Shininess);
             effect.Parameters["TextureTiling"].SetValue(Tiling);
-            effect.Parameters["MainTexture"].SetValue(diffuseTexture);
-            effect.Parameters["World"].SetValue(renderer.Transform.world);
-
-            if (ShaderQuality == ShaderQuality.Normal)
-            {
-                effect.Parameters["ShadowData"].SetValue(light.shadowGenerator.shadowData);
-                effect.Parameters["ShadowMap"].SetValue(light.shadowGenerator.ShadowMap);
-                effect.Parameters["FogColor"].SetValue(scene.RenderSettings.fogColor);
-                effect.Parameters["FogData"].SetValue(scene.RenderSettings.fogData);
-                effect.Parameters["LightView"].SetValue(light.viewMatrix);
-                effect.Parameters["LightProjection"].SetValue(light.projectionMatrix);
-            }
-
-            effect.Parameters["LightColor"].SetValue(light.color);
-            effect.Parameters["LightDirection"].SetValue(light.transform.Rotation);
-            effect.Parameters["LightPosition"].SetValue(light.transform.Position);
-            effect.Parameters["LightIntensity"].SetValue(light.Intensity);
-            effect.Parameters["LightRange"].SetValue(light.Range);
-            effect.Parameters["LightFallOff"].SetValue((int)light.FallOf);
-            effect.Parameters["LightType"].SetValue((int)light.TypeLight);
-
-            effect.CurrentTechnique.Passes["LightPass"].Apply();
+            effect.Parameters["DiffuseColor"].SetValue(_diffuseColor);
+            effect.Parameters["MainTexture"].SetValue(MainTexture);
+            effect.CurrentTechnique.Passes["AmbientPass"].Apply();
         }
 
         public void LightPass(Renderer renderer, Light light)
         {
-            effect.Parameters["DiffuseColor"].SetValue(_diffuseColor);
             effect.Parameters["SpecularColor"].SetValue(_specularColor);
             effect.Parameters["Shininess"].SetValue(Shininess);
-            effect.Parameters["TextureTiling"].SetValue(Tiling);
-            effect.Parameters["MainTexture"].SetValue(diffuseTexture);
-            effect.Parameters["World"].SetValue(renderer.Transform.world);
 
             if (ShaderQuality == ShaderQuality.Normal)
             {
@@ -128,8 +98,16 @@ namespace C3DE.Graphics.Materials
             effect.CurrentTechnique.Passes["LightPass"].Apply();
         }
 
-        public void EmissivePass(Renderer renderer)
+        public bool EmissivePass(Renderer renderer)
         {
+            if (EmissiveTexture == null)
+                return false;
+
+            effect.Parameters["EmissiveTexture"].SetValue(EmissiveTexture);
+            effect.Parameters["EmissiveColor"].SetValue(_emissiveColor);
+            effect.Parameters["EmissiveIntensity"].SetValue(EmissiveIntensity);
+            effect.CurrentTechnique.Passes["EmissivePass"].Apply();
+            return true;
         }
     }
 }

@@ -10,7 +10,7 @@ namespace C3DE.Demo.Scenes
 
         protected override void SetupScene()
         {
-            m_Terrain.GetComponent<MeshRenderer>().Material.Texture = Application.Content.Load<Texture2D>("Textures/Terrain/Rock");
+            m_Terrain.GetComponent<MeshRenderer>().Material.MainTexture = Application.Content.Load<Texture2D>("Textures/Terrain/Rock");
 
             // Lava
             var lavaTexture = Application.Content.Load<Texture2D>("Textures/lava_texture");

@@ -1,5 +1,4 @@
-﻿using C3DE.Components;
-using C3DE.Components.Controllers;
+﻿using C3DE.Components.Controllers;
 using C3DE.Components.Lighting;
 using C3DE.Components.Rendering;
 using C3DE.Demo.Scripts;
@@ -19,8 +18,6 @@ namespace C3DE.Demo.Scenes
         public override void Initialize()
         {
             base.Initialize();
-
-            RenderSettings.AmbientColor = Color.Black;
 
             // Camera
             var cameraGo = GameObjectFactory.CreateCamera();
@@ -45,9 +42,9 @@ namespace C3DE.Demo.Scenes
                 new Vector3(padding * 2, 10, 0)
             };
 
-            for (var i = 0; i < 6; i++)
+            for (var i = 0; i < 8; i++)
             {
-                var lightGo = GameObjectFactory.CreateLight(LightType.Point, colors[i], 1f, 1024);
+                var lightGo = GameObjectFactory.CreateLight(LightType.Point, colors[i], 1f, i == 0 ? 1024 : 0);
                 lightGo.Transform.Position = pos[i];
                 Add(lightGo);
 
@@ -57,17 +54,20 @@ namespace C3DE.Demo.Scenes
                 var ligthSphere = lightGo.AddComponent<MeshRenderer>();
                 ligthSphere.Geometry = new SphereGeometry(2f, 4);
                 ligthSphere.Geometry.Build();
-                ligthSphere.CastShadow = false;
+                ligthSphere.CastShadow = true;
                 ligthSphere.ReceiveShadow = false;
                 ligthSphere.Material = new UnlitColorMaterial(scene);
                 ligthSphere.Material.DiffuseColor = colors[i];
                 ligthSphere.AddComponent<LightMover>();
                 ligthSphere.AddComponent<LightSwitcher>();
+
+                if (i == 0)
+                    ligthSphere.AddComponent<ShadowMapViewer>();
             }
 
             // Terrain
             var terrainMaterial = new StandardMaterial(scene);
-            terrainMaterial.Texture = GraphicsHelper.CreateBorderTexture(Color.CornflowerBlue, Color.Black, 128, 128, 2);
+            terrainMaterial.MainTexture = GraphicsHelper.CreateBorderTexture(Color.CornflowerBlue, Color.Black, 128, 128, 2);
             terrainMaterial.Shininess = 150;
             terrainMaterial.Tiling = new Vector2(32);
 
@@ -88,7 +88,9 @@ namespace C3DE.Demo.Scenes
             var model = Application.Content.Load<Model>("Models/Quandtum/Quandtum");
             var mesh = model.ToMeshRenderers(this);
             var renderer = mesh.GetComponentInChildren<MeshRenderer>();
-            renderer.Material.Texture = Application.Content.Load<Texture2D>("Models/Quandtum/textures/Turret-Diffuse");
+            renderer.CastShadow = true;
+            renderer.ReceiveShadow = true;
+            renderer.Material.MainTexture = Application.Content.Load<Texture2D>("Models/Quandtum/textures/Turret-Diffuse");
             renderer.Transform.LocalScale = new Vector3(0.1f);
             renderer.Transform.Rotate(0, -MathHelper.PiOver2, 0);
             renderer.Transform.Translate(-0.25f, 0, 0);

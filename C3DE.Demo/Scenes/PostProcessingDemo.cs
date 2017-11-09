@@ -57,13 +57,14 @@ namespace C3DE.Demo.Scenes
             ligthSphere.CastShadow = false;
             ligthSphere.ReceiveShadow = false;
             ligthSphere.Material = new SimpleMaterial(scene);
-            ligthSphere.Material.Texture = GraphicsHelper.CreateTexture(Color.Yellow, 1, 1);
+            ligthSphere.Material.MainTexture = GraphicsHelper.CreateTexture(Color.Yellow, 1, 1);
 
             // Terrain
             var terrainMaterial = new StandardMaterial(scene);
-            terrainMaterial.Texture = Application.Content.Load<Texture2D>("Textures/Terrain/Rock");
+            terrainMaterial.MainTexture = Application.Content.Load<Texture2D>("Textures/Terrain/Rock");
             terrainMaterial.Shininess = 50;
             terrainMaterial.Tiling = new Vector2(8);
+            terrainMaterial.EmissiveTexture = GraphicsHelper.CreateTexture(Color.Black, 1, 1);
 
             var terrainGo = GameObjectFactory.CreateTerrain();
             var terrain = terrainGo.GetComponent<Terrain>();
@@ -92,12 +93,13 @@ namespace C3DE.Demo.Scenes
 
             var jackMaterial = new StandardMaterial(this);
             jackMaterial.EmissiveColor = new Color(0.2f, 0.005f, 0);
-            jackMaterial.Texture = Application.Content.Load<Texture2D>("Models/Jack/PumpkinColor");
+            jackMaterial.MainTexture = Application.Content.Load<Texture2D>("Models/Jack/PumpkinColor");
             jackRenderer.Material = jackMaterial;
             Add(jackOLenternGo);
 
             orbitController.LookAt(jackOLenternGo.Transform);
             orbitController.Distance = 150.0f;
+            //orbitController.AddComponent<EmissiveViewer>();
         }
     }
 }

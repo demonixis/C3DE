@@ -62,7 +62,6 @@ namespace C3DE.Graphics.Rendering
             RendererComponent renderer;
             Material material;
             IMultipassLightingMaterial lightMaterial;
-            IEmissiveMaterial emissiveMaterial;
 
             // Pass, Update matrix, material attributes, etc.
             for (var i = 0; i < renderCount; i++)
@@ -83,21 +82,11 @@ namespace C3DE.Graphics.Rendering
 
                     for (var l = 0; l < scene.lights.Count; l++)
                     {
-                        lightMaterial.LightPass(scene.RenderList[i], scene.lights[l]);
+                        lightMaterial.LightPass(renderer, scene.lights[l]);
                         renderer.Draw(m_graphicsDevice);
                     }
 
                     m_graphicsDevice.BlendState = BlendState.Opaque;
-                }
-                
-                // Emissive
-                if (material is IEmissiveMaterial)
-                {
-                    m_graphicsDevice.SetRenderTarget(m_EmissiveRenderTarget);
-                    emissiveMaterial = (IEmissiveMaterial)material;
-                    emissiveMaterial.EmissivePass(scene.renderList[i]);
-                    renderer.Draw(m_graphicsDevice);
-                    m_graphicsDevice.SetRenderTarget(m_SceneRenderTarget);
                 }
             }
         }

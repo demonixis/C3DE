@@ -31,7 +31,7 @@ namespace C3DE.Demo.Scenes
 
             // Finally a terrain
             var terrainMaterial = new TerrainMaterial(scene);
-            terrainMaterial.Texture = content.Load<Texture2D>("Textures/Terrain/Grass");
+            terrainMaterial.MainTexture = content.Load<Texture2D>("Textures/Terrain/Grass");
             terrainMaterial.SandTexture = content.Load<Texture2D>("Textures/Terrain/Sand");
             terrainMaterial.SnowTexture = content.Load<Texture2D>("Textures/Terrain/Snow");
             terrainMaterial.RockTexture = content.Load<Texture2D>("Textures/Terrain/Rock");

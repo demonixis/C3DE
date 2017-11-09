@@ -20,6 +20,11 @@ namespace C3DE.Graphics.Rendering
 
         public bool NeedsBufferUpdate { get; set; } = true;
 
+        public RenderTarget2D EmissiveTexture
+        {
+            get { return m_EmissiveRenderTarget; }
+        }
+
         public bool HDRSupport
         {
             get => m_HDRSupport;

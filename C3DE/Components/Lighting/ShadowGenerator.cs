@@ -110,6 +110,7 @@ namespace C3DE.Components.Lighting
             var currentRenderTargets = device.GetRenderTargets();
 
             device.SetRenderTarget(shadowMap);
+            device.BlendState = BlendState.Opaque;
             device.DepthStencilState = DepthStencilState.Default;
             device.Clear(Color.White);
 
@@ -126,7 +127,7 @@ namespace C3DE.Components.Lighting
                 }
             }
 
-            device.SetRenderTargets(currentRenderTargets);
+            device.SetRenderTargets(null);
         }
 
         public void Dispose()

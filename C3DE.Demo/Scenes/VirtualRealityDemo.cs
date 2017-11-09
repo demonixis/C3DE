@@ -77,7 +77,7 @@ namespace C3DE.Demo.Scenes
 
 			// Terrain
 			var terrainMaterial = new StandardMaterial(scene);
-			terrainMaterial.Texture = GraphicsHelper.CreateBorderTexture(Color.LightGreen, Color.LightSeaGreen, 128, 128, 4);
+			terrainMaterial.MainTexture = GraphicsHelper.CreateBorderTexture(Color.LightGreen, Color.LightSeaGreen, 128, 128, 4);
 			terrainMaterial.Shininess = 10;
 			terrainMaterial.Tiling = new Vector2(64);
 
@@ -91,7 +91,7 @@ namespace C3DE.Demo.Scenes
 			Add(terrainGo);
 
 			var cubMat = new StandardMaterial(this);
-			cubMat.Texture = GraphicsHelper.CreateCheckboardTexture(Color.Red, Color.White);
+			cubMat.MainTexture = GraphicsHelper.CreateCheckboardTexture(Color.Red, Color.White);
 			cubMat.Tiling = new Vector2(2, 2);
 
 			for (var i = 0; i < 10; i++)

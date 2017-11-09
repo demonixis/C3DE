@@ -185,7 +185,7 @@ namespace C3DE
         {
             initialized = true;
 
-            DefaultMaterial.Texture = GraphicsHelper.CreateTexture(Color.AntiqueWhite, 1, 1);
+            DefaultMaterial.MainTexture = GraphicsHelper.CreateTexture(Color.AntiqueWhite, 1, 1);
 
             for (int i = 0, l = materials.Count; i < l; i++)
                 materials[i].LoadContent(Application.Content);

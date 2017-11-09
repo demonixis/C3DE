@@ -53,7 +53,7 @@ namespace C3DE.Graphics.Materials
             effect.Parameters["EmissiveColor"].SetValue(_emissiveColor);
             effect.Parameters["TextureTiling"].SetValue(Tiling);
             effect.Parameters["TextureOffset"].SetValue(Offset);
-            effect.Parameters["MainTexture"].SetValue(diffuseTexture);
+            effect.Parameters["MainTexture"].SetValue(MainTexture);
             effect.Parameters["World"].SetValue(renderable.GameObject.Transform.world);
             effect.CurrentTechnique.Passes[0].Apply();
         }

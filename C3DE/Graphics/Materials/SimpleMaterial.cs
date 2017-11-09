@@ -71,7 +71,7 @@ namespace C3DE.Graphics.Materials
             effect.Parameters["TextureTiling"].SetValue(Tiling);
             effect.Parameters["TextureOffset"].SetValue(Offset);
             effect.Parameters["Alpha"].SetValue(_alpha);
-            effect.Parameters["MainTexture"].SetValue(diffuseTexture);
+            effect.Parameters["MainTexture"].SetValue(MainTexture);
             effect.Parameters["World"].SetValue(renderable.transform.world);
             effect.CurrentTechnique.Passes[AlphaEnabled ? 0 : 1].Apply();
         }

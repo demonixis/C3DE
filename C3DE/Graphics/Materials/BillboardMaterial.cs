@@ -23,7 +23,7 @@ namespace C3DE.Graphics.Materials
         {
             var world = Matrix.CreateConstrainedBillboard(renderable.transform.Position, Camera.Main.transform.Position, Vector3.Up, Camera.Main.transform.Forward, renderable.transform.Forward);
             effect.Parameters["World"].SetValue(world);
-            effect.Parameters["MainTexture"].SetValue(diffuseTexture);
+            effect.Parameters["MainTexture"].SetValue(MainTexture);
             effect.Parameters["TextureTiling"].SetValue(Tiling);
             effect.Parameters["TextureOffset"].SetValue(Offset);
             effect.CurrentTechnique.Passes[0].Apply();

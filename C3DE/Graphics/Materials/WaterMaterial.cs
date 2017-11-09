@@ -112,7 +112,7 @@ namespace C3DE.Graphics.Materials
         public override void Pass(Renderer renderable)
         {
             effect.Parameters["TotalTime"].SetValue(_totalTime);
-            effect.Parameters["WaterTexture"].SetValue(diffuseTexture);
+            effect.Parameters["WaterTexture"].SetValue(MainTexture);
 
             if (ShaderQuality == ShaderQuality.Normal)
             {

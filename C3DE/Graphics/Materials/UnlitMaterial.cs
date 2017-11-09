@@ -34,7 +34,7 @@ namespace C3DE.Graphics.Materials
         public override void Pass(Renderer renderable)
         {
             effect.Parameters["World"].SetValue(renderable.GameObject.Transform.world);
-            effect.Parameters["MainTexture"].SetValue(diffuseTexture);
+            effect.Parameters["MainTexture"].SetValue(MainTexture);
             effect.Parameters["TextureTiling"].SetValue(Tiling);
             effect.Parameters["TextureOffset"].SetValue(Offset);
             effect.CurrentTechnique.Passes[0].Apply();

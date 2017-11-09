@@ -9,8 +9,10 @@ float4x4 Projection;
 // Material
 float3 AmbientColor = float3(0.1, 0.1, 0.1);
 float3 DiffuseColor = float3(1.0, 1.0, 1.0);
+float3 EmissiveColor = float3(0.0, 0.0, 0.0);
 float3 SpecularColor = float3(0.8, 0.8, 0.8);
 float Shininess = 200.0;
+float EmissiveIntensity = 1.0;
 
 // Lighting
 float3 LightColor;
@@ -30,6 +32,17 @@ texture MainTexture;
 sampler2D textureSampler = sampler_state
 {
 	Texture = (MainTexture);
+	MinFilter = Linear;
+	MagFilter = Linear;
+	MipFilter = Linear;
+	AddressU = Wrap;
+	AddressV = Wrap;
+};
+
+texture EmissiveTexture;
+sampler2D emissiveSampler = sampler_state
+{
+	Texture = (EmissiveTexture);
 	MinFilter = Linear;
 	MagFilter = Linear;
 	MipFilter = Linear;
@@ -124,12 +137,12 @@ VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
 
 float4 PixelShaderAmbient(VertexShaderOutput input) : COLOR0
 {
-	return float4(0, 0, 0, 1);
+	return float4(AmbientColor * tex2D(textureSampler, input.UV  * TextureTiling).xyz, 1);
 }
 
 float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 {
-	float3 baseDiffuse = DiffuseColor * tex2D(textureSampler, input.UV  * TextureTiling);
+	//float3 baseDiffuse = DiffuseColor * tex2D(textureSampler, input.UV  * TextureTiling);
 	float3 lightFactor = float3(1, 1, 1);
 	float3 normal = normalize(input.Normal);
 	float shadowTerm = CalcShadow(input.WorldPosition);
@@ -142,11 +155,17 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 	else if (LightType == 3)
 		lightFactor = CalcSpotLightColor(normal, input.WorldPosition);
 
-	float3 finalDiffuse = baseDiffuse * lightFactor * shadowTerm;
+	float3 finalDiffuse = lightFactor * shadowTerm;
 	float3 finalSpecular = CalcSpecularColor(normal, input.WorldPosition, finalDiffuse, LightType);
 	float4 finalCompose = float4(AmbientColor + finalDiffuse + finalSpecular, 1.0);
 	
 	return ApplyFog(finalCompose, input.FogDistance);
+}
+
+float4 PixelShaderEmissive(VertexShaderOutput input) : COLOR0
+{
+	float3 emission = EmissiveColor * tex2D(emissiveSampler, input.UV  * TextureTiling);
+	return float4(emission * EmissiveIntensity, 1);
 }
 
 technique Textured
@@ -168,6 +187,15 @@ technique Textured
 		PixelShader = compile ps_4_0_level_9_3 PixelShaderFunction();
 #else
 		PixelShader = compile ps_3_0 PixelShaderFunction();
+#endif
+	}
+	
+	pass EmissivePass
+	{
+#if SM4
+		PixelShader = compile ps_4_0_level_9_3 PixelShaderEmissive();
+#else
+		PixelShader = compile ps_3_0 PixelShaderEmissive();
 #endif
 	}
 }

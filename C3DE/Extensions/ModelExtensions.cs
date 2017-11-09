@@ -40,7 +40,7 @@ namespace C3DE.Extensions
                     var effect = (BasicEffect)part.Effect;
                     Debug.Log($"Texture for mesh {mesh.Name} for part {meshPartIndex}: {effect.Texture?.Name}");
                     var material = new StandardMaterial(scene);
-                    material.Texture = effect.Texture;
+                    material.MainTexture = effect.Texture;
                     material.DiffuseColor = new Color(effect.DiffuseColor.X, effect.DiffuseColor.Y, effect.DiffuseColor.Z);
                     material.SpecularColor = new Color(effect.SpecularColor.X, effect.SpecularColor.Y, effect.SpecularColor.Z);
                     material.Shininess = effect.SpecularPower;

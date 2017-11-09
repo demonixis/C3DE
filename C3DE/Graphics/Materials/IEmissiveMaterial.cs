@@ -4,7 +4,6 @@ namespace C3DE.Graphics.Materials
 {
     public interface IEmissiveMaterial
     {
-        string EmissivePassName { get; }
-        void EmissivePass(Renderer renderer);
+        bool EmissivePass(Renderer renderer);
     }
 }

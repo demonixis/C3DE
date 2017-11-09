@@ -94,8 +94,8 @@ namespace C3DE
             collider.IsPickable = false;
 
             var material = new LavaMaterial(gameObject.Scene);
-            material.Texture = lavalTexture;
-            material.NormalMap = normalTexture;
+            material.MainTexture = lavalTexture;
+            material.NormalTexture = normalTexture;
 
             renderer.Material = material;
             renderer.Geometry.Size = size;
@@ -119,7 +119,7 @@ namespace C3DE
             collider.IsPickable = false;
 
             var material = new WaterMaterial(gameObject.Scene);
-            material.Texture = waterTexture;
+            material.MainTexture = waterTexture;
             material.NormalMap = normalTexture;
 
             renderer.Material = material;

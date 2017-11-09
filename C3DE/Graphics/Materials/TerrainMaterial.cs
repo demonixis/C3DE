@@ -67,7 +67,7 @@ namespace C3DE.Graphics.Materials
             effect.Parameters["DiffuseColor"].SetValue(diffuseColor);
             effect.Parameters["TextureTiling"].SetValue(Tiling);
             effect.Parameters["TextureOffset"].SetValue(Offset);
-            effect.Parameters["MainTexture"].SetValue(diffuseTexture);
+            effect.Parameters["MainTexture"].SetValue(MainTexture);
             effect.Parameters["SnowTexture"].SetValue(SnowTexture);
             effect.Parameters["SandTexture"].SetValue(SandTexture);
             effect.Parameters["RockTexture"].SetValue(RockTexture);

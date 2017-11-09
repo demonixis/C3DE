@@ -43,10 +43,10 @@ namespace C3DE.Graphics.Materials
 
         public override void Pass(Renderer renderable)
         {
-            effect.Parameters["MainTextureEnabled"].SetValue(diffuseTexture != null);
+            effect.Parameters["MainTextureEnabled"].SetValue(MainTexture != null);
 
-            if (diffuseTexture != null)
-                effect.Parameters["MainTexture"].SetValue(diffuseTexture);
+            if (MainTexture != null)
+                effect.Parameters["MainTexture"].SetValue(MainTexture);
 
             effect.Parameters["ReflectionColor"].SetValue(diffuseColor);
             effect.Parameters["ReflectiveTexture"].SetValue(ReflectionMap);

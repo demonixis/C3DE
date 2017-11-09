@@ -7,6 +7,7 @@ float4x4 Projection;
 float3 AmbientColor = float3(0.1, 0.1, 0.1);
 float3 DiffuseColor = float3(1.0, 1.0, 1.0);
 float3 EmissiveColor = float3(0.0, 0.0, 0.0);
+float EmissiveIntensity = 1.0;
 
 // Misc
 float2 TextureTiling = float2(1, 1);
@@ -28,6 +29,17 @@ texture BumpTexture;
 sampler2D bumpSampler = sampler_state 
 {
 	Texture = (BumpTexture);
+	MinFilter = Linear;
+	MagFilter = Linear;
+	MipFilter = Linear;
+	AddressU = Wrap;
+	AddressV = Wrap;
+};
+
+texture EmissiveTexture;
+sampler2D emissiveSampler = sampler_state
+{
+	Texture = (EmissiveTexture);
 	MinFilter = Linear;
 	MagFilter = Linear;
 	MipFilter = Linear;
@@ -88,7 +100,13 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 	if (temp.b > 1.0)
 		temp.rg += temp.b - 1.0;
 		
-	return float4(AmbientColor + (DiffuseColor * temp) + EmissiveColor, 1.0);
+	return float4(AmbientColor + (DiffuseColor * temp), 1.0);
+}
+
+float4 PixelShaderEmissive(VertexShaderOutput input) : COLOR0
+{
+	float3 emission = EmissiveColor * tex2D(emissiveSampler, input.UV  * TextureTiling);
+	return float4(emission * EmissiveIntensity, 1);
 }
 
 technique Basic
@@ -101,6 +119,15 @@ technique Basic
 #else
 		VertexShader = compile vs_3_0 VertexShaderFunction();
 		PixelShader = compile ps_3_0 PixelShaderFunction();
+#endif
+	}
+	
+	pass EmissivePass
+	{
+#if SM4
+		PixelShader = compile ps_4_0_level_9_3 PixelShaderEmissive();
+#else
+		PixelShader = compile ps_3_0 PixelShaderEmissive();
 #endif
 	}
 }
