@@ -13,6 +13,7 @@ float3 EmissiveColor = float3(0.0, 0.0, 0.0);
 float3 SpecularColor = float3(0.8, 0.8, 0.8);
 float Shininess = 200.0;
 float EmissiveIntensity = 1.0;
+int ReflectiveEnabled = 0.;
 
 // Lighting
 float3 LightColor;
@@ -48,6 +49,17 @@ sampler2D emissiveSampler = sampler_state
 	MipFilter = Linear;
 	AddressU = Wrap;
 	AddressV = Wrap;
+};
+
+Texture ReflectiveTexture;
+samplerCUBE reflectiveSampler = sampler_state
+{
+	Texture = <ReflectiveTexture>;
+	MinFilter = Linear;
+	MagFilter = Linear;
+	MipFilter = Linear;
+	AddressU = Mirror;
+	AddressV = Mirror;
 };
 
 float4 CalcDirectionalLightColor(float3 normal, float4 worldPosition)
@@ -117,6 +129,7 @@ struct VertexShaderOutput
 	float4 WorldPosition : TEXCOORD2;
 	float4 CopyPosition : TEXCOORD3;
 	float FogDistance : FOG;
+	float3 Reflection : TEXCOORD4;
 };
 
 VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
@@ -132,17 +145,25 @@ VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
 	output.CopyPosition = input.Position;
 	output.FogDistance = distance(worldPosition, EyePosition);
 
+	float3 viewDirection = EyePosition - worldPosition;
+	float3 normal = input.Normal;
+	output.Reflection = reflect(-normalize(viewDirection), normalize(normal));
+
 	return output;
 }
 
 float4 PixelShaderAmbient(VertexShaderOutput input) : COLOR0
 {
-	return float4(AmbientColor * tex2D(textureSampler, input.UV  * TextureTiling).xyz, 1);
+	float3 reflectColor = float3(1, 1, 1);
+	
+	if (ReflectiveEnabled == 1)
+		reflectColor = texCUBE(reflectiveSampler, normalize(input.Reflection));
+	
+	return float4(AmbientColor * (DiffuseColor + tex2D(textureSampler, input.UV  * TextureTiling)).xyz * reflectColor, 1);
 }
 
 float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 {
-	//float3 baseDiffuse = DiffuseColor * tex2D(textureSampler, input.UV  * TextureTiling);
 	float3 lightFactor = float3(1, 1, 1);
 	float3 normal = normalize(input.Normal);
 	float shadowTerm = CalcShadow(input.WorldPosition);
@@ -157,7 +178,7 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 
 	float3 finalDiffuse = lightFactor * shadowTerm;
 	float3 finalSpecular = CalcSpecularColor(normal, input.WorldPosition, finalDiffuse, LightType);
-	float4 finalCompose = float4(AmbientColor + finalDiffuse + finalSpecular, 1.0);
+	float4 finalCompose = float4(finalDiffuse + finalSpecular, 1.0);
 	
 	return ApplyFog(finalCompose, input.FogDistance);
 }

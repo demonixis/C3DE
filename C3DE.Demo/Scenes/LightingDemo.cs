@@ -90,7 +90,11 @@ namespace C3DE.Demo.Scenes
             var renderer = mesh.GetComponentInChildren<MeshRenderer>();
             renderer.CastShadow = true;
             renderer.ReceiveShadow = true;
-            renderer.Material.MainTexture = Application.Content.Load<Texture2D>("Models/Quandtum/textures/Turret-Diffuse");
+
+            var material = (StandardMaterial)renderer.Material;
+            material.MainTexture = Application.Content.Load<Texture2D>("Models/Quandtum/textures/Turret-Diffuse");
+            material.DiffuseColor = Color.Red;
+            material.ReflectionMap = GraphicsHelper.CreateCubeMap(terrainMaterial.MainTexture);
             renderer.Transform.LocalScale = new Vector3(0.1f);
             renderer.Transform.Rotate(0, -MathHelper.PiOver2, 0);
             renderer.Transform.Translate(-0.25f, 0, 0);
