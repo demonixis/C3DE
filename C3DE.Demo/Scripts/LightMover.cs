@@ -8,6 +8,7 @@ namespace C3DE.Demo.Scripts
     public class LightMover : Behaviour
     {
         private Vector3 translation;
+        private Vector3 rotation;
         private Light _light;
 
         public override void Start()
@@ -34,6 +35,16 @@ namespace C3DE.Demo.Scripts
             else if (Input.Keys.Pressed(Keys.E))
                 translation.Y--;
 
+            if (Input.Keys.Pressed(Keys.I))
+                rotation.Y += 0.1f * Time.DeltaTime;
+            else if (Input.Keys.Pressed(Keys.K))
+                rotation.Y -= 0.1f * Time.DeltaTime;
+
+            if (Input.Keys.Pressed(Keys.J))
+                rotation.Y += 0.1f * Time.DeltaTime;
+            else if (Input.Keys.Pressed(Keys.L))
+                rotation.Y -= 0.1f * Time.DeltaTime;
+
             if (Input.Keys.Pressed(Keys.Add))
                 _light.Range += 0.1f;
             else if (Input.Keys.Pressed(Keys.Subtract))
@@ -53,6 +64,7 @@ namespace C3DE.Demo.Scripts
                 translation.Y += Input.Mouse.Delta.Y * 0.1f;
 
             transform.Translate(ref translation);
+            transform.Rotate(ref rotation);
         }
     }
 }

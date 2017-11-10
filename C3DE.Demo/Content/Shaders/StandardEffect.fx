@@ -52,7 +52,7 @@ sampler2D emissiveSampler = sampler_state
 	AddressV = Wrap;
 };
 
-Texture ReflectionTexture;
+texture ReflectionTexture;
 samplerCUBE reflectionSampler = sampler_state
 {
 	Texture = <ReflectionTexture>;
@@ -168,9 +168,9 @@ float4 PixelShaderAmbient(VertexShaderOutput input) : COLOR0
 
 float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 {
-	float3 lightFactor = float3(1, 1, 1);
+    float3 lightFactor = float3(0, 0, 0);
 	float3 normal = normalize(input.Normal);
-	float shadowTerm = CalcShadow(input.WorldPosition);
+	float shadowTerm = 1 - CalcShadow(input.WorldPosition);
 
 	// Apply a light influence.
 	if (LightType == 1)
@@ -179,17 +179,17 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 		lightFactor = CalcPointLightColor(normal, input.WorldPosition);
 	else if (LightType == 3)
 		lightFactor = CalcSpotLightColor(normal, input.WorldPosition);
-
-	float3 finalDiffuse = lightFactor * shadowTerm;
+ 
+	float3 finalDiffuse = lightFactor - shadowTerm;
 	float3 finalSpecular = CalcSpecularColor(normal, input.WorldPosition, finalDiffuse, LightType);
 	float4 finalCompose = float4(finalDiffuse + finalSpecular, 1.0);
-	
+
 	return ApplyFog(finalCompose, input.FogDistance);
 }
 
 float4 PixelShaderEmissive(VertexShaderOutput input) : COLOR0
 {
-	float3 emission = EmissiveColor * tex2D(emissiveSampler, input.UV  * TextureTiling);
+	float3 emission = EmissiveColor * tex2D(emissiveSampler, input.UV  * TextureTiling).xyz;
 	return float4(emission * EmissiveIntensity, 1);
 }
 

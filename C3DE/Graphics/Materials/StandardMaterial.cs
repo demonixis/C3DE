@@ -93,6 +93,7 @@ namespace C3DE.Graphics.Materials
             {
                 effect.Parameters["ShadowData"].SetValue(light.shadowGenerator.shadowData);
                 effect.Parameters["ShadowMap"].SetValue(light.shadowGenerator.ShadowMap);
+                effect.Parameters["RecieveShadow"].SetValue(light.ShadowGenerator.Enabled);
                 effect.Parameters["FogColor"].SetValue(scene.RenderSettings.fogColor);
                 effect.Parameters["FogData"].SetValue(scene.RenderSettings.fogData);
                 effect.Parameters["LightView"].SetValue(light.viewMatrix);

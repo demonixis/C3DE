@@ -32,7 +32,7 @@ float CalcShadowPCF(float lightSpaceDepth, float2 shadowCoordinates)
 
 float CalcShadow(float4 worldPosition)
 {
-	float shadowTerm = 1.0;
+	float shadowTerm = 0;
 	
 	// ShadowData [0] => Map size [1] => Bias [2] => Strength
 	if (ShadowData[0] > 0 && RecieveShadow == true)
@@ -44,7 +44,7 @@ float CalcShadow(float4 worldPosition)
 		float2 screenPosition = 0.5 + float2(lightSpacePosition.x, -lightSpacePosition.y) * 0.5;
 
 		if ((saturate(screenPosition).x == screenPosition.x) && (saturate(screenPosition).y == screenPosition.y))
-			shadowTerm = max(ShadowData[2], CalcShadowPCF(lightSpacePosition.z, screenPosition));
+			shadowTerm = CalcShadowPCF(lightSpacePosition.z, screenPosition);
 	}
 	
 	return shadowTerm;

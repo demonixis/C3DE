@@ -42,14 +42,17 @@ namespace C3DE.Demo.Scenes
                 new Vector3(padding * 2, 10, 0)
             };
 
-            for (var i = 0; i < 8; i++)
+            for (var i = 0; i < 1; i++)
             {
-                var lightGo = GameObjectFactory.CreateLight(LightType.Point, colors[i], 1f, i == 0 ? 1024 : 0);
+                var lightGo = GameObjectFactory.CreateLight(LightType.Point, colors[i], 0.25f, 1024);
+                lightGo.Transform.Rotation = new Vector3(0.0f, 0.5f, 0);
                 lightGo.Transform.Position = pos[i];
                 Add(lightGo);
-
+                
                 var light = lightGo.GetComponent<Light>();
                 light.Range = 10;
+                light.ShadowGenerator.ShadowStrength = 1;
+                light.ShadowGenerator.ShadowBias = 0.01f;
 
                 var ligthSphere = lightGo.AddComponent<MeshRenderer>();
                 ligthSphere.Geometry = new SphereGeometry(2f, 16);
@@ -64,7 +67,7 @@ namespace C3DE.Demo.Scenes
                 if (i == 0)
                     ligthSphere.AddComponent<ShadowMapViewer>();
             }
-
+            
             // Terrain
             var terrainMaterial = new StandardMaterial(scene);
             terrainMaterial.MainTexture = GraphicsHelper.CreateBorderTexture(Color.CornflowerBlue, Color.Black, 128, 128, 2);
@@ -78,6 +81,7 @@ namespace C3DE.Demo.Scenes
             terrain.Flatten();
             terrain.Renderer.Material = terrainMaterial;
             terrain.Renderer.ReceiveShadow = true;
+            terrain.Renderer.CastShadow = false;
             terrainGo.Transform.Translate(-terrain.Width >> 1, 0, -terrain.Depth / 2);
             Add(terrainGo);
 
@@ -94,7 +98,7 @@ namespace C3DE.Demo.Scenes
             var material = (StandardMaterial)renderer.Material;
             material.MainTexture = Application.Content.Load<Texture2D>("Models/Quandtum/textures/Turret-Diffuse");
             material.DiffuseColor = Color.Red;
-            material.ReflectionMap = GraphicsHelper.CreateCubeMap(terrainMaterial.MainTexture);
+            //material.ReflectionMap = GraphicsHelper.CreateCubeMap(terrainMaterial.MainTexture);
             renderer.Transform.LocalScale = new Vector3(0.1f);
             renderer.Transform.Rotate(0, -MathHelper.PiOver2, 0);
             renderer.Transform.Translate(-0.25f, 0, 0);

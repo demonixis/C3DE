@@ -46,8 +46,8 @@ namespace C3DE.Components.Lighting
 
         public float ShadowStrength
         {
-            get { return 1 - shadowData.Z; }
-            set { shadowData.Z = Math.Min(1.0f, Math.Max(0.0f, value)); }
+            get { return shadowData.Z; }
+            set { shadowData.Z = value; }
         }
 
         // FIXME
