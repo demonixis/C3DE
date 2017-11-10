@@ -52,7 +52,7 @@ namespace C3DE.Demo.Scenes
                 light.Range = 10;
 
                 var ligthSphere = lightGo.AddComponent<MeshRenderer>();
-                ligthSphere.Geometry = new SphereGeometry(2f, 4);
+                ligthSphere.Geometry = new SphereGeometry(2f, 16);
                 ligthSphere.Geometry.Build();
                 ligthSphere.CastShadow = true;
                 ligthSphere.ReceiveShadow = false;

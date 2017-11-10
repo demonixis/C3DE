@@ -133,7 +133,7 @@
     <Compile Include="Time.cs" />
     <Compile Include="Utils\NoiseGenerator.cs" />
     <Compile Include="Utils\RandomHelper.cs" />
-    <Compile Include="Graphics\Rendering\PreLightRenderer.cs" />
+    <Compile Include="Components\Rendering\DepthNormalRenderer.cs" />
     <Compile Include="VR\VRService.cs" />
     <Compile Include="VR\NullVRService.cs" />
     <Compile Include="VR\OpenVR\OpenVRService.cs" />

@@ -13,7 +13,8 @@ float3 EmissiveColor = float3(0.0, 0.0, 0.0);
 float3 SpecularColor = float3(0.8, 0.8, 0.8);
 float Shininess = 200.0;
 float EmissiveIntensity = 1.0;
-int ReflectiveEnabled = 0.;
+int ReflectionEnabled = 0.;
+float ReflectionIntensity = 0.15;
 
 // Lighting
 float3 LightColor;
@@ -51,10 +52,10 @@ sampler2D emissiveSampler = sampler_state
 	AddressV = Wrap;
 };
 
-Texture ReflectiveTexture;
-samplerCUBE reflectiveSampler = sampler_state
+Texture ReflectionTexture;
+samplerCUBE reflectionSampler = sampler_state
 {
-	Texture = <ReflectiveTexture>;
+	Texture = <ReflectionTexture>;
 	MinFilter = Linear;
 	MagFilter = Linear;
 	MipFilter = Linear;
@@ -154,12 +155,15 @@ VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
 
 float4 PixelShaderAmbient(VertexShaderOutput input) : COLOR0
 {
-	float3 reflectColor = float3(1, 1, 1);
+	float3 diffuseColor = tex2D(textureSampler, input.UV  * TextureTiling).xyz;
 	
-	if (ReflectiveEnabled == 1)
-		reflectColor = texCUBE(reflectiveSampler, normalize(input.Reflection));
+	if (ReflectionEnabled == 1)
+	{
+		float3 reflectColor = texCUBE(reflectionSampler, normalize(input.Reflection)).xyz;
+		diffuseColor = lerp(diffuseColor, reflectColor, ReflectionIntensity);
+	}
 	
-	return float4(AmbientColor * (DiffuseColor + tex2D(textureSampler, input.UV  * TextureTiling)).xyz * reflectColor, 1);
+	return float4(AmbientColor * (DiffuseColor + diffuseColor), 1);
 }
 
 float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0

@@ -19,6 +19,8 @@ namespace C3DE.Graphics.Materials
 
         public TextureCube ReflectionMap { get; set; }
 
+        public float ReflectionIntensity { get; set; } = 0.35f;
+
         public float EmissiveIntensity { get; set; } = 1.0f;
 
         [DataMember]
@@ -71,8 +73,14 @@ namespace C3DE.Graphics.Materials
             effect.Parameters["TextureTiling"].SetValue(Tiling);
             effect.Parameters["DiffuseColor"].SetValue(_diffuseColor);
             effect.Parameters["MainTexture"].SetValue(MainTexture);
-            effect.Parameters["ReflectiveTexture"].SetValue(ReflectionMap);
-            effect.Parameters["ReflectiveEnabled"].SetValue(ReflectionMap != null ? 1 : 0);
+
+            if (ShaderQuality == ShaderQuality.Normal)
+            {
+                effect.Parameters["ReflectionTexture"].SetValue(ReflectionMap);
+                effect.Parameters["ReflectionEnabled"].SetValue(ReflectionMap != null ? 1 : 0);
+                effect.Parameters["ReflectionIntensity"].SetValue(ReflectionIntensity);
+            }
+
             effect.CurrentTechnique.Passes["AmbientPass"].Apply();
         }
 
