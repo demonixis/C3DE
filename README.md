@@ -10,7 +10,9 @@ C3DE is a research project. The aim is to create a modest but powerful enough 3D
 - 3D Model support
 - Custom Mesh geometry
 - Terrain: Flat, Random, Heightmap, multi textured
-- Materials: Standard, Simple, Reflective, Water, Lava, Custom
+- Materials: Standard (Phong + Extras), Terrain (multi-textured) and few extras
+- Lighting: Directional, Point, Spot
+- Unlimited number of lights (Forward Renderer)
 - Shadow mapping (Hard shadow)
 - Input management: Keyboard, Mouse, Gamepad, Touch
 - Procedural texture generation
@@ -19,7 +21,7 @@ C3DE is a research project. The aim is to create a modest but powerful enough 3D
 - Virtual Reality Support
 
 ### Platforms
-C3DE supports Windows, Linux and Mac using MonoGame (both DirectX and DesktopGL). Because of the OpenGL shader compiler is limited to SM3, this version has less graphics features than DirectX. 
+C3DE supports Windows, Linux and Mac using MonoGame (both DirectX and DesktopGL). Because of the OpenGL shader compiler is limited to shader model 3, this version has less graphics features than DirectX. 
 For now Android and Windows UWP supports are paused the time the engine is more stable.
 
 ### This feature is broken
@@ -34,7 +36,6 @@ You **must** install the [MonoGame Framework](http://www.monogame.net/downloads/
 - Unified Input System
 - HDR
 - Tone Mapping
-- Multi Lighting
 - Windows UWP
 
 ### License
