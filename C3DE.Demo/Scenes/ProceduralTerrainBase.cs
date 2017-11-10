@@ -17,9 +17,6 @@ namespace C3DE.Demo.Scenes
         {
             base.Initialize();
 
-            // Skybox
-            RenderSettings.Skybox.Generate(Application.GraphicsDevice, Application.Content, DemoGame.BlueSkybox);
-
             // And a camera with some components
             var cameraGo = GameObjectFactory.CreateCamera();
             cameraGo.AddComponent<ControllerSwitcher>();
@@ -48,7 +45,6 @@ namespace C3DE.Demo.Scenes
 
             m_Terrain.SetWeightData(0.5f, 4, 15, 30);
 
-
             terrainMaterial.WeightTexture = m_Terrain.GenerateWeightMap();
             terrainMaterial.Tiling = new Vector2(4);
 
@@ -69,6 +65,9 @@ namespace C3DE.Demo.Scenes
             sunflares.Setup(glowTexture, flareTextures);
 
             SetupScene();
+
+            // Skybox
+            RenderSettings.Skybox.Generate(Application.GraphicsDevice, Application.Content, DemoGame.BlueSkybox);
         }
 
         protected abstract void SetupScene();

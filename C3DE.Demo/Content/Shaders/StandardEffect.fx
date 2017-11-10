@@ -170,7 +170,7 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 {
     float3 lightFactor = float3(0, 0, 0);
 	float3 normal = normalize(input.Normal);
-	float shadowTerm = 1 - CalcShadow(input.WorldPosition);
+    float shadowTerm = CalcShadow2(input.WorldPosition);
 
 	// Apply a light influence.
 	if (LightType == 1)
@@ -180,7 +180,7 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 	else if (LightType == 3)
 		lightFactor = CalcSpotLightColor(normal, input.WorldPosition);
  
-	float3 finalDiffuse = lightFactor - shadowTerm;
+	float3 finalDiffuse = lightFactor * shadowTerm;
 	float3 finalSpecular = CalcSpecularColor(normal, input.WorldPosition, finalDiffuse, LightType);
 	float4 finalCompose = float4(finalDiffuse + finalSpecular, 1.0);
 

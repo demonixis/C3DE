@@ -1,4 +1,5 @@
-﻿using C3DE.Components.Controllers;
+﻿using C3DE.Components;
+using C3DE.Components.Controllers;
 using C3DE.Components.Lighting;
 using C3DE.Components.Rendering;
 using C3DE.Demo.Scripts;
@@ -23,34 +24,33 @@ namespace C3DE.Demo.Scenes
             var cameraGo = GameObjectFactory.CreateCamera();
             var orbit = cameraGo.AddComponent<OrbitController>();
             orbit.KeyboardEnabled = false;
-            orbit.MaxDistance = 2000;
             cameraGo.AddComponent<DemoBehaviour>();
             Add(cameraGo);
 
             // Light
-            var padding = 15;
-            var colors = new Color[] { Color.Red, Color.CornflowerBlue, Color.YellowGreen, Color.AntiqueWhite, Color.Cyan, Color.OrangeRed, Color.Purple, Color.Silver };
+            var padding = 50;
+            var colors = new Color[] { Color.Yellow, Color.CornflowerBlue, Color.YellowGreen, Color.AntiqueWhite, Color.Cyan, Color.OrangeRed, Color.Purple, Color.Silver };
             var pos = new Vector3[]
             {
-                new Vector3(padding, 10, padding),
-                new Vector3(padding, 10, -padding),
-                new Vector3(-padding, 10, padding),
-                new Vector3(-padding, 10, -padding),
-                new Vector3(0, 10, -padding * 2),
-                new Vector3(0, 10, padding * 2),
-                new Vector3(-padding * 2, 10, 0),
-                new Vector3(padding * 2, 10, 0)
+                new Vector3(padding, 16, padding),
+                new Vector3(padding, 16, -padding),
+                new Vector3(-padding, 16, padding),
+                new Vector3(-padding, 16, -padding),
+                new Vector3(0, 16, -padding * 2),
+                new Vector3(0, 16, padding * 2),
+                new Vector3(-padding * 2, 16, 0),
+                new Vector3(padding * 2, 16, 0)
             };
 
-            for (var i = 0; i < 1; i++)
+            for (var i = 0; i < 8; i++)
             {
-                var lightGo = GameObjectFactory.CreateLight(LightType.Point, colors[i], 0.25f, 1024);
+                var lightGo = GameObjectFactory.CreateLight(LightType.Point, colors[i], 1.5f, 1024);
                 lightGo.Transform.Rotation = new Vector3(0.0f, 0.5f, 0);
                 lightGo.Transform.Position = pos[i];
                 Add(lightGo);
                 
                 var light = lightGo.GetComponent<Light>();
-                light.Range = 10;
+                light.Range = 60;
                 light.ShadowGenerator.ShadowStrength = 1;
                 light.ShadowGenerator.ShadowBias = 0.01f;
 
@@ -98,7 +98,8 @@ namespace C3DE.Demo.Scenes
             var material = (StandardMaterial)renderer.Material;
             material.MainTexture = Application.Content.Load<Texture2D>("Models/Quandtum/textures/Turret-Diffuse");
             material.DiffuseColor = Color.Red;
-            //material.ReflectionMap = GraphicsHelper.CreateCubeMap(terrainMaterial.MainTexture);
+            material.ReflectionMap = GraphicsHelper.CreateCubeMap(Application.Content.Load<Texture2D>("Textures/lava_texture"));
+            material.ReflectionIntensity = 0.2f;
             renderer.Transform.LocalScale = new Vector3(0.1f);
             renderer.Transform.Rotate(0, -MathHelper.PiOver2, 0);
             renderer.Transform.Translate(-0.25f, 0, 0);
