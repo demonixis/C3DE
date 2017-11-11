@@ -20,6 +20,7 @@ float LightSpotAngle;
 float LightRange;
 int LightFallOff;
 int LightType = 0;
+int EmissiveTextureEnabled;
 
 // Misc
 float3 EyePosition = float3(1, 1, 0);
@@ -132,13 +133,13 @@ VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
 
 float4 PixelShaderAmbient(VertexShaderOutput input) : COLOR0
 {
-	return float4(0, 0, 0, 1);
+    float3 diffuseColor = tex2D(textureSampler, input.UV * TextureTiling).xyz;
+    return float4(AmbientColor * (DiffuseColor + diffuseColor), 1);
 }
 
 float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 {
-	float3 baseDiffuse = DiffuseColor * tex2D(textureSampler, input.UV  * TextureTiling);
-	float3 lightFactor = float3(1, 1, 1);
+    float3 lightFactor = float3(0, 0, 0);
 	float3 normal = normalize(input.Normal);
 
 	// Apply a light influence.
@@ -149,17 +150,21 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 	else if (LightType == 3)
 		lightFactor = CalcSpotLightColor(normal, input.WorldPosition);
 
-	float3 finalDiffuse = baseDiffuse * lightFactor;
+	float3 finalDiffuse = lightFactor;
 	float3 finalSpecular = CalcSpecularColor(normal, input.WorldPosition, finalDiffuse, LightType);
-	float3 finalCompose = AmbientColor + finalDiffuse + finalSpecular;
+	float3 finalCompose = finalDiffuse + finalSpecular;
 	
 	return float4(finalCompose, 1.0);
 }
 
 float4 PixelShaderEmissive(VertexShaderOutput input) : COLOR0
 {
-	float3 emission = EmissiveColor * tex2D(emissiveSampler, input.UV  * TextureTiling);
-	return float4(emission * EmissiveIntensity, 1);
+    float3 emissiveColor = EmissiveColor;
+
+    if (EmissiveTextureEnabled == 1)
+        emissiveColor = tex2D(emissiveSampler, input.UV * TextureTiling).xyz;
+
+    return float4(emissiveColor * EmissiveIntensity, 1);
 }
 
 technique Textured

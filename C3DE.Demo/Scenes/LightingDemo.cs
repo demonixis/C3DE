@@ -6,6 +6,7 @@ using C3DE.Demo.Scripts;
 using C3DE.Extensions;
 using C3DE.Graphics.Geometries;
 using C3DE.Graphics.Materials;
+using C3DE.Graphics.PostProcessing;
 using C3DE.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -28,8 +29,8 @@ namespace C3DE.Demo.Scenes
             Add(cameraGo);
 
             // Light
-            var padding = 50;
-            var colors = new Color[] { Color.Yellow, Color.CornflowerBlue, Color.YellowGreen, Color.AntiqueWhite, Color.Cyan, Color.OrangeRed, Color.Purple, Color.Silver };
+            var padding = 25;
+            var colors = new Color[] { Color.MediumSpringGreen, Color.CornflowerBlue, Color.YellowGreen, Color.DarkGoldenrod, Color.Cyan, Color.OrangeRed, Color.Purple, Color.LightBlue };
             var pos = new Vector3[]
             {
                 new Vector3(padding, 16, padding),
@@ -44,13 +45,13 @@ namespace C3DE.Demo.Scenes
 
             for (var i = 0; i < 8; i++)
             {
-                var lightGo = GameObjectFactory.CreateLight(LightType.Point, colors[i], 1.5f, 1024);
+                var lightGo = GameObjectFactory.CreateLight(LightType.Point, colors[i], 0.5f, 1024);
                 lightGo.Transform.Rotation = new Vector3(0.0f, 0.5f, 0);
                 lightGo.Transform.Position = pos[i];
                 Add(lightGo);
                 
                 var light = lightGo.GetComponent<Light>();
-                light.Range = 60;
+                light.Range = 25;
                 light.ShadowGenerator.ShadowStrength = 1;
                 light.ShadowGenerator.ShadowBias = 0.01f;
 
@@ -59,8 +60,14 @@ namespace C3DE.Demo.Scenes
                 ligthSphere.Geometry.Build();
                 ligthSphere.CastShadow = true;
                 ligthSphere.ReceiveShadow = false;
-                ligthSphere.Material = new UnlitColorMaterial(scene);
-                ligthSphere.Material.DiffuseColor = colors[i];
+
+                var sphereMaterial = new StandardMaterial(scene);
+                sphereMaterial.DiffuseColor = colors[i];
+                sphereMaterial.EmissiveIntensity = 1;
+                sphereMaterial.EmissiveColor = colors[i];
+                sphereMaterial.EmissiveEnabled = true;
+                ligthSphere.Material = sphereMaterial;
+                
                 ligthSphere.AddComponent<LightMover>();
                 ligthSphere.AddComponent<LightSwitcher>();
 
@@ -97,12 +104,18 @@ namespace C3DE.Demo.Scenes
 
             var material = (StandardMaterial)renderer.Material;
             material.MainTexture = Application.Content.Load<Texture2D>("Models/Quandtum/textures/Turret-Diffuse");
+            material.SpecularTexture = Application.Content.Load<Texture2D>("Models/Quandtum/textures/Turret-Specular");
+            material.EmissiveTexture = Application.Content.Load<Texture2D>("Models/Quandtum/textures/Turret-Emission");
+            material.EmissiveEnabled = true;
+            material.EmissiveIntensity = 1.0f;
             material.DiffuseColor = Color.Red;
-            material.ReflectionMap = GraphicsHelper.CreateCubeMap(Application.Content.Load<Texture2D>("Textures/lava_texture"));
-            material.ReflectionIntensity = 0.2f;
-            renderer.Transform.LocalScale = new Vector3(0.1f);
+            material.ReflectionTexture = GraphicsHelper.CreateCubeMap(material.MainTexture);
+            material.ReflectionIntensity = 0.45f;
+            material.Shininess = 250;
+            renderer.Transform.LocalScale = new Vector3(0.05f);
             renderer.Transform.Rotate(0, -MathHelper.PiOver2, 0);
-            renderer.Transform.Translate(-0.25f, 0, 0);
+            renderer.Transform.Translate(-0.15f, 0, 0);
+
             Screen.ShowCursor = true;
         }
     }

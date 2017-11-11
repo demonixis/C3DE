@@ -13,17 +13,11 @@ namespace C3DE.Graphics.Rendering
         protected GraphicsDevice m_graphicsDevice;
         protected SpriteBatch m_spriteBatch;
         protected RenderTarget2D m_SceneRenderTarget;
-        protected RenderTarget2D m_EmissiveRenderTarget;
         protected internal GUI m_uiManager;
         protected bool m_IsDisposed;
         protected bool m_HDRSupport = false;
 
         public bool NeedsBufferUpdate { get; set; } = true;
-
-        public RenderTarget2D EmissiveTexture
-        {
-            get { return m_EmissiveRenderTarget; }
-        }
 
         public bool HDRSupport
         {

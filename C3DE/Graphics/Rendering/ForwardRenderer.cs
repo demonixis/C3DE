@@ -42,9 +42,6 @@ namespace C3DE.Graphics.Rendering
         /// <param name="camera">The camera to use.</param>
         protected override void RenderObjects(Scene scene, Camera camera)
         {
-            m_graphicsDevice.SetRenderTarget(m_EmissiveRenderTarget);
-            m_graphicsDevice.Clear(Color.Black);
-
             m_graphicsDevice.SetRenderTarget(m_SceneRenderTarget);
             m_graphicsDevice.Clear(camera.clearColor);
             m_graphicsDevice.DepthStencilState = DepthStencilState.Default;
@@ -62,6 +59,9 @@ namespace C3DE.Graphics.Rendering
             RendererComponent renderer;
             Material material;
             IMultipassLightingMaterial lightMaterial;
+            IEmissiveMaterial emissiveMaterial;
+            var lights = scene.lights;
+            var lightCount = lights.Count;
 
             // Pass, Update matrix, material attributes, etc.
             for (var i = 0; i < renderCount; i++)
@@ -80,9 +80,28 @@ namespace C3DE.Graphics.Rendering
 
                     m_graphicsDevice.BlendState = BlendState.Additive;
 
+                    for (var l = 0; l < lightCount; l++)
+                    {
+                        lightMaterial.LightPass(renderer, lights[l]);
+                        renderer.Draw(m_graphicsDevice);
+                    }
+
+                    m_graphicsDevice.BlendState = BlendState.Opaque;
+                }
+
+                // Emissive pass
+                if (material is IEmissiveMaterial)
+                {
+                    emissiveMaterial = (IEmissiveMaterial)material;
+
+                    if (!emissiveMaterial.EmissiveEnabled)
+                        continue;
+
+                    m_graphicsDevice.BlendState = BlendState.Additive;
+
                     for (var l = 0; l < scene.lights.Count; l++)
                     {
-                        lightMaterial.LightPass(renderer, scene.lights[l]);
+                        emissiveMaterial.EmissivePass(renderer);
                         renderer.Draw(m_graphicsDevice);
                     }
 
@@ -139,7 +158,6 @@ namespace C3DE.Graphics.Rendering
                 return;
 
             m_SceneRenderTarget = new RenderTarget2D(m_graphicsDevice, m_graphicsDevice.Viewport.Width, m_graphicsDevice.Viewport.Height, false, m_HDRSupport ? SurfaceFormat.HdrBlendable : SurfaceFormat.Color, DepthFormat.Depth24Stencil8, 0, RenderTargetUsage.PreserveContents);
-            m_EmissiveRenderTarget = new RenderTarget2D(m_graphicsDevice, m_graphicsDevice.Viewport.Width, m_graphicsDevice.Viewport.Height, false, m_HDRSupport ? SurfaceFormat.HdrBlendable : SurfaceFormat.Color, DepthFormat.Depth24Stencil8, 0, RenderTargetUsage.PreserveContents);
             NeedsBufferUpdate = false;
         }
 

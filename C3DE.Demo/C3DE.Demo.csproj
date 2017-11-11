@@ -72,7 +72,6 @@
     <Compile Include="Scripts\AutoRotation.cs" />
     <Compile Include="Scripts\ControllerSwitcher.cs" />
     <Compile Include="Scripts\DemoBehaviour.cs" />
-    <Compile Include="Scripts\EmissiveViewer.cs" />
     <Compile Include="Scripts\HexaGridBuilder.cs" />
     <Compile Include="Scripts\LightMover.cs" />
     <Compile Include="Scripts\LightMoverKeys.cs" />

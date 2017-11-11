@@ -31,28 +31,18 @@ namespace C3DE.Demo.Scenes
             orbitController.KeyboardEnabled = false;
 
             // Light
-            var lightGo = GameObjectFactory.CreateLight(LightType.Point);
-            lightGo.Transform.Position = new Vector3(0, 15, 15);
-            lightGo.Transform.Rotation = new Vector3(-1, 1, 0);
+            var lightGo = GameObjectFactory.CreateLight(LightType.Point, Color.White, 1.0f, 1024);
+            lightGo.AddComponent<LightMover>();
+            lightGo.AddComponent<DemoBehaviour>();
+            lightGo.Transform.Position = new Vector3(50, 50, 50);
+            lightGo.Transform.Rotation = new Vector3(0.0f, 0.5f, 0);
             Add(lightGo);
-
-            var light = lightGo.GetComponent<Light>();
-            light.Range = 105;
-            light.Intensity = 2.0f;
-            light.FallOf = 5f;
-            light.Color = Color.Violet;
-            light.Angle = 0.1f;
-            light.ShadowGenerator.ShadowStrength = 0.6f; // FIXME need to be inverted
-            light.ShadowGenerator.SetShadowMapSize(Application.GraphicsDevice, 1024);
 
             var ls = lightGo.AddComponent<LightSwitcher>();
             ls.SetBoxAlign(true);
 
-            lightGo.AddComponent<LightMover>();
-            lightGo.AddComponent<DemoBehaviour>();
-
             var ligthSphere = lightGo.AddComponent<MeshRenderer>();
-            ligthSphere.Geometry = new SphereGeometry(2f, 4);
+            ligthSphere.Geometry = new SphereGeometry(2f, 16);
             ligthSphere.Geometry.Build();
             ligthSphere.CastShadow = false;
             ligthSphere.ReceiveShadow = false;
@@ -64,7 +54,6 @@ namespace C3DE.Demo.Scenes
             terrainMaterial.MainTexture = Application.Content.Load<Texture2D>("Textures/Terrain/Rock");
             terrainMaterial.Shininess = 50;
             terrainMaterial.Tiling = new Vector2(8);
-            terrainMaterial.EmissiveTexture = GraphicsHelper.CreateTexture(Color.Black, 1, 1);
 
             var terrainGo = GameObjectFactory.CreateTerrain();
             var terrain = terrainGo.GetComponent<Terrain>();
@@ -85,15 +74,19 @@ namespace C3DE.Demo.Scenes
             var jackOLenternGo = GameObjectFactory.CreateXNAModel(jackModel);
             jackOLenternGo.Transform.Rotate(-MathHelper.PiOver2, 0, 0);
             jackOLenternGo.Transform.Translate(0, 35, 0);
-            jackOLenternGo.Transform.LocalScale = new Vector3(4);
+            jackOLenternGo.Transform.LocalScale = new Vector3(3);
 
             var jackRenderer = jackOLenternGo.GetComponent<ModelRenderer>();
             jackRenderer.ReceiveShadow = true;
             jackRenderer.CastShadow = true;
 
             var jackMaterial = new StandardMaterial(this);
+            jackMaterial.DiffuseColor = new Color(0.2f, 0.005f, 0);
             jackMaterial.EmissiveColor = new Color(0.2f, 0.005f, 0);
-            jackMaterial.MainTexture = Application.Content.Load<Texture2D>("Models/Jack/PumpkinColor");
+            jackMaterial.EmissiveEnabled = true;
+            jackMaterial.EmissiveIntensity = 1.25f;
+            //jackMaterial.EmissiveTexture = Application.Content.Load<Texture2D>("Models/Jack/PumpkinColor");
+            //jackMaterial.MainTexture = Application.Content.Load<Texture2D>("Models/Jack/PumpkinColor");
             jackRenderer.Material = jackMaterial;
             Add(jackOLenternGo);
 
