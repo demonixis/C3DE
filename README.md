@@ -19,10 +19,10 @@ C3DE is a research project. The aim is to create a modest but powerful enough 3D
 - Post Processing
 - Instant GUI system
 - Virtual Reality Support
+- Windows Desktop & UWP, Linux, Mac
 
 ### Platforms
-C3DE supports Windows, Linux and Mac using MonoGame (both DirectX and DesktopGL). Because of the OpenGL shader compiler is limited to shader model 3, this version has less graphics features than DirectX. 
-For now Android and Windows UWP supports are paused the time the engine is more stable.
+C3DE supports Windows Desktop, UWP, Linux and Mac using MonoGame (both DirectX and DesktopGL). Because of the OpenGL shader compiler is limited to shader model 3, this version has less graphics features than DirectX.
 
 ### This feature is broken
 It's an **experimental project**, but you are **free** to fix it by sending a pull request. However you've to follow the [coding convention](https://msdn.microsoft.com/en-US/library/ff926074.aspx). 
@@ -30,13 +30,11 @@ It's an **experimental project**, but you are **free** to fix it by sending a pu
 ### Requirement
 You **must** install the [MonoGame Framework](http://www.monogame.net/downloads/) from the installer. **You'll not be able to build the solution without it**.
 
-### What's next ?
-- VR Support (in progress)
+### What's next?
 - Physics engine
 - Unified Input System
 - HDR
 - Tone Mapping
-- Windows UWP
 
 ### License
 C3DE is released under the MIT License, please take your time to read the LICENSE file for more informations.
