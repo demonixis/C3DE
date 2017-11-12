@@ -6,6 +6,8 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using C3DE.VR;
+using RendererComponent = C3DE.Components.Rendering.Renderer;
+using C3DE.Graphics.Materials;
 
 namespace C3DE.Graphics.Rendering
 {
@@ -57,6 +59,71 @@ namespace C3DE.Graphics.Rendering
 
             // show left eye view also on the monitor screen 
             DrawEyeViewIntoBackbuffer(0);
+        }
+
+        protected override void RenderObjects(Scene scene, Camera camera)
+        {
+            if (scene.RenderSettings.Skybox.Enabled)
+                scene.RenderSettings.Skybox.Draw(m_graphicsDevice, camera);
+
+            var renderCount = scene.renderList.Count;
+
+            // Prepass, Update light, eye position, etc.
+            for (var i = 0; i < scene.effects.Count; i++)
+                scene.materials[scene.materialsEffectIndex[i]].PrePass(camera);
+
+            RendererComponent renderer;
+            Material material;
+            IMultipassLightingMaterial lightMaterial;
+            IEmissiveMaterial emissiveMaterial;
+            var lights = scene.lights;
+            var lightCount = lights.Count;
+
+            // Pass, Update matrix, material attributes, etc.
+            for (var i = 0; i < renderCount; i++)
+            {
+                renderer = scene.renderList[i];
+                material = scene.renderList[i].Material;
+
+                // Ambient pass
+                material?.Pass(scene.RenderList[i]);
+                renderer.Draw(m_graphicsDevice);
+
+                // Lightpass
+                if (material is IMultipassLightingMaterial)
+                {
+                    lightMaterial = (IMultipassLightingMaterial)material;
+
+                    m_graphicsDevice.BlendState = BlendState.Additive;
+
+                    for (var l = 0; l < lightCount; l++)
+                    {
+                        lightMaterial.LightPass(renderer, lights[l]);
+                        renderer.Draw(m_graphicsDevice);
+                    }
+
+                    m_graphicsDevice.BlendState = BlendState.Opaque;
+                }
+
+                // Emissive pass
+                if (material is IEmissiveMaterial)
+                {
+                    emissiveMaterial = (IEmissiveMaterial)material;
+
+                    if (!emissiveMaterial.EmissiveEnabled)
+                        continue;
+
+                    m_graphicsDevice.BlendState = BlendState.Additive;
+
+                    for (var l = 0; l < scene.lights.Count; l++)
+                    {
+                        emissiveMaterial.EmissivePass(renderer);
+                        renderer.Draw(m_graphicsDevice);
+                    }
+
+                    m_graphicsDevice.BlendState = BlendState.Opaque;
+                }
+            }
         }
 
         public override void RenderEditor(Scene scene, Camera camera, RenderTarget2D target)

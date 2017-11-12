@@ -38,6 +38,7 @@ namespace C3DE.Demo.Scenes
             if (vrDevice.TryInitialize() == 0)
 			{
 				var vrRenderer = new VRRenderer(Application.GraphicsDevice, vrDevice);
+                vrRenderer.StereoPreview = false;
 				Application.Engine.Renderer = vrRenderer;
 			}
 
@@ -49,7 +50,7 @@ namespace C3DE.Demo.Scenes
 #if DESKTOPGL
             return new OSVRService(Application.Engine);
 #else
-            return new NullVRService(Application.Engine);
+            return new OpenVRService(Application.Engine);
 #endif
         }
 
@@ -63,17 +64,9 @@ namespace C3DE.Demo.Scenes
         {
             var lightGo = GameObjectFactory.CreateLight(LightType.Directional);
             lightGo.Transform.Position = new Vector3(-15, 15, 15);
-            lightGo.Transform.Rotation = new Vector3(0, MathHelper.Pi, 1);
             lightGo.Transform.Rotation = new Vector3(-1, 1, 0);
             lightGo.AddComponent<DemoBehaviour>();
             Add(lightGo);
-
-            var light = lightGo.GetComponent<Light>();
-            light.Range = 105;
-            light.Intensity = 2.0f;
-            light.FallOf = 5f;
-            light.Color = Color.Violet;
-            light.ShadowGenerator.ShadowStrength = 0.6f; // FIXME need to be inverted
 
 			// Terrain
 			var terrainMaterial = new StandardMaterial(scene);
@@ -106,7 +99,7 @@ namespace C3DE.Demo.Scenes
 			}
 
 			// Skybox
-			RenderSettings.Skybox.Generate(Application.GraphicsDevice, Application.Content, DemoGame.BlueSkybox, 100);
+			RenderSettings.Skybox.Generate(Application.GraphicsDevice, Application.Content, DemoGame.BlueSkybox);
         }
     }
 }

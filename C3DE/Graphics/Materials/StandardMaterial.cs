@@ -112,7 +112,6 @@ namespace C3DE.Graphics.Materials
                 effect.Parameters["FogData"].SetValue(scene.RenderSettings.fogData);
                 effect.Parameters["LightView"].SetValue(light.viewMatrix);
                 effect.Parameters["LightProjection"].SetValue(light.projectionMatrix);
-
                 effect.Parameters["SpecularTextureEnabled"].SetValue(SpecularTexture != null ? 1 : 0);
                 effect.Parameters["SpecularTexture"].SetValue(SpecularTexture);
             }

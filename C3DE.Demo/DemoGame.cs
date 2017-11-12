@@ -56,28 +56,30 @@ namespace C3DE.Demo
             return skin;
         }
 
-#if !NETFX_CORE && !ANDROID
+        public static void InitializeGame()
+        {
+            Application.SceneManager.Add(new MenuDemo(), true);
+            Application.SceneManager.Add(new HeightmapDemo());
+            Application.SceneManager.Add(new ProceduralTerrainWater());
+            Application.SceneManager.Add(new ProceduralTerrainLava());
+            Application.SceneManager.Add(new PostProcessingDemo());
+            Application.SceneManager.Add(new LightingDemo());
+            Application.SceneManager.Add(new SponzaDemo());
+            Application.SceneManager.Add(new HexagonTerrainDemo());
+            Application.SceneManager.Add(new GUIDemo());
+            Application.SceneManager.Add(new VirtualRealityDemo());
+            Application.SceneManager.LoadLevel(0);
+            Screen.SetVirtualResolution(UIWidth, UIHeight, true);
+        }
+
+#if !ANDROID && !NETFX_CORE
 
         // Entry point.
         static void Main(string[] args)
         {
             using (var game = new Engine("C3DE Game Engine", ScreenWidth, ScreenHeight))
             {
-                Application.SceneManager.Add(new MenuDemo(), true);
-                Application.SceneManager.Add(new HeightmapDemo());
-                Application.SceneManager.Add(new ProceduralTerrainWater());
-                Application.SceneManager.Add(new ProceduralTerrainLava());
-                Application.SceneManager.Add(new PostProcessingDemo());
-                Application.SceneManager.Add(new LightingDemo());
-                Application.SceneManager.Add(new SponzaDemo());
-                Application.SceneManager.Add(new HexagonTerrainDemo());
-                Application.SceneManager.Add(new GUIDemo());
-                Application.SceneManager.Add(new VirtualRealityDemo());
-                Application.SceneManager.LoadLevel(0);
-
-                Screen.SetVirtualResolution(UIWidth, UIHeight, true);
-                Screen.Fullscreen = false; // Set to true in VR
-
+                InitializeGame();
                 game.Run();
             }
         }

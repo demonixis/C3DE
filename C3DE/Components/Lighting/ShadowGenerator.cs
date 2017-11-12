@@ -127,7 +127,7 @@ namespace C3DE.Components.Lighting
                 }
             }
 
-            device.SetRenderTargets(null);
+            device.SetRenderTargets(currentRenderTargets);
         }
 
         public void Dispose()

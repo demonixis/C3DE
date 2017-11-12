@@ -1,8 +1,8 @@
 
 #----------------------------- Global Properties ----------------------------#
 
-/outputDir:bin/DesktopGL.Shaders
-/intermediateDir:obj/DesktopGL.Shaders
+/outputDir:bin/$(Platform).Shaders
+/intermediateDir:obj/$(Platform).Shaders
 /platform:DesktopGL
 /config:
 /profile:HiDef
@@ -12,6 +12,12 @@
 
 
 #---------------------------------- Content ---------------------------------#
+
+#begin Shaders/DepthNormal.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Shaders/DepthNormal.fx
 
 #begin Shaders/FresnelEffect.fx
 /importer:EffectImporter
@@ -60,6 +66,12 @@
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
 /build:Shaders/PostProcessing/CGAFilter.fx
+
+#begin Shaders/PostProcessing/ColorGrading.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Shaders/PostProcessing/ColorGrading.fx
 
 #begin Shaders/PostProcessing/Convolution.fx
 /importer:EffectImporter
@@ -114,24 +126,6 @@
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
 /build:Shaders/PostProcessing/SimpleBlur.fx
-
-#begin Shaders/PreLighting/PL_DepthNormal.fx
-/importer:EffectImporter
-/processor:EffectProcessor
-/processorParam:DebugMode=Auto
-/build:Shaders/PreLighting/PL_DepthNormal.fx
-
-#begin Shaders/PreLighting/PL_Lightmap.fx
-/importer:EffectImporter
-/processor:EffectProcessor
-/processorParam:DebugMode=Auto
-/build:Shaders/PreLighting/PL_Lightmap.fx
-
-#begin Shaders/PreLighting/PL_StandardFX.fx
-/importer:EffectImporter
-/processor:EffectProcessor
-/processorParam:DebugMode=Auto
-/build:Shaders/PreLighting/PL_StandardFX.fx
 
 #begin Shaders/ReflectionEffect.fx
 /importer:EffectImporter

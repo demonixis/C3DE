@@ -85,7 +85,10 @@
     <Compile Include="Components\Lighting\Light.cs" />
     <Compile Include="Components\Rendering\MeshRenderer.cs" />
     <Compile Include="Components\Rendering\Terrain.cs" />
+    <Compile Include="Extensions\ModelExtensions.cs" />
     <Compile Include="GameObjectFactory.cs" />
+    <Compile Include="Graphics\Materials\IEmissiveMaterial.cs" />
+    <Compile Include="Graphics\Materials\IMultipassLightingMaterial.cs" />
     <Compile Include="Graphics\PostProcessing\AverageColorFilter.cs" />
     <Compile Include="Graphics\PostProcessing\Bloom.cs" />
     <Compile Include="Graphics\PostProcessing\ColorGrading.cs" />
@@ -96,7 +99,6 @@
     <Compile Include="Extensions\QuaternionExtensions.cs" />
     <Compile Include="Input.cs" />
     <Compile Include="Graphics\Materials\BillboardMaterial.cs" />
-    <Compile Include="Graphics\Materials\PreLightMaterial.cs" />
     <Compile Include="Graphics\Materials\UnlitColorMaterial.cs" />
     <Compile Include="Graphics\Materials\UnlitMaterial.cs" />
     <Compile Include="Graphics\PostProcessing\PostProcessManager.cs" />
@@ -160,8 +162,7 @@
     <Compile Include="Time.cs" />
     <Compile Include="Utils\NoiseGenerator.cs" />
     <Compile Include="Utils\RandomHelper.cs" />
-    <Compile Include="Graphics\Rendering\PreLightRenderer.cs" />
-    <Compile Include="VR\OSVR\MonoGameGraphicsToolkit.cs" />
+    <Compile Include="Components\Rendering\DepthNormalRenderer.cs" />
     <Compile Include="VR\VRService.cs" />
     <Compile Include="VR\NullVRService.cs" />
     <Compile Include="VR\OpenVR\OpenVRService.cs" />
@@ -170,6 +171,7 @@
     <Compile Include="VR\OpenHMD\OpenHMDService.cs" />
     <Compile Include="Components\CoroutineManager.cs" />
     <Compile Include="Components\Coroutine.cs" />
+    <Compile Include="VR\OSVR\MonoGameGraphicsToolkit.cs" />
     <Compile Include="VR\OSVR\OSVR.MonoGame\DeviceDescriptor.cs" />
     <Compile Include="VR\OSVR\OSVR.MonoGame\Math.cs" />
     <Compile Include="VR\OSVR\OSVR.MonoGame\Sample\Axes.cs" />

@@ -17,7 +17,7 @@ namespace C3DE.Graphics.Rendering
         protected bool m_IsDisposed;
         protected bool m_HDRSupport = false;
 
-        public bool NeedsBufferUpdate { get; set; } = true;
+        public bool Dirty { get; set; } = true;
 
         public bool HDRSupport
         {
@@ -25,7 +25,7 @@ namespace C3DE.Graphics.Rendering
             set
             {
                 m_HDRSupport = value;
-                NeedsBufferUpdate = true;
+                Dirty = true;
             }
         }
 

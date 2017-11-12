@@ -43,6 +43,17 @@ sampler2D textureSampler = sampler_state
     AddressV = Wrap;
 };
 
+texture NormalTexture;
+sampler2D normalSampler = sampler_state
+{
+    Texture = (NormalTexture);
+    MinFilter = Linear;
+    MagFilter = Linear;
+    MipFilter = Linear;
+    AddressU = Wrap;
+    AddressV = Wrap;
+};
+
 texture SpecularTexture;
 sampler2D specularSampler = sampler_state
 {
@@ -146,9 +157,9 @@ struct VertexShaderOutput
     float2 UV : TEXCOORD0;
     float3 Normal : TEXCOORD1;
     float4 WorldPosition : TEXCOORD2;
-    float4 CopyPosition : TEXCOORD3;
+    float3 Reflection : TEXCOORD3;
+    float3x3 WorldToTangentSpace : TEXCOORD4;
     float FogDistance : FOG;
-    float3 Reflection : TEXCOORD4;
 };
 
 VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
@@ -161,12 +172,14 @@ VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
     output.UV = input.UV;
     output.Normal = mul(input.Normal, World);
     output.WorldPosition = worldPosition;
-    output.CopyPosition = input.Position;
     output.FogDistance = distance(worldPosition, EyePosition);
 
-    float3 viewDirection = EyePosition - worldPosition;
-    float3 normal = input.Normal;
-    output.Reflection = reflect(-normalize(viewDirection), normalize(normal));
+    if (ReflectionEnabled)
+    {
+        float3 viewDirection = EyePosition - worldPosition;
+        float3 normal = input.Normal;
+        output.Reflection = reflect(-normalize(viewDirection), normalize(normal));
+    }
 
     return output;
 }

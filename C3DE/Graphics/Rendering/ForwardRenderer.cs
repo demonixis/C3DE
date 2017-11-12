@@ -154,11 +154,11 @@ namespace C3DE.Graphics.Rendering
 
         protected virtual void RebuildRenderTargets()
         {
-            if (!NeedsBufferUpdate)
+            if (!Dirty)
                 return;
 
             m_SceneRenderTarget = new RenderTarget2D(m_graphicsDevice, m_graphicsDevice.Viewport.Width, m_graphicsDevice.Viewport.Height, false, m_HDRSupport ? SurfaceFormat.HdrBlendable : SurfaceFormat.Color, DepthFormat.Depth24Stencil8, 0, RenderTargetUsage.PreserveContents);
-            NeedsBufferUpdate = false;
+            Dirty = false;
         }
 
         protected virtual void RenderSceneForCamera(Scene scene, Camera camera)

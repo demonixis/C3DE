@@ -92,7 +92,6 @@ struct VertexShaderOutput
 	float2 UV : TEXCOORD0;
 	float3 Normal : TEXCOORD1;
 	float4 WorldPosition : TEXCOORD2;
-	float4 CopyPosition : TEXCOORD3;
 	float FogDistance : FOG;
 };
 
@@ -106,7 +105,6 @@ VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
 	output.UV = input.UV;
 	output.Normal = mul(input.Normal, World);
 	output.WorldPosition = worldPosition;
-	output.CopyPosition = input.Position;
 	output.FogDistance = distance(worldPosition, EyePosition);
 
 	return output;

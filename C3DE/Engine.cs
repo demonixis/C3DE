@@ -25,6 +25,11 @@ namespace C3DE
             set { m_nextRenderer = value; }
         }
 
+        public Engine()
+            : this("C3DE Game")
+        {
+        }
+
         /// <summary>
         /// Creates the game by initializing graphics, input and other managers.
         /// The default configuration use the best resolution and toggle in fullscreen mode.
@@ -37,7 +42,6 @@ namespace C3DE
             : base()
         {
             _graphics = new GraphicsDeviceManager(this);
-            _graphics.PreparingDeviceSettings += OnResize;
             _graphics.GraphicsProfile = GraphicsProfile.HiDef;
             _sceneManager = new SceneManager();
             _initialized = false;
@@ -53,13 +57,19 @@ namespace C3DE
             Application.GraphicsDeviceManager = _graphics;
             Application.SceneManager = _sceneManager;
 
-#if !ANDROID && !WINDOWS_APP
+#if WINDOWS || DESKTOP
             _autoDetectResolution = width == 0 || height == 0;
 
             if (!_autoDetectResolution)
             {
                 _graphics.PreferredBackBufferWidth = width;
                 _graphics.PreferredBackBufferHeight = height;
+            }
+#else
+            if (width == 0 || height == 0)
+            {
+                width = Window.ClientBounds.Width;
+                height = Window.ClientBounds.Height;
             }
 #endif
 
@@ -69,9 +79,15 @@ namespace C3DE
 
         private void OnResize(object sender, PreparingDeviceSettingsEventArgs e)
         {
-            var width = e.GraphicsDeviceInformation.PresentationParameters.BackBufferWidth;
-            var height = e.GraphicsDeviceInformation.PresentationParameters.BackBufferHeight;
+            var pp = e.GraphicsDeviceInformation.PresentationParameters;
+            var width = pp.BackBufferWidth;
+            var height = pp.BackBufferHeight;
             Screen.Setup(width, height, null, null);
+
+            if (UI.GUI.Scale != Vector2.One)
+                UI.GUI.Scale = Screen.GetScale();
+
+            renderer.Dirty = true;
         }
 
         protected override void Initialize()
@@ -101,6 +117,7 @@ namespace C3DE
             Components.Add(Input.Gamepad);
             Components.Add(Input.Touch);
 
+            _graphics.PreparingDeviceSettings += OnResize;
             _initialized = true;
 
             base.Initialize();

@@ -30,7 +30,17 @@ namespace C3DE.Demo.Scenes
 
             // Light
             var padding = 25;
-            var colors = new Color[] { Color.MediumSpringGreen, Color.CornflowerBlue, Color.YellowGreen, Color.DarkGoldenrod, Color.Cyan, Color.OrangeRed, Color.Purple, Color.LightBlue };
+            var colors = new Color[] {
+                Color.Red,
+                Color.Green,
+                Color.Blue,
+                Color.Yellow,
+                Color.Pink,
+                Color.Cyan,
+                Color.Purple,
+                Color.Olive
+            };
+
             var pos = new Vector3[]
             {
                 new Vector3(padding, 16, padding),
@@ -70,14 +80,13 @@ namespace C3DE.Demo.Scenes
                 
                 ligthSphere.AddComponent<LightMover>();
                 ligthSphere.AddComponent<LightSwitcher>();
-
-                if (i == 0)
-                    ligthSphere.AddComponent<ShadowMapViewer>();
             }
             
             // Terrain
             var terrainMaterial = new StandardMaterial(scene);
-            terrainMaterial.MainTexture = GraphicsHelper.CreateBorderTexture(Color.CornflowerBlue, Color.Black, 128, 128, 2);
+            terrainMaterial.MainTexture = GraphicsHelper.CreateBorderTexture(Color.Blue, Color.Black, 128, 128, 2);
+            terrainMaterial.EmissiveTexture = terrainMaterial.MainTexture;
+            terrainMaterial.EmissiveEnabled = true;
             terrainMaterial.Shininess = 150;
             terrainMaterial.Tiling = new Vector2(32);
 

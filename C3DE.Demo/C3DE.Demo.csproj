@@ -68,6 +68,7 @@
     <Compile Include="Scenes\MenuDemo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Scenes\SponzaDemo.cs" />
+    <Compile Include="Scenes\Vetor3.cs" />
     <Compile Include="Scenes\VirtualRealityDemo.cs" />
     <Compile Include="Scripts\AutoRotation.cs" />
     <Compile Include="Scripts\ControllerSwitcher.cs" />
@@ -75,6 +76,7 @@
     <Compile Include="Scripts\HexaGridBuilder.cs" />
     <Compile Include="Scripts\LightMover.cs" />
     <Compile Include="Scripts\LightMoverKeys.cs" />
+    <Compile Include="Scripts\LightSpawner.cs" />
     <Compile Include="Scripts\LightSwitcher.cs" />
     <Compile Include="Scripts\MenuBehaviour.cs" />
     <Compile Include="Scripts\PointerCoordDebug.cs" />
@@ -88,7 +90,7 @@
     <Compile Include="Scenes\HeightmapDemo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <MonoGameContentReference Include="Content\Content.mgcb" />
+    <MonoGameContentReference Include="Content\Content.UWP.mgcb" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

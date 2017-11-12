@@ -143,6 +143,19 @@ namespace C3DE.Components
         public override void Start()
         {
             Setup(transform.Position, Vector3.Zero, Vector3.Up);
+            Screen.ScreenSizeChanged += OnScreenChanged;
+        }
+
+        public override void Dispose()
+        {
+            base.Dispose();
+            Screen.ScreenSizeChanged -= OnScreenChanged;
+        }
+
+        private void OnScreenChanged(int width, int height)
+        {
+            _aspectRatio = (float)width / (float)height;
+            _needProjectionUpdate = true;
         }
 
         public void Setup(Vector3 position, Vector3 camTarget, Vector3 upVector)

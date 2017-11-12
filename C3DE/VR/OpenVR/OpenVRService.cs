@@ -99,14 +99,7 @@ namespace C3DE.VR
         public override Matrix GetViewMatrix(int eye, Matrix playerPose)
         {
             var view = _hmd.GetEyeToHeadTransform((EVREye)eye).ToXNA();
-            Vector3 translation;
-            Quaternion rotation;
-            Vector3 scale;
-
-            _hmdPose.Decompose(out scale, out rotation, out translation);
-
-            var target = translation + Vector3.Transform(Vector3.Forward, rotation);
-            return Matrix.CreateLookAt(translation, target, Vector3.Down) * view;
+            return _hmdPose * view;
         }
 
         public override float GetRenderTargetAspectRatio(int eye) => 1.0f;

@@ -19,6 +19,7 @@ namespace C3DE.Demo.Scenes
             var cameraGo = GameObjectFactory.CreateCamera();
             var controller = cameraGo.AddComponent<ControllerSwitcher>();
             cameraGo.AddComponent<DemoBehaviour>();
+            cameraGo.AddComponent<LightSpawner>();
             Add(cameraGo);
 
             controller.DefaultPosition = new Vector3(-10.0f, 2.0f, 0.45f);
@@ -28,15 +29,8 @@ namespace C3DE.Demo.Scenes
 
             // Sponza Model
             var content = Application.Content;
-            var sponzaGo = GameObjectFactory.CreateXNAModel(content, "Models/Atrium/sponza");
-            var modelRenderer = sponzaGo.GetComponent<ModelRenderer>();
-            modelRenderer.DrawWithBasicEffect = true;
-            Scene.Add(sponzaGo);
-
-            // A Light (which is not yet used because we still use the Basic Effect)
-            var lightGo = GameObjectFactory.CreateLight(LightType.Directional, Color.LightSkyBlue, 1.0f);
-            lightGo.Transform.Rotation = new Vector3(-1, 1, 0);
-            Add(lightGo);
+            var sponzaModel = content.Load<Model>("Models/Atrium/sponza");
+            var sponzaGo = sponzaModel.ToMeshRenderers(this);
 
             // Sun Flares
             var glowTexture = content.Load<Texture2D>("Textures/Flares/SunGlow");
@@ -46,7 +40,7 @@ namespace C3DE.Demo.Scenes
                 content.Load<Texture2D>("Textures/Flares/circle_sharp_1"),
                 content.Load<Texture2D>("Textures/Flares/circle_soft_1")
             };
-            var direction = lightGo.Transform.Rotation;
+            var direction = new Vector3(-1, 1, 0);
             direction.Normalize();
 
             var sunflares = cameraGo.AddComponent<LensFlare>();

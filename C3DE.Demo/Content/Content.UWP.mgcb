@@ -3,7 +3,7 @@
 
 /outputDir:bin/$(Platform)
 /intermediateDir:obj/$(Platform)
-/platform:Windows
+/platform:WindowsStoreApp
 /config:
 /profile:HiDef
 /compress:False
