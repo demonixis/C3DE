@@ -22,6 +22,8 @@ namespace C3DE.VR
         private Matrix _leftControllerPose;
         private Matrix _rightControllerPose;
 
+        public override SpriteEffects PreviewRenderEffect => SpriteEffects.FlipHorizontally;
+
         public OpenVRService(Game game)
             : base(game)
         {
@@ -65,7 +67,7 @@ namespace C3DE.VR
             uint height = 0;
             _hmd.GetRecommendedRenderTargetSize(ref width, ref height);
 
-            var renderTarget = new RenderTarget2D(Game.GraphicsDevice, (int)width, (int)height, false, SurfaceFormat.ColorSRgb, DepthFormat.Depth24Stencil8);
+            var renderTarget = new RenderTarget2D(Game.GraphicsDevice, (int)width, (int)height, false, SurfaceFormat.ColorSRgb, DepthFormat.Depth24Stencil8, 2, RenderTargetUsage.PreserveContents);
 
             _textures[eye] = new Texture_t();
 
@@ -98,8 +100,8 @@ namespace C3DE.VR
 
         public override Matrix GetViewMatrix(int eye, Matrix playerPose)
         {
-            var view = _hmd.GetEyeToHeadTransform((EVREye)eye).ToXNA();
-            return _hmdPose * view;
+            var matrixEyePos = _hmd.GetEyeToHeadTransform((EVREye)eye).ToXNA();
+            return matrixEyePos * Matrix.Invert(_hmdPose);
         }
 
         public override float GetRenderTargetAspectRatio(int eye) => 1.0f;

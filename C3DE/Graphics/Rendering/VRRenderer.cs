@@ -46,13 +46,10 @@ namespace C3DE.Graphics.Rendering
                 camera.projection = _vrDevice.GetProjectionMatrix(eye);
 				camera.view = _vrDevice.GetViewMatrix(eye, playerMatrix);
 
-				if (camera.transform.Parent != null)
-					camera.view *= Matrix.Invert(camera.transform.Parent.world);
-
                 RenderShadowMaps(scene);
                 RenderObjects(scene, camera);
-                //renderPostProcess(scene.postProcessPasses);
-                //RenderUI(scene.Behaviours);
+                RenderPostProcess(scene.postProcessPasses);
+                RenderUI(scene.Behaviours);
             }
 
             _vrDevice.SubmitRenderTargets(renderTargetEye[0], renderTargetEye[1]);

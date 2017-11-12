@@ -12,7 +12,7 @@ namespace C3DE.VR
 		/// Gets or sets the preview render effect.
 		/// </summary>
 		/// <value>The preview render effect.</value>
-		public SpriteEffects PreviewRenderEffect { get; protected set; } = SpriteEffects.None;
+		public virtual SpriteEffects PreviewRenderEffect { get; protected set; } = SpriteEffects.None;
 
 		/// <summary>
 		/// Gets or sets the distortion correction effect.

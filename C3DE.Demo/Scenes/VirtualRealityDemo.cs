@@ -7,6 +7,7 @@ using C3DE.Graphics.Rendering;
 using C3DE.Utils;
 using C3DE.VR;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace C3DE.Demo.Scenes
 {
@@ -62,21 +63,25 @@ namespace C3DE.Demo.Scenes
 
         private void BuildScene()
         {
-            var lightGo = GameObjectFactory.CreateLight(LightType.Directional);
+            var lightGo = GameObjectFactory.CreateLight(LightType.Directional, Color.LightSteelBlue, 0.5f);
             lightGo.Transform.Position = new Vector3(-15, 15, 15);
-            lightGo.Transform.Rotation = new Vector3(-1, 1, 0);
+            lightGo.Transform.Rotation = new Vector3(-1, -1, 0);
             lightGo.AddComponent<DemoBehaviour>();
+            lightGo.AddComponent<LightMover>();
             Add(lightGo);
 
 			// Terrain
 			var terrainMaterial = new StandardMaterial(scene);
-			terrainMaterial.MainTexture = GraphicsHelper.CreateBorderTexture(Color.LightGreen, Color.LightSeaGreen, 128, 128, 4);
-			terrainMaterial.Shininess = 10;
-			terrainMaterial.Tiling = new Vector2(64);
+            terrainMaterial.MainTexture = Application.Content.Load<Texture2D>("Textures/Terrain/Grass");
+			terrainMaterial.Shininess = 150;
+			terrainMaterial.Tiling = new Vector2(16);
+            terrainMaterial.EmissiveTexture = terrainMaterial.MainTexture;
+            terrainMaterial.EmissiveEnabled = true;
 
             var terrainGo = GameObjectFactory.CreateTerrain();
             var terrain = terrainGo.GetComponent<Terrain>();
             terrain.Renderer.Geometry.Size = new Vector3(2);
+            terrain.Renderer.Geometry.TextureRepeat = new Vector2(4);
             terrain.Renderer.Geometry.Build();
             terrain.Flatten();
             terrain.Renderer.Material = terrainMaterial;
@@ -90,7 +95,7 @@ namespace C3DE.Demo.Scenes
 			for (var i = 0; i < 10; i++)
 			{
 				var go = new GameObject("Cube " + i);
-				go.Transform.Position = RandomHelper.GetVector3(-20, 0.5f, -20, 20, 0.5f, 20);
+				go.Transform.Position = RandomHelper.GetVector3(-20, 1, -20, 20, 1, 20);
 				Add(go);
 				var renderer = go.AddComponent<MeshRenderer>();
 				renderer.Geometry = new CubeGeometry();

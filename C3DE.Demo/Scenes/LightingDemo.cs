@@ -26,6 +26,7 @@ namespace C3DE.Demo.Scenes
             var orbit = cameraGo.AddComponent<OrbitController>();
             orbit.KeyboardEnabled = false;
             cameraGo.AddComponent<DemoBehaviour>();
+            cameraGo.AddComponent<VRSwitcher>();
             Add(cameraGo);
 
             // Light
