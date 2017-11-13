@@ -66,7 +66,6 @@
     <Compile Include="Graphics\PostProcessing\FullScreenQuadRenderer.cs" />
     <Compile Include="Graphics\PostProcessing\MotionBlur.cs" />
     <Compile Include="Graphics\PostProcessing\QuadRenderer.cs" />
-    <Compile Include="Graphics\Rendering\VRRenderer.cs" />
     <Compile Include="Extensions\QuaternionExtensions.cs" />
     <Compile Include="Input.cs" />
     <Compile Include="Graphics\Materials\BillboardMaterial.cs" />

@@ -15,7 +15,7 @@ namespace C3DE.Demo.Scripts
         public override void Start()
         {
             base.Start();
-            _vrEnabled = Application.Engine.Renderer is VRRenderer;
+            _vrEnabled = Application.Engine.Renderer.VREnabled;
         }
 
         public override void OnGUI(GUI ui)
@@ -28,23 +28,17 @@ namespace C3DE.Demo.Scripts
 
         private void Toggle()
         {
-            _vrEnabled = Application.Engine.Renderer is VRRenderer;
+            _vrEnabled = Application.Engine.Renderer.VREnabled;
             _vrEnabled = !_vrEnabled;
 
             if (_vrEnabled)
             {
                 var vrDevice = GetService();
                 if (vrDevice.TryInitialize() == 0)
-                {
-                    var vrRenderer = new VRRenderer(Application.GraphicsDevice, vrDevice);
-                    vrRenderer.StereoPreview = false;
-                    Application.Engine.Renderer = vrRenderer;
-                }
+                    Application.Engine.Renderer.SetVREnabled(vrDevice);
                 else
                     _vrEnabled = false;
             }
-            else
-                Application.Engine.Renderer = new ForwardRenderer(Application.GraphicsDevice);
 
             VRChanged?.Invoke(true);
         }
@@ -54,14 +48,8 @@ namespace C3DE.Demo.Scripts
 #if DESKTOPGL
             return new OSVRService(Application.Engine);
 #else
-            return new OpenVRService(Application.Engine);
+            return new NullVRService(Application.Engine);
 #endif
-        }
-
-        public override void OnDestroy()
-        {
-            if (_vrEnabled)
-                Application.Engine.Renderer = new ForwardRenderer(Application.GraphicsDevice);
         }
     }
 }

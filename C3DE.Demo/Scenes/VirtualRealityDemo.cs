@@ -37,11 +37,7 @@ namespace C3DE.Demo.Scenes
 
             var vrDevice = GetService();
             if (vrDevice.TryInitialize() == 0)
-			{
-				var vrRenderer = new VRRenderer(Application.GraphicsDevice, vrDevice);
-                vrRenderer.StereoPreview = false;
-				Application.Engine.Renderer = vrRenderer;
-			}
+                Application.Engine.Renderer.SetVREnabled(vrDevice);
 
             BuildScene();
 		}
@@ -57,8 +53,7 @@ namespace C3DE.Demo.Scenes
 
         public override void Unload()
         {
-            Application.Engine.Renderer = new ForwardRenderer(Application.GraphicsDevice);
-            base.Unload();
+            Application.Engine.Renderer.SetVREnabled(null);
         }
 
         private void BuildScene()

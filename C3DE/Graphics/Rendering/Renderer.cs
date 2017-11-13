@@ -1,6 +1,7 @@
 ﻿using C3DE.Components;
 using C3DE.Graphics.PostProcessing;
 using C3DE.UI;
+using C3DE.VR;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -17,6 +18,7 @@ namespace C3DE.Graphics.Rendering
         protected bool m_IsDisposed;
         protected bool m_HDRSupport = false;
 
+        public abstract bool VREnabled { get; }
         public bool Dirty { get; set; } = true;
 
         public bool HDRSupport
@@ -41,6 +43,8 @@ namespace C3DE.Graphics.Rendering
             m_uiManager.LoadContent(content);
         }
 
+        public abstract bool SetVREnabled(VRService service);
+
         /// <summary>
         /// Renders shadowmaps.
         /// </summary>
@@ -52,26 +56,9 @@ namespace C3DE.Graphics.Rendering
                     scene.Lights[i].shadowGenerator.RenderShadows(m_graphicsDevice, scene.renderList);
         }
 
-        protected virtual void RenderObjects(Scene scene, Camera camera)
-        {
-            if (scene.RenderSettings.Skybox.Enabled)
-                scene.RenderSettings.Skybox.Draw(m_graphicsDevice, camera);
+        protected abstract void RenderObjects(Scene scene, Camera camera);
 
-            var renderCount = scene.renderList.Count;
-
-            // Prepass, Update light, eye position, etc.
-            for (var i = 0; i < scene.effects.Count; i++)
-                scene.materials[scene.materialsEffectIndex[i]].PrePass(camera);
-
-            // Pass, Update matrix, material attributes, etc.
-            for (var i = 0; i < renderCount; i++)
-            {
-                scene.renderList[i].Material?.Pass(scene.RenderList[i]);
-                scene.renderList[i].Draw(m_graphicsDevice);
-            }
-        }
-
-        protected abstract void RenderPostProcess(List<PostProcessPass> passes);
+        protected abstract void RenderPostProcess(List<PostProcessPass> passes, RenderTarget2D renderTarget);
 
         protected virtual void RenderUI(List<Behaviour> scripts)
         {
