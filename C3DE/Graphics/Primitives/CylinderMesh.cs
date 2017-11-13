@@ -3,10 +3,10 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Runtime.Serialization;
 
-namespace C3DE.Graphics.Geometries
+namespace C3DE.Graphics.Primitives
 {
     [DataContract]
-    public class CylinderGeometry : Geometry
+    public class CylinderMesh : Mesh
     {
         [DataMember]
         public Vector3 StartPosition { get; set; }
@@ -28,12 +28,12 @@ namespace C3DE.Graphics.Geometries
 
         private static Random random = new Random();
 
-        public CylinderGeometry()
+        public CylinderMesh()
             : this(new Vector3(0, 0, 0), new Vector3(0, 1, 0))
         {
         }
 
-        public CylinderGeometry(Vector3 startPosition, Vector3 endPosition, float startRadius = 1, float endRadius = 1, int nbSegments = 8, int nbSlices = 8)
+        public CylinderMesh(Vector3 startPosition, Vector3 endPosition, float startRadius = 1, float endRadius = 1, int nbSegments = 8, int nbSlices = 8)
             :  base()
         {
             StartPosition = startPosition;

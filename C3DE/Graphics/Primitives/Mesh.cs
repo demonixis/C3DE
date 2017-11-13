@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Runtime.Serialization;
 
-namespace C3DE.Graphics.Geometries
+namespace C3DE.Graphics.Primitives
 {
     public enum VertexType
     {
@@ -11,7 +11,7 @@ namespace C3DE.Graphics.Geometries
     }
 
     [DataContract]
-    public class Geometry : IDisposable, ICloneable
+    public class Mesh : IDisposable, ICloneable
     {
         private VertexPositionNormalTexture[] _vertices;
         private ushort[] _indices;
@@ -214,7 +214,7 @@ namespace C3DE.Graphics.Geometries
 
         public object Clone()
         {
-            var clone = (Geometry)MemberwiseClone();
+            var clone = (Mesh)MemberwiseClone();
 
             if (Built)
                 Build();

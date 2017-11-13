@@ -84,7 +84,7 @@ float4 PixelShaderCreateLUT(VertexShaderFSQOutput input) : COLOR0
 
 float4 PixelShaderApplyLUT(VertexShaderFSQOutput input) : COLOR0
 {
-
+#if SM4
 	//Our input
 	float4 baseTexture = InputTexture.Load(int3(input.Position.xy, 0));
 
@@ -209,6 +209,9 @@ float4 PixelShaderApplyLUT(VertexShaderFSQOutput input) : COLOR0
 	result = lerp(result, result2, blueinterpol);
 
 	return result;
+#else
+	return float4(1, 1, 1, 0);
+#endif
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -68,7 +68,6 @@
     <Compile Include="Scenes\MenuDemo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Scenes\SponzaDemo.cs" />
-    <Compile Include="Scenes\Vetor3.cs" />
     <Compile Include="Scenes\VirtualRealityDemo.cs" />
     <Compile Include="Scripts\AutoRotation.cs" />
     <Compile Include="Scripts\ControllerSwitcher.cs" />
@@ -79,6 +78,7 @@
     <Compile Include="Scripts\LightSpawner.cs" />
     <Compile Include="Scripts\LightSwitcher.cs" />
     <Compile Include="Scripts\MenuBehaviour.cs" />
+    <Compile Include="Scripts\MotionController.cs" />
     <Compile Include="Scripts\PointerCoordDebug.cs" />
     <Compile Include="Scripts\PostProcessSwitcher.cs" />
     <Compile Include="Scripts\RayPickingTester.cs" />

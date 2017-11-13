@@ -1,5 +1,5 @@
 ﻿using C3DE.Components;
-using C3DE.Graphics.Geometries;
+using C3DE.Graphics.Primitives;
 using C3DE.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
@@ -15,7 +15,7 @@ namespace C3DE
         private static Effect SkyboxEffect = null;
         private Matrix _world;
         private Matrix _scaleMatrix;
-        private CubeGeometry _geometry;
+        private CubeMesh _geometry;
         private TextureCube _texture;
         private RasterizerState _skyboxRasterizerState;
         private RasterizerState _currentRasterizerState;
@@ -31,7 +31,7 @@ namespace C3DE
 
         public Skybox()
         {
-            _geometry = new CubeGeometry();
+            _geometry = new CubeMesh();
             _world = Matrix.Identity;
             _scaleMatrix = Matrix.CreateScale(1.0f);
             _skyboxRasterizerState = new RasterizerState();

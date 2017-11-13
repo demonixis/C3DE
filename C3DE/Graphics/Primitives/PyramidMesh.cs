@@ -2,10 +2,10 @@
 using Microsoft.Xna.Framework.Graphics;
 using System.Runtime.Serialization;
 
-namespace C3DE.Graphics.Geometries
+namespace C3DE.Graphics.Primitives
 {
     [DataContract]
-    public class PyramidGeometry : Geometry
+    public class PyramidMesh : Mesh
     {
         protected override void CreateGeometry()
         {

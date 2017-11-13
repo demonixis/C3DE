@@ -3,10 +3,10 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Runtime.Serialization;
 
-namespace C3DE.Graphics.Geometries
+namespace C3DE.Graphics.Primitives
 {
     [DataContract]
-    public class TorusGeometry : Geometry
+    public class TorusMesh : Mesh
     {
         [DataMember]
         public float RadiusExterior { get; set; }
@@ -20,12 +20,12 @@ namespace C3DE.Graphics.Geometries
         [DataMember]
         public int NbSegments { get; set; }
 
-        public TorusGeometry()
+        public TorusMesh()
             : this(2, 1, 8, 8)
         {
         }
 
-        public TorusGeometry(float radiusExterior, float radiusInterior, int nbSlices, int nbSegments)
+        public TorusMesh(float radiusExterior, float radiusInterior, int nbSlices, int nbSegments)
         {
             RadiusExterior = radiusExterior;
             RaduisInterior = radiusInterior;

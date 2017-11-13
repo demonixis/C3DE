@@ -14,12 +14,24 @@ namespace C3DE.Graphics.Rendering
         protected GraphicsDevice m_graphicsDevice;
         protected SpriteBatch m_spriteBatch;
         protected RenderTarget2D m_SceneRenderTarget;
+        protected RenderTarget2D[] m_VRRenderTargets = new RenderTarget2D[2];
+        protected VRService m_VRService;
         protected internal GUI m_uiManager;
         protected bool m_IsDisposed;
         protected bool m_HDRSupport = false;
+        protected bool m_VREnabled;
 
-        public abstract bool VREnabled { get; }
+        #region Properties
+
+        public bool StereoPreview { get; set; } = false;
+
         public bool Dirty { get; set; } = true;
+
+        public bool VREnabled
+        {
+            get => m_VREnabled;
+            set { SetVREnabled(value); }
+        }
 
         public bool HDRSupport
         {
@@ -30,6 +42,8 @@ namespace C3DE.Graphics.Rendering
                 Dirty = true;
             }
         }
+
+        #endregion
 
         public Renderer(GraphicsDevice graphics)
         {
@@ -43,7 +57,41 @@ namespace C3DE.Graphics.Rendering
             m_uiManager.LoadContent(content);
         }
 
-        public abstract bool SetVREnabled(VRService service);
+        public virtual bool SetVREnabled(bool enabled)
+        {
+            if (enabled && m_VRService != null || !enabled && m_VRService == null)
+                return false;
+
+            var engine = Application.Engine;
+
+            if (enabled)
+            {
+                var service = VRManager.GetAvailableService();
+                if (service != null)
+                {
+                    m_VRService = service;
+                    m_VREnabled = true;
+                    engine.Components.Add(m_VRService);
+                }
+            }
+            else
+            {
+                if (m_VRService != null)
+                {
+                    engine.Components.Remove(m_VRService);
+                    m_VRService.Dispose();
+                }
+
+                m_VREnabled = false;
+            }
+
+            Dirty = true;
+
+            VRManager.ActiveService = m_VRService;
+            Application.Engine.IsFixedTimeStep = !m_VREnabled;
+
+            return m_VREnabled;
+        }
 
         /// <summary>
         /// Renders shadowmaps.

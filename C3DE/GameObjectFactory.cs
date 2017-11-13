@@ -2,7 +2,7 @@
 using C3DE.Components.Lighting;
 using C3DE.Components.Physics;
 using C3DE.Components.Rendering;
-using C3DE.Graphics.Geometries;
+using C3DE.Graphics.Primitives;
 using C3DE.Graphics.Materials;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
@@ -38,7 +38,7 @@ namespace C3DE
             return gameObject;
         }
 
-        public static GameObject CreateMesh(Geometry geometry, bool receiveShadow = true, bool castShadow = true, bool collider = true)
+        public static GameObject CreateMesh(Mesh geometry, bool receiveShadow = true, bool castShadow = true, bool collider = true)
         {
             var gameObject = new GameObject($"Mesh_{nameof(geometry)}");
             var renderer = gameObject.AddComponent<MeshRenderer>();
@@ -88,7 +88,7 @@ namespace C3DE
             var renderer = gameObject.AddComponent<MeshRenderer>();
             renderer.CastShadow = false;
             renderer.ReceiveShadow = false;
-            renderer.Geometry = new PlaneGeometry();
+            renderer.Geometry = new PlaneMesh();
 
             var collider = gameObject.AddComponent<BoxCollider>();
             collider.IsPickable = false;
@@ -113,7 +113,7 @@ namespace C3DE
             var renderer = gameObject.AddComponent<MeshRenderer>();
             renderer.CastShadow = false;
             renderer.ReceiveShadow = false;
-            renderer.Geometry = new PlaneGeometry();
+            renderer.Geometry = new PlaneMesh();
 
             var collider = gameObject.AddComponent<BoxCollider>();
             collider.IsPickable = false;

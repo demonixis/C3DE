@@ -5,6 +5,7 @@ using C3DE.VR;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.Collections.Generic;
 using RendererComponent = C3DE.Components.Rendering.Renderer;
 
@@ -15,15 +16,6 @@ namespace C3DE.Graphics.Rendering
     /// </summary>
     public class ForwardRenderer : Renderer
     {
-        protected VRService m_VRService;
-        protected bool m_VREnabled;
-        private RenderTarget2D[] m_VRRenderTargets = new RenderTarget2D[2];
-        private Matrix m_PlayerMatrix = Matrix.CreateScale(1);
-
-        public bool StereoPreview { get; set; } = false;
-
-        public override bool VREnabled => m_VREnabled;
-
         public ForwardRenderer(GraphicsDevice graphics)
            : base(graphics)
         {
@@ -33,15 +25,6 @@ namespace C3DE.Graphics.Rendering
         {
             base.Initialize(content);
             RebuildRenderTargets();
-        }
-
-        public override bool SetVREnabled(VRService service)
-        {
-            m_VRService = service;
-            m_VREnabled = m_VRService != null;
-            Dirty = true;
-            Application.Engine.IsFixedTimeStep = !m_VREnabled;
-            return m_VREnabled;
         }
 
         public override void Dispose(bool disposing)
@@ -64,11 +47,18 @@ namespace C3DE.Graphics.Rendering
             if (!Dirty)
                 return;
 
-            m_SceneRenderTarget = new RenderTarget2D(m_graphicsDevice, m_graphicsDevice.Viewport.Width, m_graphicsDevice.Viewport.Height, false, m_HDRSupport ? SurfaceFormat.HdrBlendable : SurfaceFormat.Color, DepthFormat.Depth24Stencil8, 0, RenderTargetUsage.PreserveContents);
+            m_SceneRenderTarget?.Dispose();
+
+            for (var eye = 0; eye < 2; eye++)
+                m_VRRenderTargets[eye]?.Dispose();
 
             if (m_VREnabled)
+            {
                 for (var eye = 0; eye < 2; eye++)
                     m_VRRenderTargets[eye] = m_VRService.CreateRenderTargetForEye(eye);
+            }
+            else
+                m_SceneRenderTarget = new RenderTarget2D(m_graphicsDevice, m_graphicsDevice.Viewport.Width, m_graphicsDevice.Viewport.Height, false, m_HDRSupport ? SurfaceFormat.HdrBlendable : SurfaceFormat.Color, DepthFormat.Depth24Stencil8, 0, RenderTargetUsage.PreserveContents);
 
             Dirty = false;
         }
@@ -97,7 +87,7 @@ namespace C3DE.Graphics.Rendering
                 for (var eye = 0; eye < 2; eye++)
                 {
                     camera.projection = m_VRService.GetProjectionMatrix(eye);
-                    camera.view = m_VRService.GetViewMatrix(eye, m_PlayerMatrix);
+                    camera.view = m_VRService.GetViewMatrix(eye, Matrix.Identity);
 
                     RenderSceneForCamera(scene, camera, m_VRRenderTargets[eye]);
                 }

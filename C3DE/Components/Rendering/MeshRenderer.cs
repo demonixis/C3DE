@@ -1,4 +1,4 @@
-﻿using C3DE.Graphics.Geometries;
+﻿using C3DE.Graphics.Primitives;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -10,10 +10,10 @@ namespace C3DE.Components.Rendering
     public class MeshRenderer : Renderer
     {
         private bool m_HaveListener;
-        protected Geometry m_Geometry;
+        protected Mesh m_Geometry;
 
         [DataMember]
-        public Geometry Geometry
+        public Mesh Geometry
         {
             get { return m_Geometry; }
             set
@@ -99,7 +99,7 @@ namespace C3DE.Components.Rendering
 
             if (m_Geometry != null)
             {
-                clone.m_Geometry = (Geometry)Activator.CreateInstance(m_Geometry.GetType());
+                clone.m_Geometry = (Mesh)Activator.CreateInstance(m_Geometry.GetType());
                 clone.m_Geometry.Size = m_Geometry.Size;
                 clone.m_Geometry.TextureRepeat = m_Geometry.TextureRepeat;
 

@@ -32,24 +32,9 @@ namespace C3DE.Demo.Scripts
             _vrEnabled = !_vrEnabled;
 
             if (_vrEnabled)
-            {
-                var vrDevice = GetService();
-                if (vrDevice.TryInitialize() == 0)
-                    Application.Engine.Renderer.SetVREnabled(vrDevice);
-                else
-                    _vrEnabled = false;
-            }
+                _vrEnabled = Application.Engine.Renderer.SetVREnabled(true);
 
             VRChanged?.Invoke(true);
-        }
-
-        private VRService GetService()
-        {
-#if DESKTOPGL
-            return new OSVRService(Application.Engine);
-#else
-            return new NullVRService(Application.Engine);
-#endif
         }
     }
 }

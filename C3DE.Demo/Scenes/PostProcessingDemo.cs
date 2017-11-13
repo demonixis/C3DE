@@ -2,7 +2,7 @@
 using C3DE.Components.Lighting;
 using C3DE.Components.Rendering;
 using C3DE.Demo.Scripts;
-using C3DE.Graphics.Geometries;
+using C3DE.Graphics.Primitives;
 using C3DE.Graphics.Materials;
 using C3DE.Utils;
 using Microsoft.Xna.Framework;
@@ -42,7 +42,7 @@ namespace C3DE.Demo.Scenes
             ls.SetBoxAlign(true);
 
             var ligthSphere = lightGo.AddComponent<MeshRenderer>();
-            ligthSphere.Geometry = new SphereGeometry(2f, 16);
+            ligthSphere.Geometry = new SphereMesh(2f, 16);
             ligthSphere.Geometry.Build();
             ligthSphere.CastShadow = false;
             ligthSphere.ReceiveShadow = false;

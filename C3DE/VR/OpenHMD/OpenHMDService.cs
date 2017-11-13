@@ -32,23 +32,21 @@ namespace C3DE.VR
 			: base(game)
 		{
 			_distortionCenter = new Vector2(0.5f, 0.5f);
-			DistortionEffect = game.Content.Load<Effect>("FX/PostProcess/OsvrDistortion");
-			DistortionCorrectionRequired = true;
-
-			_context = OpenHMD.ohmd_ctx_create();
-			if (_context == IntPtr.Zero)
-				throw new Exception("[OpenHMD] I can't create the context");
 		}
 
 		public override int TryInitialize()
 		{
-			var deviceCount = OpenHMD.ohmd_ctx_probe(_context);
+            _context = OpenHMD.ohmd_ctx_create();
+            if (_context == IntPtr.Zero)
+                return -1;
+
+            var deviceCount = OpenHMD.ohmd_ctx_probe(_context);
 			if (deviceCount < 0)
-				return -1;
+				return -2;
 
 			_hmd = OpenHMD.ohmd_list_open_device(_context, 0);
 			if (_hmd == IntPtr.Zero)
-				return -2;
+				return -3;
 
 			_hmdDescription = new OpenHMDDesc();
 			_hmdDescription.HorizontalResolution = GetIntParameter(OpenHMD.ohmd_int_value.OHMD_SCREEN_HORIZONTAL_RESOLUTION);
@@ -71,7 +69,8 @@ namespace C3DE.VR
 			_projectionMatrix[0] = Matrix.CreatePerspectiveFieldOfView(_hmdDescription.LeftEyeFov, _hmdDescription.LeftEyeAspect, 0.1f, 1000.0f);
 			_projectionMatrix[1] = Matrix.CreatePerspectiveFieldOfView(_hmdDescription.RightEyeFov, _hmdDescription.RightEyeAspect, 0.1f, 1000.0f);
 
-			Game.Components.Add(this);
+            DistortionEffect = Application.Content.Load<Effect>("Shaders/PostProcessing/OsvrDistortion");
+            DistortionCorrectionRequired = true;
 
 			return 0;
 		}

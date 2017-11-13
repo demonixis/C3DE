@@ -4,7 +4,7 @@ using C3DE.Components.Lighting;
 using C3DE.Components.Rendering;
 using C3DE.Demo.Scripts;
 using C3DE.Extensions;
-using C3DE.Graphics.Geometries;
+using C3DE.Graphics.Primitives;
 using C3DE.Graphics.Materials;
 using C3DE.Graphics.PostProcessing;
 using C3DE.Utils;
@@ -67,7 +67,7 @@ namespace C3DE.Demo.Scenes
                 light.ShadowGenerator.ShadowBias = 0.01f;
 
                 var ligthSphere = lightGo.AddComponent<MeshRenderer>();
-                ligthSphere.Geometry = new SphereGeometry(2f, 16);
+                ligthSphere.Geometry = new SphereMesh(2f, 16);
                 ligthSphere.Geometry.Build();
                 ligthSphere.CastShadow = true;
                 ligthSphere.ReceiveShadow = false;

@@ -2,10 +2,10 @@
 using Microsoft.Xna.Framework.Graphics;
 using System.Runtime.Serialization;
 
-namespace C3DE.Graphics.Geometries
+namespace C3DE.Graphics.Primitives
 {
     [DataContract]
-    public class TerrainGeometry : Geometry
+    public class TerrainMesh : Mesh
     {
         private int _width;
         private int _height;
@@ -40,7 +40,7 @@ namespace C3DE.Graphics.Geometries
             set { _data = value; }
         }
 
-        public TerrainGeometry()
+        public TerrainMesh()
             : base()
         {
             _width = 25;
@@ -57,7 +57,7 @@ namespace C3DE.Graphics.Geometries
             }
         }
 
-        public TerrainGeometry(int width = 25, int depth = 25, float scale = 10.0f)
+        public TerrainMesh(int width = 25, int depth = 25, float scale = 10.0f)
             : base()
         {
             _width = width;

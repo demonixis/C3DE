@@ -11,15 +11,14 @@ namespace C3DE.VR
         public OculusRiftService(Game game)
             : base(game)
         {
-            _oculusRift = new OculusRift();
         }
 
         public override int TryInitialize()
         {
+            _oculusRift = new OculusRift();
+
             if (_oculusRift.Initialize(Game.GraphicsDevice) != 0)
                 return -1;
-
-            Game.Components.Add(this);
 
             return 0;
         }

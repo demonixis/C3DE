@@ -3,10 +3,10 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Runtime.Serialization;
 
-namespace C3DE.Graphics.Geometries
+namespace C3DE.Graphics.Primitives
 {
     [DataContract]
-    public class SphereGeometry : Geometry
+    public class SphereMesh : Mesh
     {
         [DataMember]
         public float Radius { get; set; }
@@ -14,12 +14,12 @@ namespace C3DE.Graphics.Geometries
         [DataMember]
         public int TessellationLevel { get; set; }
 
-       public SphereGeometry()
+       public SphereMesh()
            : this(1, 8)
         {
         }
 
-        public SphereGeometry(float radius = 1.0f, int tessellation = 8)
+        public SphereMesh(float radius = 1.0f, int tessellation = 8)
         {
             Radius = radius;
             TessellationLevel = tessellation;

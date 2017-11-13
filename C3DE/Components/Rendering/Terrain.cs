@@ -1,4 +1,4 @@
-﻿using C3DE.Graphics.Geometries;
+﻿using C3DE.Graphics.Primitives;
 using C3DE.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -18,12 +18,12 @@ namespace C3DE.Components.Rendering
     public class Terrain : Component
     {
         protected MeshRenderer m_Renderer;
-        protected TerrainGeometry m_Geometry;
+        protected TerrainMesh m_Geometry;
         protected TerrainWeightData m_WeightData;
 
         public MeshRenderer Renderer => m_Renderer;
         public TerrainWeightData WeightData => m_WeightData;
-        public TerrainGeometry Geometry => m_Geometry;
+        public TerrainMesh Geometry => m_Geometry;
 
         public int Width => (int)(m_Geometry.Width * m_Geometry.Size.X);
         public int Height => (int)(m_Geometry.Height * m_Geometry.Size.Y);
@@ -33,7 +33,7 @@ namespace C3DE.Components.Rendering
         {
             base.Awake();
 
-            m_Geometry = new TerrainGeometry(100, 100, 1);
+            m_Geometry = new TerrainMesh(100, 100, 1);
             m_Renderer = GetComponent<MeshRenderer>();
 
             if (m_Renderer == null)

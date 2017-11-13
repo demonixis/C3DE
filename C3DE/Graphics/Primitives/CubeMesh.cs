@@ -2,10 +2,10 @@
 using Microsoft.Xna.Framework.Graphics;
 using System.Runtime.Serialization;
 
-namespace C3DE.Graphics.Geometries
+namespace C3DE.Graphics.Primitives
 {
     [DataContract]
-    public class CubeGeometry : Geometry
+    public class CubeMesh : Mesh
     {
         protected override void CreateGeometry()
         {

@@ -50,8 +50,6 @@ namespace C3DE.VR
 
             PreviewRenderEffect = SpriteEffects.FlipVertically;
 
-            Game.Components.Add(this);
-
             return 0;
         }
 
@@ -102,6 +100,19 @@ namespace C3DE.VR
         {
             var matrixEyePos = _hmd.GetEyeToHeadTransform((EVREye)eye).ToXNA();
             return matrixEyePos * Matrix.Invert(_hmdPose);
+        }
+
+        public override void GetHandTransform(int hand, ref Vector3 position, ref Quaternion rotation)
+        {
+            if (hand == 0 && _leftControllerDeviceID == -1)
+                return;
+
+            if (hand == 1 && _rightControllerDeviceID == -1)
+                return;
+
+            var matrix = (hand == 0 ? _leftControllerPose : _rightControllerPose);
+            var scale = Vector3.One;
+            matrix.Decompose(out scale, out rotation, out position);
         }
 
         public override float GetRenderTargetAspectRatio(int eye) => 1.0f;

@@ -2,27 +2,27 @@
 using Microsoft.Xna.Framework.Graphics;
 using System.Runtime.Serialization;
 
-namespace C3DE.Graphics.Geometries
+namespace C3DE.Graphics.Primitives
 {
     [DataContract]
-    public class QuadGeometry : Geometry
+    public class PlaneMesh : Mesh
     {
         protected override void CreateGeometry()
         {
             var position = new Vector3[4]
             {
-                new Vector3(-1.0f, 1.0f, 0.0f),
-                new Vector3(1.0f, 1.0f, 0.0f),
-                new Vector3(1.0f, -1.0f, 0.0f),
-                new Vector3(-1.0f, -1.0f, 0.0f)
+                new Vector3(-1.0f, 0.0f, 1.0f),
+                new Vector3(-1.0f, 0.0f, -1.0f),
+                new Vector3(1.0f, 0.0f, -1.0f),
+                new Vector3(1.0f, 0.0f, 1.0f)
             };
 
             var uvs = new Vector2[4]
             {
+                new Vector2(0.0f, 1.0f),
                 new Vector2(0.0f, 0.0f),
                 new Vector2(1.0f, 0.0f),
-                new Vector2(1.0f, 1.0f),
-                new Vector2(0.0f, 1.0f)
+                new Vector2(1.0f, 1.0f)
             };
 
             Vertices = new VertexPositionNormalTexture[4];
@@ -31,7 +31,7 @@ namespace C3DE.Graphics.Geometries
             {
                 Vertices[i].Position = position[i];
                 Vertices[i].TextureCoordinate = uvs[i];
-                Vertices[i].Normal = Vector3.Forward;
+                Vertices[i].Normal = Vector3.Up;
             }
 
             Indices = new ushort[] { 0, 1, 2, 0, 2, 3 };

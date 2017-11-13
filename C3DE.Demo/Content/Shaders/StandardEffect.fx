@@ -158,7 +158,6 @@ struct VertexShaderOutput
     float3 Normal : TEXCOORD1;
     float4 WorldPosition : TEXCOORD2;
     float3 Reflection : TEXCOORD3;
-    float3x3 WorldToTangentSpace : TEXCOORD4;
     float FogDistance : FOG;
 };
 
