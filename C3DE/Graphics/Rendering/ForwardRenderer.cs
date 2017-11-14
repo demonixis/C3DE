@@ -1,11 +1,9 @@
 ﻿using C3DE.Components;
 using C3DE.Graphics.Materials;
 using C3DE.Graphics.PostProcessing;
-using C3DE.VR;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using System;
 using System.Collections.Generic;
 using RendererComponent = C3DE.Components.Rendering.Renderer;
 
@@ -42,6 +40,9 @@ namespace C3DE.Graphics.Rendering
             }
         }
 
+        /// <summary>
+        /// Rebuilds render targets if Dirty is true.
+        /// </summary>
         protected virtual void RebuildRenderTargets()
         {
             if (!Dirty)
@@ -64,11 +65,11 @@ namespace C3DE.Graphics.Rendering
         }
 
         /// <summary>
-        /// Render the scene with the specified camera.
+        /// Renders the scene with the specified camera.
         /// Render order:
         /// 1 - Shadow maps
         /// 2 - Objects
-        /// 3 - PostProcesses
+        /// 3 - Post Processing
         /// 4 - UI
         /// </summary>
         /// <param name="scene">The scene to render.</param>
@@ -116,7 +117,7 @@ namespace C3DE.Graphics.Rendering
         }
 
         /// <summary>
-        /// Render renderable objects
+        /// Renders renderable objects
         /// </summary>
         /// <param name="camera">The camera to use.</param>
         protected override void RenderObjects(Scene scene, Camera camera)
@@ -188,7 +189,7 @@ namespace C3DE.Graphics.Rendering
         }
 
         /// <summary>
-        /// Render buffers to screen.
+        /// Renders buffers to screen.
         /// </summary>
         protected virtual void renderBuffers()
         {
@@ -198,6 +199,11 @@ namespace C3DE.Graphics.Rendering
             m_spriteBatch.End();
         }
 
+        /// <summary>
+        /// Renders effects.
+        /// </summary>
+        /// <param name="passes"></param>
+        /// <param name="renderTarget"></param>
         protected override void RenderPostProcess(List<PostProcessPass> passes, RenderTarget2D renderTarget)
         {
             if (passes.Count == 0)
@@ -232,6 +238,10 @@ namespace C3DE.Graphics.Rendering
             m_spriteBatch.End();
         }
 
+        /// <summary>
+        /// Draws the VR Preview to the Back Buffer
+        /// </summary>
+        /// <param name="eye"></param>
         private void DrawVRPreview(int eye)
         {
             m_graphicsDevice.SetRenderTarget(null);

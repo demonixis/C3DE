@@ -31,8 +31,6 @@ namespace C3DE.VR
         /// <param name="game">Game.</param>
         public VRService(Game game) : base(game) { }
 
-        public VRService() : base(Application.Engine) { }
-
         /// <summary>
         /// Tries to initialize the VR Device.
         /// </summary>
@@ -61,6 +59,12 @@ namespace C3DE.VR
         /// <param name="playerPose">Player scale.</param>
         public abstract Matrix GetViewMatrix(int eye, Matrix playerPose);
 
+        /// <summary>
+        /// Gets the position and the rotation of the given controller.
+        /// </summary>
+        /// <param name="hand">Which hand: 0 for left, 1 for right.</param>
+        /// <param name="position">The position vector</param>
+        /// <param name="rotation">The rotation vector</param>
         public virtual void GetHandTransform(int hand, ref Vector3 position, ref Quaternion rotation) { }
 
         /// <summary>

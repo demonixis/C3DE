@@ -7,6 +7,7 @@ using C3DE.Graphics.Materials;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using C3DE.Demo.Scripts;
 
 namespace C3DE
 {
@@ -129,6 +130,47 @@ namespace C3DE
             //collider.BoundingBox = new BoundingBox(transform.Position, size);
 
             return gameObject;
+        }
+
+        public static GameObject CreatePlayer(bool vrEnabled)
+        {
+            var scene = Scene.current;
+
+            var player = new GameObject("Player");
+            scene.Add(player);
+
+            var head = new GameObject();
+            head.Transform.Parent = player.Transform;
+            head.Transform.Position = new Vector3(0, 1.8f, 0);
+            scene.Add(head);
+
+            var trackingSpace = new GameObject();
+            trackingSpace.Transform.Parent = head.Transform;
+            scene.Add(trackingSpace);
+
+            var cameraGo = CreateCamera();
+            cameraGo.Name = "CenterEyeAnchor";
+            cameraGo.Transform.Parent = trackingSpace.Transform;
+            scene.Add(cameraGo);
+
+            if (vrEnabled)
+            {
+                var leftHand = new GameObject("LeftHandAnchor");
+                leftHand.Transform.Parent = trackingSpace.Transform;
+                scene.Add(leftHand);
+
+                var mc = leftHand.AddComponent<MotionController>();
+                mc.LeftHand = true;
+
+                var rightHand = new GameObject("RightHandAnchor");
+                rightHand.Transform.Parent = trackingSpace.Transform;
+                scene.Add(rightHand);
+
+                mc = rightHand.AddComponent<MotionController>();
+                mc.LeftHand = false;
+            }
+
+            return player;
         }
     }
 }

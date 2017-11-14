@@ -43,8 +43,6 @@ namespace C3DE.Demo.Scenes
                 var hand = new GameObject();
                 Add(hand);
 
-                //hand.Transform.Parent = cameraGo.Transform;
-
                 var sphereHand = hand.AddComponent<MeshRenderer>();
                 sphereHand.Geometry = new CubeMesh();
                 sphereHand.Geometry.Size = new Vector3(0.05f);

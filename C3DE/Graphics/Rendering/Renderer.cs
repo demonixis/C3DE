@@ -66,7 +66,7 @@ namespace C3DE.Graphics.Rendering
 
             if (enabled)
             {
-                var service = VRManager.GetAvailableService();
+                var service = VRManager.GetVRAvailableVRService();
                 if (service != null)
                 {
                     m_VRService = service;
