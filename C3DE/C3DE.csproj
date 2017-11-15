@@ -60,6 +60,7 @@
     <Compile Include="GameObjectFactory.cs" />
     <Compile Include="Graphics\Materials\IEmissiveMaterial.cs" />
     <Compile Include="Graphics\Materials\IMultipassLightingMaterial.cs" />
+    <Compile Include="Graphics\Materials\StandardMaterialN.cs" />
     <Compile Include="Graphics\PostProcessing\AverageColorFilter.cs" />
     <Compile Include="Graphics\PostProcessing\Bloom.cs" />
     <Compile Include="Graphics\PostProcessing\ColorGrading.cs" />

@@ -84,11 +84,11 @@ namespace C3DE.Demo.Scenes
             }
             
             // Terrain
-            var terrainMaterial = new StandardMaterial(scene);
+            var terrainMaterial = new StandardMaterialN(scene);
             terrainMaterial.MainTexture = GraphicsHelper.CreateBorderTexture(Color.Blue, Color.Black, 128, 128, 2);
             terrainMaterial.EmissiveTexture = terrainMaterial.MainTexture;
             terrainMaterial.EmissiveEnabled = true;
-            terrainMaterial.Shininess = 150;
+            terrainMaterial.Shininess = 200;
             terrainMaterial.Tiling = new Vector2(32);
 
             var terrainGo = GameObjectFactory.CreateTerrain();
