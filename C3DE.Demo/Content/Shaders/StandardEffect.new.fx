@@ -115,12 +115,32 @@ float4 PixelShaderAmbient(VertexShaderOutput input) : COLOR0
 
 float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 {
-    float3 lightFactor = CalcLightFactor(input.WorldPosition, input.WorldNormal);
+    float3 lightFactor = float3(0, 0, 0);
+    float3 normal = normalize(input.WorldNormal);
+    float shadowTerm = CalcShadow(input.WorldPosition);
+
+	// Apply a light influence.
+    if (LightType == 1)
+        lightFactor = CalcDirectionalLightColor(input.WorldPosition, normal);
+    else if (LightType == 2)
+        lightFactor = CalcPointLightColor(input.WorldPosition, normal);
+    else if (LightType == 3)
+        lightFactor = CalcSpotLightColor(input.WorldPosition, normal);
+ 
+    float3 finalDiffuse = lightFactor * shadowTerm;
+    float3 finalSpecular = CalcSpecular(input.WorldPosition, normal, LightType, input.UV * TextureTiling);
+
+    if (LightType == 0)
+        return ApplyFog(finalDiffuse + finalSpecular, input.FogDistance);
+    else
+        return float4(finalDiffuse, 1);
+
+   /* float3 lightFactor = CalcLightFactor(input.WorldPosition, input.WorldNormal);
     float shadow = CalcShadow(input.WorldPosition); 
     float3 diffuse = lightFactor * shadow;
     float3 specular = CalcSpecular(input.WorldPosition, input.WorldNormal, EyePosition, input.UV * TextureTiling);
     float3 compose = diffuse + specular;
-    return ApplyFog(compose, input.FogDistance);
+    return ApplyFog(compose, input.FogDistance);*/
 }
 
 float4 PixelShaderEmissive(VertexShaderOutput input) : COLOR0

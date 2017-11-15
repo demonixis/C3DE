@@ -50,9 +50,9 @@ namespace C3DE.Demo.Scenes
             ligthSphere.Material.MainTexture = GraphicsHelper.CreateTexture(Color.Yellow, 1, 1);
 
             // Terrain
-            var terrainMaterial = new StandardMaterial(scene);
+            var terrainMaterial = new StandardMaterialN(scene);
             terrainMaterial.MainTexture = Application.Content.Load<Texture2D>("Textures/Terrain/Rock");
-            terrainMaterial.Shininess = 50;
+            terrainMaterial.Shininess = 250;
             terrainMaterial.Tiling = new Vector2(8);
 
             var terrainGo = GameObjectFactory.CreateTerrain();
@@ -80,7 +80,7 @@ namespace C3DE.Demo.Scenes
             jackRenderer.ReceiveShadow = true;
             jackRenderer.CastShadow = true;
 
-            var jackMaterial = new StandardMaterial(this);
+            var jackMaterial = new StandardMaterialN(this);
             jackMaterial.DiffuseColor = new Color(0.2f, 0.005f, 0);
             jackMaterial.EmissiveColor = new Color(0.2f, 0.005f, 0);
             jackMaterial.EmissiveEnabled = true;

@@ -72,7 +72,7 @@ namespace C3DE.Demo.Scenes
                 ligthSphere.CastShadow = true;
                 ligthSphere.ReceiveShadow = false;
 
-                var sphereMaterial = new StandardMaterial(scene);
+                var sphereMaterial = new StandardMaterialN(scene);
                 sphereMaterial.DiffuseColor = colors[i];
                 sphereMaterial.EmissiveIntensity = 1;
                 sphereMaterial.EmissiveColor = colors[i];
