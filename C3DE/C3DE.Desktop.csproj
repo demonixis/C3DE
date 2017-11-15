@@ -64,7 +64,7 @@
     <Reference Include="System.Runtime.Serialization" />
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Application.cs" />
+    <Compile Include="Application.cs" />
     <Compile Include="Asset.cs" />
     <Compile Include="AudioManager.cs" />
     <Compile Include="Components\AudioListener.cs" />
@@ -85,6 +85,7 @@
     <Compile Include="Components\Lighting\Light.cs" />
     <Compile Include="Components\Rendering\MeshRenderer.cs" />
     <Compile Include="Components\Rendering\Terrain.cs" />
+    <Compile Include="Components\VR\MotionController.cs" />
     <Compile Include="Extensions\ModelExtensions.cs" />
     <Compile Include="GameObjectFactory.cs" />
     <Compile Include="Graphics\Materials\IEmissiveMaterial.cs" />
@@ -162,9 +163,7 @@
     <Compile Include="Utils\NoiseGenerator.cs" />
     <Compile Include="Utils\RandomHelper.cs" />
     <Compile Include="Components\Rendering\DepthNormalRenderer.cs" />
-    <Compile Include="VR\Oculus\MonogameExtensions.cs" />
-    <Compile Include="VR\Oculus\OculusRift.cs" />
-    <Compile Include="VR\Oculus\OculusService.cs" />
+    <Compile Include="VR\VRDriver.cs" />
     <Compile Include="VR\VRManager.cs" />
     <Compile Include="VR\VRService.cs" />
     <Compile Include="VR\NullVRService.cs" />
