@@ -29,19 +29,19 @@ namespace C3DE.Graphics.Materials
 
         public override void LoadContent(ContentManager content)
         {
-            effect = content.Load<Effect>("Shaders/ToonEffect");
+            m_Effect = content.Load<Effect>("Shaders/ToonEffect");
         }
 
         public override void PrePass(Camera camera)
         {
-            effect.Parameters["View"].SetValue(camera.view);
-            effect.Parameters["Projection"].SetValue(camera.projection);
-            effect.Parameters["AmbientColor"].SetValue(scene.RenderSettings.ambientColor);
+            m_Effect.Parameters["View"].SetValue(camera.view);
+            m_Effect.Parameters["Projection"].SetValue(camera.projection);
+            m_Effect.Parameters["AmbientColor"].SetValue(scene.RenderSettings.ambientColor);
 
             if (scene.lights.Count > 0)
             {
                 var light0 = scene.Lights[0]; // FIXME
-                effect.Parameters["LightDirection"].SetValue(light0.transform.LocalRotation);
+                m_Effect.Parameters["LightDirection"].SetValue(light0.transform.LocalRotation);
             }
         }
 
@@ -49,13 +49,13 @@ namespace C3DE.Graphics.Materials
         {
             // Material
             
-            effect.Parameters["DiffuseColor"].SetValue(diffuseColor);
-            effect.Parameters["EmissiveColor"].SetValue(_emissiveColor);
-            effect.Parameters["TextureTiling"].SetValue(Tiling);
-            effect.Parameters["TextureOffset"].SetValue(Offset);
-            effect.Parameters["MainTexture"].SetValue(MainTexture);
-            effect.Parameters["World"].SetValue(renderable.GameObject.Transform.world);
-            effect.CurrentTechnique.Passes[0].Apply();
+            m_Effect.Parameters["DiffuseColor"].SetValue(diffuseColor);
+            m_Effect.Parameters["EmissiveColor"].SetValue(_emissiveColor);
+            m_Effect.Parameters["TextureTiling"].SetValue(Tiling);
+            m_Effect.Parameters["TextureOffset"].SetValue(Offset);
+            m_Effect.Parameters["MainTexture"].SetValue(MainTexture);
+            m_Effect.Parameters["World"].SetValue(renderable.GameObject.Transform.world);
+            m_Effect.CurrentTechnique.Passes[0].Apply();
         }
     }
 }

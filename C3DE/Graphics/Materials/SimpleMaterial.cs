@@ -52,28 +52,28 @@ namespace C3DE.Graphics.Materials
 
         public override void LoadContent(ContentManager content)
         {
-            effect = content.Load<Effect>("Shaders/SimpleEffect");
+            m_Effect = content.Load<Effect>("Shaders/SimpleEffect");
         }
 
         public override void PrePass(Camera camera)
         {
-            effect.Parameters["AmbientColor"].SetValue(scene.RenderSettings.ambientColor);
-            effect.Parameters["View"].SetValue(camera.view);
-            effect.Parameters["Projection"].SetValue(camera.projection); 
+            m_Effect.Parameters["AmbientColor"].SetValue(scene.RenderSettings.ambientColor);
+            m_Effect.Parameters["View"].SetValue(camera.view);
+            m_Effect.Parameters["Projection"].SetValue(camera.projection); 
         }
 
         public override void Pass(Renderer renderable)
         {
             // Material
             
-            effect.Parameters["DiffuseColor"].SetValue(diffuseColor);
-            effect.Parameters["EmissiveColor"].SetValue(_emissiveColor);
-            effect.Parameters["TextureTiling"].SetValue(Tiling);
-            effect.Parameters["TextureOffset"].SetValue(Offset);
-            effect.Parameters["Alpha"].SetValue(_alpha);
-            effect.Parameters["MainTexture"].SetValue(MainTexture);
-            effect.Parameters["World"].SetValue(renderable.transform.world);
-            effect.CurrentTechnique.Passes[AlphaEnabled ? 0 : 1].Apply();
+            m_Effect.Parameters["DiffuseColor"].SetValue(diffuseColor);
+            m_Effect.Parameters["EmissiveColor"].SetValue(_emissiveColor);
+            m_Effect.Parameters["TextureTiling"].SetValue(Tiling);
+            m_Effect.Parameters["TextureOffset"].SetValue(Offset);
+            m_Effect.Parameters["Alpha"].SetValue(_alpha);
+            m_Effect.Parameters["MainTexture"].SetValue(MainTexture);
+            m_Effect.Parameters["World"].SetValue(renderable.transform.world);
+            m_Effect.CurrentTechnique.Passes[AlphaEnabled ? 0 : 1].Apply();
         }
     }
 }

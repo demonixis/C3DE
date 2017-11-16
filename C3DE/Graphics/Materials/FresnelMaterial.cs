@@ -19,20 +19,20 @@ namespace C3DE.Graphics.Materials
 
         public override void LoadContent(ContentManager content)
         {
-            effect = content.Load<Effect>("Shaders/FresnelEffect");
+            m_Effect = content.Load<Effect>("Shaders/FresnelEffect");
         }
 
         public override void PrePass(Camera camera)
         {
-            effect.Parameters["View"].SetValue(camera.view);
-            effect.Parameters["Projection"].SetValue(camera.projection);
-            effect.Parameters["EyePosition"].SetValue(camera.Transform.LocalPosition);
+            m_Effect.Parameters["View"].SetValue(camera.view);
+            m_Effect.Parameters["Projection"].SetValue(camera.projection);
+            m_Effect.Parameters["EyePosition"].SetValue(camera.Transform.LocalPosition);
         }
 
         public override void Pass(Renderer renderable)
         {
-            effect.Parameters["World"].SetValue(renderable.Transform.world);
-            effect.CurrentTechnique.Passes[0].Apply();
+            m_Effect.Parameters["World"].SetValue(renderable.Transform.world);
+            m_Effect.CurrentTechnique.Passes[0].Apply();
         }
     }
 }

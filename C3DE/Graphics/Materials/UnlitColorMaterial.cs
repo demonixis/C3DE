@@ -22,20 +22,20 @@ namespace C3DE.Graphics.Materials
 
         public override void LoadContent(ContentManager content)
         {
-            effect = content.Load<Effect>("Shaders/UnlitColor");
+            m_Effect = content.Load<Effect>("Shaders/UnlitColor");
         }
 
         public override void PrePass(Camera camera)
         {
-            effect.Parameters["View"].SetValue(camera.view);
-            effect.Parameters["Projection"].SetValue(camera.projection);
+            m_Effect.Parameters["View"].SetValue(camera.view);
+            m_Effect.Parameters["Projection"].SetValue(camera.projection);
         }
 
         public override void Pass(Renderer renderable)
         {
-            effect.Parameters["World"].SetValue(renderable.GameObject.Transform.world);
-            effect.Parameters["DiffuseColor"].SetValue(diffuseColor);
-            effect.CurrentTechnique.Passes[0].Apply();
+            m_Effect.Parameters["World"].SetValue(renderable.GameObject.Transform.world);
+            m_Effect.Parameters["DiffuseColor"].SetValue(diffuseColor);
+            m_Effect.CurrentTechnique.Passes[0].Apply();
         }
     }
 }

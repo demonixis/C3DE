@@ -19,7 +19,7 @@ namespace C3DE.Graphics.Materials
     {
         protected internal Scene scene;
         protected Vector3 diffuseColor;
-        protected internal Effect effect;
+        protected internal Effect m_Effect;
         protected internal bool hasAlpha;
 
         [DataMember]

@@ -76,9 +76,9 @@ namespace C3DE.Graphics.Materials
         public override void LoadContent(ContentManager content)
         {
             if (ShaderQuality == ShaderQuality.Low)
-                effect = content.Load<Effect>("Shaders/WaterEffect.Low");
+                m_Effect = content.Load<Effect>("Shaders/WaterEffect.Low");
             else
-                effect = content.Load<Effect>("Shaders/WaterEffect");
+                m_Effect = content.Load<Effect>("Shaders/WaterEffect");
         }
 
         public override void PrePass(Camera camera)
@@ -87,56 +87,56 @@ namespace C3DE.Graphics.Materials
 
             if (ShaderQuality == ShaderQuality.Normal)
             {
-                effect.Parameters["EyePosition"].SetValue(camera.Transform.LocalPosition);
+                m_Effect.Parameters["EyePosition"].SetValue(camera.Transform.LocalPosition);
 
                 // Fog
-                effect.Parameters["FogColor"].SetValue(scene.RenderSettings.fogColor);
-                effect.Parameters["FogData"].SetValue(scene.RenderSettings.fogData);
+                m_Effect.Parameters["FogColor"].SetValue(scene.RenderSettings.fogColor);
+                m_Effect.Parameters["FogData"].SetValue(scene.RenderSettings.fogData);
             }
 
-            effect.Parameters["View"].SetValue(camera.view);
-            effect.Parameters["Projection"].SetValue(camera.projection);
+            m_Effect.Parameters["View"].SetValue(camera.view);
+            m_Effect.Parameters["Projection"].SetValue(camera.projection);
 
             // Light
             if (scene.lights.Count > 0)
             {
                 var light0 = scene.Lights[0];
-                effect.Parameters["LightColor"].SetValue(light0.color);
-                effect.Parameters["LightDirection"].SetValue(light0.transform.LocalRotation);
-                effect.Parameters["LightIntensity"].SetValue(light0.Intensity);
+                m_Effect.Parameters["LightColor"].SetValue(light0.color);
+                m_Effect.Parameters["LightDirection"].SetValue(light0.transform.LocalRotation);
+                m_Effect.Parameters["LightIntensity"].SetValue(light0.Intensity);
             }
 
-            effect.Parameters["AmbientColor"].SetValue(scene.RenderSettings.ambientColor);
+            m_Effect.Parameters["AmbientColor"].SetValue(scene.RenderSettings.ambientColor);
         }
 
         public override void Pass(Renderer renderable)
         {
-            effect.Parameters["TotalTime"].SetValue(_totalTime);
-            effect.Parameters["WaterTexture"].SetValue(MainTexture);
+            m_Effect.Parameters["TotalTime"].SetValue(_totalTime);
+            m_Effect.Parameters["WaterTexture"].SetValue(MainTexture);
 
             if (ShaderQuality == ShaderQuality.Normal)
             {
                 if (_normalMapEnabled)
-                    effect.Parameters["NormalTexture"].SetValue(NormalMap);
+                    m_Effect.Parameters["NormalTexture"].SetValue(NormalMap);
 
                 if (_reflectiveMapEnabled)
                 {
-                    effect.Parameters["ReflectiveTexture"].SetValue(ReflectiveMap);
-                    effect.Parameters["ReflectionColor"].SetValue(_reflectionColor);
+                    m_Effect.Parameters["ReflectiveTexture"].SetValue(ReflectiveMap);
+                    m_Effect.Parameters["ReflectionColor"].SetValue(_reflectionColor);
                 }
 
-                effect.Parameters["ReflectiveMapEnabled"].SetValue(_reflectiveMapEnabled);
-                effect.Parameters["NormalMapEnabled"].SetValue(_normalMapEnabled);
+                m_Effect.Parameters["ReflectiveMapEnabled"].SetValue(_reflectiveMapEnabled);
+                m_Effect.Parameters["NormalMapEnabled"].SetValue(_normalMapEnabled);
             }
 
-            effect.Parameters["TextureTiling"].SetValue(Tiling);
-            effect.Parameters["TextureOffset"].SetValue(Offset);
-            effect.Parameters["Alpha"].SetValue(WaterTransparency);
-            effect.Parameters["DiffuseColor"].SetValue(diffuseColor);
-            effect.Parameters["SpecularColor"].SetValue(_specularColor);
-            effect.Parameters["Shininess"].SetValue(Shininess);
-            effect.Parameters["World"].SetValue(renderable.Transform.world);
-            effect.CurrentTechnique.Passes[0].Apply();
+            m_Effect.Parameters["TextureTiling"].SetValue(Tiling);
+            m_Effect.Parameters["TextureOffset"].SetValue(Offset);
+            m_Effect.Parameters["Alpha"].SetValue(WaterTransparency);
+            m_Effect.Parameters["DiffuseColor"].SetValue(diffuseColor);
+            m_Effect.Parameters["SpecularColor"].SetValue(_specularColor);
+            m_Effect.Parameters["Shininess"].SetValue(Shininess);
+            m_Effect.Parameters["World"].SetValue(renderable.Transform.world);
+            m_Effect.CurrentTechnique.Passes[0].Apply();
         }
     }
 }

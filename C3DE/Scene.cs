@@ -447,10 +447,10 @@ namespace C3DE
                 {
                     material.LoadContent(Application.Content);
 
-                    if (!effects.Contains(material.effect))
+                    if (!effects.Contains(material.m_Effect))
                     {
-                        effects.Add(material.effect);
-                        materialsEffectIndex.Add(effects.IndexOf(material.effect), materials.IndexOf(material));
+                        effects.Add(material.m_Effect);
+                        materialsEffectIndex.Add(effects.IndexOf(material.m_Effect), materials.IndexOf(material));
                     }
                 }
             }
@@ -482,10 +482,10 @@ namespace C3DE
         {
             for (int i = 0, l = materials.Count; i < l; i++)
             {
-                if (!effects.Contains(materials[i].effect))
+                if (!effects.Contains(materials[i].m_Effect))
                 {
-                    effects.Add(materials[i].effect);
-                    materialsEffectIndex.Add(effects.IndexOf(materials[i].effect), materials.IndexOf(materials[i]));
+                    effects.Add(materials[i].m_Effect);
+                    materialsEffectIndex.Add(effects.IndexOf(materials[i].m_Effect), materials.IndexOf(materials[i]));
                 }
             }
         }

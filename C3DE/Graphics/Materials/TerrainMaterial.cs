@@ -26,55 +26,55 @@ namespace C3DE.Graphics.Materials
         public override void LoadContent(ContentManager content)
         {
             if (ShaderQuality == ShaderQuality.Low)
-                effect = content.Load<Effect>("Shaders/TerrainEffect.Low");
+                m_Effect = content.Load<Effect>("Shaders/TerrainEffect.Low");
             else
-                effect = content.Load<Effect>("Shaders/TerrainEffect");
+                m_Effect = content.Load<Effect>("Shaders/TerrainEffect");
         }
 
         public override void PrePass(Camera camera)
         {
-            effect.Parameters["View"].SetValue(camera.view);
-            effect.Parameters["Projection"].SetValue(camera.projection);
-            effect.Parameters["EyePosition"].SetValue(camera.Transform.LocalPosition);
+            m_Effect.Parameters["View"].SetValue(camera.view);
+            m_Effect.Parameters["Projection"].SetValue(camera.projection);
+            m_Effect.Parameters["EyePosition"].SetValue(camera.Transform.LocalPosition);
 
             if (scene.lights.Count > 0)
             {
                 var light0 = scene.lights[0];
 
                 // Light
-                effect.Parameters["LightColor"].SetValue(light0.color);
-                effect.Parameters["LightDirection"].SetValue(light0.transform.LocalRotation);
-                effect.Parameters["LightIntensity"].SetValue(light0.Intensity);
+                m_Effect.Parameters["LightColor"].SetValue(light0.color);
+                m_Effect.Parameters["LightDirection"].SetValue(light0.transform.LocalRotation);
+                m_Effect.Parameters["LightIntensity"].SetValue(light0.Intensity);
 
                 // Update shadow data.
-                effect.Parameters["ShadowData"].SetValue(light0.shadowGenerator.shadowData);
-                effect.Parameters["ShadowMap"].SetValue(light0.shadowGenerator.ShadowMap);
+                m_Effect.Parameters["ShadowData"].SetValue(light0.shadowGenerator.shadowData);
+                m_Effect.Parameters["ShadowMap"].SetValue(light0.shadowGenerator.ShadowMap);
             }
 
             if (ShaderQuality == ShaderQuality.Normal)
             {
                 // Fog
-                effect.Parameters["FogColor"].SetValue(scene.RenderSettings.fogColor);
-                effect.Parameters["FogData"].SetValue(scene.RenderSettings.fogData);
+                m_Effect.Parameters["FogColor"].SetValue(scene.RenderSettings.fogColor);
+                m_Effect.Parameters["FogData"].SetValue(scene.RenderSettings.fogData);
             }
 
-            effect.Parameters["AmbientColor"].SetValue(scene.RenderSettings.ambientColor);
+            m_Effect.Parameters["AmbientColor"].SetValue(scene.RenderSettings.ambientColor);
         }
 
         public override void Pass(Renderer renderable)
         {
             // Material
-            effect.Parameters["DiffuseColor"].SetValue(diffuseColor);
-            effect.Parameters["TextureTiling"].SetValue(Tiling);
-            effect.Parameters["TextureOffset"].SetValue(Offset);
-            effect.Parameters["MainTexture"].SetValue(MainTexture);
-            effect.Parameters["SnowTexture"].SetValue(SnowTexture);
-            effect.Parameters["SandTexture"].SetValue(SandTexture);
-            effect.Parameters["RockTexture"].SetValue(RockTexture);
-            effect.Parameters["WeightMap"].SetValue(WeightTexture);
-            effect.Parameters["RecieveShadow"].SetValue(renderable.ReceiveShadow);
-            effect.Parameters["World"].SetValue(renderable.Transform.world);
-            effect.CurrentTechnique.Passes[0].Apply();
+            m_Effect.Parameters["DiffuseColor"].SetValue(diffuseColor);
+            m_Effect.Parameters["TextureTiling"].SetValue(Tiling);
+            m_Effect.Parameters["TextureOffset"].SetValue(Offset);
+            m_Effect.Parameters["MainTexture"].SetValue(MainTexture);
+            m_Effect.Parameters["SnowTexture"].SetValue(SnowTexture);
+            m_Effect.Parameters["SandTexture"].SetValue(SandTexture);
+            m_Effect.Parameters["RockTexture"].SetValue(RockTexture);
+            m_Effect.Parameters["WeightMap"].SetValue(WeightTexture);
+            m_Effect.Parameters["RecieveShadow"].SetValue(renderable.ReceiveShadow);
+            m_Effect.Parameters["World"].SetValue(renderable.Transform.world);
+            m_Effect.CurrentTechnique.Passes[0].Apply();
         }
     }
 }

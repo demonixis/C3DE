@@ -25,26 +25,26 @@ namespace C3DE.Graphics.Materials
 
         public override void LoadContent(ContentManager content)
         {
-            effect = content.Load<Effect>("Shaders/LavaEffect");
+            m_Effect = content.Load<Effect>("Shaders/LavaEffect");
         }
 
         public override void PrePass(Camera camera)
         {
-            effect.Parameters["View"].SetValue(camera.view);
-            effect.Parameters["Projection"].SetValue(camera.projection);
+            m_Effect.Parameters["View"].SetValue(camera.view);
+            m_Effect.Parameters["Projection"].SetValue(camera.projection);
         }
 
         public override void Pass(Renderer renderable)
         {
             _totalTime += Time.DeltaTime / 10.0f;
 
-            effect.Parameters["Time"].SetValue(_totalTime);
-            effect.Parameters["MainTexture"].SetValue(MainTexture);
-            effect.Parameters["TextureTiling"].SetValue(Tiling);
-            effect.Parameters["DiffuseColor"].SetValue(diffuseColor);
-            effect.Parameters["World"].SetValue(renderable.Transform.world);
-            effect.Parameters["EmissiveIntensity"].SetValue(EmissiveIntensity);
-            effect.CurrentTechnique.Passes[0].Apply();
+            m_Effect.Parameters["Time"].SetValue(_totalTime);
+            m_Effect.Parameters["MainTexture"].SetValue(MainTexture);
+            m_Effect.Parameters["TextureTiling"].SetValue(Tiling);
+            m_Effect.Parameters["DiffuseColor"].SetValue(diffuseColor);
+            m_Effect.Parameters["World"].SetValue(renderable.Transform.world);
+            m_Effect.Parameters["EmissiveIntensity"].SetValue(EmissiveIntensity);
+            m_Effect.CurrentTechnique.Passes[0].Apply();
         }
     }
 }
