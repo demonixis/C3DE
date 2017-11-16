@@ -105,9 +105,9 @@ VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
     return output;
 }
 
-float4 PixelShaderAmbient(VertexShaderOutput input) : COLOR0
+float3 CalcDiffuseColor(VertexShaderOutput input)
 {
-    float3 sandTex = tex2D(SandTextureSampler, input.UV  * TextureTiling);
+    float3 sandTex = tex2D(SandTextureSampler, input.UV * TextureTiling);
     float3 rockTex = tex2D(RockTextureSampler, input.UV * TextureTiling);
     float3 snowTex = tex2D(SnowTextureSampler, input.UV * TextureTiling);
     float3 mainTex = tex2D(MainTextureSampler, input.UV * TextureTiling);
@@ -117,16 +117,23 @@ float4 PixelShaderAmbient(VertexShaderOutput input) : COLOR0
     diffuse *= mainTex;
     diffuse += weightTex.r * sandTex + weightTex.g * rockTex + weightTex.b * snowTex;
 	
-    return float4(AmbientColor * (DiffuseColor + diffuse), 1.0);
+    return diffuse * DiffuseColor;
+}
+
+float4 PixelShaderAmbient(VertexShaderOutput input) : COLOR0
+{
+    return float4(AmbientColor * CalcDiffuseColor(input), 1);
 }
 
 float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 {
+    float3 diffuse = CalcDiffuseColor(input);
+
     float3 lightFactor = CalcLightFactor(input.WorldPosition, input.WorldNormal);
     float shadow = CalcShadow(input.WorldPosition);
-    float3 diffuse = lightFactor * shadow;
+    float3 diffuse2 = lightFactor * shadow * diffuse;
     float3 specular = CalcSpecular(input.WorldPosition, input.WorldNormal, EyePosition, input.UV * TextureTiling);
-    float3 compose = diffuse + specular;
+    float3 compose = diffuse2 + specular;
     return ApplyFog(compose, input.FogDistance);
 }
 

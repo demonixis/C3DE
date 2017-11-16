@@ -24,11 +24,12 @@ namespace C3DE.Demo.Scenes
             Add(cameraGo);
 
             // And a light
-            var lightGo = GameObjectFactory.CreateLight(LightType.Directional, Color.White, 0.1f);
-            lightGo.Transform.LocalRotation = new Vector3(0.5f, 0.5f, 0);
+            var lightGo = GameObjectFactory.CreateLight(LightType.Directional, Color.White, 1f);
+            lightGo.Transform.LocalRotation = new Vector3(1, 0.5f, 0);
             lightGo.AddComponent<DemoBehaviour>();
             lightGo.AddComponent<LightMover>();
             lightGo.AddComponent<LightSwitcher>().LogPositionRotation = true;
+            lightGo.GetComponent<Light>().ShadowGenerator.ShadowStrength = 0.5f;
             Add(lightGo);
 
             // Finally a terrain

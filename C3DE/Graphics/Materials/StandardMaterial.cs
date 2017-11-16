@@ -54,8 +54,6 @@ namespace C3DE.Graphics.Materials
         private EffectParameter m_EPEmissiveColor;
         private EffectParameter m_EPEmissiveIntensity;
 
-        public Texture2D EmissiveTexture { get; set; }
-
         public TextureCube ReflectionTexture { get; set; }
 
         [DataMember]
@@ -88,6 +86,8 @@ namespace C3DE.Graphics.Materials
 
         [DataMember]
         public float EmissiveIntensity { get; set; } = 1.0f;
+
+        public Texture2D EmissiveTexture { get; set; }
 
         public StandardMaterial(Scene scene, string name = "Standard Material")
             : base(scene)

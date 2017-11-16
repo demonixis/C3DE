@@ -118,7 +118,6 @@ namespace C3DE.Demo.Scenes
             material.EmissiveTexture = Application.Content.Load<Texture2D>("Models/Quandtum/textures/Turret-Emission");
             material.EmissiveEnabled = true;
             material.EmissiveIntensity = 1.0f;
-            material.DiffuseColor = Color.Red;
             material.ReflectionTexture = GraphicsHelper.CreateCubeMap(material.MainTexture);
             material.ReflectionIntensity = 0.45f;
             material.Shininess = 250;
