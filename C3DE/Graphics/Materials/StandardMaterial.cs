@@ -60,6 +60,22 @@ namespace C3DE.Graphics.Materials
             Name = name;
         }
 
+        private EffectPass m_PassAmbient;
+        private EffectPass m_PassLight;
+        private EffectPass m_PassEmissive;
+
+        private EffectParameter m_EPView;
+        private EffectParameter m_EPProjection;
+        private EffectParameter m_EPEyePosition;
+        private EffectParameter m_EPAmbientColor;
+        private EffectParameter m_EPWorld;
+        private EffectParameter m_EPTextureTilling;
+        private EffectParameter m_EPDiffuseColor;
+        private EffectParameter m_EPMainTexture;
+        private EffectParameter m_EPReflectionTexture;
+        private EffectParameter m_EPReflectionTextureEnabled;
+        private EffectParameter m_EPReflectionIntensity;
+
         public override void LoadContent(ContentManager content)
         {
             effect = content.Load<Effect>("Shaders/StandardEffect");
