@@ -13,8 +13,8 @@ namespace C3DE.Graphics.Materials
         public TransparentMaterial(Scene scene, string name = "Transparent Material")
             : base(scene)
         {
-            diffuseColor = new Vector3(1.0f, 1.0f, 1.0f);
-            hasAlpha = true;
+            m_DiffuseColor = new Vector3(1.0f, 1.0f, 1.0f);
+            m_hasAlpha = true;
             Name = name;
         }
 
@@ -35,7 +35,7 @@ namespace C3DE.Graphics.Materials
             m_Effect.Parameters["TextureTiling"].SetValue(Tiling);
             m_Effect.Parameters["TextureOffset"].SetValue(Offset);
             m_Effect.Parameters["AmbientColor"].SetValue(scene.RenderSettings.ambientColor);
-            m_Effect.Parameters["DiffuseColor"].SetValue(diffuseColor);
+            m_Effect.Parameters["DiffuseColor"].SetValue(m_DiffuseColor);
             m_Effect.Parameters["MainTexture"].SetValue(MainTexture);
             m_Effect.Parameters["World"].SetValue(renderable.GameObject.Transform.world);
             m_Effect.CurrentTechnique.Passes[0].Apply();

@@ -17,7 +17,7 @@ sampler2D shadowSampler = sampler_state
 
 float CalcShadow(float4 worldPosition)
 {
-	if (!ShadowEnabled)
+	if (ShadowEnabled == false)
 		return 1.0f;
 		
     float4x4 LightViewProj = mul(LightView, LightProjection);

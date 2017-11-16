@@ -24,9 +24,11 @@ namespace C3DE.Demo.Scenes
             Add(cameraGo);
 
             // And a light
-            var lightGo = GameObjectFactory.CreateLight(LightType.Directional, Color.LightSkyBlue, 1.0f);
-            lightGo.Transform.LocalRotation = new Vector3(-1, 1, 0);
+            var lightGo = GameObjectFactory.CreateLight(LightType.Directional, Color.White, 0.1f);
+            lightGo.Transform.LocalRotation = new Vector3(0.5f, 0.5f, 0);
             lightGo.AddComponent<DemoBehaviour>();
+            lightGo.AddComponent<LightMover>();
+            lightGo.AddComponent<LightSwitcher>().LogPositionRotation = true;
             Add(lightGo);
 
             // Finally a terrain
@@ -76,10 +78,10 @@ namespace C3DE.Demo.Scenes
 
             // Don't miss the Skybox ;)
             RenderSettings.Skybox.Generate(Application.GraphicsDevice, Application.Content, DemoGame.BlueSkybox);
-
+            //RenderSettings.AmbientColor = Color.Black;
             // And fog
-            RenderSettings.FogDensity = 0.0085f;
-            RenderSettings.FogMode = FogMode.Exp2;
+            //RenderSettings.FogDensity = 0.0085f;
+            //RenderSettings.FogMode = FogMode.Exp2;
         }
     }
 }

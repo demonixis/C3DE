@@ -99,9 +99,9 @@ namespace C3DE.Components.Rendering
             if (material == null || Material == null)
                 return base.CompareTo(obj);
 
-            if (Material.hasAlpha == material.hasAlpha)
+            if (Material.m_hasAlpha == material.m_hasAlpha)
                 return 0;
-            else if (Material.hasAlpha && !material.hasAlpha)
+            else if (Material.m_hasAlpha && !material.m_hasAlpha)
                 return 1;
             else
                 return -1;

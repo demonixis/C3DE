@@ -34,7 +34,7 @@ namespace C3DE.Graphics.Materials
         public override void Pass(Renderer renderable)
         {
             m_Effect.Parameters["World"].SetValue(renderable.GameObject.Transform.world);
-            m_Effect.Parameters["DiffuseColor"].SetValue(diffuseColor);
+            m_Effect.Parameters["DiffuseColor"].SetValue(m_DiffuseColor);
             m_Effect.CurrentTechnique.Passes[0].Apply();
         }
     }

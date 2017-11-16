@@ -15,6 +15,8 @@ namespace C3DE.Demo.Scripts
         private Rectangle _btn4;
         private Light _light;
 
+        public bool LogPositionRotation { get; set; } = false;
+
         public override void Start()
         {
             SetBoxAlign(false);
@@ -47,6 +49,9 @@ namespace C3DE.Demo.Scripts
 
             if (gui.Button(_btn4, "Spot"))
                 _light.TypeLight = LightType.Spot;
+
+            if (LogPositionRotation)
+                Debug.Log($"p: {transform.Position} r: {transform.Rotation}");
         }
     }
 }

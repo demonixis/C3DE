@@ -13,7 +13,7 @@ namespace C3DE.Graphics.Materials
         public FresnelMaterial(Scene scene, string name = "Fresnel Material")
             : base(scene)
         {
-            diffuseColor = new Vector3(1.0f, 1.0f, 1.0f);
+            m_DiffuseColor = new Vector3(1.0f, 1.0f, 1.0f);
             Name = name;
         }
 

@@ -36,14 +36,14 @@ namespace C3DE.Demo.Scripts
                 translation.Y--;
 
             if (Input.Keys.Pressed(Keys.I))
-                rotation.Y += 0.1f * Time.DeltaTime;
+                rotation.X += 0.01f;
             else if (Input.Keys.Pressed(Keys.K))
-                rotation.Y -= 0.1f * Time.DeltaTime;
+                rotation.X -= 0.01f;
 
             if (Input.Keys.Pressed(Keys.J))
-                rotation.Y += 0.1f * Time.DeltaTime;
+                rotation.Y += 0.01f;
             else if (Input.Keys.Pressed(Keys.L))
-                rotation.Y -= 0.1f * Time.DeltaTime;
+                rotation.Y -= 0.01f;
 
             if (Input.Keys.Pressed(Keys.Add))
                 _light.Range += 0.1f;

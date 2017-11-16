@@ -11,7 +11,6 @@ namespace C3DE.Graphics.Materials
     [DataContract]
     public class StandardMaterial : Material, IMultipassLightingMaterial, IEmissiveMaterial
     {
-        private Vector3 m_DiffuseColor = Vector3.One;
         private Vector3 m_EmissiveColor = Vector3.Zero;
         private Vector3 m_SpecularColor = new Vector3(0.6f, 0.6f, 0.6f);
 

@@ -18,9 +18,9 @@ namespace C3DE.Graphics.Materials
     public abstract class Material : IDisposable
     {
         protected internal Scene scene;
-        protected Vector3 diffuseColor;
+        protected Vector3 m_DiffuseColor;
         protected internal Effect m_Effect;
-        protected internal bool hasAlpha;
+        protected internal bool m_hasAlpha;
 
         [DataMember]
         public string Id { get; private set; }
@@ -36,8 +36,8 @@ namespace C3DE.Graphics.Materials
         [DataMember]
         public Color DiffuseColor
         {
-            get { return new Color(diffuseColor); }
-            set { diffuseColor = value.ToVector3(); }
+            get { return new Color(m_DiffuseColor); }
+            set { m_DiffuseColor = value.ToVector3(); }
         }
 
         public Texture2D MainTexture { get;set; }
@@ -53,13 +53,13 @@ namespace C3DE.Graphics.Materials
 
 		public Material()
 		{
-			diffuseColor = Color.White.ToVector3();
+			m_DiffuseColor = Color.White.ToVector3();
 			Id = "MAT-" + Guid.NewGuid();
 			Name = "Material_" + Id;
 			Tiling = Vector2.One;
 			Offset = Vector2.Zero;
 			ShaderQuality = ShaderQuality.Normal;
-			hasAlpha = false;
+			m_hasAlpha = false;
 
 #if ANDROID || OPENGL || DESKTOP
             ShaderQuality = ShaderQuality.Low;

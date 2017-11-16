@@ -8,40 +8,31 @@ namespace C3DE.Components.Lighting
         Ambient = 0, Directional, Point, Spot
     }
 
-	public enum LightRenderMode
-	{
-		RealTime = 0, Backed
-	}
-
     [DataContract]
     public class Light : Component
     {
         internal protected Matrix viewMatrix;
         internal protected Matrix projectionMatrix;
         internal protected ShadowGenerator shadowGenerator;
-        internal protected Vector3 color;
+        internal protected Vector3 color = Color.White.ToVector3();
 
-        public Matrix View
-        {
-            get { return viewMatrix; }
-        }
+        public Matrix View => viewMatrix;
 
-        public Matrix Projection
-        {
-            get { return projectionMatrix; }
-        }
+        public Matrix Projection => projectionMatrix;
+
+        public Vector3 Direction => Vector3.Normalize(sceneObject.Transform.Position);
 
         [DataMember]
         public bool EnableShadow
         {
-            get { return shadowGenerator.Enabled; }
+            get => shadowGenerator.Enabled;
             set { shadowGenerator.Enabled = value; }
         }
 
         [DataMember]
         public ShadowGenerator ShadowGenerator
         {
-            get { return shadowGenerator; }
+            get => shadowGenerator;
             protected set { shadowGenerator = value; }
         }
 
@@ -51,7 +42,7 @@ namespace C3DE.Components.Lighting
         [DataMember]
         public Color Color
         {
-            get { return new Color(color); }
+            get => new Color(color);
             set { color = value.ToVector3(); }
         }
 
@@ -59,44 +50,35 @@ namespace C3DE.Components.Lighting
         /// The intensity of the light.
         /// </summary>
         [DataMember]
-        public float Intensity { get; set; }
+        public float Intensity { get; set; } = 1.0f;
 
         /// <summary>
         /// The maximum distance of emission.
         /// </summary>
         [DataMember]
-        public float Range { get; set; }
+        public float Range { get; set; } = 25;
 
         [DataMember]
-		public LightRenderMode Backing { get; set; }
-
-        [DataMember]
-        public float FallOf { get; set; }
+        public float FallOf { get; set; } = 5.0f;
 
         /// <summary>
         /// The type of the light.
         /// </summary>
         [DataMember]
-        public LightType TypeLight { get; set; }
+        public LightType TypeLight { get; set; } = LightType.Directional;
 
         /// <summary>
         /// The angle used by the Spot light.
         /// </summary>
         [DataMember]
-        public float Angle { get; set; }
+        public float Angle { get; set; } = MathHelper.PiOver4;
 
         public Light()
             : base()
         {
             viewMatrix = Matrix.Identity;
-            projectionMatrix = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45), 1, 1, 500);
+            projectionMatrix = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45), 1, 1, 1000);
             viewMatrix = Matrix.CreateLookAt(Vector3.Zero, Vector3.Zero, Vector3.Up);
-            color = new Vector3(1.0f, 1.0f, 1.0f);
-            Intensity = 1.0f;
-            TypeLight = LightType.Ambient;
-            Range = 5000.0f;
-            FallOf = 2.0f;
-			Backing = LightRenderMode.RealTime;
             shadowGenerator = new ShadowGenerator(this);
         }
 
@@ -132,8 +114,6 @@ namespace C3DE.Components.Lighting
 
             if (TypeLight == light.TypeLight)
                 return 0;
-            else if (Backing == LightRenderMode.RealTime && light.Backing == LightRenderMode.Backed)
-                return 1;
             else
                 return -1;
         }

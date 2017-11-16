@@ -48,7 +48,7 @@ namespace C3DE.Graphics.Materials
             if (MainTexture != null)
                 m_Effect.Parameters["MainTexture"].SetValue(MainTexture);
 
-            m_Effect.Parameters["ReflectionColor"].SetValue(diffuseColor);
+            m_Effect.Parameters["ReflectionColor"].SetValue(m_DiffuseColor);
             m_Effect.Parameters["ReflectiveTexture"].SetValue(ReflectionMap);
             m_Effect.Parameters["TextureTiling"].SetValue(Tiling);
             m_Effect.Parameters["TextureOffset"].SetValue(Offset);

@@ -70,7 +70,7 @@ namespace C3DE.Graphics.Materials
             _reflectiveMapEnabled = false;
             _totalTime = 0.0f;
             Name = name;
-            hasAlpha = true;
+            m_hasAlpha = true;
         }
 
         public override void LoadContent(ContentManager content)
@@ -132,7 +132,7 @@ namespace C3DE.Graphics.Materials
             m_Effect.Parameters["TextureTiling"].SetValue(Tiling);
             m_Effect.Parameters["TextureOffset"].SetValue(Offset);
             m_Effect.Parameters["Alpha"].SetValue(WaterTransparency);
-            m_Effect.Parameters["DiffuseColor"].SetValue(diffuseColor);
+            m_Effect.Parameters["DiffuseColor"].SetValue(m_DiffuseColor);
             m_Effect.Parameters["SpecularColor"].SetValue(_specularColor);
             m_Effect.Parameters["Shininess"].SetValue(Shininess);
             m_Effect.Parameters["World"].SetValue(renderable.Transform.world);

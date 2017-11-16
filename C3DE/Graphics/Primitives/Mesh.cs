@@ -128,9 +128,6 @@ namespace C3DE.Graphics.Primitives
                 _vertices[index2].Normal += normal;
                 _vertices[index3].Normal += normal;
             }
-
-            for (int i = 0; i < _vertices.Length; i++)
-                _vertices[i].Normal.Normalize();
         }
 
         public void SetVertices(VertexType type, Vector3[] vertices)

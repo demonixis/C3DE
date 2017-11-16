@@ -22,7 +22,7 @@ namespace C3DE.Graphics.Materials
         public ToonMaterial(Scene scene, string name = "Toon Material")
             : base(scene)
         {
-            diffuseColor = new Vector3(1.0f, 1.0f, 1.0f);
+            m_DiffuseColor = new Vector3(1.0f, 1.0f, 1.0f);
             _emissiveColor = new Vector3(0.0f, 0.0f, 0.0f);
             Name = name;
         }
@@ -49,7 +49,7 @@ namespace C3DE.Graphics.Materials
         {
             // Material
             
-            m_Effect.Parameters["DiffuseColor"].SetValue(diffuseColor);
+            m_Effect.Parameters["DiffuseColor"].SetValue(m_DiffuseColor);
             m_Effect.Parameters["EmissiveColor"].SetValue(_emissiveColor);
             m_Effect.Parameters["TextureTiling"].SetValue(Tiling);
             m_Effect.Parameters["TextureOffset"].SetValue(Offset);

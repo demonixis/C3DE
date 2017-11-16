@@ -41,7 +41,7 @@ namespace C3DE.Graphics.Materials
             m_Effect.Parameters["Time"].SetValue(_totalTime);
             m_Effect.Parameters["MainTexture"].SetValue(MainTexture);
             m_Effect.Parameters["TextureTiling"].SetValue(Tiling);
-            m_Effect.Parameters["DiffuseColor"].SetValue(diffuseColor);
+            m_Effect.Parameters["DiffuseColor"].SetValue(m_DiffuseColor);
             m_Effect.Parameters["World"].SetValue(renderable.Transform.world);
             m_Effect.Parameters["EmissiveIntensity"].SetValue(EmissiveIntensity);
             m_Effect.CurrentTechnique.Passes[0].Apply();
