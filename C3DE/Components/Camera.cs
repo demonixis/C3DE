@@ -142,7 +142,7 @@ namespace C3DE.Components
 
         public override void Start()
         {
-            Setup(transform.Position, Vector3.Zero, Vector3.Up);
+            Setup(transform.LocalPosition, Vector3.Zero, Vector3.Up);
             Screen.ScreenSizeChanged += OnScreenChanged;
         }
 
@@ -160,7 +160,7 @@ namespace C3DE.Components
 
         public void Setup(Vector3 position, Vector3 camTarget, Vector3 upVector)
         {
-            transform.Position = position;
+            transform.LocalPosition = position;
             _target = camTarget;
             _upVector = upVector;
 
@@ -196,7 +196,7 @@ namespace C3DE.Components
 
             if (!sceneObject.IsStatic || _needUpdate)
             {
-                view = Matrix.CreateLookAt(transform.Position, _target, _upVector);
+                view = Matrix.CreateLookAt(transform.world.Translation, _target, _upVector);
                 _needUpdate = false;
             }
         }

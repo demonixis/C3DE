@@ -588,14 +588,14 @@ namespace C3DE
 
         public static GameObject Instanciate(GameObject sceneObject)
         {
-            return Instanciate(sceneObject, sceneObject.Transform.Position, sceneObject.Transform.Rotation);
+            return Instanciate(sceneObject, sceneObject.Transform.LocalPosition, sceneObject.Transform.LocalRotation);
         }
 
         public static GameObject Instanciate(GameObject sceneObject, Vector3 position, Vector3 rotation)
         {
             GameObject clone = (GameObject)sceneObject.Clone();
-            clone.Transform.Position = position;
-            clone.Transform.Rotation = rotation;
+            clone.Transform.LocalPosition = position;
+            clone.Transform.LocalRotation = rotation;
 
             Scene.current.Add(clone);
 

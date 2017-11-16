@@ -41,7 +41,7 @@ namespace C3DE.Graphics.Materials
             if (scene.lights.Count > 0)
             {
                 var light0 = scene.Lights[0]; // FIXME
-                effect.Parameters["LightDirection"].SetValue(light0.transform.Rotation);
+                effect.Parameters["LightDirection"].SetValue(light0.transform.LocalRotation);
             }
         }
 

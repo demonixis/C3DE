@@ -108,13 +108,13 @@ namespace C3DE.Components.Lighting
         // Need to be changed quickly !
         public void Update(ref BoundingSphere sphere)
         {
-            Vector3 dir = sphere.Center - sceneObject.Transform.Position;
+            Vector3 dir = sphere.Center - sceneObject.Transform.LocalPosition;
             dir.Normalize();
 
-            viewMatrix = Matrix.CreateLookAt(transform.Position, sphere.Center, Vector3.Up);
+            viewMatrix = Matrix.CreateLookAt(transform.LocalPosition, sphere.Center, Vector3.Up);
             float size = sphere.Radius;
 
-            float dist = Vector3.Distance(transform.Position, sphere.Center);
+            float dist = Vector3.Distance(transform.LocalPosition, sphere.Center);
             projectionMatrix = Matrix.CreateOrthographicOffCenter(-size, size, size, -size, dist - sphere.Radius, dist + sphere.Radius * 2);
         }
 

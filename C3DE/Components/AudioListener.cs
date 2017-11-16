@@ -22,7 +22,7 @@
             base.Update();
 
             m_AudioListener.Forward = transform.Forward;
-            m_AudioListener.Position = transform.Position;
+            m_AudioListener.Position = transform.LocalPosition;
             m_AudioListener.Up = transform.Up;
         }
     }

@@ -34,8 +34,8 @@ namespace C3DE.Demo.Scenes
             var lightGo = GameObjectFactory.CreateLight(LightType.Point, Color.White, 1.0f, 1024);
             lightGo.AddComponent<LightMover>();
             lightGo.AddComponent<DemoBehaviour>();
-            lightGo.Transform.Position = new Vector3(50, 50, 50);
-            lightGo.Transform.Rotation = new Vector3(0.0f, 0.5f, 0);
+            lightGo.Transform.LocalPosition = new Vector3(50, 50, 50);
+            lightGo.Transform.LocalRotation = new Vector3(0.0f, 0.5f, 0);
             Add(lightGo);
 
             var ls = lightGo.AddComponent<LightSwitcher>();
@@ -50,7 +50,7 @@ namespace C3DE.Demo.Scenes
             ligthSphere.Material.MainTexture = GraphicsHelper.CreateTexture(Color.Yellow, 1, 1);
 
             // Terrain
-            var terrainMaterial = new StandardMaterialN(scene);
+            var terrainMaterial = new StandardMaterial(scene);
             terrainMaterial.MainTexture = Application.Content.Load<Texture2D>("Textures/Terrain/Rock");
             terrainMaterial.Shininess = 250;
             terrainMaterial.Tiling = new Vector2(8);
@@ -80,7 +80,7 @@ namespace C3DE.Demo.Scenes
             jackRenderer.ReceiveShadow = true;
             jackRenderer.CastShadow = true;
 
-            var jackMaterial = new StandardMaterialN(this);
+            var jackMaterial = new StandardMaterial(this);
             jackMaterial.DiffuseColor = new Color(0.2f, 0.005f, 0);
             jackMaterial.EmissiveColor = new Color(0.2f, 0.005f, 0);
             jackMaterial.EmissiveEnabled = true;

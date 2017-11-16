@@ -47,7 +47,7 @@ namespace C3DE.Components.Rendering
                 foreach (ModelMesh mesh in model.Meshes)
                     boundingSphere = BoundingSphere.CreateMerged(boundingSphere, mesh.BoundingSphere);
 
-                boundingSphere.Center = sceneObject.Transform.Position;
+                boundingSphere.Center = sceneObject.Transform.LocalPosition;
                 boundingSphere.Transform(sceneObject.Transform.world);
                 boundingSphere.Radius *= Math.Max(Math.Max(transform.LocalScale.X, transform.LocalScale.Y), transform.LocalScale.Z);
 

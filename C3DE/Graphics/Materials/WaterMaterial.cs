@@ -87,7 +87,7 @@ namespace C3DE.Graphics.Materials
 
             if (ShaderQuality == ShaderQuality.Normal)
             {
-                effect.Parameters["EyePosition"].SetValue(camera.Transform.Position);
+                effect.Parameters["EyePosition"].SetValue(camera.Transform.LocalPosition);
 
                 // Fog
                 effect.Parameters["FogColor"].SetValue(scene.RenderSettings.fogColor);
@@ -102,7 +102,7 @@ namespace C3DE.Graphics.Materials
             {
                 var light0 = scene.Lights[0];
                 effect.Parameters["LightColor"].SetValue(light0.color);
-                effect.Parameters["LightDirection"].SetValue(light0.transform.Rotation);
+                effect.Parameters["LightDirection"].SetValue(light0.transform.LocalRotation);
                 effect.Parameters["LightIntensity"].SetValue(light0.Intensity);
             }
 

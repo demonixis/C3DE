@@ -47,15 +47,33 @@ namespace C3DE.Components
             protected set { _transforms = value; }
         }
 
-        [DataMember]
         public Vector3 Position
+        {
+            get => world.Translation;
+            set { world.Translation = value; }
+        }
+
+        [DataMember]
+        public Vector3 LocalPosition
         {
             get { return _localPosition; }
             set { _localPosition = value; }
         }
 
-        [DataMember]
         public Vector3 Rotation
+        {
+            get
+            {
+                var p = Vector3.Zero;
+                var r = Quaternion.Identity;
+                var s = Vector3.Zero;
+                world.Decompose(out s, out r, out p);
+                return r.ToEuler();
+            }
+        }
+
+        [DataMember]
+        public Vector3 LocalRotation
         {
             get { return _localRotation; }
             set { _localRotation = value; }
@@ -173,20 +191,20 @@ namespace C3DE.Components
 
         public override void Update()
         {
-            if (!sceneObject.IsStatic || _dirty)
-            {
-                lastPosition = Position;
+            if (sceneObject.IsStatic && !_dirty)
+                return;
 
-                world = Matrix.Identity;
-                world *= Matrix.CreateScale(_localScale);
-                world *= Matrix.CreateFromYawPitchRoll(_localRotation.Y, _localRotation.X, _localRotation.Z);
-                world *= Matrix.CreateTranslation(_localPosition);
+            lastPosition = LocalPosition;
 
-                if (_parent != null)
-                    world *= _parent.world;
+            world = Matrix.Identity;
+            world *= Matrix.CreateScale(_localScale);
+            world *= Matrix.CreateFromYawPitchRoll(_localRotation.Y, _localRotation.X, _localRotation.Z);
+            world *= Matrix.CreateTranslation(_localPosition);
 
-                _dirty = false;
-            }
+            if (_parent != null)
+                world *= _parent.world;
+
+            _dirty = false;
         }
 
         private Vector3 GetTransformedVector(Vector3 direction)

@@ -27,13 +27,14 @@ namespace C3DE.Demo.Scenes
             cameraGo.Transform.Parent = trackingSpace.Transform;
 
             var head = new GameObject();
-            head.Transform.Position = new Vector3(0, 1.8f, 0);
             Add(head);
+            head.Transform.LocalPosition = new Vector3(0, 1.8f, 0);
             trackingSpace.Transform.Parent = head.Transform;
 
             var player = new GameObject();
             Add(player);
             head.Transform.Parent = player.Transform;
+            player.AddComponent<VRSwitcher>();
 
             var handMaterial = new StandardMaterial(scene);
             handMaterial.DiffuseColor = Color.DarkBlue;
@@ -55,21 +56,14 @@ namespace C3DE.Demo.Scenes
                 mc.LeftHand = i == 0;
             }
 
-            Application.Engine.Renderer.SetVREnabled(true);
-
             BuildScene();
-        }
-
-        public override void Unload()
-        {
-            Application.Engine.Renderer.SetVREnabled(false);
         }
 
         private void BuildScene()
         {
             var lightGo = GameObjectFactory.CreateLight(LightType.Point, Color.LightSteelBlue, 1.5f);
-            lightGo.Transform.Position = new Vector3(-20, 20, 0);
-            lightGo.Transform.Rotation = new Vector3(1, -1, 0);
+            lightGo.Transform.LocalPosition = new Vector3(-20, 20, 0);
+            lightGo.Transform.LocalRotation = new Vector3(1, -1, 0);
             lightGo.AddComponent<DemoBehaviour>();
             Add(lightGo);
 
@@ -99,7 +93,7 @@ namespace C3DE.Demo.Scenes
             for (var i = 0; i < 10; i++)
             {
                 var go = new GameObject("Cube " + i);
-                go.Transform.Position = RandomHelper.GetVector3(-20, 1, -20, 20, 1, 20);
+                go.Transform.LocalPosition = RandomHelper.GetVector3(-20, 1, -20, 20, 1, 20);
                 Add(go);
                 var renderer = go.AddComponent<MeshRenderer>();
                 renderer.Geometry = new CubeMesh();

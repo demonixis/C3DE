@@ -141,7 +141,7 @@ namespace C3DE
 
             var head = new GameObject();
             head.Transform.Parent = player.Transform;
-            head.Transform.Position = new Vector3(0, 1.8f, 0);
+            head.Transform.LocalPosition = new Vector3(0, 1.8f, 0);
             scene.Add(head);
 
             var trackingSpace = new GameObject();

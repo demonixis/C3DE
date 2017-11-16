@@ -93,13 +93,13 @@ namespace C3DE
             _currentRasterizerState = device.RasterizerState;
             device.RasterizerState = _skyboxRasterizerState;
 
-            _world = _scaleMatrix * Matrix.CreateTranslation(camera.Transform.Position);
+            _world = _scaleMatrix * Matrix.CreateTranslation(camera.Transform.LocalPosition);
 
             SkyboxEffect.Parameters["World"].SetValue(_world);
             SkyboxEffect.Parameters["View"].SetValue(camera.view);
             SkyboxEffect.Parameters["Projection"].SetValue(camera.projection);
             SkyboxEffect.Parameters["SkyboxTexture"].SetValue(_texture);
-            SkyboxEffect.Parameters["CameraPosition"].SetValue(camera.Transform.Position);
+            SkyboxEffect.Parameters["CameraPosition"].SetValue(camera.Transform.LocalPosition);
             SkyboxEffect.CurrentTechnique.Passes[0].Apply();
 
             device.SetVertexBuffer(_geometry.VertexBuffer);

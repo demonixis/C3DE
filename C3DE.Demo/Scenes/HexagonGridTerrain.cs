@@ -21,7 +21,7 @@ namespace C3DE.Demo.Scenes
 
             // Light
             var lightGo = GameObjectFactory.CreateLight(LightType.Directional);
-            lightGo.Transform.Rotation = new Vector3(-1, 1, 0);
+            lightGo.Transform.LocalRotation = new Vector3(-1, 1, 0);
             Add(lightGo);
 
             var grid = new GameObject("HexaGrid");

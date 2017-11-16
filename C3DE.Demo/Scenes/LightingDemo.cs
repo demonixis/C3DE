@@ -57,8 +57,8 @@ namespace C3DE.Demo.Scenes
             for (var i = 0; i < 8; i++)
             {
                 var lightGo = GameObjectFactory.CreateLight(LightType.Point, colors[i], 0.5f, 1024);
-                lightGo.Transform.Rotation = new Vector3(0.0f, 0.5f, 0);
-                lightGo.Transform.Position = pos[i];
+                lightGo.Transform.LocalRotation = new Vector3(0.0f, 0.5f, 0);
+                lightGo.Transform.LocalPosition = pos[i];
                 Add(lightGo);
                 
                 var light = lightGo.GetComponent<Light>();
@@ -72,7 +72,7 @@ namespace C3DE.Demo.Scenes
                 ligthSphere.CastShadow = true;
                 ligthSphere.ReceiveShadow = false;
 
-                var sphereMaterial = new StandardMaterialN(scene);
+                var sphereMaterial = new StandardMaterial(scene);
                 sphereMaterial.DiffuseColor = colors[i];
                 sphereMaterial.EmissiveIntensity = 1;
                 sphereMaterial.EmissiveColor = colors[i];
@@ -84,7 +84,7 @@ namespace C3DE.Demo.Scenes
             }
             
             // Terrain
-            var terrainMaterial = new StandardMaterialN(scene);
+            var terrainMaterial = new StandardMaterial(scene);
             terrainMaterial.MainTexture = GraphicsHelper.CreateBorderTexture(Color.Blue, Color.Black, 128, 128, 2);
             terrainMaterial.EmissiveTexture = terrainMaterial.MainTexture;
             terrainMaterial.EmissiveEnabled = true;

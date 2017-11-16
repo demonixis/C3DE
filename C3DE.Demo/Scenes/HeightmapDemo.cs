@@ -25,7 +25,7 @@ namespace C3DE.Demo.Scenes
 
             // And a light
             var lightGo = GameObjectFactory.CreateLight(LightType.Directional, Color.LightSkyBlue, 1.0f);
-            lightGo.Transform.Rotation = new Vector3(-1, 1, 0);
+            lightGo.Transform.LocalRotation = new Vector3(-1, 1, 0);
             lightGo.AddComponent<DemoBehaviour>();
             Add(lightGo);
 
@@ -65,7 +65,7 @@ namespace C3DE.Demo.Scenes
                 content.Load<Texture2D>("Textures/Flares/flare2"),
                 content.Load<Texture2D>("Textures/Flares/flare3")
             };
-            var direction = lightGo.Transform.Rotation;
+            var direction = lightGo.Transform.LocalRotation;
             direction.Normalize();
 
             var sunflares = cameraGo.AddComponent<LensFlare>();

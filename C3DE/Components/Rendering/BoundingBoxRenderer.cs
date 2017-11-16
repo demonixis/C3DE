@@ -81,7 +81,7 @@ namespace C3DE.Components.Rendering
                 _vertices[i].Color = LineColor;
             }
 
-            _effect.World = Matrix.CreateFromYawPitchRoll(transform.Rotation.Y, transform.Rotation.X, transform.Rotation.Z) * Matrix.CreateTranslation(transform.Position);
+            _effect.World = Matrix.CreateFromYawPitchRoll(transform.LocalRotation.Y, transform.LocalRotation.X, transform.LocalRotation.Z) * Matrix.CreateTranslation(transform.LocalPosition);
             _effect.View = Camera.Main.view;
             _effect.Projection = Camera.Main.projection;
             _effect.CurrentTechnique.Passes[0].Apply();

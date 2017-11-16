@@ -19,8 +19,9 @@ namespace C3DE.Demo.Scripts
             {
                 var color = RandomHelper.GetColor();
                 var lightGo = GameObjectFactory.CreateLight(LightType.Point, color, 0.5f, 1024);
-                lightGo.Transform.Rotation = new Vector3(0.0f, 0.5f, 0);
-                lightGo.Transform.Position = transform.Position;
+                lightGo.Transform.LocalRotation = new Vector3(0.0f, 0.5f, 0);
+                lightGo.Transform.LocalPosition = transform.LocalPosition;
+                Scene.current.Add(lightGo);
 
                 var light = lightGo.GetComponent<Light>();
                 light.Range = 10;
@@ -38,7 +39,7 @@ namespace C3DE.Demo.Scripts
 
                 ligthSphere.AddComponent<LightMover>();
 
-                Debug.Log(transform.Position);
+                Debug.Log(transform.LocalPosition);
             }
         }
     }

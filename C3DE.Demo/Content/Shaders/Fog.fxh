@@ -2,8 +2,8 @@
 const float E = 2.71828;
 
 // Fog [0] => Mode [1] => Density [2] => Start [3] => End
-float4 FogData = float4(0, 0.01, 0.0, 100.0);
-float4 FogColor = float4(1, 1, 1, 1.0);
+float4 FogData;
+float3 FogColor;
 
 float CalcFogFactor(float camDistance)
 {
@@ -28,13 +28,13 @@ float CalcFogFactor(float camDistance)
 	return fogCoeff;
 }
 
-float4 ApplyFog(float4 finalCompose, float fogDistance)
+float4 ApplyFog(float3 pixelColor, float fogDistance)
 {
 	if (FogData.x > 0)
 	{
 		float fog = CalcFogFactor(fogDistance);
-		return (fog * finalCompose + (1.0 - fog)) * FogColor;
+		return float4((fog * pixelColor + (1.0 - fog)) * FogColor, 1.0);
 	}
 
-	return finalCompose;
+    return float4(pixelColor, 1.0);
 }

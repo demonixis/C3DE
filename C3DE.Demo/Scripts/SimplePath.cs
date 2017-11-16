@@ -66,7 +66,7 @@ public class SimplePath : Behaviour
     public void AddPath(Vector3 path, Transform transform)
     {
         if (_beginStarted)
-            _paths.Add(transform.Position + path);
+            _paths.Add(transform.LocalPosition + path);
     }
 
     public void End()
@@ -86,20 +86,20 @@ public class SimplePath : Behaviour
 
     private bool MoveToPoint(float elapsedTime, Vector3 target)
     {
-        if (transform.Position == target)
+        if (transform.LocalPosition == target)
             return true;
 
-        Vector3 direction = Vector3.Normalize(target - transform.Position);
-        transform.Position += direction * MoveSpeed * elapsedTime;
+        Vector3 direction = Vector3.Normalize(target - transform.LocalPosition);
+        transform.LocalPosition += direction * MoveSpeed * elapsedTime;
 
         //Vector3 lookDirection = target - transform.Position;
 
 //        if (updateRotation)
   //          transform.Rotation = Quaternion.Slerp(transform.Rotation, Quaternion.LookRotation(lookDirection), rotationSpeed * Time.DeltaTime);
 
-        if (Math.Abs(Vector3.Dot(direction, Vector3.Normalize(target - transform.Position)) + 1) < 0.1f)
-            transform.Position = target;
+        if (Math.Abs(Vector3.Dot(direction, Vector3.Normalize(target - transform.LocalPosition)) + 1) < 0.1f)
+            transform.LocalPosition = target;
 
-        return transform.Position == target;
+        return transform.LocalPosition == target;
     }
 }

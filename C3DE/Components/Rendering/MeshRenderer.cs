@@ -66,7 +66,7 @@ namespace C3DE.Components.Rendering
             var dz = max.Z - min.Z;
 
             boundingSphere.Radius = (float)Math.Max(Math.Max(dx, dy), dz) / 2.0f;
-            boundingSphere.Center = transform.Position;
+            boundingSphere.Center = transform.LocalPosition;
 
             UpdateColliders();
         }

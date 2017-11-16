@@ -110,7 +110,7 @@ namespace C3DE.Components.Rendering
 
         public void ApplyCollision(Transform tr)
         {
-            var y = (GetTerrainHeight(tr.Position.X, 0, tr.Position.Z) + 2 * m_Geometry.Size.Y - tr.Position.Y) * 0.2f;
+            var y = (GetTerrainHeight(tr.LocalPosition.X, 0, tr.LocalPosition.Z) + 2 * m_Geometry.Size.Y - tr.LocalPosition.Y) * 0.2f;
             tr.Translate(0.0f, y, 0.0f);
         }
 
@@ -128,9 +128,9 @@ namespace C3DE.Components.Rendering
         public virtual float GetTerrainHeight(float x, float y, float z)
         {
             // Terrain space.
-            x -= transform.Position.X;
-            y -= transform.Position.Y;
-            z -= transform.Position.Z;
+            x -= transform.LocalPosition.X;
+            y -= transform.LocalPosition.Y;
+            z -= transform.LocalPosition.Z;
 
             float terrainHeigth = 0.0f;
 

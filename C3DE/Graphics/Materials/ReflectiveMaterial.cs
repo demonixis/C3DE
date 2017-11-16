@@ -38,7 +38,7 @@ namespace C3DE.Graphics.Materials
             effect.Parameters["Projection"].SetValue(camera.projection);
 
             // Material
-            effect.Parameters["EyePosition"].SetValue(camera.GameObject.Transform.Position);
+            effect.Parameters["EyePosition"].SetValue(camera.GameObject.Transform.LocalPosition);
         }
 
         public override void Pass(Renderer renderable)

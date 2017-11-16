@@ -101,7 +101,7 @@ namespace C3DE.Components.Controllers
             _position *= _distance;
             _position += _camera.Target;
 
-            transform.Position = _position;
+            transform.LocalPosition = _position;
             _camera.Target = _target;
 
             angleVelocity *= AngularVelocity;
@@ -111,7 +111,7 @@ namespace C3DE.Components.Controllers
 
         public void LookAt(Transform transform)
         {
-            _target = transform.Position;
+            _target = transform.LocalPosition;
         }
 
         protected override void UpdateInputs()

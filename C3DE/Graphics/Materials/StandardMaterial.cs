@@ -32,6 +32,9 @@ namespace C3DE.Graphics.Materials
         }
 
         [DataMember]
+        public float SpecularIntensity { get; set; } = 1.0f;
+
+        [DataMember]
         public float Shininess { get; set; }
 
         [DataMember]
@@ -59,10 +62,7 @@ namespace C3DE.Graphics.Materials
 
         public override void LoadContent(ContentManager content)
         {
-            if (ShaderQuality == ShaderQuality.Low)
-                effect = content.Load<Effect>("Shaders/StandardEffect.Low");
-            else
-                effect = content.Load<Effect>("Shaders/StandardEffect");
+            effect = content.Load<Effect>("Shaders/StandardEffect");
         }
 
         public override void PrePass(Camera camera)
@@ -70,7 +70,7 @@ namespace C3DE.Graphics.Materials
             // Matrix and camera.
             effect.Parameters["View"].SetValue(camera.view);
             effect.Parameters["Projection"].SetValue(camera.projection);
-            effect.Parameters["EyePosition"].SetValue(camera.Transform.Position);
+            effect.Parameters["EyePosition"].SetValue(camera.Transform.LocalPosition);
             effect.Parameters["AmbientColor"].SetValue(scene.RenderSettings.ambientColor);
         }
 
@@ -84,7 +84,7 @@ namespace C3DE.Graphics.Materials
             if (ShaderQuality == ShaderQuality.Normal)
             {
                 effect.Parameters["ReflectionTexture"].SetValue(ReflectionTexture);
-                effect.Parameters["ReflectionEnabled"].SetValue(ReflectionTexture != null ? 1 : 0);
+                effect.Parameters["ReflectionTextureEnabled"].SetValue(ReflectionTexture != null);
                 effect.Parameters["ReflectionIntensity"].SetValue(ReflectionIntensity);
             }
 
@@ -93,26 +93,29 @@ namespace C3DE.Graphics.Materials
 
         public void LightPass(Renderer renderer, Light light)
         {
-            effect.Parameters["SpecularColor"].SetValue(_specularColor);
-            effect.Parameters["Shininess"].SetValue(Shininess);
+            effect.Parameters["SpecularLightColor"].SetValue(_specularColor);
+            effect.Parameters["SpecularPower"].SetValue(Shininess);
+            effect.Parameters["SpecularIntensity"].SetValue(1.0f);
             effect.Parameters["LightColor"].SetValue(light.color);
-            effect.Parameters["LightDirection"].SetValue(light.transform.Rotation);
-            effect.Parameters["LightPosition"].SetValue(light.transform.Position);
+            effect.Parameters["LightDirection"].SetValue(light.transform.LocalRotation);
+            effect.Parameters["LightPosition"].SetValue(light.transform.LocalPosition);
+            effect.Parameters["LightSpotAngle"].SetValue(light.Angle);
             effect.Parameters["LightIntensity"].SetValue(light.Intensity);
             effect.Parameters["LightRange"].SetValue(light.Range);
-            effect.Parameters["LightFallOff"].SetValue((int)light.FallOf);
+            effect.Parameters["LightFallOff"].SetValue(light.FallOf);
             effect.Parameters["LightType"].SetValue((int)light.TypeLight);
 
             if (ShaderQuality == ShaderQuality.Normal)
             {
-                effect.Parameters["ShadowData"].SetValue(light.shadowGenerator.shadowData);
+                effect.Parameters["ShadowStrength"].SetValue(light.shadowGenerator.ShadowStrength);
+                effect.Parameters["ShadowBias"].SetValue(light.shadowGenerator.ShadowBias);
                 effect.Parameters["ShadowMap"].SetValue(light.shadowGenerator.ShadowMap);
-                effect.Parameters["RecieveShadow"].SetValue(light.ShadowGenerator.Enabled);
+                effect.Parameters["ShadowEnabled"].SetValue(renderer.ReceiveShadow);
                 effect.Parameters["FogColor"].SetValue(scene.RenderSettings.fogColor);
                 effect.Parameters["FogData"].SetValue(scene.RenderSettings.fogData);
                 effect.Parameters["LightView"].SetValue(light.viewMatrix);
                 effect.Parameters["LightProjection"].SetValue(light.projectionMatrix);
-                effect.Parameters["SpecularTextureEnabled"].SetValue(SpecularTexture != null ? 1 : 0);
+                effect.Parameters["SpecularTextureEnabled"].SetValue(SpecularTexture != null);
                 effect.Parameters["SpecularTexture"].SetValue(SpecularTexture);
             }
 
@@ -121,7 +124,7 @@ namespace C3DE.Graphics.Materials
 
         public bool EmissivePass(Renderer renderer)
         {
-            effect.Parameters["EmissiveTextureEnabled"].SetValue(EmissiveTexture != null ? 1 : 0);
+            effect.Parameters["EmissiveTextureEnabled"].SetValue(EmissiveTexture != null);
             effect.Parameters["EmissiveTexture"].SetValue(EmissiveTexture);
             effect.Parameters["EmissiveColor"].SetValue(_emissiveColor);
             effect.Parameters["EmissiveIntensity"].SetValue(EmissiveIntensity);

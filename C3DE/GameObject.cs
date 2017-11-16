@@ -204,7 +204,7 @@ namespace C3DE
                     else
                         throw new Exception("You need to attach first the main scene object to scene.");
                 }
-
+                // TODO: Rework this part
                 // Remove its parent's transform
                 if (sceneObject.Transform.Parent != null)
                     sceneObject.Transform.Parent.Transforms.Remove(sceneObject.Transform);
@@ -254,8 +254,8 @@ namespace C3DE
             {
                 // The constructor hasn't be called
                 InternalConstructor(Name);
-                transform.Position = serializedTransform.Position;
-                transform.Rotation = serializedTransform.Rotation;
+                transform.LocalPosition = serializedTransform.LocalPosition;
+                transform.LocalRotation = serializedTransform.LocalRotation;
                 transform.LocalScale = serializedTransform.LocalScale;
             }
             else

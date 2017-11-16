@@ -35,7 +35,7 @@ namespace C3DE.Graphics.Materials
         {
             effect.Parameters["View"].SetValue(camera.view);
             effect.Parameters["Projection"].SetValue(camera.projection);
-            effect.Parameters["EyePosition"].SetValue(camera.Transform.Position);
+            effect.Parameters["EyePosition"].SetValue(camera.Transform.LocalPosition);
 
             if (scene.lights.Count > 0)
             {
@@ -43,7 +43,7 @@ namespace C3DE.Graphics.Materials
 
                 // Light
                 effect.Parameters["LightColor"].SetValue(light0.color);
-                effect.Parameters["LightDirection"].SetValue(light0.transform.Rotation);
+                effect.Parameters["LightDirection"].SetValue(light0.transform.LocalRotation);
                 effect.Parameters["LightIntensity"].SetValue(light0.Intensity);
 
                 // Update shadow data.

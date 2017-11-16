@@ -99,7 +99,7 @@ namespace C3DE
         /// </summary>
         public RenderSettings()
         {
-            ambientColor = new Vector3(0.05f, 0.05f, 0.05f);
+            ambientColor = new Vector3(0.1f, 0.1f, 0.1f);
             fogData = Vector4.Zero;
             FogEnabled = false;
             FogMode = FogMode.None;

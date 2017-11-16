@@ -25,7 +25,7 @@ namespace C3DE.Demo.Scenes
 
             // A light is required to illuminate objects.
             var lightGo = GameObjectFactory.CreateLight(LightType.Directional);
-            lightGo.Transform.Rotation = new Vector3(-1, 1, 0);
+            lightGo.Transform.LocalRotation = new Vector3(-1, 1, 0);
             Add(lightGo);
 
             // Finally a terrain
@@ -57,7 +57,7 @@ namespace C3DE.Demo.Scenes
                 content.Load<Texture2D>("Textures/Flares/flare2"),
                 content.Load<Texture2D>("Textures/Flares/flare3")
             };
-            var direction = lightGo.Transform.Rotation;
+            var direction = lightGo.Transform.LocalRotation;
             direction.Normalize();
 
             var sunflares = cameraGo.AddComponent<LensFlare>();

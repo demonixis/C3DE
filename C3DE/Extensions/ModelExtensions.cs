@@ -14,14 +14,16 @@ namespace C3DE.Extensions
             model.CopyAbsoluteBoneTransformsTo(boneTransforms);
 
             var gameObject = new GameObject("Model");
+            scene.Add(gameObject);
 
             foreach (ModelMesh mesh in model.Meshes)
             {
                 var meshPartIndex = 0;
 
                 var parent = new GameObject(mesh.Name);
+                scene.Add(parent);
                 parent.Transform.Parent = gameObject.Transform;
-                
+
                 var matrix = boneTransforms[mesh.ParentBone.Index];
                 Vector3 position;
                 Quaternion rotation;
@@ -29,14 +31,13 @@ namespace C3DE.Extensions
 
                 matrix.Decompose(out scale, out rotation, out position);
 
-                parent.Transform.Position = position;
-                parent.Transform.Rotation = rotation.ToEuler();
+                parent.Transform.LocalPosition = position;
+                parent.Transform.LocalRotation = rotation.ToEuler();
                 parent.Transform.LocalScale = scale;
 
                 foreach (var part in mesh.MeshParts)
                 {
                     var effect = (BasicEffect)part.Effect;
-                    Debug.Log($"Texture for mesh {mesh.Name} for part {meshPartIndex}: {effect.Texture?.Name}");
                     var material = new StandardMaterial(scene);
                     material.MainTexture = effect.Texture;
                     material.DiffuseColor = new Color(effect.DiffuseColor.X, effect.DiffuseColor.Y, effect.DiffuseColor.Z);
@@ -45,6 +46,7 @@ namespace C3DE.Extensions
                     material.EmissiveColor = new Color(effect.EmissiveColor.X, effect.EmissiveColor.Y, effect.EmissiveColor.Z);
 
                     var child = new GameObject($"{mesh.Name}_{meshPartIndex}");
+                    scene.Add(child);
                     var renderer = child.AddComponent<MeshRenderer>();
                     renderer.material = material;
                     renderer.CastShadow = true;

@@ -26,7 +26,7 @@ namespace C3DE.Graphics.Materials
         {
             effect.Parameters["View"].SetValue(camera.view);
             effect.Parameters["Projection"].SetValue(camera.projection);
-            effect.Parameters["EyePosition"].SetValue(camera.Transform.Position);
+            effect.Parameters["EyePosition"].SetValue(camera.Transform.LocalPosition);
         }
 
         public override void Pass(Renderer renderable)

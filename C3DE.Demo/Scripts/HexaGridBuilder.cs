@@ -32,8 +32,8 @@ namespace C3DE.Demo.Scripts
             var go = GameObjectFactory.CreateXNAModel(Application.Content, "Models/hexagone");
             _gridPrefab = go.GetComponent<ModelRenderer>();
             _gridPrefab.Transform.LocalScale = new Vector3(TileScale, 0.5f * TileScale, TileScale);
-            _gridPrefab.Transform.Rotation = new Vector3(0, MathHelper.Pi / 6, 0);
-            _gridPrefab.Material = new SimpleMaterial(sceneObject.Scene);
+            _gridPrefab.Transform.LocalRotation = new Vector3(0, MathHelper.Pi / 6, 0);
+            _gridPrefab.Material = new StandardMaterial(sceneObject.Scene);
             _gridPrefab.Material.MainTexture = Application.Content.Load<Texture2D>("Models/hexagone_basic");
             _gridPrefab.Enabled = false;
             sceneObject.Scene.Add(go);
@@ -91,7 +91,7 @@ namespace C3DE.Demo.Scripts
                     rand = RandomHelper.Range(0, 10);
 
                     cache = Scene.Instanciate(_gridPrefab.GameObject);
-                    cache.Transform.Position = GetWorldCoordinate(x, z);
+                    cache.Transform.LocalPosition = GetWorldCoordinate(x, z);
                     cache.Transform.Parent = transform;
 
                     mRenderer = cache.GetComponent<ModelRenderer>();

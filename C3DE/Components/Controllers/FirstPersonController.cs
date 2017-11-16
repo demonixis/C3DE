@@ -107,27 +107,27 @@ namespace C3DE.Components.Controllers
             UpdateInputs();
 
             // Limits on X axis
-            if (transform.Rotation.X <= -MathHelper.PiOver2)
+            if (transform.LocalRotation.X <= -MathHelper.PiOver2)
             {
                 transform.SetRotation(-MathHelper.PiOver2 + 0.001f, null, null);
                 rotation = Vector3.Zero;
             }
-            else if (transform.Rotation.X >= MathHelper.PiOver2)
+            else if (transform.LocalRotation.X >= MathHelper.PiOver2)
             {
                 transform.SetRotation(MathHelper.PiOver2 - 0.001f, null, null);
                 rotation = Vector3.Zero;
             }
 
-            _rotationMatrix = Matrix.CreateFromYawPitchRoll(transform.Rotation.Y, transform.Rotation.X, 0.0f);
+            _rotationMatrix = Matrix.CreateFromYawPitchRoll(transform.LocalRotation.Y, transform.LocalRotation.X, 0.0f);
 
-            _transformedReference = Vector3.Transform(translation, !Fly ? Matrix.CreateRotationY(transform.Rotation.Y) : _rotationMatrix);
+            _transformedReference = Vector3.Transform(translation, !Fly ? Matrix.CreateRotationY(transform.LocalRotation.Y) : _rotationMatrix);
 
             // Translate and rotate
             transform.Translate(ref _transformedReference);
             transform.Rotate(ref rotation);
 
             // Update target
-            _camera.Target = transform.Position + Vector3.Transform(Vector3.Forward, _rotationMatrix);
+            _camera.Target = transform.LocalPosition + Vector3.Transform(Vector3.Forward, _rotationMatrix);
 
             translation *= Velocity;
             rotation *= AngularVelocity;

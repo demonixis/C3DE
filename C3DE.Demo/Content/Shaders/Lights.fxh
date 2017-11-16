@@ -30,7 +30,7 @@ float3 CalcDirectionalLightColor(float4 worldPosition, float3 worldNormal)
 {
 	float3 directionToLight = normalize(LightPosition - worldPosition.xyz);
 	float diffuseIntensity = saturate(dot(directionToLight, worldNormal.xyz));
-    return diffuseIntensity * LightColor;
+    return diffuseIntensity * LightColor * LightIntensity;
 }
 
 float3 CalcPointLightColor(float4 worldPosition, float3 worldNormal)
@@ -39,7 +39,7 @@ float3 CalcPointLightColor(float4 worldPosition, float3 worldNormal)
     float diffuseIntensity = saturate(dot(directionToLight, worldNormal.xyz));
     float d = distance(LightPosition, worldPosition.xyz);
     float attenuation = 1.0 - pow(clamp(d / LightRange, 0.0, 1.0), LightFallOff);
-    return diffuseIntensity * attenuation * LightColor;
+    return diffuseIntensity * attenuation * LightColor * LightIntensity;
 }
 
 float3 CalcSpotLightColor(float4 worldPosition, float3 worldNormal)

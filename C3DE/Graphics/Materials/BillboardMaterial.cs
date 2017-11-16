@@ -21,7 +21,7 @@ namespace C3DE.Graphics.Materials
 
         public override void Pass(Renderer renderable)
         {
-            var world = Matrix.CreateConstrainedBillboard(renderable.transform.Position, Camera.Main.transform.Position, Vector3.Up, Camera.Main.transform.Forward, renderable.transform.Forward);
+            var world = Matrix.CreateConstrainedBillboard(renderable.transform.LocalPosition, Camera.Main.transform.LocalPosition, Vector3.Up, Camera.Main.transform.Forward, renderable.transform.Forward);
             effect.Parameters["World"].SetValue(world);
             effect.Parameters["MainTexture"].SetValue(MainTexture);
             effect.Parameters["TextureTiling"].SetValue(Tiling);
