@@ -44,11 +44,6 @@ namespace C3DE.Graphics.Materials
         protected EffectParameter m_EPSpecularTextureEnabled;
         protected EffectParameter m_EPSpecularTexture;
 
-        public TextureCube ReflectionTexture { get; set; }
-
-        [DataMember]
-        public float ReflectionIntensity { get; set; } = 0.35f;
-
         public Texture2D SpecularTexture { get; set; }
 
         [DataMember]

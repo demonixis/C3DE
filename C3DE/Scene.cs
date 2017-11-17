@@ -690,6 +690,23 @@ namespace C3DE
             return sceneObjects.ToArray();
         }
 
+        public static T FindObjectOfType<T>() where T : Component
+        {
+            var scripts = new List<T>();
+
+            if (current != null)
+            {
+                foreach (GameObject so in current.sceneObjects)
+                {
+                    var components = so.GetComponents<T>();
+                    if (components.Length > 0)
+                        return components[0];
+                }
+            }
+
+            return default(T);
+        }
+
         public static T[] FindObjectsOfType<T>() where T : Component
         {
             var scripts = new List<T>();

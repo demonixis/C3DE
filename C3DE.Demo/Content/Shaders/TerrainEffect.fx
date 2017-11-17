@@ -100,7 +100,7 @@ VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
     output.UV = input.UV;
     output.WorldNormal = mul(input.Normal, World);
     output.WorldPosition = worldPosition;
-    output.FogDistance = distance(worldPosition, EyePosition);
+    output.FogDistance = distance(worldPosition.xyz, EyePosition);
 
     return output;
 }
@@ -128,7 +128,6 @@ float4 PixelShaderAmbient(VertexShaderOutput input) : COLOR0
 float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 {
     float3 diffuse = CalcDiffuseColor(input);
-
     float3 lightFactor = CalcLightFactor(input.WorldPosition, input.WorldNormal);
     float shadow = CalcShadow(input.WorldPosition);
     float3 diffuse2 = lightFactor * shadow * diffuse;

@@ -8,23 +8,23 @@ float4x4 View;
 float4x4 Projection;
 
 // Material
-float3 AmbientColor = float3(1.0, 1.0, 1.0);
-float3 DiffuseColor = float3(1.0, 1.0, 1.0);
+float3 AmbientColor;
+float3 DiffuseColor;
 
 bool ReflectionTextureEnabled = false;
-float3 ReflectionColor = float3(1.0, 1.0, 1.0);
+float3 ReflectionColor;
 
 // Misc
-float2 TextureTiling = float2(1, 1);
-bool NormalMapEnabled = false;
-float3 EyePosition = float3(0, 0, 1);
-float TotalTime = 0.0;
-float Alpha = 0.3;
+float2 TextureTiling;
+bool NormalTextureEnabled = false;
+float3 EyePosition;
+float TotalTime;
+float Alpha;
 
-texture WaterTexture;
+texture MainTexture;
 sampler2D WaterMapSampler = sampler_state
 {
-    Texture = <WaterTexture>;
+    Texture = <MainTexture>;
     MinFilter = Linear;
     MagFilter = Linear;
     MipFilter = Linear;
@@ -43,10 +43,10 @@ sampler2D NormalMapSampler = sampler_state
     AddressV = Wrap;
 };
 
-texture ReflectiveTexture;
+texture ReflectionTexture;
 samplerCUBE reflectiveSampler = sampler_state
 {
-    Texture = <ReflectiveTexture>;
+    Texture = <ReflectionTexture>;
     MinFilter = Linear;
     MagFilter = Linear;
     MipFilter = Linear;
@@ -124,15 +124,14 @@ float3 CalcDiffuseColor(VertexShaderOutput input)
 
 float4 PixelShaderAmbient(VertexShaderOutput input) : COLOR0
 {
-    return float4(CalcDiffuseColor(input), 1.0);
+    return float4(AmbientColor * CalcDiffuseColor(input), 1);
 }
 
 float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 {
-    float3 diffuse = CalcDiffuseColor(input);
     float3 normal = input.WorldNormal;
 
-    if (NormalMapEnabled == true)
+    if (NormalTextureEnabled == true)
     {
         input.UV.y += (sin(TotalTime * 3.0 + 10.0) / 256) + (TotalTime / 16);
         float3 normalMap = 2.0 * (tex2D(NormalMapSampler, input.UV * TextureTiling)) - 1.0;
@@ -146,6 +145,7 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
         normal = normalMap;
     }
 
+    float3 diffuse = CalcDiffuseColor(input);
     float3 lightFactor = CalcLightFactor(input.WorldPosition, normal);
     float shadow = CalcShadow(input.WorldPosition);
     float3 diffuse2 = lightFactor * shadow * diffuse;

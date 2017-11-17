@@ -18,7 +18,6 @@ bool EmissiveTextureEnabled;
 
 // Reflection
 bool ReflectionTextureEnabled;
-float ReflectionIntensity;
 
 // Misc
 float3 EyePosition = float3(1, 1, 0);
@@ -88,11 +87,11 @@ VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
     output.UV = input.UV;
     output.WorldNormal = mul(input.Normal, World);
     output.WorldPosition = worldPosition;
-    output.FogDistance = distance(worldPosition, EyePosition);
+    output.FogDistance = distance(worldPosition.xyz, EyePosition);
 
     if (ReflectionTextureEnabled)
     {
-        float3 viewDirection = EyePosition - worldPosition;
+        float3 viewDirection = EyePosition - worldPosition.xyz;
         float3 normal = input.Normal;
         output.Reflection = reflect(-normalize(viewDirection), normalize(normal));
     }
@@ -107,7 +106,7 @@ float3 CalcDiffuseColor(VertexShaderOutput input)
     if (ReflectionTextureEnabled)
     {
         float3 reflectColor = texCUBE(reflectionSampler, normalize(input.Reflection)).xyz;
-        diffuse = lerp(diffuse, reflectColor, ReflectionIntensity);
+        diffuse *= texCUBE(reflectionSampler, normalize(input.Reflection)).xyz;
     }
 
     return diffuse * DiffuseColor;

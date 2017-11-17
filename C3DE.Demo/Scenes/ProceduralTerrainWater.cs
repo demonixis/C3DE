@@ -1,4 +1,5 @@
-﻿using C3DE.Components.Rendering;
+﻿using C3DE.Components.Lighting;
+using C3DE.Components.Rendering;
 using C3DE.Graphics.Materials;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -11,6 +12,9 @@ namespace C3DE.Demo.Scenes
 
         protected override void SetupScene()
         {
+            var light = FindObjectOfType<Light>();
+            light.Transform.LocalPosition = new Vector3(250, 500, 100);
+
             // Water
             var waterTexture = Application.Content.Load<Texture2D>("Textures/water");
             var lavaNormal = Application.Content.Load<Texture2D>("Textures/wavesbump");
@@ -19,8 +23,8 @@ namespace C3DE.Demo.Scenes
 
             var water = waterGo.GetComponent<MeshRenderer>();
             var waterMat = (WaterMaterial)water.Material;
-            waterMat.ReflectiveMap = scene.RenderSettings.Skybox.Texture;
-            waterMat.WaterTransparency = 0.6f;
+            waterMat.ReflectionTexture = scene.RenderSettings.Skybox.Texture;
+            waterMat.Alpha = 0.6f;
         }
     }
 }

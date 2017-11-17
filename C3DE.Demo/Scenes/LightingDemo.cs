@@ -30,7 +30,7 @@ namespace C3DE.Demo.Scenes
             Add(cameraGo);
 
             // Light
-            var padding = 25;
+            var padding = 20;
             var colors = new Color[] {
                 Color.Red,
                 Color.Green,
@@ -85,10 +85,8 @@ namespace C3DE.Demo.Scenes
             
             // Terrain
             var terrainMaterial = new StandardMaterial(scene);
-            terrainMaterial.MainTexture = GraphicsHelper.CreateBorderTexture(Color.Blue, Color.Black, 128, 128, 2);
-            terrainMaterial.EmissiveTexture = terrainMaterial.MainTexture;
-            terrainMaterial.EmissiveEnabled = true;
-            terrainMaterial.Shininess = 200;
+            terrainMaterial.MainTexture = Application.Content.Load<Texture2D>("Textures/Terrain/Sand");
+            terrainMaterial.Shininess = 500;
             terrainMaterial.Tiling = new Vector2(32);
 
             var terrainGo = GameObjectFactory.CreateTerrain();
@@ -104,6 +102,7 @@ namespace C3DE.Demo.Scenes
 
             // Skybox
             RenderSettings.Skybox.Generate(Application.GraphicsDevice, Application.Content, DemoGame.BlueSkybox);
+            //RenderSettings.AmbientColor = Color.Black;
 
             // Model
             var model = Application.Content.Load<Model>("Models/Quandtum/Quandtum");
@@ -118,12 +117,11 @@ namespace C3DE.Demo.Scenes
             material.EmissiveTexture = Application.Content.Load<Texture2D>("Models/Quandtum/textures/Turret-Emission");
             material.EmissiveEnabled = true;
             material.EmissiveIntensity = 1.0f;
-            material.ReflectionTexture = GraphicsHelper.CreateCubeMap(material.MainTexture);
-            material.ReflectionIntensity = 0.45f;
+            material.ReflectionTexture = GraphicsHelper.CreateCubeMap(terrainMaterial.MainTexture);
             material.Shininess = 250;
-            renderer.Transform.LocalScale = new Vector3(0.05f);
+            renderer.Transform.LocalScale = new Vector3(0.035f);
             renderer.Transform.Rotate(0, -MathHelper.PiOver2, 0);
-            renderer.Transform.Translate(-0.15f, 0, 0);
+            renderer.Transform.Translate(-0.1f, 0, 0);
 
             Screen.ShowCursor = true;
         }

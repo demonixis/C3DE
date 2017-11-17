@@ -38,7 +38,7 @@ namespace C3DE.Graphics.Materials
             m_EPView = m_Effect.Parameters["View"];
             m_EPProjection = m_Effect.Parameters["Projection"];
             m_EPWorld = m_Effect.Parameters["World"];
-            m_EPTextureTilling = m_Effect.Parameters["TextureTiling"];
+            m_EPTextureTilling = m_Effect.Parameters["TextureTilling"];
             m_EPDiffuseColor = m_Effect.Parameters["DiffuseColor"];
             m_EPMainTexture = m_Effect.Parameters["MainTexture"];
         }
@@ -51,12 +51,6 @@ namespace C3DE.Graphics.Materials
 
         public override void Pass(Renderer renderable)
         {
-            m_Effect.Parameters["World"].SetValue(renderable.GameObject.Transform.world);
-            m_Effect.Parameters["MainTexture"].SetValue(MainTexture);
-            m_Effect.Parameters["TextureTiling"].SetValue(Tiling);
-            m_Effect.Parameters["TextureOffset"].SetValue(Offset);
-            m_Effect.CurrentTechnique.Passes[0].Apply();
-
             m_EPWorld.SetValue(renderable.Transform.world);
             m_EPTextureTilling.SetValue(Tiling);
             m_EPDiffuseColor.SetValue(m_DiffuseColor);

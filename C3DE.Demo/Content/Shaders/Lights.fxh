@@ -75,5 +75,5 @@ float3 CalcLightFactor(float4 worldPosition, float3 worldNormal)
     else if (LightType == 3)
         return CalcSpotLightColor(worldPosition, worldNormal);
 	
-    return float3(1.0, 1.0, 1.0);
+    return float3(0.0, 0.0, 0.0);
 }

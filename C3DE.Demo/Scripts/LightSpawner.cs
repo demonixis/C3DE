@@ -33,7 +33,7 @@ namespace C3DE.Demo.Scripts
                 ligthSphere.CastShadow = false;
                 ligthSphere.ReceiveShadow = false;
 
-                var sphereMaterial = new UnlitColorMaterial(Scene.current);
+                var sphereMaterial = new UnlitMaterial(Scene.current);
                 sphereMaterial.DiffuseColor = color;
                 ligthSphere.Material = sphereMaterial;
 
