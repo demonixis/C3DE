@@ -9,7 +9,7 @@ namespace C3DE.Demo.Scripts
 {
     public class WeightMapViewer : Behaviour
     {
-        private TerrainMaterial _material;
+        private StandardTerrainMaterial _material;
         private Rectangle _rect;
 
         public override void Start()
@@ -19,7 +19,7 @@ namespace C3DE.Demo.Scripts
             if (renderer == null)
                 throw new Exception("You need to attach a mesh renderer first.");
                 
-            var mat = renderer.Material as TerrainMaterial;
+            var mat = renderer.Material as StandardTerrainMaterial;
 
             if (mat == null)
                 throw new Exception("You need to use a TerrainMaterial with a non null weightMap.");

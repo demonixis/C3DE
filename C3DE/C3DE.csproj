@@ -62,6 +62,7 @@
     <Compile Include="Graphics\Materials\IMultipassLightingMaterial.cs" />
     <Compile Include="Graphics\Materials\StandardMaterial.cs" />
     <Compile Include="Graphics\Materials\StandardMaterialBase.cs" />
+    <Compile Include="Graphics\Materials\StandardToonMaterial.cs" />
     <Compile Include="Graphics\PostProcessing\AverageColorFilter.cs" />
     <Compile Include="Graphics\PostProcessing\Bloom.cs" />
     <Compile Include="Graphics\PostProcessing\ColorGrading.cs" />
@@ -75,7 +76,7 @@
     <Compile Include="Graphics\PostProcessing\PostProcessManager.cs" />
     <Compile Include="Graphics\Materials\FresnelMaterial.cs" />
     <Compile Include="Graphics\Materials\LavaMaterial.cs" />
-    <Compile Include="Graphics\Materials\TerrainMaterial.cs" />
+    <Compile Include="Graphics\Materials\StandardTerrainMaterial.cs" />
     <Compile Include="Graphics\Materials\ToonMaterial.cs" />
     <Compile Include="Graphics\PostProcessing\BloomLegacy.cs" />
     <Compile Include="Graphics\PostProcessing\BloomLegacySettings.cs" />
@@ -109,7 +110,7 @@
     <Compile Include="UI\GUISkin.cs" />
     <Compile Include="UI\GUI.cs" />
     <Compile Include="Utils\GraphicsHelper.cs" />
-    <Compile Include="Graphics\Materials\WaterMaterial.cs" />
+    <Compile Include="Graphics\Materials\StandardWaterMaterial.cs" />
     <Compile Include="Components\Component.cs" />
     <Compile Include="Components\Rendering\ModelRenderer.cs" />
     <Compile Include="Components\Transform.cs" />

@@ -7,7 +7,7 @@ using System.Runtime.Serialization;
 namespace C3DE.Graphics.Materials
 {
     [DataContract]
-    public class WaterMaterial : StandardMaterialBase
+    public class StandardWaterMaterial : StandardMaterialBase
     {
         protected Vector3 _reflectionColor = Vector3.One;
         protected EffectParameter m_EPReflectionTexture;
@@ -37,7 +37,7 @@ namespace C3DE.Graphics.Materials
         [DataMember]
         public float Alpha { get; set; } = 0.45f;
 
-        public WaterMaterial(Scene scene, string name = "Water Material")
+        public StandardWaterMaterial(Scene scene, string name = "Water Material")
             : base(scene, name)
         {
             m_hasAlpha = true;
@@ -45,7 +45,7 @@ namespace C3DE.Graphics.Materials
 
         protected override void LoadEffect(ContentManager content)
         {
-            m_Effect = content.Load<Effect>("Shaders/WaterEffect");
+            m_Effect = content.Load<Effect>("Shaders/StandardWaterEffect");
         }
 
         protected override void SetupParamaters()

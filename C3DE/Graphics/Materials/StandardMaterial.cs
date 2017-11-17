@@ -11,6 +11,8 @@ namespace C3DE.Graphics.Materials
     {
         protected Vector3 m_EmissiveColor = Vector3.Zero;
         protected EffectPass m_PassEmissive;
+        protected EffectParameter m_EPNormalTexture;
+        protected EffectParameter m_EPNormalTextureEnabled;
         protected EffectParameter m_EPReflectionTexture;
         protected EffectParameter m_EPReflectionTextureEnabled;
         protected EffectParameter m_EPEmissiveTextureEnabled;
@@ -50,6 +52,8 @@ namespace C3DE.Graphics.Materials
         {
             base.SetupParamaters();
 
+            m_EPNormalTexture = m_Effect.Parameters["NormalTexture"];
+            m_EPNormalTextureEnabled = m_Effect.Parameters["NormalTextureEnabled"];
             m_PassEmissive = m_Effect.CurrentTechnique.Passes["EmissivePass"];
             m_EPReflectionTexture = m_Effect.Parameters["ReflectionTexture"];
             m_EPReflectionTextureEnabled = m_Effect.Parameters["ReflectionTextureEnabled"];
@@ -68,6 +72,8 @@ namespace C3DE.Graphics.Materials
 
         public virtual void EmissivePass(Renderer renderer)
         {
+            m_EPNormalTexture.SetValue(NormalTexture);
+            m_EPNormalTextureEnabled.SetValue(NormalTexture != null);
             m_EPEmissiveTextureEnabled.SetValue(EmissiveTexture != null);
             m_EPEmissiveTexture.SetValue(EmissiveTexture);
             m_EPEmissiveColor.SetValue(m_EmissiveColor);

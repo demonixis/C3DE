@@ -3,6 +3,9 @@
 #include "Lights.fxh"
 #include "Emissive.fxh"
 
+static const float ToonThresholds[4] = { 0.95, 0.5, 0.2, 0.03 };
+static const float ToonBrightnessLevels[5] = { 1.0, 0.8, 0.6, 0.35, 0.2 };
+
 // Matrix
 float4x4 World;
 float4x4 View;
@@ -11,7 +14,6 @@ float4x4 Projection;
 // Material
 float3 AmbientColor;
 float3 DiffuseColor;
-bool NormalTextureEnabled;
 
 // Reflection
 bool ReflectionTextureEnabled;
@@ -24,17 +26,6 @@ texture MainTexture;
 sampler2D textureSampler = sampler_state
 {
     Texture = (MainTexture);
-    MinFilter = Linear;
-    MagFilter = Linear;
-    MipFilter = Linear;
-    AddressU = Wrap;
-    AddressV = Wrap;
-};
-
-texture NormalTexture;
-sampler2D normalSampler = sampler_state
-{
-    Texture = (NormalTexture);
     MinFilter = Linear;
     MagFilter = Linear;
     MipFilter = Linear;
@@ -71,7 +62,6 @@ struct VertexShaderOutput
     float3 WorldNormal : TEXCOORD1;
     float4 WorldPosition : TEXCOORD2;
     float3 Reflection : TEXCOORD3;
-    float3x3 WorldToTangentSpace : TEXCOORD4;
     float FogDistance : FOG;
 };
 
@@ -94,11 +84,6 @@ VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
         output.Reflection = reflect(-normalize(viewDirection), normalize(normal));
     }
 
-    // [0] Tangent / [1] Binormal / [2] Normal
-    output.WorldToTangentSpace[0] = cross(input.Normal, float3(-1.0, 0.0, 0.0));
-    output.WorldToTangentSpace[1] = cross(output.WorldToTangentSpace[0], input.Normal);
-    output.WorldToTangentSpace[2] = input.Normal;
-
     return output;
 }
 
@@ -111,7 +96,9 @@ float3 CalcDiffuseColor(VertexShaderOutput input)
         float3 reflectColor = texCUBE(reflectionSampler, normalize(input.Reflection)).xyz;
         diffuse *= texCUBE(reflectionSampler, normalize(input.Reflection)).xyz;
     }
-
+	
+	diffuse *= ToonBrightnessLevels[4];
+	
     return diffuse * DiffuseColor;
 }
 
@@ -122,25 +109,32 @@ float4 PixelShaderAmbient(VertexShaderOutput input) : COLOR0
 
 float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 {
-    if (NormalTextureEnabled == true)
-    {
-        float3 normalMap = (2.0 * (tex2D(normalSampler, input.UV * TextureTiling))) - 1.0;
-        normalMap = normalize(mul(normalMap, input.WorldToTangentSpace));
-        input.WorldNormal = normalMap;
-    }
-    
     float3 diffuse = CalcDiffuseColor(input);
     float3 lightFactor = CalcLightFactor(input.WorldPosition, input.WorldNormal);
-    float shadow = CalcShadow(input.WorldPosition);
+	float light = lightFactor.x + lightFactor.y + lightFactor.z / 3.0;
+	
+	if (light > ToonThresholds[0])
+		diffuse *= ToonBrightnessLevels[0];
+	else if (light > ToonThresholds[1])
+		diffuse *= ToonBrightnessLevels[1];
+	else if (light > ToonThresholds[2])
+		diffuse *= ToonBrightnessLevels[2];
+	else if (light > ToonThresholds[3])
+		diffuse *= ToonBrightnessLevels[3];
+	else
+		diffuse *= ToonBrightnessLevels[4];
+	
+    float shadow = CalcShadow(input.WorldPosition); 
     float3 diffuse2 = lightFactor * shadow * diffuse;
     float3 specular = CalcSpecular(input.WorldPosition, input.WorldNormal, EyePosition, input.UV * TextureTiling);
     float3 compose = diffuse2 + specular;
+	
     return ApplyFog(compose, input.FogDistance);
 }
 
 float4 PixelShaderEmissive(VertexShaderOutput input) : COLOR0
 {
-    return CalcEmissiveColor(input.UV * TextureTiling);
+	return CalcEmissiveColor(input.UV * TextureTiling);
 }
 
 technique Standard

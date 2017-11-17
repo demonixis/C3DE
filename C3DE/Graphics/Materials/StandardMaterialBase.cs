@@ -44,6 +44,8 @@ namespace C3DE.Graphics.Materials
         protected EffectParameter m_EPSpecularTextureEnabled;
         protected EffectParameter m_EPSpecularTexture;
 
+        public Texture2D NormalTexture { get; set; }
+
         public Texture2D SpecularTexture { get; set; }
 
         [DataMember]

@@ -34,7 +34,7 @@ namespace C3DE.Demo.Scenes
             Add(lightGo);
 
             // Finally a terrain
-            var terrainMaterial = new TerrainMaterial(scene);
+            var terrainMaterial = new StandardTerrainMaterial(scene);
             terrainMaterial.MainTexture = content.Load<Texture2D>("Textures/Terrain/Grass");
             terrainMaterial.SandTexture = content.Load<Texture2D>("Textures/Terrain/Sand");
             terrainMaterial.SnowTexture = content.Load<Texture2D>("Textures/Terrain/Snow");

@@ -7,7 +7,7 @@ using System.Runtime.Serialization;
 namespace C3DE.Graphics.Materials
 {
     [DataContract]
-    public class TerrainMaterial : StandardMaterialBase
+    public class StandardTerrainMaterial : StandardMaterialBase
     {
         private EffectParameter m_EPWeightTexture;
         private EffectParameter m_EPRockTexture;
@@ -19,17 +19,14 @@ namespace C3DE.Graphics.Materials
         public Texture2D RockTexture { get; set; }
         public Texture2D WeightTexture { get; set; }
 
-        public TerrainMaterial(Scene scene, string name = "Terrain Material")
-            : base(scene)
+        public StandardTerrainMaterial(Scene scene, string name = "Standard Terrain Material")
+            : base(scene, name)
         {
-            base.m_DiffuseColor = new Vector3(1.0f, 1.0f, 1.0f);
-            Tiling = Vector2.One;
-            Name = name;
         }
 
         protected override void LoadEffect(ContentManager content)
         {
-            m_Effect = content.Load<Effect>("Shaders/TerrainEffect");
+            m_Effect = content.Load<Effect>("Shaders/StandardTerrainEffect");
         }
 
         protected override void SetupParamaters()
