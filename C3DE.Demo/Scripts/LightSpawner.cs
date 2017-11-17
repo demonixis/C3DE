@@ -11,6 +11,10 @@ namespace C3DE.Demo.Scripts
 {
     public class LightSpawner : Behaviour
     {
+        private Color _color;
+        private float _range;
+        private bool _spawnSphere;
+
         public override void Update()
         {
             base.Update();

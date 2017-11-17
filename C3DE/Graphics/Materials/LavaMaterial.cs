@@ -8,43 +8,71 @@ using System.Runtime.Serialization;
 namespace C3DE.Graphics.Materials
 {
     [DataContract]
-    public class LavaMaterial : Material
+    public class LavaMaterial : Material, IEmissiveMaterial
     {
-        private float _totalTime;
+        private EffectPass m_PassAmbient;
+        private EffectPass m_PassEmissive;
+        private EffectParameter m_EPView;
+        private EffectParameter m_EPProjection;
+        private EffectParameter m_EPTime;
+        private EffectParameter m_EPMainTexture;
+        private EffectParameter m_EPNormalTexture;
+        private EffectParameter m_EPTextureTilling;
+        private EffectParameter m_EPDiffuseColor;
+        private EffectParameter m_EPWorld;
+        private EffectParameter m_EPEmissiveIntensity;
 
         public Texture2D NormalTexture { get; set; }
+
         public float EmissiveIntensity { get; set; } = 2.0f;
+
+        public bool EmissiveEnabled => false;
+
+        public float Speed { get; set; } = 0.25f;
 
         public LavaMaterial(Scene scene, string name = "Lava Material")
             : base(scene)
         {
-            DiffuseColor = Color.White;
-            _totalTime = 0.0f;
             Name = name;
         }
 
         public override void LoadContent(ContentManager content)
         {
             m_Effect = content.Load<Effect>("Shaders/LavaEffect");
+            m_PassAmbient = m_Effect.CurrentTechnique.Passes["AmbientPass"];
+            m_PassEmissive = m_Effect.CurrentTechnique.Passes["EmissivePass"];
+
+            m_EPView = m_Effect.Parameters["View"];
+            m_EPProjection = m_Effect.Parameters["Projection"];
+            m_EPTime = m_Effect.Parameters["Time"];
+            m_EPMainTexture = m_Effect.Parameters["MainTexture"];
+            m_EPNormalTexture = m_Effect.Parameters["NormalTexture"];
+            m_EPTextureTilling = m_Effect.Parameters["TextureTiling"];
+            m_EPDiffuseColor = m_Effect.Parameters["DiffuseColor"];
+            m_EPWorld = m_Effect.Parameters["World"];
+            m_EPEmissiveIntensity = m_Effect.Parameters["EmissiveIntensity"];
         }
 
         public override void PrePass(Camera camera)
         {
-            m_Effect.Parameters["View"].SetValue(camera.view);
-            m_Effect.Parameters["Projection"].SetValue(camera.projection);
+            m_EPView.SetValue(camera.view);
+            m_EPProjection.SetValue(camera.projection);
         }
 
         public override void Pass(Renderer renderable)
         {
-            _totalTime += Time.DeltaTime / 10.0f;
+            m_EPTime.SetValue(Time.TotalTime * Speed);
+            m_EPMainTexture.SetValue(MainTexture);
+            m_EPNormalTexture.SetValue(NormalTexture);
+            m_EPTextureTilling.SetValue(Tiling);
+            m_EPDiffuseColor.SetValue(m_DiffuseColor);
+            m_EPWorld.SetValue(renderable.Transform.world);
+            m_EPEmissiveIntensity.SetValue(EmissiveIntensity);
+            m_PassAmbient.Apply();
+        }
 
-            m_Effect.Parameters["Time"].SetValue(_totalTime);
-            m_Effect.Parameters["MainTexture"].SetValue(MainTexture);
-            m_Effect.Parameters["TextureTiling"].SetValue(Tiling);
-            m_Effect.Parameters["DiffuseColor"].SetValue(m_DiffuseColor);
-            m_Effect.Parameters["World"].SetValue(renderable.Transform.world);
-            m_Effect.Parameters["EmissiveIntensity"].SetValue(EmissiveIntensity);
-            m_Effect.CurrentTechnique.Passes[0].Apply();
+        public void EmissivePass(Renderer renderer)
+        {
         }
     }
 }
