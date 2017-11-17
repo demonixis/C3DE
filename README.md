@@ -1,10 +1,13 @@
 C3DE : Cool 3D Engine
 =====================
 
-### The project
+## The project
 C3DE is a research project. The aim is to create a modest but powerful enough 3D engine powered by the MonoGame Framework.
 
-### Features
+## Status
+I'm refactoring all shaders that means the only platform that work is Windows. Don't worry I'm going to fix the opengl shaders soon. Don't forget that it's a development branch.
+
+## Features
 - Scenegraph
 - Component based
 - 3D Model support
@@ -18,25 +21,32 @@ C3DE is a research project. The aim is to create a modest but powerful enough 3D
 - Procedural texture generation
 - Post Processing
 - Instant GUI system
-- Virtual Reality Support
+- Virtual Reality
 
-### Platforms
-C3DE supports Windows, Linux and Mac using MonoGame (both DirectX and DesktopGL). Because of the OpenGL shader compiler is limited to shader model 3, this version has less graphics features than DirectX. 
+## Platforms
+C3DE supports Windows, Universal Windows Platform, Linux and Mac using MonoGame (both DirectX and DesktopGL). Because of the OpenGL shader compiler is limited to shader model 3, this version has less graphics features than DirectX. 
 For now Android and Windows UWP supports are paused the time the engine is more stable.
 
-### This feature is broken
-It's an **experimental project**, but you are **free** to fix it by sending a pull request. However you've to follow the [coding convention](https://msdn.microsoft.com/en-US/library/ff926074.aspx). 
+### Virtual Reality
+| VR Vendor | Status | Work to do |
+|-----------|--------|------------|
+| OpenVR    | OK     | Get buttons state |
+| OSVR      | Almost OK | Side by side only (no RenderManager) |
+| OpenHMD   | OK     | Needs better correction distortion and controllers support |
+| Oculus Rift | Dev | Many crashes to fix |
 
-### Requirement
+## Requirement
 You **must** install the [MonoGame Framework](http://www.monogame.net/downloads/) from the installer. **You'll not be able to build the solution without it**.
 
-### What's next ?
-- VR Support (in progress)
+## What's next ?
 - Physics engine
 - Unified Input System
-- HDR
-- Tone Mapping
-- Windows UWP
+- HDR / Tone Mapping
+- Linear Rendering
+- NavMesh
 
-### License
+## Contributions
+It's an **experimental project**, but you are **free** to fix it by sending a pull request. However you've to follow the [coding convention](https://msdn.microsoft.com/en-US/library/ff926074.aspx). 
+
+## License
 C3DE is released under the MIT License, please take your time to read the LICENSE file for more informations.

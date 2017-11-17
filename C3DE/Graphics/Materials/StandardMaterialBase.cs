@@ -9,14 +9,11 @@ using System.Runtime.Serialization;
 namespace C3DE.Graphics.Materials
 {
     [DataContract]
-    public class StandardMaterial : Material, IMultipassLightingMaterial, IEmissiveMaterial
+    public class StandardMaterialBase : Material, IMultipassLightingMaterial
     {
-        protected Vector3 m_EmissiveColor = Vector3.Zero;
         protected Vector3 m_SpecularColor = new Vector3(0.6f, 0.6f, 0.6f);
-
         protected EffectPass m_PassAmbient;
         protected EffectPass m_PassLight;
-        protected EffectPass m_PassEmissive;
         protected EffectParameter m_EPView;
         protected EffectParameter m_EPProjection;
         protected EffectParameter m_EPEyePosition;
@@ -25,9 +22,6 @@ namespace C3DE.Graphics.Materials
         protected EffectParameter m_EPTextureTilling;
         protected EffectParameter m_EPDiffuseColor;
         protected EffectParameter m_EPMainTexture;
-        protected EffectParameter m_EPReflectionTexture;
-        protected EffectParameter m_EPReflectionTextureEnabled;
-        protected EffectParameter m_EPReflectionIntensity;
         protected EffectParameter m_EPSpecularLightColor;
         protected EffectParameter m_EPSpecularPower;
         protected EffectParameter m_EPSpecularIntensity;
@@ -49,10 +43,6 @@ namespace C3DE.Graphics.Materials
         protected EffectParameter m_EPLightProjection;
         protected EffectParameter m_EPSpecularTextureEnabled;
         protected EffectParameter m_EPSpecularTexture;
-        protected EffectParameter m_EPEmissiveTextureEnabled;
-        protected EffectParameter m_EPEmissiveTexture;
-        protected EffectParameter m_EPEmissiveColor;
-        protected EffectParameter m_EPEmissiveIntensity;
 
         public TextureCube ReflectionTexture { get; set; }
 
@@ -74,22 +64,7 @@ namespace C3DE.Graphics.Materials
         [DataMember]
         public float Shininess { get; set; } = 250.0f;
 
-        [DataMember]
-        public Color EmissiveColor
-        {
-            get { return new Color(m_EmissiveColor); }
-            set { m_EmissiveColor = value.ToVector3(); }
-        }
-
-        [DataMember]
-        public bool EmissiveEnabled { get; set; } = false;
-
-        [DataMember]
-        public float EmissiveIntensity { get; set; } = 1.0f;
-
-        public Texture2D EmissiveTexture { get; set; }
-
-        public StandardMaterial(Scene scene, string name = "Standard Material")
+        public StandardMaterialBase(Scene scene, string name = "Standard Material Base")
             : base(scene)
         {
             Name = name;
@@ -110,8 +85,6 @@ namespace C3DE.Graphics.Materials
         {
             m_PassAmbient = m_Effect.CurrentTechnique.Passes["AmbientPass"];
             m_PassLight = m_Effect.CurrentTechnique.Passes["LightPass"];
-            m_PassEmissive = m_Effect.CurrentTechnique.Passes["EmissivePass"];
-
             m_EPView = m_Effect.Parameters["View"];
             m_EPProjection = m_Effect.Parameters["Projection"];
             m_EPEyePosition = m_Effect.Parameters["EyePosition"];
@@ -120,9 +93,6 @@ namespace C3DE.Graphics.Materials
             m_EPTextureTilling = m_Effect.Parameters["TextureTiling"];
             m_EPDiffuseColor = m_Effect.Parameters["DiffuseColor"];
             m_EPMainTexture = m_Effect.Parameters["MainTexture"];
-            m_EPReflectionTexture = m_Effect.Parameters["ReflectionTexture"];
-            m_EPReflectionTextureEnabled = m_Effect.Parameters["ReflectionTextureEnabled"];
-            m_EPReflectionIntensity = m_Effect.Parameters["ReflectionIntensity"];
             m_EPSpecularLightColor = m_Effect.Parameters["SpecularLightColor"];
             m_EPSpecularPower = m_Effect.Parameters["SpecularPower"];
             m_EPSpecularIntensity = m_Effect.Parameters["SpecularIntensity"];
@@ -144,10 +114,6 @@ namespace C3DE.Graphics.Materials
             m_EPLightProjection = m_Effect.Parameters["LightProjection"];
             m_EPSpecularTextureEnabled = m_Effect.Parameters["SpecularTextureEnabled"];
             m_EPSpecularTexture = m_Effect.Parameters["SpecularTexture"];
-            m_EPEmissiveTextureEnabled = m_Effect.Parameters["EmissiveTextureEnabled"];
-            m_EPEmissiveTexture = m_Effect.Parameters["EmissiveTexture"];
-            m_EPEmissiveColor = m_Effect.Parameters["EmissiveColor"];
-            m_EPEmissiveIntensity = m_Effect.Parameters["EmissiveIntensity"];
         }
 
         public override void PrePass(Camera camera)
@@ -164,12 +130,6 @@ namespace C3DE.Graphics.Materials
             m_EPTextureTilling.SetValue(Tiling);
             m_EPDiffuseColor.SetValue(m_DiffuseColor);
             m_EPMainTexture.SetValue(MainTexture);
-
-            // High
-            m_EPReflectionTexture.SetValue(ReflectionTexture);
-            m_EPReflectionTextureEnabled.SetValue(ReflectionTexture != null);
-            m_EPReflectionIntensity.SetValue(ReflectionIntensity);
-
             m_PassAmbient.Apply();
         }
 
@@ -187,7 +147,6 @@ namespace C3DE.Graphics.Materials
             m_EPLightFallOff.SetValue(light.FallOf);
             m_EPLightType.SetValue((int)light.TypeLight);
 
-            // High
             m_EPShadowStrength.SetValue(light.shadowGenerator.ShadowStrength);
             m_EPShadowBias.SetValue(light.shadowGenerator.ShadowBias);
             m_EPShadowMap.SetValue(light.shadowGenerator.ShadowMap);
@@ -200,15 +159,6 @@ namespace C3DE.Graphics.Materials
             m_EPSpecularTexture.SetValue(SpecularTexture);
 
             m_PassLight.Apply();
-        }
-
-        public virtual void EmissivePass(Renderer renderer)
-        {
-            m_EPEmissiveTextureEnabled.SetValue(EmissiveTexture != null);
-            m_EPEmissiveTexture.SetValue(EmissiveTexture);
-            m_EPEmissiveColor.SetValue(m_EmissiveColor);
-            m_EPEmissiveIntensity.SetValue(EmissiveIntensity);
-            m_PassEmissive.Apply();
         }
     }
 }

@@ -61,6 +61,7 @@
     <Compile Include="Graphics\Materials\IEmissiveMaterial.cs" />
     <Compile Include="Graphics\Materials\IMultipassLightingMaterial.cs" />
     <Compile Include="Graphics\Materials\StandardMaterial.cs" />
+    <Compile Include="Graphics\Materials\StandardMaterialBase.cs" />
     <Compile Include="Graphics\PostProcessing\AverageColorFilter.cs" />
     <Compile Include="Graphics\PostProcessing\Bloom.cs" />
     <Compile Include="Graphics\PostProcessing\ColorGrading.cs" />
@@ -70,7 +71,6 @@
     <Compile Include="Extensions\QuaternionExtensions.cs" />
     <Compile Include="Input.cs" />
     <Compile Include="Graphics\Materials\BillboardMaterial.cs" />
-    <Compile Include="Graphics\Materials\UnlitColorMaterial.cs" />
     <Compile Include="Graphics\Materials\UnlitMaterial.cs" />
     <Compile Include="Graphics\PostProcessing\PostProcessManager.cs" />
     <Compile Include="Graphics\Materials\FresnelMaterial.cs" />

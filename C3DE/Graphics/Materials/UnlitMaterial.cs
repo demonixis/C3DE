@@ -9,6 +9,16 @@ namespace C3DE.Graphics.Materials
     [DataContract]
     public class UnlitMaterial : Material
     {
+        private EffectPass m_PassColor;
+        private EffectPass m_PassTexture;
+
+        private EffectParameter m_EPView;
+        private EffectParameter m_EPProjection;
+        private EffectParameter m_EPWorld;
+        private EffectParameter m_EPTextureTilling;
+        private EffectParameter m_EPDiffuseColor;
+        private EffectParameter m_EPMainTexture;
+
         public UnlitMaterial()
             : this(null)
         {
@@ -23,12 +33,20 @@ namespace C3DE.Graphics.Materials
         public override void LoadContent(ContentManager content)
         {
             m_Effect = content.Load<Effect>("Shaders/Unlit");
+            m_PassColor = m_Effect.CurrentTechnique.Passes["UnlitColor"];
+            m_PassTexture = m_Effect.CurrentTechnique.Passes["UnlitTexture"];
+            m_EPView = m_Effect.Parameters["View"];
+            m_EPProjection = m_Effect.Parameters["Projection"];
+            m_EPWorld = m_Effect.Parameters["World"];
+            m_EPTextureTilling = m_Effect.Parameters["TextureTiling"];
+            m_EPDiffuseColor = m_Effect.Parameters["DiffuseColor"];
+            m_EPMainTexture = m_Effect.Parameters["MainTexture"];
         }
 
         public override void PrePass(Camera camera)
         {
-            m_Effect.Parameters["View"].SetValue(camera.view);
-            m_Effect.Parameters["Projection"].SetValue(camera.projection);
+            m_EPView.SetValue(camera.view);
+            m_EPProjection.SetValue(camera.projection);
         }
 
         public override void Pass(Renderer renderable)
@@ -38,6 +56,16 @@ namespace C3DE.Graphics.Materials
             m_Effect.Parameters["TextureTiling"].SetValue(Tiling);
             m_Effect.Parameters["TextureOffset"].SetValue(Offset);
             m_Effect.CurrentTechnique.Passes[0].Apply();
+
+            m_EPWorld.SetValue(renderable.Transform.world);
+            m_EPTextureTilling.SetValue(Tiling);
+            m_EPDiffuseColor.SetValue(m_DiffuseColor);
+            m_EPMainTexture.SetValue(MainTexture);
+
+            if (MainTexture == null)
+                m_PassColor.Apply();
+            else
+                m_PassTexture.Apply();
         }
     }
 }
