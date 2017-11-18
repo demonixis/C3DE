@@ -87,6 +87,7 @@ namespace C3DE.Demo.Scenes
             // Terrain
             var terrainMaterial = new StandardMaterial(scene);
             terrainMaterial.MainTexture = Application.Content.Load<Texture2D>("Textures/Terrain/Sand");
+            terrainMaterial.NormalTexture = Application.Content.Load<Texture2D>("Textures/Terrain/Sand_Normal");
             terrainMaterial.Shininess = 500;
             terrainMaterial.Tiling = new Vector2(32);
 

@@ -94,9 +94,12 @@ VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
         output.Reflection = reflect(-normalize(viewDirection), normalize(normal));
     }
 
+    float3 c1 = cross(input.Normal, float3(0.0, 0.0, 1.0));
+    float3 c2 = cross(input.Normal, float3(0.0, 1.0, 0.0));
+
     // [0] Tangent / [1] Binormal / [2] Normal
-    output.WorldToTangentSpace[0] = normalize(float3(input.Normal.z, 0.0, input.Normal.x));
-    output.WorldToTangentSpace[1] = normalize(float3(0.0, input.Normal.z, input.Normal.y));
+    output.WorldToTangentSpace[0] = length(c1) > length(c2) ? c1 : c2;
+    output.WorldToTangentSpace[1] = normalize(output.WorldToTangentSpace[0]);
     output.WorldToTangentSpace[2] = input.Normal;
 
     return output;
