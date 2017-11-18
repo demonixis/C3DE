@@ -28,22 +28,23 @@ namespace C3DE.Demo.Scripts
                 Scene.current.Add(lightGo);
 
                 var light = lightGo.GetComponent<Light>();
-                light.Range = 10;
+                light.Range = 5;
                 light.ShadowGenerator.ShadowStrength = 1;
 
+                /*var mover = light.AddComponent<SinMovement>();
+                mover.Min = 5;
+                mover.Max = 5;
+                mover.Frequency = 0.015f;*/
+
                 var ligthSphere = lightGo.AddComponent<MeshRenderer>();
-                ligthSphere.Geometry = new SphereMesh(0.5f, 16);
+                ligthSphere.Geometry = new SphereMesh(0.05f, 12);
                 ligthSphere.Geometry.Build();
-                ligthSphere.CastShadow = false;
+                ligthSphere.CastShadow = true;
                 ligthSphere.ReceiveShadow = false;
 
                 var sphereMaterial = new UnlitMaterial(Scene.current);
                 sphereMaterial.DiffuseColor = color;
                 ligthSphere.Material = sphereMaterial;
-
-                ligthSphere.AddComponent<LightMover>();
-
-                Debug.Log(transform.LocalPosition);
             }
         }
     }

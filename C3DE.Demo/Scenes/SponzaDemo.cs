@@ -2,6 +2,7 @@
 using C3DE.Components.Rendering;
 using C3DE.Demo.Scripts;
 using C3DE.Extensions;
+using C3DE.Graphics.Materials;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -31,6 +32,16 @@ namespace C3DE.Demo.Scenes
             var content = Application.Content;
             var sponzaModel = content.Load<Model>("Models/Atrium/sponza");
             var sponzaGo = sponzaModel.ToMeshRenderers(this);
+            var sRenderers = sponzaGo.GetComponentsInChildren<MeshRenderer>();
+            foreach (var rd in sRenderers)
+            {
+                var mat = (StandardMaterial)rd.Material;
+                if (mat.MainTexture == null)
+                    continue;
+
+                mat.Shininess = 50;
+                mat.NormalTexture = content.Load<Texture2D>($"{mat.MainTexture.Name.Replace("_0", "")}_Normal");
+            }
 
             // Sun Flares
             var glowTexture = content.Load<Texture2D>("Textures/Flares/SunGlow");
@@ -53,8 +64,8 @@ namespace C3DE.Demo.Scenes
             RenderSettings.Skybox.Generate(Application.GraphicsDevice, Application.Content, DemoGame.BlueSkybox);
 
             // And fog
-            RenderSettings.FogDensity = 0.0085f;
-            RenderSettings.FogMode = FogMode.Exp2;
+            //RenderSettings.FogDensity = 0.0085f;
+            //RenderSettings.FogMode = FogMode.Exp2;
         }
     }
 }

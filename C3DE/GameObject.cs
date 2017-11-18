@@ -323,32 +323,24 @@ namespace C3DE
 
         public T GetComponentInChildren<T>() where T : Component
         {
-            T component = null;
-
             var transforms = transform.Transforms;
             var size = transforms.Count;
+            var cpns = (Component[])null;
+
+            foreach (var cpn in components)
+            {
+                if (cpn is T)
+                    return (T)cpn;
+            }
 
             for (var i = 0; i < size; i++)
             {
-                foreach (var cpn in components)
-                {
-                    Debug.Log(cpn);
-                    if (cpn is T)
-                        component = (T)cpn;
-                }
-                if (component != null)
-                    return component;
-
-                var cpns = transforms[i].GameObject.GetComponentsInChildren<T>();
+                cpns = transforms[i].GameObject.GetComponentsInChildren<T>();
                 foreach (var cpn in cpns)
                 {
-                    Debug.Log(cpn);
                     if (cpn is T)
-                        component = (T)cpn;
+                        return (T)cpn;
                 }
-
-                if (component != null)
-                    return component;
             }
 
             return null;
@@ -357,16 +349,11 @@ namespace C3DE
         public T[] GetComponentsInChildren<T>() where T : Component
         {
             var list = new List<T>();
-            T[] cpns;
+            list.AddRange(GetComponents<T>());
 
-            for (int i = 0, l = transform.Transforms.Count; i < l; i++)
-            {
-                cpns = transform.Transforms[i].GetComponents<T>();
-
-                if (cpns != null && cpns.Length > 0)
-                    list.AddRange(cpns);
-            }
-
+            foreach (var tr in transform.Transforms)
+                list.AddRange(tr.GameObject.GetComponentsInChildren<T>());
+            
             return list.ToArray();
         }
 
