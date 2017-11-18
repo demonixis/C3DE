@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System.Runtime.Serialization;
+using C3DE.Components.Lighting;
 
 namespace C3DE.Graphics.Materials
 {
@@ -70,10 +71,15 @@ namespace C3DE.Graphics.Materials
             base.Pass(renderable);
         }
 
-        public virtual void EmissivePass(Renderer renderer)
+        public override void LightPass(Renderer renderer, Light light)
         {
             m_EPNormalTexture.SetValue(NormalTexture);
             m_EPNormalTextureEnabled.SetValue(NormalTexture != null);
+            base.LightPass(renderer, light);
+        }
+
+        public virtual void EmissivePass(Renderer renderer)
+        {
             m_EPEmissiveTextureEnabled.SetValue(EmissiveTexture != null);
             m_EPEmissiveTexture.SetValue(EmissiveTexture);
             m_EPEmissiveColor.SetValue(m_EmissiveColor);

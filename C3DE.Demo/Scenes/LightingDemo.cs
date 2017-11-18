@@ -81,6 +81,7 @@ namespace C3DE.Demo.Scenes
                 
                 ligthSphere.AddComponent<LightMover>();
                 ligthSphere.AddComponent<LightSwitcher>();
+                ligthSphere.AddComponent<SinMovement>();
             }
             
             // Terrain
@@ -117,7 +118,8 @@ namespace C3DE.Demo.Scenes
             material.NormalTexture = Application.Content.Load<Texture2D>("Models/Quandtum/textures/Turret-Normal");
             material.EmissiveTexture = Application.Content.Load<Texture2D>("Models/Quandtum/textures/Turret-Emission");
             material.EmissiveEnabled = true;
-            material.EmissiveIntensity = 1.0f;
+            material.EmissiveIntensity = 2.0f;
+            material.EmissiveColor = Color.Red;
             material.ReflectionTexture = RenderSettings.Skybox.Texture;
             material.Shininess = 250;
             renderer.Transform.LocalScale = new Vector3(0.035f);

@@ -691,6 +691,18 @@
 /processorParam:TextureFormat=Color
 /build:Textures/lava_texture.jpg
 
+#begin Textures/Laval_Normal.jpg
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/Laval_Normal.jpg
+
 #begin Textures/Luts/lut_32_default.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -967,6 +979,18 @@
 /processorParam:TextureFormat=Color
 /build:Textures/Terrain/Grass.jpg
 
+#begin Textures/Terrain/Grass_Normal.jpg
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/Terrain/Grass_Normal.jpg
+
 #begin Textures/Terrain/Rock.jpg
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -978,6 +1002,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Textures/Terrain/Rock.jpg
+
+#begin Textures/Terrain/Rock_Normal.jpg
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/Terrain/Rock_Normal.jpg
 
 #begin Textures/Terrain/Sand.jpg
 /importer:TextureImporter
@@ -991,6 +1027,18 @@
 /processorParam:TextureFormat=Color
 /build:Textures/Terrain/Sand.jpg
 
+#begin Textures/Terrain/Sand_Normal.jpg
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/Terrain/Sand_Normal.jpg
+
 #begin Textures/Terrain/Snow.jpg
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -1002,6 +1050,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Textures/Terrain/Snow.jpg
+
+#begin Textures/Terrain/Snow_Normal.jpg
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/Terrain/Snow_Normal.jpg
 
 #begin Textures/UI/grey_box.png
 /importer:TextureImporter
@@ -1098,6 +1158,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Textures/water.jpg
+
+#begin Textures/Water_Normal.jpg
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/Water_Normal.jpg
 
 #begin Textures/wavesbump.png
 /importer:TextureImporter

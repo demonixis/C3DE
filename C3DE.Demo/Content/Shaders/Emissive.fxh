@@ -15,10 +15,10 @@ sampler2D emissiveSampler = sampler_state
 
 float4 CalcEmissiveColor(float2 uv) : COLOR0
 {
-    float3 emissiveColor = EmissiveColor * EmissiveIntensity;
+    float3 emissiveColor = EmissiveColor;
 
     if (EmissiveTextureEnabled)
-        emissiveColor *= tex2D(emissiveSampler, uv).xyz;
+        emissiveColor = tex2D(emissiveSampler, uv).xyz;
 
-    return float4(emissiveColor, 1.0);
+    return float4(emissiveColor * EmissiveIntensity, 1.0);
 }
