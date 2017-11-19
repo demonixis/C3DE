@@ -82,11 +82,15 @@
     <Compile Include="Components\Lighting\Light.cs" />
     <Compile Include="Components\Rendering\MeshRenderer.cs" />
     <Compile Include="Components\Rendering\Terrain.cs" />
+    <Compile Include="Components\Physics\Rigidbody.cs" />
     <Compile Include="Components\VR\MotionController.cs" />
     <Compile Include="Extensions\ModelExtensions.cs" />
     <Compile Include="GameObjectFactory.cs" />
     <Compile Include="Graphics\Materials\IEmissiveMaterial.cs" />
     <Compile Include="Graphics\Materials\IMultipassLightingMaterial.cs" />
+    <Compile Include="Graphics\Materials\StandardMaterial.cs" />
+    <Compile Include="Graphics\Materials\StandardMaterialBase.cs" />
+    <Compile Include="Graphics\Materials\StandardToonMaterial.cs" />
     <Compile Include="Graphics\PostProcessing\AverageColorFilter.cs" />
     <Compile Include="Graphics\PostProcessing\Bloom.cs" />
     <Compile Include="Graphics\PostProcessing\ColorGrading.cs" />
@@ -96,12 +100,11 @@
     <Compile Include="Extensions\QuaternionExtensions.cs" />
     <Compile Include="Input.cs" />
     <Compile Include="Graphics\Materials\BillboardMaterial.cs" />
-    <Compile Include="Graphics\Materials\UnlitColorMaterial.cs" />
     <Compile Include="Graphics\Materials\UnlitMaterial.cs" />
     <Compile Include="Graphics\PostProcessing\PostProcessManager.cs" />
     <Compile Include="Graphics\Materials\FresnelMaterial.cs" />
     <Compile Include="Graphics\Materials\LavaMaterial.cs" />
-    <Compile Include="Graphics\Materials\TerrainMaterial.cs" />
+    <Compile Include="Graphics\Materials\StandardTerrainMaterial.cs" />
     <Compile Include="Graphics\Materials\ToonMaterial.cs" />
     <Compile Include="Graphics\PostProcessing\BloomLegacy.cs" />
     <Compile Include="Graphics\PostProcessing\BloomLegacySettings.cs" />
@@ -123,7 +126,6 @@
     <Compile Include="Graphics\Primitives\TorusMesh.cs" />
     <Compile Include="Inputs\InputDevice.cs" />
     <Compile Include="Inputs\TouchComponent.cs" />
-    <Compile Include="Graphics\Materials\ReflectiveMaterial.cs" />
     <Compile Include="Graphics\Materials\SimpleMaterial.cs" />
     <Compile Include="Graphics\Materials\TransparentMaterial.cs" />
     <Compile Include="Graphics\PostProcessing\SimpleBlur.cs" />
@@ -136,8 +138,7 @@
     <Compile Include="UI\GUISkin.cs" />
     <Compile Include="UI\GUI.cs" />
     <Compile Include="Utils\GraphicsHelper.cs" />
-    <Compile Include="Graphics\Materials\StandardMaterial.cs" />
-    <Compile Include="Graphics\Materials\WaterMaterial.cs" />
+    <Compile Include="Graphics\Materials\StandardWaterMaterial.cs" />
     <Compile Include="Components\Component.cs" />
     <Compile Include="Components\Rendering\ModelRenderer.cs" />
     <Compile Include="Components\Transform.cs" />
@@ -160,6 +161,9 @@
     <Compile Include="Utils\NoiseGenerator.cs" />
     <Compile Include="Utils\RandomHelper.cs" />
     <Compile Include="Components\Rendering\DepthNormalRenderer.cs" />
+    <Compile Include="VR\Oculus\MonogameExtensions.cs" />
+    <Compile Include="VR\Oculus\OculusRift.cs" />
+    <Compile Include="VR\Oculus\OculusService.cs" />
     <Compile Include="VR\VRDriver.cs" />
     <Compile Include="VR\VRManager.cs" />
     <Compile Include="VR\VRService.cs" />

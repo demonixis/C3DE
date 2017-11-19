@@ -39,6 +39,18 @@
 /processorParam:TextureFormat=Color
 /build:Models/Atrium/00_skap.jpg
 
+#begin Models/Atrium/00_skap_Normal.jpg
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Models/Atrium/00_skap_Normal.jpg
+
 #begin Models/Atrium/01_S_ba.jpg
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -50,6 +62,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Models/Atrium/01_S_ba.jpg
+
+#begin Models/Atrium/01_S_ba_Normal.jpg
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Models/Atrium/01_S_ba_Normal.jpg
 
 #begin Models/Atrium/01_St_kp.jpg
 /importer:TextureImporter
@@ -63,6 +87,18 @@
 /processorParam:TextureFormat=Color
 /build:Models/Atrium/01_St_kp.jpg
 
+#begin Models/Atrium/01_St_kp_Normal.jpg
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Models/Atrium/01_St_kp_Normal.jpg
+
 #begin Models/Atrium/01_STUB.jpg
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -74,6 +110,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Models/Atrium/01_STUB.jpg
+
+#begin Models/Atrium/01_STUB_Normal.jpg
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Models/Atrium/01_STUB_Normal.jpg
 
 #begin Models/Atrium/KAMEN.jpg
 /importer:TextureImporter
@@ -87,6 +135,18 @@
 /processorParam:TextureFormat=Color
 /build:Models/Atrium/KAMEN.jpg
 
+#begin Models/Atrium/KAMEN_Normal.jpg
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Models/Atrium/KAMEN_Normal.jpg
+
 #begin Models/Atrium/prozor1.jpg
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -98,6 +158,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Models/Atrium/prozor1.jpg
+
+#begin Models/Atrium/prozor1_Normal.jpg
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Models/Atrium/prozor1_Normal.jpg
 
 #begin Models/Atrium/reljef.jpg
 /importer:TextureImporter
@@ -111,6 +183,18 @@
 /processorParam:TextureFormat=Color
 /build:Models/Atrium/reljef.jpg
 
+#begin Models/Atrium/reljef_Normal.jpg
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Models/Atrium/reljef_Normal.jpg
+
 #begin Models/Atrium/sp_luk.jpg
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -122,6 +206,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Models/Atrium/sp_luk.jpg
+
+#begin Models/Atrium/sp_luk_Normal.jpg
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Models/Atrium/sp_luk_Normal.jpg
 
 #begin Models/Atrium/sponza.obj
 /importer:OpenAssetImporter
@@ -154,6 +250,18 @@
 /processorParam:TextureFormat=Color
 /build:Models/Atrium/vrata_ko.jpg
 
+#begin Models/Atrium/vrata_ko_Normal.jpg
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Models/Atrium/vrata_ko_Normal.jpg
+
 #begin Models/Atrium/vrata_kr.jpg
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -166,6 +274,18 @@
 /processorParam:TextureFormat=Color
 /build:Models/Atrium/vrata_kr.jpg
 
+#begin Models/Atrium/vrata_kr_Normal.jpg
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Models/Atrium/vrata_kr_Normal.jpg
+
 #begin Models/Atrium/x01_st.jpg
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -177,6 +297,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Models/Atrium/x01_st.jpg
+
+#begin Models/Atrium/x01_st_Normal.jpg
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Models/Atrium/x01_st_Normal.jpg
 
 #begin Models/hexagone_basic.png
 /importer:TextureImporter
@@ -511,6 +643,18 @@
 /processorParam:TextureFormat=Color
 /build:Textures/lava_texture.jpg
 
+#begin Textures/Laval_Normal.jpg
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/Laval_Normal.jpg
+
 #begin Textures/Luts/lut_32_default.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -787,6 +931,18 @@
 /processorParam:TextureFormat=Color
 /build:Textures/Terrain/Grass.jpg
 
+#begin Textures/Terrain/Grass_Normal.jpg
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/Terrain/Grass_Normal.jpg
+
 #begin Textures/Terrain/Rock.jpg
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -798,6 +954,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Textures/Terrain/Rock.jpg
+
+#begin Textures/Terrain/Rock_Normal.jpg
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/Terrain/Rock_Normal.jpg
 
 #begin Textures/Terrain/Sand.jpg
 /importer:TextureImporter
@@ -811,6 +979,18 @@
 /processorParam:TextureFormat=Color
 /build:Textures/Terrain/Sand.jpg
 
+#begin Textures/Terrain/Sand_Normal.jpg
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/Terrain/Sand_Normal.jpg
+
 #begin Textures/Terrain/Snow.jpg
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -822,6 +1002,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Textures/Terrain/Snow.jpg
+
+#begin Textures/Terrain/Snow_Normal.jpg
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/Terrain/Snow_Normal.jpg
 
 #begin Textures/UI/grey_box.png
 /importer:TextureImporter
@@ -918,6 +1110,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Textures/water.jpg
+
+#begin Textures/Water_Normal.jpg
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/Water_Normal.jpg
 
 #begin Textures/wavesbump.png
 /importer:TextureImporter

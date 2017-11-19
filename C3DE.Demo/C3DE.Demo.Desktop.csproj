@@ -77,11 +77,13 @@
     <Compile Include="Scripts\LightSpawner.cs" />
     <Compile Include="Scripts\LightSwitcher.cs" />
     <Compile Include="Scripts\MenuBehaviour.cs" />
+    <Compile Include="Scripts\PhysicsSpawner.cs" />
     <Compile Include="Scripts\PointerCoordDebug.cs" />
     <Compile Include="Scripts\PostProcessSwitcher.cs" />
     <Compile Include="Scripts\RayPickingTester.cs" />
     <Compile Include="Scripts\ShadowMapViewer.cs" />
     <Compile Include="Scripts\SimplePath.cs" />
+    <Compile Include="Scripts\SinMovement.cs" />
     <Compile Include="Scripts\UIWidgetDemo.cs" />
     <Compile Include="Scripts\VRSwitcher.cs" />
     <Compile Include="Scripts\WeightMapViewer.cs" />

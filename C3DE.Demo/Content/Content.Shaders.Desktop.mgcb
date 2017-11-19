@@ -157,17 +157,23 @@
 /processorParam:DebugMode=Auto
 /build:Shaders/StandardEffect.fx
 
-#begin Shaders/TerrainEffect.fx
+#begin Shaders/StandardTerrainEffect.fx
 /importer:EffectImporter
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
-/build:Shaders/TerrainEffect.fx
+/build:Shaders/StandardTerrainEffect.fx
 
-#begin Shaders/TerrainEffect.Low.fx
+#begin Shaders/StandardToonEffect.fx
 /importer:EffectImporter
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
-/build:Shaders/TerrainEffect.Low.fx
+/build:Shaders/StandardToonEffect.fx
+
+#begin Shaders/StandardWaterEffect.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Shaders/StandardWaterEffect.fx
 
 #begin Shaders/ToonEffect.fx
 /importer:EffectImporter
@@ -186,22 +192,3 @@
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
 /build:Shaders/Unlit.fx
-
-#begin Shaders/UnlitColor.fx
-/importer:EffectImporter
-/processor:EffectProcessor
-/processorParam:DebugMode=Auto
-/build:Shaders/UnlitColor.fx
-
-#begin Shaders/WaterEffect.fx
-/importer:EffectImporter
-/processor:EffectProcessor
-/processorParam:DebugMode=Auto
-/build:Shaders/WaterEffect.fx
-
-#begin Shaders/WaterEffect.Low.fx
-/importer:EffectImporter
-/processor:EffectProcessor
-/processorParam:DebugMode=Auto
-/build:Shaders/WaterEffect.Low.fx
-
