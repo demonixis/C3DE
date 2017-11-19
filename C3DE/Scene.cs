@@ -10,6 +10,8 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using Jitter.Collision;
+using Jitter;
 
 namespace C3DE
 {
@@ -63,6 +65,9 @@ namespace C3DE
         [DataMember]
         internal protected List<GameObject> prefabs;
         internal protected List<PostProcessPass> postProcessPasses;
+
+        internal protected CollisionSystem m_PhysicsCollisionSystem;
+        internal protected World m_PhysicsWorld;
 
         public RenderSettings RenderSettings { get; private set; }
 
@@ -165,6 +170,8 @@ namespace C3DE
             _needRemoveCheck = false;
             defaultMaterial = new SimpleMaterial(this, "Default Material");
             RenderSettings = new RenderSettings();
+            m_PhysicsCollisionSystem = new CollisionSystemSAP();
+            m_PhysicsWorld = new World(m_PhysicsCollisionSystem);
         }
 
         public Scene(string name)
@@ -202,6 +209,8 @@ namespace C3DE
         public override void Update()
         {
             base.Update();
+
+            m_PhysicsWorld.Step(1.0f / 100.0f, true);
 
             // First - Check if we need to remove some components.
             if (_needRemoveCheck)

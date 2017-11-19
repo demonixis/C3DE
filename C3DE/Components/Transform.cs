@@ -49,8 +49,18 @@ namespace C3DE.Components
 
         public Vector3 Position
         {
-            get => world.Translation;
-            set { world.Translation = value; }
+            get
+            {
+                _dirty = true;
+                Update();
+                return world.Translation;
+            }
+            set
+            {
+                _dirty = true;
+                Update();
+                world.Translation = value;
+            }
         }
 
         [DataMember]
