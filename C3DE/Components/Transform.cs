@@ -185,11 +185,25 @@ namespace C3DE.Components
             _localPosition.Z = z.HasValue ? z.Value : _localPosition.Z;
         }
 
+        public void SetPosition(Vector3 position)
+        {
+            _localPosition.X = position.X;
+            _localPosition.Y = position.Y;
+            _localPosition.Z = position.Z;
+        }
+
         public void SetRotation(float? x, float? y, float? z)
         {
             _localRotation.X = x.HasValue ? x.Value : _localRotation.X;
             _localRotation.Y = y.HasValue ? y.Value : _localRotation.Y;
             _localRotation.Z = z.HasValue ? z.Value : _localRotation.Z;
+        }
+
+        public void SetRotation(Matrix matrix)
+        {
+            var quaternion = Quaternion.CreateFromRotationMatrix(matrix);
+            var rotation = quaternion.ToEuler();
+            SetRotation(rotation.X, rotation.Y, rotation.Z);
         }
 
         public void SetScale(float? x, float? y, float? z)

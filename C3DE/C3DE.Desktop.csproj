@@ -193,8 +193,5 @@
     <Compile Include="VR\OSVR\OSVR.MonoGame\XnaPosition2DInterface.cs" />
     <Compile Include="VR\OSVR\OSVR.MonoGame\XnaPositionInterface.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Coroutines\" />
-  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

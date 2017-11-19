@@ -210,7 +210,7 @@ namespace C3DE
         {
             base.Update();
 
-            m_PhysicsWorld.Step(1.0f / 100.0f, true);
+            m_PhysicsWorld.Step(Time.DeltaTime, true);
 
             // First - Check if we need to remove some components.
             if (_needRemoveCheck)

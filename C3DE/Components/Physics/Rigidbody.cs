@@ -1,6 +1,7 @@
 ﻿using C3DE.Components.Physics;
 using C3DE.Components.Rendering;
 using Jitter.Collision.Shapes;
+using Jitter.Dynamics;
 using Jitter.LinearMath;
 using Microsoft.Xna.Framework;
 using JRigidBody = Jitter.Dynamics.RigidBody;
@@ -14,28 +15,44 @@ namespace C3DE.Components.Physics
 
         public bool IsStatic
         {
-            get => m_rigidBody?.IsStatic ?? false;
-            set
-            {
-                if (m_rigidBody != null)
-                    m_rigidBody.IsStatic = value;
-            }
+            get => m_rigidBody.IsStatic;
+            set => m_rigidBody.IsStatic = value;
         }
 
         public bool AffectedByGravity
         {
             get => m_rigidBody?.AffectedByGravity ?? false;
-            set
-            {
-                if (m_rigidBody != null)
-                    m_rigidBody.AffectedByGravity = value;
-            }
+            set => m_rigidBody.AffectedByGravity = value;
+        }
+
+        public Vector3 AngularVelocity
+        {
+            get => ToVector3(m_rigidBody.AngularVelocity);
+            set => m_rigidBody.AngularVelocity = ToJVector(value);
+        }
+
+        public Vector3 Velocity
+        {
+            get => ToVector3(m_rigidBody.LinearVelocity);
+            set => m_rigidBody.LinearVelocity = ToJVector(value);
+        }
+
+        public Material PhysicsMaterial
+        {
+            get => m_rigidBody.Material;
+            set => m_rigidBody.Material = value;
+        }
+
+        public float Mass
+        {
+            get => m_rigidBody.Mass;
+            set => m_rigidBody.Mass = value;
         }
 
         public Rigidbody()
             : base()
         {
-            var shape = new BoxShape(1, 1, 1);
+            var shape = new BoxShape(1.0f, 1.0f, 1.0f);
             m_rigidBody = new JRigidBody(shape);
         }
 
@@ -84,6 +101,21 @@ namespace C3DE.Components.Physics
             }
         }
 
+        public void AddForce(Vector3 force)
+        {
+            m_rigidBody.AddForce(ToJVector(force));
+        }
+
+        public void AddForceAtPosition(Vector3 force, Vector3 position)
+        {
+            m_rigidBody.AddForce(ToJVector(force), ToJVector(position));
+        }
+
+        public void AddTorque(Vector3 torque)
+        {
+            m_rigidBody.AddTorque(ToJVector(torque));
+        }
+
         public override void Update()
         {
             base.Update();
@@ -91,9 +123,8 @@ namespace C3DE.Components.Physics
             if (!m_AddedToScene || m_rigidBody.IsStatic)
                 return;
 
-            transform.LocalPosition = ToVector3(m_rigidBody.Position);
-            var matrix = ToMatrix(m_rigidBody.Orientation);
-            transform.LocalRotation = Quaternion.CreateFromRotationMatrix(matrix).ToEuler();
+            transform.SetPosition(ToVector3(m_rigidBody.Position));
+            transform.SetRotation(ToMatrix(m_rigidBody.Orientation));
         }
 
         public override void Dispose()
