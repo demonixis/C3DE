@@ -236,6 +236,9 @@
     <Reference Include="MonoGame.Framework">
       <HintPath>$(MonoGameInstallDirectory)\MonoGame\v3.0\Assemblies\WindowsUniversal\MonoGame.Framework.dll</HintPath>
     </Reference>
+    <Reference Include="Jitter.Standard">
+      <HintPath>..\Deps\Jitter.Standard\Jitter.Standard.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">

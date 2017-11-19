@@ -5,11 +5,10 @@ namespace C3DE.Components.Rendering
 {
     public class DepthRenderer : Renderer
     {
-        private Vector2 _viewport;
         internal RenderTarget2D m_DepthRT;
         internal RenderTarget2D m_NormalRT;
         private Effect m_Effect;
-        
+
         public Camera Camera { get; set; }
 
         public override void Start()

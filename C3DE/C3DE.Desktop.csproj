@@ -54,11 +54,14 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="MonoGame.Framework">
-      <HintPath>..\..\..\..\..\Library\Frameworks\Mono.framework\External\xbuild\MonoGame\v3.0\Assemblies\DesktopGL\MonoGame.Framework.dll</HintPath>
+      <HintPath>$(MonoGameInstallDirectory)\MonoGame\v3.0\Assemblies\DesktopGL\MonoGame.Framework.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Serialization" />
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="Jitter.Standard">
+      <HintPath>..\Deps\Jitter.Standard\Jitter.Standard.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Application.cs" />
@@ -189,9 +192,6 @@
     <Compile Include="VR\OSVR\OSVR.MonoGame\XnaPoseInterface.cs" />
     <Compile Include="VR\OSVR\OSVR.MonoGame\XnaPosition2DInterface.cs" />
     <Compile Include="VR\OSVR\OSVR.MonoGame\XnaPositionInterface.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Coroutines\" />
