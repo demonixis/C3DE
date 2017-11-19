@@ -56,8 +56,8 @@ namespace C3DE.Components.Physics
 
         public void SyncTransform()
         {
-            m_rigidBody.Position = ToJVector(transform.Position);
-            m_rigidBody.Orientation = ToJMatrix(Matrix.CreateFromYawPitchRoll(transform.Rotation.Y, transform.Rotation.Y, transform.Rotation.Z));
+            m_rigidBody.Position = ToJVector(transform.LocalPosition);
+            m_rigidBody.Orientation = ToJMatrix(Matrix.CreateFromYawPitchRoll(transform.LocalRotation.Y, transform.LocalRotation.Y, transform.LocalRotation.Z));
         }
 
         public void SetShapeSource(Collider collider)
@@ -88,10 +88,12 @@ namespace C3DE.Components.Physics
         {
             base.Update();
 
-            if (!m_AddedToScene)
+            if (!m_AddedToScene || m_rigidBody.IsStatic)
                 return;
 
-            transform.Position = ToVector3(m_rigidBody.Position);
+            transform.LocalPosition = ToVector3(m_rigidBody.Position);
+            var matrix = ToMatrix(m_rigidBody.Orientation);
+            transform.LocalRotation = Quaternion.CreateFromRotationMatrix(matrix).ToEuler();
         }
 
         public override void Dispose()
@@ -102,6 +104,16 @@ namespace C3DE.Components.Physics
 
         public static Vector3 ToVector3(JVector jVector) => new Vector3(jVector.X, jVector.Y, jVector.Z);
         public static JVector ToJVector(Vector3 vector) => new JVector(vector.X, vector.Y, vector.Z);
+
+        public static Matrix ToMatrix(JMatrix mat)
+        {
+            return new Matrix(
+                mat.M11, mat.M12, mat.M13, 0.0f,
+                mat.M21, mat.M22, mat.M23, 0.0f,
+                mat.M31, mat.M32, mat.M33, 0.0f,
+                0.0f, 0.0f, 0.0f, 1.0f
+            );
+        }
 
         public static JMatrix ToJMatrix(Matrix matrix)
         {
