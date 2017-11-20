@@ -94,7 +94,7 @@ VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
 	
     float3 normal = input.Normal;
 
-    if (ReflectionTextureEnabled)
+    if (ReflectionTextureEnabled == true)
     {
         float3 viewDirection = EyePosition - worldPosition.xyz;
         output.Reflection = reflect(-normalize(viewDirection), normalize(normal));

@@ -87,7 +87,7 @@ VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
     output.WorldPosition = worldPosition;
     output.FogDistance = distance(worldPosition.xyz, EyePosition);
 
-    if (ReflectionTextureEnabled)
+    if (ReflectionTextureEnabled == true)
     {
         float3 viewDirection = EyePosition - worldPosition.xyz;
         float3 normal = input.Normal;
@@ -109,7 +109,7 @@ float3 CalcDiffuseColor(VertexShaderOutput input)
 {
     float3 diffuse = tex2D(textureSampler, input.UV * TextureTiling).xyz;
 	
-    if (ReflectionTextureEnabled)
+    if (ReflectionTextureEnabled == true)
     {
         float3 reflectColor = texCUBE(reflectionSampler, normalize(input.Reflection)).xyz;
         diffuse *= texCUBE(reflectionSampler, normalize(input.Reflection)).xyz;

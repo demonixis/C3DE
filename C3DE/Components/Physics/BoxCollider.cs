@@ -35,8 +35,8 @@ namespace C3DE.Components.Physics
         public override void Update()
         {
             base.Update();
-            _boundingBox.Min = minimum + (center + transform.LocalPosition);
-            _boundingBox.Max = maximum + (center + transform.LocalPosition);
+            _boundingBox.Min = (minimum - (center + transform.LocalPosition)) * transform.LocalScale;
+            _boundingBox.Max = (maximum + (center + transform.LocalPosition)) * transform.LocalScale;
         }
 
         public override void Compute()
@@ -44,9 +44,10 @@ namespace C3DE.Components.Physics
             var renderer = GetComponent<Renderer>();
             if (renderer != null && autoCompute)
             {
-                minimum = renderer.boundingBox.Min * transform.LocalScale;
-                maximum = renderer.boundingBox.Max * transform.LocalScale;
+                minimum = renderer.boundingBox.Min * 2;
+                maximum = renderer.boundingBox.Max * 2;
                 center = maximum + minimum;
+                Update();
             }
         }
 

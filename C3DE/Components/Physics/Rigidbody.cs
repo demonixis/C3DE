@@ -49,6 +49,13 @@ namespace C3DE.Components.Physics
             set => m_rigidBody.Mass = value;
         }
 
+        public JRigidBody JitterRigidbody
+        {
+            get => m_rigidBody;
+        }
+
+        public Shape Shape => m_rigidBody.Shape;
+
         public Rigidbody()
             : base()
         {
@@ -64,11 +71,9 @@ namespace C3DE.Components.Physics
             var collider = GameObject.GetComponentInChildren<Collider>();
 
             if (collider != null)
-                SetShapeSource(collider);
+                SetShapeFromCollider(collider);
             else if (renderer != null)
-                SetShapeSource(renderer);
-
-            SyncTransform();
+                SetShapeFromRenderer(renderer);
         }
 
         public void SyncTransform()
@@ -77,10 +82,12 @@ namespace C3DE.Components.Physics
             m_rigidBody.Orientation = ToJMatrix(Matrix.CreateFromYawPitchRoll(transform.LocalRotation.Y, transform.LocalRotation.Y, transform.LocalRotation.Z));
         }
 
-        public void SetShapeSource(Collider collider)
+        public void SetShape(Shape shape)
         {
-            var shape = new BoxShape(MathHelper.Max(collider.Size.X, 0.1f), MathHelper.Max(collider.Size.Y, 0.1f), MathHelper.Max(collider.Size.Z, 0.1f));
             m_rigidBody.Shape = shape;
+
+            SyncTransform();
+            shape.UpdateShape();
 
             if (!m_AddedToScene && Scene.current != null)
             {
@@ -89,16 +96,24 @@ namespace C3DE.Components.Physics
             }
         }
 
-        public void SetShapeSource(Renderer renderer)
+        public void SetShapeFromCollider(Collider collider)
+        {
+            var shape = (Shape)null;
+            var size = collider.Size;
+            var sphere = collider as SphereCollider;
+
+            if (sphere != null)
+                shape = new SphereShape(sphere.Sphere.Radius);
+            else
+                shape = new BoxShape(size.X, size.Y, size.Z);
+
+            SetShape(shape);
+        }
+
+        public void SetShapeFromRenderer(Renderer renderer)
         {
             var shape = new SphereShape(renderer.boundingSphere.Radius);
-            m_rigidBody.Shape = shape;
-
-            if (!m_AddedToScene && Scene.current != null)
-            {
-                Scene.current.m_PhysicsWorld.AddBody(m_rigidBody);
-                m_AddedToScene = true;
-            }
+            SetShape(shape);
         }
 
         public void AddForce(Vector3 force)
@@ -120,7 +135,7 @@ namespace C3DE.Components.Physics
         {
             base.Update();
 
-            if (!m_AddedToScene || m_rigidBody.IsStatic)
+            if (!m_AddedToScene)
                 return;
 
             transform.SetPosition(ToVector3(m_rigidBody.Position));

@@ -64,6 +64,7 @@ namespace C3DE.Demo
             Application.SceneManager.Add(new ProceduralTerrainLava());
             Application.SceneManager.Add(new PostProcessingDemo());
             Application.SceneManager.Add(new LightingDemo());
+            Application.SceneManager.Add(new PhysicsDemo());
             Application.SceneManager.Add(new SponzaDemo());
             Application.SceneManager.Add(new HexagonTerrainDemo());
             Application.SceneManager.Add(new GUIDemo());

@@ -60,7 +60,7 @@ float3 CalcSpecular(float4 worldPosition, float3 worldNormal, float3 cameraPosit
 	float3 directionToCamera = normalize(cameraPosition - worldPosition.xyz);
 	float4 specular = SpecularLightColor * SpecularIntensity * pow(saturate(dot(reflectionVector, directionToCamera)), SpecularPower);
    
-	if (SpecularTextureEnabled)
+	if (SpecularTextureEnabled == true)
 		specular *= tex2D(specularSampler, uv);
    
 	return specular;

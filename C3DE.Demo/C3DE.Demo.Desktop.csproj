@@ -59,6 +59,7 @@
   <ItemGroup>
     <Compile Include="DemoGame.cs" />
     <Compile Include="Scenes\GUIDemo.cs" />
+    <Compile Include="Scenes\PhysicsDemo.cs" />
     <Compile Include="Scenes\PostProcessingDemo.cs" />
     <Compile Include="Scenes\HexagonGridTerrain.cs" />
     <Compile Include="Scenes\LightingDemo.cs" />

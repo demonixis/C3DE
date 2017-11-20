@@ -17,7 +17,7 @@ float4 CalcEmissiveColor(float2 uv) : COLOR0
 {
     float3 emissiveColor = EmissiveColor;
 
-    if (EmissiveTextureEnabled)
+    if (EmissiveTextureEnabled == true)
         emissiveColor = tex2D(emissiveSampler, uv).xyz;
 
     return float4(emissiveColor * EmissiveIntensity, 1.0);

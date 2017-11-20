@@ -30,6 +30,7 @@ namespace C3DE
 
     public struct RaycastInfo
     {
+        public Vector3 Position;
         public Ray Ray;
         public Collider Collider;
         public float Distance;
@@ -841,8 +842,10 @@ namespace C3DE
 
                 if (val.HasValue && val.Value <= distance)
                 {
+
                     infos.Add(new RaycastInfo()
                     {
+                        Position = ray.Position,
                         Collider = collider,
                         Distance = val.Value,
                         Ray = ray
