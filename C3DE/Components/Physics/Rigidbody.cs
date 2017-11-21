@@ -80,8 +80,8 @@ namespace C3DE.Components.Physics
 
         public void SyncTransform()
         {
-            m_rigidBody.Position = ToJVector(transform.LocalPosition);
-            m_rigidBody.Orientation = ToJMatrix(Matrix.CreateFromYawPitchRoll(transform.LocalRotation.Y, transform.LocalRotation.Y, transform.LocalRotation.Z));
+            m_rigidBody.Position = ToJVector(m_Transform.LocalPosition);
+            m_rigidBody.Orientation = ToJMatrix(Matrix.CreateFromYawPitchRoll(m_Transform.LocalRotation.Y, m_Transform.LocalRotation.Y, m_Transform.LocalRotation.Z));
         }
 
         public void SetShape(Shape shape)
@@ -142,8 +142,8 @@ namespace C3DE.Components.Physics
 
             if (!IsKinematic)
             {
-                transform.SetPosition(ToVector3(m_rigidBody.Position));
-                transform.SetRotation(ToMatrix(m_rigidBody.Orientation));
+                m_Transform.SetPosition(ToVector3(m_rigidBody.Position));
+                m_Transform.SetRotation(ToMatrix(m_rigidBody.Orientation));
             }
             else
                 SyncTransform();

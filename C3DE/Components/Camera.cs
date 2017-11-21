@@ -142,7 +142,7 @@ namespace C3DE.Components
 
         public override void Start()
         {
-            Setup(transform.LocalPosition, Vector3.Zero, Vector3.Up);
+            Setup(m_Transform.LocalPosition, Vector3.Zero, Vector3.Up);
             Screen.ScreenSizeChanged += OnScreenChanged;
         }
 
@@ -160,7 +160,7 @@ namespace C3DE.Components
 
         public void Setup(Vector3 position, Vector3 camTarget, Vector3 upVector)
         {
-            transform.LocalPosition = position;
+            m_Transform.LocalPosition = position;
             _target = camTarget;
             _upVector = upVector;
 
@@ -194,9 +194,9 @@ namespace C3DE.Components
             if (_needProjectionUpdate)
                 ComputeProjectionMatrix();
 
-            if (!sceneObject.IsStatic || _needUpdate)
+            if (!m_GameObject.IsStatic || _needUpdate)
             {
-                view = Matrix.CreateLookAt(transform.world.Translation, _target, _upVector);
+                view = Matrix.CreateLookAt(m_Transform.m_WorldMatrix.Translation, _target, _upVector);
                 _needUpdate = false;
             }
         }

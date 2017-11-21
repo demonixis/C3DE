@@ -31,7 +31,7 @@ namespace C3DE.Graphics.Materials
 
         public override void Pass(Renderer renderable)
         {
-            m_Effect.Parameters["World"].SetValue(renderable.Transform.world);
+            m_Effect.Parameters["World"].SetValue(renderable.Transform.m_WorldMatrix);
             m_Effect.CurrentTechnique.Passes[0].Apply();
         }
     }

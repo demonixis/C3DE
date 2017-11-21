@@ -72,7 +72,7 @@ namespace C3DE.Graphics.Materials
             m_Effect.Parameters["TextureOffset"].SetValue(Offset);
             m_Effect.Parameters["Alpha"].SetValue(_alpha);
             m_Effect.Parameters["MainTexture"].SetValue(MainTexture);
-            m_Effect.Parameters["World"].SetValue(renderable.transform.world);
+            m_Effect.Parameters["World"].SetValue(renderable.m_Transform.m_WorldMatrix);
             m_Effect.CurrentTechnique.Passes[AlphaEnabled ? 0 : 1].Apply();
         }
     }

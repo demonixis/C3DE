@@ -11,7 +11,7 @@ namespace C3DE.Demo.Scripts
 
         public override void Start()
         {
-            scene = sceneObject.Scene;
+            scene = m_GameObject.Scene;
             camera = Camera.Main; ;
             _hit = "Nothing";
         }

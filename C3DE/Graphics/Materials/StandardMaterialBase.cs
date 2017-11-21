@@ -123,7 +123,7 @@ namespace C3DE.Graphics.Materials
 
         public override void Pass(Renderer renderable)
         {
-            m_EPWorld.SetValue(renderable.Transform.world);
+            m_EPWorld.SetValue(renderable.Transform.m_WorldMatrix);
             m_EPTextureTilling.SetValue(Tiling);
             m_EPDiffuseColor.SetValue(m_DiffuseColor);
             m_EPMainTexture.SetValue(MainTexture);
@@ -136,8 +136,8 @@ namespace C3DE.Graphics.Materials
             m_EPSpecularPower.SetValue(Shininess);
             m_EPSpecularIntensity.SetValue(SpecularIntensity);
             m_EPLightColor.SetValue(light.color);
-            m_EPLightDirection.SetValue(light.transform.LocalRotation);
-            m_EPLightPosition.SetValue(light.transform.LocalPosition);
+            m_EPLightDirection.SetValue(light.m_Transform.LocalRotation);
+            m_EPLightPosition.SetValue(light.m_Transform.LocalPosition);
             m_EPLightSpotAngle.SetValue(light.Angle);
             m_EPLightIntensity.SetValue(light.Intensity);
             m_EPLightRange.SetValue(light.Range);

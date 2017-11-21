@@ -21,9 +21,9 @@
         {
             base.Update();
 
-            m_AudioListener.Forward = transform.Forward;
-            m_AudioListener.Position = transform.LocalPosition;
-            m_AudioListener.Up = transform.Up;
+            m_AudioListener.Forward = m_Transform.Forward;
+            m_AudioListener.Position = m_Transform.LocalPosition;
+            m_AudioListener.Up = m_Transform.Up;
         }
     }
 }

@@ -39,8 +39,8 @@ namespace C3DE.Demo.Scripts
 
             m_VRService.GetHandTransform(LeftHand ? 0 : 1, ref m_Position, ref m_Rotation);
 
-            transform.LocalPosition = m_Position;
-            transform.LocalRotation = m_Rotation.ToEuler();
+            m_Transform.LocalPosition = m_Position;
+            m_Transform.LocalRotation = m_Rotation.ToEuler();
         }
     }
 }

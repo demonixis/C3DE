@@ -134,7 +134,7 @@ namespace C3DE
                 components = new List<Component>(5);
 
                 transform = new Transform();
-                transform.transform = transform;
+                transform.m_Transform = transform;
                 transform.GameObject = this;
                 transform.PropertyChanged += OnComponentChanged;
                 transform.Awake();
@@ -167,7 +167,7 @@ namespace C3DE
 
                 for (int i = 0; i < components.Count; i++)
                 {
-                    components[i].started = true;
+                    components[i].m_Started = true;
                     components[i].Start();
                 }
             }
@@ -261,7 +261,7 @@ namespace C3DE
             else
             {
                 component.GameObject = this;
-                component.transform = transform;
+                component.m_Transform = transform;
                 component.Awake();
                 component.PropertyChanged += OnComponentChanged;
                 components.Add(component);
@@ -270,7 +270,7 @@ namespace C3DE
             if (initialized && !component.Initialized)
             {
                 component.Start();
-                component.started = true;
+                component.m_Started = true;
                 // Sort components here only if the SceneObject is already initialized.
                 components.Sort();
             }
@@ -403,12 +403,12 @@ namespace C3DE
             foreach (Component component in components)
             {
                 clonedComponent = clone.AddComponent((Component)component.Clone());
-                clonedComponent.sceneObject = clone;
+                clonedComponent.m_GameObject = clone;
 
                 clonedTransform = clonedComponent as Transform;
 
                 if (clonedTransform != null)
-                    clonedComponent.transform = clonedTransform;
+                    clonedComponent.m_Transform = clonedTransform;
             }
 
             clone.Id = "GameObject_" + Guid.NewGuid();
@@ -434,8 +434,8 @@ namespace C3DE
 
                 for (i = 0; i < size; i++)
                 {
-                    components[i].sceneObject = this;
-                    components[i].transform = transform;
+                    components[i].m_GameObject = this;
+                    components[i].m_Transform = transform;
                 }
 
                 for (i = 0; i < size; i++)

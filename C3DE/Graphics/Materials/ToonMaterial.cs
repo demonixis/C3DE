@@ -41,7 +41,7 @@ namespace C3DE.Graphics.Materials
             if (scene.lights.Count > 0)
             {
                 var light0 = scene.Lights[0]; // FIXME
-                m_Effect.Parameters["LightDirection"].SetValue(light0.transform.LocalRotation);
+                m_Effect.Parameters["LightDirection"].SetValue(light0.m_Transform.LocalRotation);
             }
         }
 
@@ -54,7 +54,7 @@ namespace C3DE.Graphics.Materials
             m_Effect.Parameters["TextureTiling"].SetValue(Tiling);
             m_Effect.Parameters["TextureOffset"].SetValue(Offset);
             m_Effect.Parameters["MainTexture"].SetValue(MainTexture);
-            m_Effect.Parameters["World"].SetValue(renderable.GameObject.Transform.world);
+            m_Effect.Parameters["World"].SetValue(renderable.GameObject.Transform.m_WorldMatrix);
             m_Effect.CurrentTechnique.Passes[0].Apply();
         }
     }

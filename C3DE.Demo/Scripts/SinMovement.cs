@@ -25,11 +25,11 @@ public sealed class SinMovement : Behaviour
 
     public override void Update()
     {
-        m_Position = transform.LocalPosition;
+        m_Position = m_Transform.LocalPosition;
         m_Y = (Time.TotalTime + Phase) * Frequency;
         m_Y = m_Y - (float)Math.Floor((double)m_Y); // normalized value to 0..1
         m_Position.Y = (float)((Max * Math.Sin(2 * MathHelper.Pi * m_Y)) + Min);
 
-        transform.LocalPosition = m_Position;
+        m_Transform.LocalPosition = m_Position;
     }
 }

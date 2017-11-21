@@ -10,97 +10,110 @@ namespace C3DE.Components
     [DataContract]
     public class Transform : Component
     {
-        internal Matrix world;
-        internal Vector3 lastPosition;
-        private Vector3 _localRotation;
-        private Vector3 _localPosition;
-        private Vector3 _localScale;
-        private Transform _parent;
-        private Transform _root;
-        private bool _dirty;
-        protected List<Transform> _transforms;
+        internal Matrix m_WorldMatrix;
+        private Vector3 m_LocalRotation;
+        private Vector3 m_LocalPosition;
+        private Vector3 m_LocalScale;
+        private Transform m_Parent;
+        private Transform m_Root;
+        private bool m_Dirty;
+        protected List<Transform> m_Transforms;
 
         public Transform Root
         {
-            get { return _root; }
-            internal set { _root = value; }
+            get { return m_Root; }
+            internal set { m_Root = value; }
         }
 
         public Transform Parent
         {
-            get { return _parent; }
+            get { return m_Parent; }
             set
             {
-                if (_parent != null)
-                    _parent.Transforms.Remove(this);
+                if (m_Parent != null)
+                    m_Parent.Transforms.Remove(this);
 
-                _parent = value;
+                m_Parent = value;
 
-                if (_parent != null)
-                    _parent.Transforms.Add(this);
+                if (m_Parent != null)
+                    m_Parent.Transforms.Add(this);
             }
         }
 
         public List<Transform> Transforms
         {
-            get { return _transforms; }
-            protected set { _transforms = value; }
+            get { return m_Transforms; }
+            protected set { m_Transforms = value; }
         }
 
         public Vector3 Position
         {
             get
             {
-                _dirty = true;
-                Update();
-                return world.Translation;
+                UpdateWorldMatrix();
+                return m_WorldMatrix.Translation;
             }
             set
             {
-                _dirty = true;
-                Update();
-                world.Translation = value;
+                UpdateWorldMatrix();
+                m_WorldMatrix.Translation = value;
             }
         }
 
         [DataMember]
         public Vector3 LocalPosition
         {
-            get { return _localPosition; }
-            set { _localPosition = value; }
+            get { return m_LocalPosition; }
+            set { m_LocalPosition = value; }
         }
 
         public Vector3 Rotation
         {
             get
             {
-                var p = Vector3.Zero;
-                var r = Quaternion.Identity;
-                var s = Vector3.Zero;
-                world.Decompose(out s, out r, out p);
-                return r.ToEuler();
+                UpdateWorldMatrix();
+                var position = Vector3.Zero;
+                var rotation = Quaternion.Identity;
+                var scale = Vector3.Zero;
+                m_WorldMatrix.Decompose(out scale, out rotation, out position);
+                return rotation.ToEuler();
             }
         }
 
-        public Quaternion Quaternion => Quaternion.CreateFromYawPitchRoll(_localRotation.Y, _localRotation.X, _localRotation.Z);
+        public Quaternion Quaternion
+        {
+            get
+            {
+                var rotation = Rotation;
+                return Quaternion.CreateFromYawPitchRoll(rotation.Y, rotation.X, rotation.Z);
+            }
+        }
+
+        public Quaternion LocalQuaternion
+        {
+            get
+            {
+                return Quaternion.CreateFromYawPitchRoll(m_LocalRotation.Y, m_LocalRotation.X, m_LocalRotation.Z);
+            }
+        }
 
         [DataMember]
         public Vector3 LocalRotation
         {
-            get { return _localRotation; }
-            set { _localRotation = value; }
+            get { return m_LocalRotation; }
+            set { m_LocalRotation = value; }
         }
 
         [DataMember]
         public Vector3 LocalScale
         {
-            get { return _localScale; }
-            set { _localScale = value; }
+            get { return m_LocalScale; }
+            set { m_LocalScale = value; }
         }
 
         public Matrix WorldMatrix
         {
-            get { return world; }
+            get { return m_WorldMatrix; }
         }
 
         public Vector3 Forward
@@ -136,21 +149,21 @@ namespace C3DE.Components
         public Transform()
             : base()
         {
-            _localPosition = Vector3.Zero;
-            _localRotation = Vector3.Zero;
-            _localScale = Vector3.One;
-            _parent = null;
-            _root = null;
-            _transforms = new List<Transform>();
-            _dirty = false;
-            world = Matrix.Identity;
+            m_LocalPosition = Vector3.Zero;
+            m_LocalRotation = Vector3.Zero;
+            m_LocalScale = Vector3.One;
+            m_Parent = null;
+            m_Root = null;
+            m_Transforms = new List<Transform>();
+            m_Dirty = false;
+            m_WorldMatrix = Matrix.Identity;
         }
 
         public void Translate(float x, float y, float z)
         {
-            _localPosition.X += x;
-            _localPosition.Y += y;
-            _localPosition.Z += z;
+            m_LocalPosition.X += x;
+            m_LocalPosition.Y += y;
+            m_LocalPosition.Z += z;
         }
 
         public void Translate(ref Vector3 translation)
@@ -165,9 +178,9 @@ namespace C3DE.Components
 
         public void Rotate(float rx, float ry, float rz)
         {
-            _localRotation.X += rx;
-            _localRotation.Y += ry;
-            _localRotation.Z += rz;
+            m_LocalRotation.X += rx;
+            m_LocalRotation.Y += ry;
+            m_LocalRotation.Z += rz;
         }
 
         public void Rotate(ref Vector3 rotation)
@@ -182,23 +195,23 @@ namespace C3DE.Components
 
         public void SetPosition(float? x, float? y, float? z)
         {
-            _localPosition.X = x.HasValue ? x.Value : _localPosition.X;
-            _localPosition.Y = y.HasValue ? y.Value : _localPosition.Y;
-            _localPosition.Z = z.HasValue ? z.Value : _localPosition.Z;
+            m_LocalPosition.X = x.HasValue ? x.Value : m_LocalPosition.X;
+            m_LocalPosition.Y = y.HasValue ? y.Value : m_LocalPosition.Y;
+            m_LocalPosition.Z = z.HasValue ? z.Value : m_LocalPosition.Z;
         }
 
         public void SetPosition(Vector3 position)
         {
-            _localPosition.X = position.X;
-            _localPosition.Y = position.Y;
-            _localPosition.Z = position.Z;
+            m_LocalPosition.X = position.X;
+            m_LocalPosition.Y = position.Y;
+            m_LocalPosition.Z = position.Z;
         }
 
         public void SetRotation(float? x, float? y, float? z)
         {
-            _localRotation.X = x.HasValue ? x.Value : _localRotation.X;
-            _localRotation.Y = y.HasValue ? y.Value : _localRotation.Y;
-            _localRotation.Z = z.HasValue ? z.Value : _localRotation.Z;
+            m_LocalRotation.X = x.HasValue ? x.Value : m_LocalRotation.X;
+            m_LocalRotation.Y = y.HasValue ? y.Value : m_LocalRotation.Y;
+            m_LocalRotation.Z = z.HasValue ? z.Value : m_LocalRotation.Z;
         }
 
         public void SetRotation(Matrix matrix)
@@ -210,48 +223,51 @@ namespace C3DE.Components
 
         public void SetScale(float? x, float? y, float? z)
         {
-            _localScale.X = x.HasValue ? x.Value : _localScale.X;
-            _localScale.Y = y.HasValue ? y.Value : _localScale.Y;
-            _localScale.Z = z.HasValue ? z.Value : _localScale.Z;
+            m_LocalScale.X = x.HasValue ? x.Value : m_LocalScale.X;
+            m_LocalScale.Y = y.HasValue ? y.Value : m_LocalScale.Y;
+            m_LocalScale.Z = z.HasValue ? z.Value : m_LocalScale.Z;
         }
 
         public override void Update()
         {
-            if (sceneObject.IsStatic && !_dirty)
+            if (m_GameObject.IsStatic && !m_Dirty)
                 return;
 
-            lastPosition = LocalPosition;
+            UpdateWorldMatrix();
 
-            world = Matrix.Identity;
-            world *= Matrix.CreateScale(_localScale);
-            world *= Matrix.CreateFromYawPitchRoll(_localRotation.Y, _localRotation.X, _localRotation.Z);
-            world *= Matrix.CreateTranslation(_localPosition);
+            m_Dirty = false;
+        }
 
-            if (_parent != null)
-                world *= _parent.world;
+        public void UpdateWorldMatrix()
+        {
+            m_WorldMatrix = Matrix.Identity;
+            m_WorldMatrix *= Matrix.CreateScale(m_LocalScale);
+            m_WorldMatrix *= Matrix.CreateFromYawPitchRoll(m_LocalRotation.Y, m_LocalRotation.X, m_LocalRotation.Z);
+            m_WorldMatrix *= Matrix.CreateTranslation(m_LocalPosition);
 
-            _dirty = false;
+            if (m_Parent != null)
+                m_WorldMatrix *= m_Parent.m_WorldMatrix;
         }
 
         private Vector3 GetTransformedVector(Vector3 direction)
         {
-            return Vector3.Transform(direction, Matrix.CreateFromYawPitchRoll(_localRotation.Y, _localRotation.X, _localRotation.Z));
+            return Vector3.Transform(direction, Matrix.CreateFromYawPitchRoll(m_LocalRotation.Y, m_LocalRotation.X, m_LocalRotation.Z));
         }
 
         public override object Clone()
         {
             var tr = new Transform();
-            tr._parent = Parent;
-            tr._root = _root;
-            tr.sceneObject = sceneObject;
+            tr.m_Parent = Parent;
+            tr.m_Root = m_Root;
+            tr.m_GameObject = m_GameObject;
 
-            foreach (var t in _transforms)
-                tr._transforms.Add(t);
+            foreach (var t in m_Transforms)
+                tr.m_Transforms.Add(t);
 
-            tr._localPosition = _localPosition;
-            tr._localRotation = _localRotation;
-            tr._localScale = _localScale;
-            tr._dirty = true;
+            tr.m_LocalPosition = m_LocalPosition;
+            tr.m_LocalRotation = m_LocalRotation;
+            tr.m_LocalScale = m_LocalScale;
+            tr.m_Dirty = true;
 
             return tr;
         }

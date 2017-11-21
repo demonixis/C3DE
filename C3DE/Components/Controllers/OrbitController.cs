@@ -101,7 +101,7 @@ namespace C3DE.Components.Controllers
             _position *= _distance;
             _position += _camera.Target;
 
-            transform.LocalPosition = _position;
+            m_Transform.LocalPosition = _position;
             _camera.Target = _target;
 
             angleVelocity *= AngularVelocity;

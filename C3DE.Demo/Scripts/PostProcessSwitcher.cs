@@ -120,7 +120,7 @@ namespace C3DE.Demo.Scripts
         private void AddPass(PostProcessPass pass)
         {
             pass.Enabled = false;
-            sceneObject.Scene.Add(pass);
+            m_GameObject.Scene.Add(pass);
             _passes.Add(pass);
         }
 

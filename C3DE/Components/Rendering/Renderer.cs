@@ -58,8 +58,8 @@ namespace C3DE.Components.Rendering
 
         public override void Update()
         {
-            if (!sceneObject.IsStatic)
-                boundingSphere.Center = transform.LocalPosition;
+            if (!m_GameObject.IsStatic)
+                boundingSphere.Center = m_Transform.LocalPosition;
         }
 
         /// <summary>

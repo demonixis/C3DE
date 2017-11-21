@@ -128,17 +128,17 @@ namespace C3DE.Components.Rendering
         public virtual float GetTerrainHeight(float x, float y, float z)
         {
             // Terrain space.
-            x -= transform.LocalPosition.X;
-            y -= transform.LocalPosition.Y;
-            z -= transform.LocalPosition.Z;
+            x -= m_Transform.LocalPosition.X;
+            y -= m_Transform.LocalPosition.Y;
+            z -= m_Transform.LocalPosition.Z;
 
             float terrainHeigth = 0.0f;
 
-            float sizedPosX = (x / m_Geometry.Size.X) / transform.LocalScale.X;
-            float sizedPosZ = (z / m_Geometry.Size.Z) / transform.LocalScale.Z;
+            float sizedPosX = (x / m_Geometry.Size.X) / m_Transform.LocalScale.X;
+            float sizedPosZ = (z / m_Geometry.Size.Z) / m_Transform.LocalScale.Z;
 
-            int px = (int)((x / m_Geometry.Size.X) / transform.LocalScale.X);
-            int pz = (int)((z / m_Geometry.Size.Z) / transform.LocalScale.Z);
+            int px = (int)((x / m_Geometry.Size.X) / m_Transform.LocalScale.X);
+            int pz = (int)((z / m_Geometry.Size.Z) / m_Transform.LocalScale.Z);
 
             if (px < 0 || px >= m_Geometry.Data.GetLength(0) - 1 || pz < 0 || pz >= m_Geometry.Data.GetLength(1) - 1)
                 terrainHeigth = y;
@@ -168,7 +168,7 @@ namespace C3DE.Components.Rendering
                 }
             }
 
-            return (terrainHeigth * m_Geometry.Size.Y * transform.LocalScale.Y);
+            return (terrainHeigth * m_Geometry.Size.Y * m_Transform.LocalScale.Y);
         }
 
         public void SetWeightData(float sand, float ground, float rock, float snow)

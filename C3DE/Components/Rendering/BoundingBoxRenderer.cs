@@ -49,7 +49,7 @@ namespace C3DE.Components.Rendering
 
             if (_renderer == null)
             {
-                sceneObject.RemoveComponent(this);
+                m_GameObject.RemoveComponent(this);
                 return;
             }
 
@@ -77,11 +77,11 @@ namespace C3DE.Components.Rendering
 
             for (int i = 0; i < 8; i++)
             {
-                _vertices[i].Position = _corners[i] * transform.LocalScale;
+                _vertices[i].Position = _corners[i] * m_Transform.LocalScale;
                 _vertices[i].Color = LineColor;
             }
 
-            _effect.World = Matrix.CreateFromYawPitchRoll(transform.LocalRotation.Y, transform.LocalRotation.X, transform.LocalRotation.Z) * Matrix.CreateTranslation(transform.LocalPosition);
+            _effect.World = Matrix.CreateFromYawPitchRoll(m_Transform.LocalRotation.Y, m_Transform.LocalRotation.X, m_Transform.LocalRotation.Z) * Matrix.CreateTranslation(m_Transform.LocalPosition);
             _effect.View = Camera.Main.view;
             _effect.Projection = Camera.Main.projection;
             _effect.CurrentTechnique.Passes[0].Apply();

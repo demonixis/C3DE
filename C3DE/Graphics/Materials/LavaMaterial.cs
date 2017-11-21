@@ -66,7 +66,7 @@ namespace C3DE.Graphics.Materials
             m_EPNormalTexture.SetValue(NormalTexture);
             m_EPTextureTilling.SetValue(Tiling);
             m_EPDiffuseColor.SetValue(m_DiffuseColor);
-            m_EPWorld.SetValue(renderable.Transform.world);
+            m_EPWorld.SetValue(renderable.Transform.m_WorldMatrix);
             m_EPEmissiveIntensity.SetValue(EmissiveIntensity);
             m_PassAmbient.Apply();
         }

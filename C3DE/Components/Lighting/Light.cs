@@ -20,7 +20,7 @@ namespace C3DE.Components.Lighting
 
         public Matrix Projection => projectionMatrix;
 
-        public Vector3 Direction => Vector3.Normalize(sceneObject.Transform.Position);
+        public Vector3 Direction => Vector3.Normalize(m_GameObject.Transform.Position);
 
         [DataMember]
         public bool EnableShadow
@@ -90,13 +90,13 @@ namespace C3DE.Components.Lighting
         // Need to be changed quickly !
         public void Update(ref BoundingSphere sphere)
         {
-            Vector3 dir = sphere.Center - sceneObject.Transform.LocalPosition;
+            Vector3 dir = sphere.Center - m_GameObject.Transform.LocalPosition;
             dir.Normalize();
 
-            viewMatrix = Matrix.CreateLookAt(transform.LocalPosition, sphere.Center, Vector3.Up);
+            viewMatrix = Matrix.CreateLookAt(m_Transform.LocalPosition, sphere.Center, Vector3.Up);
             float size = sphere.Radius;
 
-            float dist = Vector3.Distance(transform.LocalPosition, sphere.Center);
+            float dist = Vector3.Distance(m_Transform.LocalPosition, sphere.Center);
             projectionMatrix = Matrix.CreateOrthographicOffCenter(-size, size, size, -size, dist - sphere.Radius, dist + sphere.Radius * 2);
         }
 

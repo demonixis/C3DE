@@ -51,7 +51,7 @@ namespace C3DE.Graphics.Materials
 
         public override void Pass(Renderer renderable)
         {
-            m_EPWorld.SetValue(renderable.Transform.world);
+            m_EPWorld.SetValue(renderable.Transform.m_WorldMatrix);
             m_EPTextureTilling.SetValue(Tiling);
             m_EPDiffuseColor.SetValue(m_DiffuseColor);
             m_EPMainTexture.SetValue(MainTexture);
