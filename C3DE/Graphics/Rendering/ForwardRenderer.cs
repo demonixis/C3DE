@@ -83,6 +83,8 @@ namespace C3DE.Graphics.Rendering
 
             RebuildRenderTargets();
 
+            RenderShadowMaps(scene);
+
             if (m_VREnabled)
             {
                 for (var eye = 0; eye < 2; eye++)
@@ -105,7 +107,6 @@ namespace C3DE.Graphics.Rendering
             m_graphicsDevice.SetRenderTarget(renderTarget);
             m_graphicsDevice.Clear(camera.clearColor);
 
-            RenderShadowMaps(scene);
             RenderObjects(scene, camera);
             RenderPostProcess(scene.postProcessPasses, renderTarget);
 
