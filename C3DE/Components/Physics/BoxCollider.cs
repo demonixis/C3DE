@@ -44,8 +44,8 @@ namespace C3DE.Components.Physics
             var renderer = GetComponent<Renderer>();
             if (renderer != null && autoCompute)
             {
-                minimum = renderer.boundingBox.Min * 2;
-                maximum = renderer.boundingBox.Max * 2;
+                minimum = renderer.boundingBox.Min;
+                maximum = renderer.boundingBox.Max;
                 center = maximum + minimum;
                 Update();
             }

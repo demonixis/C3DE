@@ -78,18 +78,27 @@ namespace C3DE.Graphics.Primitives
         {
             Vertices = new VertexPositionNormalTexture[_width * _depth];
 
+            var xx = -_width / 2;
+            
+
             for (int x = 0; x < _width; x++)
             {
+                var zz = -_depth / 2;
+
                 for (int z = 0; z < _depth; z++)
                 {
-                    Vertices[x + z * _width].Position = new Vector3(x, _data[x, z], z);
+                    Vertices[x + z * _width].Position = new Vector3(xx, _data[x, z], zz);
 
                     Vertices[x + z * _width].TextureCoordinate = new Vector2(
                         ((float)x / (float)_width),
                         ((float)z / (float)_depth));
 
                     Vertices[x + z * _width].Normal = Vector3.Up;
+
+                    zz++;
                 }
+
+                xx++;
             }
 
             Indices = new ushort[(_width - 1) * (_depth - 1) * 6];

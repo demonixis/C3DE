@@ -50,6 +50,8 @@ namespace C3DE.Demo.Scenes
             var rb = terrain.AddComponent<Rigidbody>();
             rb.IsStatic = true;
             rb.AddComponent<RigidbodyRenderer>();
+            rb.AddComponent<BoundingBoxRenderer>().LineColor = Color.Red;
+            rb.IsKinematic = true;
 
             // Skybox
             RenderSettings.Skybox.Generate(Application.GraphicsDevice, Application.Content, DemoGame.BlueSkybox);

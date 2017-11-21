@@ -49,6 +49,8 @@ namespace C3DE.Components.Physics
             set => m_rigidBody.Mass = value;
         }
 
+        public bool IsKinematic { get; set; } = false;
+
         public JRigidBody JitterRigidbody
         {
             get => m_rigidBody;
@@ -105,7 +107,7 @@ namespace C3DE.Components.Physics
             if (sphere != null)
                 shape = new SphereShape(sphere.Sphere.Radius);
             else
-                shape = new BoxShape(size.X, size.Y, size.Z);
+                shape = new BoxShape(size.X  * 2, size.Y * 2, size.Z * 2);
 
             SetShape(shape);
         }
@@ -138,8 +140,13 @@ namespace C3DE.Components.Physics
             if (!m_AddedToScene)
                 return;
 
-            transform.SetPosition(ToVector3(m_rigidBody.Position));
-            transform.SetRotation(ToMatrix(m_rigidBody.Orientation));
+            if (!IsKinematic)
+            {
+                transform.SetPosition(ToVector3(m_rigidBody.Position));
+                transform.SetRotation(ToMatrix(m_rigidBody.Orientation));
+            }
+            else
+                SyncTransform();
         }
 
         public override void Dispose()
