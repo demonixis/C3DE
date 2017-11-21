@@ -36,6 +36,7 @@ namespace C3DE.Demo.Scenes
             foreach (var rd in sRenderers)
             {
                 var mat = (StandardMaterial)rd.Material;
+                mat.ReflectionTexture = RenderSettings.Skybox.Texture;
                 if (mat.MainTexture == null)
                     continue;
 

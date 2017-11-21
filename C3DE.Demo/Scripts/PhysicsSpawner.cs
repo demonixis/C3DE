@@ -5,6 +5,7 @@ using C3DE.Graphics.Materials;
 using C3DE.Graphics.Primitives;
 using C3DE.Utils;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 namespace C3DE.Demo.Scripts
@@ -32,8 +33,10 @@ namespace C3DE.Demo.Scripts
             cube.CastShadow = true;
             cube.ReceiveShadow = false;
 
-            var material = new UnlitMaterial(Scene.current);
+            var material = new StandardMaterial(Scene.current);
             material.DiffuseColor = RandomHelper.GetColor();
+            material.MainTexture = Application.Content.Load<Texture2D>("Textures/Terrain/Rock");
+            material.NormalTexture = Application.Content.Load<Texture2D>("Textures/Terrain/Rock_Normal");
             cube.Material = material;
 
             var collider = cube.AddComponent<BoxCollider>();

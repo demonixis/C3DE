@@ -19,7 +19,6 @@ float2 TextureTiling;
 bool NormalTextureEnabled = false;
 float3 EyePosition;
 float TotalTime;
-float Alpha;
 
 texture MainTexture;
 sampler2D WaterMapSampler = sampler_state
@@ -100,11 +99,13 @@ VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
         output.Reflection = reflect(-normalize(viewDirection), normalize(normal));
     }
 
+    float3 c1 = cross(input.Normal, float3(0.0, 0.0, 1.0));
+    float3 c2 = cross(input.Normal, float3(0.0, 1.0, 0.0));
+
     // [0] Tangent / [1] Binormal / [2] Normal
-    output.WorldPosition = worldPosition;
-    output.WorldToTangentSpace[0] = cross(normal, float3(-1.0, 0.0, 0.0));
-    output.WorldToTangentSpace[1] = cross(output.WorldToTangentSpace[0], normal);
-    output.WorldToTangentSpace[2] = normal;
+    output.WorldToTangentSpace[0] = length(c1) > length(c2) ? c1 : c2;
+    output.WorldToTangentSpace[1] = normalize(output.WorldToTangentSpace[0]);
+    output.WorldToTangentSpace[2] = input.Normal;
 
     return output;
 }
@@ -124,7 +125,7 @@ float3 CalcDiffuseColor(VertexShaderOutput input)
 
 float4 PixelShaderAmbient(VertexShaderOutput input) : COLOR0
 {
-    return float4(AmbientColor * CalcDiffuseColor(input), 1);
+    return float4(AmbientColor * CalcDiffuseColor(input), 1.0);
 }
 
 float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
@@ -152,7 +153,6 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
     float3 specular = CalcSpecular(input.WorldPosition, normal, EyePosition, input.UV * TextureTiling);
     float3 compose = diffuse2 + specular;
     float4 final = ApplyFog(compose, input.FogDistance);
-    final.a = Alpha;
 
     return final;
 }

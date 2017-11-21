@@ -40,7 +40,6 @@ namespace C3DE.Demo.Scenes
 
             m_Terrain.Randomize(4, 12);
             m_Terrain.Renderer.Material = terrainMaterial;
-            m_Terrain.Transform.Translate(-m_Terrain.Width >> 1, 0, -m_Terrain.Depth / 2);
             Add(terrainGo);
 
             m_Terrain.SetWeightData(0.5f, 4, 15, 30);

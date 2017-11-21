@@ -24,7 +24,6 @@ namespace C3DE.Demo.Scenes
             var water = waterGo.GetComponent<MeshRenderer>();
             var waterMat = (StandardWaterMaterial)water.Material;
             waterMat.ReflectionTexture = scene.RenderSettings.Skybox.Texture;
-            waterMat.Alpha = 0.6f;
         }
     }
 }

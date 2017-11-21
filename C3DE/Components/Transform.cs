@@ -82,6 +82,8 @@ namespace C3DE.Components
             }
         }
 
+        public Quaternion Quaternion => Quaternion.CreateFromYawPitchRoll(_localRotation.Y, _localRotation.X, _localRotation.Z);
+
         [DataMember]
         public Vector3 LocalRotation
         {

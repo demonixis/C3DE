@@ -43,7 +43,6 @@ namespace C3DE.Demo.Scenes
             terrain.Renderer.Material = terrainMaterial;
             terrain.Renderer.ReceiveShadow = true;
             terrain.Renderer.CastShadow = false;
-            terrainGo.Transform.Translate(-terrain.Width >> 1, 0, -terrain.Depth / 2);
             Add(terrainGo);
 
             terrain.AddComponent<BoxCollider>();

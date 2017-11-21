@@ -16,7 +16,6 @@ namespace C3DE.Graphics.Materials
         protected EffectParameter m_EPNormalMap;
         protected EffectParameter m_EPNormalMapEnabled;
         protected EffectParameter m_EPTotalTime;
-        protected EffectParameter m_EPAlpha;
 
         public Texture2D NormalMap { get; set; }
 
@@ -33,9 +32,6 @@ namespace C3DE.Graphics.Materials
             get => new Color(_reflectionColor);
             set { _reflectionColor = value.ToVector3(); }
         }
-
-        [DataMember]
-        public float Alpha { get; set; } = 0.45f;
 
         public StandardWaterMaterial(Scene scene, string name = "Water Material")
             : base(scene, name)
@@ -58,7 +54,6 @@ namespace C3DE.Graphics.Materials
             m_EPNormalMap = m_Effect.Parameters["NormalTexture"];
             m_EPNormalMapEnabled = m_Effect.Parameters["NormalTextureEnabled"];
             m_EPTotalTime = m_Effect.Parameters["TotalTime"];
-            m_EPAlpha = m_Effect.Parameters["Alpha"];
         }
 
         public override void Pass(Renderer renderable)
@@ -69,7 +64,6 @@ namespace C3DE.Graphics.Materials
             m_EPReflectionTexture.SetValue(ReflectionTexture);
             m_EPReflectionTextureEnabled.SetValue(ReflectionTexture != null);
             m_EPReflectionColor.SetValue(_reflectionColor);
-            m_EPAlpha.SetValue(Alpha);
 
             base.Pass(renderable);
         }

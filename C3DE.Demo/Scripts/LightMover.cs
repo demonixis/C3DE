@@ -36,14 +36,14 @@ namespace C3DE.Demo.Scripts
                 translation.Y--;
 
             if (Input.Keys.Pressed(Keys.I))
-                rotation.X += 0.01f;
+                _light.Angle += 0.01f;
             else if (Input.Keys.Pressed(Keys.K))
-                rotation.X -= 0.01f;
+                _light.Angle -= 0.01f;
 
             if (Input.Keys.Pressed(Keys.J))
-                rotation.Y += 0.01f;
+                rotation.X += 0.01f;
             else if (Input.Keys.Pressed(Keys.L))
-                rotation.Y -= 0.01f;
+                rotation.X -= 0.01f;
 
             if (Input.Keys.Pressed(Keys.Add))
                 _light.Range += 0.1f;
@@ -64,7 +64,6 @@ namespace C3DE.Demo.Scripts
                 translation.Y += Input.Mouse.Delta.Y * 0.1f;
 
             transform.Translate(ref translation);
-            transform.Rotate(ref rotation);
         }
     }
 }

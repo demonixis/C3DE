@@ -1,14 +1,16 @@
+#include "Fog.fxh"
 // Matrix
 float4x4 World;
 float4x4 View;
 float4x4 Projection;
 
-float3 CameraPosition;
+float3 EyePosition;
+bool FogEnabled;
 
-texture SkyboxTexture;
+texture MainTexture;
 samplerCUBE SkyboxSampler = sampler_state
 {
-    Texture = <SkyboxTexture>;
+    Texture = <MainTexture>;
     MagFilter = Linear;
     MinFilter = Linear;
     MipFilter = Linear;
@@ -29,6 +31,7 @@ struct VertexShaderOutput
 {
     float4 Position : POSITION0;
     float3 TextureCoordinate : TEXCOORD0;
+    float FogDistance : FOG;
 };
 
 VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
@@ -38,21 +41,25 @@ VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
     float4 worldPosition = mul(input.Position, World);
     float4 viewPosition = mul(worldPosition, View);
     output.Position = mul(viewPosition, Projection);
-
-    float4 vertexPosition = mul(input.Position, World);
-    output.TextureCoordinate = vertexPosition.xyz - CameraPosition;
+    output.TextureCoordinate = worldPosition.xyz - EyePosition;
+    output.FogDistance = distance(worldPosition.xyz, EyePosition);
 
     return output;
 }
 
 float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 {
-    return texCUBE(SkyboxSampler, normalize(input.TextureCoordinate));
+    float4 diffuse = texCUBE(SkyboxSampler, normalize(input.TextureCoordinate));
+
+    if (FogEnabled == true)
+        return ApplyFog(diffuse.xyz, input.FogDistance);
+
+    return diffuse;
 }
 
 technique Skybox
 {
-    pass Pass1
+    pass AmbientPass
     {
 #if SM4
 		VertexShader = compile vs_4_0_level_9_1 VertexShaderFunction();

@@ -198,6 +198,8 @@ namespace C3DE
             for (int i = 0, l = materials.Count; i < l; i++)
                 materials[i].LoadContent(Application.Content);
 
+            RenderSettings.Skybox.LoadContent(Application.Content);
+
             UpdateEffectMaterialMatching();
 
             for (int i = 0; i < sceneObjects.Count; i++)

@@ -53,12 +53,11 @@ namespace C3DE.Demo.Scenes
             terrainMaterial.Tiling = new Vector2(4);
             terrainGo.AddComponent<WeightMapViewer>();
 
-            terrainGo.Transform.Translate(-terrain.Width >> 1, -10, -terrain.Depth >> 1);
-
             // With water !
             var waterTexture = content.Load<Texture2D>("Textures/water");
             var bumpTexture = content.Load<Texture2D>("Textures/wavesbump");
             var water = GameObjectFactory.CreateWater(waterTexture, bumpTexture, new Vector3(terrain.Width * 0.5f));
+            water.Transform.Translate(0, 10.0f, 0);
             scene.Add(water);
 
             // Sun Flares
@@ -82,8 +81,10 @@ namespace C3DE.Demo.Scenes
             RenderSettings.Skybox.Generate(Application.GraphicsDevice, Application.Content, DemoGame.BlueSkybox);
             RenderSettings.AmbientColor = Color.Black;
             // And fog
-            //RenderSettings.FogDensity = 0.0085f;
-            //RenderSettings.FogMode = FogMode.Exp2;
+            RenderSettings.FogDensity = 0.0085f;
+            RenderSettings.FogMode = FogMode.Exp2;
+            RenderSettings.Skybox.FogSupported = true;
+            RenderSettings.Skybox.OverrideSkyboxFog(FogMode.Exp2, 0.05f, 0, 0);
         }
     }
 }

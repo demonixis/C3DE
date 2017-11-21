@@ -83,7 +83,6 @@ namespace C3DE.Demo.Scenes
             terrain.Flatten();
             terrain.Renderer.CastShadow = true;
             terrain.Renderer.Material = terrainMaterial;
-            terrain.Transform.Translate(-terrain.Width >> 1, 0, -terrain.Depth / 2);
             Add(terrainGo);
 
             var cubMat = new StandardMaterial(this);

@@ -61,7 +61,6 @@ namespace C3DE.Demo.Scenes
             terrain.Renderer.ReceiveShadow = true;
             terrain.Randomize(4, 15, 0.086, 0.25, true);
             terrain.Renderer.Material = terrainMaterial;
-            terrain.Transform.Translate(-terrain.Width >> 1, 0, -terrain.Depth / 2);
             Add(terrainGo);
 
             // Lava
