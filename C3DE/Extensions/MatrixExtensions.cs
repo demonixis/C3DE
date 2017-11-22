@@ -30,8 +30,8 @@ namespace Microsoft.Xna.Framework
 
         public static void ExtractRotation(this Matrix matrix, ref Vector3 rotation)
         {
-            Quaternion q;
-            ExtractRotation(matrix, out q);
+            Quaternion q = Quaternion.Identity;
+            ExtractRotation(matrix, ref q);
             q.ToEuler(ref rotation);
         }
     }
