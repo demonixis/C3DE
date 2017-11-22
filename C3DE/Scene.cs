@@ -80,7 +80,7 @@ namespace C3DE
                 if (value == null)
                     throw new Exception("The default material can't be null");
 
-                scene.Remove(value);
+                m_Scene.RemoveMaterial(value);
                 defaultMaterial = value;
                 defaultMaterial.Name = "Default Material";
             }
@@ -154,9 +154,9 @@ namespace C3DE
             : base()
         {
             Name = "SCENE-" + Guid.NewGuid();
-            transform.Root = transform;
+            m_Transform.Root = m_Transform;
             sceneObjects = new List<GameObject>();
-            scene = this;
+            m_Scene = this;
             renderList = new List<Renderer>(10);
             materials = new List<Material>(5);
             effects = new List<Effect>(5);
@@ -191,7 +191,7 @@ namespace C3DE
         /// <param name="content"></param>
         public override void Initialize()
         {
-            initialized = true;
+            m_Initialized = true;
 
             DefaultMaterial.MainTexture = GraphicsHelper.CreateTexture(Color.AntiqueWhite, 1, 1);
 
@@ -301,7 +301,7 @@ namespace C3DE
                 {
                     sceneObjects.Add(sceneObject);
                     sceneObject.Scene = this;
-                    sceneObject.Transform.Root = transform;
+                    sceneObject.Transform.Root = m_Transform;
 
                     if (sceneObject.Enabled)
                     {
@@ -310,7 +310,7 @@ namespace C3DE
                         sceneObject.ComponentChanged += OnGameObjectComponentChanged;
                     }
 
-                    if (initialized && !sceneObject.Initialized)
+                    if (m_Initialized && !sceneObject.Initialized)
                         sceneObject.Initialize();
                 }
                 else
@@ -359,10 +359,10 @@ namespace C3DE
                 var renderable = component as Renderer;
 
                 if (type == ComponentChangeType.Add)
-                    Add(renderable);
+                    AddRenderer(renderable);
 
                 else if (type == ComponentChangeType.Remove)
-                    Remove(renderable);
+                    RemoveRenderer(renderable);
             }
 
             else if (component is Behaviour)
@@ -370,9 +370,9 @@ namespace C3DE
                 var script = component as Behaviour;
 
                 if (type == ComponentChangeType.Add)
-                    Add(script);
+                    AddScript(script);
                 else if (type == ComponentChangeType.Remove)
-                    Remove(script);
+                    RemoveScript(script);
             }
 
             else if (component is Collider)
@@ -380,9 +380,9 @@ namespace C3DE
                 var collider = component as Collider;
 
                 if (type == ComponentChangeType.Add)
-                    Add(collider);
+                    AddCollider(collider);
                 else if (type == ComponentChangeType.Remove)
-                    Remove(collider);
+                    RemoveCollider(collider);
             }
 
             else if (component is Camera)
@@ -390,9 +390,9 @@ namespace C3DE
                 var camera = component as Camera;
 
                 if (type == ComponentChangeType.Add && !cameras.Contains(camera))
-                    Add(camera);
+                    AddCamera(camera);
                 else if (type == ComponentChangeType.Remove)
-                    Remove(camera);
+                    RemoveCamera(camera);
             }
 
             else if (component is Light)
@@ -400,9 +400,9 @@ namespace C3DE
                 var light = component as Light;
 
                 if (type == ComponentChangeType.Add)
-                    Add(light);
+                    AddLight(light);
                 else if (type == ComponentChangeType.Remove)
-                    Remove(light);
+                    RemoveLight(light);
             }
         }
 
@@ -449,13 +449,13 @@ namespace C3DE
         /// Add a new material.
         /// </summary>
         /// <param name="material"></param>
-        public void Add(Material material)
+        internal protected void AddMaterial(Material material)
         {
             if (!materials.Contains(material))
             {
                 materials.Add(material);
 
-                if (initialized)
+                if (m_Initialized)
                 {
                     material.LoadContent(Application.Content);
 
@@ -481,7 +481,7 @@ namespace C3DE
         /// Remove a material.
         /// </summary>
         /// <param name="material"></param>
-        public void Remove(Material material)
+        internal protected void RemoveMaterial(Material material)
         {
             if (materials.Contains(material))
             {
@@ -506,7 +506,7 @@ namespace C3DE
 
         #region Add/Remove components
 
-        protected int Add(Camera camera)
+        internal protected int AddCamera(Camera camera)
         {
             var index = cameras.IndexOf(camera);
 
@@ -523,61 +523,61 @@ namespace C3DE
             return index;
         }
 
-        protected void Add(Renderer renderer)
+        protected void AddRenderer(Renderer renderer)
         {
-            if (!renderList.Contains(renderer))
-            {
-                renderList.Add(renderer);
-                renderList.Sort();
-            }
+            if (renderList.Contains(renderer))
+                return;
+
+            renderList.Add(renderer);
+            renderList.Sort();
         }
 
-        protected void Add(Light light)
+        protected void AddLight(Light light)
         {
-            if (!lights.Contains(light))
-            {
-                lights.Add(light);
-                lights.Sort();
-            }
+            if (lights.Contains(light))
+                return;
+
+            lights.Add(light);
+            lights.Sort();
         }
 
-        protected void Add(Collider collider)
+        protected void AddCollider(Collider collider)
         {
             if (!colliders.Contains(collider))
                 colliders.Add(collider);
         }
 
-        protected void Add(Behaviour script)
+        protected void AddScript(Behaviour script)
         {
             if (!scripts.Contains(script))
                 scripts.Add(script);
         }
 
-        protected void Remove(Renderer renderable)
+        protected void RemoveRenderer(Renderer renderable)
         {
             if (renderList.Contains(renderable))
                 renderList.Remove(renderable);
         }
 
-        protected void Remove(Behaviour script)
+        protected void RemoveScript(Behaviour script)
         {
             if (scripts.Contains(script))
                 scripts.Remove(script);
         }
 
-        protected void Remove(Light light)
+        protected void RemoveLight(Light light)
         {
             if (lights.Contains(light))
                 lights.Remove(light);
         }
 
-        protected void Remove(Collider collider)
+        protected void RemoveCollider(Collider collider)
         {
             if (colliders.Contains(collider))
                 colliders.Remove(collider);
         }
 
-        protected void Remove(Camera camera)
+        protected void RemoveCamera(Camera camera)
         {
             if (cameras.Contains(camera))
                 cameras.Remove(camera);
@@ -596,27 +596,6 @@ namespace C3DE
             }
 
             return -1;
-        }
-
-        public static GameObject Instanciate(GameObject sceneObject)
-        {
-            return Instanciate(sceneObject, sceneObject.Transform.LocalPosition, sceneObject.Transform.LocalRotation);
-        }
-
-        public static GameObject Instanciate(GameObject sceneObject, Vector3 position, Vector3 rotation)
-        {
-            GameObject clone = (GameObject)sceneObject.Clone();
-            clone.Transform.LocalPosition = position;
-            clone.Transform.LocalRotation = rotation;
-
-            Scene.current.Add(clone);
-
-            return clone;
-        }
-
-        public static void Destroy(GameObject sceneObject)
-        {
-            Scene.current.Remove(sceneObject);
         }
 
         public override bool Remove(GameObject sceneObject)

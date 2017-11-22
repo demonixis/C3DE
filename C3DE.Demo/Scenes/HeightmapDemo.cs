@@ -34,7 +34,7 @@ namespace C3DE.Demo.Scenes
             Add(lightGo);
 
             // Finally a terrain
-            var terrainMaterial = new StandardTerrainMaterial(scene);
+            var terrainMaterial = new StandardTerrainMaterial(m_Scene);
             terrainMaterial.MainTexture = content.Load<Texture2D>("Textures/Terrain/Grass");
             terrainMaterial.SandTexture = content.Load<Texture2D>("Textures/Terrain/Sand");
             terrainMaterial.SnowTexture = content.Load<Texture2D>("Textures/Terrain/Snow");
@@ -42,7 +42,7 @@ namespace C3DE.Demo.Scenes
 
             var terrainGo = GameObjectFactory.CreateTerrain();
             
-            scene.Add(terrainGo);
+            m_Scene.Add(terrainGo);
 
             var terrain = terrainGo.GetComponent<Terrain>();
             terrain.LoadHeightmap("Textures/heightmap");
@@ -58,7 +58,7 @@ namespace C3DE.Demo.Scenes
             var bumpTexture = content.Load<Texture2D>("Textures/wavesbump");
             var water = GameObjectFactory.CreateWater(waterTexture, bumpTexture, new Vector3(terrain.Width * 0.5f));
             water.Transform.Translate(0, 10.0f, 0);
-            scene.Add(water);
+            m_Scene.Add(water);
 
             // Sun Flares
             var glowTexture = content.Load<Texture2D>("Textures/Flares/glow");

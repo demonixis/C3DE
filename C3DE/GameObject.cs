@@ -1,4 +1,5 @@
 ﻿using C3DE.Components;
+using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
@@ -13,15 +14,15 @@ namespace C3DE
     {
         #region Private/protected declarations
 
-        protected Transform transform;
-        protected Scene scene;
-        protected bool enabled;
+        protected Transform m_Transform;
+        protected Scene m_Scene;
+        protected bool m_Enabled;
 
         [DataMember]
-        protected List<Component> components;
+        protected List<Component> m_Components;
 
         [DataMember]
-        protected bool initialized;
+        protected bool m_Initialized;
 
         #endregion
 
@@ -45,19 +46,19 @@ namespace C3DE
         [DataMember]
         public bool Enabled
         {
-            get { return enabled; }
+            get { return m_Enabled; }
             set
             {
-                if (value != enabled)
+                if (value != m_Enabled)
                 {
-                    enabled = value;
+                    m_Enabled = value;
 
                     NotifyPropertyChanged("Enabled");
 
-                    if (transform != null)
+                    if (m_Transform != null)
                     {
-                        for (int i = 0, l = transform.Transforms.Count; i < l; i++)
-                            transform.Transforms[i].GameObject.Enabled = value;
+                        for (int i = 0, l = m_Transform.Transforms.Count; i < l; i++)
+                            m_Transform.Transforms[i].GameObject.Enabled = value;
                     }
                 }
             }
@@ -65,24 +66,24 @@ namespace C3DE
 
         public Transform Transform
         {
-            get { return transform; }
-            protected set { transform = value; }
+            get { return m_Transform; }
+            protected set { m_Transform = value; }
         }
 
         public Scene Scene
         {
-            get { return scene; }
-            internal set { scene = value; }
+            get { return m_Scene; }
+            internal set { m_Scene = value; }
         }
 
         public List<Component> Components
         {
-            get { return components; }
+            get { return m_Components; }
         }
 
         public bool Initialized
         {
-            get { return initialized; }
+            get { return m_Initialized; }
         }
 
         #endregion
@@ -129,24 +130,26 @@ namespace C3DE
 
         private void InternalConstructor(string name = "")
         {
-            if (transform == null)
+            if (m_Transform == null)
             {
-                components = new List<Component>(5);
+                m_Components = new List<Component>(5);
 
-                transform = new Transform();
-                transform.m_Transform = transform;
-                transform.GameObject = this;
-                transform.PropertyChanged += OnComponentChanged;
-                transform.Awake();
-                components.Add(transform);
+                m_Transform = new Transform();
+                m_Transform.m_Transform = m_Transform;
+                m_Transform.GameObject = this;
+                m_Transform.PropertyChanged += OnComponentChanged;
+                m_Transform.Awake();
+                m_Components.Add(m_Transform);
 
-                enabled = true;
-                initialized = false;
+                m_Enabled = true;
+                m_Initialized = false;
                 IsStatic = false;
                 IsPrefab = false;
 
                 Id = "SO_" + Guid.NewGuid();
                 Name = string.IsNullOrEmpty(name) ? "SceneObject-" + Guid.NewGuid() : name;
+
+                Scene.current?.Add(this);
             }
         }
 
@@ -158,17 +161,17 @@ namespace C3DE
         /// <param name="content">The content manager.</param>
         public virtual void Initialize()
         {
-            if (!initialized)
+            if (!m_Initialized)
             {
-                initialized = true;
+                m_Initialized = true;
 
                 // Sort component now then initialize it.
-                components.Sort();
+                m_Components.Sort();
 
-                for (int i = 0; i < components.Count; i++)
+                for (int i = 0; i < m_Components.Count; i++)
                 {
-                    components[i].m_Started = true;
-                    components[i].Start();
+                    m_Components[i].m_Started = true;
+                    m_Components[i].Start();
                 }
             }
         }
@@ -178,10 +181,10 @@ namespace C3DE
         /// </summary>
         public virtual void Update()
         {
-            for (int i = 0; i < components.Count; i++)
+            for (int i = 0; i < m_Components.Count; i++)
             {
-                if (components[i].Enabled)
-                    components[i].Update();
+                if (m_Components[i].Enabled)
+                    m_Components[i].Update();
             }
         }
 
@@ -194,13 +197,13 @@ namespace C3DE
         /// <returns>Return true if added, otherwise return false.</returns>
         public virtual bool Add(GameObject sceneObject)
         {
-            if (!transform.Transforms.Contains(sceneObject.transform) && sceneObject != this)
+            if (!m_Transform.Transforms.Contains(sceneObject.m_Transform) && sceneObject != this)
             {
                 // Add the scene object to the scene if not yet added.
-                if (this != scene)
+                if (this != m_Scene)
                 {
-                    if (scene != null)
-                        scene.Add(sceneObject);
+                    if (m_Scene != null)
+                        m_Scene.Add(sceneObject);
                     else
                         throw new Exception("You need to attach first the main scene object to scene.");
                 }
@@ -210,10 +213,10 @@ namespace C3DE
                     sceneObject.Transform.Parent.Transforms.Remove(sceneObject.Transform);
 
                 // Add to current transform
-                sceneObject.transform.Parent = transform;
-                sceneObject.transform.Root = transform.Root;
-                transform.Transforms.Add(sceneObject.transform);
-                sceneObject.Enabled = enabled;
+                sceneObject.m_Transform.Parent = m_Transform;
+                sceneObject.m_Transform.Root = m_Transform.Root;
+                m_Transform.Transforms.Add(sceneObject.m_Transform);
+                sceneObject.Enabled = m_Enabled;
 
                 return true;
             }
@@ -228,10 +231,10 @@ namespace C3DE
         /// <returns>Return true if succed, otherwise return false.</returns>
         public virtual bool Remove(GameObject sceneObject)
         {
-            if (sceneObject.transform.Parent == transform)
+            if (sceneObject.m_Transform.Parent == m_Transform)
             {
-                transform.Transforms.Remove(sceneObject.transform);
-                sceneObject.transform.Parent = transform.Root;
+                m_Transform.Transforms.Remove(sceneObject.m_Transform);
+                sceneObject.m_Transform.Parent = m_Transform.Root;
                 return true;
             }
 
@@ -254,25 +257,25 @@ namespace C3DE
             {
                 // The constructor hasn't be called
                 InternalConstructor(Name);
-                transform.LocalPosition = serializedTransform.LocalPosition;
-                transform.LocalRotation = serializedTransform.LocalRotation;
-                transform.LocalScale = serializedTransform.LocalScale;
+                m_Transform.LocalPosition = serializedTransform.LocalPosition;
+                m_Transform.LocalRotation = serializedTransform.LocalRotation;
+                m_Transform.LocalScale = serializedTransform.LocalScale;
             }
             else
             {
                 component.GameObject = this;
-                component.m_Transform = transform;
+                component.m_Transform = m_Transform;
                 component.Awake();
                 component.PropertyChanged += OnComponentChanged;
-                components.Add(component);
+                m_Components.Add(component);
             }
 
-            if (initialized && !component.Initialized)
+            if (m_Initialized && !component.Initialized)
             {
                 component.Start();
                 component.m_Started = true;
                 // Sort components here only if the SceneObject is already initialized.
-                components.Sort();
+                m_Components.Sort();
             }
 
             NotifyComponentChanged(component, string.Empty, ComponentChangeType.Add);
@@ -299,10 +302,10 @@ namespace C3DE
         /// <returns>Return the first component of this type if founded, otherwise return null.</returns>
         public T GetComponent<T>() where T : Component
         {
-            for (int i = 0; i < components.Count; i++)
+            for (int i = 0; i < m_Components.Count; i++)
             {
-                if (components[i] is T)
-                    return components[i] as T;
+                if (m_Components[i] is T)
+                    return m_Components[i] as T;
             }
 
             return null;
@@ -312,10 +315,10 @@ namespace C3DE
         {
             List<T> comps = new List<T>();
 
-            for (int i = 0; i < components.Count; i++)
+            for (int i = 0; i < m_Components.Count; i++)
             {
-                if (components[i] is T)
-                    comps.Add(components[i] as T);
+                if (m_Components[i] is T)
+                    comps.Add(m_Components[i] as T);
             }
 
             return comps.ToArray();
@@ -323,11 +326,11 @@ namespace C3DE
 
         public T GetComponentInChildren<T>() where T : Component
         {
-            var transforms = transform.Transforms;
+            var transforms = m_Transform.Transforms;
             var size = transforms.Count;
             var cpns = (Component[])null;
 
-            foreach (var cpn in components)
+            foreach (var cpn in m_Components)
             {
                 if (cpn is T)
                     return (T)cpn;
@@ -351,7 +354,7 @@ namespace C3DE
             var list = new List<T>();
             list.AddRange(GetComponents<T>());
 
-            foreach (var tr in transform.Transforms)
+            foreach (var tr in m_Transform.Transforms)
                 list.AddRange(tr.GameObject.GetComponentsInChildren<T>());
             
             return list.ToArray();
@@ -359,12 +362,12 @@ namespace C3DE
 
         public T GetComponentInParent<T>() where T : Component
         {
-            return transform.Parent.GetComponent<T>();
+            return m_Transform.Parent.GetComponent<T>();
         }
 
         public T[] GetComponentsInParent<T>() where T : Component
         {
-            return transform.Parent.GetComponents<T>();
+            return m_Transform.Parent.GetComponents<T>();
         }
 
         /// <summary>
@@ -374,10 +377,10 @@ namespace C3DE
         /// <returns>Return true if the component has been removed, otherwise return false.</returns>
         public bool RemoveComponent(Component component)
         {
-            if (component == transform)
+            if (component == m_Transform)
                 return false;
 
-            var result = components.Remove(component);
+            var result = m_Components.Remove(component);
             if (result)
             {
                 component.PropertyChanged -= OnComponentChanged;
@@ -400,7 +403,7 @@ namespace C3DE
             Component clonedComponent = null;
             Transform clonedTransform = null;
 
-            foreach (Component component in components)
+            foreach (Component component in m_Components)
             {
                 clonedComponent = clone.AddComponent((Component)component.Clone());
                 clonedComponent.m_GameObject = clone;
@@ -419,37 +422,62 @@ namespace C3DE
 
         public void Dispose()
         {
-            foreach (Component component in components)
+            foreach (Component component in m_Components)
                 component.Dispose();
         }
 
         public virtual void PostDeserialize()
         {
-            var size = components.Count;
+            var size = m_Components.Count;
             var i = 0;
 
             if (size > 0)
             {
-                transform = GetComponent<Transform>();
+                m_Transform = GetComponent<Transform>();
 
                 for (i = 0; i < size; i++)
                 {
-                    components[i].m_GameObject = this;
-                    components[i].m_Transform = transform;
+                    m_Components[i].m_GameObject = this;
+                    m_Components[i].m_Transform = m_Transform;
                 }
 
                 for (i = 0; i < size; i++)
                 {
-                    components[i].PostDeserialize();
-                    components[i].Awake();
+                    m_Components[i].PostDeserialize();
+                    m_Components[i].Awake();
 
-                    if (initialized)
-                        components[i].Start();
+                    if (m_Initialized)
+                        m_Components[i].Start();
                 }
 
                 // Refresh children
-                Enabled = enabled;
+                Enabled = m_Enabled;
             }
         }
+
+        #region Static Methods
+
+        public static GameObject Instanciate(GameObject sceneObject)
+        {
+            return Instanciate(sceneObject, sceneObject.m_Transform.LocalPosition, sceneObject.m_Transform.LocalRotation);
+        }
+
+        public static GameObject Instanciate(GameObject sceneObject, Vector3 position, Vector3 rotation)
+        {
+            GameObject clone = (GameObject)sceneObject.Clone();
+            clone.m_Transform.LocalPosition = position;
+            clone.m_Transform.LocalRotation = rotation;
+
+            Scene.current.Add(clone);
+
+            return clone;
+        }
+
+        public static void Destroy(GameObject sceneObject)
+        {
+            Scene.current.Remove(sceneObject);
+        }
+
+        #endregion
     }
 }

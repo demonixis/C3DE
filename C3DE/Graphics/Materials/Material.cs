@@ -74,7 +74,7 @@ namespace C3DE.Graphics.Materials
             if (scene == null)
                 scene = Scene.current;
 
-            scene.Add(this);
+            scene.AddMaterial(this);
         }
 
         public abstract void LoadContent(ContentManager content);

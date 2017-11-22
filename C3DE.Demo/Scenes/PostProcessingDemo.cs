@@ -46,11 +46,11 @@ namespace C3DE.Demo.Scenes
             ligthSphere.Geometry.Build();
             ligthSphere.CastShadow = false;
             ligthSphere.ReceiveShadow = false;
-            ligthSphere.Material = new SimpleMaterial(scene);
+            ligthSphere.Material = new SimpleMaterial(m_Scene);
             ligthSphere.Material.MainTexture = GraphicsHelper.CreateTexture(Color.Yellow, 1, 1);
 
             // Terrain
-            var terrainMaterial = new StandardMaterial(scene);
+            var terrainMaterial = new StandardMaterial(m_Scene);
             terrainMaterial.MainTexture = Application.Content.Load<Texture2D>("Textures/Terrain/Rock");
             terrainMaterial.Shininess = 250;
             terrainMaterial.Tiling = new Vector2(8);

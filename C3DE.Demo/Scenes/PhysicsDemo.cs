@@ -29,7 +29,7 @@ namespace C3DE.Demo.Scenes
 
             lightGo.GetComponent<Light>().Range = 100;
 
-            var terrainMaterial = new StandardMaterial(scene);
+            var terrainMaterial = new StandardMaterial(m_Scene);
             terrainMaterial.MainTexture = Application.Content.Load<Texture2D>("Textures/Terrain/Sand");
             terrainMaterial.NormalTexture = Application.Content.Load<Texture2D>("Textures/Terrain/Sand_Normal");
             terrainMaterial.Shininess = 500;

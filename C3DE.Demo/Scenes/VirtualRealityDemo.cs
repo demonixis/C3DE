@@ -36,7 +36,7 @@ namespace C3DE.Demo.Scenes
             head.Transform.Parent = player.Transform;
             player.AddComponent<VRSwitcher>();
 
-            var handMaterial = new StandardMaterial(scene);
+            var handMaterial = new StandardMaterial(m_Scene);
             handMaterial.DiffuseColor = Color.DarkBlue;
 
             for (var i = 0; i < 2; i++)
@@ -70,7 +70,7 @@ namespace C3DE.Demo.Scenes
             lightGo.GetComponent<Light>().Range = 100;
 
             // Terrain
-            var terrainMaterial = new StandardMaterial(scene);
+            var terrainMaterial = new StandardMaterial(m_Scene);
             terrainMaterial.MainTexture = Application.Content.Load<Texture2D>("Textures/Terrain/Grass");
             terrainMaterial.Shininess = 150;
             terrainMaterial.Tiling = new Vector2(16);

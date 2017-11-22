@@ -16,7 +16,7 @@ namespace C3DE.Demo.Scripts
         {
             base.Update();
 
-            if (Input.Keys.JustPressed(Keys.Space))
+            if (Input.Keys.JustPressed(Keys.Space) || Input.Keys.Pressed(Keys.LeftControl))
                 SpawnCubeAtPosition(Camera.Main.Transform.Position + new Vector3(0, 0, 5));
         }
 
