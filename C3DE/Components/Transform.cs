@@ -56,7 +56,7 @@ namespace C3DE.Components
             set
             {
                 UpdateWorldMatrix();
-                m_WorldMatrix.Translation = value;
+                m_LocalPosition = Vector3.Transform(value, Matrix.Invert(m_WorldMatrix));
             }
         }
 
@@ -72,30 +72,29 @@ namespace C3DE.Components
             get
             {
                 UpdateWorldMatrix();
-                var position = Vector3.Zero;
                 var rotation = Quaternion.Identity;
-                var scale = Vector3.Zero;
-                m_WorldMatrix.Decompose(out scale, out rotation, out position);
+                m_WorldMatrix.ExtractRotation(ref rotation);
                 return rotation.ToEuler();
             }
+            set
+            {
+                var result = Quaternion.Euler(value) * Quaternion.Inverse(m_Parent.Quaternion);
+                m_LocalRotation = result.ToEuler();
+            }
         }
+
+        public Matrix RotationMatrix => Matrix.CreateFromYawPitchRoll(m_LocalRotation.Y, m_LocalRotation.X, m_LocalRotation.Z);
 
         public Quaternion Quaternion
         {
             get
             {
                 var rotation = Rotation;
-                return Quaternion.CreateFromYawPitchRoll(rotation.Y, rotation.X, rotation.Z);
+                return Quaternion.Euler(rotation);
             }
         }
 
-        public Quaternion LocalQuaternion
-        {
-            get
-            {
-                return Quaternion.CreateFromYawPitchRoll(m_LocalRotation.Y, m_LocalRotation.X, m_LocalRotation.Z);
-            }
-        }
+        public Quaternion LocalQuaternion => Quaternion.Euler(m_LocalRotation);
 
         [DataMember]
         public Vector3 LocalRotation
@@ -111,40 +110,14 @@ namespace C3DE.Components
             set { m_LocalScale = value; }
         }
 
-        public Matrix WorldMatrix
-        {
-            get { return m_WorldMatrix; }
-        }
+        public Matrix WorldMatrix => m_WorldMatrix;
 
-        public Vector3 Forward
-        {
-            get { return GetTransformedVector(Vector3.Forward); }
-        }
-
-        public Vector3 Backward
-        {
-            get { return GetTransformedVector(Vector3.Backward); }
-        }
-
-        public Vector3 Right
-        {
-            get { return GetTransformedVector(Vector3.Right); }
-        }
-
-        public Vector3 Left
-        {
-            get { return GetTransformedVector(Vector3.Left); }
-        }
-
-        public Vector3 Up
-        {
-            get { return GetTransformedVector(Vector3.Up); }
-        }
-
-        public Vector3 Down
-        {
-            get { return GetTransformedVector(Vector3.Down); }
-        }
+        public Vector3 Forward => GetTransformedVector(Vector3.Forward);
+        public Vector3 Backward => GetTransformedVector(Vector3.Backward);
+        public Vector3 Right => GetTransformedVector(Vector3.Right);
+        public Vector3 Left => GetTransformedVector(Vector3.Left);
+        public Vector3 Up => GetTransformedVector(Vector3.Up);
+        public Vector3 Down => GetTransformedVector(Vector3.Down);
 
         public Transform()
             : base()

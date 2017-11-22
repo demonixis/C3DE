@@ -1,10 +1,9 @@
 ﻿using C3DE.Components.Rendering;
 using C3DE.Graphics.Primitives;
 using C3DE.Graphics.Materials;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
+using C3DE;
 
-namespace C3DE.Extensions
+namespace Microsoft.Xna.Framework.Graphics
 {
     public static class ModelExtensions
     {

@@ -45,8 +45,8 @@ namespace C3DE.Graphics.Materials
 
         public override void PrePass(Camera camera)
         {
-            m_EPView.SetValue(camera.view);
-            m_EPProjection.SetValue(camera.projection);
+            m_EPView.SetValue(camera.m_ViewMatrix);
+            m_EPProjection.SetValue(camera.m_ProjectionMatrix);
         }
 
         public override void Pass(Renderer renderable)

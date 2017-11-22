@@ -36,8 +36,8 @@ namespace C3DE.Components.Rendering
             if (Camera == null)
                 Camera = Camera.Main;
 
-            m_Effect.Parameters["View"].SetValue(Camera.view);
-            m_Effect.Parameters["Projection"].SetValue(Camera.projection);
+            m_Effect.Parameters["View"].SetValue(Camera.m_ViewMatrix);
+            m_Effect.Parameters["Projection"].SetValue(Camera.m_ProjectionMatrix);
 
             device.SetRenderTargets(m_NormalRT, m_DepthRT);
             device.Clear(Color.White);

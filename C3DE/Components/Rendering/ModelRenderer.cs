@@ -83,8 +83,8 @@ namespace C3DE.Components.Rendering
                 foreach (BasicEffect effect in mesh.Effects)
                 {
                     effect.World = boneTransforms[mesh.ParentBone.Index] * m_Transform.m_WorldMatrix;
-                    effect.View = camera.view;
-                    effect.Projection = camera.projection;
+                    effect.View = camera.m_ViewMatrix;
+                    effect.Projection = camera.m_ProjectionMatrix;
                     effect.EnableDefaultLighting();
                     effect.CurrentTechnique.Passes[0].Apply();
                 }

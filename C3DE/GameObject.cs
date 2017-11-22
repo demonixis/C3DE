@@ -193,30 +193,30 @@ namespace C3DE
         /// <summary>
         /// Add a scene object as children of this scene object. It is not possible to add the same object twice
         /// </summary>
-        /// <param name="sceneObject">The scene object to add.</param>
+        /// <param name="newGameObject">The scene object to add.</param>
         /// <returns>Return true if added, otherwise return false.</returns>
-        public virtual bool Add(GameObject sceneObject)
+        public virtual bool Add(GameObject newGameObject)
         {
-            if (!m_Transform.Transforms.Contains(sceneObject.m_Transform) && sceneObject != this)
+            if (!m_Transform.Transforms.Contains(newGameObject.m_Transform) && newGameObject != this)
             {
                 // Add the scene object to the scene if not yet added.
                 if (this != m_Scene)
                 {
                     if (m_Scene != null)
-                        m_Scene.Add(sceneObject);
+                        m_Scene.Add(newGameObject);
                     else
                         throw new Exception("You need to attach first the main scene object to scene.");
                 }
                 // TODO: Rework this part
                 // Remove its parent's transform
-                if (sceneObject.Transform.Parent != null)
-                    sceneObject.Transform.Parent.Transforms.Remove(sceneObject.Transform);
+                if (newGameObject.Transform.Parent != null)
+                    newGameObject.Transform.Parent.Transforms.Remove(newGameObject.Transform);
 
                 // Add to current transform
-                sceneObject.m_Transform.Parent = m_Transform;
-                sceneObject.m_Transform.Root = m_Transform.Root;
-                m_Transform.Transforms.Add(sceneObject.m_Transform);
-                sceneObject.Enabled = m_Enabled;
+                newGameObject.m_Transform.Parent = m_Transform;
+                newGameObject.m_Transform.Root = m_Transform.Root;
+                m_Transform.Transforms.Add(newGameObject.m_Transform);
+                newGameObject.Enabled = m_Enabled;
 
                 return true;
             }

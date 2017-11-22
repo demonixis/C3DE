@@ -13,10 +13,10 @@ namespace C3DE.Components
     public class Camera : Component
     {
         public static Camera Main { get; internal set; }
-        protected internal Matrix view;
-        protected internal Matrix projection;
+        protected internal Matrix m_ViewMatrix;
+        protected internal Matrix m_ProjectionMatrix;
         protected internal Color clearColor;
-		protected internal short depth;
+        protected internal short depth;
         private Vector3 _target;
         private Vector3 _upVector;
         private float _fieldOfView;
@@ -49,11 +49,11 @@ namespace C3DE.Components
         }
 
         [DataMember]
-		public short Depth
-		{
-			get { return depth; }
-			set { depth = value; }
-		}
+        public short Depth
+        {
+            get { return depth; }
+            set { depth = value; }
+        }
 
         [DataMember]
         public float FieldOfView
@@ -120,12 +120,12 @@ namespace C3DE.Components
 
         public Matrix ViewMatrix
         {
-            get { return view; }
+            get { return m_ViewMatrix; }
         }
 
         public Matrix ProjectionMatrix
         {
-            get { return projection; }
+            get { return m_ProjectionMatrix; }
         }
 
         public Camera()
@@ -164,7 +164,7 @@ namespace C3DE.Components
             _target = camTarget;
             _upVector = upVector;
 
-            view = Matrix.CreateLookAt(position, _target, Vector3.Up);
+            m_ViewMatrix = Matrix.CreateLookAt(position, _target, Vector3.Up);
 
             ComputeProjectionMatrix();
         }
@@ -172,9 +172,9 @@ namespace C3DE.Components
         public void ComputeProjectionMatrix()
         {
             if (_projectionType == CameraProjectionType.Perspective)
-                projection = Matrix.CreatePerspectiveFieldOfView(_fieldOfView, _aspectRatio, _nearPlane, _farPlane);
+                m_ProjectionMatrix = Matrix.CreatePerspectiveFieldOfView(_fieldOfView, _aspectRatio, _nearPlane, _farPlane);
             else
-                projection = Matrix.CreateOrthographic(Application.GraphicsDevice.Viewport.Width, Application.GraphicsDevice.Viewport.Height, _nearPlane, _farPlane);
+                m_ProjectionMatrix = Matrix.CreateOrthographic(Application.GraphicsDevice.Viewport.Width, Application.GraphicsDevice.Viewport.Height, _nearPlane, _farPlane);
 
             _needProjectionUpdate = false;
         }
@@ -196,34 +196,48 @@ namespace C3DE.Components
 
             if (!m_GameObject.IsStatic || _needUpdate)
             {
-                view = Matrix.CreateLookAt(m_Transform.m_WorldMatrix.Translation, _target, _upVector);
+                m_ViewMatrix = Matrix.CreateLookAt(m_Transform.m_WorldMatrix.Translation, _target, _upVector);
                 _needUpdate = false;
             }
         }
 
         public Vector3 WorldToScreenPoint(Vector3 position)
         {
-            return Application.GraphicsDevice.Viewport.Project(position, projection, view, Matrix.Identity);
+            return Application.GraphicsDevice.Viewport.Project(position, m_ProjectionMatrix, m_ViewMatrix, Matrix.Identity);
         }
 
         /// <summary>
         /// Get 3D world position of from the 2D position (on screen)
         /// </summary>
-        /// <param name="camera">Camera to use</param>
+        /// <param name="x">Position on world</param>
+        /// <param name="x">Position on world</param>
+        /// <returns>Position on 3D world</returns>
+        public Vector3 ScreenToWorldPoint(float x, float y)
+        {
+            var device = Application.GraphicsDevice;
+            var nearScreenPoint = new Vector3(x, y, 0.0f);
+            var farScreenPoint = new Vector3(x, y, 1.0f);
+            var nearWorldPoint = device.Viewport.Unproject(nearScreenPoint, m_ProjectionMatrix, m_ViewMatrix, Matrix.Identity);
+            var farWorldPoint = device.Viewport.Unproject(farScreenPoint, m_ProjectionMatrix, m_ViewMatrix, Matrix.Identity);
+            var direction = farWorldPoint - nearWorldPoint;
+            var zFactor = -nearWorldPoint.Y / direction.Y;
+            return nearWorldPoint + direction * zFactor;
+        }
+
+        /// <summary>
+        /// Get 3D world position of from the 2D position (on screen)
+        /// </summary>
         /// <param name="position">Position on world</param>
         /// <returns>Position on 3D world</returns>
-        public Vector3 ScreenToWorld(Vector3 position)
-        {
-            return Application.GraphicsDevice.Viewport.Unproject(position, projection, view, Matrix.Identity);
-        }
+        public Vector3 ScreenToWorld(Vector3 position) => ScreenToWorldPoint(position.X, position.Y);
 
         public Ray GetRay(Vector2 position)
         {
             Vector3 nearPoint = new Vector3(position, 0);
             Vector3 farPoint = new Vector3(position, 1);
 
-            nearPoint = Application.GraphicsDevice.Viewport.Unproject(nearPoint, projection, view, Matrix.Identity);
-            farPoint = Application.GraphicsDevice.Viewport.Unproject(farPoint, projection, view, Matrix.Identity);
+            nearPoint = Application.GraphicsDevice.Viewport.Unproject(nearPoint, m_ProjectionMatrix, m_ViewMatrix, Matrix.Identity);
+            farPoint = Application.GraphicsDevice.Viewport.Unproject(farPoint, m_ProjectionMatrix, m_ViewMatrix, Matrix.Identity);
 
             // Get the direction
             Vector3 direction = farPoint - nearPoint;

@@ -73,8 +73,8 @@ namespace C3DE.Components.Rendering
             }
 
             _effect.World = Matrix.CreateFromYawPitchRoll(m_Transform.LocalRotation.Y, m_Transform.LocalRotation.X, m_Transform.LocalRotation.Z) * Matrix.CreateTranslation(m_Transform.LocalPosition);
-            _effect.View = Camera.Main.view;
-            _effect.Projection = Camera.Main.projection;
+            _effect.View = Camera.Main.m_ViewMatrix;
+            _effect.Projection = Camera.Main.m_ProjectionMatrix;
             _effect.CurrentTechnique.Passes[0].Apply();
 
             device.DrawUserIndexedPrimitives(PrimitiveType.LineList, _vertices, 0, 8, _indices, 0, _indices.Length / 2);

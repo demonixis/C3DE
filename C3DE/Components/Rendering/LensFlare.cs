@@ -108,12 +108,12 @@ namespace C3DE.Components.Rendering
 
         private void UpdateOcclusion()
         {
-            var infiniteView = m_Camera.view;
+            var infiniteView = m_Camera.m_ViewMatrix;
             infiniteView.Translation = Vector3.Zero;
 
             // Project the light position into 2D screen space.
             var viewport = m_GraphicsDevice.Viewport;
-            var projectedPosition = viewport.Project(-LightDirection, m_Camera.projection, infiniteView, Matrix.Identity);
+            var projectedPosition = viewport.Project(-LightDirection, m_Camera.m_ProjectionMatrix, infiniteView, Matrix.Identity);
 
             // Don't draw any flares if the light is behind the camera.
             if ((projectedPosition.Z < 0) || (projectedPosition.Z > Math.PI))

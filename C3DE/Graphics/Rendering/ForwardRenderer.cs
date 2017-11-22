@@ -89,8 +89,8 @@ namespace C3DE.Graphics.Rendering
             {
                 for (var eye = 0; eye < 2; eye++)
                 {
-                    camera.projection = m_VRService.GetProjectionMatrix(eye);
-                    camera.view = m_VRService.GetViewMatrix(eye, Matrix.Identity);
+                    camera.m_ProjectionMatrix = m_VRService.GetProjectionMatrix(eye);
+                    camera.m_ViewMatrix = m_VRService.GetViewMatrix(eye, Matrix.Identity);
 
                     RenderSceneForCamera(scene, camera, m_VRRenderTargets[eye]);
                 }

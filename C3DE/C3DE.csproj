@@ -58,6 +58,7 @@
     <Compile Include="Components\Rendering\Terrain.cs" />
     <Compile Include="Components\Physics\Rigidbody.cs" />
     <Compile Include="Components\VR\MotionController.cs" />
+    <Compile Include="Extensions\MatrixExtensions.cs" />
     <Compile Include="Extensions\ModelExtensions.cs" />
     <Compile Include="GameObjectFactory.cs" />
     <Compile Include="Graphics\Materials\IEmissiveMaterial.cs" />

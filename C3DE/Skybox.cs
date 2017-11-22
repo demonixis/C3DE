@@ -130,8 +130,8 @@ namespace C3DE
 
             m_World = _scaleMatrix * Matrix.CreateTranslation(camera.Transform.LocalPosition);
 
-            m_EPView.SetValue(camera.view);
-            m_EPProjection.SetValue(camera.projection);
+            m_EPView.SetValue(camera.m_ViewMatrix);
+            m_EPProjection.SetValue(camera.m_ProjectionMatrix);
             m_EPEyePosition.SetValue(camera.Transform.LocalPosition);
             m_EPMainTexture.SetValue(m_MainTexture);
             m_EPWorld.SetValue(m_World);

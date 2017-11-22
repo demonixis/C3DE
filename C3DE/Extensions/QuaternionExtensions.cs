@@ -39,5 +39,9 @@ namespace Microsoft.Xna.Framework
             ToEuler(quaternion, ref result);
             return result;
         }
+
+        public static Quaternion Euler(this Quaternion q, float x, float y, float z) => Quaternion.CreateFromYawPitchRoll(y, x, z);
+
+        public static Quaternion Euler(this Quaternion q, Vector3 rotation) => Euler(q, rotation.X, rotation.Y, rotation.Z);
     }
 }
