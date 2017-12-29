@@ -104,10 +104,6 @@ namespace C3DE.Graphics.Rendering
                     scene.Lights[i].shadowGenerator.RenderShadows(m_graphicsDevice, scene.renderList);
         }
 
-        protected abstract void RenderObjects(Scene scene, Camera camera);
-
-        protected abstract void RenderPostProcess(List<PostProcessPass> passes, RenderTarget2D renderTarget);
-
         protected virtual void RenderUI(List<Behaviour> scripts)
         {
             var size = scripts.Count;

@@ -121,7 +121,7 @@ namespace C3DE.Graphics.Rendering
         /// Renders renderable objects
         /// </summary>
         /// <param name="camera">The camera to use.</param>
-        protected override void RenderObjects(Scene scene, Camera camera)
+        protected void RenderObjects(Scene scene, Camera camera)
         {
             m_graphicsDevice.DepthStencilState = DepthStencilState.Default;
             m_graphicsDevice.BlendState = BlendState.Opaque;
@@ -205,7 +205,7 @@ namespace C3DE.Graphics.Rendering
         /// </summary>
         /// <param name="passes"></param>
         /// <param name="renderTarget"></param>
-        protected override void RenderPostProcess(List<PostProcessPass> passes, RenderTarget2D renderTarget)
+        protected void RenderPostProcess(List<PostProcessPass> passes, RenderTarget2D renderTarget)
         {
             if (passes.Count == 0)
                 return;

@@ -73,6 +73,7 @@
     <Compile Include="Graphics\PostProcessing\MotionBlur.cs" />
     <Compile Include="Graphics\PostProcessing\QuadRenderer.cs" />
     <Compile Include="Extensions\QuaternionExtensions.cs" />
+    <Compile Include="Graphics\Rendering\DeferredRenderer.cs" />
     <Compile Include="Input.cs" />
     <Compile Include="Graphics\Materials\BillboardMaterial.cs" />
     <Compile Include="Graphics\Materials\UnlitMaterial.cs" />
