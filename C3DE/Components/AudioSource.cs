@@ -108,6 +108,8 @@ namespace C3DE.Components
             SoundEffect.DistanceScale = 2000.0f;
             SoundEffect.DopplerScale = 0.1f;
 
+            m_AudioEmitter = new AudioEmitter();
+
             if (PlayOnAwake)
                 Play();
         }

@@ -2,6 +2,7 @@
 using C3DE.Graphics.PostProcessing;
 using C3DE.UI;
 using C3DE.VR;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -13,8 +14,7 @@ namespace C3DE.Graphics.Rendering
     {
         protected GraphicsDevice m_graphicsDevice;
         protected SpriteBatch m_spriteBatch;
-        protected RenderTarget2D m_SceneRenderTarget;
-        protected RenderTarget2D[] m_VRRenderTargets = new RenderTarget2D[2];
+        protected RenderTarget2D[] m_SceneRenderTargets = new RenderTarget2D[2];
         protected VRService m_VRService;
         protected internal GUI m_uiManager;
         protected bool m_IsDisposed;
@@ -55,6 +55,32 @@ namespace C3DE.Graphics.Rendering
             m_spriteBatch = new SpriteBatch(m_graphicsDevice);
             m_uiManager = new GUI(m_spriteBatch);
             m_uiManager.LoadContent(content);
+        }
+
+        /// <summary>
+        /// Rebuilds render targets if Dirty is true.
+        /// </summary>
+        protected virtual void RebuildRenderTargets()
+        {
+            if (!Dirty)
+                return;
+
+            for (var eye = 0; eye < 2; eye++)
+                m_SceneRenderTargets[eye]?.Dispose();
+
+            if (m_VREnabled)
+            {
+                for (var eye = 0; eye < 2; eye++)
+                    m_SceneRenderTargets[eye] = m_VRService.CreateRenderTargetForEye(eye);
+            }
+            else
+            {
+                var pp = m_graphicsDevice.PresentationParameters;
+                var surfaceFormat = m_HDRSupport ? SurfaceFormat.HdrBlendable : pp.BackBufferFormat;
+                m_SceneRenderTargets[0] = new RenderTarget2D(m_graphicsDevice, pp.BackBufferWidth, pp.BackBufferHeight, false, surfaceFormat, pp.DepthStencilFormat, pp.MultiSampleCount, RenderTargetUsage.DiscardContents);
+            }
+
+            Dirty = false;
         }
 
         public virtual bool SetVREnabled(bool enabled)
@@ -126,6 +152,37 @@ namespace C3DE.Graphics.Rendering
         public abstract void Render(Scene scene);
 
         public abstract void RenderEditor(Scene scene, Camera camera, RenderTarget2D target);
+
+        /// <summary>
+        /// Draws the VR Preview to the Back Buffer
+        /// </summary>
+        /// <param name="eye"></param>
+        protected virtual void DrawVRPreview(int eye)
+        {
+            m_graphicsDevice.SetRenderTarget(null);
+            m_graphicsDevice.Clear(Color.Black);
+
+            var pp = m_graphicsDevice.PresentationParameters;
+            var height = pp.BackBufferHeight;
+            var width = MathHelper.Min(pp.BackBufferWidth, (int)(height * m_VRService.GetRenderTargetAspectRatio(eye)));
+            var offset = (pp.BackBufferWidth - width) / 2;
+
+            m_spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Opaque, null, null, null, m_VRService.DistortionEffect, null);
+
+            if (StereoPreview || m_VRService.DistortionCorrectionRequired)
+            {
+                width = pp.BackBufferWidth / 2;
+                m_spriteBatch.Draw(m_SceneRenderTargets[0], new Rectangle(0, 0, width, height), null, Color.White, 0, Vector2.Zero, m_VRService.PreviewRenderEffect, 0);
+                m_VRService.ApplyDistortion(m_SceneRenderTargets[0], 0);
+
+                m_spriteBatch.Draw(m_SceneRenderTargets[1], new Rectangle(width, 0, width, height), null, Color.White, 0, Vector2.Zero, m_VRService.PreviewRenderEffect, 0);
+                m_VRService.ApplyDistortion(m_SceneRenderTargets[1], 0);
+            }
+            else
+                m_spriteBatch.Draw(m_SceneRenderTargets[eye], new Rectangle(offset, 0, width, height), null, Color.White, 0, Vector2.Zero, m_VRService.PreviewRenderEffect, 0);
+
+            m_spriteBatch.End();
+        }
 
         #region IDisposable
 
