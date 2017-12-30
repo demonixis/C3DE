@@ -487,6 +487,18 @@
 /processorParam:TextureFormat=Color
 /build:Models/Quandtum/textures/Turret-Specular.jpg
 
+#begin Shaders/Deferred/Clear.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Shaders/Deferred/Clear.fx
+
+#begin Shaders/Deferred/Combine.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Shaders/Deferred/Combine.fx
+
 #begin Shaders/DepthNormal.fx
 /importer:EffectImporter
 /processor:EffectProcessor
@@ -552,6 +564,12 @@
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
 /build:Shaders/PostProcessing/Convolution.fx
+
+#begin Shaders/PostProcessing/DepthOfField.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Shaders/PostProcessing/DepthOfField.fx
 
 #begin Shaders/PostProcessing/Film.fx
 /importer:EffectImporter

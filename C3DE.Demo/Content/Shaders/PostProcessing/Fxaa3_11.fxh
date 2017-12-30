@@ -676,8 +676,8 @@ NOTE the other tuning knobs are now in the shader function inputs!
 #if (FXAA_HLSL_3 == 1) || (FXAA_360 == 1) || (FXAA_PS3 == 1)
     #define FxaaInt2 float2
     #define FxaaTex sampler2D
-    #define FxaaTexTop(t, p) tex2Dlod(t, float4(p, 0.0, 0.0))
-    #define FxaaTexOff(t, p, o, r) tex2Dlod(t, float4(p + (o * r), 0, 0))
+    #define FxaaTexTop(t, p) tex2D(t, p)
+    #define FxaaTexOff(t, p, o, r) tex2D(t, p + (o * r))
 #endif
 /*--------------------------------------------------------------------------*/
 #if (FXAA_HLSL_4 == 1)

@@ -54,9 +54,9 @@ Technique Default
     Pass
     {
 #if SM4
-		PixelShader = compile ps_4_0_level_9_1 ps_2_0();
+		PixelShader = compile ps_4_0_level_9_3 PixelShaderFunction();
 #else
-        PixelShader = compile ps_3_0 ps_2_0();
+        PixelShader = compile ps_3_0 PixelShaderFunction();
 #endif
     }
 }
@@ -67,7 +67,7 @@ Technique Scale
     Pass
     {
 #if SM4
-		PixelShader = compile ps_4_0_level_9_1 PixelShaderScaleFunction();
+		PixelShader = compile ps_4_0_level_9_3 PixelShaderScaleFunction();
 #else
         PixelShader = compile ps_3_0 PixelShaderScaleFunction();
 #endif

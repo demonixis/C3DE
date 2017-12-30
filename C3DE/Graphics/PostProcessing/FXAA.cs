@@ -8,8 +8,7 @@ namespace C3DE.Graphics.PostProcessing
     {
         private Effect m_Effect;
         private RenderTarget2D m_SceneRenderTarget;
-
-        public Vector2 TexelSize { get; set; } = Vector2.One;
+        private Vector4 m_PixelSize;
 
         public FXAA(GraphicsDevice graphics) : base(graphics)
         {
@@ -19,6 +18,12 @@ namespace C3DE.Graphics.PostProcessing
         {
             m_Effect = content.Load<Effect>("Shaders/PostProcessing/FXAA");
             m_SceneRenderTarget = GetRenderTarget();
+
+            var viewport = m_GraphicsDevice.Viewport;
+            m_PixelSize.X = 1.0f / viewport.Width;
+            m_PixelSize.Y = 1.0f / viewport.Height;
+            m_PixelSize.Z = -m_PixelSize.X;
+            m_PixelSize.W = m_PixelSize.Y;
         }
 
         public override void Draw(SpriteBatch spriteBatch, RenderTarget2D sceneRT)
@@ -26,7 +31,7 @@ namespace C3DE.Graphics.PostProcessing
             m_GraphicsDevice.SetRenderTarget(m_SceneRenderTarget);
             m_GraphicsDevice.SamplerStates[1] = SamplerState.LinearClamp;
 
-            m_Effect.Parameters["TexelSize"].SetValue(TexelSize);
+            m_Effect.Parameters["PixelSize"].SetValue(m_PixelSize);
 
             DrawFullscreenQuad(spriteBatch, sceneRT, m_SceneRenderTarget, m_Effect);
 

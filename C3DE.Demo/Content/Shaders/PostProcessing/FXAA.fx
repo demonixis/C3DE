@@ -28,10 +28,10 @@ struct PixelShaderInput
     float2 UV : TEXCOORD0;
 };
 
-float4 PixelShaderFunction(PPixelShaderInput input) : COLOR0
+float4 PixelShaderFunction(PixelShaderInput input) : COLOR0
 {
     return FxaaPixelShader( 
-        uv,                 //pos 
+        input.UV,                 //pos 
         0,                  //fxaaConsolePosPos (not used) 
         textureSampler,     //tex 
         textureSampler,     //fxaaConsole360TexExpBiasNegOne (not used)
@@ -55,7 +55,7 @@ technique Default
     pass Pass1
     {
 #if SM4
-		PixelShader = compile ps_4_0_level_9_1 PixelShaderFunction();
+		PixelShader = compile ps_4_0_level_9_3 PixelShaderFunction();
 #else
         PixelShader = compile ps_3_0 PixelShaderFunction();
 #endif

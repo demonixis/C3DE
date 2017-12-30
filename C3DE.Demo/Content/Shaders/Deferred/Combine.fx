@@ -46,7 +46,7 @@ VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
 	return output;
 }
 
-float4 PixelShaderFunction(VertexShaderOutput input)
+float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 {
     float3 diffuse = tex2D(colorSampler, input.UV).rgb;
     float4 light = tex2D(lightSampler, input.UV);
