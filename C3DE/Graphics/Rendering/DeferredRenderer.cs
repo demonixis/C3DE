@@ -94,9 +94,7 @@ namespace C3DE.Graphics.Rendering
             }
 
             if (scene.RenderSettings.Skybox.Enabled)
-            {
-                //scene.RenderSettings.Skybox.Draw(m_graphicsDevice, camera);
-            }
+                scene.RenderSettings.Skybox.DrawDeferred(m_graphicsDevice, camera);
 
             using (m_graphicsDevice.GeometryState())
             {

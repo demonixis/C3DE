@@ -145,5 +145,31 @@ namespace C3DE
             device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, m_Geometry.Indices.Length / 3);
             device.RasterizerState = m_CurrentRasterizerState;
         }
+
+        public void DrawDeferred(GraphicsDevice device, Camera camera)
+        {
+            if (m_Effect.Name == "Shaders/SkyboxEffect")
+            {
+                m_Effect.Dispose();
+                m_Effect = Application.Content.Load<Effect>("Shaders/Deferred/Skybox");
+            }
+
+            m_CurrentRasterizerState = device.RasterizerState;
+            device.RasterizerState = m_SkyboxRasterizerState;
+
+            m_World = _scaleMatrix * Matrix.CreateTranslation(camera.Transform.LocalPosition);
+
+            m_Effect.Parameters["World"].SetValue(m_World);
+            m_Effect.Parameters["Projection"].SetValue(camera.m_ProjectionMatrix);
+            m_Effect.Parameters["View"].SetValue(camera.m_ViewMatrix);
+            m_Effect.Parameters["Texture"].SetValue(m_MainTexture);
+            m_Effect.Parameters["EyePosition"].SetValue(camera.Transform.Position);
+            m_Effect.CurrentTechnique.Passes[0].Apply();
+
+            device.SetVertexBuffer(m_Geometry.VertexBuffer);
+            device.Indices = m_Geometry.IndexBuffer;
+            device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, m_Geometry.Indices.Length / 3);
+            device.RasterizerState = m_CurrentRasterizerState;
+        }
     }
 }

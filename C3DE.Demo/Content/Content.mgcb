@@ -511,6 +511,12 @@
 /processorParam:DebugMode=Auto
 /build:Shaders/Deferred/PointLight.fx
 
+#begin Shaders/Deferred/Skybox.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Shaders/Deferred/Skybox.fx
+
 #begin Shaders/Deferred/Standard.fx
 /importer:EffectImporter
 /processor:EffectProcessor
