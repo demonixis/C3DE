@@ -1,6 +1,5 @@
 ﻿using C3DE.Demo.Scripts;
 using C3DE.UI;
-using Microsoft.Xna.Framework;
 
 namespace C3DE.Demo.Scenes
 {

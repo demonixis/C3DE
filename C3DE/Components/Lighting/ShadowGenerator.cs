@@ -114,8 +114,8 @@ namespace C3DE.Components.Lighting
             device.DepthStencilState = DepthStencilState.Default;
             device.Clear(Color.White);
 
-            _shadowEffect.Parameters["View"].SetValue(_light.viewMatrix);
-            _shadowEffect.Parameters["Projection"].SetValue(_light.projectionMatrix);
+            _shadowEffect.Parameters["View"].SetValue(_light.m_ViewMatrix);
+            _shadowEffect.Parameters["Projection"].SetValue(_light.m_ProjectionMatrix);
 
             for (int i = 0; i < renderList.Count; i++)
             {

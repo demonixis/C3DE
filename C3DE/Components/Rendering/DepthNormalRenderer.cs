@@ -20,6 +20,7 @@ namespace C3DE.Components.Rendering
 
             CreateRenderTargets();
             m_Effect = Application.Content.Load<Effect>("Shaders/DepthNormal");
+            RenderQueue = -1;
         }
 
         public void CreateRenderTargets()

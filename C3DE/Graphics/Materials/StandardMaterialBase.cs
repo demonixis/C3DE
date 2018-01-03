@@ -135,7 +135,7 @@ namespace C3DE.Graphics.Materials
             m_EPSpecularLightColor.SetValue(m_SpecularColor);
             m_EPSpecularPower.SetValue(Shininess);
             m_EPSpecularIntensity.SetValue(SpecularIntensity);
-            m_EPLightColor.SetValue(light.color);
+            m_EPLightColor.SetValue(light.m_Color);
             m_EPLightDirection.SetValue(light.m_Transform.LocalRotation);
             m_EPLightPosition.SetValue(light.m_Transform.LocalPosition);
             m_EPLightSpotAngle.SetValue(light.Angle);
@@ -144,14 +144,14 @@ namespace C3DE.Graphics.Materials
             m_EPLightFallOff.SetValue(light.FallOf);
             m_EPLightType.SetValue((int)light.TypeLight);
 
-            m_EPShadowStrength.SetValue(light.shadowGenerator.ShadowStrength);
-            m_EPShadowBias.SetValue(light.shadowGenerator.ShadowBias);
-            m_EPShadowMap.SetValue(light.shadowGenerator.ShadowMap);
+            m_EPShadowStrength.SetValue(light.m_ShadowGenerator.ShadowStrength);
+            m_EPShadowBias.SetValue(light.m_ShadowGenerator.ShadowBias);
+            m_EPShadowMap.SetValue(light.m_ShadowGenerator.ShadowMap);
             m_EPShadowEnabled.SetValue(renderer.ReceiveShadow);
             m_EPFogColor.SetValue(scene.RenderSettings.fogColor);
             m_EPFogData.SetValue(scene.RenderSettings.fogData);
-            m_EPLightView.SetValue(light.viewMatrix);
-            m_EPLightProjection.SetValue(light.projectionMatrix);
+            m_EPLightView.SetValue(light.m_ViewMatrix);
+            m_EPLightProjection.SetValue(light.m_ProjectionMatrix);
             m_EPSpecularTextureEnabled.SetValue(SpecularTexture != null);
             m_EPSpecularTexture.SetValue(SpecularTexture);
 

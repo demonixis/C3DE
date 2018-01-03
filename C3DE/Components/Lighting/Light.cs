@@ -1,4 +1,7 @@
-﻿using Microsoft.Xna.Framework;
+﻿using C3DE.Graphics.PostProcessing;
+using C3DE.Graphics.Primitives;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System.Runtime.Serialization;
 
 namespace C3DE.Components.Lighting
@@ -11,29 +14,33 @@ namespace C3DE.Components.Lighting
     [DataContract]
     public class Light : Component
     {
-        internal protected Matrix viewMatrix;
-        internal protected Matrix projectionMatrix;
-        internal protected ShadowGenerator shadowGenerator;
-        internal protected Vector3 color = Color.White.ToVector3();
+        internal protected Matrix m_ViewMatrix;
+        internal protected Matrix m_ProjectionMatrix;
+        internal protected ShadowGenerator m_ShadowGenerator;
+        internal protected Vector3 m_Color = Color.White.ToVector3();
+        private Effect m_DeferredDirLightEffect;
+        private Effect m_DeferredPointLightEffect;
+        private QuadRenderer m_QuadRenderer;
+        private SphereMesh m_SphereMesh;
 
-        public Matrix View => viewMatrix;
+        public Matrix View => m_ViewMatrix;
 
-        public Matrix Projection => projectionMatrix;
+        public Matrix Projection => m_ProjectionMatrix;
 
         public Vector3 Direction => Vector3.Normalize(m_GameObject.Transform.Position);
 
         [DataMember]
         public bool EnableShadow
         {
-            get => shadowGenerator.Enabled;
-            set { shadowGenerator.Enabled = value; }
+            get => m_ShadowGenerator.Enabled;
+            set { m_ShadowGenerator.Enabled = value; }
         }
 
         [DataMember]
         public ShadowGenerator ShadowGenerator
         {
-            get => shadowGenerator;
-            protected set { shadowGenerator = value; }
+            get => m_ShadowGenerator;
+            protected set { m_ShadowGenerator = value; }
         }
 
         /// <summary>
@@ -42,8 +49,8 @@ namespace C3DE.Components.Lighting
         [DataMember]
         public Color Color
         {
-            get => new Color(color);
-            set { color = value.ToVector3(); }
+            get => new Color(m_Color);
+            set { m_Color = value.ToVector3(); }
         }
 
         /// <summary>
@@ -76,15 +83,24 @@ namespace C3DE.Components.Lighting
         public Light()
             : base()
         {
-            viewMatrix = Matrix.Identity;
-            projectionMatrix = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45), 1, 1, 1000);
-            viewMatrix = Matrix.CreateLookAt(Vector3.Zero, Vector3.Zero, Vector3.Up);
-            shadowGenerator = new ShadowGenerator(this);
+            m_ViewMatrix = Matrix.Identity;
+            m_ProjectionMatrix = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45), 1, 1, 1000);
+            m_ViewMatrix = Matrix.CreateLookAt(Vector3.Zero, Vector3.Zero, Vector3.Up);
+            m_ShadowGenerator = new ShadowGenerator(this);
         }
 
         public override void Start()
         {
-            shadowGenerator.Initialize();
+            m_ShadowGenerator.Initialize();
+
+            m_QuadRenderer = new QuadRenderer(Application.GraphicsDevice);
+
+            var content = Application.Content;
+            m_DeferredDirLightEffect = content.Load<Effect>("Shaders/Deferred/DirectionalLight");
+            m_DeferredPointLightEffect = content.Load<Effect>("Shaders/Deferred/PointLight");
+
+            m_SphereMesh = new SphereMesh(1, 16);
+            m_SphereMesh.Build();
         }
 
         // Need to be changed quickly !
@@ -93,16 +109,74 @@ namespace C3DE.Components.Lighting
             Vector3 dir = sphere.Center - m_GameObject.Transform.LocalPosition;
             dir.Normalize();
 
-            viewMatrix = Matrix.CreateLookAt(m_Transform.LocalPosition, sphere.Center, Vector3.Up);
+            m_ViewMatrix = Matrix.CreateLookAt(m_Transform.LocalPosition, sphere.Center, Vector3.Up);
             float size = sphere.Radius;
 
             float dist = Vector3.Distance(m_Transform.LocalPosition, sphere.Center);
-            projectionMatrix = Matrix.CreateOrthographicOffCenter(-size, size, size, -size, dist - sphere.Radius, dist + sphere.Radius * 2);
+            m_ProjectionMatrix = Matrix.CreateOrthographicOffCenter(-size, size, size, -size, dist - sphere.Radius, dist + sphere.Radius * 2);
+        }
+
+        public void RenderDeferred(RenderTarget2D colorMap, RenderTarget2D normalMap, RenderTarget2D depthMap, Camera camera)
+        {
+            var graphics = Application.GraphicsDevice;
+            var invertViewProjection = Matrix.Invert(camera.m_ViewMatrix * camera.m_ProjectionMatrix);
+
+            if (TypeLight == LightType.Directional)
+            {
+                // G-Buffer input
+                m_DeferredDirLightEffect.Parameters["ColorMap"].SetValue(colorMap);
+                m_DeferredDirLightEffect.Parameters["NormalMap"].SetValue(normalMap);
+                m_DeferredDirLightEffect.Parameters["DepthMap"].SetValue(depthMap);
+
+                // Light properties
+                m_DeferredDirLightEffect.Parameters["LightDirection"].SetValue(m_Transform.Position);
+                m_DeferredDirLightEffect.Parameters["Color"].SetValue(m_Color);
+
+                // Camera properties for specular reflections
+                m_DeferredDirLightEffect.Parameters["CameraPosition"].SetValue(camera.m_Transform.Position);
+                m_DeferredDirLightEffect.Parameters["InvertViewProjection"].SetValue(invertViewProjection);
+                m_DeferredDirLightEffect.CurrentTechnique.Passes[0].Apply();
+            }
+            else
+            {
+                // G-Buffer input
+                m_DeferredPointLightEffect.Parameters["ColorMap"].SetValue(colorMap);
+                m_DeferredPointLightEffect.Parameters["NormalMap"].SetValue(normalMap);
+                m_DeferredPointLightEffect.Parameters["DepthMap"].SetValue(depthMap);
+
+                // Light properties
+                var sphereWorldMatrix = Matrix.CreateScale(Range) * Matrix.CreateTranslation(m_Transform.Position);
+
+                m_DeferredPointLightEffect.Parameters["World"].SetValue(sphereWorldMatrix);
+                m_DeferredPointLightEffect.Parameters["LightPosition"].SetValue(m_Transform.Position);
+                m_DeferredPointLightEffect.Parameters["Color"].SetValue(m_Color);
+                m_DeferredPointLightEffect.Parameters["Radius"].SetValue(Range);
+                m_DeferredPointLightEffect.Parameters["Intensity"].SetValue(Intensity);
+
+                // Camera properties for specular reflections
+                m_DeferredPointLightEffect.Parameters["View"].SetValue(camera.m_ViewMatrix);
+                m_DeferredPointLightEffect.Parameters["Projection"].SetValue(camera.m_ProjectionMatrix);
+                m_DeferredPointLightEffect.Parameters["InvertViewProjection"].SetValue(invertViewProjection);
+                m_DeferredPointLightEffect.Parameters["CameraPosition"].SetValue(camera.m_Transform.Position);
+
+                // If the camera is inside the light's radius we invert the cull direction
+                // otherwise the camera's sphere model is clipped
+                var inside = Vector3.Distance(camera.m_Transform.Position, m_Transform.Position) < Range;
+                graphics.RasterizerState = inside ? RasterizerState.CullClockwise : RasterizerState.CullCounterClockwise;
+
+                m_DeferredPointLightEffect.CurrentTechnique.Passes[0].Apply();
+
+                graphics.SetVertexBuffer(m_SphereMesh.VertexBuffer);
+                graphics.Indices = m_SphereMesh.IndexBuffer;
+                graphics.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, m_SphereMesh.IndexBuffer.IndexCount / 3);
+            }
+
+            m_QuadRenderer.RenderFullscreenQuad(Application.GraphicsDevice);
         }
 
         public override void Dispose()
         {
-            shadowGenerator.Dispose();
+            m_ShadowGenerator.Dispose();
         }
 
         public override int CompareTo(object obj)

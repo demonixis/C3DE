@@ -37,6 +37,8 @@ namespace C3DE.Components.Rendering
 
         public BoundingBox BoundingBox =>  boundingBox;
 
+        public int RenderQueue { get; protected set; } = 1;
+
         /// <summary>
         /// Gets the main material.
         /// </summary>

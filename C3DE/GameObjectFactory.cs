@@ -31,10 +31,10 @@ namespace C3DE
             var light = gameObject.AddComponent<Light>();
             light.TypeLight = type;
             light.Intensity = intensity;
-            light.color = color.ToVector3();
+            light.m_Color = color.ToVector3();
 
             if (shadowMapSize > 0)
-                light.shadowGenerator.SetShadowMapSize(Application.GraphicsDevice, shadowMapSize);
+                light.m_ShadowGenerator.SetShadowMapSize(Application.GraphicsDevice, shadowMapSize);
 
             return gameObject;
         }

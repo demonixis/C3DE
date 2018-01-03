@@ -4,6 +4,11 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace C3DE.Graphics.PostProcessing
 {
+    /// <summary>
+    /// An FXAA (Fast Approximate AntiAliasing) filter.
+    /// Original Author: SeriousMaxx
+    /// Link: https://github.com/SeriousMaxx/FXAAMonoGame
+    /// </summary>
     public class FXAA : PostProcessPass
     {
         public enum FXAAQuality

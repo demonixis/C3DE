@@ -499,6 +499,24 @@
 /processorParam:DebugMode=Auto
 /build:Shaders/Deferred/Combine.fx
 
+#begin Shaders/Deferred/DirectionalLight.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Shaders/Deferred/DirectionalLight.fx
+
+#begin Shaders/Deferred/PointLight.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Shaders/Deferred/PointLight.fx
+
+#begin Shaders/Deferred/Standard.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Shaders/Deferred/Standard.fx
+
 #begin Shaders/DepthNormal.fx
 /importer:EffectImporter
 /processor:EffectProcessor

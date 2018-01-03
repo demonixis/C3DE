@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using C3DE.Components;
-using C3DE.Components.Lighting;
+﻿using C3DE.Components;
 using C3DE.Graphics.PostProcessing;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
@@ -8,6 +6,9 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace C3DE.Graphics.Rendering
 {
+    /// <summary>
+    /// A very **Work In Progress** Deferred Renderer
+    /// </summary>
     public class DeferredRenderer : Renderer
     {
         private QuadRenderer m_QuadRenderer;
@@ -17,8 +18,12 @@ namespace C3DE.Graphics.Rendering
         private RenderTarget2D m_LightTarget;
         private Effect m_ClearEffect;
         private Effect m_CombineEffect;
+        private Effect m_TempRenderEffect;
 
+        public Texture2D ColorBuffer => m_ColorTarget;
+        public Texture2D NormalMap => m_NormalTarget;
         public Texture2D DepthBuffer => m_DepthTarget;
+        public Texture2D LightMap => m_LightTarget;
 
         public DeferredRenderer(GraphicsDevice graphics)
             : base(graphics)
@@ -31,6 +36,7 @@ namespace C3DE.Graphics.Rendering
             base.Initialize(content);
             m_ClearEffect = content.Load<Effect>("Shaders/Deferred/Clear");
             m_CombineEffect = content.Load<Effect>("Shaders/Deferred/Combine");
+            m_TempRenderEffect = content.Load<Effect>("Shaders/Deferred/Standard");
         }
 
         /// <summary>
@@ -73,6 +79,12 @@ namespace C3DE.Graphics.Rendering
 
         public override void Render(Scene scene)
         {
+            var camera = scene.cameras[0];
+
+            RebuildRenderTargets();
+
+            RenderShadowMaps(scene);
+
             m_graphicsDevice.SetRenderTargets(m_ColorTarget, m_NormalTarget, m_DepthTarget);
 
             foreach (var pass in m_ClearEffect.Techniques[0].Passes)
@@ -81,35 +93,49 @@ namespace C3DE.Graphics.Rendering
                 m_QuadRenderer.RenderFullscreenQuad(m_graphicsDevice);
             }
 
-            foreach (var renderer in scene.renderList)
-                renderer.Draw(m_graphicsDevice);
+            if (scene.RenderSettings.Skybox.Enabled)
+            {
+                //scene.RenderSettings.Skybox.Draw(m_graphicsDevice, camera);
+            }
+
+            using (m_graphicsDevice.GeometryState())
+            {
+                foreach (var renderer in scene.renderList)
+                {
+                    // FIXME: Materials have to be updated.
+                    m_TempRenderEffect.Parameters["World"].SetValue(renderer.m_Transform.m_WorldMatrix);
+                    m_TempRenderEffect.Parameters["View"].SetValue(camera.m_ViewMatrix);
+                    m_TempRenderEffect.Parameters["Projection"].SetValue(camera.m_ProjectionMatrix);
+                    m_TempRenderEffect.Parameters["Texture"].SetValue(renderer.material.MainTexture);
+                    m_TempRenderEffect.CurrentTechnique.Passes[0].Apply();
+                    renderer.Draw(m_graphicsDevice);
+                }
+            }
 
             m_graphicsDevice.SetRenderTargets(null);
-
             m_graphicsDevice.SetRenderTarget(m_LightTarget);
             m_graphicsDevice.Clear(Color.Transparent);
 
-            DrawLights(Camera.Main, scene.lights);
+            using (m_graphicsDevice.LightState())
+            {
+                foreach (var light in scene.lights)
+                    light.RenderDeferred(m_ColorTarget, m_NormalTarget, m_DepthTarget, camera);
+            }
 
             m_graphicsDevice.SetRenderTargets(null);
 
-            m_graphicsDevice.BlendState = BlendState.Opaque;
-            m_graphicsDevice.DepthStencilState = DepthStencilState.None;
-            m_graphicsDevice.RasterizerState = RasterizerState.CullCounterClockwise;
-            m_graphicsDevice.SamplerStates[0] = SamplerState.LinearClamp;
-
-            foreach (var pass in m_CombineEffect.Techniques[0].Passes)
+            using (m_graphicsDevice.PostProcessState())
             {
-                m_CombineEffect.Parameters["ColorMap"].SetValue(m_ColorTarget);
-                m_CombineEffect.Parameters["LightMap"].SetValue(m_LightTarget);
-                pass.Apply();
-                m_QuadRenderer.RenderFullscreenQuad(m_graphicsDevice);
+                foreach (var pass in m_CombineEffect.Techniques[0].Passes)
+                {
+                    m_CombineEffect.Parameters["ColorMap"].SetValue(m_ColorTarget);
+                    m_CombineEffect.Parameters["LightMap"].SetValue(m_LightTarget);
+                    pass.Apply();
+                    m_QuadRenderer.RenderFullscreenQuad(m_graphicsDevice);
+                }
             }
-        }
 
-        private void DrawLights(Camera camera, IEnumerable<Light> lights)
-        {
-
+            RenderUI(scene.Behaviours);
         }
 
         public override void RenderEditor(Scene scene, Camera camera, RenderTarget2D target)
