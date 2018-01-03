@@ -58,6 +58,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DemoGame.cs" />
+    <Compile Include="Scenes\DeferredDemo.cs" />
     <Compile Include="Scenes\GUIDemo.cs" />
     <Compile Include="Scenes\PhysicsDemo.cs" />
     <Compile Include="Scenes\PostProcessingDemo.cs" />
@@ -71,6 +72,7 @@
     <Compile Include="Scenes\VirtualRealityDemo.cs" />
     <Compile Include="Scripts\AutoRotation.cs" />
     <Compile Include="Scripts\ControllerSwitcher.cs" />
+    <Compile Include="Scripts\DeferredDebuger.cs" />
     <Compile Include="Scripts\DemoBehaviour.cs" />
     <Compile Include="Scripts\HexaGridBuilder.cs" />
     <Compile Include="Scripts\LightMover.cs" />

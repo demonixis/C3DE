@@ -487,6 +487,42 @@
 /processorParam:TextureFormat=Color
 /build:Models/Quandtum/textures/Turret-Specular.jpg
 
+#begin Shaders/Deferred/Clear.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Shaders/Deferred/Clear.fx
+
+#begin Shaders/Deferred/Combine.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Shaders/Deferred/Combine.fx
+
+#begin Shaders/Deferred/DirectionalLight.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Shaders/Deferred/DirectionalLight.fx
+
+#begin Shaders/Deferred/PointLight.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Shaders/Deferred/PointLight.fx
+
+#begin Shaders/Deferred/Skybox.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Shaders/Deferred/Skybox.fx
+
+#begin Shaders/Deferred/Standard.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Shaders/Deferred/Standard.fx
+
 #begin Shaders/DepthNormal.fx
 /importer:EffectImporter
 /processor:EffectProcessor
@@ -600,6 +636,12 @@
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
 /build:Shaders/PostProcessing/SimpleBlur.fx
+
+#begin Shaders/PostProcessing/Vignette.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Shaders/PostProcessing/Vignette.fx
 
 #begin Shaders/ReflectionEffect.fx
 /importer:EffectImporter

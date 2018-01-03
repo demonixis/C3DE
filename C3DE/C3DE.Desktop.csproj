@@ -88,6 +88,7 @@
     <Compile Include="Components\Rendering\Terrain.cs" />
     <Compile Include="Components\Physics\Rigidbody.cs" />
     <Compile Include="Components\VR\MotionController.cs" />
+    <Compile Include="Extensions\MatrixExtensions.cs" />
     <Compile Include="Extensions\ModelExtensions.cs" />
     <Compile Include="GameObjectFactory.cs" />
     <Compile Include="Graphics\Materials\IEmissiveMaterial.cs" />
@@ -102,6 +103,10 @@
     <Compile Include="Graphics\PostProcessing\MotionBlur.cs" />
     <Compile Include="Graphics\PostProcessing\QuadRenderer.cs" />
     <Compile Include="Extensions\QuaternionExtensions.cs" />
+    <Compile Include="Graphics\PostProcessing\Vignette.cs" />
+    <Compile Include="Graphics\Rendering\DeferredRenderer.cs" />
+    <Compile Include="Graphics\Rendering\DeviceState.cs" />
+    <Compile Include="Graphics\Rendering\GraphicsDeviceExtensions.cs" />
     <Compile Include="Input.cs" />
     <Compile Include="Graphics\Materials\BillboardMaterial.cs" />
     <Compile Include="Graphics\Materials\UnlitMaterial.cs" />
