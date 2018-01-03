@@ -36,31 +36,34 @@ namespace C3DE.Demo.Scripts
             // Setup PostProcess.
 #if !DESKTOP
             var colorGrading = new ColorGrading(graphics);
-            AddPass(colorGrading);
+            AddPostProcess(colorGrading);
             colorGrading.LookUpTable = Application.Content.Load<Texture2D>("Textures/Luts/lut_default");
 #endif
 
             var oldBloom = new BloomLegacy(graphics);
-            AddPass(oldBloom);
+            AddPostProcess(oldBloom);
             oldBloom.Settings = new BloomLegacySettings("Profile", 0.15f, 1f, 4.0f, 1.0f, 1f, 1f);
 
             var newBloom = new Bloom(graphics);
-            AddPass(newBloom);
+            AddPostProcess(newBloom);
             newBloom.SetPreset(new float[] { 5, 1, 1, 1, 1 }, new float[] { 1, 1, 1, 1, 1 }, 1, 5);
 
-            AddPass(new C64Filter(graphics));
-            AddPass(new CGAFilter(graphics));
-            AddPass(new ConvolutionFilter(graphics));
-            AddPass(new FilmFilter(graphics));
-            AddPass(new FXAA(graphics));
-            AddPass(new GrayScaleFilter(graphics));
-            AddPass(new AverageColorFilter(graphics));
-            AddPass(new MotionBlur(graphics));
+            AddPostProcess(new C64Filter(graphics));
+            AddPostProcess(new CGAFilter(graphics));
+            AddPostProcess(new ConvolutionFilter(graphics));
+            AddPostProcess(new FilmFilter(graphics));
+            AddPostProcess(new FXAA(graphics));
+            AddPostProcess(new GrayScaleFilter(graphics));
+            AddPostProcess(new AverageColorFilter(graphics));
+            AddPostProcess(new MotionBlur(graphics));
 
             var refractionPass = new Refraction(graphics);
-            AddPass(refractionPass);
+            AddPostProcess(refractionPass);
             refractionPass.RefractionTexture = Application.Content.Load<Texture2D>("Textures/hexagrid");
             refractionPass.TextureTiling = new Vector2(0.5f);
+
+            var vignette = new Vignette(graphics);
+            AddPostProcess(vignette);
 
             // Setup UI
             var titles = new List<string>();
@@ -74,7 +77,7 @@ namespace C3DE.Demo.Scripts
                 "Old Bloom", "New Bloom", "C64 Filter",
                 "CGA Filter", "Convolution", "Film",
                 "FXAA", "GrayScale", "Average Color",
-                "Motion Blur", "Refraction"
+                "Motion Blur", "Refraction", "Vignette"
             });
 
             var count = titles.Count;
@@ -117,7 +120,7 @@ namespace C3DE.Demo.Scripts
             }
         }
 
-        private void AddPass(PostProcessPass pass)
+        private void AddPostProcess(PostProcessPass pass)
         {
             pass.Enabled = false;
             m_GameObject.Scene.Add(pass);
