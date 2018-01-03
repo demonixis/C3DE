@@ -3,13 +3,16 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace C3DE.Components.Rendering
 {
-    public class DepthRenderer : Renderer
+    public class DepthNormalRenderer : Renderer
     {
         internal RenderTarget2D m_DepthRT;
         internal RenderTarget2D m_NormalRT;
         private Effect m_Effect;
 
         public Camera Camera { get; set; }
+
+        public Texture2D DepthBuffer => m_DepthRT;
+        public Texture2D NormalBuffer => m_NormalRT;
 
         public override void Start()
         {
@@ -46,6 +49,9 @@ namespace C3DE.Components.Rendering
 
             for (int i = 0, l = renderList.Count; i < l; i++)
             {
+                if (renderList[i] == this)
+                    continue;
+
                 m_Effect.Parameters["World"].SetValue(renderList[i].Transform.m_WorldMatrix);
                 m_Effect.CurrentTechnique.Passes[0].Apply();
                 renderList[i].Draw(device);

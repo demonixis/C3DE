@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using C3DE.Components;
 using C3DE.Components.Lighting;
 using C3DE.Graphics.PostProcessing;
@@ -22,6 +17,8 @@ namespace C3DE.Graphics.Rendering
         private RenderTarget2D m_LightTarget;
         private Effect m_ClearEffect;
         private Effect m_CombineEffect;
+
+        public Texture2D DepthBuffer => m_DepthTarget;
 
         public DeferredRenderer(GraphicsDevice graphics)
             : base(graphics)
