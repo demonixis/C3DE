@@ -36,7 +36,7 @@ namespace C3DE.Demo.Scenes
             head.Transform.Parent = player.Transform;
             player.AddComponent<VRSwitcher>();
 
-            var handMaterial = new StandardMaterial(m_Scene);
+            var handMaterial = new UnlitMaterial(m_Scene);
             handMaterial.DiffuseColor = Color.DarkBlue;
 
             for (var i = 0; i < 2; i++)
@@ -70,9 +70,9 @@ namespace C3DE.Demo.Scenes
             lightGo.GetComponent<Light>().Range = 100;
 
             // Terrain
-            var terrainMaterial = new StandardMaterial(m_Scene);
+            var terrainMaterial = new UnlitMaterial(m_Scene);
             terrainMaterial.MainTexture = Application.Content.Load<Texture2D>("Textures/Terrain/Grass");
-            terrainMaterial.Shininess = 150;
+            //terrainMaterial.Shininess = 150;
             terrainMaterial.Tiling = new Vector2(16);
 
             var terrainGo = GameObjectFactory.CreateTerrain();
@@ -85,7 +85,7 @@ namespace C3DE.Demo.Scenes
             terrain.Renderer.Material = terrainMaterial;
             Add(terrainGo);
 
-            var cubMat = new StandardMaterial(this);
+            var cubMat = new UnlitMaterial(this);
             cubMat.MainTexture = GraphicsHelper.CreateCheckboardTexture(Color.Red, Color.White);
             cubMat.Tiling = new Vector2(2, 2);
 
