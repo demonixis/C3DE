@@ -65,7 +65,6 @@
     <Compile Include="Graphics\Materials\IMultipassLightingMaterial.cs" />
     <Compile Include="Graphics\Materials\StandardMaterial.cs" />
     <Compile Include="Graphics\Materials\StandardMaterialBase.cs" />
-    <Compile Include="Graphics\Materials\StandardToonMaterial.cs" />
     <Compile Include="Graphics\PostProcessing\AverageColorFilter.cs" />
     <Compile Include="Graphics\PostProcessing\Bloom.cs" />
     <Compile Include="Graphics\PostProcessing\ColorGrading.cs" />
@@ -81,10 +80,8 @@
     <Compile Include="Graphics\Materials\BillboardMaterial.cs" />
     <Compile Include="Graphics\Materials\UnlitMaterial.cs" />
     <Compile Include="Graphics\PostProcessing\PostProcessManager.cs" />
-    <Compile Include="Graphics\Materials\FresnelMaterial.cs" />
     <Compile Include="Graphics\Materials\LavaMaterial.cs" />
     <Compile Include="Graphics\Materials\StandardTerrainMaterial.cs" />
-    <Compile Include="Graphics\Materials\ToonMaterial.cs" />
     <Compile Include="Graphics\PostProcessing\BloomLegacy.cs" />
     <Compile Include="Graphics\PostProcessing\BloomLegacySettings.cs" />
     <Compile Include="Graphics\PostProcessing\C64Filter.cs" />
@@ -105,7 +102,6 @@
     <Compile Include="Graphics\Primitives\TorusMesh.cs" />
     <Compile Include="Inputs\InputDevice.cs" />
     <Compile Include="Inputs\TouchComponent.cs" />
-    <Compile Include="Graphics\Materials\SimpleMaterial.cs" />
     <Compile Include="Graphics\Materials\TransparentMaterial.cs" />
     <Compile Include="Graphics\PostProcessing\SimpleBlur.cs" />
     <Compile Include="Graphics\Rendering\Renderer.cs" />

@@ -55,7 +55,7 @@ namespace C3DE
 
         public void LoadContent(ContentManager content)
         {
-            m_Effect = content.Load<Effect>("Shaders/SkyboxEffect");
+            m_Effect = content.Load<Effect>("Shaders/Forward/Skybox");
             m_DefaultPass = m_Effect.CurrentTechnique.Passes["AmbientPass"];
             m_EPView = m_Effect.Parameters["View"];
             m_EPProjection = m_Effect.Parameters["Projection"];
@@ -135,9 +135,11 @@ namespace C3DE
             m_EPEyePosition.SetValue(camera.Transform.LocalPosition);
             m_EPMainTexture.SetValue(m_MainTexture);
             m_EPWorld.SetValue(m_World);
+#if !DESKTOP
             m_EPFogEnabled.SetValue(FogSupported);
             m_EPFogColor.SetValue(Scene.current.RenderSettings.fogColor);
             m_EPFogData.SetValue(m_OverrideFog ? m_CustomFogData : Scene.current.RenderSettings.fogData);
+#endif
             m_DefaultPass.Apply();
 
             device.SetVertexBuffer(m_Geometry.VertexBuffer);

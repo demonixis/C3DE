@@ -46,7 +46,7 @@ namespace C3DE.Graphics.Materials
 
         protected override void LoadEffect(ContentManager content)
         {
-            m_Effect = content.Load<Effect>("Shaders/StandardEffect");
+            m_Effect = content.Load<Effect>("Shaders/Forward/Standard");
         }
 
         protected override void SetupParamaters()

@@ -120,7 +120,7 @@ float3 CalcDiffuseColor(VertexShaderOutput input)
     if (ReflectionTextureEnabled == true)
         return diffuse * ReflectionColor * texCUBE(reflectiveSampler, normalize(input.Reflection)).xyz;
 	
-    return diffuse;
+    return diffuse * DiffuseColor;
 }
 
 float4 PixelShaderAmbient(VertexShaderOutput input) : COLOR0

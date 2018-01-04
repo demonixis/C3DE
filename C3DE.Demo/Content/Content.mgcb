@@ -529,17 +529,53 @@
 /processorParam:DebugMode=Auto
 /build:Shaders/DepthNormal.fx
 
-#begin Shaders/FresnelEffect.fx
+#begin Shaders/Forward/Lava.fx
 /importer:EffectImporter
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
-/build:Shaders/FresnelEffect.fx
+/build:Shaders/Forward/Lava.fx
 
-#begin Shaders/LavaEffect.fx
+#begin Shaders/ShadowMap.fx
 /importer:EffectImporter
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
-/build:Shaders/LavaEffect.fx
+/build:Shaders/ShadowMap.fx
+
+#begin Shaders/Forward/Skybox.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Shaders/Forward/Skybox.fx
+
+#begin Shaders/Forward/Standard.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Shaders/Forward/Standard.fx
+
+#begin Shaders/Forward/StandardTerrain.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Shaders/Forward/StandardTerrain.fx
+
+#begin Shaders/Forward/StandardWater.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Shaders/Forward/StandardWater.fx
+
+#begin Shaders/Forward/Transparent.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Shaders/Forward/Transparent.fx
+
+#begin Shaders/Forward/Unlit.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Shaders/Forward/Unlit.fx
 
 #begin Shaders/PostProcessing/AverageColor.fx
 /importer:EffectImporter
@@ -642,72 +678,6 @@
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
 /build:Shaders/PostProcessing/Vignette.fx
-
-#begin Shaders/ReflectionEffect.fx
-/importer:EffectImporter
-/processor:EffectProcessor
-/processorParam:DebugMode=Auto
-/build:Shaders/ReflectionEffect.fx
-
-#begin Shaders/ShadowMapEffect.fx
-/importer:EffectImporter
-/processor:EffectProcessor
-/processorParam:DebugMode=Auto
-/build:Shaders/ShadowMapEffect.fx
-
-#begin Shaders/SimpleEffect.fx
-/importer:EffectImporter
-/processor:EffectProcessor
-/processorParam:DebugMode=Auto
-/build:Shaders/SimpleEffect.fx
-
-#begin Shaders/SkyboxEffect.fx
-/importer:EffectImporter
-/processor:EffectProcessor
-/processorParam:DebugMode=Auto
-/build:Shaders/SkyboxEffect.fx
-
-#begin Shaders/StandardEffect.fx
-/importer:EffectImporter
-/processor:EffectProcessor
-/processorParam:DebugMode=Auto
-/build:Shaders/StandardEffect.fx
-
-#begin Shaders/StandardTerrainEffect.fx
-/importer:EffectImporter
-/processor:EffectProcessor
-/processorParam:DebugMode=Auto
-/build:Shaders/StandardTerrainEffect.fx
-
-#begin Shaders/StandardToonEffect.fx
-/importer:EffectImporter
-/processor:EffectProcessor
-/processorParam:DebugMode=Auto
-/build:Shaders/StandardToonEffect.fx
-
-#begin Shaders/StandardWaterEffect.fx
-/importer:EffectImporter
-/processor:EffectProcessor
-/processorParam:DebugMode=Auto
-/build:Shaders/StandardWaterEffect.fx
-
-#begin Shaders/ToonEffect.fx
-/importer:EffectImporter
-/processor:EffectProcessor
-/processorParam:DebugMode=Auto
-/build:Shaders/ToonEffect.fx
-
-#begin Shaders/TransparentEffect.fx
-/importer:EffectImporter
-/processor:EffectProcessor
-/processorParam:DebugMode=Auto
-/build:Shaders/TransparentEffect.fx
-
-#begin Shaders/Unlit.fx
-/importer:EffectImporter
-/processor:EffectProcessor
-/processorParam:DebugMode=Auto
-/build:Shaders/Unlit.fx
 
 #begin Textures/Flares/circle.jpg
 /importer:TextureImporter

@@ -38,7 +38,7 @@ namespace C3DE.Graphics.Materials
 
         public override void LoadContent(ContentManager content)
         {
-            m_Effect = content.Load<Effect>("Shaders/LavaEffect");
+            m_Effect = content.Load<Effect>("Shaders/Forward/Lava");
             m_PassAmbient = m_Effect.CurrentTechnique.Passes["AmbientPass"];
             m_PassEmissive = m_Effect.CurrentTechnique.Passes["EmissivePass"];
 

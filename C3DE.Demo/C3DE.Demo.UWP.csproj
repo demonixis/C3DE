@@ -107,6 +107,7 @@
       <DependentUpon>GamePage.xaml</DependentUpon>
     </Compile>
     <Compile Include="DemoGame.cs" />
+	<Compile Include="Scenes\DeferredDemo.cs" />
     <Compile Include="Scenes\GUIDemo.cs" />
     <Compile Include="Scenes\PostProcessingDemo.cs" />
     <Compile Include="Scenes\HexagonGridTerrain.cs" />

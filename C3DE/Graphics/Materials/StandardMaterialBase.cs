@@ -75,7 +75,7 @@ namespace C3DE.Graphics.Materials
 
         protected virtual void LoadEffect(ContentManager content)
         {
-            m_Effect = content.Load<Effect>("Shaders/StandardEffect");
+            m_Effect = content.Load<Effect>("Shaders/Forward/Standard");
         }
 
         protected virtual void SetupParamaters()
@@ -144,12 +144,16 @@ namespace C3DE.Graphics.Materials
             m_EPLightFallOff.SetValue(light.FallOf);
             m_EPLightType.SetValue((int)light.TypeLight);
 
+#if !DESKTOP
+            
+            m_EPFogColor.SetValue(scene.RenderSettings.fogColor);
+            m_EPFogData.SetValue(scene.RenderSettings.fogData);
+            
+#endif
             m_EPShadowStrength.SetValue(light.m_ShadowGenerator.ShadowStrength);
             m_EPShadowBias.SetValue(light.m_ShadowGenerator.ShadowBias);
             m_EPShadowMap.SetValue(light.m_ShadowGenerator.ShadowMap);
             m_EPShadowEnabled.SetValue(renderer.ReceiveShadow);
-            m_EPFogColor.SetValue(scene.RenderSettings.fogColor);
-            m_EPFogData.SetValue(scene.RenderSettings.fogData);
             m_EPLightView.SetValue(light.m_ViewMatrix);
             m_EPLightProjection.SetValue(light.m_ProjectionMatrix);
             m_EPSpecularTextureEnabled.SetValue(SpecularTexture != null);

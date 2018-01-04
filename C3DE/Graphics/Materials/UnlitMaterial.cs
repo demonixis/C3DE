@@ -32,7 +32,7 @@ namespace C3DE.Graphics.Materials
 
         public override void LoadContent(ContentManager content)
         {
-            m_Effect = content.Load<Effect>("Shaders/Unlit");
+            m_Effect = content.Load<Effect>("Shaders/Forward/Unlit");
             m_PassColor = m_Effect.CurrentTechnique.Passes["UnlitColor"];
             m_PassTexture = m_Effect.CurrentTechnique.Passes["UnlitTexture"];
             m_EPView = m_Effect.Parameters["View"];

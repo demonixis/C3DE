@@ -46,7 +46,7 @@ namespace C3DE.Demo.Scenes
             ligthSphere.Geometry.Build();
             ligthSphere.CastShadow = false;
             ligthSphere.ReceiveShadow = false;
-            ligthSphere.Material = new SimpleMaterial(m_Scene);
+            ligthSphere.Material = new UnlitMaterial(m_Scene);
             ligthSphere.Material.MainTexture = GraphicsHelper.CreateTexture(Color.Yellow, 1, 1);
 
             // Terrain

@@ -26,7 +26,7 @@ namespace C3DE.Graphics.Materials
 
         protected override void LoadEffect(ContentManager content)
         {
-            m_Effect = content.Load<Effect>("Shaders/StandardTerrainEffect");
+            m_Effect = content.Load<Effect>("Shaders/Forward/StandardTerrain");
         }
 
         protected override void SetupParamaters()

@@ -169,7 +169,7 @@ namespace C3DE
             postProcessPasses = new List<PostProcessPass>();
             _componentsToDestroy = new List<Component>();
             _needRemoveCheck = false;
-            defaultMaterial = new SimpleMaterial(this, "Default Material");
+            defaultMaterial = new UnlitMaterial(this, "Default Material");
             RenderSettings = new RenderSettings();
             m_PhysicsCollisionSystem = new CollisionSystemSAP();
             m_PhysicsWorld = new World(m_PhysicsCollisionSystem);

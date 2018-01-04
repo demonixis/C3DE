@@ -29,7 +29,7 @@ namespace C3DE.Demo.Scenes
             lightGo.Transform.LocalRotation = new Vector3(1, 0.5f, 0);
             lightGo.AddComponent<DemoBehaviour>();
             lightGo.AddComponent<LightMover>();
-            lightGo.AddComponent<LightSwitcher>().LogPositionRotation = true;
+            lightGo.AddComponent<LightSwitcher>().LogPositionRotation = false;
             lightGo.GetComponent<Light>().ShadowGenerator.ShadowStrength = 0.5f;
             Add(lightGo);
 
