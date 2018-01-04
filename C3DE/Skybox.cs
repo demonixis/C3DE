@@ -150,7 +150,7 @@ namespace C3DE
 
         public void DrawDeferred(GraphicsDevice device, Camera camera)
         {
-            if (m_Effect.Name == "Shaders/SkyboxEffect")
+            if (m_Effect.Name == "Shaders/Forward/Skybox")
             {
                 m_Effect.Dispose();
                 m_Effect = Application.Content.Load<Effect>("Shaders/Deferred/Skybox");
