@@ -356,7 +356,7 @@ namespace C3DE
 
             foreach (var tr in m_Transform.Transforms)
                 list.AddRange(tr.GameObject.GetComponentsInChildren<T>());
-            
+
             return list.ToArray();
         }
 
@@ -475,7 +475,18 @@ namespace C3DE
 
         public static void Destroy(GameObject sceneObject)
         {
-            Scene.current.Remove(sceneObject);
+            if (sceneObject != null)
+                Scene.current.Remove(sceneObject);
+        }
+
+        public static GameObject Find(string name)
+        {
+            var gameObjects = Scene.current.sceneObjects;
+            foreach (var gameObject in gameObjects)
+                if (gameObject.Name == name)
+                    return gameObject;
+
+            return null;
         }
 
         #endregion

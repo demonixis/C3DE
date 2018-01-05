@@ -74,15 +74,21 @@ float4 PixelShaderAmbient(VertexShaderOutput input) : COLOR0
     input.ScreenPosition.xy /= input.ScreenPosition.w;
 
     float2 texCoord = 0.5f * (float2(input.ScreenPosition.x, -input.ScreenPosition.y) + 1);
-    
+    float4 color = tex2D(colorSampler, texCoord);
+
     //get normal data from the normalMap
     float4 normalData = tex2D(normalSampler, texCoord);
     float3 normal = 2.0f * normalData.xyz - 1.0f;
     float specularPower = normalData.a * 255;
-    float specularIntensity = tex2D(colorSampler, texCoord).a;
+    float specularIntensity = color.a;
 
     //read depth
-    float depthVal = tex2D(depthSampler, texCoord).r;
+    float4 depth = tex2D(depthSampler, texCoord);
+    float depthVal = depth.r;
+
+    // Unlit case: If all depth values are 9 we just draw the color on the lightmap.
+    if (depth.r == 0 && depth.g == 0 && depth.b == 0)
+        return float4(color.rgb, 0);
 
     //compute screen-space position
     float4 position;
