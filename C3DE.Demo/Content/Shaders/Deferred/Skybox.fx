@@ -60,9 +60,9 @@ PixelShaderOutput PixelShaderFunction(VertexShaderOutput input) : COLOR0
     PixelShaderOutput output = (PixelShaderOutput) 0;
     float3 diffuse = texCUBE(SkyboxSampler, normalize(input.UV)).rgb;
 
-    output.Color = float4(diffuse, 0.0f);
-    output.Normal = 0; // float4(input.WorldNormal.rgb, 0.0f);
-    output.Depth = 0;// input.Depth.x / input.Depth.y;
+    output.Color = float4(diffuse, 0);
+    output.Normal = 0;
+    output.Depth = 0;
 
     return output;
 }

@@ -63,13 +63,17 @@ VertexShaderOutput VertexShaderFunction(in VertexShaderInput input)
 
 float4 PixelShaderAmbient(VertexShaderOutput input) : COLOR0
 {
+    float4 color = tex2D(colorSampler, input.UV);
     float4 normalData = tex2D(normalSampler, input.UV);
     float3 normal = 2.0f * normalData.xyz - 1.0f;
     float specularPower = normalData.a * 255;
-    float specularIntensity = tex2D(colorSampler, input.UV).a;
+    float specularIntensity = color.a;
     
     //read depth
-    float depthVal = tex2D(depthSampler, input.UV).r;
+    float4 depth = tex2D(depthSampler, input.UV);
+    float depthVal = depth.r;
+    if (depth.r == 0 && depth.g == 0 && depth.b == 0)
+        return float4(color.rgb, 0);
 
     //compute screen-space position
     float4 position;

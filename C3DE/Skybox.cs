@@ -83,6 +83,7 @@ namespace C3DE
 
             m_Geometry.Size = new Vector3(size);
             m_Geometry.Build();
+            m_Geometry.ComputeNormals();
 
             m_MainTexture = new TextureCube(device, textures[0].Width, false, SurfaceFormat.Color);
             Color[] textureData;
