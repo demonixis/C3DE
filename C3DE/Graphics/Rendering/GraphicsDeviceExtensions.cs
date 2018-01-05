@@ -27,6 +27,16 @@ namespace C3DE.Graphics.Rendering
                 SamplerState.LinearClamp);
         }
 
+        public static DeviceState GeometryUnlitState(this GraphicsDevice device)
+        {
+            return new DeviceState(
+                device,
+                BlendState.Opaque,
+                DepthStencilState.Default,
+                RasterizerState.CullNone,
+                SamplerState.LinearClamp);
+        }
+
         /// <summary>
         /// Graphics device state for drawing lights to the Light Target
         /// </summary>

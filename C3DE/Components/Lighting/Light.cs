@@ -27,7 +27,7 @@ namespace C3DE.Components.Lighting
 
         public Matrix Projection => m_ProjectionMatrix;
 
-        public Vector3 Direction => Vector3.Normalize(m_GameObject.Transform.Position);
+        public Vector3 Direction => Vector3.Normalize(m_Transform.LocalRotation);
 
         [DataMember]
         public bool EnableShadow
@@ -123,44 +123,34 @@ namespace C3DE.Components.Lighting
 
             if (TypeLight == LightType.Directional)
             {
-                // G-Buffer input
                 m_DeferredDirLightEffect.Parameters["ColorMap"].SetValue(colorMap);
                 m_DeferredDirLightEffect.Parameters["NormalMap"].SetValue(normalMap);
                 m_DeferredDirLightEffect.Parameters["DepthMap"].SetValue(depthMap);
-
-                // Light properties
-                m_DeferredDirLightEffect.Parameters["LightDirection"].SetValue(m_Transform.Position);
                 m_DeferredDirLightEffect.Parameters["Color"].SetValue(m_Color);
-
-                // Camera properties for specular reflections
+                m_DeferredDirLightEffect.Parameters["Intensity"].SetValue(Intensity);
                 m_DeferredDirLightEffect.Parameters["CameraPosition"].SetValue(camera.m_Transform.Position);
                 m_DeferredDirLightEffect.Parameters["InvertViewProjection"].SetValue(invertViewProjection);
+                m_DeferredDirLightEffect.Parameters["LightPosition"].SetValue(m_Transform.LocalPosition);
+                m_DeferredDirLightEffect.Parameters["World"].SetValue(m_Transform.m_WorldMatrix);
                 m_DeferredDirLightEffect.CurrentTechnique.Passes[0].Apply();
             }
             else
             {
-                // G-Buffer input
+                var sphereWorldMatrix = Matrix.CreateScale(Range) * Matrix.CreateTranslation(m_Transform.Position);
+
                 m_DeferredPointLightEffect.Parameters["ColorMap"].SetValue(colorMap);
                 m_DeferredPointLightEffect.Parameters["NormalMap"].SetValue(normalMap);
                 m_DeferredPointLightEffect.Parameters["DepthMap"].SetValue(depthMap);
-
-                // Light properties
-                var sphereWorldMatrix = Matrix.CreateScale(Range) * Matrix.CreateTranslation(m_Transform.Position);
-
                 m_DeferredPointLightEffect.Parameters["World"].SetValue(sphereWorldMatrix);
                 m_DeferredPointLightEffect.Parameters["LightPosition"].SetValue(m_Transform.Position);
                 m_DeferredPointLightEffect.Parameters["Color"].SetValue(m_Color);
                 m_DeferredPointLightEffect.Parameters["Radius"].SetValue(Range);
                 m_DeferredPointLightEffect.Parameters["Intensity"].SetValue(Intensity);
-
-                // Camera properties for specular reflections
                 m_DeferredPointLightEffect.Parameters["View"].SetValue(camera.m_ViewMatrix);
                 m_DeferredPointLightEffect.Parameters["Projection"].SetValue(camera.m_ProjectionMatrix);
                 m_DeferredPointLightEffect.Parameters["InvertViewProjection"].SetValue(invertViewProjection);
                 m_DeferredPointLightEffect.Parameters["CameraPosition"].SetValue(camera.m_Transform.Position);
 
-                // If the camera is inside the light's radius we invert the cull direction
-                // otherwise the camera's sphere model is clipped
                 var inside = Vector3.Distance(camera.m_Transform.Position, m_Transform.Position) < Range;
                 graphics.RasterizerState = inside ? RasterizerState.CullClockwise : RasterizerState.CullCounterClockwise;
 

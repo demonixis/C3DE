@@ -18,7 +18,7 @@ namespace C3DE.Graphics.Materials
     public abstract class Material : IDisposable
     {
         protected internal Scene scene;
-        protected Vector3 m_DiffuseColor;
+        protected internal Vector3 m_DiffuseColor;
         protected internal Effect m_Effect;
         protected internal bool m_hasAlpha;
 

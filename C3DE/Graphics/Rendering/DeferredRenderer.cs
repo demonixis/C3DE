@@ -1,4 +1,5 @@
 ﻿using C3DE.Components;
+using C3DE.Graphics.Materials;
 using C3DE.Graphics.PostProcessing;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
@@ -93,18 +94,35 @@ namespace C3DE.Graphics.Rendering
                 m_QuadRenderer.RenderFullscreenQuad(m_graphicsDevice);
             }
 
-            if (scene.RenderSettings.Skybox.Enabled)
-                scene.RenderSettings.Skybox.DrawDeferred(m_graphicsDevice, camera);
-
             using (m_graphicsDevice.GeometryState())
             {
+                using (m_graphicsDevice.GeometryUnlitState())
+                    if (scene.RenderSettings.Skybox.Enabled)
+                        scene.RenderSettings.Skybox.DrawDeferred(m_graphicsDevice, camera);
+
                 foreach (var renderer in scene.renderList)
                 {
+                    var material = renderer.material;
+                    if (material == null)
+                        continue;
+
                     // FIXME: Materials have to be updated.
                     m_TempRenderEffect.Parameters["World"].SetValue(renderer.m_Transform.m_WorldMatrix);
                     m_TempRenderEffect.Parameters["View"].SetValue(camera.m_ViewMatrix);
                     m_TempRenderEffect.Parameters["Projection"].SetValue(camera.m_ProjectionMatrix);
                     m_TempRenderEffect.Parameters["Texture"].SetValue(renderer.material.MainTexture);
+                    m_TempRenderEffect.Parameters["AmbientColor"].SetValue(scene.RenderSettings.ambientColor);
+                    m_TempRenderEffect.Parameters["DiffuseColor"].SetValue(material.m_DiffuseColor);
+
+                    if (material is StandardMaterial)
+                    {
+                        var standard = (StandardMaterial)material;
+                        m_TempRenderEffect.Parameters["NormalTextureEnabled"].SetValue(standard.NormalTexture != null);
+                        m_TempRenderEffect.Parameters["NormalMap"].SetValue(standard.NormalTexture);
+                        m_TempRenderEffect.Parameters["SpecularTextureEnabled"].SetValue(standard.SpecularTexture != null);
+                        m_TempRenderEffect.Parameters["SpecularMap"].SetValue(standard.SpecularTexture);
+                    }
+
                     m_TempRenderEffect.CurrentTechnique.Passes[0].Apply();
                     renderer.Draw(m_graphicsDevice);
                 }

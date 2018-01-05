@@ -5,19 +5,19 @@ namespace C3DE.Graphics.Rendering
 {
     internal sealed class DeviceState : IDisposable
     {
-        private readonly GraphicsDevice Device;
-        private readonly BlendState PreviousBlendState;
-        private readonly DepthStencilState PreviousDepthStencilState;
-        private readonly RasterizerState PreviousRasterizerState;
-        private readonly SamplerState PreviouSamplerState;
+        private readonly GraphicsDevice m_Device;
+        private readonly BlendState m_BlendState;
+        private readonly DepthStencilState m_DepthStencilState;
+        private readonly RasterizerState m_RasterizerState;
+        private readonly SamplerState m_SamplerState;
 
         public DeviceState(GraphicsDevice device, BlendState blendState, DepthStencilState depthStencilState, RasterizerState rasterizerState, SamplerState samplerState)
         {
-            this.Device = device;
-            this.PreviousBlendState = device.BlendState;
-            this.PreviousDepthStencilState = device.DepthStencilState;
-            this.PreviousRasterizerState = device.RasterizerState;
-            this.PreviouSamplerState = device.SamplerStates[0];
+            m_Device = device;
+            m_BlendState = device.BlendState;
+            m_DepthStencilState = device.DepthStencilState;
+            m_RasterizerState = device.RasterizerState;
+            m_SamplerState = device.SamplerStates[0];
 
             device.BlendState = blendState;
             device.DepthStencilState = depthStencilState;
@@ -27,10 +27,10 @@ namespace C3DE.Graphics.Rendering
 
         public void Dispose()
         {
-            this.Device.BlendState = this.PreviousBlendState;
-            this.Device.DepthStencilState = this.PreviousDepthStencilState;
-            this.Device.RasterizerState = this.PreviousRasterizerState;
-            this.Device.SamplerStates[0] = this.PreviouSamplerState;
+            m_Device.BlendState = this.m_BlendState;
+            m_Device.DepthStencilState = this.m_DepthStencilState;
+            m_Device.RasterizerState = this.m_RasterizerState;
+            m_Device.SamplerStates[0] = this.m_SamplerState;
         }
     }
 }

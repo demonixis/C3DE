@@ -13,6 +13,8 @@ namespace C3DE.Demo.Scenes
     {
         public SponzaDemo() : base("Sponza Demo") { }
 
+        public SponzaDemo(string name) : base(name) { }
+
         public override void Initialize()
         {
             base.Initialize();

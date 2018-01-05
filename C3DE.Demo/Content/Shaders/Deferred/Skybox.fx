@@ -22,13 +22,16 @@ struct VertexShaderInput
 #else
     float4 Position : POSITION0;
 #endif
+    float2 UV : TEXCOORD0;
+    float3 Normal : NORMAL0;
 };
 
 struct VertexShaderOutput
 {
     float4 Position : POSITION0;
-    float3 TextureCoordinate : TEXCOORD0;
-    float2 Depth : TEXCOORD1;
+    float3 UV : TEXCOORD0;
+    float3 WorldNormal : TEXCOORD1;
+    float2 Depth : TEXCOORD2;
 };
 
 struct PixelShaderOutput
@@ -45,22 +48,21 @@ VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
     float4 worldPosition = mul(input.Position, World);
     float4 viewPosition = mul(worldPosition, View);
     output.Position = mul(viewPosition, Projection);
-    output.TextureCoordinate = worldPosition.xyz - EyePosition;
+    output.WorldNormal = mul(input.Normal, World);
+    output.UV = worldPosition.xyz - EyePosition;
     output.Depth.x = output.Position.z;
     output.Depth.y = output.Position.w;
-
     return output;
 }
 
 PixelShaderOutput PixelShaderFunction(VertexShaderOutput input) : COLOR0
 {
     PixelShaderOutput output = (PixelShaderOutput) 0;
-    float4 diffuse = texCUBE(SkyboxSampler, normalize(input.TextureCoordinate));
+    float3 diffuse = texCUBE(SkyboxSampler, normalize(input.UV)).rgb;
 
-    output.Color = diffuse;
-    output.Color.a = 0;
-    output.Normal = float4(0, 0, 0, 0);
-    output.Depth = input.Depth.x / input.Depth.y;
+    output.Color = float4(diffuse, 0.0f);
+    output.Normal = 0; // float4(input.WorldNormal.rgb, 0.0f);
+    output.Depth = 0;// input.Depth.x / input.Depth.y;
 
     return output;
 }

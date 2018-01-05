@@ -156,9 +156,6 @@ namespace C3DE
                 m_Effect = Application.Content.Load<Effect>("Shaders/Deferred/Skybox");
             }
 
-            m_CurrentRasterizerState = device.RasterizerState;
-            device.RasterizerState = m_SkyboxRasterizerState;
-
             m_World = _scaleMatrix * Matrix.CreateTranslation(camera.Transform.LocalPosition);
 
             m_Effect.Parameters["World"].SetValue(m_World);
@@ -171,7 +168,6 @@ namespace C3DE
             device.SetVertexBuffer(m_Geometry.VertexBuffer);
             device.Indices = m_Geometry.IndexBuffer;
             device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, m_Geometry.Indices.Length / 3);
-            device.RasterizerState = m_CurrentRasterizerState;
         }
     }
 }

@@ -136,7 +136,7 @@ namespace C3DE.Graphics.Materials
             m_EPSpecularPower.SetValue(Shininess);
             m_EPSpecularIntensity.SetValue(SpecularIntensity);
             m_EPLightColor.SetValue(light.m_Color);
-            m_EPLightDirection.SetValue(light.m_Transform.LocalRotation);
+            m_EPLightDirection.SetValue(light.Direction);
             m_EPLightPosition.SetValue(light.m_Transform.LocalPosition);
             m_EPLightSpotAngle.SetValue(light.Angle);
             m_EPLightIntensity.SetValue(light.Intensity);
