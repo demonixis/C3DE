@@ -189,6 +189,15 @@ namespace C3DE.Components
             ComputeProjectionMatrix();
         }
 
+        public Vector3[] CalculateFrustumCorners(Rectangle viewport, float z, int eye)
+        {
+            _needProjectionUpdate = true;
+            _needUpdate = true;
+            Update();
+            BoundingFrustum frustrum = new BoundingFrustum(m_ViewMatrix * m_ProjectionMatrix);
+            return frustrum.GetCorners();
+        }
+
         public override void Update()
         {
             if (_needProjectionUpdate)

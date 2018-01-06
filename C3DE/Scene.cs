@@ -529,7 +529,7 @@ namespace C3DE
                 return;
 
             renderList.Add(renderer);
-            renderList.Sort();
+           // renderList.Sort();
         }
 
         protected void AddLight(Light light)

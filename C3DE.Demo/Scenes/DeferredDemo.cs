@@ -14,7 +14,8 @@ namespace C3DE.Demo.Scenes
             base.Initialize();
 
             var directionalLight = GameObject.Find("DirectionalLight");
-            directionalLight.GetComponent<Light>().Intensity = 0.1f;
+            if (directionalLight != null)
+                directionalLight.GetComponent<Light>().Intensity = 0.1f;
 
             Application.Engine.Renderer = new DeferredRenderer(Application.GraphicsDevice);
 

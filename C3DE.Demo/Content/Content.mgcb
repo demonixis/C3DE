@@ -854,6 +854,12 @@
 /processorParam:DebugMode=Auto
 /build:Shaders/Deferred/Standard.fx
 
+#begin Shaders/Depth.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Shaders/Depth.fx
+
 #begin Shaders/DepthNormal.fx
 /importer:EffectImporter
 /processor:EffectProcessor
@@ -967,6 +973,12 @@
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
 /build:Shaders/PostProcessing/GaussianBlur.fx
+
+#begin Shaders/PostProcessing/GlobalFog.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Shaders/PostProcessing/GlobalFog.fx
 
 #begin Shaders/PostProcessing/GrayScale.fx
 /importer:EffectImporter

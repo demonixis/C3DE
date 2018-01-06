@@ -112,12 +112,12 @@ namespace C3DE.Components
 
         public Matrix WorldMatrix => m_WorldMatrix;
 
-        public Vector3 Forward => GetTransformedVector(Vector3.Forward);
-        public Vector3 Backward => GetTransformedVector(Vector3.Backward);
-        public Vector3 Right => GetTransformedVector(Vector3.Right);
-        public Vector3 Left => GetTransformedVector(Vector3.Left);
-        public Vector3 Up => GetTransformedVector(Vector3.Up);
-        public Vector3 Down => GetTransformedVector(Vector3.Down);
+        public Vector3 Forward => TransformVector(Vector3.Forward);
+        public Vector3 Backward => TransformVector(Vector3.Backward);
+        public Vector3 Right => TransformVector(Vector3.Right);
+        public Vector3 Left => TransformVector(Vector3.Left);
+        public Vector3 Up => TransformVector(Vector3.Up);
+        public Vector3 Down => TransformVector(Vector3.Down);
 
         public Transform()
             : base()
@@ -222,7 +222,7 @@ namespace C3DE.Components
                 m_WorldMatrix *= m_Parent.m_WorldMatrix;
         }
 
-        private Vector3 GetTransformedVector(Vector3 direction)
+        public Vector3 TransformVector(Vector3 direction)
         {
             return Vector3.Transform(direction, Matrix.CreateFromYawPitchRoll(m_LocalRotation.Y, m_LocalRotation.X, m_LocalRotation.Z));
         }

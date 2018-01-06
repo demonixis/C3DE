@@ -38,6 +38,8 @@ namespace C3DE
             set { m_MainTexture = value; }
         }
 
+        public Matrix WorldMatrix => m_World;
+
         [DataMember]
         public bool FogSupported { get; set; } = false;
 
@@ -143,6 +145,16 @@ namespace C3DE
 #endif
             m_DefaultPass.Apply();
 
+            device.SetVertexBuffer(m_Geometry.VertexBuffer);
+            device.Indices = m_Geometry.IndexBuffer;
+            device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, m_Geometry.Indices.Length / 3);
+            device.RasterizerState = m_CurrentRasterizerState;
+        }
+
+        public void DrawNoEffect(GraphicsDevice device)
+        {
+            m_CurrentRasterizerState = device.RasterizerState;
+            device.RasterizerState = m_SkyboxRasterizerState;
             device.SetVertexBuffer(m_Geometry.VertexBuffer);
             device.Indices = m_Geometry.IndexBuffer;
             device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, m_Geometry.Indices.Length / 3);

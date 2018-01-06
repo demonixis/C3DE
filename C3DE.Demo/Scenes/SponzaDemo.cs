@@ -2,6 +2,7 @@
 using C3DE.Components.Rendering;
 using C3DE.Demo.Scripts;
 using C3DE.Graphics.Materials;
+using C3DE.Graphics.PostProcessing;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -31,11 +32,11 @@ namespace C3DE.Demo.Scenes
             controller.SetControllerActive(ControllerSwitcher.ControllerType.FPS);
             controller.FlyMode = true;
 
-            var lightGo = GameObjectFactory.CreateLight(LightType.Directional, Color.White, 1f);
+            /*var lightGo = GameObjectFactory.CreateLight(LightType.Directional, Color.White, 1f);
             lightGo.Name = "DirectionalLight";
             lightGo.Transform.LocalPosition = new Vector3(250, 500, 100);
             lightGo.Transform.LocalRotation = new Vector3(1, 0.5f, 0);
-            Add(lightGo);
+            Add(lightGo);*/
 
             // Sponza Model
             var content = Application.Content;
@@ -65,8 +66,12 @@ namespace C3DE.Demo.Scenes
             RenderSettings.Skybox.Generate(Application.GraphicsDevice, Application.Content, DemoGame.BlueSkybox);
 
             // And fog
-            //RenderSettings.FogDensity = 0.0085f;
-            //RenderSettings.FogMode = FogMode.Exp2;
+            RenderSettings.FogDensity = 0.0085f;
+            RenderSettings.FogMode = FogMode.None;
+            RenderSettings.FogColor = Color.FloralWhite;
+
+            var fog = new GlobalFog(Application.GraphicsDevice);
+            Add(fog);
         }
 
         private void PatchMaterials(GameObject sponzaGo, ContentManager content)

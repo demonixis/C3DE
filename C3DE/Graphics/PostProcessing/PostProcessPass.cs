@@ -40,9 +40,18 @@ namespace C3DE.Graphics.PostProcessing
             DrawFullscreenQuad(spriteBatch, texture, renderTarget.Width, renderTarget.Height, effect);
         }
 
-        protected void DrawFullscreenQuad(SpriteBatch spriteBatch, Texture2D texture, int width, int height, Effect effect)
+        protected void DrawFullscreenQuad(SpriteBatch spriteBatch, Texture2D texture, RenderTarget2D renderTarget, Effect effect, int pass)
         {
+            m_GraphicsDevice.SetRenderTarget(renderTarget);
             spriteBatch.Begin(0, BlendState.Opaque, null, null, null, effect);
+            effect.CurrentTechnique.Passes[pass].Apply();
+            spriteBatch.Draw(texture, new Rectangle(0, 0, renderTarget.Width, renderTarget.Height), Color.White);
+            spriteBatch.End();
+        }
+
+        protected void DrawFullscreenQuad(SpriteBatch spriteBatch, Texture2D texture, int width, int height, Effect effect, BlendState blendState = null)
+        {
+            spriteBatch.Begin(0, blendState != null ? blendState : BlendState.Opaque, null, null, null, effect);
             spriteBatch.Draw(texture, new Rectangle(0, 0, width, height), Color.White);
             spriteBatch.End();
         }

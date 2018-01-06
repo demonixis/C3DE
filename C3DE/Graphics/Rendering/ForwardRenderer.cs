@@ -1,4 +1,5 @@
 ﻿using C3DE.Components;
+using C3DE.Components.Rendering;
 using C3DE.Graphics.Materials;
 using C3DE.Graphics.PostProcessing;
 using Microsoft.Xna.Framework;
@@ -14,6 +15,10 @@ namespace C3DE.Graphics.Rendering
     /// </summary>
     public class ForwardRenderer : Renderer
     {
+        private DepthRenderer m_DepthRenderer;
+
+        public DepthRenderer DepthRenderer => m_DepthRenderer;
+
         public ForwardRenderer(GraphicsDevice graphics)
            : base(graphics)
         {
@@ -23,6 +28,7 @@ namespace C3DE.Graphics.Rendering
         {
             base.Initialize(content);
             RebuildRenderTargets();
+            m_DepthRenderer = new DepthRenderer();
         }
 
         public override void Dispose(bool disposing)
@@ -59,6 +65,8 @@ namespace C3DE.Graphics.Rendering
 
             RenderShadowMaps(scene);
 
+            m_DepthRenderer.Draw(m_graphicsDevice);
+
             if (m_VREnabled)
             {
                 for (var eye = 0; eye < 2; eye++)
@@ -86,7 +94,7 @@ namespace C3DE.Graphics.Rendering
 
             if (!m_VREnabled)
             {
-                renderBuffers();
+                RenderBuffers();
                 RenderUI(scene.Behaviours);
             }
         }
@@ -166,7 +174,7 @@ namespace C3DE.Graphics.Rendering
         /// <summary>
         /// Renders buffers to screen.
         /// </summary>
-        protected virtual void renderBuffers()
+        protected virtual void RenderBuffers()
         {
             m_graphicsDevice.SetRenderTarget(null);
             m_spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Opaque, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone);
@@ -203,7 +211,7 @@ namespace C3DE.Graphics.Rendering
 
             RenderShadowMaps(scene);
             RenderObjects(scene, camera);
-            renderBuffers();
+            RenderBuffers();
             //renderPostProcess(scene.PostProcessPasses);
             //renderUI(scene.Behaviours);
 

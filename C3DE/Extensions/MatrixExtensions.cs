@@ -34,5 +34,15 @@ namespace Microsoft.Xna.Framework
             ExtractRotation(matrix, ref q);
             q.ToEuler(ref rotation);
         }
+
+        public static Matrix CreateFromVector3(Vector3 row1, Vector3 row2, Vector3 row3, Vector3 row4)
+        {
+            var v1 = new Vector4(row1, 0);
+            var v2 = new Vector4(row2, 0);
+            var v3 = new Vector4(row3, 0);
+            var v4 = new Vector4(row4, 0);
+
+            return new Matrix(v1, v2, v3, v4);
+        }
     }
 }

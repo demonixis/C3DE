@@ -69,6 +69,7 @@
     <Compile Include="Graphics\PostProcessing\Bloom.cs" />
     <Compile Include="Graphics\PostProcessing\ColorGrading.cs" />
     <Compile Include="Graphics\PostProcessing\FullScreenQuadRenderer.cs" />
+    <Compile Include="Graphics\PostProcessing\GlobalFog.cs" />
     <Compile Include="Graphics\PostProcessing\MotionBlur.cs" />
     <Compile Include="Graphics\PostProcessing\QuadRenderer.cs" />
     <Compile Include="Extensions\QuaternionExtensions.cs" />
@@ -135,7 +136,7 @@
     <Compile Include="Time.cs" />
     <Compile Include="Utils\NoiseGenerator.cs" />
     <Compile Include="Utils\RandomHelper.cs" />
-    <Compile Include="Components\Rendering\DepthNormalRenderer.cs" />
+    <Compile Include="Components\Rendering\DepthRenderer.cs" />
     <Compile Include="VR\Oculus\MonogameExtensions.cs" />
     <Compile Include="VR\Oculus\OculusRift.cs" />
     <Compile Include="VR\Oculus\OculusService.cs" />
