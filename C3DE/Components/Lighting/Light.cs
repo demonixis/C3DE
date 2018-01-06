@@ -99,7 +99,7 @@ namespace C3DE.Components.Lighting
             m_DeferredDirLightEffect = content.Load<Effect>("Shaders/Deferred/DirectionalLight");
             m_DeferredPointLightEffect = content.Load<Effect>("Shaders/Deferred/PointLight");
 
-            m_SphereMesh = new SphereMesh(1, 16);
+            m_SphereMesh = new SphereMesh(1, 8);
             m_SphereMesh.Build();
         }
 
