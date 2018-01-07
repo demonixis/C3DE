@@ -68,11 +68,14 @@
     <Compile Include="Graphics\PostProcessing\AverageColorFilter.cs" />
     <Compile Include="Graphics\PostProcessing\Bloom.cs" />
     <Compile Include="Graphics\PostProcessing\ColorGrading.cs" />
+    <Compile Include="Graphics\PostProcessing\FastBloom.cs" />
     <Compile Include="Graphics\PostProcessing\FullScreenQuadRenderer.cs" />
     <Compile Include="Graphics\PostProcessing\GlobalFog.cs" />
     <Compile Include="Graphics\PostProcessing\MotionBlur.cs" />
     <Compile Include="Graphics\PostProcessing\QuadRenderer.cs" />
     <Compile Include="Extensions\QuaternionExtensions.cs" />
+    <Compile Include="Graphics\PostProcessing\RenderTexture.cs" />
+    <Compile Include="Graphics\PostProcessing\ScreenSpaceAmbientObscurance.cs" />
     <Compile Include="Graphics\PostProcessing\Vignette.cs" />
     <Compile Include="Graphics\Rendering\DeferredRenderer.cs" />
     <Compile Include="Graphics\Rendering\DeviceState.cs" />

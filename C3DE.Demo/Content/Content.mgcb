@@ -956,6 +956,12 @@
 /processorParam:DebugMode=Auto
 /build:Shaders/PostProcessing/Convolution.fx
 
+#begin Shaders/PostProcessing/FastBloom.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Shaders/PostProcessing/FastBloom.fx
+
 #begin Shaders/PostProcessing/Film.fx
 /importer:EffectImporter
 /processor:EffectProcessor
@@ -1009,6 +1015,12 @@
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
 /build:Shaders/PostProcessing/SimpleBlur.fx
+
+#begin Shaders/PostProcessing/SSAmbientObscurance.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Shaders/PostProcessing/SSAmbientObscurance.fx
 
 #begin Shaders/PostProcessing/Vignette.fx
 /importer:EffectImporter

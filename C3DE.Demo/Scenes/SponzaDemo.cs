@@ -68,9 +68,6 @@ namespace C3DE.Demo.Scenes
             RenderSettings.FogDensity = 0.0085f;
             RenderSettings.FogMode = FogMode.None;
             RenderSettings.FogColor = Color.FloralWhite;
-
-            var fog = new GlobalFog(Application.GraphicsDevice);
-            Add(fog);
         }
 
         private void PatchMaterials(GameObject sponzaGo, ContentManager content)
