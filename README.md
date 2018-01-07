@@ -4,7 +4,7 @@ C3DE : Cool 3D Engine
 ## The project
 C3DE aims to become a 3D game engine powered by the MonoGame Framework with all features you can except from a modern "Garage Game Dev Tool".
 
-![preview](http://78.media.tumblr.com/f03761f706d1195796b3b957bd91ced8/tumblr_p26k5w2xac1s15knro2_1280.png)
+![preview](http://78.media.tumblr.com/9a7fd3f3dd743e8d32c8f4e1f98ffe79/tumblr_p26hge9n4w1s15knro2_1280.jpg)
 
 ## Status & branch strategy
 This project is in early stage. Use the `master` branch for testing and the `develop` branch for latest and **instable** changes. Keep in mind that all branches other than `master` are brobably broken on non Windows targets.
