@@ -167,6 +167,10 @@
     <Compile Include="Graphics\Primitives\SphereMesh.cs" />
     <Compile Include="Graphics\Primitives\TerrainMesh.cs" />
     <Compile Include="Graphics\Primitives\TorusMesh.cs" />
+    <Compile Include="Graphics\PostProcessing\FastBloom.cs" />
+    <Compile Include="Graphics\PostProcessing\GlobalFog.cs" />
+    <Compile Include="Graphics\PostProcessing\RenderTexture.cs" />
+    <Compile Include="Graphics\PostProcessing\ScreenSpaceAmbientObscurance.cs" />
     <Compile Include="Inputs\InputDevice.cs" />
     <Compile Include="Inputs\TouchComponent.cs" />
     <Compile Include="Graphics\Materials\TransparentMaterial.cs" />
