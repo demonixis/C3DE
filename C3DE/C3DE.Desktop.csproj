@@ -162,6 +162,10 @@
     <Compile Include="Graphics\Rendering\ForwardRenderer.cs" />
     <Compile Include="Components\Lighting\ShadowGenerator.cs" />
     <Compile Include="Skybox.cs" />
+    <Compile Include="Graphics\PostProcessing\FastBloom.cs" />
+    <Compile Include="Graphics\PostProcessing\GlobalFog.cs" />
+    <Compile Include="Graphics\PostProcessing\RenderTexture.cs" />
+    <Compile Include="Graphics\PostProcessing\ScreenSpaceAmbientObscurance.cs" />
     <Compile Include="Time.cs" />
     <Compile Include="Utils\NoiseGenerator.cs" />
     <Compile Include="Utils\RandomHelper.cs" />

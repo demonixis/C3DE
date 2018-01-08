@@ -2,10 +2,12 @@ C3DE : Cool 3D Engine
 =====================
 
 ## The project
-C3DE is a research project. The aim is to create a modest but powerful enough 3D engine powered by the MonoGame Framework.
+C3DE aims to become a 3D game engine powered by the MonoGame Framework with all features you can except from a modern "Garage Game Dev Tool".
 
-## Status
-I'm refactoring all shaders that means the only platform that work is Windows. Don't worry I'm going to fix the opengl shaders soon. Don't forget that it's a development branch.
+![preview](http://78.media.tumblr.com/9a7fd3f3dd743e8d32c8f4e1f98ffe79/tumblr_p26hge9n4w1s15knro2_1280.jpg)
+
+## Status & branch strategy
+This project is in early stage. Use the `master` branch for testing and the `develop` branch for latest and **instable** changes. Keep in mind that all branches other than `master` are brobably broken on non Windows targets.
 
 ## Features
 - Scenegraph
@@ -22,10 +24,12 @@ I'm refactoring all shaders that means the only platform that work is Windows. D
 - Post Processing
 - Instant GUI system
 - Virtual Reality
+- Physics (WIP)
+- Deferred Renderer (WIP)
 
 ## Platforms
-C3DE supports Windows, Universal Windows Platform, Linux and Mac using MonoGame (both DirectX and DesktopGL). Because of the OpenGL shader compiler is limited to shader model 3, this version has less graphics features than DirectX. 
-For now Android and Windows UWP supports are paused the time the engine is more stable.
+C3DE supports Windows, Universal Windows Platform, Linux and Mac using MonoGame (both DirectX and DesktopGL). The OpenGL shader compiler is limited to the shader model 3, so some effects or materials will not work or will have less features.
+Android support is paused for now.
 
 ### Virtual Reality
 | VR Vendor | Status | Work to do |
@@ -38,12 +42,17 @@ For now Android and Windows UWP supports are paused the time the engine is more 
 ## Requirement
 You **must** install the [MonoGame Framework](http://www.monogame.net/downloads/) from the installer. **You'll not be able to build the solution without it**.
 
+## Short time road map
+- Physics Engine
+- Deferred Renderer
+
 ## What's next ?
-- Physics engine
 - Unified Input System
 - HDR / Tone Mapping
-- Linear Rendering
-- NavMesh
+- NavMesh 
+- New UI framework
+- Editor
+- Player
 
 ## Contributions
 It's an **experimental project**, but you are **free** to fix it by sending a pull request. However you've to follow the [coding convention](https://msdn.microsoft.com/en-US/library/ff926074.aspx). 
