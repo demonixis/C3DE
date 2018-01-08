@@ -133,9 +133,11 @@ namespace C3DE.Components.Lighting
                 m_DeferredDirLightEffect.Parameters["LightPosition"].SetValue(m_Transform.LocalPosition);
                 m_DeferredDirLightEffect.Parameters["World"].SetValue(m_Transform.m_WorldMatrix);
                 m_DeferredDirLightEffect.CurrentTechnique.Passes[0].Apply();
+                m_QuadRenderer.RenderFullscreenQuad(Application.GraphicsDevice);
             }
             else
             {
+                var previousRS = graphics.RasterizerState;
                 var sphereWorldMatrix = Matrix.CreateScale(Range) * Matrix.CreateTranslation(m_Transform.Position);
 
                 m_DeferredPointLightEffect.Parameters["ColorMap"].SetValue(colorMap);
@@ -159,9 +161,9 @@ namespace C3DE.Components.Lighting
                 graphics.SetVertexBuffer(m_SphereMesh.VertexBuffer);
                 graphics.Indices = m_SphereMesh.IndexBuffer;
                 graphics.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, m_SphereMesh.IndexBuffer.IndexCount / 3);
-            }
 
-            m_QuadRenderer.RenderFullscreenQuad(Application.GraphicsDevice);
+                graphics.RasterizerState = previousRS;
+            }
         }
 
         public override void Dispose()

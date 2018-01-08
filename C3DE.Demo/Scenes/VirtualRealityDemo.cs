@@ -36,27 +36,35 @@ namespace C3DE.Demo.Scenes
             head.Transform.Parent = player.Transform;
             player.AddComponent<VRSwitcher>();
 
+            CreateHandController(true);
+            CreateHandController(false);
+
+            BuildScene();
+        }
+
+        private void CreateHandController(bool leftHand)
+        {
+            var handString = leftHand ? "Left" : "Right";
+            var hand = new GameObject($"{handString}HandAnchor");
+            Add(hand);
+
+            var motionController = hand.AddComponent<MotionController>();
+            motionController.LeftHand = leftHand; ;
+
+            var modelRaw = Application.Content.Load<Model>($"Models/VR/{handString}HandModel");
+            var model = modelRaw.ToMeshRenderers(this);
+            model.Transform.Parent = hand.Transform;
+
             var handMaterial = new StandardMaterial(m_Scene);
             handMaterial.DiffuseColor = Color.DarkBlue;
 
-            for (var i = 0; i < 2; i++)
-            {
-                var hand = new GameObject();
-                Add(hand);
-
-                var sphereHand = hand.AddComponent<MeshRenderer>();
-                sphereHand.Geometry = new CubeMesh();
-                sphereHand.Geometry.Size = new Vector3(0.05f);
-                sphereHand.Geometry.Build();
-                sphereHand.CastShadow = true;
-                sphereHand.ReceiveShadow = true;
-                sphereHand.Material = handMaterial;
-
-                var mc = sphereHand.AddComponent<MotionController>();
-                mc.LeftHand = i == 0;
-            }
-
-            BuildScene();
+            var sphereHand = hand.AddComponent<MeshRenderer>();
+            sphereHand.Geometry = new CubeMesh();
+            sphereHand.Geometry.Size = new Vector3(0.05f);
+            sphereHand.Geometry.Build();
+            sphereHand.CastShadow = true;
+            sphereHand.ReceiveShadow = true;
+            sphereHand.Material = handMaterial;
         }
 
         private void BuildScene()

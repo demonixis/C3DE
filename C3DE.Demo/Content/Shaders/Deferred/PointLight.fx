@@ -46,7 +46,7 @@ sampler depthSampler = sampler_state
 
 struct VertexShaderInput
 {
-    float3 Position : POSITION0;
+    float4 Position : POSITION0;
 };
 
 struct VertexShaderOutput
@@ -60,7 +60,7 @@ VertexShaderOutput VertexShaderFunction(in VertexShaderInput input)
     VertexShaderOutput output = (VertexShaderOutput) 0;
     
     // Process geometry coordinates
-    float4 worldPosition = mul(float4(input.Position, 1), World);
+    float4 worldPosition = mul(input.Position, World);
     float4 viewPosition = mul(worldPosition, View);
     
     output.Position = mul(viewPosition, Projection);
