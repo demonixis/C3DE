@@ -38,6 +38,9 @@ namespace C3DE.Demo.Scripts
             var colorGrading = new ColorGrading(graphics);
             AddPostProcess(colorGrading);
             colorGrading.LookUpTable = Application.Content.Load<Texture2D>("Textures/Luts/lut_default");
+
+            var ssao = new ScreenSpaceAmbientObscurance(graphics);
+            AddPostProcess(ssao);
 #endif
 
             var oldBloom = new BloomLegacy(graphics);
@@ -47,6 +50,9 @@ namespace C3DE.Demo.Scripts
             var newBloom = new Bloom(graphics);
             AddPostProcess(newBloom);
             newBloom.SetPreset(new float[] { 5, 1, 1, 1, 1 }, new float[] { 1, 1, 1, 1, 1 }, 1, 5);
+
+            var fastBloom = new FastBloom(graphics);
+            AddPostProcess(fastBloom);
 
             AddPostProcess(new C64Filter(graphics));
             AddPostProcess(new CGAFilter(graphics));
@@ -69,19 +75,21 @@ namespace C3DE.Demo.Scripts
             var titles = new List<string>();
 
 #if !DESKTOP
-            titles.Add("Color Grading");
+            titles.AddRange(new string[] {
+                "Color Grading", "Ambient Obscurance"
+            });
 #endif
 
             titles.AddRange(new string[]
             {
-                "Old Bloom", "New Bloom", "C64 Filter",
+                "Old Bloom", "New Bloom", "Fast Bloom", "C64 Filter",
                 "CGA Filter", "Convolution", "Film",
                 "FXAA", "GrayScale", "Average Color",
                 "Motion Blur", "Refraction", "Vignette"
             });
 
             var count = titles.Count;
-            _boxRect = new Rectangle(Screen.VirtualWidth - 190, 10, 180, 45 * count);
+            _boxRect = new Rectangle(Screen.VirtualWidth - 220, 10, 210, 45 * count);
             _widgets = new Widget[count];
 
             for (int i = 0; i < count; i++)

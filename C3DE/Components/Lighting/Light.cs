@@ -153,7 +153,7 @@ namespace C3DE.Components.Lighting
                 m_DeferredPointLightEffect.Parameters["InvertViewProjection"].SetValue(invertViewProjection);
                 m_DeferredPointLightEffect.Parameters["CameraPosition"].SetValue(camera.m_Transform.Position);
 
-                var inside = Vector3.Distance(camera.m_Transform.Position, m_Transform.Position) < Range;
+                var inside = Vector3.Distance(camera.m_Transform.Position, m_Transform.Position) < (Range * 1.25f);
                 graphics.RasterizerState = inside ? RasterizerState.CullClockwise : RasterizerState.CullCounterClockwise;
 
                 m_DeferredPointLightEffect.CurrentTechnique.Passes[0].Apply();
@@ -176,12 +176,12 @@ namespace C3DE.Components.Lighting
             var light = obj as Light;
 
             if (light == null)
-                return 1;
+                return -1;
 
             if (TypeLight == light.TypeLight)
-                return 0;
+                return 1;
             else
-                return -1;
+                return 0;
         }
     }
 }

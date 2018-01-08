@@ -186,8 +186,8 @@ namespace C3DE
 
             Setup(width, height, null, null);
 
-            if (Application.GraphicsDeviceManager.IsFullScreen && fullscreen)
-                Application.GraphicsDeviceManager.ToggleFullScreen();
+            Application.GraphicsDeviceManager.IsFullScreen = fullscreen;
+            GUI.Scale = GetScale();
         }
 
         /// <summary>

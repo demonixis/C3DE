@@ -20,6 +20,7 @@ namespace C3DE.Demo.Scenes
             Application.Engine.Renderer = new DeferredRenderer(Application.GraphicsDevice);
 
             Camera.Main.AddComponent<DeferredDebuger>();
+            Camera.Main.AddComponent<PostProcessSwitcher>();
         }
 
         public override void Unload()
