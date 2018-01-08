@@ -268,7 +268,7 @@ technique Technique1
         VertexShader = compile vs_5_0 VertexShaderFunction();
 		PixelShader = compile ps_5_0 fragAO();
 #else
-        VertexShader = compile ps_3_0 VertexShaderFunction();
+        VertexShader = compile vs_3_0 VertexShaderFunction();
         PixelShader = compile ps_3_0 fragAO();
 #endif
     }
@@ -279,7 +279,7 @@ technique Technique1
         VertexShader = compile vs_5_0 VertexShaderFunction();
 		PixelShader = compile ps_5_0 fragBlurBL();
 #else
-        VertexShader = compile ps_3_0 VertexShaderFunction();
+        VertexShader = compile vs_3_0 VertexShaderFunction();
         PixelShader = compile ps_3_0 fragBlurBL();
 #endif
     }
@@ -290,7 +290,7 @@ technique Technique1
         VertexShader = compile vs_5_0 VertexShaderFunction();
 		PixelShader = compile ps_5_0 fragApply();
 #else
-        VertexShader = compile ps_3_0 VertexShaderFunction();
+        VertexShader = compile vs_3_0 VertexShaderFunction();
         PixelShader = compile ps_3_0 fragApply();
 #endif
     }
@@ -301,7 +301,7 @@ technique Technique1
         VertexShader = compile vs_5_0 VertexShaderFunction();
 		PixelShader = compile ps_5_0 fragApplySoft();
 #else
-        VertexShader = compile ps_3_0 VertexShaderFunction();
+        VertexShader = compile vs_3_0 VertexShaderFunction();
         PixelShader = compile ps_3_0 fragApplySoft();
 #endif
     }
@@ -312,7 +312,7 @@ technique Technique1
         VertexShader = compile vs_5_0 VertexShaderFunction();
 		PixelShader = compile ps_5_0 fragUpsample();
 #else
-        VertexShader = compile ps_3_0 VertexShaderFunction();
+        VertexShader = compile vs_3_0 VertexShaderFunction();
         PixelShader = compile ps_3_0 fragUpsample();
 #endif
     }

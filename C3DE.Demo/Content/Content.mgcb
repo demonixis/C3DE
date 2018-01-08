@@ -818,6 +818,12 @@
 /processorParam:TextureFormat=Color
 /build:Models/Sponza/textures/vase_round_spec.jpg
 
+#begin Shaders/Copy.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Shaders/Copy.fx
+
 #begin Shaders/Deferred/Clear.fx
 /importer:EffectImporter
 /processor:EffectProcessor

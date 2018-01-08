@@ -202,7 +202,7 @@ technique Technique1
         VertexShader = compile vs_4_0 VS_Bloom();
 		PixelShader = compile ps_4_0 PS_Bloom();
 #else
-        VertexShader = compile ps_3_0 VS_Bloom();
+        VertexShader = compile vs_3_0 VS_Bloom();
         PixelShader = compile ps_3_0 PS_Bloom();
 #endif
     }
@@ -213,7 +213,7 @@ technique Technique1
         VertexShader = compile vs_4_0 VS_4Tap();
 		PixelShader = compile ps_4_0 PS_Downsample();
 #else
-        VertexShader = compile ps_3_0 VS_4Tap();
+        VertexShader = compile vs_3_0 VS_4Tap();
         PixelShader = compile ps_3_0 PS_Downsample();
 #endif
     }
@@ -224,7 +224,7 @@ technique Technique1
         VertexShader = compile vs_4_0 VS_BlurVertical();
 		PixelShader = compile ps_4_0 PS_Blur8();
 #else
-        VertexShader = compile ps_3_0 VS_BlurVertical();
+        VertexShader = compile vs_3_0 VS_BlurVertical();
         PixelShader = compile ps_3_0 PS_Blur8();
 #endif
     }
@@ -235,7 +235,7 @@ technique Technique1
         VertexShader = compile vs_4_0 VS_BlurHorizontal();
 		PixelShader = compile ps_4_0 PS_Blur8();
 #else
-        VertexShader = compile ps_3_0 VS_BlurHorizontal();
+        VertexShader = compile vs_3_0 VS_BlurHorizontal();
         PixelShader = compile ps_3_0 PS_Blur8();
 #endif
     }
@@ -246,7 +246,7 @@ technique Technique1
         VertexShader = compile vs_4_0 VS_BlurVerticalSGX();
 		PixelShader = compile ps_4_0 PS_BlurSGX();
 #else
-        VertexShader = compile ps_3_0 VS_BlurVerticalSGX();
+        VertexShader = compile vs_3_0 VS_BlurVerticalSGX();
         PixelShader = compile ps_3_0 PS_BlurSGX();
 #endif
     }
@@ -257,7 +257,7 @@ technique Technique1
         VertexShader = compile vs_4_0 VS_BlurHorizontalSGX();
 		PixelShader = compile ps_4_0 PS_BlurSGX();
 #else
-        VertexShader = compile ps_3_0 VS_BlurHorizontalSGX();
+        VertexShader = compile vs_3_0 VS_BlurHorizontalSGX();
         PixelShader = compile ps_3_0 PS_BlurSGX();
 #endif
     }
