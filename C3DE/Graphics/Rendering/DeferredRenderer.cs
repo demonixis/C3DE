@@ -155,11 +155,9 @@ namespace C3DE.Graphics.Rendering
                 }
 
                 RenderPostProcess(scene.postProcessPasses, m_SceneFinalRT);
+                RenderBuffers();
+                RenderUI(scene.Behaviours);
             }
-
-           
-            RenderBuffers();
-            RenderUI(scene.Behaviours);
         }
 
         protected virtual void RenderBuffers()
