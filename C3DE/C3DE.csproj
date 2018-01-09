@@ -76,6 +76,7 @@
     <Compile Include="Extensions\QuaternionExtensions.cs" />
     <Compile Include="Graphics\PostProcessing\RenderTexture.cs" />
     <Compile Include="Graphics\PostProcessing\ScreenSpaceAmbientObscurance.cs" />
+    <Compile Include="Graphics\PostProcessing\ScreenSpaceAmbientOcclusion.cs" />
     <Compile Include="Graphics\PostProcessing\Vignette.cs" />
     <Compile Include="Graphics\Rendering\DeferredRenderer.cs" />
     <Compile Include="Graphics\Rendering\DeviceState.cs" />
@@ -110,6 +111,7 @@
     <Compile Include="Graphics\Materials\TransparentMaterial.cs" />
     <Compile Include="Graphics\PostProcessing\SimpleBlur.cs" />
     <Compile Include="Graphics\Rendering\Renderer.cs" />
+    <Compile Include="QuadTree.cs" />
     <Compile Include="RenderSettings.cs" />
     <Compile Include="Resources\ResourcesHelper.cs" />
     <Compile Include="SceneManager.cs" />

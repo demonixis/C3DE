@@ -64,6 +64,11 @@ namespace C3DE.Components.Physics
             get { return maximum; }
         }
 
+        public Rectangle Rectangle
+        {
+            get => new Rectangle((int)(center.X - minimum.X), (int)(center.Z - minimum.Z), (int)(center.X + minimum.X), (int)(center.Z + minimum.Z));
+        }
+
         /// <summary>
         /// Create an emtpy collider.
         /// </summary>

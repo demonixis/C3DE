@@ -42,6 +42,11 @@ namespace C3DE.Graphics.PostProcessing
                 var forward = (DeferredRenderer)renderer;
                 m_DepthBuffer = forward.DepthBuffer;
             }
+            else if (renderer is LightPrePassRenderer)
+            {
+                var lpp = (LightPrePassRenderer)renderer;
+                m_DepthBuffer = lpp.DepthBuffer;
+            }
 
             m_QuadRenderer = new QuadRenderer(m_GraphicsDevice);
 

@@ -1046,6 +1046,12 @@
 /processorParam:DebugMode=Auto
 /build:Shaders/PostProcessing/SSAmbientObscurance.fx
 
+#begin Shaders/PostProcessing/SSAmbientOcclusion.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Shaders/PostProcessing/SSAmbientOcclusion.fx
+
 #begin Shaders/PostProcessing/Vignette.fx
 /importer:EffectImporter
 /processor:EffectProcessor

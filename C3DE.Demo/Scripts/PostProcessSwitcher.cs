@@ -41,6 +41,10 @@ namespace C3DE.Demo.Scripts
 
             var ssao = new ScreenSpaceAmbientObscurance(graphics);
             AddPostProcess(ssao);
+
+            var ssao2 = new ScreenSpaceAmbientOcclusion(graphics);
+            ssao2.RandomTexture = GraphicsHelper.CreateRandomTexture(128);
+            AddPostProcess(ssao2);
 #endif
 
             var oldBloom = new BloomLegacy(graphics);
@@ -76,7 +80,7 @@ namespace C3DE.Demo.Scripts
 
 #if !DESKTOP
             titles.AddRange(new string[] {
-                "Color Grading", "Ambient Obscurance"
+                "Color Grading", "Ambient Obscurance", "Ambient Occlusion"
             });
 #endif
 
