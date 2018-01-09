@@ -9,11 +9,6 @@ using System.Runtime.Serialization;
 
 namespace C3DE.Graphics.Materials
 {
-    public enum ShaderQuality
-    {
-        Low, Normal
-    }
-
     [DataContract]
     public abstract class Material : IDisposable
     {
@@ -48,9 +43,6 @@ namespace C3DE.Graphics.Materials
         [DataMember]
         public Vector2 Offset { get; set; }
 
-        [DataMember]
-        public ShaderQuality ShaderQuality { get; set; }
-
 		public Material()
 		{
 			m_DiffuseColor = Color.White.ToVector3();
@@ -58,12 +50,7 @@ namespace C3DE.Graphics.Materials
 			Name = "Material_" + Id;
 			Tiling = Vector2.One;
 			Offset = Vector2.Zero;
-			ShaderQuality = ShaderQuality.Normal;
 			m_hasAlpha = false;
-
-#if ANDROID || OPENGL || DESKTOP
-            ShaderQuality = ShaderQuality.Low;
-#endif
         }
 
         public Material(Scene mainScene)
@@ -82,8 +69,6 @@ namespace C3DE.Graphics.Materials
         public abstract void PrePass(Camera camera);
 
         public abstract void Pass(Renderer renderable);
-
-        public virtual void PassLighting(Renderer renderer, Light light) { }
 
         public virtual void Dispose() { }
     }
