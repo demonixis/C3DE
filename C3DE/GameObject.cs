@@ -479,6 +479,14 @@ namespace C3DE
                 Scene.current.Remove(sceneObject);
         }
 
+        public static void Destroy(Component component)
+        {
+            if (component is Transform)
+                return;
+
+            component.GameObject.RemoveComponent(component);
+        }
+
         public static GameObject Find(string name)
         {
             var gameObjects = Scene.current.sceneObjects;

@@ -11,8 +11,8 @@ namespace C3DE.Demo
     {
         public const int ScreenWidth = 1280;
         public const int ScreenHeight = 800;
-        public const int UIWidth = 1440;
-        public const int UIHeight = 900;
+        public const int UIWidth = 1280;
+        public const int UIHeight = 800;
 
         public static string[] BlueSkybox = new string[6]
         {
