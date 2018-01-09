@@ -50,6 +50,16 @@ namespace C3DE.Graphics.Rendering
                 SamplerState.LinearClamp);
         }
 
+        public static DeviceState LightPrePassState(this GraphicsDevice device)
+        {
+            return new DeviceState(
+                device,
+                BlendState.Additive,
+                DepthStencilState.None,
+                RasterizerState.CullCounterClockwise,
+                SamplerState.LinearClamp);
+        }
+
         public static DeviceState PostProcessState(this GraphicsDevice device)
         {
             return new DeviceState(

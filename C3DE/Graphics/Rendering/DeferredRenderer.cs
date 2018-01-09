@@ -81,83 +81,48 @@ namespace C3DE.Graphics.Rendering
             }
         }
 
-        public override void Render(Scene scene)
+        private void RenderObjects(Scene scene, Camera camera)
         {
-            var camera = scene.cameras[0];
+            using (m_graphicsDevice.GeometryUnlitState())
+                if (scene.RenderSettings.Skybox.Enabled)
+                    scene.RenderSettings.Skybox.DrawDeferred(m_graphicsDevice, camera);
 
-            RebuildRenderTargets();
-
-            RenderShadowMaps(scene);
-
-            m_graphicsDevice.SetRenderTargets(m_ColorTarget, m_NormalTarget, m_DepthTarget);
-
-            foreach (var pass in m_ClearEffect.Techniques[0].Passes)
+            foreach (var renderer in scene.renderList)
             {
-                pass.Apply();
-                m_QuadRenderer.RenderFullscreenQuad(m_graphicsDevice);
-            }
+                var material = renderer.material;
+                if (material == null)
+                    continue;
 
-            using (m_graphicsDevice.GeometryState())
-            {
-                using (m_graphicsDevice.GeometryUnlitState())
-                    if (scene.RenderSettings.Skybox.Enabled)
-                        scene.RenderSettings.Skybox.DrawDeferred(m_graphicsDevice, camera);
+                // FIXME: Materials have to be updated.
+                m_TempRenderEffect.Parameters["World"].SetValue(renderer.m_Transform.m_WorldMatrix);
+                m_TempRenderEffect.Parameters["View"].SetValue(camera.m_ViewMatrix);
+                m_TempRenderEffect.Parameters["Projection"].SetValue(camera.m_ProjectionMatrix);
+                m_TempRenderEffect.Parameters["Texture"].SetValue(renderer.material.MainTexture);
+                m_TempRenderEffect.Parameters["AmbientColor"].SetValue(scene.RenderSettings.ambientColor);
+                m_TempRenderEffect.Parameters["DiffuseColor"].SetValue(material.m_DiffuseColor);
 
-                foreach (var renderer in scene.renderList)
+                if (material is StandardMaterial)
                 {
-                    var material = renderer.material;
-                    if (material == null)
-                        continue;
-
-                    // FIXME: Materials have to be updated.
-                    m_TempRenderEffect.Parameters["World"].SetValue(renderer.m_Transform.m_WorldMatrix);
-                    m_TempRenderEffect.Parameters["View"].SetValue(camera.m_ViewMatrix);
-                    m_TempRenderEffect.Parameters["Projection"].SetValue(camera.m_ProjectionMatrix);
-                    m_TempRenderEffect.Parameters["Texture"].SetValue(renderer.material.MainTexture);
-                    m_TempRenderEffect.Parameters["AmbientColor"].SetValue(scene.RenderSettings.ambientColor);
-                    m_TempRenderEffect.Parameters["DiffuseColor"].SetValue(material.m_DiffuseColor);
-
-                    if (material is StandardMaterial)
-                    {
-                        var standard = (StandardMaterial)material;
-                        m_TempRenderEffect.Parameters["NormalTextureEnabled"].SetValue(standard.NormalTexture != null);
-                        m_TempRenderEffect.Parameters["NormalMap"].SetValue(standard.NormalTexture);
-                        m_TempRenderEffect.Parameters["SpecularTextureEnabled"].SetValue(standard.SpecularTexture != null);
-                        m_TempRenderEffect.Parameters["SpecularMap"].SetValue(standard.SpecularTexture);
-                    }
-
-                    m_TempRenderEffect.CurrentTechnique.Passes[0].Apply();
-                    renderer.Draw(m_graphicsDevice);
+                    var standard = (StandardMaterial)material;
+                    m_TempRenderEffect.Parameters["NormalTextureEnabled"].SetValue(standard.NormalTexture != null);
+                    m_TempRenderEffect.Parameters["NormalMap"].SetValue(standard.NormalTexture);
+                    m_TempRenderEffect.Parameters["SpecularTextureEnabled"].SetValue(standard.SpecularTexture != null);
+                    m_TempRenderEffect.Parameters["SpecularMap"].SetValue(standard.SpecularTexture);
                 }
-            }
 
+                m_TempRenderEffect.CurrentTechnique.Passes[0].Apply();
+                renderer.Draw(m_graphicsDevice);
+            }
+        }
+
+        private void RenderLights(Scene scene, Camera camera)
+        {
             m_graphicsDevice.SetRenderTargets(null);
             m_graphicsDevice.SetRenderTarget(m_LightTarget);
             m_graphicsDevice.Clear(Color.Transparent);
 
-            using (m_graphicsDevice.LightState())
-            {
-                foreach (var light in scene.lights)
-                    light.RenderDeferred(m_ColorTarget, m_NormalTarget, m_DepthTarget, camera);
-            }
-
-            m_graphicsDevice.SetRenderTarget(m_SceneFinalRT);
-            m_graphicsDevice.Clear(Color.Black);
-
-            using (m_graphicsDevice.PostProcessState())
-            {
-                foreach (var pass in m_CombineEffect.Techniques[0].Passes)
-                {
-                    m_CombineEffect.Parameters["ColorMap"].SetValue(m_ColorTarget);
-                    m_CombineEffect.Parameters["LightMap"].SetValue(m_LightTarget);
-                    pass.Apply();
-                    m_QuadRenderer.RenderFullscreenQuad(m_graphicsDevice);
-                }
-
-                RenderPostProcess(scene.postProcessPasses, m_SceneFinalRT);
-                RenderBuffers();
-                RenderUI(scene.Behaviours);
-            }
+            foreach (var light in scene.lights)
+                light.RenderDeferred(m_ColorTarget, m_NormalTarget, m_DepthTarget, camera);
         }
 
         protected virtual void RenderBuffers()
@@ -185,8 +150,45 @@ namespace C3DE.Graphics.Rendering
                     passes[i].Draw(m_spriteBatch, renderTarget);
         }
 
-        public override void RenderEditor(Scene scene, Camera camera, RenderTarget2D target)
+        public override void Render(Scene scene)
         {
+            var camera = scene.cameras[0];
+
+            RebuildRenderTargets();
+
+            RenderShadowMaps(scene);
+
+            m_graphicsDevice.SetRenderTargets(m_ColorTarget, m_NormalTarget, m_DepthTarget);
+
+            foreach (var pass in m_ClearEffect.Techniques[0].Passes)
+            {
+                pass.Apply();
+                m_QuadRenderer.RenderFullscreenQuad(m_graphicsDevice);
+            }
+
+            using (m_graphicsDevice.GeometryState())
+                RenderObjects(scene, camera);
+
+            using (m_graphicsDevice.LightState())
+                RenderLights(scene, camera);
+
+            m_graphicsDevice.SetRenderTarget(m_SceneFinalRT);
+            m_graphicsDevice.Clear(Color.Black);
+
+            using (m_graphicsDevice.PostProcessState())
+            {
+                foreach (var pass in m_CombineEffect.Techniques[0].Passes)
+                {
+                    m_CombineEffect.Parameters["ColorMap"].SetValue(m_ColorTarget);
+                    m_CombineEffect.Parameters["LightMap"].SetValue(m_LightTarget);
+                    pass.Apply();
+                    m_QuadRenderer.RenderFullscreenQuad(m_graphicsDevice);
+                }
+
+                RenderPostProcess(scene.postProcessPasses, m_SceneFinalRT);
+                RenderBuffers();
+                RenderUI(scene.Behaviours);
+            }
         }
     }
 }

@@ -866,12 +866,6 @@
 /processorParam:DebugMode=Auto
 /build:Shaders/Depth.fx
 
-#begin Shaders/DepthNormal.fx
-/importer:EffectImporter
-/processor:EffectProcessor
-/processorParam:DebugMode=Auto
-/build:Shaders/DepthNormal.fx
-
 #begin Shaders/Forward/Lava.fx
 /importer:EffectImporter
 /processor:EffectProcessor
@@ -913,6 +907,30 @@
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
 /build:Shaders/Forward/Unlit.fx
+
+#begin Shaders/LPP/DepthNormal.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Shaders/LPP/DepthNormal.fx
+
+#begin Shaders/LPP/DirectionalLight.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Shaders/LPP/DirectionalLight.fx
+
+#begin Shaders/LPP/PointLight.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Shaders/LPP/PointLight.fx
+
+#begin Shaders/LPP/Standard.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Shaders/LPP/Standard.fx
 
 #begin Shaders/PostProcessing/AverageColor.fx
 /importer:EffectImporter

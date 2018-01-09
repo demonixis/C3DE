@@ -20,6 +20,8 @@ namespace C3DE.Components.Lighting
         internal protected Vector3 m_Color = Color.White.ToVector3();
         private Effect m_DeferredDirLightEffect;
         private Effect m_DeferredPointLightEffect;
+        private Effect m_LPPPointLightEffect;
+        private Effect m_LPPDirLightEffect;
         private QuadRenderer m_QuadRenderer;
         private SphereMesh m_SphereMesh;
 
@@ -98,7 +100,8 @@ namespace C3DE.Components.Lighting
             var content = Application.Content;
             m_DeferredDirLightEffect = content.Load<Effect>("Shaders/Deferred/DirectionalLight");
             m_DeferredPointLightEffect = content.Load<Effect>("Shaders/Deferred/PointLight");
-
+            m_LPPDirLightEffect = content.Load<Effect>("Shaders/LPP/DirectionalLight");
+            m_LPPPointLightEffect = content.Load<Effect>("Shaders/LPP/PointLight");
             m_SphereMesh = new SphereMesh(1, 8);
             m_SphereMesh.Build();
         }
@@ -114,6 +117,54 @@ namespace C3DE.Components.Lighting
 
             float dist = Vector3.Distance(m_Transform.LocalPosition, sphere.Center);
             m_ProjectionMatrix = Matrix.CreateOrthographicOffCenter(-size, size, size, -size, dist - sphere.Radius, dist + sphere.Radius * 2);
+        }
+
+
+        public void RenderLPP(RenderTarget2D normal, RenderTarget2D depth, Camera camera)
+        {
+            var graphics = Application.GraphicsDevice;
+            var previousRS = graphics.RasterizerState;
+            var viewProjection = camera.m_ViewMatrix * camera.m_ProjectionMatrix;
+            var invViewProjection = Matrix.Invert(viewProjection);
+            var viewport = new Vector2(Screen.Width, Screen.Height);
+
+            if (TypeLight == LightType.Directional)
+            {
+                m_LPPDirLightEffect.Parameters["NormalTexture"].SetValue(normal);
+                m_LPPDirLightEffect.Parameters["DepthTexture"].SetValue(depth);
+                m_LPPDirLightEffect.Parameters["InvViewProjection"].SetValue(invViewProjection);
+                m_LPPDirLightEffect.Parameters["WorldViewProjection"].SetValue(m_Transform.m_WorldMatrix * viewProjection);
+                m_LPPDirLightEffect.Parameters["LightColor"].SetValue(m_Color);
+                m_LPPDirLightEffect.Parameters["LightPosition"].SetValue(Transform.Position);
+                m_LPPDirLightEffect.Parameters["LightIntensity"].SetValue(Intensity);
+                m_LPPDirLightEffect.CurrentTechnique.Passes[0].Apply();
+                m_QuadRenderer.RenderFullscreenQuad(Application.GraphicsDevice);
+            }
+            else
+            {
+                m_LPPPointLightEffect.Parameters["NormalTexture"].SetValue(normal);
+                m_LPPPointLightEffect.Parameters["DepthTexture"].SetValue(depth);
+                m_LPPPointLightEffect.Parameters["InvViewProjection"].SetValue(invViewProjection);
+
+                var worldViewProjection = (Matrix.CreateScale(Range) * m_Transform.m_WorldMatrix) * viewProjection;
+                m_LPPPointLightEffect.Parameters["WorldViewProjection"].SetValue(worldViewProjection);
+                m_LPPPointLightEffect.Parameters["LightColor"].SetValue(m_Color);
+                m_LPPPointLightEffect.Parameters["LightAttenuation"].SetValue(FallOf);
+                m_LPPPointLightEffect.Parameters["LightPosition"].SetValue(Transform.Position);
+                m_LPPPointLightEffect.Parameters["LightRange"].SetValue(Range);
+                m_LPPPointLightEffect.Parameters["LightIntensity"].SetValue(Intensity);
+
+                var inside = Vector3.Distance(camera.m_Transform.Position, m_Transform.Position) < (Range * 1.25f);
+                graphics.RasterizerState = inside ? RasterizerState.CullClockwise : RasterizerState.CullCounterClockwise;
+
+                m_LPPPointLightEffect.CurrentTechnique.Passes[0].Apply();
+
+                graphics.SetVertexBuffer(m_SphereMesh.VertexBuffer);
+                graphics.Indices = m_SphereMesh.IndexBuffer;
+                graphics.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, m_SphereMesh.IndexBuffer.IndexCount / 3);
+
+                graphics.RasterizerState = previousRS;
+            }
         }
 
         public void RenderDeferred(RenderTarget2D colorMap, RenderTarget2D normalMap, RenderTarget2D depthMap, Camera camera)

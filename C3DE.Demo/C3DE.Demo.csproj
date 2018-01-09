@@ -61,6 +61,7 @@
     <Compile Include="DemoGame.cs" />
     <Compile Include="Scenes\DeferredDemo.cs" />
     <Compile Include="Scenes\GUIDemo.cs" />
+    <Compile Include="Scenes\LightPrePassDemo.cs" />
     <Compile Include="Scenes\PhysicsDemo.cs" />
     <Compile Include="Scenes\PostProcessingDemo.cs" />
     <Compile Include="Scenes\HexagonGridTerrain.cs" />
@@ -78,6 +79,7 @@
     <Compile Include="Scripts\HexaGridBuilder.cs" />
     <Compile Include="Scripts\LightMover.cs" />
     <Compile Include="Scripts\LightMoverKeys.cs" />
+    <Compile Include="Scripts\LightPrePassDebuger.cs" />
     <Compile Include="Scripts\LightSpawner.cs" />
     <Compile Include="Scripts\LightSwitcher.cs" />
     <Compile Include="Scripts\MenuBehaviour.cs" />

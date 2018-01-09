@@ -198,27 +198,5 @@ namespace C3DE.Graphics.Rendering
                 if (passes[i].Enabled)
                     passes[i].Draw(m_spriteBatch, renderTarget);
         }
-
-        /// <summary>
-        /// Deprecated
-        /// </summary>
-        /// <param name="scene"></param>
-        /// <param name="camera"></param>
-        /// <param name="target"></param>
-        public override void RenderEditor(Scene scene, Camera camera, RenderTarget2D target)
-        {
-            RebuildRenderTargets();
-
-            RenderShadowMaps(scene);
-            RenderObjects(scene, camera);
-            RenderBuffers();
-            //renderPostProcess(scene.PostProcessPasses);
-            //renderUI(scene.Behaviours);
-
-            m_graphicsDevice.SetRenderTarget(target);
-            m_spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Opaque, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone);
-            m_spriteBatch.Draw(m_SceneRenderTargets[0], Vector2.Zero, Color.White);
-            m_spriteBatch.End();
-        }
     }
 }
