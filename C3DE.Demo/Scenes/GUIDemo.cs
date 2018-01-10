@@ -2,18 +2,14 @@
 
 namespace C3DE.Demo.Scenes
 {
-    public class GUIDemo : Scene
+    public class GUIDemo : SimpleDemo
     {
         public GUIDemo() : base("User Interface") { }
 
         public override void Initialize()
         {
             base.Initialize();
-
-            var cameraGo = GameObjectFactory.CreateCamera();
-            cameraGo.AddComponent<UIWidgetDemo>();
-            cameraGo.AddComponent<DemoBehaviour>();
-            Add(cameraGo);
+            m_Camera.AddComponent<UIWidgetDemo>();
         }
     }
 }

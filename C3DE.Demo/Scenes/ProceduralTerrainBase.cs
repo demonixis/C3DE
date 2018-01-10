@@ -1,13 +1,11 @@
-﻿using C3DE.Components.Lighting;
-using C3DE.Components.Rendering;
-using C3DE.Demo.Scripts;
+﻿using C3DE.Components.Rendering;
 using C3DE.Graphics.Materials;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace C3DE.Demo.Scenes
 {
-    public abstract class ProceduralTerrainBase : Scene
+    public abstract class ProceduralTerrainBase : SimpleDemo
     {
         protected Terrain m_Terrain;
 
@@ -17,18 +15,7 @@ namespace C3DE.Demo.Scenes
         {
             base.Initialize();
 
-            // And a camera with some components
-            var cameraGo = GameObjectFactory.CreateCamera();
-            cameraGo.AddComponent<ControllerSwitcher>();
-            cameraGo.AddComponent<DemoBehaviour>();
-            Add(cameraGo);
-
-            // A light is required to illuminate objects.
-            var lightGo = GameObjectFactory.CreateLight(LightType.Directional);
-            lightGo.Transform.LocalRotation = new Vector3(-1, 1, 0);
-            Add(lightGo);
-
-            // Finally a terrain
+              // Finally a terrain
             var terrainMaterial = new StandardTerrainMaterial(m_Scene);
             terrainMaterial.MainTexture = Application.Content.Load<Texture2D>("Textures/Terrain/Grass");
             terrainMaterial.SandTexture = Application.Content.Load<Texture2D>("Textures/Terrain/Sand");
@@ -56,17 +43,14 @@ namespace C3DE.Demo.Scenes
                 content.Load<Texture2D>("Textures/Flares/flare2"),
                 content.Load<Texture2D>("Textures/Flares/flare3")
             };
-            var direction = lightGo.Transform.LocalRotation;
+            var direction = m_DirectionalLight.Transform.LocalRotation;
             direction.Normalize();
 
-            var sunflares = cameraGo.AddComponent<LensFlare>();
+            var sunflares = m_Camera.AddComponent<LensFlare>();
             sunflares.LightDirection = direction;
             sunflares.Setup(glowTexture, flareTextures);
 
             SetupScene();
-
-            // Skybox
-            RenderSettings.Skybox.Generate(Application.GraphicsDevice, Application.Content, DemoGame.BlueSkybox);
         }
 
         protected abstract void SetupScene();

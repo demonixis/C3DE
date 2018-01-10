@@ -1,5 +1,4 @@
-﻿using C3DE.Components.Lighting;
-using C3DE.Components.Physics;
+﻿using C3DE.Components.Physics;
 using C3DE.Components.Rendering;
 using C3DE.Demo.Scripts;
 using C3DE.Graphics.Materials;
@@ -8,7 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace C3DE.Demo.Scenes
 {
-    public class PhysicsDemo : Scene
+    public class PhysicsDemo : SimpleDemo
     {
         public PhysicsDemo() : base("Physics") { }
 
@@ -16,18 +15,7 @@ namespace C3DE.Demo.Scenes
         {
             base.Initialize();
 
-            var cameraGo = GameObjectFactory.CreateCamera();
-            cameraGo.AddComponent<ControllerSwitcher>();
-            cameraGo.AddComponent<PhysicsSpawner>();
-            Add(cameraGo);
-
-            var lightGo = GameObjectFactory.CreateLight(LightType.Directional, Color.LightSteelBlue, 1.5f);
-            lightGo.Transform.LocalPosition = new Vector3(-20, 20, 0);
-            lightGo.Transform.LocalRotation = new Vector3(1, -1, 0);
-            lightGo.AddComponent<DemoBehaviour>();
-            Add(lightGo);
-
-            lightGo.GetComponent<Light>().Range = 100;
+            m_Camera.AddComponent<PhysicsSpawner>();
 
             var terrainMaterial = new StandardMaterial(m_Scene);
             terrainMaterial.MainTexture = Application.Content.Load<Texture2D>("Textures/Terrain/Sand");
@@ -51,11 +39,6 @@ namespace C3DE.Demo.Scenes
             rb.AddComponent<RigidbodyRenderer>();
             rb.AddComponent<BoundingBoxRenderer>().LineColor = Color.Red;
             rb.IsKinematic = true;
-
-            // Skybox
-            RenderSettings.Skybox.Generate(Application.GraphicsDevice, Application.Content, DemoGame.BlueSkybox);
-
-            Screen.ShowCursor = true;
         }
     }
 }

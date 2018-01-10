@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace C3DE.Demo.Scenes
 {
-    public class LightingDemo : Scene
+    public class LightingDemo : SimpleDemo
     {
         public LightingDemo() : base("Realtime Lighting") { }
 
@@ -19,13 +19,7 @@ namespace C3DE.Demo.Scenes
         {
             base.Initialize();
 
-            // Camera
-            var cameraGo = GameObjectFactory.CreateCamera();
-            var orbit = cameraGo.AddComponent<OrbitController>();
-            orbit.KeyboardEnabled = false;
-            cameraGo.AddComponent<DemoBehaviour>();
-            cameraGo.AddComponent<VRSwitcher>();
-            Add(cameraGo);
+            Destroy(m_DirectionalLight);
 
             // Light
             var padding = 20;
@@ -99,10 +93,6 @@ namespace C3DE.Demo.Scenes
             terrain.Renderer.CastShadow = false;
             Add(terrainGo);
 
-            // Skybox
-            RenderSettings.Skybox.Generate(Application.GraphicsDevice, Application.Content, DemoGame.BlueSkybox);
-            //RenderSettings.AmbientColor = Color.Black;
-
             // Model
             var model = Application.Content.Load<Model>("Models/Quandtum/Quandtum");
             var mesh = model.ToMeshRenderers(this);
@@ -123,8 +113,6 @@ namespace C3DE.Demo.Scenes
             renderer.Transform.LocalScale = new Vector3(0.035f);
             renderer.Transform.Rotate(0, -MathHelper.PiOver2, 0);
             renderer.Transform.Translate(-0.1f, 0, 0);
-            
-            Screen.ShowCursor = true;
         }
     }
 }

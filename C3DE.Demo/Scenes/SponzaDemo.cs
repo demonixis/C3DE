@@ -2,7 +2,6 @@
 using C3DE.Components.Rendering;
 using C3DE.Demo.Scripts;
 using C3DE.Graphics.Materials;
-using C3DE.Graphics.PostProcessing;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -10,7 +9,7 @@ using System.Collections.Generic;
 
 namespace C3DE.Demo.Scenes
 {
-    public class SponzaDemo : Scene
+    public class SponzaDemo : SimpleDemo
     {
         public SponzaDemo() : base("Sponza Demo") { }
 
@@ -20,23 +19,13 @@ namespace C3DE.Demo.Scenes
         {
             base.Initialize();
 
-            // And a camera with some components
-            var cameraGo = GameObjectFactory.CreateCamera();
-            var controller = cameraGo.AddComponent<ControllerSwitcher>();
-            cameraGo.AddComponent<DemoBehaviour>();
-            cameraGo.AddComponent<LightSpawner>();
-            Add(cameraGo);
+            m_Camera.AddComponent<LightSpawner>();
 
+            var controller = m_Camera.GetComponent<ControllerSwitcher>();
             controller.DefaultPosition = new Vector3(-10.0f, 2.0f, 0.45f);
             controller.DefaultRotation = new Vector3(0.0f, -1.4f, 0.0f);
             controller.SetControllerActive(ControllerSwitcher.ControllerType.FPS);
             controller.FlyMode = true;
-
-            var lightGo = GameObjectFactory.CreateLight(LightType.Directional, Color.White, 1f);
-            lightGo.Name = "DirectionalLight";
-            lightGo.Transform.LocalPosition = new Vector3(250, 500, 100);
-            lightGo.Transform.LocalRotation = new Vector3(1, 0.5f, 0);
-            Add(lightGo);
 
             // Sponza Model
             var content = Application.Content;
@@ -53,16 +42,11 @@ namespace C3DE.Demo.Scenes
                 content.Load<Texture2D>("Textures/Flares/circle_sharp_1"),
                 content.Load<Texture2D>("Textures/Flares/circle_soft_1")
             };
-            var direction = lightGo.GetComponent<Light>().Direction;
 
-            var sunflares = cameraGo.AddComponent<LensFlare>();
+            var direction = m_DirectionalLight.Direction;
+            var sunflares = m_Camera.AddComponent<LensFlare>();
             sunflares.LightDirection = direction;
             sunflares.Setup(glowTexture, flareTextures);
-
-            Screen.ShowCursor = true;
-
-            // Don't miss the Skybox ;)
-            RenderSettings.Skybox.Generate(Application.GraphicsDevice, Application.Content, DemoGame.BlueSkybox);
 
             // And fog
             RenderSettings.FogDensity = 0.0085f;

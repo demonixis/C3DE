@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace C3DE.Demo.Scenes
 {
-    public class HeightmapDemo : Scene
+    public class HeightmapDemo : SimpleDemo
     {
         public HeightmapDemo() : base("Heightmap Terrain") { }
 
@@ -18,20 +18,9 @@ namespace C3DE.Demo.Scenes
 
             var content = Application.Content;
 
-            // Add a camera with a FPS controller
-            var cameraGo = GameObjectFactory.CreateCamera(new Vector3(0, 2, -10), new Vector3(0, 0, 0), Vector3.Up);
-            cameraGo.AddComponent<ControllerSwitcher>();
-            Add(cameraGo);
-
-            // And a light
-            var lightGo = GameObjectFactory.CreateLight(LightType.Directional, Color.White, 1f);
-            lightGo.Transform.LocalPosition = new Vector3(250, 500, 100);
-            lightGo.Transform.LocalRotation = new Vector3(1, 0.5f, 0);
-            lightGo.AddComponent<DemoBehaviour>();
-            lightGo.AddComponent<LightMover>();
-            lightGo.AddComponent<LightSwitcher>().LogPositionRotation = false;
-            lightGo.GetComponent<Light>().ShadowGenerator.ShadowStrength = 0.5f;
-            Add(lightGo);
+            m_DirectionalLight.AddComponent<LightMover>();
+            m_DirectionalLight.AddComponent<LightSwitcher>().LogPositionRotation = false;
+            m_DirectionalLight.ShadowGenerator.ShadowStrength = 0.5f;
 
             // Finally a terrain
             var terrainMaterial = new StandardTerrainMaterial(m_Scene);
@@ -68,18 +57,14 @@ namespace C3DE.Demo.Scenes
                 content.Load<Texture2D>("Textures/Flares/flare2"),
                 content.Load<Texture2D>("Textures/Flares/flare3")
             };
-            var direction = lightGo.Transform.LocalRotation;
+
+            var direction = m_DirectionalLight.Transform.LocalRotation;
             direction.Normalize();
 
-            var sunflares = cameraGo.AddComponent<LensFlare>();
+            var sunflares = m_Camera.AddComponent<LensFlare>();
             sunflares.LightDirection = direction; 
             sunflares.Setup(glowTexture, flareTextures);
 
-            Screen.ShowCursor = true;
-
-            // Don't miss the Skybox ;)
-            RenderSettings.Skybox.Generate(Application.GraphicsDevice, Application.Content, DemoGame.BlueSkybox);
-            RenderSettings.AmbientColor = Color.Black;
             // And fog
             RenderSettings.FogDensity = 0.0085f;
             RenderSettings.FogMode = FogMode.Exp2;

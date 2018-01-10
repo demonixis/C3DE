@@ -1,6 +1,5 @@
 using C3DE.Demo.Scenes;
 using C3DE.UI;
-using C3DE.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -62,13 +61,10 @@ namespace C3DE.Demo
             Application.SceneManager.Add(new HeightmapDemo());
             Application.SceneManager.Add(new ProceduralTerrainWater());
             Application.SceneManager.Add(new ProceduralTerrainLava());
-            Application.SceneManager.Add(new PostProcessingDemo());
             Application.SceneManager.Add(new LightingDemo());
             Application.SceneManager.Add(new PhysicsDemo());
             Application.SceneManager.Add(new SponzaDemo());
-            Application.SceneManager.Add(new HexagonTerrainDemo());
             Application.SceneManager.Add(new GUIDemo());
-            Application.SceneManager.Add(new VirtualRealityDemo());
             Application.SceneManager.Add(new DeferredDemo());
             Application.SceneManager.Add(new LightPrePassDemo());
             Application.SceneManager.LoadLevel(0);

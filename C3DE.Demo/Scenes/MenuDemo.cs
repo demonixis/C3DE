@@ -3,19 +3,15 @@ using C3DE.UI;
 
 namespace C3DE.Demo.Scenes
 {
-    public class MenuDemo : Scene
+    public class MenuDemo : SimpleDemo
     {
         public MenuDemo() : base("Menu") { }
 
         public override void Initialize()
         {
             base.Initialize();
-
             GUI.Skin = DemoGame.CreateSkin(Application.Content, false);
-
-            var cameraGo = GameObjectFactory.CreateCamera();
-            cameraGo.AddComponent<MenuBehaviour>();
-            Add(cameraGo);
+            m_Camera.AddComponent<MenuBehaviour>();
         }
     }
 }

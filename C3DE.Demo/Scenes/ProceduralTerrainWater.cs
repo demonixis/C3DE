@@ -1,5 +1,4 @@
-﻿using C3DE.Components.Lighting;
-using C3DE.Components.Rendering;
+﻿using C3DE.Components.Rendering;
 using C3DE.Graphics.Materials;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -12,8 +11,7 @@ namespace C3DE.Demo.Scenes
 
         protected override void SetupScene()
         {
-            var light = FindObjectOfType<Light>();
-            light.Transform.LocalPosition = new Vector3(250, 500, 100);
+            m_DirectionalLight.Transform.LocalPosition = new Vector3(250, 500, 100);
 
             // Water
             var waterTexture = Application.Content.Load<Texture2D>("Textures/water");

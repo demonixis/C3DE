@@ -20,11 +20,7 @@ namespace C3DE.Demo.Scripts
                 throw new Exception("You need to attach a mesh renderer first.");
                 
             var mat = renderer.Material as StandardTerrainMaterial;
-
-            if (mat == null)
-                throw new Exception("You need to use a TerrainMaterial with a non null weightMap.");
-
-            _material = mat;
+            _material = mat ?? throw new Exception("You need to use a TerrainMaterial with a non null weightMap.");
             _rect = new Rectangle(0, 0, 150, 150);
         }
 

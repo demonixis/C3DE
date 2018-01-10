@@ -29,7 +29,7 @@ namespace C3DE.Demo.Scripts
 
         public override void Start()
         {
-            var go = GameObjectFactory.CreateXNAModel(Application.Content, "Models/hexagone");
+            var go = GameObjectFactory.CreateXNAModel(Application.Content, "Models/HexGrid");
             _gridPrefab = go.GetComponent<ModelRenderer>();
             _gridPrefab.Transform.LocalScale = new Vector3(TileScale, 0.5f * TileScale, TileScale);
             _gridPrefab.Transform.LocalRotation = new Vector3(0, MathHelper.Pi / 6, 0);
