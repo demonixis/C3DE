@@ -10,6 +10,7 @@ namespace C3DE.Demo.Scenes
         public override void Initialize()
         {
             base.Initialize();
+            OptimizeFor2D();
             GUI.Skin = DemoGame.CreateSkin(Application.Content, false);
             m_Camera.AddComponent<MenuBehaviour>();
         }

@@ -9,15 +9,15 @@ using System.Collections.Generic;
 
 namespace C3DE.Demo.Scripts
 {
-    struct Widget
-    {
-        public Rectangle Rect { get; set; }
-        public string Name { get; set; }
-        public Rectangle RectExt { get; set; }
-    }
-
     public class PostProcessSwitcher : Behaviour
     {
+        struct Widget
+        {
+            public Rectangle Rect { get; set; }
+            public string Name { get; set; }
+            public Rectangle RectExt { get; set; }
+        }
+
         private Rectangle _boxRect;
         private Widget[] _widgets;
         private Texture2D _backgroundTexture;

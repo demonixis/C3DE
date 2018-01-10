@@ -21,11 +21,7 @@ namespace C3DE.Demo.Scenes
 
             m_Camera.AddComponent<LightSpawner>();
 
-            var controller = m_Camera.GetComponent<ControllerSwitcher>();
-            controller.DefaultPosition = new Vector3(-10.0f, 2.0f, 0.45f);
-            controller.DefaultRotation = new Vector3(0.0f, -1.4f, 0.0f);
-            controller.SetControllerActive(ControllerSwitcher.ControllerType.FPS);
-            controller.FlyMode = true;
+            SetControlMode(ControllerSwitcher.ControllerType.FPS, new Vector3(-10.0f, 2.0f, 0.45f), new Vector3(0.0f, -1.4f, 0.0f), true);
 
             // Sponza Model
             var content = Application.Content;
@@ -47,11 +43,6 @@ namespace C3DE.Demo.Scenes
             var sunflares = m_Camera.AddComponent<LensFlare>();
             sunflares.LightDirection = direction;
             sunflares.Setup(glowTexture, flareTextures);
-
-            // And fog
-            RenderSettings.FogDensity = 0.0085f;
-            RenderSettings.FogMode = FogMode.None;
-            RenderSettings.FogColor = Color.FloralWhite;
         }
 
         private void PatchMaterials(GameObject sponzaGo, ContentManager content)

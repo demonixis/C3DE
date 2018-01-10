@@ -9,6 +9,7 @@ namespace C3DE.Demo.Scenes
         public override void Initialize()
         {
             base.Initialize();
+            OptimizeFor2D();
             m_Camera.AddComponent<UIWidgetDemo>();
         }
     }

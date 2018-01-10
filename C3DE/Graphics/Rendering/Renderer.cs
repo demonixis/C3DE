@@ -138,9 +138,17 @@ namespace C3DE.Graphics.Rendering
                 m_spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone, GUI.uiEffect, GUI.uiMatrix);
 
                 for (int i = 0; i < size; i++)
+                {
+                    // FIXME: We can't access the script if it's disabled
+                    if (size != scripts.Count)
+                    {
+                        m_spriteBatch.End();
+                        return;
+                    }
+
                     if (scripts[i].Enabled)
                         scripts[i].OnGUI(m_uiManager);
-
+                }
                 m_spriteBatch.End();
             }
         }

@@ -92,6 +92,9 @@ namespace C3DE.UI
         {
             _spriteBatch.Draw(Skin.Box, rect, Color.White);
 
+            if (string.IsNullOrEmpty(text))
+                return;
+
             _cacheVec2 = Skin.Font.MeasureString(text);
             _cacheVec2.X = (rect.X + rect.Width / 2) - (_cacheVec2.X / 2);
             _cacheVec2.Y = rect.Y + Skin.TextMargin;
