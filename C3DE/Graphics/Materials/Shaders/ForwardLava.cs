@@ -33,7 +33,6 @@ namespace C3DE.Graphics.Materials.Shaders
             m_Effect = content.Load<Effect>("Shaders/Forward/Lava");
             m_PassAmbient = m_Effect.CurrentTechnique.Passes["AmbientPass"];
             m_PassEmissive = m_Effect.CurrentTechnique.Passes["EmissivePass"];
-
             m_EPView = m_Effect.Parameters["View"];
             m_EPProjection = m_Effect.Parameters["Projection"];
             m_EPTime = m_Effect.Parameters["Time"];

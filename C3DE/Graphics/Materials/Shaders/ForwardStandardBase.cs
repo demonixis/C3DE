@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace C3DE.Graphics.Materials.Shaders
 {
-    public abstract class ForwardStandardBase : ShaderMaterial
+    public abstract class ForwardStandardBase : ShaderMaterial, IMultipassLightingMaterial
     {
         protected EffectPass m_PassAmbient;
         protected EffectPass m_PassLight;
@@ -82,15 +82,16 @@ namespace C3DE.Graphics.Materials.Shaders
             m_EPAmbientColor.SetValue(Scene.current.RenderSettings.ambientColor);
         }
 
-        protected void PreparePass(StandardMaterialBase material, Renderer renderable)
+        protected void BasePass(StandardMaterialBase material, Renderer renderable)
         {
             m_EPWorld.SetValue(renderable.Transform.m_WorldMatrix);
             m_EPTextureTilling.SetValue(material.Tiling);
             m_EPDiffuseColor.SetValue(material.m_DiffuseColor);
             m_EPMainTexture.SetValue(material.MainTexture);
+            m_PassAmbient.Apply();
         }
 
-        protected void PrepareLightPass(StandardMaterialBase material, Renderer renderer, Light light)
+        protected void BaseLightPass(StandardMaterialBase material, Renderer renderer, Light light)
         {
             m_EPSpecularLightColor.SetValue(material.SpecularColor.ToVector3());
             m_EPSpecularPower.SetValue(material.Shininess);
@@ -116,6 +117,9 @@ namespace C3DE.Graphics.Materials.Shaders
             m_EPLightProjection.SetValue(light.m_ProjectionMatrix);
             m_EPSpecularTextureEnabled.SetValue(material.SpecularTexture != null);
             m_EPSpecularTexture.SetValue(material.SpecularTexture);
+            m_PassLight.Apply();
         }
+
+        public abstract void LightPass(Renderer renderer, Light light);
     }
 }

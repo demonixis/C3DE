@@ -1,12 +1,11 @@
-﻿using System;
-using C3DE.Components.Lighting;
+﻿using C3DE.Components.Lighting;
 using C3DE.Components.Rendering;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace C3DE.Graphics.Materials.Shaders
 {
-    public class ForwardStandard : ForwardStandardBase, IMultipassLightingMaterial, IEmissiveMaterial
+    public class ForwardStandard : ForwardStandardBase, IEmissiveMaterial
     {
         private StandardMaterial m_Material;
         protected EffectPass m_PassEmissive;
@@ -19,11 +18,11 @@ namespace C3DE.Graphics.Materials.Shaders
         protected EffectParameter m_EPEmissiveColor;
         protected EffectParameter m_EPEmissiveIntensity;
 
-        public bool EmissiveEnabled => throw new NotImplementedException();
+        public bool EmissiveEnabled => m_Material.EmissiveEnabled;
 
         public ForwardStandard(StandardMaterial material)
         {
-           
+            m_Material = material;
         }
 
         public override void LoadEffect(ContentManager content)
@@ -48,17 +47,25 @@ namespace C3DE.Graphics.Materials.Shaders
 
         public override void Pass(Renderer renderable)
         {
-            PreparePass(m_Material, renderable);
+            m_EPReflectionTexture.SetValue(m_Material.ReflectionTexture);
+            m_EPReflectionTextureEnabled.SetValue(m_Material.ReflectionTexture != null);
+            BasePass(m_Material, renderable);
+        }
+
+        public override void LightPass(Renderer renderer, Light light)
+        {
+            m_EPNormalTexture.SetValue(m_Material.NormalTexture);
+            m_EPNormalTextureEnabled.SetValue(m_Material.NormalTexture != null);
+            BaseLightPass(m_Material, renderer, light);
         }
 
         public void EmissivePass(Renderer renderer)
         {
-            throw new NotImplementedException();
-        }
-
-        public void LightPass(Renderer renderer, Light light)
-        {
-            throw new NotImplementedException();
+            m_EPEmissiveTextureEnabled.SetValue(m_Material.EmissiveTexture != null);
+            m_EPEmissiveTexture.SetValue(m_Material.EmissiveTexture);
+            m_EPEmissiveColor.SetValue(m_Material.EmissiveColor.ToVector3());
+            m_EPEmissiveIntensity.SetValue(m_Material.EmissiveIntensity);
+            m_PassEmissive.Apply();
         }
     }
 }

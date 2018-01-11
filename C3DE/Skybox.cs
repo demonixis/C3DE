@@ -46,6 +46,9 @@ namespace C3DE
         [DataMember]
         public bool Enabled { get; set; }
 
+        public bool OverrideFog => m_OverrideFog;
+        public Vector4 CustomFogData => m_CustomFogData;
+
         public Skybox()
         {
             m_Geometry = new CubeMesh();
