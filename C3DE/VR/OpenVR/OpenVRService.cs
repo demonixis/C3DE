@@ -111,8 +111,9 @@ namespace C3DE.VR
                 return;
 
             var matrix = (hand == 0 ? _leftControllerPose : _rightControllerPose);
+            matrix = Matrix.Invert(matrix);
             var scale = Vector3.One;
-
+            
             matrix.Decompose(out scale, out rotation, out position);
         }
 

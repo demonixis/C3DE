@@ -31,7 +31,7 @@ namespace C3DE.Demo.Scripts
             m_VREnabled = Application.Engine.Renderer.VREnabled;
             m_UIRectangle = new Rectangle(10, 10, 100, 30);
 
-            var handMaterial = new StandardMaterial();
+            var handMaterial = new UnlitMaterial();
             handMaterial.DiffuseColor = Color.AliceBlue;
 
             m_Hands = new GameObject[2];
@@ -51,7 +51,8 @@ namespace C3DE.Demo.Scripts
             m_Hands[id].AddComponent<MotionController>().LeftHand = id == 0;
 
             var renderer = m_Hands[id].AddComponent<MeshRenderer>();
-            renderer.Geometry = new SphereMesh(1f);
+            renderer.Geometry = new CubeMesh();
+            renderer.Geometry.Size = new Vector3(0.1f);
             renderer.Geometry.Build();
             renderer.Material = material;
 
