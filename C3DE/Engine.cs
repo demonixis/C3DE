@@ -54,6 +54,8 @@ namespace C3DE
             Window.Title = title;
             Content.RootDirectory = "Content";
 
+            renderer = new ForwardRenderer(GraphicsDevice);
+
             Application.Content = Content;
             Application.Engine = this;
             Application.GraphicsDevice = GraphicsDevice;
@@ -101,11 +103,9 @@ namespace C3DE
             if (_autoDetectResolution)
                 Screen.SetBestResolution(_requestFullscreen);
 
-            if (renderer == null)
-            {
-                renderer = new ForwardRenderer(GraphicsDevice);
-                renderer.Initialize(Content);
-            }
+            renderer.m_graphicsDevice = GraphicsDevice;
+            renderer.Initialize(Content);
+            RendererChanged?.Invoke(renderer);
 
             Serializer.AddTypes(typeof(Engine));
 

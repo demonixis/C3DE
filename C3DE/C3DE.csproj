@@ -61,8 +61,8 @@
     <Compile Include="Extensions\MatrixExtensions.cs" />
     <Compile Include="Extensions\ModelExtensions.cs" />
     <Compile Include="GameObjectFactory.cs" />
-    <Compile Include="Graphics\Materials\IEmissiveMaterial.cs" />
-    <Compile Include="Graphics\Materials\IMultipassLightingMaterial.cs" />
+    <Compile Include="Graphics\Materials\Shaders\Forward\IEmissiveMaterial.cs" />
+    <Compile Include="Graphics\Materials\Shaders\Forward\IMultipassLightingMaterial.cs" />
     <Compile Include="Graphics\Materials\Shaders\Deferred\DeferredSkybox.cs" />
     <Compile Include="Graphics\Materials\Shaders\Deferred\DeferredStandard.cs" />
     <Compile Include="Graphics\Materials\Shaders\Forward\ForwardLava.cs" />

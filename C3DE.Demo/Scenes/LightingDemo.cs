@@ -64,7 +64,7 @@ namespace C3DE.Demo.Scenes
                 ligthSphere.CastShadow = true;
                 ligthSphere.ReceiveShadow = false;
 
-                var sphereMaterial = new StandardMaterial(m_Scene);
+                var sphereMaterial = new StandardMaterial();
                 sphereMaterial.DiffuseColor = colors[i];
                 sphereMaterial.EmissiveIntensity = 1;
                 sphereMaterial.EmissiveColor = colors[i];
@@ -77,7 +77,7 @@ namespace C3DE.Demo.Scenes
             }
             
             // Terrain
-            var terrainMaterial = new StandardMaterial(m_Scene);
+            var terrainMaterial = new StandardMaterial();
             terrainMaterial.MainTexture = Application.Content.Load<Texture2D>("Textures/Terrain/Sand");
             terrainMaterial.NormalTexture = Application.Content.Load<Texture2D>("Textures/Terrain/Sand_Normal");
             terrainMaterial.Shininess = 500;

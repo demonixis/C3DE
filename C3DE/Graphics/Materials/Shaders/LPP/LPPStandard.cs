@@ -34,7 +34,7 @@ namespace C3DE.Graphics.Materials.Shaders
         {
             m_Effect.Parameters["World"].SetValue(renderable.m_Transform.m_WorldMatrix);
             m_Effect.Parameters["MainTexture"].SetValue(renderable.material.MainTexture);
-            m_Effect.Parameters["AmbientColor"].SetValue(m_Material.scene.RenderSettings.ambientColor);
+            m_Effect.Parameters["AmbientColor"].SetValue(Scene.current.RenderSettings.ambientColor);
             m_Effect.Parameters["DiffuseColor"].SetValue(m_Material.m_DiffuseColor);
             m_Effect.Parameters["LightMap"].SetValue(lightmap);
             m_Effect.Parameters["Viewport"].SetValue(new Vector2(Screen.Width, Screen.Height));

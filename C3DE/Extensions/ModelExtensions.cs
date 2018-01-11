@@ -37,7 +37,7 @@ namespace Microsoft.Xna.Framework.Graphics
                 foreach (var part in mesh.MeshParts)
                 {
                     var effect = (BasicEffect)part.Effect;
-                    var material = new StandardMaterial(scene);
+                    var material = new StandardMaterial();
                     material.MainTexture = effect.Texture;
                     material.DiffuseColor = new Color(effect.DiffuseColor.X, effect.DiffuseColor.Y, effect.DiffuseColor.Z);
                     material.SpecularColor = new Color(effect.SpecularColor.X, effect.SpecularColor.Y, effect.SpecularColor.Z);

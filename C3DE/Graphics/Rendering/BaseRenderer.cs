@@ -12,7 +12,7 @@ namespace C3DE.Graphics.Rendering
 {
     public abstract class BaseRenderer : IDisposable
     {
-        protected GraphicsDevice m_graphicsDevice;
+        protected internal GraphicsDevice m_graphicsDevice;
         protected SpriteBatch m_spriteBatch;
         protected RenderTarget2D[] m_SceneRenderTargets = new RenderTarget2D[2];
         protected VRService m_VRService;

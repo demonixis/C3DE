@@ -33,7 +33,7 @@ namespace C3DE.Demo.Scripts
             _gridPrefab = go.GetComponent<ModelRenderer>();
             _gridPrefab.Transform.LocalScale = new Vector3(TileScale, 0.5f * TileScale, TileScale);
             _gridPrefab.Transform.LocalRotation = new Vector3(0, MathHelper.Pi / 6, 0);
-            _gridPrefab.Material = new StandardMaterial(m_GameObject.Scene);
+            _gridPrefab.Material = new StandardMaterial();
             _gridPrefab.Material.MainTexture = Application.Content.Load<Texture2D>("Models/hexagone_basic");
             _gridPrefab.Enabled = false;
             m_GameObject.Scene.Add(go);
@@ -74,10 +74,10 @@ namespace C3DE.Demo.Scripts
 
             var waterMaterial = _gridPrefab.Material;
 
-            var groundMaterial = new StandardMaterial(Scene.current);
+            var groundMaterial = new StandardMaterial();
             groundMaterial.MainTexture = Application.Content.Load<Texture2D>("Models/hexagone_green");
 
-            var montainMaterial = new StandardMaterial(Scene.current);
+            var montainMaterial = new StandardMaterial();
             montainMaterial.MainTexture = Application.Content.Load<Texture2D>("Models/hexagone_brown");
             montainMaterial.DiffuseColor = Color.Red;
 

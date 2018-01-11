@@ -33,7 +33,7 @@ namespace C3DE.Demo.Scripts
             cube.CastShadow = true;
             cube.ReceiveShadow = false;
 
-            var material = new StandardMaterial(Scene.current);
+             var material = new StandardMaterial();
             material.DiffuseColor = RandomHelper.GetColor();
             material.MainTexture = Application.Content.Load<Texture2D>("Textures/Terrain/Rock");
             material.NormalTexture = Application.Content.Load<Texture2D>("Textures/Terrain/Rock_Normal");

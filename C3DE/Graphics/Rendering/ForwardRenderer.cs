@@ -1,6 +1,7 @@
 ﻿using C3DE.Components;
 using C3DE.Components.Rendering;
 using C3DE.Graphics.Materials;
+using C3DE.Graphics.Materials.Shaders;
 using C3DE.Graphics.PostProcessing;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
@@ -113,14 +114,11 @@ namespace C3DE.Graphics.Rendering
 
             var renderCount = scene.renderList.Count;
 
-            // Prepass, Update light, eye position, etc.
-            for (var i = 0; i < scene.effects.Count; i++)
-                scene.materials[scene.materialsEffectIndex[i]].PrePass(camera);
-
             RendererComponent renderer;
             Material material;
-            IMultipassLightingMaterial lightMaterial;
-            IEmissiveMaterial emissiveMaterial;
+            ShaderMaterial shader;
+            IMultipassLightingMaterial multiLightShader;
+            IEmissiveMaterial emissiveShader;
             var lights = scene.lights;
             var lightCount = lights.Count;
 
@@ -130,20 +128,30 @@ namespace C3DE.Graphics.Rendering
                 renderer = scene.renderList[i];
                 material = scene.renderList[i].Material;
 
+                // A specific renderer that uses its own draw logic.
+                if (material == null)
+                {
+                    renderer.Draw(m_graphicsDevice);
+                    continue;
+                }
+
+                shader = material.m_ShaderMaterial;
+
                 // Ambient pass
-                material?.Pass(scene.RenderList[i]);
+                shader.PrePass(camera);
+                shader.Pass(scene.RenderList[i]);
                 renderer.Draw(m_graphicsDevice);
 
                 // Lightpass
-                if (material is IMultipassLightingMaterial)
+                if (shader is IMultipassLightingMaterial)
                 {
-                    lightMaterial = (IMultipassLightingMaterial)material;
+                    multiLightShader = (IMultipassLightingMaterial)shader;
 
                     m_graphicsDevice.BlendState = BlendState.Additive;
 
                     for (var l = 0; l < lightCount; l++)
                     {
-                        lightMaterial.LightPass(renderer, lights[l]);
+                        multiLightShader.LightPass(renderer, lights[l]);
                         renderer.Draw(m_graphicsDevice);
                     }
 
@@ -151,18 +159,18 @@ namespace C3DE.Graphics.Rendering
                 }
 
                 // Emissive pass
-                if (material is IEmissiveMaterial)
+                if (shader is IEmissiveMaterial)
                 {
-                    emissiveMaterial = (IEmissiveMaterial)material;
+                    emissiveShader = (IEmissiveMaterial)shader;
 
-                    if (!emissiveMaterial.EmissiveEnabled)
+                    if (!emissiveShader.EmissiveEnabled)
                         continue;
 
                     m_graphicsDevice.BlendState = BlendState.Additive;
 
                     for (var l = 0; l < scene.lights.Count; l++)
                     {
-                        emissiveMaterial.EmissivePass(renderer);
+                        emissiveShader.EmissivePass(renderer);
                         renderer.Draw(m_graphicsDevice);
                     }
 

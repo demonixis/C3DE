@@ -169,7 +169,7 @@ namespace C3DE
             postProcessPasses = new List<PostProcessPass>();
             _componentsToDestroy = new List<Component>();
             _needRemoveCheck = false;
-            defaultMaterial = new UnlitMaterial(this, "Default Material");
+            defaultMaterial = new UnlitMaterial();
             RenderSettings = new RenderSettings();
             m_PhysicsCollisionSystem = new CollisionSystemSAP();
             m_PhysicsWorld = new World(m_PhysicsCollisionSystem);
@@ -195,12 +195,10 @@ namespace C3DE
 
             DefaultMaterial.MainTexture = GraphicsHelper.CreateTexture(Color.AntiqueWhite, 1, 1);
 
-            for (int i = 0, l = materials.Count; i < l; i++)
-                materials[i].LoadContent(Application.Content);
-
             RenderSettings.Skybox.LoadContent(Application.Content);
 
-            UpdateEffectMaterialMatching();
+            for (var i = 0; i < materials.Count; i++)
+                materials[i].LoadContent(Application.Content);
 
             for (int i = 0; i < sceneObjects.Count; i++)
                 sceneObjects[i].Initialize();
@@ -455,26 +453,9 @@ namespace C3DE
             {
                 materials.Add(material);
 
-                if (m_Initialized)
-                {
+                if (Initialized)
                     material.LoadContent(Application.Content);
-
-                    if (!effects.Contains(material.m_Effect))
-                    {
-                        effects.Add(material.m_Effect);
-                        materialsEffectIndex.Add(effects.IndexOf(material.m_Effect), materials.IndexOf(material));
-                    }
-                }
             }
-        }
-
-        public int GetMaterialIndexByName(string name)
-        {
-            for (int i = 0, l = materials.Count; i < l; i++)
-                if (materials[i].Name == name)
-                    return i;
-
-            return -1;
         }
 
         /// <summary>
@@ -487,18 +468,6 @@ namespace C3DE
             {
                 materials.Remove(material);
                 material.Dispose();
-            }
-        }
-
-        private void UpdateEffectMaterialMatching()
-        {
-            for (int i = 0, l = materials.Count; i < l; i++)
-            {
-                if (!effects.Contains(materials[i].m_Effect))
-                {
-                    effects.Add(materials[i].m_Effect);
-                    materialsEffectIndex.Add(effects.IndexOf(materials[i].m_Effect), materials.IndexOf(materials[i]));
-                }
             }
         }
 
@@ -529,7 +498,7 @@ namespace C3DE
                 return;
 
             renderList.Add(renderer);
-           // renderList.Sort();
+            // renderList.Sort();
         }
 
         protected void AddLight(Light light)

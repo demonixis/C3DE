@@ -23,7 +23,7 @@ namespace C3DE.Demo.Scenes
             m_DirectionalLight.ShadowGenerator.ShadowStrength = 0.5f;
 
             // Finally a terrain
-            var terrainMaterial = new StandardTerrainMaterial(m_Scene);
+            var terrainMaterial = new StandardTerrainMaterial();
             terrainMaterial.MainTexture = content.Load<Texture2D>("Textures/Terrain/Grass");
             terrainMaterial.SandTexture = content.Load<Texture2D>("Textures/Terrain/Sand");
             terrainMaterial.SnowTexture = content.Load<Texture2D>("Textures/Terrain/Snow");

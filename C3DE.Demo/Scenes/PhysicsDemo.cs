@@ -17,7 +17,7 @@ namespace C3DE.Demo.Scenes
 
             m_Camera.AddComponent<PhysicsSpawner>();
 
-            var terrainMaterial = new StandardMaterial(m_Scene);
+            var terrainMaterial = new StandardMaterial();
             terrainMaterial.MainTexture = Application.Content.Load<Texture2D>("Textures/Terrain/Sand");
             terrainMaterial.NormalTexture = Application.Content.Load<Texture2D>("Textures/Terrain/Sand_Normal");
             terrainMaterial.Shininess = 500;

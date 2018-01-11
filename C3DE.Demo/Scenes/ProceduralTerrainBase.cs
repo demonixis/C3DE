@@ -16,7 +16,7 @@ namespace C3DE.Demo.Scenes
             base.Initialize();
 
               // Finally a terrain
-            var terrainMaterial = new StandardTerrainMaterial(m_Scene);
+            var terrainMaterial = new StandardTerrainMaterial();
             terrainMaterial.MainTexture = Application.Content.Load<Texture2D>("Textures/Terrain/Grass");
             terrainMaterial.SandTexture = Application.Content.Load<Texture2D>("Textures/Terrain/Sand");
             terrainMaterial.SnowTexture = Application.Content.Load<Texture2D>("Textures/Terrain/Snow");
