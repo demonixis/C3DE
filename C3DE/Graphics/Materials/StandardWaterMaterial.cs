@@ -35,8 +35,6 @@ namespace C3DE.Graphics.Materials
         {
             if (renderer is ForwardRenderer)
                 m_ShaderMaterial = new ForwardStandardWater(this);
-            else
-                throw new System.NotSupportedException("Unlit is not supported with this renderer");
 
             m_ShaderMaterial.LoadEffect(Application.Content);
         }

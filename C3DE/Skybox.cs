@@ -1,5 +1,7 @@
 ﻿using C3DE.Components;
+using C3DE.Graphics.Materials.Shaders;
 using C3DE.Graphics.Primitives;
+using C3DE.Graphics.Rendering;
 using C3DE.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
@@ -12,6 +14,7 @@ namespace C3DE
     [DataContract]
     public class Skybox
     {
+        private ShaderMaterial m_ShaderMaterial;
         private static Effect m_Effect = null;
         private Matrix m_World;
         private Matrix _scaleMatrix;
@@ -22,15 +25,7 @@ namespace C3DE
         private Vector4 m_CustomFogData;
         private bool m_OverrideFog;
 
-        private EffectPass m_DefaultPass;
-        protected EffectParameter m_EPWorld;
-        protected EffectParameter m_EPView;
-        protected EffectParameter m_EPProjection;
-        protected EffectParameter m_EPMainTexture;
-        protected EffectParameter m_EPEyePosition;
-        protected EffectParameter m_EPFogEnabled;
-        protected EffectParameter m_EPFogColor;
-        protected EffectParameter m_EPFogData;
+        
 
         public TextureCube Texture
         {
@@ -58,18 +53,21 @@ namespace C3DE
             m_SkyboxRasterizerState.CullMode = CullMode.None;
         }
 
+        protected void SetupShaderMaterial(BaseRenderer renderer)
+        {
+            if (renderer is DeferredRenderer)
+                m_ShaderMaterial = new DeferredSkybox(this);
+            else
+                m_ShaderMaterial = new ForwardSkybox(this);
+
+            m_ShaderMaterial.LoadEffect(Application.Content);
+        }
+
         public void LoadContent(ContentManager content)
         {
-            m_Effect = content.Load<Effect>("Shaders/Forward/Skybox");
-            m_DefaultPass = m_Effect.CurrentTechnique.Passes["AmbientPass"];
-            m_EPView = m_Effect.Parameters["View"];
-            m_EPProjection = m_Effect.Parameters["Projection"];
-            m_EPMainTexture = m_Effect.Parameters["MainTexture"];
-            m_EPEyePosition = m_Effect.Parameters["EyePosition"];
-            m_EPWorld = m_Effect.Parameters["World"];
-            m_EPFogEnabled = m_Effect.Parameters["FogEnabled"];
-            m_EPFogColor = m_Effect.Parameters["FogColor"];
-            m_EPFogData = m_Effect.Parameters["FogData"];
+            var engine = Application.Engine;
+            SetupShaderMaterial(engine.Renderer);
+            engine.RendererChanged += SetupShaderMaterial;
         }
 
         public void OverrideSkyboxFog(FogMode mode, float density, float start, float end)
@@ -136,17 +134,7 @@ namespace C3DE
 
             m_World = _scaleMatrix * Matrix.CreateTranslation(camera.Transform.LocalPosition);
 
-            m_EPView.SetValue(camera.m_ViewMatrix);
-            m_EPProjection.SetValue(camera.m_ProjectionMatrix);
-            m_EPEyePosition.SetValue(camera.Transform.LocalPosition);
-            m_EPMainTexture.SetValue(m_MainTexture);
-            m_EPWorld.SetValue(m_World);
-#if !DESKTOP
-            m_EPFogEnabled.SetValue(FogSupported);
-            m_EPFogColor.SetValue(Scene.current.RenderSettings.fogColor);
-            m_EPFogData.SetValue(m_OverrideFog ? m_CustomFogData : Scene.current.RenderSettings.fogData);
-#endif
-            m_DefaultPass.Apply();
+            m_ShaderMaterial.PrePass(camera);
 
             device.SetVertexBuffer(m_Geometry.VertexBuffer);
             device.Indices = m_Geometry.IndexBuffer;
@@ -163,7 +151,7 @@ namespace C3DE
             device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, m_Geometry.Indices.Length / 3);
             device.RasterizerState = m_CurrentRasterizerState;
         }
-
+        /*
         public void DrawDeferred(GraphicsDevice device, Camera camera)
         {
             if (m_Effect.Name == "Shaders/Forward/Skybox")
@@ -184,6 +172,6 @@ namespace C3DE
             device.SetVertexBuffer(m_Geometry.VertexBuffer);
             device.Indices = m_Geometry.IndexBuffer;
             device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, m_Geometry.Indices.Length / 3);
-        }
+        }*/
     }
 }

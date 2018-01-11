@@ -18,9 +18,20 @@ namespace C3DE.Graphics.Materials.Shaders
         protected EffectParameter m_EPFogColor;
         protected EffectParameter m_EPFogData;
 
+        public DeferredSkybox(Skybox skybox)
+        {
+            m_Skybox = skybox;
+        }
+
         public override void LoadEffect(ContentManager content)
         {
             m_Effect = content.Load<Effect>("Shaders/Deferred/Skybox");
+            //m_DefaultPass = m_Effect.CurrentTechnique.Passes["AmbientPass"];
+            m_EPView = m_Effect.Parameters["View"];
+            m_EPProjection = m_Effect.Parameters["Projection"];
+            m_EPMainTexture = m_Effect.Parameters["Texture"];
+            m_EPEyePosition = m_Effect.Parameters["EyePosition"];
+            m_EPWorld = m_Effect.Parameters["World"];
         }
 
         public override void Pass(Renderer renderable)
@@ -29,11 +40,11 @@ namespace C3DE.Graphics.Materials.Shaders
 
         public override void PrePass(Camera camera)
         {
-            m_Effect.Parameters["World"].SetValue(m_Skybox.WorldMatrix);
-            m_Effect.Parameters["Projection"].SetValue(camera.m_ProjectionMatrix);
-            m_Effect.Parameters["View"].SetValue(camera.m_ViewMatrix);
-            m_Effect.Parameters["Texture"].SetValue(m_Skybox.Texture);
-            m_Effect.Parameters["EyePosition"].SetValue(camera.Transform.Position);
+            m_EPWorld.SetValue(m_Skybox.WorldMatrix);
+            m_EPProjection.SetValue(camera.m_ProjectionMatrix);
+            m_EPView.SetValue(camera.m_ViewMatrix);
+            m_EPMainTexture.SetValue(m_Skybox.Texture);
+            m_EPEyePosition.SetValue(camera.Transform.Position);
             m_Effect.CurrentTechnique.Passes[0].Apply();
         }
     }

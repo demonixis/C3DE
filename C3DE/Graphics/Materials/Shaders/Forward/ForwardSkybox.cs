@@ -23,9 +23,23 @@ namespace C3DE.Graphics.Materials.Shaders
         protected EffectParameter m_EPFogColor;
         protected EffectParameter m_EPFogData;
 
+        public ForwardSkybox(Skybox skybox)
+        {
+            m_Skybox = skybox;
+        }
+
         public override void LoadEffect(ContentManager content)
         {
             m_Effect = content.Load<Effect>("Shaders/Forward/Skybox");
+            m_DefaultPass = m_Effect.CurrentTechnique.Passes["AmbientPass"];
+            m_EPView = m_Effect.Parameters["View"];
+            m_EPProjection = m_Effect.Parameters["Projection"];
+            m_EPMainTexture = m_Effect.Parameters["MainTexture"];
+            m_EPEyePosition = m_Effect.Parameters["EyePosition"];
+            m_EPWorld = m_Effect.Parameters["World"];
+            m_EPFogEnabled = m_Effect.Parameters["FogEnabled"];
+            m_EPFogColor = m_Effect.Parameters["FogColor"];
+            m_EPFogData = m_Effect.Parameters["FogData"];
         }
 
         public override void Pass(Renderer renderable)

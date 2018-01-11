@@ -85,7 +85,7 @@ namespace C3DE.Graphics.Rendering
         {
             using (m_graphicsDevice.GeometryUnlitState())
                 if (scene.RenderSettings.Skybox.Enabled)
-                    scene.RenderSettings.Skybox.DrawDeferred(m_graphicsDevice, camera);
+                    scene.RenderSettings.Skybox.Draw(m_graphicsDevice, camera);
 
             foreach (var renderer in scene.renderList)
             {

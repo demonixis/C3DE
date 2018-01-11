@@ -65,7 +65,7 @@ namespace C3DE.Demo.Scripts
 
         public void SetVertical(bool left)
         {
-            m_BoxRect = new Rectangle(left ? 10 : Screen.VirtualWidth - 220, 10, 210, 45 * m_Widgets.Length);
+            m_BoxRect = new Rectangle(left ? 10 : Screen.VirtualWidth - 220, 10, 210, 50 * m_Widgets.Length);
 
             for (int i = 0; i < m_Widgets.Length; i++)
             {

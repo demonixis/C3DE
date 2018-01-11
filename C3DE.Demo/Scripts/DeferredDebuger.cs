@@ -28,8 +28,8 @@ namespace C3DE.Demo.Scripts
                     return;
             }
 
-            var width = 320;
-            var height = 200;
+            var width = 260;
+            var height = 162;
 
             GUI.Skin.TextColor = Color.White;
 

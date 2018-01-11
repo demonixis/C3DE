@@ -36,8 +36,6 @@ namespace C3DE.Graphics.Materials
                 m_ShaderMaterial = new DeferredStandard(this);
             else if (renderer is LightPrePassRenderer)
                 m_ShaderMaterial = new LPPStandard(this);
-            else
-                throw new System.NotSupportedException("Unlit is not supported with this renderer");
 
             m_ShaderMaterial.LoadEffect(Application.Content);
         }
