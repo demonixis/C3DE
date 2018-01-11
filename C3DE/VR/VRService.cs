@@ -82,6 +82,8 @@ namespace C3DE.VR
         /// <param name="renderTargetRight">The renderTarget used for the right eye.</param>
         public abstract int SubmitRenderTargets(RenderTarget2D renderTargetLeft, RenderTarget2D renderTargetRight);
 
+        public virtual int SubmitRenderTarget(int eye, RenderTarget2D renderTarget) => 0;
+
         /// <summary>
         /// Applies the distortion correction effect.
         /// </summary>

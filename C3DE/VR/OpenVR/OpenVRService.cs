@@ -99,7 +99,7 @@ namespace C3DE.VR
         public override Matrix GetViewMatrix(int eye, Matrix playerPose)
         {
             var matrixEyePos = _hmd.GetEyeToHeadTransform((EVREye)eye).ToXNA();
-            return matrixEyePos * Matrix.Invert(_hmdPose);
+            return _hmdPose * matrixEyePos;
         }
 
         public override void GetHandTransform(int hand, ref Vector3 position, ref Quaternion rotation)
@@ -112,6 +112,7 @@ namespace C3DE.VR
 
             var matrix = (hand == 0 ? _leftControllerPose : _rightControllerPose);
             var scale = Vector3.One;
+
             matrix.Decompose(out scale, out rotation, out position);
         }
 
@@ -166,6 +167,12 @@ namespace C3DE.VR
             // Controllers state
         }
 
+        public override int SubmitRenderTarget(int eye, RenderTarget2D renderTarget)
+        {
+            OpenVR.Compositor.Submit((EVREye)eye, ref _textures[eye], ref _textureBounds[eye], EVRSubmitFlags.Submit_Default);
+            return 0;
+        }
+
         public override int SubmitRenderTargets(RenderTarget2D renderTargetLeft, RenderTarget2D renderTargetRight)
         {
             OpenVR.Compositor.Submit(EVREye.Eye_Left, ref _textures[0], ref _textureBounds[0], EVRSubmitFlags.Submit_Default);
@@ -197,7 +204,7 @@ namespace C3DE.VR
                 mat.m2, mat.m6, mat.m10, 0.0f,
                 mat.m3, mat.m7, mat.m11, 1.0f);
 
-            return m;
+            return Matrix.Invert(m);
         }
 
         public static Matrix ToXNA(this HmdMatrix44_t mat)

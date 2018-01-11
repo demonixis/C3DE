@@ -76,9 +76,10 @@ namespace C3DE.Graphics.Rendering
                     camera.m_ViewMatrix = m_VRService.GetViewMatrix(eye, Matrix.Identity);
 
                     RenderSceneForCamera(scene, camera, m_SceneRenderTargets[eye]);
+                    m_VRService.SubmitRenderTarget(eye, m_SceneRenderTargets[eye]);
                 }
 
-                m_VRService.SubmitRenderTargets(m_SceneRenderTargets[0], m_SceneRenderTargets[1]);
+                //m_VRService.SubmitRenderTargets(m_SceneRenderTargets[0], m_SceneRenderTargets[1]);
                 DrawVRPreview(0);
             }
             else

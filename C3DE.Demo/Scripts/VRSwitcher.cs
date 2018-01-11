@@ -1,4 +1,7 @@
 ﻿using C3DE.Components;
+using C3DE.Components.Rendering;
+using C3DE.Graphics.Materials;
+using C3DE.Graphics.Primitives;
 using C3DE.UI;
 using Microsoft.Xna.Framework;
 using System;
@@ -10,6 +13,7 @@ namespace C3DE.Demo.Scripts
         private Rectangle m_UIRectangle;
         private bool m_VREnabled = false;
         public Action<bool> VRChanged;
+        private GameObject[] m_Hands;
 
         public Point UIPosition
         {
@@ -26,6 +30,34 @@ namespace C3DE.Demo.Scripts
             base.Start();
             m_VREnabled = Application.Engine.Renderer.VREnabled;
             m_UIRectangle = new Rectangle(10, 10, 100, 30);
+
+            var handMaterial = new StandardMaterial();
+            handMaterial.DiffuseColor = Color.AliceBlue;
+
+            m_Hands = new GameObject[2];
+
+            CreateHand(0, handMaterial);
+            CreateHand(1, handMaterial);
+        }
+
+        public override void OnDestroy()
+        {
+            Application.Engine.Renderer.SetVREnabled(false);
+        }
+
+        private void CreateHand(int id, Material material)
+        {
+            m_Hands[id] = new GameObject($"Hand_{id}");
+            m_Hands[id].AddComponent<MotionController>().LeftHand = id == 0;
+
+            var renderer = m_Hands[id].AddComponent<MeshRenderer>();
+            renderer.Geometry = new SphereMesh(1f);
+            renderer.Geometry.Build();
+            renderer.Material = material;
+
+            m_Hands[id].Enabled = false;
+
+            //m_Hands[id].Transform.Parent = Camera.Main.Transform;
         }
 
         public override void OnGUI(GUI ui)
@@ -43,6 +75,9 @@ namespace C3DE.Demo.Scripts
 
             if (m_VREnabled)
                 m_VREnabled = Application.Engine.Renderer.SetVREnabled(true);
+
+            foreach (var hand in m_Hands)
+                hand.Enabled = m_VREnabled;
 
             VRChanged?.Invoke(m_VREnabled);
         }
