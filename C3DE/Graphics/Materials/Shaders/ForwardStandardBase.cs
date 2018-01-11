@@ -1,19 +1,12 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
+﻿using C3DE.Components;
+using C3DE.Components.Lighting;
+using C3DE.Components.Rendering;
 using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace C3DE.Graphics.Materials.Shaders
 {
-    public class StandardForwardBase : ShaderMaterial
+    public abstract class ForwardStandardBase : ShaderMaterial
     {
-        protected StandardMaterialBase m_Material;
-        protected Effect m_Effect;
-        protected Vector3 m_SpecularColor = new Vector3(0.6f, 0.6f, 0.6f);
         protected EffectPass m_PassAmbient;
         protected EffectPass m_PassLight;
         protected EffectParameter m_EPView;
@@ -46,14 +39,8 @@ namespace C3DE.Graphics.Materials.Shaders
         protected EffectParameter m_EPSpecularTextureEnabled;
         protected EffectParameter m_EPSpecularTexture;
 
-        public StandardForwardBase(StandardMaterialBase material)
+        protected virtual void SetupParamaters()
         {
-            m_Material = material;
-        }
-
-        public override void LoadEffect(ContentManager content)
-        {
-            m_Effect = content.Load<Effect>("Shaders/Forward/Standard");
             m_PassAmbient = m_Effect.CurrentTechnique.Passes["AmbientPass"];
             m_PassLight = m_Effect.CurrentTechnique.Passes["LightPass"];
             m_EPView = m_Effect.Parameters["View"];
@@ -87,7 +74,7 @@ namespace C3DE.Graphics.Materials.Shaders
             m_EPSpecularTexture = m_Effect.Parameters["SpecularTexture"];
         }
 
-        public void PrePass(Camera camera)
+        public override void PrePass(Camera camera)
         {
             m_EPView.SetValue(camera.m_ViewMatrix);
             m_EPProjection.SetValue(camera.m_ProjectionMatrix);
@@ -95,20 +82,19 @@ namespace C3DE.Graphics.Materials.Shaders
             m_EPAmbientColor.SetValue(Scene.current.RenderSettings.ambientColor);
         }
 
-        public void Pass(Renderer renderable)
+        protected void PreparePass(StandardMaterialBase material, Renderer renderable)
         {
             m_EPWorld.SetValue(renderable.Transform.m_WorldMatrix);
-            m_EPTextureTilling.SetValue(Tiling);
-            m_EPDiffuseColor.SetValue(m_DiffuseColor);
-            m_EPMainTexture.SetValue(MainTexture);
-            m_PassAmbient.Apply();
+            m_EPTextureTilling.SetValue(material.Tiling);
+            m_EPDiffuseColor.SetValue(material.m_DiffuseColor);
+            m_EPMainTexture.SetValue(material.MainTexture);
         }
 
-        public void LightPass(Renderer renderer, Light light)
+        protected void PrepareLightPass(StandardMaterialBase material, Renderer renderer, Light light)
         {
-            m_EPSpecularLightColor.SetValue(m_SpecularColor);
-            m_EPSpecularPower.SetValue(Shininess);
-            m_EPSpecularIntensity.SetValue(SpecularIntensity);
+            m_EPSpecularLightColor.SetValue(material.SpecularColor.ToVector3());
+            m_EPSpecularPower.SetValue(material.Shininess);
+            m_EPSpecularIntensity.SetValue(material.SpecularIntensity);
             m_EPLightColor.SetValue(light.m_Color);
             m_EPLightDirection.SetValue(light.Direction);
             m_EPLightPosition.SetValue(light.m_Transform.LocalPosition);
@@ -119,10 +105,8 @@ namespace C3DE.Graphics.Materials.Shaders
             m_EPLightType.SetValue((int)light.TypeLight);
 
 #if !DESKTOP
-
-            m_EPFogColor.SetValue(scene.RenderSettings.fogColor);
-            m_EPFogData.SetValue(scene.RenderSettings.fogData);
-
+            m_EPFogColor.SetValue(material.scene.RenderSettings.fogColor);
+            m_EPFogData.SetValue(material.scene.RenderSettings.fogData);
 #endif
             m_EPShadowStrength.SetValue(light.m_ShadowGenerator.ShadowStrength);
             m_EPShadowBias.SetValue(light.m_ShadowGenerator.ShadowBias);
@@ -130,10 +114,8 @@ namespace C3DE.Graphics.Materials.Shaders
             m_EPShadowEnabled.SetValue(renderer.ReceiveShadow);
             m_EPLightView.SetValue(light.m_ViewMatrix);
             m_EPLightProjection.SetValue(light.m_ProjectionMatrix);
-            m_EPSpecularTextureEnabled.SetValue(SpecularTexture != null);
-            m_EPSpecularTexture.SetValue(SpecularTexture);
-
-            m_PassLight.Apply();
+            m_EPSpecularTextureEnabled.SetValue(material.SpecularTexture != null);
+            m_EPSpecularTexture.SetValue(material.SpecularTexture);
         }
     }
 }

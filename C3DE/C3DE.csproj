@@ -63,6 +63,14 @@
     <Compile Include="GameObjectFactory.cs" />
     <Compile Include="Graphics\Materials\IEmissiveMaterial.cs" />
     <Compile Include="Graphics\Materials\IMultipassLightingMaterial.cs" />
+    <Compile Include="Graphics\Materials\Shaders\ForwardLava.cs" />
+    <Compile Include="Graphics\Materials\Shaders\ForwardStandardTerrain.cs" />
+    <Compile Include="Graphics\Materials\Shaders\ForwardStandardWater.cs" />
+    <Compile Include="Graphics\Materials\Shaders\ForwardStandard.cs" />
+    <Compile Include="Graphics\Materials\Shaders\ForwardTransparent.cs" />
+    <Compile Include="Graphics\Materials\Shaders\ForwardUnlit.cs" />
+    <Compile Include="Graphics\Materials\Shaders\ShaderMaterial.cs" />
+    <Compile Include="Graphics\Materials\Shaders\ForwardStandardBase.cs" />
     <Compile Include="Graphics\Materials\StandardMaterial.cs" />
     <Compile Include="Graphics\Materials\StandardMaterialBase.cs" />
     <Compile Include="Graphics\PostProcessing\AverageColorFilter.cs" />
