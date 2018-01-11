@@ -3,6 +3,7 @@ using C3DE.Graphics.Rendering;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
 
 namespace C3DE
 {
@@ -14,16 +15,18 @@ namespace C3DE
         private bool _autoDetectResolution;
         private bool _requestFullscreen;
         protected GraphicsDeviceManager _graphics;
-        protected Renderer renderer;
-        private Renderer m_nextRenderer;
+        protected BaseRenderer renderer;
+        private BaseRenderer m_nextRenderer;
         protected SceneManager _sceneManager;
         protected bool _initialized;
 
-        public Renderer Renderer
+        public BaseRenderer Renderer
         {
             get { return renderer; }
             set { m_nextRenderer = value; }
         }
+
+        public event Action<BaseRenderer> RendererChanged = null;
 
         public Engine()
             : this("C3DE Game")
@@ -141,6 +144,9 @@ namespace C3DE
             if (Screen.LockCursor)
                 Mouse.SetPosition(Screen.WidthPerTwo, Screen.HeightPerTwo);
 
+
+            base.EndDraw();
+
             if (m_nextRenderer != null)
             {
                 renderer?.Dispose();
@@ -148,9 +154,9 @@ namespace C3DE
                 renderer = m_nextRenderer;
                 renderer.Initialize(Content);
                 m_nextRenderer = null;
-            }
 
-            base.EndDraw();
+                RendererChanged?.Invoke(renderer);
+            }
         }
     }
 }

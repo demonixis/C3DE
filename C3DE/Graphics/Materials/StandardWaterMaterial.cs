@@ -1,4 +1,6 @@
 ﻿using C3DE.Components.Rendering;
+using C3DE.Graphics.Materials.Shaders;
+using C3DE.Graphics.Rendering;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -66,6 +68,14 @@ namespace C3DE.Graphics.Materials
             m_EPReflectionColor.SetValue(_reflectionColor);
 
             base.Pass(renderable);
+        }
+
+        protected override void SetupShaderMaterial(BaseRenderer renderer)
+        {
+            if (renderer is ForwardRenderer)
+                m_ShaderMaterial = new ForwardStandardWater(this);
+            else
+                throw new System.NotSupportedException("Unlit is not supported with this renderer");
         }
     }
 }

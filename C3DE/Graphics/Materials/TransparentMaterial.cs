@@ -1,5 +1,7 @@
 ﻿using C3DE.Components;
 using C3DE.Components.Rendering;
+using C3DE.Graphics.Materials.Shaders.Forward;
+using C3DE.Graphics.Rendering;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -39,6 +41,14 @@ namespace C3DE.Graphics.Materials
             m_Effect.Parameters["MainTexture"].SetValue(MainTexture);
             m_Effect.Parameters["World"].SetValue(renderable.GameObject.Transform.m_WorldMatrix);
             m_Effect.CurrentTechnique.Passes[0].Apply();
+        }
+
+        protected override void SetupShaderMaterial(BaseRenderer renderer)
+        {
+            if (renderer is ForwardRenderer)
+                m_ShaderMaterial = new ForwardTransparent(this);
+            else
+                throw new System.NotSupportedException("Unlit is not supported with this renderer");
         }
     }
 }

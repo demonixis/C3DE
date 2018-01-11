@@ -1,5 +1,7 @@
 ﻿using C3DE.Components;
 using C3DE.Components.Rendering;
+using C3DE.Graphics.Materials.Shaders;
+using C3DE.Graphics.Rendering;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System.Runtime.Serialization;
@@ -60,6 +62,14 @@ namespace C3DE.Graphics.Materials
                 m_PassColor.Apply();
             else
                 m_PassTexture.Apply();
+        }
+
+        protected override void SetupShaderMaterial(BaseRenderer renderer)
+        {
+            if (renderer is ForwardRenderer)
+                m_ShaderMaterial = new ForwardUnlit(this);
+            else
+                throw new System.NotSupportedException("Unlit is not supported with this renderer");
         }
     }
 }

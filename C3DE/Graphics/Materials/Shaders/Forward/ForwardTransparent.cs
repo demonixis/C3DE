@@ -5,9 +5,14 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace C3DE.Graphics.Materials.Shaders.Forward
 {
-    public class Transparent : ShaderMaterial
+    public class ForwardTransparent : ShaderMaterial
     {
         private TransparentMaterial m_Material;
+
+        public ForwardTransparent(TransparentMaterial material)
+        {
+            m_Material = material;
+        }
 
         public override void LoadEffect(ContentManager content)
         {

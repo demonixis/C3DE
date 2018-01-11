@@ -11,7 +11,7 @@ namespace C3DE.Graphics.Rendering
     /// <summary>
     /// A very **Work In Progress** Deferred Renderer
     /// </summary>
-    public class DeferredRenderer : Renderer
+    public class DeferredRenderer : BaseRenderer
     {
         private QuadRenderer m_QuadRenderer;
         private RenderTarget2D m_ColorTarget;

@@ -13,7 +13,7 @@ namespace C3DE.Graphics.Rendering
     /// <summary>
     /// The renderer is responsible to render a scene with a camera view to the screen.
     /// </summary>
-    public class ForwardRenderer : Renderer
+    public class ForwardRenderer : BaseRenderer
     {
         private DepthRenderer m_DepthRenderer;
 

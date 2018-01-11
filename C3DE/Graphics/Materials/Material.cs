@@ -1,6 +1,7 @@
 ﻿using C3DE.Components;
 using C3DE.Components.Lighting;
 using C3DE.Components.Rendering;
+using C3DE.Graphics.Materials.Shaders;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -16,6 +17,7 @@ namespace C3DE.Graphics.Materials
         protected internal Vector3 m_DiffuseColor;
         protected internal Effect m_Effect;
         protected internal bool m_hasAlpha;
+        protected internal ShaderMaterial m_ShaderMaterial;
 
         [DataMember]
         public string Id { get; private set; }
@@ -51,7 +53,10 @@ namespace C3DE.Graphics.Materials
 			Tiling = Vector2.One;
 			Offset = Vector2.Zero;
 			m_hasAlpha = false;
+            Application.Engine.RendererChanged += SetupShaderMaterial;
         }
+
+        protected abstract void SetupShaderMaterial(Rendering.BaseRenderer renderer);
 
         public Material(Scene mainScene)
             : this()

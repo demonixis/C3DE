@@ -9,7 +9,7 @@ using System.Runtime.Serialization;
 namespace C3DE.Graphics.Materials
 {
     [DataContract]
-    public class StandardMaterialBase : Material, IMultipassLightingMaterial
+    public abstract class StandardMaterialBase : Material, IMultipassLightingMaterial
     {
         protected Vector3 m_SpecularColor = new Vector3(0.6f, 0.6f, 0.6f);
         protected EffectPass m_PassAmbient;

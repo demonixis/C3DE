@@ -10,7 +10,7 @@ using System.Collections.Generic;
 
 namespace C3DE.Graphics.Rendering
 {
-    public class LightPrePassRenderer : Renderer
+    public class LightPrePassRenderer : BaseRenderer
     {
         private QuadRenderer m_QuadRenderer;
         private Vector2 m_Viewport;

@@ -10,7 +10,7 @@ using System.Collections.Generic;
 
 namespace C3DE.Graphics.Rendering
 {
-    public abstract class Renderer : IDisposable
+    public abstract class BaseRenderer : IDisposable
     {
         protected GraphicsDevice m_graphicsDevice;
         protected SpriteBatch m_spriteBatch;
@@ -45,7 +45,7 @@ namespace C3DE.Graphics.Rendering
 
         #endregion
 
-        public Renderer(GraphicsDevice graphics)
+        public BaseRenderer(GraphicsDevice graphics)
         {
             m_graphicsDevice = graphics;
         }

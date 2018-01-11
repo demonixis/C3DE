@@ -4,6 +4,8 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System.Runtime.Serialization;
 using C3DE.Components.Lighting;
+using C3DE.Graphics.Rendering;
+using C3DE.Graphics.Materials.Shaders;
 
 namespace C3DE.Graphics.Materials
 {
@@ -85,6 +87,18 @@ namespace C3DE.Graphics.Materials
             m_EPEmissiveColor.SetValue(m_EmissiveColor);
             m_EPEmissiveIntensity.SetValue(EmissiveIntensity);
             m_PassEmissive.Apply();
+        }
+
+        protected override void SetupShaderMaterial(BaseRenderer renderer)
+        {
+            if (renderer is ForwardRenderer)
+                m_ShaderMaterial = new ForwardStandard(this);
+            else if (renderer is DeferredRenderer)
+                m_ShaderMaterial = new DeferredStandard(this);
+            else if (renderer is LightPrePassRenderer)
+                m_ShaderMaterial = new LPPStandard(this);
+            else
+                throw new System.NotSupportedException("Unlit is not supported with this renderer");
         }
     }
 }
