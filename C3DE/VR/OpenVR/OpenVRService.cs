@@ -102,18 +102,30 @@ namespace C3DE.VR
             return _hmdPose * matrixEyePos;
         }
 
-        public override void GetHandTransform(int hand, ref Vector3 position, ref Quaternion rotation)
+        public Matrix GetHandTransform(int hand)
         {
             if (hand == 0 && _leftControllerDeviceID == -1)
-                return;
+                return Matrix.Identity;
 
             if (hand == 1 && _rightControllerDeviceID == -1)
-                return;
+                return Matrix.Identity;
 
             var matrix = (hand == 0 ? _leftControllerPose : _rightControllerPose);
-            matrix = Matrix.Invert(matrix);
+
+            return Matrix.Invert(matrix);
+        }
+
+        public override void GetHandTransform(int hand, ref Vector3 position, ref Quaternion rotation, ref Matrix cameraParent)
+        {
+            var matrix = GetHandTransform(hand) * cameraParent;
             var scale = Vector3.One;
-            
+            matrix.Decompose(out scale, out rotation, out position);
+        }
+
+        public override void GetHandTransform(int hand, ref Vector3 position, ref Quaternion rotation)
+        {
+            var matrix = GetHandTransform(hand);
+            var scale = Vector3.One;
             matrix.Decompose(out scale, out rotation, out position);
         }
 

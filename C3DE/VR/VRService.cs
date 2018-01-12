@@ -59,6 +59,8 @@ namespace C3DE.VR
         /// <param name="playerPose">Player scale.</param>
         public abstract Matrix GetViewMatrix(int eye, Matrix playerPose);
 
+        public virtual void GetHandTransform(int hand, ref Vector3 position, ref Quaternion rotation, ref Matrix cameraParent) { }
+
         /// <summary>
         /// Gets the position and the rotation of the given controller.
         /// </summary>

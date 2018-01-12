@@ -9,14 +9,14 @@ namespace C3DE.Graphics.Primitives
     {
         protected override void CreateGeometry()
         {
-            Vector3 topLeftFront = new Vector3(-1.0f, 1.0f, 1.0f);
-            Vector3 bottomLeftFront = new Vector3(-1.0f, -1.0f, 1.0f);
-            Vector3 topRightFront = new Vector3(1.0f, 1.0f, 1.0f);
-            Vector3 bottomRightFront = new Vector3(1.0f, -1.0f, 1.0f);
-            Vector3 topLeftBack = new Vector3(-1.0f, 1.0f, -1.0f);
-            Vector3 topRightBack = new Vector3(1.0f, 1.0f, -1.0f);
-            Vector3 bottomLeftBack = new Vector3(-1.0f, -1.0f, -1.0f);
-            Vector3 bottomRightBack = new Vector3(1.0f, -1.0f, -1.0f);
+            Vector3 topLeftFront = new Vector3(-0.5f, 0.5f, 0.5f);
+            Vector3 bottomLeftFront = new Vector3(-0.5f, -0.5f, 0.5f);
+            Vector3 topRightFront = new Vector3(0.5f, 0.5f, 0.5f);
+            Vector3 bottomRightFront = new Vector3(0.5f, -0.5f, 0.5f);
+            Vector3 topLeftBack = new Vector3(-0.5f, 0.5f, -0.5f);
+            Vector3 topRightBack = new Vector3(0.5f, 0.5f, -0.5f);
+            Vector3 bottomLeftBack = new Vector3(-0.5f, -0.5f, -0.5f);
+            Vector3 bottomRightBack = new Vector3(0.5f, -0.5f, -0.5f);
 
             //Texture Positions
             Vector2 TtopLeftBack = new Vector2(0.0f, 0.0f);

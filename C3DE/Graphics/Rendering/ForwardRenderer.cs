@@ -74,6 +74,10 @@ namespace C3DE.Graphics.Rendering
                     camera.m_ProjectionMatrix = m_VRService.GetProjectionMatrix(eye);
                     camera.m_ViewMatrix = m_VRService.GetViewMatrix(eye, Matrix.Identity);
 
+                    var parent = camera.m_Transform.Parent;
+                    if (parent != null)
+                        camera.m_ViewMatrix = Matrix.Invert(parent.m_WorldMatrix) * camera.m_ViewMatrix;
+
                     RenderSceneForCamera(scene, camera, m_SceneRenderTargets[eye]);
                     m_VRService.SubmitRenderTarget(eye, m_SceneRenderTargets[eye]);
                 }

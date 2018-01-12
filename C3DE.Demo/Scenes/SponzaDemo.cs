@@ -1,5 +1,4 @@
-﻿using C3DE.Components.Lighting;
-using C3DE.Components.Rendering;
+﻿using C3DE.Components.Rendering;
 using C3DE.Demo.Scripts;
 using C3DE.Graphics.Materials;
 using Microsoft.Xna.Framework;
@@ -20,6 +19,8 @@ namespace C3DE.Demo.Scenes
             base.Initialize();
 
             m_Camera.AddComponent<LightSpawner>();
+            var vrPlayerEnabler = m_Camera.AddComponent<VRPlayerEnabler>();
+            vrPlayerEnabler.Position = new Vector3(0, 1.0f, 0);
 
             SetControlMode(ControllerSwitcher.ControllerType.FPS, new Vector3(-10.0f, 2.0f, 0.45f), new Vector3(0.0f, -1.4f, 0.0f), true);
 
@@ -80,7 +81,6 @@ namespace C3DE.Demo.Scenes
             foreach (var renderer in renderers)
             {
                 material = (StandardMaterial)renderer.Material;
-                material.ReflectionTexture = RenderSettings.Skybox.Texture;
 
                 if (material.MainTexture == null)
                     continue;

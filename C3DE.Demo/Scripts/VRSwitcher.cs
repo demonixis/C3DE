@@ -57,8 +57,6 @@ namespace C3DE.Demo.Scripts
             renderer.Material = material;
 
             m_Hands[id].Enabled = false;
-
-            //m_Hands[id].Transform.Parent = Camera.Main.Transform;
         }
 
         public override void OnGUI(GUI ui)
