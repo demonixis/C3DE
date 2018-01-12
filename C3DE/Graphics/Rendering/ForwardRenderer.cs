@@ -7,7 +7,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
-using RendererComponent = C3DE.Components.Rendering.Renderer;
 
 namespace C3DE.Graphics.Rendering
 {
@@ -115,7 +114,7 @@ namespace C3DE.Graphics.Rendering
 
             var renderCount = scene.renderList.Count;
 
-            RendererComponent renderer;
+            Renderer renderer;
             Material material;
             ShaderMaterial shader;
             IMultipassLightingMaterial multiLightShader;

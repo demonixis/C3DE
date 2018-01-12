@@ -4,26 +4,20 @@ namespace Microsoft.Xna.Framework
 {
     public static class QuaternionExtensions
     {
-        public static void ToEuler(float x, float y, float z, float w, ref Vector3 result) 
+        public static void ToEuler(float x, float y, float z, float w, ref Vector3 result)
         {
-            float sqx = x * x;
-            float sqy = y * y;
-            float sqz = z * z;
+            result.X = (float)Math.Atan2(2.0f * y * w - 2.0f * x * z, 1.0f - 2.0f * Math.Pow(y, 2.0f) - 2.0f * Math.Pow(z, 2.0f));
+            result.Y = (float)Math.Asin(2.0f * x * y + 2.0f * z * w);
+            result.Z = (float)Math.Atan2(2.0f * x * w - 2.0f * y * z, 1.0f - 2.0f * Math.Pow(x, 2.0f) - 2.0f * Math.Pow(z, 2.0f));
 
-            result.Y = (float)Math.Atan2(2.0 * (y * w - x * z), 1.0 - 2.0 * (sqy + sqz));
-            result.X = (float)Math.Asin(2.0 * (x * y + z * w));
-            result.Z = (float)Math.Atan2(2.0 * (x * w - y * z), 1.0 - 2.0 * (sqx + sqz));
-
-            float gimbaLockTest = x * y * z * w;
-
-            if (gimbaLockTest > 0.499f)
+            if (x * y + z * w == 0.5f)
             {
-                result.Y = (float)(2.0 * Math.Atan2(x, w));
+                result.X = (float)(2.0f * Math.Atan2(x, w));
                 result.Z = 0.0f;
             }
-            else if (gimbaLockTest < -0.499f) 
+            else if (x * y + z * w == -0.5f)
             {
-                result.Y = (float)(-2.0 * Math.Atan2(x, w));
+                result.X = (float)(-2.0f * Math.Atan2(x, w));
                 result.Z = 0.0f;
             }
         }

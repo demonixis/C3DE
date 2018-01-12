@@ -15,7 +15,6 @@ namespace C3DE
     public class Skybox
     {
         private ShaderMaterial m_ShaderMaterial;
-        private static Effect m_Effect = null;
         private Matrix m_World;
         private Matrix _scaleMatrix;
         private CubeMesh m_Geometry;
@@ -24,8 +23,6 @@ namespace C3DE
         private RasterizerState m_CurrentRasterizerState;
         private Vector4 m_CustomFogData;
         private bool m_OverrideFog;
-
-        
 
         public TextureCube Texture
         {
@@ -151,27 +148,5 @@ namespace C3DE
             device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, m_Geometry.Indices.Length / 3);
             device.RasterizerState = m_CurrentRasterizerState;
         }
-        /*
-        public void DrawDeferred(GraphicsDevice device, Camera camera)
-        {
-            if (m_Effect.Name == "Shaders/Forward/Skybox")
-            {
-                m_Effect.Dispose();
-                m_Effect = Application.Content.Load<Effect>("Shaders/Deferred/Skybox");
-            }
-
-            m_World = _scaleMatrix * Matrix.CreateTranslation(camera.Transform.LocalPosition);
-
-            m_Effect.Parameters["World"].SetValue(m_World);
-            m_Effect.Parameters["Projection"].SetValue(camera.m_ProjectionMatrix);
-            m_Effect.Parameters["View"].SetValue(camera.m_ViewMatrix);
-            m_Effect.Parameters["Texture"].SetValue(m_MainTexture);
-            m_Effect.Parameters["EyePosition"].SetValue(camera.Transform.Position);
-            m_Effect.CurrentTechnique.Passes[0].Apply();
-
-            device.SetVertexBuffer(m_Geometry.VertexBuffer);
-            device.Indices = m_Geometry.IndexBuffer;
-            device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, m_Geometry.Indices.Length / 3);
-        }*/
     }
 }

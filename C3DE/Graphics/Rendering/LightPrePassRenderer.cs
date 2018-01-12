@@ -1,6 +1,8 @@
 using C3DE.Components;
 using C3DE.Components.Lighting;
 using C3DE.Components.Rendering;
+using C3DE.Graphics.Materials;
+using C3DE.Graphics.Materials.Shaders;
 using C3DE.Graphics.PostProcessing;
 using C3DE.Graphics.Primitives;
 using Microsoft.Xna.Framework;
@@ -115,22 +117,29 @@ namespace C3DE.Graphics.Rendering
             if (scene.RenderSettings.Skybox.Enabled)
                 scene.RenderSettings.Skybox.Draw(m_graphicsDevice, camera);
 
-            foreach (var renderer in scene.renderList)
-            {
-                var material = renderer.material;
-                if (material == null)
-                    continue;
+            var renderCount = scene.renderList.Count;
 
-                // FIXME: Materials have to be updated.
-                m_TempRenderEffect.Parameters["World"].SetValue(renderer.m_Transform.m_WorldMatrix);
-                m_TempRenderEffect.Parameters["View"].SetValue(camera.m_ViewMatrix);
-                m_TempRenderEffect.Parameters["Projection"].SetValue(camera.m_ProjectionMatrix);
-                m_TempRenderEffect.Parameters["MainTexture"].SetValue(renderer.material.MainTexture);
-                m_TempRenderEffect.Parameters["AmbientColor"].SetValue(scene.RenderSettings.ambientColor);
-                m_TempRenderEffect.Parameters["DiffuseColor"].SetValue(material.m_DiffuseColor);
-                m_TempRenderEffect.Parameters["LightMap"].SetValue(m_LightRT);
-                m_TempRenderEffect.Parameters["Viewport"].SetValue(m_Viewport);
-                m_TempRenderEffect.CurrentTechnique.Passes[0].Apply();
+            Renderer renderer;
+            Material material;
+            LPPShader shader;
+
+            for (var i = 0; i < renderCount; i++)
+            {
+                renderer = scene.renderList[i];
+                material = scene.renderList[i].Material;
+
+                // A specific renderer that uses its own draw logic.
+                if (material == null)
+                {
+                    renderer.Draw(m_graphicsDevice);
+                    continue;
+                }
+
+                shader = (LPPShader)material.m_ShaderMaterial;
+
+                // Ambient pass
+                shader.PrePass(camera);
+                shader.Pass(scene.RenderList[i], m_LightRT);
                 renderer.Draw(m_graphicsDevice);
             }
         }
