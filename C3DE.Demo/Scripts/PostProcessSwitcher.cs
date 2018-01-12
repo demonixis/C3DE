@@ -41,10 +41,6 @@ namespace C3DE.Demo.Scripts
 
             var ssao = new ScreenSpaceAmbientObscurance(graphics);
             AddPostProcess(ssao);
-
-            var ssao2 = new ScreenSpaceAmbientOcclusion(graphics);
-            ssao2.RandomTexture = GraphicsHelper.CreateRandomTexture(128);
-            AddPostProcess(ssao2);
 #endif
 
             var oldBloom = new BloomLegacy(graphics);
@@ -62,7 +58,6 @@ namespace C3DE.Demo.Scripts
             AddPostProcess(new CGAFilter(graphics));
             AddPostProcess(new ConvolutionFilter(graphics));
             AddPostProcess(new FilmFilter(graphics));
-            AddPostProcess(new FXAA(graphics));
             AddPostProcess(new GrayScaleFilter(graphics));
             AddPostProcess(new AverageColorFilter(graphics));
             AddPostProcess(new MotionBlur(graphics));
@@ -75,12 +70,16 @@ namespace C3DE.Demo.Scripts
             var vignette = new Vignette(graphics);
             AddPostProcess(vignette);
 
+            AddPostProcess(new GlobalFog(graphics));
+
+            AddPostProcess(new FXAA(graphics));
+
             // Setup UI
             var titles = new List<string>();
 
 #if !DESKTOP
             titles.AddRange(new string[] {
-                "Color Grading", "Ambient Obscurance", "Ambient Occlusion"
+                "Color Grading", "Ambient Obscurance"
             });
 #endif
 
@@ -88,8 +87,8 @@ namespace C3DE.Demo.Scripts
             {
                 "Old Bloom", "New Bloom", "Fast Bloom", "C64 Filter",
                 "CGA Filter", "Convolution", "Film",
-                "FXAA", "GrayScale", "Average Color",
-                "Motion Blur", "Refraction", "Vignette"
+                "GrayScale", "Average Color", "Motion Blur",
+                "Refraction", "Vignette", "Global Fog", "FXAA"
             });
 
             var count = titles.Count;
@@ -110,6 +109,12 @@ namespace C3DE.Demo.Scripts
             }
 
             _backgroundTexture = GraphicsHelper.CreateTexture(Color.CornflowerBlue, 1, 1);
+
+            var renderSettings = Scene.current.RenderSettings;
+            renderSettings.FogDensity = 0.0085f;
+            renderSettings.FogMode = FogMode.Linear;
+            renderSettings.Skybox.FogSupported = true;
+            renderSettings.Skybox.OverrideSkyboxFog(FogMode.Exp2, 0.05f, 0, 0);
         }
 
         public override void Update()

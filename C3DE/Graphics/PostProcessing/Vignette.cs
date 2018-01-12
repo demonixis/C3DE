@@ -11,7 +11,7 @@ namespace C3DE.Graphics.PostProcessing
         private Vector2 m_ViewportSize;
 
         public Vector2 Scale { get; set; } = Vector2.One;
-        public float Power { get; set; } = 1.0f;
+        public float Power { get; set; } = 0.5f;
 
         public Vignette(GraphicsDevice graphics) : base(graphics)
         {
