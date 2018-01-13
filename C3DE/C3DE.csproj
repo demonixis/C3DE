@@ -75,6 +75,8 @@
     <Compile Include="Graphics\Materials\Shaders\Forward\ForwardUnlit.cs" />
     <Compile Include="Graphics\Materials\Shaders\LPP\LPPShader.cs" />
     <Compile Include="Graphics\Materials\Shaders\LPP\LPPStandard.cs" />
+    <Compile Include="Graphics\Materials\Shaders\LPP\LPPStandardTerrain.cs" />
+    <Compile Include="Graphics\Materials\Shaders\LPP\LPPStandardWater.cs" />
     <Compile Include="Graphics\Materials\Shaders\ShaderMaterial.cs" />
     <Compile Include="Graphics\Materials\Shaders\Forward\ForwardStandardBase.cs" />
     <Compile Include="Graphics\Materials\StandardMaterial.cs" />
@@ -160,6 +162,7 @@
     <Compile Include="VR\Oculus\MonogameExtensions.cs" />
     <Compile Include="VR\Oculus\OculusRift.cs" />
     <Compile Include="VR\Oculus\OculusService.cs" />
+    <Compile Include="VR\OpenVR\OpenVRController.cs" />
     <Compile Include="VR\VRDriver.cs" />
     <Compile Include="VR\VRManager.cs" />
     <Compile Include="VR\VRService.cs" />

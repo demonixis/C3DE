@@ -4,6 +4,16 @@ using System.Collections.Generic;
 
 namespace C3DE.VR
 {
+    public enum XRButton
+    {
+        Trigger, Grip, Menu
+    }
+
+    public enum XRAxis
+    {
+        TouchpadX, TouchpadY
+    }
+
     /// <summary>
     /// Defines a VR Service used by the VRRenderer.
     /// </summary>
@@ -68,6 +78,12 @@ namespace C3DE.VR
         /// <param name="position">The position vector</param>
         /// <param name="rotation">The rotation vector</param>
         public virtual void GetHandTransform(int hand, ref Vector3 position, ref Quaternion rotation) { }
+
+        public virtual void GetLocalPosition(int hand, ref Vector3 position) { }
+        public virtual void GetLocalRotation(int hand, ref Quaternion quaternion) { }
+        public virtual bool GetButton(int hand, XRButton button) => false;
+        public virtual bool GetButtonDown(int hand, XRButton button) => false;
+        public virtual float GetAxis(int hand, XRAxis axis) => 0;
 
         /// <summary>
         /// Gets the render target aspect ratio.

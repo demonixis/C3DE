@@ -79,10 +79,10 @@ namespace C3DE.Graphics.Rendering
                         camera.m_ViewMatrix = Matrix.Invert(parent.m_WorldMatrix) * camera.m_ViewMatrix;
 
                     RenderSceneForCamera(scene, camera, m_SceneRenderTargets[eye]);
-                    m_VRService.SubmitRenderTarget(eye, m_SceneRenderTargets[eye]);
+                    //m_VRService.SubmitRenderTarget(eye, m_SceneRenderTargets[eye]);
                 }
 
-                //m_VRService.SubmitRenderTargets(m_SceneRenderTargets[0], m_SceneRenderTargets[1]);
+                m_VRService.SubmitRenderTargets(m_SceneRenderTargets[0], m_SceneRenderTargets[1]);
                 DrawVRPreview(0);
             }
             else
@@ -99,7 +99,7 @@ namespace C3DE.Graphics.Rendering
 
             if (!m_VREnabled)
             {
-                RenderBuffers();
+                RenderToBackBuffer();
                 RenderUI(scene.Behaviours);
             }
         }
@@ -181,34 +181,6 @@ namespace C3DE.Graphics.Rendering
                     m_graphicsDevice.BlendState = BlendState.Opaque;
                 }
             }
-        }
-
-        /// <summary>
-        /// Renders buffers to screen.
-        /// </summary>
-        protected virtual void RenderBuffers()
-        {
-            m_graphicsDevice.SetRenderTarget(null);
-            m_spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Opaque, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone);
-            m_spriteBatch.Draw(m_SceneRenderTargets[0], Vector2.Zero, Color.White);
-            m_spriteBatch.End();
-        }
-
-        /// <summary>
-        /// Renders effects.
-        /// </summary>
-        /// <param name="passes"></param>
-        /// <param name="renderTarget"></param>
-        protected void RenderPostProcess(List<PostProcessPass> passes, RenderTarget2D renderTarget)
-        {
-            if (passes.Count == 0)
-                return;
-
-            m_graphicsDevice.SetRenderTarget(renderTarget);
-
-            for (int i = 0, l = passes.Count; i < l; i++)
-                if (passes[i].Enabled)
-                    passes[i].Draw(m_spriteBatch, renderTarget);
         }
     }
 }

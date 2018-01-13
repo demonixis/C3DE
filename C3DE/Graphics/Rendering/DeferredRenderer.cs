@@ -83,6 +83,47 @@ namespace C3DE.Graphics.Rendering
             }
         }
 
+        public override void Render(Scene scene)
+        {
+            var camera = scene.cameras[0];
+
+            RebuildRenderTargets();
+
+            RenderShadowMaps(scene);
+
+            m_graphicsDevice.SetRenderTargets(m_ColorTarget, m_NormalTarget, m_DepthTarget);
+
+            foreach (var pass in m_ClearEffect.Techniques[0].Passes)
+            {
+                pass.Apply();
+                m_QuadRenderer.RenderFullscreenQuad(m_graphicsDevice);
+            }
+
+            using (m_graphicsDevice.GeometryState())
+                RenderObjects(scene, camera);
+
+            using (m_graphicsDevice.LightState())
+                RenderLights(scene, camera);
+
+            m_graphicsDevice.SetRenderTarget(m_SceneFinalRT);
+            m_graphicsDevice.Clear(Color.Black);
+
+            using (m_graphicsDevice.PostProcessState())
+            {
+                foreach (var pass in m_CombineEffect.Techniques[0].Passes)
+                {
+                    m_CombineEffect.Parameters["ColorMap"].SetValue(m_ColorTarget);
+                    m_CombineEffect.Parameters["LightMap"].SetValue(m_LightTarget);
+                    pass.Apply();
+                    m_QuadRenderer.RenderFullscreenQuad(m_graphicsDevice);
+                }
+
+                RenderPostProcess(scene.postProcessPasses, m_SceneFinalRT);
+                RenderToBackBuffer();
+                RenderUI(scene.Behaviours);
+            }
+        }
+
         private void RenderObjects(Scene scene, Camera camera)
         {
             using (m_graphicsDevice.GeometryUnlitState())
@@ -124,72 +165,6 @@ namespace C3DE.Graphics.Rendering
 
             foreach (var light in scene.lights)
                 light.RenderDeferred(m_ColorTarget, m_NormalTarget, m_DepthTarget, camera);
-        }
-
-        protected virtual void RenderBuffers()
-        {
-            m_graphicsDevice.SetRenderTarget(null);
-            m_spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Opaque, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone);
-            m_spriteBatch.Draw(m_SceneFinalRT, Vector2.Zero, Color.White);
-            m_spriteBatch.End();
-        }
-
-        /// <summary>
-        /// Renders effects.
-        /// </summary>
-        /// <param name="passes"></param>
-        /// <param name="renderTarget"></param>
-        protected void RenderPostProcess(List<PostProcessPass> passes, RenderTarget2D renderTarget)
-        {
-            if (passes.Count == 0)
-                return;
-
-            m_graphicsDevice.SetRenderTarget(renderTarget);
-
-            for (int i = 0, l = passes.Count; i < l; i++)
-                if (passes[i].Enabled)
-                    passes[i].Draw(m_spriteBatch, renderTarget);
-        }
-
-        public override void Render(Scene scene)
-        {
-            var camera = scene.cameras[0];
-
-            RebuildRenderTargets();
-
-            RenderShadowMaps(scene);
-
-            m_graphicsDevice.SetRenderTargets(m_ColorTarget, m_NormalTarget, m_DepthTarget);
-
-            foreach (var pass in m_ClearEffect.Techniques[0].Passes)
-            {
-                pass.Apply();
-                m_QuadRenderer.RenderFullscreenQuad(m_graphicsDevice);
-            }
-
-            using (m_graphicsDevice.GeometryState())
-                RenderObjects(scene, camera);
-
-            using (m_graphicsDevice.LightState())
-                RenderLights(scene, camera);
-
-            m_graphicsDevice.SetRenderTarget(m_SceneFinalRT);
-            m_graphicsDevice.Clear(Color.Black);
-
-            using (m_graphicsDevice.PostProcessState())
-            {
-                foreach (var pass in m_CombineEffect.Techniques[0].Passes)
-                {
-                    m_CombineEffect.Parameters["ColorMap"].SetValue(m_ColorTarget);
-                    m_CombineEffect.Parameters["LightMap"].SetValue(m_LightTarget);
-                    pass.Apply();
-                    m_QuadRenderer.RenderFullscreenQuad(m_graphicsDevice);
-                }
-
-                RenderPostProcess(scene.postProcessPasses, m_SceneFinalRT);
-                RenderBuffers();
-                RenderUI(scene.Behaviours);
-            }
         }
     }
 }

@@ -90,6 +90,7 @@
     <Compile Include="Scripts\SimplePath.cs" />
     <Compile Include="Scripts\SinMovement.cs" />
     <Compile Include="Scripts\UIWidgetDemo.cs" />
+    <Compile Include="Scripts\VRMovement.cs" />
     <Compile Include="Scripts\VRPlayerEnabler.cs" />
     <Compile Include="Scripts\VRSwitcher.cs" />
     <Compile Include="Scripts\WeightMapViewer.cs" />

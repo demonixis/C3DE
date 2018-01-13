@@ -37,16 +37,18 @@ namespace C3DE.Demo.Scripts
             if (m_VRService == null)
                 return;
 
-            var cameraParent = Camera.Main.Transform.Parent;
-            if (cameraParent != null)
-                m_VRService.GetHandTransform(LeftHand ? 0 : 1, ref m_Position, ref m_Rotation, ref cameraParent.m_WorldMatrix);
-            else
-                m_VRService.GetHandTransform(LeftHand ? 0 : 1, ref m_Position, ref m_Rotation);
+            m_VRService.GetLocalPosition(LeftHand ? 0 : 1, ref m_Position);
+            m_VRService.GetLocalRotation(LeftHand ? 0 : 1, ref m_Rotation);
+
+            var rotation = m_Rotation.ToEuler();
+            var copy = m_Rotation.ToEuler();
+
+            rotation.X = copy.Z;
+            rotation.Y = copy.X;
+            rotation.Z = copy.Y;
 
             m_Transform.LocalPosition = m_Position;
-            m_Transform.LocalRotation = m_Rotation.ToEuler();
-
-            //Debug.Log(m_Transform.LocalRotation);
+            m_Transform.LocalRotation = rotation;
         }
     }
 }

@@ -4,6 +4,7 @@ using C3DE.Graphics.Materials;
 using C3DE.Graphics.Primitives;
 using C3DE.UI;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 
 namespace C3DE.Demo.Scripts
@@ -30,14 +31,9 @@ namespace C3DE.Demo.Scripts
             base.Start();
             m_VREnabled = Application.Engine.Renderer.VREnabled;
             m_UIRectangle = new Rectangle(10, 10, 100, 30);
-
-            var handMaterial = new UnlitMaterial();
-            handMaterial.DiffuseColor = Color.AliceBlue;
-
             m_Hands = new GameObject[2];
-
-            CreateHand(0, handMaterial);
-            CreateHand(1, handMaterial);
+            CreateHand(0);
+            CreateHand(1);
         }
 
         public override void OnDestroy()
@@ -45,18 +41,24 @@ namespace C3DE.Demo.Scripts
             Application.Engine.Renderer.SetVREnabled(false);
         }
 
-        private void CreateHand(int id, Material material)
+        private void CreateHand(int id)
         {
             m_Hands[id] = new GameObject($"Hand_{id}");
             m_Hands[id].AddComponent<MotionController>().LeftHand = id == 0;
+            m_Hands[id].Enabled = false;
+/*
+            var handMaterial = new UnlitMaterial();
+            handMaterial.DiffuseColor = Color.AliceBlue;
 
             var renderer = m_Hands[id].AddComponent<MeshRenderer>();
             renderer.Geometry = new CubeMesh();
             renderer.Geometry.Size = new Vector3(0.1f);
             renderer.Geometry.Build();
-            renderer.Material = material;
+            renderer.Material = handMaterial;*/
 
-            m_Hands[id].Enabled = false;
+            var cModel = Application.Content.Load<Model>("Models/VRController/vr_controller_01_mrhat");
+            var controller = cModel.ToMeshRenderers();
+            controller.Transform.Parent = m_Hands[id].Transform;
         }
 
         public override void OnGUI(GUI ui)
@@ -75,8 +77,14 @@ namespace C3DE.Demo.Scripts
             if (m_VREnabled)
                 m_VREnabled = Application.Engine.Renderer.SetVREnabled(true);
 
+            var parent = Camera.Main.Transform.Parent;
+
             foreach (var hand in m_Hands)
+            {
                 hand.Enabled = m_VREnabled;
+                if (parent != null)
+                    hand.Transform.Parent = parent;
+            }
 
             VRChanged?.Invoke(m_VREnabled);
         }

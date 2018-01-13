@@ -21,6 +21,7 @@ namespace C3DE.VR
         private Matrix _hmdPose;
         private Matrix _leftControllerPose;
         private Matrix _rightControllerPose;
+        private OpenVRController[] m_Controllers;
 
         public override SpriteEffects PreviewRenderEffect => SpriteEffects.FlipHorizontally;
 
@@ -32,6 +33,10 @@ namespace C3DE.VR
             _trackedDevices = new TrackedDevicePose_t[OpenVR.k_unMaxTrackedDeviceCount];
             _gamePose = new TrackedDevicePose_t[OpenVR.k_unMaxTrackedDeviceCount];
             _devicePoses = new Matrix[OpenVR.k_unMaxTrackedDeviceCount];
+
+            m_Controllers = new OpenVRController[2];
+            m_Controllers[0] = new OpenVRController();
+            m_Controllers[1] = new OpenVRController();
         }
 
         public override int TryInitialize()
@@ -129,6 +134,51 @@ namespace C3DE.VR
             matrix.Decompose(out scale, out rotation, out position);
         }
 
+        public override void GetLocalPosition(int hand, ref Vector3 position)
+        {
+            m_Controllers[hand].GetRelativePosition(ref position);
+        }
+
+        public override void GetLocalRotation(int hand, ref Quaternion quaternion)
+        {
+            m_Controllers[hand].GetRelativeRotation(ref quaternion);
+        }
+
+        public override bool GetButton(int hand, XRButton button)
+        {
+            if (button == XRButton.Trigger)
+                return m_Controllers[hand].GetPress(EVRButtonId.k_EButton_SteamVR_Trigger);
+            else if (button == XRButton.Menu)
+                return m_Controllers[hand].GetPress(EVRButtonId.k_EButton_ApplicationMenu);
+            else if (button == XRButton.Grip)
+                return m_Controllers[hand].GetPress(EVRButtonId.k_EButton_Grip);
+
+            return false;
+        }
+
+        public override bool GetButtonDown(int hand, XRButton button)
+        {
+            if (button == XRButton.Trigger)
+                return m_Controllers[hand].GetPressDown(EVRButtonId.k_EButton_SteamVR_Trigger);
+            else if (button == XRButton.Menu)
+                return m_Controllers[hand].GetPressDown(EVRButtonId.k_EButton_ApplicationMenu);
+            else if (button == XRButton.Grip)
+                return m_Controllers[hand].GetPressDown(EVRButtonId.k_EButton_Grip);
+
+            return false;
+        }
+
+        public override float GetAxis(int hand, XRAxis axis)
+        {
+            Vector2 result = Vector2.Zero;
+            m_Controllers[hand].GetAxis(EVRButtonId.k_EButton_Axis0, ref result);
+
+            if (axis == XRAxis.TouchpadX)
+                return result.X;
+            else
+                return result.Y;
+        }
+
         public override float GetRenderTargetAspectRatio(int eye) => 1.0f;
 
         public override void Update(GameTime gameTime)
@@ -161,11 +211,13 @@ namespace C3DE.VR
                         {
                             _leftControllerDeviceID = i;
                             _leftControllerPose = _devicePoses[i];
+                            m_Controllers[0].Update(_hmd, i, _devicePoses[i]);
                         }
                         else if (_hmd.GetControllerRoleForTrackedDeviceIndex((uint)i) == ETrackedControllerRole.RightHand)
                         {
                             _rightControllerDeviceID = i;
                             _rightControllerPose = _devicePoses[i];
+                            m_Controllers[1].Update(_hmd, i, _devicePoses[i]);
                         }
                     }
                 }

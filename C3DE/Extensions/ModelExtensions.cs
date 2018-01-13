@@ -7,8 +7,11 @@ namespace Microsoft.Xna.Framework.Graphics
 {
     public static class ModelExtensions
     {
-        public static GameObject ToMeshRenderers(this Model model, Scene scene)
+        public static GameObject ToMeshRenderers(this Model model, Scene scene = null)
         {
+            if (scene == null)
+                scene = Scene.current;
+
             var boneTransforms = new Matrix[model.Bones.Count];
             model.CopyAbsoluteBoneTransformsTo(boneTransforms);
 

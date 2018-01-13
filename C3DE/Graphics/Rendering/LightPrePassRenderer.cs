@@ -144,31 +144,6 @@ namespace C3DE.Graphics.Rendering
             }
         }
 
-        protected void RenderToBackBuffer()
-        {
-            m_graphicsDevice.SetRenderTarget(null);
-            m_spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Opaque, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone);
-            m_spriteBatch.Draw(m_SceneFinalRT, Vector2.Zero, Color.White);
-            m_spriteBatch.End();
-        }
-
-        /// <summary>
-        /// Renders effects.
-        /// </summary>
-        /// <param name="passes"></param>
-        /// <param name="renderTarget"></param>
-        protected void RenderPostProcess(List<PostProcessPass> passes, RenderTarget2D renderTarget)
-        {
-            if (passes.Count == 0)
-                return;
-
-            m_graphicsDevice.SetRenderTarget(renderTarget);
-
-            for (int i = 0, l = passes.Count; i < l; i++)
-                if (passes[i].Enabled)
-                    passes[i].Draw(m_spriteBatch, renderTarget);
-        }
-
         public override void Render(Scene scene)
         {
             var camera = Camera.Main;

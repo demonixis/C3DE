@@ -19,6 +19,8 @@ namespace C3DE.Demo.Scripts
             if (player == null)
                 player = new GameObject("Player");
 
+            player.AddComponent<VRMovement>();
+
             m_PlayerTransform = player.Transform;
             m_CameraTransform = Camera.Main.Transform;
         }
