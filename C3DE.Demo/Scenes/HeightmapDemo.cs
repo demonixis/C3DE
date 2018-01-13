@@ -70,6 +70,9 @@ namespace C3DE.Demo.Scenes
             RenderSettings.FogMode = FogMode.Exp2;
             RenderSettings.Skybox.FogSupported = true;
             RenderSettings.Skybox.OverrideSkyboxFog(FogMode.Exp2, 0.05f, 0, 0);
+
+            var vrPlayerEnabler = m_Camera.AddComponent<VRPlayerEnabler>();
+            vrPlayerEnabler.Position = new Vector3(0, water.Transform.Position.Y + 0.5f, 0);
         }
     }
 }

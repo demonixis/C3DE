@@ -46,15 +46,6 @@ namespace C3DE.Demo.Scripts
             m_Hands[id] = new GameObject($"Hand_{id}");
             m_Hands[id].AddComponent<MotionController>().LeftHand = id == 0;
             m_Hands[id].Enabled = false;
-/*
-            var handMaterial = new UnlitMaterial();
-            handMaterial.DiffuseColor = Color.AliceBlue;
-
-            var renderer = m_Hands[id].AddComponent<MeshRenderer>();
-            renderer.Geometry = new CubeMesh();
-            renderer.Geometry.Size = new Vector3(0.1f);
-            renderer.Geometry.Build();
-            renderer.Material = handMaterial;*/
 
             var cModel = Application.Content.Load<Model>("Models/VRController/vr_controller_01_mrhat");
             var controller = cModel.ToMeshRenderers();

@@ -113,6 +113,8 @@ namespace C3DE.Demo.Scenes
             renderer.Transform.LocalScale = new Vector3(0.035f);
             renderer.Transform.Rotate(0, -MathHelper.PiOver2, 0);
             renderer.Transform.Translate(-0.1f, 0, 0);
+
+            m_Camera.AddComponent<Scripts.VRPlayerEnabler>();
         }
     }
 }

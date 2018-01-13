@@ -39,6 +39,8 @@ namespace C3DE.Demo.Scenes
             rb.AddComponent<RigidbodyRenderer>();
             rb.AddComponent<BoundingBoxRenderer>().LineColor = Color.Red;
             rb.IsKinematic = true;
+
+            m_Camera.AddComponent<Scripts.VRPlayerEnabler>();
         }
     }
 }

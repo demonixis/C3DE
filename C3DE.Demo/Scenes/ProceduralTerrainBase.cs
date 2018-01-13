@@ -51,6 +51,8 @@ namespace C3DE.Demo.Scenes
             sunflares.Setup(glowTexture, flareTextures);
 
             SetupScene();
+
+            m_Camera.AddComponent<Scripts.VRPlayerEnabler>();
         }
 
         protected abstract void SetupScene();
