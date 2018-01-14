@@ -19,9 +19,7 @@ namespace C3DE.Graphics.Rendering
         internal RenderTarget2D m_DepthRT;
         internal RenderTarget2D m_NormalRT;
         internal RenderTarget2D m_LightRT;
-        private RenderTarget2D m_SceneFinalRT;
         private Effect m_DepthNormalEffect;
-        private Effect m_TempRenderEffect;
 
         public RenderTarget2D DepthBuffer => m_DepthRT;
         public RenderTarget2D NormalBuffer => m_NormalRT;
@@ -42,7 +40,6 @@ namespace C3DE.Graphics.Rendering
             m_Viewport.X = m_graphicsDevice.Viewport.Width;
             m_Viewport.Y = m_graphicsDevice.Viewport.Height;
             m_DepthNormalEffect = content.Load<Effect>("Shaders/LPP/DepthNormal");
-            m_TempRenderEffect = content.Load<Effect>("Shaders/LPP/Standard");
         }
 
         protected override void RebuildRenderTargets()
@@ -52,14 +49,20 @@ namespace C3DE.Graphics.Rendering
 
             base.RebuildRenderTargets();
 
-            var device = Application.GraphicsDevice;
+            m_DepthRT = CreateRenderTarget(SurfaceFormat.Single);
+            m_NormalRT = CreateRenderTarget();
+            m_LightRT = CreateRenderTarget();
+        }
+
+        private RenderTarget2D CreateRenderTarget(SurfaceFormat surfaceFormat = SurfaceFormat.Color, DepthFormat depthFormat = DepthFormat.Depth24)
+        {
             var width = m_graphicsDevice.PresentationParameters.BackBufferWidth;
             var height = m_graphicsDevice.PresentationParameters.BackBufferHeight;
 
-            m_DepthRT = new RenderTarget2D(device, width, height, false, SurfaceFormat.Single, DepthFormat.Depth24);
-            m_NormalRT = new RenderTarget2D(device, width, height, false, SurfaceFormat.Color, DepthFormat.Depth24);
-            m_LightRT = new RenderTarget2D(device, width, height, false, SurfaceFormat.Color, DepthFormat.Depth24);
-            m_SceneFinalRT = new RenderTarget2D(device, width, height, false, SurfaceFormat.Color, DepthFormat.Depth24);
+            if (m_VREnabled)
+                width /= 2;
+
+            return new RenderTarget2D(m_graphicsDevice, width, height, false, surfaceFormat, depthFormat);
         }
 
         public override void Dispose(bool disposing)
@@ -74,7 +77,7 @@ namespace C3DE.Graphics.Rendering
                     DisposeObject(m_DepthRT);
                     DisposeObject(m_NormalRT);
                     DisposeObject(m_LightRT);
-                    DisposeObject(m_SceneFinalRT);
+                    DisposeObject(m_SceneRenderTargets);
                 }
                 m_IsDisposed = true;
             }
@@ -111,7 +114,7 @@ namespace C3DE.Graphics.Rendering
 
         private void DrawObjects(Scene scene, Camera camera)
         {
-            m_graphicsDevice.SetRenderTarget(m_SceneFinalRT);
+            m_graphicsDevice.SetRenderTarget(m_SceneRenderTargets[0]);
             m_graphicsDevice.Clear(camera.clearColor);
 
             if (scene.RenderSettings.Skybox.Enabled)
@@ -144,6 +147,31 @@ namespace C3DE.Graphics.Rendering
             }
         }
 
+        protected virtual void RenderSceneForCamera(Scene scene, Camera camera)
+        {
+            using (m_graphicsDevice.GeometryState())
+                DrawDepthNormalMap(scene, camera);
+
+            using (m_graphicsDevice.LightPrePassState())
+                DrawLightMap(scene, camera);
+
+            using (m_graphicsDevice.GeometryState())
+                DrawObjects(scene, camera);
+
+            using (m_graphicsDevice.PostProcessState())
+            {
+                RenderPostProcess(scene.postProcessPasses, m_SceneRenderTargets[0]);
+                RenderToBackBuffer();
+                RenderUI(scene.Behaviours);
+            }
+
+            if (!m_VREnabled)
+            {
+                RenderToBackBuffer();
+                RenderUI(scene.Behaviours);
+            }
+        }
+
         public override void Render(Scene scene)
         {
             var camera = Camera.Main;
@@ -161,7 +189,7 @@ namespace C3DE.Graphics.Rendering
 
             using (m_graphicsDevice.PostProcessState())
             {
-                RenderPostProcess(scene.postProcessPasses, m_SceneFinalRT);
+                RenderPostProcess(scene.postProcessPasses, m_SceneRenderTargets[0]);
                 RenderToBackBuffer();
                 RenderUI(scene.Behaviours);
             }

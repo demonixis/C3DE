@@ -238,6 +238,21 @@ namespace C3DE.Graphics.Rendering
             }
         }
 
+        protected void DisposeObject(IDisposable[] disposables)
+        {
+            if (disposables != null)
+            {
+                for (var i = 0; i < disposables.Length; i++)
+                {
+                    if (disposables[i] == null)
+                        continue;
+
+                    disposables[i].Dispose();
+                    disposables[i] = null;
+                }
+            }
+        }
+
         #endregion
     }
 }

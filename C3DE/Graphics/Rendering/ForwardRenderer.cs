@@ -36,10 +36,8 @@ namespace C3DE.Graphics.Rendering
             if (!m_IsDisposed)
             {
                 if (disposing)
-                {
-                    for (var eye = 0; eye < 2; eye++)
-                        DisposeObject(m_SceneRenderTargets[eye]);
-                }
+                    DisposeObject(m_SceneRenderTargets);
+
                 m_IsDisposed = true;
             }
         }
