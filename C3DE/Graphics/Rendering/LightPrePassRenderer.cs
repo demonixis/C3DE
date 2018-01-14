@@ -56,17 +56,6 @@ namespace C3DE.Graphics.Rendering
             }
         }
 
-        private RenderTarget2D CreateRenderTarget(SurfaceFormat surfaceFormat = SurfaceFormat.Color, DepthFormat depthFormat = DepthFormat.Depth24)
-        {
-            var width = m_graphicsDevice.PresentationParameters.BackBufferWidth;
-            var height = m_graphicsDevice.PresentationParameters.BackBufferHeight;
-
-            if (m_VREnabled)
-                width /= 2;
-
-            return new RenderTarget2D(m_graphicsDevice, width, height, false, surfaceFormat, depthFormat);
-        }
-
         public override void Dispose(bool disposing)
         {
             if (!m_IsDisposed)

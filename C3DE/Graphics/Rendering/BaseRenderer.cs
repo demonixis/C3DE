@@ -57,6 +57,17 @@ namespace C3DE.Graphics.Rendering
             m_uiManager.LoadContent(content);
         }
 
+        protected RenderTarget2D CreateRenderTarget(SurfaceFormat surfaceFormat = SurfaceFormat.Color, DepthFormat depthFormat = DepthFormat.Depth24, bool mipMap = false)
+        {
+            var width = m_graphicsDevice.PresentationParameters.BackBufferWidth;
+            var height = m_graphicsDevice.PresentationParameters.BackBufferHeight;
+
+            if (m_VREnabled)
+                width /= 2;
+
+            return new RenderTarget2D(m_graphicsDevice, width, height, mipMap, surfaceFormat, depthFormat);
+        }
+
         /// <summary>
         /// Rebuilds render targets if Dirty is true.
         /// </summary>

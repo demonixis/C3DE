@@ -16,24 +16,26 @@ namespace C3DE.Graphics.Rendering
     public class DeferredRenderer : BaseRenderer
     {
         private QuadRenderer m_QuadRenderer;
-        private RenderTarget2D m_ColorTarget;
-        private RenderTarget2D m_DepthTarget;
-        private RenderTarget2D m_NormalTarget;
-        private RenderTarget2D m_LightTarget;
-        private RenderTarget2D m_SceneFinalRT;
+        private RenderTarget2D[] m_ColorTarget;
+        private RenderTarget2D[] m_DepthTarget;
+        private RenderTarget2D[] m_NormalTarget;
+        private RenderTarget2D[] m_LightTarget;
         private Effect m_ClearEffect;
         private Effect m_CombineEffect;
-        private Effect m_TempRenderEffect;
 
-        public RenderTarget2D ColorBuffer => m_ColorTarget;
-        public RenderTarget2D NormalMap => m_NormalTarget;
-        public RenderTarget2D DepthBuffer => m_DepthTarget;
-        public RenderTarget2D LightMap => m_LightTarget;
+        public RenderTarget2D ColorBuffer => m_ColorTarget[0];
+        public RenderTarget2D NormalMap => m_NormalTarget[0];
+        public RenderTarget2D DepthBuffer => m_DepthTarget[0];
+        public RenderTarget2D LightMap => m_LightTarget[0];
 
         public DeferredRenderer(GraphicsDevice graphics)
             : base(graphics)
         {
             m_QuadRenderer = new QuadRenderer(graphics);
+            m_ColorTarget = new RenderTarget2D[2];
+            m_DepthTarget = new RenderTarget2D[2];
+            m_NormalTarget = new RenderTarget2D[2];
+            m_LightTarget = new RenderTarget2D[2];
         }
 
         public override void Initialize(ContentManager content)
@@ -41,7 +43,6 @@ namespace C3DE.Graphics.Rendering
             base.Initialize(content);
             m_ClearEffect = content.Load<Effect>("Shaders/Deferred/Clear");
             m_CombineEffect = content.Load<Effect>("Shaders/Deferred/Combine");
-            m_TempRenderEffect = content.Load<Effect>("Shaders/Deferred/Standard");
         }
 
         /// <summary>
@@ -55,14 +56,17 @@ namespace C3DE.Graphics.Rendering
 
             base.RebuildRenderTargets();
 
-            var width = m_graphicsDevice.PresentationParameters.BackBufferWidth;
-            var height = m_graphicsDevice.PresentationParameters.BackBufferHeight;
+            for (var i = 0; i < 2; i++)
+            {
+                // Do not create secondary render targets if VR is not enabled.
+                if (i > 0 && !m_VREnabled)
+                    continue;
 
-            m_ColorTarget = new RenderTarget2D(m_graphicsDevice, width, height, false, SurfaceFormat.Color, DepthFormat.Depth24);
-            m_NormalTarget = new RenderTarget2D(m_graphicsDevice, width, height, false, SurfaceFormat.Color, DepthFormat.None);
-            m_DepthTarget = new RenderTarget2D(m_graphicsDevice, width, height, false, SurfaceFormat.Single, DepthFormat.None);
-            m_LightTarget = new RenderTarget2D(m_graphicsDevice, width, height, false, SurfaceFormat.Color, DepthFormat.None);
-            m_SceneFinalRT = new RenderTarget2D(m_graphicsDevice, width, height, false, SurfaceFormat.Color, DepthFormat.Depth24);
+                m_ColorTarget[i] = CreateRenderTarget(SurfaceFormat.Color);
+                m_NormalTarget[i] = CreateRenderTarget(SurfaceFormat.Color);
+                m_DepthTarget[i] = CreateRenderTarget(SurfaceFormat.Single);
+                m_LightTarget[i] = CreateRenderTarget(SurfaceFormat.Color);
+            }
         }
 
         public override void Dispose(bool disposing)
@@ -82,48 +86,7 @@ namespace C3DE.Graphics.Rendering
                 m_IsDisposed = true;
             }
         }
-
-        public override void Render(Scene scene)
-        {
-            var camera = scene.cameras[0];
-
-            RebuildRenderTargets();
-
-            RenderShadowMaps(scene);
-
-            m_graphicsDevice.SetRenderTargets(m_ColorTarget, m_NormalTarget, m_DepthTarget);
-
-            foreach (var pass in m_ClearEffect.Techniques[0].Passes)
-            {
-                pass.Apply();
-                m_QuadRenderer.RenderFullscreenQuad(m_graphicsDevice);
-            }
-
-            using (m_graphicsDevice.GeometryState())
-                RenderObjects(scene, camera);
-
-            using (m_graphicsDevice.LightState())
-                RenderLights(scene, camera);
-
-            m_graphicsDevice.SetRenderTarget(m_SceneFinalRT);
-            m_graphicsDevice.Clear(Color.Black);
-
-            using (m_graphicsDevice.PostProcessState())
-            {
-                foreach (var pass in m_CombineEffect.Techniques[0].Passes)
-                {
-                    m_CombineEffect.Parameters["ColorMap"].SetValue(m_ColorTarget);
-                    m_CombineEffect.Parameters["LightMap"].SetValue(m_LightTarget);
-                    pass.Apply();
-                    m_QuadRenderer.RenderFullscreenQuad(m_graphicsDevice);
-                }
-
-                RenderPostProcess(scene.postProcessPasses, m_SceneFinalRT);
-                RenderToBackBuffer();
-                RenderUI(scene.Behaviours);
-            }
-        }
-
+        
         private void RenderObjects(Scene scene, Camera camera)
         {
             using (m_graphicsDevice.GeometryUnlitState())
@@ -157,14 +120,85 @@ namespace C3DE.Graphics.Rendering
             }
         }
 
-        private void RenderLights(Scene scene, Camera camera)
+        private void RenderLights(Scene scene, Camera camera, int eye)
         {
             m_graphicsDevice.SetRenderTargets(null);
-            m_graphicsDevice.SetRenderTarget(m_LightTarget);
+            m_graphicsDevice.SetRenderTarget(m_LightTarget[eye]);
             m_graphicsDevice.Clear(Color.Transparent);
 
             foreach (var light in scene.lights)
-                light.RenderDeferred(m_ColorTarget, m_NormalTarget, m_DepthTarget, camera);
+                light.RenderDeferred(m_ColorTarget[eye], m_NormalTarget[eye], m_DepthTarget[eye], camera);
+        }
+
+        protected virtual void RenderSceneForCamera(Scene scene, Camera camera, int eye)
+        {
+            m_graphicsDevice.SetRenderTargets(m_ColorTarget[eye], m_NormalTarget[eye], m_DepthTarget[eye]);
+
+            foreach (var pass in m_ClearEffect.Techniques[0].Passes)
+            {
+                pass.Apply();
+                m_QuadRenderer.RenderFullscreenQuad(m_graphicsDevice);
+            }
+
+            using (m_graphicsDevice.GeometryState())
+                RenderObjects(scene, camera);
+
+            using (m_graphicsDevice.LightState())
+                RenderLights(scene, camera, eye);
+
+            m_graphicsDevice.SetRenderTarget(m_SceneRenderTargets[eye]);
+            m_graphicsDevice.Clear(Color.Black);
+
+            using (m_graphicsDevice.PostProcessState())
+            {
+                foreach (var pass in m_CombineEffect.Techniques[0].Passes)
+                {
+                    m_CombineEffect.Parameters["ColorMap"].SetValue(m_ColorTarget[eye]);
+                    m_CombineEffect.Parameters["LightMap"].SetValue(m_LightTarget[eye]);
+                    pass.Apply();
+                    m_QuadRenderer.RenderFullscreenQuad(m_graphicsDevice);
+                }
+
+                RenderPostProcess(scene.postProcessPasses, m_SceneRenderTargets[eye]);
+
+                if (!m_VREnabled)
+                {
+                    RenderToBackBuffer();
+                    RenderUI(scene.Behaviours);
+                }
+            }
+        }
+
+        public override void Render(Scene scene)
+        {
+            if (scene == null || scene?.cameras.Count == 0)
+                return;
+
+            var camera = scene.cameras[0];
+            var cameraParent = Matrix.Identity;
+            var parent = camera.m_Transform.Parent;
+            if (parent != null)
+                cameraParent = parent.m_WorldMatrix;
+
+            RebuildRenderTargets();
+
+            RenderShadowMaps(scene);
+
+            if (m_VREnabled)
+            {
+                for (var eye = 0; eye < 2; eye++)
+                {
+                    camera.m_ProjectionMatrix = m_VRService.GetProjectionMatrix(eye);
+                    camera.m_ViewMatrix = m_VRService.GetViewMatrix(eye, cameraParent);
+                    RenderSceneForCamera(scene, camera, eye);
+                }
+
+                m_VRService.SubmitRenderTargets(m_SceneRenderTargets[0], m_SceneRenderTargets[1]);
+                DrawVRPreview(0);
+                RenderUI(scene.Behaviours);
+            }
+            else
+                RenderSceneForCamera(scene, camera, 0);
         }
     }
 }
