@@ -14,31 +14,26 @@ namespace C3DE.Graphics.Rendering
 {
     public class LightPrePassRenderer : BaseRenderer
     {
-        private QuadRenderer m_QuadRenderer;
-        private Vector2 m_Viewport;
-        internal RenderTarget2D m_DepthRT;
-        internal RenderTarget2D m_NormalRT;
-        internal RenderTarget2D m_LightRT;
+        internal RenderTarget2D[] m_DepthRT;
+        internal RenderTarget2D[] m_NormalRT;
+        internal RenderTarget2D[] m_LightRT;
         private Effect m_DepthNormalEffect;
 
-        public RenderTarget2D DepthBuffer => m_DepthRT;
-        public RenderTarget2D NormalBuffer => m_NormalRT;
-        public RenderTarget2D LightBuffer => m_LightRT;
+        public RenderTarget2D DepthBuffer => m_DepthRT[0];
+        public RenderTarget2D NormalBuffer => m_NormalRT[0];
+        public RenderTarget2D LightBuffer => m_LightRT[0];
 
         public LightPrePassRenderer(GraphicsDevice graphics)
             : base(graphics)
         {
-            m_QuadRenderer = new QuadRenderer(graphics);
-            m_Viewport.X = m_graphicsDevice.Viewport.Width;
-            m_Viewport.Y = m_graphicsDevice.Viewport.Height;
+            m_DepthRT = new RenderTarget2D[2];
+            m_NormalRT = new RenderTarget2D[2];
+            m_LightRT = new RenderTarget2D[2];
         }
 
         public override void Initialize(ContentManager content)
         {
             base.Initialize(content);
-
-            m_Viewport.X = m_graphicsDevice.Viewport.Width;
-            m_Viewport.Y = m_graphicsDevice.Viewport.Height;
             m_DepthNormalEffect = content.Load<Effect>("Shaders/LPP/DepthNormal");
         }
 
@@ -49,9 +44,16 @@ namespace C3DE.Graphics.Rendering
 
             base.RebuildRenderTargets();
 
-            m_DepthRT = CreateRenderTarget(SurfaceFormat.Single);
-            m_NormalRT = CreateRenderTarget();
-            m_LightRT = CreateRenderTarget();
+            for (var i = 0; i < 2; i++)
+            {
+                // Do not create secondary render targets if VR is not enabled.
+                if (i > 0 && !m_VREnabled)
+                    continue;
+
+                m_DepthRT[i] = CreateRenderTarget(SurfaceFormat.Single);
+                m_NormalRT[i] = CreateRenderTarget();
+                m_LightRT[i] = CreateRenderTarget();
+            }
         }
 
         private RenderTarget2D CreateRenderTarget(SurfaceFormat surfaceFormat = SurfaceFormat.Color, DepthFormat depthFormat = DepthFormat.Depth24)
@@ -83,9 +85,9 @@ namespace C3DE.Graphics.Rendering
             }
         }
 
-        private void DrawDepthNormalMap(Scene scene, Camera camera)
+        private void DrawDepthNormalMap(Scene scene, Camera camera, int eye)
         {
-            m_graphicsDevice.SetRenderTargets(m_NormalRT, m_DepthRT);
+            m_graphicsDevice.SetRenderTargets(m_NormalRT[eye], m_DepthRT[eye]);
             m_graphicsDevice.Clear(Color.White);
 
             m_DepthNormalEffect.Parameters["View"].SetValue(camera.m_ViewMatrix);
@@ -101,20 +103,20 @@ namespace C3DE.Graphics.Rendering
             m_graphicsDevice.SetRenderTarget(null);
         }
 
-        private void DrawLightMap(Scene scene, Camera camera)
+        private void DrawLightMap(Scene scene, Camera camera, int eye)
         {
-            m_graphicsDevice.SetRenderTarget(m_LightRT);
+            m_graphicsDevice.SetRenderTarget(m_LightRT[eye]);
             m_graphicsDevice.Clear(Color.Black);
 
             for (var i = 0; i < scene.lights.Count; i++)
-                scene.lights[i].RenderLPP(m_NormalRT, m_DepthRT, camera);
+                scene.lights[i].RenderLPP(m_NormalRT[eye], m_DepthRT[eye], camera);
 
             m_graphicsDevice.SetRenderTarget(null);
         }
 
-        private void DrawObjects(Scene scene, Camera camera)
+        private void DrawObjects(Scene scene, Camera camera, int eye)
         {
-            m_graphicsDevice.SetRenderTarget(m_SceneRenderTargets[0]);
+            m_graphicsDevice.SetRenderTarget(m_SceneRenderTargets[eye]);
             m_graphicsDevice.Clear(camera.clearColor);
 
             if (scene.RenderSettings.Skybox.Enabled)
@@ -142,57 +144,64 @@ namespace C3DE.Graphics.Rendering
 
                 // Ambient pass
                 shader.PrePass(camera);
-                shader.Pass(scene.RenderList[i], m_LightRT);
+                shader.Pass(scene.RenderList[i], m_LightRT[eye]);
                 renderer.Draw(m_graphicsDevice);
             }
         }
 
-        protected virtual void RenderSceneForCamera(Scene scene, Camera camera)
+        protected virtual void RenderSceneForCamera(Scene scene, Camera camera, int eye)
         {
             using (m_graphicsDevice.GeometryState())
-                DrawDepthNormalMap(scene, camera);
+                DrawDepthNormalMap(scene, camera, eye);
 
             using (m_graphicsDevice.LightPrePassState())
-                DrawLightMap(scene, camera);
+                DrawLightMap(scene, camera, eye);
 
             using (m_graphicsDevice.GeometryState())
-                DrawObjects(scene, camera);
+                DrawObjects(scene, camera, eye);
 
             using (m_graphicsDevice.PostProcessState())
             {
-                RenderPostProcess(scene.postProcessPasses, m_SceneRenderTargets[0]);
-                RenderToBackBuffer();
-                RenderUI(scene.Behaviours);
-            }
+                RenderPostProcess(scene.postProcessPasses, m_SceneRenderTargets[eye]);
 
-            if (!m_VREnabled)
-            {
-                RenderToBackBuffer();
-                RenderUI(scene.Behaviours);
+                if (!m_VREnabled)
+                {
+                    RenderToBackBuffer();
+                    RenderUI(scene.Behaviours);
+                }
             }
         }
 
         public override void Render(Scene scene)
         {
-            var camera = Camera.Main;
+            if (scene == null || scene?.cameras.Count == 0)
+                return;
+
+            var camera = scene.cameras[0];
+            var cameraParent = Matrix.Identity;
+            var parent = camera.m_Transform.Parent;
+            if (parent != null)
+                cameraParent = parent.m_WorldMatrix;
 
             RebuildRenderTargets();
 
-            using (m_graphicsDevice.GeometryState())
-                DrawDepthNormalMap(scene, camera);
+            RenderShadowMaps(scene);
 
-            using (m_graphicsDevice.LightPrePassState())
-                DrawLightMap(scene, camera);
-
-            using (m_graphicsDevice.GeometryState())
-                DrawObjects(scene, camera);
-
-            using (m_graphicsDevice.PostProcessState())
+            if (m_VREnabled)
             {
-                RenderPostProcess(scene.postProcessPasses, m_SceneRenderTargets[0]);
-                RenderToBackBuffer();
+                for (var eye = 0; eye < 2; eye++)
+                {
+                    camera.m_ProjectionMatrix = m_VRService.GetProjectionMatrix(eye);
+                    camera.m_ViewMatrix = m_VRService.GetViewMatrix(eye, cameraParent);
+                    RenderSceneForCamera(scene, camera, eye);
+                }
+
+                m_VRService.SubmitRenderTargets(m_SceneRenderTargets[0], m_SceneRenderTargets[1]);
+                DrawVRPreview(0);
                 RenderUI(scene.Behaviours);
             }
+            else
+                RenderSceneForCamera(scene, camera, 0);
         }
     }
 }
