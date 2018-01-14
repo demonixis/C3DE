@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using C3DE.VR;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -39,6 +40,13 @@ namespace C3DE.Graphics.PostProcessing
             m_Effect = content.Load<Effect>("Shaders/PostProcessing/FastBloom");
             m_SceneRenderTarget = GetRenderTarget();
             m_QuadRenderer = new QuadRenderer(m_GraphicsDevice);
+        }
+
+        protected override void OnVRChanged(VRService service)
+        {
+            base.OnVRChanged(service);
+            m_SceneRenderTarget.Dispose();
+            m_SceneRenderTarget = GetRenderTarget();
         }
 
         public override void Draw(SpriteBatch spriteBatch, RenderTarget2D source)
@@ -93,10 +101,8 @@ namespace C3DE.Graphics.PostProcessing
             m_GraphicsDevice.SetRenderTarget(null);
             m_GraphicsDevice.Textures[1] = m_SceneRenderTarget;
 
-            var viewport = m_GraphicsDevice.Viewport;
             m_GraphicsDevice.SetRenderTarget(source);
-
-            DrawFullscreenQuad(spriteBatch, m_SceneRenderTarget, viewport.Width, viewport.Height, null);
+            DrawFullscreenQuad(spriteBatch, m_SceneRenderTarget, m_SceneRenderTarget.Width, m_SceneRenderTarget.Height, null);
         }
 
         private void Blit(RenderTarget2D source, RenderTarget2D dest, int pass)

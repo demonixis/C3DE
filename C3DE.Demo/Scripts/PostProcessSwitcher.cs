@@ -113,7 +113,6 @@ namespace C3DE.Demo.Scripts
             var renderSettings = Scene.current.RenderSettings;
             renderSettings.FogDensity = 0.0085f;
             renderSettings.FogMode = FogMode.Linear;
-            renderSettings.Skybox.FogSupported = true;
             renderSettings.Skybox.OverrideSkyboxFog(FogMode.Exp2, 0.05f, 0, 0);
         }
 

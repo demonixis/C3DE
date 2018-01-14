@@ -14,7 +14,7 @@ namespace C3DE.Graphics.Rendering
     {
         protected internal GraphicsDevice m_graphicsDevice;
         protected SpriteBatch m_spriteBatch;
-        protected RenderTarget2D[] m_SceneRenderTargets = new RenderTarget2D[2];
+        protected internal RenderTarget2D[] m_SceneRenderTargets = new RenderTarget2D[2];
         protected VRService m_VRService;
         protected internal GUI m_uiManager;
         protected bool m_IsDisposed;
@@ -63,7 +63,10 @@ namespace C3DE.Graphics.Rendering
             var height = m_graphicsDevice.PresentationParameters.BackBufferHeight;
 
             if (m_VREnabled)
-                width /= 2;
+            {
+                width = m_SceneRenderTargets[0].Width;
+                height = m_SceneRenderTargets[0].Height;
+            }
 
             return new RenderTarget2D(m_graphicsDevice, width, height, mipMap, surfaceFormat, depthFormat);
         }

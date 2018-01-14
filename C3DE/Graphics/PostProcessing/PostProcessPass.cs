@@ -40,7 +40,11 @@ namespace C3DE.Graphics.PostProcessing
             var format = pp.BackBufferFormat;
 
             if (m_VREnabled)
-                width /= 2;
+            {
+                var size = VRManager.ActiveService.GetRenderTargetSize();
+                width = (int)size[0];
+                height = (int)size[1];
+            }
 
             return new RenderTarget2D(Application.GraphicsDevice, width, height, false, format, pp.DepthStencilFormat, pp.MultiSampleCount, targetUsage);
         }

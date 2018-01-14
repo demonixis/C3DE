@@ -53,6 +53,12 @@ namespace C3DE.VR
         public abstract int TryInitialize();
 
         /// <summary>
+        /// Gets the render target size.
+        /// </summary>
+        /// <returns>Returns a 2D array with width and height</returns>
+        public abstract uint[] GetRenderTargetSize();
+
+        /// <summary>
         /// Creates the render target for the desired eye.
         /// </summary>
         /// <param name="eye">Left or right eye.</param>

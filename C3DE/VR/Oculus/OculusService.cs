@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using OculusRiftSample;
+using System;
 
 namespace C3DE.VR
 {
@@ -32,6 +33,11 @@ namespace C3DE.VR
                 _oculusRift.Shutdown();
                 _oculusRift = null;
             }
+        }
+
+        public override uint[] GetRenderTargetSize()
+        {
+            throw new NotSupportedException("Can' get the render target size");
         }
 
         public override void Update(GameTime gameTime)

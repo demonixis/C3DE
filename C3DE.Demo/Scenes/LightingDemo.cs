@@ -19,7 +19,8 @@ namespace C3DE.Demo.Scenes
         {
             base.Initialize();
 
-            Destroy(m_DirectionalLight);
+            m_DirectionalLight.Intensity = 0.4f;
+            //Destroy(m_DirectionalLight);
 
             // Light
             var padding = 20;
@@ -96,6 +97,7 @@ namespace C3DE.Demo.Scenes
             // Model
             var model = Application.Content.Load<Model>("Models/Quandtum/Quandtum");
             var mesh = model.ToMeshRenderers(this);
+            mesh.Transform.LocalScale = new Vector3(0.1f);
             var renderer = mesh.GetComponentInChildren<MeshRenderer>();
             renderer.CastShadow = true;
             renderer.ReceiveShadow = true;

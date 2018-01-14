@@ -58,5 +58,7 @@ namespace C3DE.VR
             DistortionEffect.Parameters["Center"].SetValue(new Vector2(0.5f, 0.5f));
             DistortionEffect.Techniques[0].Passes[0].Apply();
         }
-	}
+
+        public override uint[] GetRenderTargetSize() => new uint[] { (uint)Screen.Width, (uint)Screen.Height };
+    }
 }

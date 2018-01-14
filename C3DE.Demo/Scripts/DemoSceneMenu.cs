@@ -19,7 +19,7 @@ namespace C3DE.Demo.Scripts
                 camera.AddComponent<RendererSwitcher>(),
                 camera.AddComponent<VRSwitcher>()
             };
-            
+
             m_SideMenu = new SideMenu(null, new[] { "Controls", "Post Process", "Renderers", "Virtual Reality", "Cancel" }, -1);
             m_SideMenu.SelectionChanged += OnSelectionChanged;
             m_SideMenu.SetHorizontal(false);
@@ -44,7 +44,15 @@ namespace C3DE.Demo.Scripts
             else
             {
                 for (var i = 0; i < count; i++)
+                {
+                    if (m_Behaviours[i] is VRSwitcher)
+                    {
+                        if (m_Behaviours[i].Enabled)
+                            continue;
+                    }
+
                     m_Behaviours[i].Enabled = item == i;
+                }
             }
         }
     }

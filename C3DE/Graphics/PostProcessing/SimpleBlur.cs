@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework.Content;
+﻿using C3DE.VR;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace C3DE.Graphics.PostProcessing
@@ -21,6 +22,13 @@ namespace C3DE.Graphics.PostProcessing
             m_SceneRenderTarget = GetRenderTarget();
         }
 
+        protected override void OnVRChanged(VRService service)
+        {
+            base.OnVRChanged(service);
+            m_SceneRenderTarget.Dispose();
+            m_SceneRenderTarget = GetRenderTarget();
+        }
+
         public override void Draw(SpriteBatch spriteBatch, RenderTarget2D sceneRT)
         {
             m_GraphicsDevice.SetRenderTarget(m_SceneRenderTarget);
@@ -36,7 +44,7 @@ namespace C3DE.Graphics.PostProcessing
             var viewport = m_GraphicsDevice.Viewport;
             m_GraphicsDevice.SetRenderTarget(sceneRT);
 
-            DrawFullscreenQuad(spriteBatch, m_SceneRenderTarget, viewport.Width, viewport.Height, null);
+            DrawFullscreenQuad(spriteBatch, m_SceneRenderTarget, m_SceneRenderTarget.Width, m_SceneRenderTarget.Height, null);
         }
     }
 }
