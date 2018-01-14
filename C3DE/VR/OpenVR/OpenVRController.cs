@@ -18,19 +18,22 @@ namespace C3DE.VR
         public const ulong Trigger = (1ul << (int)EVRButtonId.k_EButton_SteamVR_Trigger);
     }
 
+    /// <summary>
+    /// Defines an OpenVR controller. This code is largely inspired by the original SteamVR SDK for Unity.
+    /// </summary>
     public class OpenVRController
     {
-        private VRControllerState_t state;
-        private VRControllerState_t prevState;
-        private TrackedDevicePose_t pose;
+        private VRControllerState_t m_State;
+        private VRControllerState_t m_PreviousState;
+        private TrackedDevicePose_t m_Pose;
         private Vector3 m_Position;
         private Quaternion m_Rotation;
         private Vector3 m_Scale;
 
         public int Index { get; private set; } = -1;
         public bool IsValid { get; private set; }
-        public bool IsConnected => pose.bDeviceIsConnected;
-        public bool IsTracked => pose.bPoseIsValid;
+        public bool IsConnected => m_Pose.bDeviceIsConnected;
+        public bool IsTracked => m_Pose.bPoseIsValid;
 
         public void Update(CVRSystem system, int index, Matrix transform)
         {
@@ -39,13 +42,13 @@ namespace C3DE.VR
             if (Index < 0)
             {
                 IsValid = false;
-                pose.bPoseIsValid = false;
+                m_Pose.bPoseIsValid = false;
                 return;
             }
 
-            prevState = state;
+            m_PreviousState = m_State;
 
-            IsValid = system.GetControllerStateWithPose(ETrackingUniverseOrigin.TrackingUniverseStanding, (uint)index, ref state, (uint)Marshal.SizeOf(typeof(VRControllerState_t)), ref pose);
+            IsValid = system.GetControllerStateWithPose(ETrackingUniverseOrigin.TrackingUniverseStanding, (uint)index, ref m_State, (uint)Marshal.SizeOf(typeof(VRControllerState_t)), ref m_Pose);
 
             transform = Matrix.Invert(transform);
 
@@ -62,26 +65,26 @@ namespace C3DE.VR
             switch (axisId)
             {
                 case 0:
-                    result.X = state.rAxis0.x;
-                    result.Y = state.rAxis0.y;
+                    result.X = m_State.rAxis0.x;
+                    result.Y = m_State.rAxis0.y;
                     break;
 
                 case 1:
-                    result.X = state.rAxis1.x;
-                    result.Y = state.rAxis1.y;
+                    result.X = m_State.rAxis1.x;
+                    result.Y = m_State.rAxis1.y;
                     break;
                 case 2:
-                    result.X = state.rAxis2.x;
-                    result.Y = state.rAxis2.y;
+                    result.X = m_State.rAxis2.x;
+                    result.Y = m_State.rAxis2.y;
                     break;
                 case 3:
-                    result.X = state.rAxis3.x;
-                    result.Y = state.rAxis3.y;
+                    result.X = m_State.rAxis3.x;
+                    result.Y = m_State.rAxis3.y;
                     break;
 
                 case 4:
-                    result.X = state.rAxis4.x;
-                    result.Y = state.rAxis4.y;
+                    result.X = m_State.rAxis4.x;
+                    result.Y = m_State.rAxis4.y;
                     break;
 
                 default:
@@ -91,17 +94,17 @@ namespace C3DE.VR
             }
         }
 
-        public bool GetPress(ulong buttonMask) => (state.ulButtonPressed & buttonMask) != 0;
-        public bool GetPressDown(ulong buttonMask) => (state.ulButtonPressed & buttonMask) != 0 && (prevState.ulButtonPressed & buttonMask) == 0;
-        public bool GetPressUp(ulong buttonMask) => (state.ulButtonPressed & buttonMask) == 0 && (prevState.ulButtonPressed & buttonMask) != 0;
+        public bool GetPress(ulong buttonMask) => (m_State.ulButtonPressed & buttonMask) != 0;
+        public bool GetPressDown(ulong buttonMask) => (m_State.ulButtonPressed & buttonMask) != 0 && (m_PreviousState.ulButtonPressed & buttonMask) == 0;
+        public bool GetPressUp(ulong buttonMask) => (m_State.ulButtonPressed & buttonMask) == 0 && (m_PreviousState.ulButtonPressed & buttonMask) != 0;
 
         public bool GetPress(EVRButtonId buttonId) => GetPress(1ul << (int)buttonId);
         public bool GetPressDown(EVRButtonId buttonId) => GetPressDown(1ul << (int)buttonId);
         public bool GetPressUp(EVRButtonId buttonId) => GetPressUp(1ul << (int)buttonId);
 
-        public bool GetTouch(ulong buttonMask) => (state.ulButtonTouched & buttonMask) != 0;
-        public bool GetTouchDown(ulong buttonMask) => (state.ulButtonTouched & buttonMask) != 0 && (prevState.ulButtonTouched & buttonMask) == 0;
-        public bool GetTouchUp(ulong buttonMask) => (state.ulButtonTouched & buttonMask) == 0 && (prevState.ulButtonTouched & buttonMask) != 0;
+        public bool GetTouch(ulong buttonMask) => (m_State.ulButtonTouched & buttonMask) != 0;
+        public bool GetTouchDown(ulong buttonMask) => (m_State.ulButtonTouched & buttonMask) != 0 && (m_PreviousState.ulButtonTouched & buttonMask) == 0;
+        public bool GetTouchUp(ulong buttonMask) => (m_State.ulButtonTouched & buttonMask) == 0 && (m_PreviousState.ulButtonTouched & buttonMask) != 0;
 
         public bool GetTouch(EVRButtonId buttonId) => GetTouch(1ul << (int)buttonId);
         public bool GetTouchDown(EVRButtonId buttonId) => GetTouchDown(1ul << (int)buttonId);

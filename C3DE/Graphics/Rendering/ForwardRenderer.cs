@@ -60,30 +60,27 @@ namespace C3DE.Graphics.Rendering
                 return;
 
             var camera = scene.cameras[0];
+            var cameraParent = Matrix.Identity;
+            var parent = camera.m_Transform.Parent;
+            if (parent != null)
+                cameraParent = parent.m_WorldMatrix;
 
             RebuildRenderTargets();
 
             RenderShadowMaps(scene);
-
-            m_DepthRenderer.Draw(m_graphicsDevice);
 
             if (m_VREnabled)
             {
                 for (var eye = 0; eye < 2; eye++)
                 {
                     camera.m_ProjectionMatrix = m_VRService.GetProjectionMatrix(eye);
-                    camera.m_ViewMatrix = m_VRService.GetViewMatrix(eye, Matrix.Identity);
-
-                    var parent = camera.m_Transform.Parent;
-                    if (parent != null)
-                        camera.m_ViewMatrix = Matrix.Invert(parent.m_WorldMatrix) * camera.m_ViewMatrix;
-
+                    camera.m_ViewMatrix = m_VRService.GetViewMatrix(eye, cameraParent);
                     RenderSceneForCamera(scene, camera, m_SceneRenderTargets[eye]);
-                    //m_VRService.SubmitRenderTarget(eye, m_SceneRenderTargets[eye]);
                 }
 
                 m_VRService.SubmitRenderTargets(m_SceneRenderTargets[0], m_SceneRenderTargets[1]);
                 DrawVRPreview(0);
+                RenderUI(scene.Behaviours);
             }
             else
                 RenderSceneForCamera(scene, camera, m_SceneRenderTargets[0]);
@@ -91,6 +88,9 @@ namespace C3DE.Graphics.Rendering
 
         protected virtual void RenderSceneForCamera(Scene scene, Camera camera, RenderTarget2D renderTarget)
         {
+            if (m_DepthRenderer.Enabled)
+                m_DepthRenderer.Draw(m_graphicsDevice);
+
             m_graphicsDevice.SetRenderTarget(renderTarget);
             m_graphicsDevice.Clear(camera.clearColor);
 

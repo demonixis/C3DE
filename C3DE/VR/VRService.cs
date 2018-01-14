@@ -14,6 +14,11 @@ namespace C3DE.VR
         TouchpadX, TouchpadY
     }
 
+    public enum XRAxis2D
+    {
+        Touchpad
+    }
+
     /// <summary>
     /// Defines a VR Service used by the VRRenderer.
     /// </summary>
@@ -66,24 +71,8 @@ namespace C3DE.VR
         /// </summary>
         /// <returns>The view matrix.</returns>
         /// <param name="eye">Left or right eye.</param>
-        /// <param name="playerPose">Player scale.</param>
-        public abstract Matrix GetViewMatrix(int eye, Matrix playerPose);
-
-        public virtual void GetHandTransform(int hand, ref Vector3 position, ref Quaternion rotation, ref Matrix cameraParent) { }
-
-        /// <summary>
-        /// Gets the position and the rotation of the given controller.
-        /// </summary>
-        /// <param name="hand">Which hand: 0 for left, 1 for right.</param>
-        /// <param name="position">The position vector</param>
-        /// <param name="rotation">The rotation vector</param>
-        public virtual void GetHandTransform(int hand, ref Vector3 position, ref Quaternion rotation) { }
-
-        public virtual void GetLocalPosition(int hand, ref Vector3 position) { }
-        public virtual void GetLocalRotation(int hand, ref Quaternion quaternion) { }
-        public virtual bool GetButton(int hand, XRButton button) => false;
-        public virtual bool GetButtonDown(int hand, XRButton button) => false;
-        public virtual float GetAxis(int hand, XRAxis axis) => 0;
+        /// <param name="parent">Player scale.</param>
+        public abstract Matrix GetViewMatrix(int eye, Matrix parent);
 
         /// <summary>
         /// Gets the render target aspect ratio.
@@ -100,8 +89,6 @@ namespace C3DE.VR
         /// <param name="renderTargetRight">The renderTarget used for the right eye.</param>
         public abstract int SubmitRenderTargets(RenderTarget2D renderTargetLeft, RenderTarget2D renderTargetRight);
 
-        public virtual int SubmitRenderTarget(int eye, RenderTarget2D renderTarget) => 0;
-
         /// <summary>
         /// Applies the distortion correction effect.
         /// </summary>
@@ -110,5 +97,63 @@ namespace C3DE.VR
         public virtual void ApplyDistortion(RenderTarget2D renderTarget, int eye)
         {
         }
+
+        #region Controllers
+
+        /// <summary>
+        /// Gets the local position of a given controller.
+        /// </summary>
+        /// <param name="hand">Which controller, 0 for the left hand and 1 for the right hand.</param>
+        /// <param name="position">The position to update.</param>
+        public virtual void GetLocalPosition(int hand, ref Vector3 position) { }
+
+        /// <summary>
+        /// Gets the local rotation of a given controller.
+        /// </summary>
+        /// <param name="hand">Which controller, 0 for the left hand and 1 for the right hand.</param>
+        /// <param name="quaternion"></param>
+        public virtual void GetLocalRotation(int hand, ref Quaternion quaternion) { }
+
+        /// <summary>
+        /// Indicates if the button is pressed.
+        /// </summary>
+        /// <param name="hand">Which controller, 0 for the left hand and 1 for the right hand.</param>
+        /// <param name="button">The button.</param>
+        /// <returns></returns>
+        public virtual bool GetButton(int hand, XRButton button) => false;
+
+        /// <summary>
+        /// Indicates if the button was just pressed.
+        /// </summary>
+        /// <param name="hand">Which controller, 0 for the left hand and 1 for the right hand.</param>
+        /// <param name="button">The button.</param>
+        /// <returns></returns>
+        public virtual bool GetButtonDown(int hand, XRButton button) => false;
+
+        /// <summary>
+        /// Indicates if the button was just released.
+        /// </summary>
+        /// <param name="hand">Which controller, 0 for the left hand and 1 for the right hand.</param>
+        /// <param name="button">The button.</param>
+        /// <returns></returns>
+        public virtual bool GetButtonUp(int hand, XRButton button) => false;
+
+        /// <summary>
+        /// Gets the value of an axis.
+        /// </summary>
+        /// <param name="hand">Which controller, 0 for the left hand and 1 for the right hand.</param>
+        /// <param name="axis">The desired axis.</param>
+        /// <returns></returns>
+        public virtual float GetAxis(int hand, XRAxis axis) => 0;
+
+        /// <summary>
+        /// Gets the value of a 2D axis.
+        /// </summary>
+        /// <param name="hand">Which controller, 0 for the left hand and 1 for the right hand.</param>
+        /// <param name="axis">The desired axis.</param>
+        /// <returns></returns>
+        public virtual Vector2 GetAxis2D(int hand, XRAxis2D axis) => Vector2.Zero;
+
+        #endregion
     }
 }

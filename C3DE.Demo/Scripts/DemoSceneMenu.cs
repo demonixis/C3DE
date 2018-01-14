@@ -16,11 +16,11 @@ namespace C3DE.Demo.Scripts
             {
                 camera.GetComponent<ControllerSwitcher>(),
                 camera.AddComponent<PostProcessSwitcher>(),
-                camera.AddComponent<VRSwitcher>(),
-                camera.AddComponent<RendererSwitcher>()
+                camera.AddComponent<RendererSwitcher>(),
+                camera.AddComponent<VRSwitcher>()
             };
-
-            m_SideMenu = new SideMenu(null, new[] { "Controls", "Post Process", "Virtual Reality", "Renderers", "Cancel" }, -1);
+            
+            m_SideMenu = new SideMenu(null, new[] { "Controls", "Post Process", "Renderers", "Virtual Reality", "Cancel" }, -1);
             m_SideMenu.SelectionChanged += OnSelectionChanged;
             m_SideMenu.SetHorizontal(false);
 

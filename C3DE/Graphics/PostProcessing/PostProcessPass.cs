@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using C3DE.VR;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -9,12 +10,19 @@ namespace C3DE.Graphics.PostProcessing
     {
         protected GraphicsDevice m_GraphicsDevice;
         protected int m_Order;
+        protected bool m_VREnabled;
 
         public bool Enabled { get; set; } = true;
 
         public PostProcessPass(GraphicsDevice graphics)
         {
             m_GraphicsDevice = graphics;
+            VRManager.VRServiceChanged += OnVRChanged;
+        }
+
+        protected virtual void OnVRChanged(VRService service)
+        {
+            m_VREnabled = service != null;
         }
 
         public abstract void Initialize(ContentManager content);
@@ -26,10 +34,13 @@ namespace C3DE.Graphics.PostProcessing
 
         protected RenderTarget2D GetRenderTarget(RenderTargetUsage targetUsage = RenderTargetUsage.DiscardContents)
         {
-            var pp = Application.GraphicsDevice.PresentationParameters;
+            var pp = m_GraphicsDevice.PresentationParameters;
             var width = pp.BackBufferWidth;
             var height = pp.BackBufferHeight;
             var format = pp.BackBufferFormat;
+
+            if (m_VREnabled)
+                width /= 2;
 
             return new RenderTarget2D(Application.GraphicsDevice, width, height, false, format, pp.DepthStencilFormat, pp.MultiSampleCount, targetUsage);
         }
@@ -38,15 +49,6 @@ namespace C3DE.Graphics.PostProcessing
         {
             m_GraphicsDevice.SetRenderTarget(renderTarget);
             DrawFullscreenQuad(spriteBatch, texture, renderTarget.Width, renderTarget.Height, effect);
-        }
-
-        protected void DrawFullscreenQuad(SpriteBatch spriteBatch, Texture2D texture, RenderTarget2D renderTarget, Effect effect, int pass)
-        {
-            m_GraphicsDevice.SetRenderTarget(renderTarget);
-            spriteBatch.Begin(0, BlendState.Opaque, null, null, null, effect);
-            effect.CurrentTechnique.Passes[pass].Apply();
-            spriteBatch.Draw(texture, new Rectangle(0, 0, renderTarget.Width, renderTarget.Height), Color.White);
-            spriteBatch.End();
         }
 
         protected void DrawFullscreenQuad(SpriteBatch spriteBatch, Texture2D texture, int width, int height, Effect effect, BlendState blendState = null)

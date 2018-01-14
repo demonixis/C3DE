@@ -29,9 +29,6 @@ namespace C3DE.Components.Rendering
 
         public void Draw(GraphicsDevice device)
         {
-            if (!Enabled)
-                return;
-
             using (device.GeometryState())
             {
                 if (Camera == null)

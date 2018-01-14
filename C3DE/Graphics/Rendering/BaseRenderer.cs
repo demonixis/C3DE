@@ -106,6 +106,7 @@ namespace C3DE.Graphics.Rendering
                 {
                     engine.Components.Remove(m_VRService);
                     m_VRService.Dispose();
+                    m_VRService = null;
                 }
 
                 m_VREnabled = false;

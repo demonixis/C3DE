@@ -1,7 +1,4 @@
 ﻿using C3DE.Components;
-using C3DE.Components.Rendering;
-using C3DE.Graphics.Materials;
-using C3DE.Graphics.Primitives;
 using C3DE.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -15,6 +12,8 @@ namespace C3DE.Demo.Scripts
         private bool m_VREnabled = false;
         public Action<bool> VRChanged;
         private GameObject[] m_Hands;
+
+        public bool Automatic { get; set; } = true;
 
         public Point UIPosition
         {
@@ -34,12 +33,16 @@ namespace C3DE.Demo.Scripts
             m_Hands = new GameObject[2];
             CreateHand(0);
             CreateHand(1);
+            Enabled = false;
         }
 
         public override void OnDestroy()
         {
             Application.Engine.Renderer.SetVREnabled(false);
         }
+
+        public override void OnEnabled() => SetActive(true);
+        public override void OnDisabled() => SetActive(false);
 
         private void CreateHand(int id)
         {
@@ -56,6 +59,9 @@ namespace C3DE.Demo.Scripts
         {
             base.OnGUI(ui);
 
+            if (Automatic)
+                return;
+
             if (ui.Button(m_UIRectangle, "Toggle VR"))
                 Toggle();
         }
@@ -70,6 +76,26 @@ namespace C3DE.Demo.Scripts
 
             var parent = Camera.Main.Transform.Parent;
 
+            foreach (var hand in m_Hands)
+            {
+                hand.Enabled = m_VREnabled;
+                if (parent != null)
+                    hand.Transform.Parent = parent;
+            }
+
+            VRChanged?.Invoke(m_VREnabled);
+        }
+
+        private void SetActive(bool mustActivate)
+        {
+            var vrEnabled = Application.Engine.Renderer.VREnabled;
+
+            if (vrEnabled && mustActivate || !vrEnabled && !mustActivate)
+                return;
+
+            m_VREnabled = Application.Engine.Renderer.SetVREnabled(mustActivate);
+
+            var parent = Camera.Main.Transform.Parent;
             foreach (var hand in m_Hands)
             {
                 hand.Enabled = m_VREnabled;

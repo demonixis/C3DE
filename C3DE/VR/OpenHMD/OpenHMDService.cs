@@ -119,7 +119,7 @@ namespace C3DE.VR
 			var yaw = 0.0f;
 			var eyeRotation = Matrix.CreateFromYawPitchRoll(yaw, pitch, roll);
 
-			return eyeRotation * viewMatrix;
+			return Matrix.Invert(playerPose) * (eyeRotation * viewMatrix);
 		}
 
 		public override float GetRenderTargetAspectRatio(int eye)

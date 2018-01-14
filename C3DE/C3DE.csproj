@@ -163,6 +163,7 @@
     <Compile Include="VR\Oculus\OculusRift.cs" />
     <Compile Include="VR\Oculus\OculusService.cs" />
     <Compile Include="VR\OpenVR\OpenVRController.cs" />
+    <Compile Include="VR\OpenVR\OpenVRExtensions.cs" />
     <Compile Include="VR\VRDriver.cs" />
     <Compile Include="VR\VRManager.cs" />
     <Compile Include="VR\VRService.cs" />
