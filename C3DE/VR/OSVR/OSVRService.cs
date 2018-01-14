@@ -93,6 +93,8 @@ namespace C3DE.VR
 			return 0;
 		}
 
+		public override uint[] GetRenderTargetSize() => new [] { (uint)_width, (uint)_height };
+
 		protected override void Dispose(bool disposing)
 		{
 			base.Dispose(disposing);
