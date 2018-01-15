@@ -1,5 +1,5 @@
-#include "ShadowMap.fxh"
-#include "Fog.fxh"
+#include "../Common/ShadowMap.fxh"
+#include "../Common/Fog.fxh"
 #include "Lights.fxh"
 
 // Matrix

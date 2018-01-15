@@ -1,4 +1,4 @@
-#include "lights.fxh"
+#include "Lightmap.fxh"
 
 // Matrix
 float4x4 World;
@@ -6,6 +6,13 @@ float4x4 View;
 float4x4 Projection;
 float3 AmbientColor;
 float3 DiffuseColor;
+
+// Reflection
+bool ReflectionTextureEnabled;
+
+// Misc
+float3 EyePosition = float3(1, 1, 0);
+float2 TextureTiling = float2(1, 1);
 
 Texture2D MainTexture;
 sampler2D mainSampler = sampler_state
@@ -18,6 +25,17 @@ sampler2D mainSampler = sampler_state
 	AddressV = Wrap;
 };
 
+texture ReflectionTexture;
+samplerCUBE reflectionSampler = sampler_state
+{
+    Texture = <ReflectionTexture>;
+    MinFilter = Linear;
+    MagFilter = Linear;
+    MipFilter = Linear;
+    AddressU = Mirror;
+    AddressV = Mirror;
+};
+
 struct VertexShaderInput
 {
 #if SM4
@@ -26,6 +44,7 @@ struct VertexShaderInput
 	float4 Position : POSITION0;
 #endif
 	float2 UV : TEXCOORD0;
+    float3 Normal : NORMAL0;
 };
 
 struct VertexShaderOutput
@@ -33,6 +52,7 @@ struct VertexShaderOutput
 	float4 Position : POSITION0;
 	float2 UV : TEXCOORD0;
 	float4 CopyPosition : TEXCOORD1;
+    float3 Reflection : TEXCOORD2;
 };
 
 VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
@@ -43,12 +63,25 @@ VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
 	output.Position = mul(input.Position, worldViewProjection);
 	output.CopyPosition = output.Position;
 	output.UV = input.UV;
+
+    if (ReflectionTextureEnabled == true)
+    {
+        float4 worldPosition = mul(input.Position, World);
+        float3 viewDirection = EyePosition - worldPosition.xyz;
+        float3 normal = input.Normal;
+        output.Reflection = reflect(-normalize(viewDirection), normalize(normal));
+    }
+
 	return output;
 }
 
 float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 {
 	float3 texColor = tex2D(mainSampler, input.UV);
+
+    if (ReflectionTextureEnabled == true)
+        texColor *= texCUBE(reflectionSampler, normalize(input.Reflection)).xyz;
+
 	float3 light = GetLightingValue(input.CopyPosition);
 	light += AmbientColor;
 	return float4(texColor * DiffuseColor * light, 1);

@@ -1,5 +1,5 @@
 #if SM4
-#include "Fog.fxh"
+#include "../Common/Fog.fxh"
 #endif
 // Matrix
 float4x4 World;

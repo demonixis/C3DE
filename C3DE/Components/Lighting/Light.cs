@@ -119,7 +119,6 @@ namespace C3DE.Components.Lighting
             m_ProjectionMatrix = Matrix.CreateOrthographicOffCenter(-size, size, size, -size, dist - sphere.Radius, dist + sphere.Radius * 2);
         }
 
-
         public void RenderLPP(RenderTarget2D normal, RenderTarget2D depth, Camera camera)
         {
             var graphics = Application.GraphicsDevice;
@@ -171,9 +170,14 @@ namespace C3DE.Components.Lighting
         {
             var graphics = Application.GraphicsDevice;
             var invertViewProjection = Matrix.Invert(camera.m_ViewMatrix * camera.m_ProjectionMatrix);
+            //var lightViewProjection = m_ViewMatrix * m_ProjectionMatrix;
 
             if (TypeLight == LightType.Directional)
             {
+                /*m_DeferredDirLightEffect.Parameters["ShadowMap"].SetValue(m_ShadowGenerator.ShadowMap);
+                m_DeferredDirLightEffect.Parameters["ShadowBias"].SetValue(m_ShadowGenerator.ShadowBias);
+                m_DeferredDirLightEffect.Parameters["ShadowEnabled"].SetValue(m_ShadowGenerator.Enabled);
+                m_DeferredDirLightEffect.Parameters["LightViewProjection"].SetValue(lightViewProjection);*/
                 m_DeferredDirLightEffect.Parameters["ColorMap"].SetValue(colorMap);
                 m_DeferredDirLightEffect.Parameters["NormalMap"].SetValue(normalMap);
                 m_DeferredDirLightEffect.Parameters["DepthMap"].SetValue(depthMap);

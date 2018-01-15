@@ -85,6 +85,8 @@ namespace C3DE.Demo.Scenes
                 if (material.MainTexture == null)
                     continue;
 
+                material.ReflectionTexture = RenderSettings.Skybox.Texture;
+
                 name = System.IO.Path.GetFileNameWithoutExtension(material.MainTexture.Name);
                 name = name.Replace("_0", "");
 

@@ -1,5 +1,5 @@
-#include "ShadowMap.fxh"
-#include "Fog.fxh"
+#include "../Common/ShadowMap.fxh"
+#include "../Common/Fog.fxh"
 #include "Lights.fxh"
 #include "Emissive.fxh"
 
@@ -110,10 +110,7 @@ float3 CalcDiffuseColor(VertexShaderOutput input)
     float3 diffuse = tex2D(textureSampler, input.UV * TextureTiling).xyz;
 	
     if (ReflectionTextureEnabled == true)
-    {
-        float3 reflectColor = texCUBE(reflectionSampler, normalize(input.Reflection)).xyz;
         diffuse *= texCUBE(reflectionSampler, normalize(input.Reflection)).xyz;
-    }
 
     return diffuse * DiffuseColor;
 }

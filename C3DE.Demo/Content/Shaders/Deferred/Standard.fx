@@ -1,16 +1,23 @@
 float4x4 World;
 float4x4 View;
 float4x4 Projection;
-
 float3 AmbientColor;
 float3 DiffuseColor;
 bool NormalTextureEnabled;
 bool SpecularTextureEnabled;
+float3 SpecularLightColor;
+float SpecularPower;
+float SpecularIntensity;
+bool ReflectionTextureEnabled;
 
-texture Texture;
+// Misc
+float3 EyePosition = float3(1, 1, 0);
+float2 TextureTiling = float2(1, 1);
+
+texture MainTexture;
 sampler diffuseSampler = sampler_state
 {
-    Texture = (Texture);
+    Texture = (MainTexture);
     MAGFILTER = LINEAR;
     MINFILTER = LINEAR;
     MIPFILTER = LINEAR;
@@ -40,6 +47,17 @@ sampler normalSampler = sampler_state
     AddressV = Wrap;
 };
 
+texture ReflectionTexture;
+samplerCUBE reflectionSampler = sampler_state
+{
+    Texture = <ReflectionTexture>;
+    MinFilter = Linear;
+    MagFilter = Linear;
+    MipFilter = Linear;
+    AddressU = Mirror;
+    AddressV = Mirror;
+};
+
 struct VertexShaderInput
 {
 #if SM4
@@ -57,7 +75,8 @@ struct VertexShaderOutput
     float2 UV : TEXCOORD0;
     float3 WorldNormal : TEXCOORD1;
     float2 Depth : TEXCOORD2;
-    float3x3 WorldToTangentSpace : TEXCOORD3;
+    float3 Reflection : TEXCOORD3;
+    float3x3 WorldToTangentSpace : TEXCOORD4;
 };
 
 struct PixelShaderOutput
@@ -87,6 +106,13 @@ VertexShaderOutput VertexShaderFunction(in VertexShaderInput input)
     output.WorldToTangentSpace[1] = normalize(output.WorldToTangentSpace[0]);
     output.WorldToTangentSpace[2] = input.Normal;
 
+    if (ReflectionTextureEnabled == true)
+    {
+        float3 viewDirection = EyePosition - worldPosition.xyz;
+        float3 normal = input.Normal;
+        output.Reflection = reflect(-normalize(viewDirection), normalize(normal));
+    }
+
     return output;
 }
 
@@ -94,18 +120,23 @@ PixelShaderOutput PixelShaderAmbient(VertexShaderOutput input)
 {
     PixelShaderOutput output = (PixelShaderOutput) 0;
 
-    output.Color = float4(AmbientColor + (tex2D(diffuseSampler, input.UV).rgb * DiffuseColor), 1.0f);
+    output.Color = float4(AmbientColor + (tex2D(diffuseSampler, input.UV * TextureTiling).rgb * DiffuseColor), 1.0f);
+
+    if (ReflectionTextureEnabled == true)
+        output.Color *= texCUBE(reflectionSampler, normalize(input.Reflection));
     
-    float4 specularAttributes = float4(0, 0, 0, 0);
+    float4 specularAttributes = float4(SpecularLightColor, SpecularPower);
 
     if (SpecularTextureEnabled == true)
-        specularAttributes = tex2D(specularSampler, input.UV);
+        specularAttributes = tex2D(specularSampler, input.UV * TextureTiling);
+
+    specularAttributes.rgb *= SpecularIntensity;
 
     output.Color.a = specularAttributes.r;
 
     if (NormalTextureEnabled)
     {
-        float3 normalFromMap = tex2D(normalSampler, input.UV).rgb;
+        float3 normalFromMap = tex2D(normalSampler, input.UV * TextureTiling).rgb;
         normalFromMap = (2.0f * normalFromMap) - 1.0f;
         normalFromMap = mul(normalFromMap, input.WorldToTangentSpace);
         normalFromMap = normalize(normalFromMap);

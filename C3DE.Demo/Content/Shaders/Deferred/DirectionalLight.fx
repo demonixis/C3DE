@@ -5,6 +5,10 @@ float3 Color;
 float3 CameraPosition;
 float Intensity;
 
+float ShadowBias;
+bool ShadowEnabled;
+float4x4 LightViewProjection;
+
 texture ColorMap;
 sampler colorSampler = sampler_state
 {
@@ -36,6 +40,17 @@ sampler depthSampler = sampler_state
     MagFilter = POINT;
     MinFilter = POINT;
     Mipfilter = POINT;
+};
+
+texture ShadowMap;
+sampler2D shadowSampler = sampler_state
+{
+    Texture = (ShadowMap);
+    MinFilter = Point;
+    MagFilter = Point;
+    MipFilter = Point;
+    AddressU = Clamp;
+    AddressV = Clamp;
 };
 
 struct VertexShaderInput
@@ -88,10 +103,26 @@ float4 PixelShaderAmbient(VertexShaderOutput input) : COLOR0
     position = mul(position, InvertViewProjection);
     position /= position.w;
     
+    float shadow = 1;
+    /*if (ShadowEnabled)
+    {   
+        // Find the position in the shadow map for this pixel
+        float4 positionInLS = mul(input.WorldPosition, LightViewProjection);
+        float2 ShadowTexCoord = mad(positionInLS.xy / positionInLS.w, 0.5f, float2(0.5f, 0.5f));
+        ShadowTexCoord.y = 1.0f - ShadowTexCoord.y;
+
+        // Get the current depth stored in the shadow map
+        float shadowdepth = tex2D(shadowSampler, ShadowTexCoord).r;
+        float ourdepth = (positionInLS.z / positionInLS.w) - ShadowBias;
+    
+        if (shadowdepth < ourdepth)
+            shadow = 0;
+    }*/
+
     //compute diffuse light
     float3 directionToLight = normalize(LightPosition - input.WorldPosition.xyz);
     float diffuseIntensity = saturate(dot(directionToLight, normal));
-    float3 diffuseLight = diffuseIntensity * Color * Intensity;
+    float3 diffuseLight = shadow * diffuseIntensity * Color * Intensity;
 
     float3 reflectionVector = normalize(reflect(-directionToLight, normal));
     float3 directionToCamera = normalize(CameraPosition - position.xyz);
