@@ -3,24 +3,6 @@ float4x4 World;
 float4x4 View;
 float4x4 Projection;
 
-// Specular
-bool SpecularTextureEnabled;
-float3 SpecularLightColor;
-float SpecularPower;
-float SpecularIntensity;
-float2 TextureTiling;
-
-texture SpecularMap;
-sampler specularSampler = sampler_state
-{
-    Texture = (SpecularMap);
-    MagFilter = LINEAR;
-    MinFilter = LINEAR;
-    Mipfilter = LINEAR;
-    AddressU = Wrap;
-    AddressV = Wrap;
-};
-
 struct VertexShaderInput
 {
 #if SM4
@@ -65,20 +47,8 @@ PixelShaderOutput PSNormalDepthFunction(VertexShaderOutput input)
 {
 	PixelShaderOutput output;
 	
-	output.Normal = float4((normalize(input.Normal).xyz / 2.0) + 0.5, 1.0);
-	
+    output.Normal = float4((normalize(input.Normal).xyz / 2.0) + 0.5, 1);
 	output.Depth = input.Depth.x / input.Depth.y;
-	output.Depth.a = 1;
-
-    float4 specularAttributes = float4(SpecularLightColor, SpecularPower / 255);
-
-    if (SpecularTextureEnabled == true)
-        specularAttributes = tex2D(specularSampler, input.UV * TextureTiling);
-
-    specularAttributes.rgb *= SpecularIntensity;
-
-    output.Depth.a = specularAttributes.r;
-    output.Normal.a = specularAttributes.a;
 
 	return output;
 }

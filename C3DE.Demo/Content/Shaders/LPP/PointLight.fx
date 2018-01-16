@@ -9,6 +9,8 @@ float LightAttenuation;
 float LightRange;
 float LightIntensity;
 
+float3 CameraPosition;
+
 Texture2D DepthTexture;
 sampler2D depthSampler = sampler_state
 {
@@ -73,14 +75,19 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 	pos.xyz /= pos.w;
 	
 	// Extract normal and range from 0, 1 to -1, 1
-	float4 normal = (tex2D(normalSampler, texCoord) - 0.5) * 2;
+    float4 normalData = tex2D(normalSampler, texCoord);
+    float4 normal = (normalData - 0.5) * 2;
 	
-	float3 direction = normalize(LightPosition - pos);
-	float light = saturate(dot(normal, direction));
-	float d = distance(LightPosition, pos);
-	float att = 1 - pow(clamp(d / LightRange, 0, 1), LightAttenuation);
-	
-	return float4(light * att * LightColor * LightIntensity, 1);
+    //surface-to-light vector
+    float3 lightVector = LightPosition - pos.xyz;
+    float attenuation = saturate(1.0f - length(lightVector) / LightRange);
+    lightVector = normalize(lightVector);
+
+    //compute diffuse light
+    float NdL = max(0, dot(normal.xyz, lightVector));
+    float3 diffuseLight = NdL * LightColor.rgb;
+
+    return float4(attenuation * LightIntensity * diffuseLight.rgb, 1);
 }
 
 technique Basic

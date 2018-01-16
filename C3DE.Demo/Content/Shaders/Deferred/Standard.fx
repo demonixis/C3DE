@@ -148,7 +148,7 @@ PixelShaderOutput PixelShaderAmbient(VertexShaderOutput input)
 
     output.Color += float4(emissiveColor * EmissiveIntensity, 0.0);
     
-    float4 specularAttributes = float4(SpecularLightColor, SpecularPower / 255);
+    float4 specularAttributes = float4(SpecularLightColor, SpecularPower);
 
     if (SpecularTextureEnabled == true)
         specularAttributes = tex2D(specularSampler, input.UV * TextureTiling);
@@ -157,7 +157,7 @@ PixelShaderOutput PixelShaderAmbient(VertexShaderOutput input)
 
     output.Color.a = specularAttributes.r;
 
-    if (NormalTextureEnabled)
+    if (NormalTextureEnabled == true)
     {
         float3 normalFromMap = tex2D(normalSampler, input.UV * TextureTiling).rgb;
         normalFromMap = (2.0f * normalFromMap) - 1.0f;

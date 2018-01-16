@@ -141,6 +141,7 @@ namespace C3DE.Components.Lighting
             }
             else
             {
+                m_LPPPointLightEffect.Parameters["CameraPosition"].SetValue(camera.m_Transform.Position);
                 m_LPPPointLightEffect.Parameters["NormalTexture"].SetValue(normal);
                 m_LPPPointLightEffect.Parameters["DepthTexture"].SetValue(depth);
                 m_LPPPointLightEffect.Parameters["InvViewProjection"].SetValue(invViewProjection);

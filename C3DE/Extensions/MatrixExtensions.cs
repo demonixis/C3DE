@@ -6,6 +6,9 @@ namespace Microsoft.Xna.Framework
     {
         public static void ExtractRotation(this Matrix matrix, ref Quaternion rotation)
         {
+            if (float.IsNaN(matrix.M11))
+                return;
+
             var sx = (Math.Sign(matrix.M11 * matrix.M12 * matrix.M13 * matrix.M14) < 0) ? -1.0f : 1.0f;
             var sy = (Math.Sign(matrix.M21 * matrix.M22 * matrix.M23 * matrix.M24) < 0) ? -1.0f : 1.0f;
             var sz = (Math.Sign(matrix.M31 * matrix.M32 * matrix.M33 * matrix.M34) < 0) ? -1.0f : 1.0f;
@@ -26,6 +29,15 @@ namespace Microsoft.Xna.Framework
                                    0.0f, 0.0f, 0.0f, 1.0f);
 
             rotation = Quaternion.CreateFromRotationMatrix(m);
+        }
+
+        public static Vector3 ExtractRottaion(this Matrix matrix)
+        {
+            Vector3 rotation = Vector3.Zero;
+            Quaternion q = Quaternion.Identity;
+            ExtractRotation(matrix, ref q);
+            q.ToEuler(ref rotation);
+            return rotation;
         }
 
         public static void ExtractRotation(this Matrix matrix, ref Vector3 rotation)

@@ -84,7 +84,7 @@ namespace C3DE.VR
 #else
             var info = typeof(RenderTarget2D).GetField("glTexture", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
             var glTexture = (int)info.GetValue(renderTarget);
-            m_Textures[eye].handle = new IntPtr(glTexture);
+            m_Textures[eye].handle = new System.IntPtr(glTexture);
             m_Textures[eye].eType = ETextureType.OpenGL;
 #endif
             m_Textures[eye].eColorSpace = EColorSpace.Auto;
