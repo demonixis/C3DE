@@ -128,9 +128,10 @@ namespace C3DE.Components
             get { return m_ProjectionMatrix; }
         }
 
-        public Vector3 Forward => Vector3.Transform(Vector3.Forward, m_ViewMatrix);
-        public Vector3 BackWard => Vector3.Transform(Vector3.Backward, m_ViewMatrix);
-        public Vector3 Left => Vector3.Transform(Vector3.Left, m_ViewMatrix);
+        public Vector3 Forward => m_ViewMatrix.Forward;
+        public Vector3 BackWard => m_ViewMatrix.Backward;
+        public Vector3 Left => m_ViewMatrix.Left;
+        public Vector3 Right => m_ViewMatrix.Right;
 
         public Vector3 Rotation
         {
@@ -172,6 +173,11 @@ namespace C3DE.Components
         {
             _aspectRatio = (float)width / (float)height;
             _needProjectionUpdate = true;
+        }
+
+        private void SyncTransform()
+        {
+
         }
 
         public void Setup(Vector3 position, Vector3 camTarget, Vector3 upVector)

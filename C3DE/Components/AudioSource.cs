@@ -127,7 +127,7 @@ namespace C3DE.Components
 
             m_AudioEmitter.Position = m_Transform.LocalPosition;
             m_AudioEmitter.Forward = m_Transform.Forward;
-            m_AudioEmitter.Up = m_Transform.Up;
+            m_AudioEmitter.Up = Vector3.Up;
             m_AudioEmitter.Velocity = Vector3.One;
             m_SoundEffectInstance.Apply3D(AudioListener, m_AudioEmitter);
         }

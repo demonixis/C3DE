@@ -27,7 +27,7 @@ namespace C3DE.Demo.Scripts
             base.Update();
 
             if (Input.Keys.JustPressed(Keys.Space) || Input.Keys.Pressed(Keys.LeftControl))
-                SpawnCubeAtPosition(Camera.Main.Transform.Position, Camera.Main.Rotation);
+                SpawnCubeAtPosition(Camera.Main.Transform.Position + Camera.Main.Forward * 5, Vector3.Forward);
 
             if (m_VRService != null && m_RightHand != null && m_VRService.GetButtonDown(1, XRButton.Trigger))
                 SpawnCubeAtPosition(m_RightHand.Position, m_RightHand.Forward);
@@ -56,7 +56,6 @@ namespace C3DE.Demo.Scripts
             var collider = cube.AddComponent<BoxCollider>();
             var rb = cube.AddComponent<Rigidbody>();
             rb.AddComponent<RigidbodyRenderer>();
-            rb.AddForce(Camera.Main.Forward * 250);
         }
 
         private void OnVRChanged(VRService service)

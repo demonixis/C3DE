@@ -112,12 +112,10 @@ namespace C3DE.Components
 
         public Matrix WorldMatrix => m_WorldMatrix;
 
-        public Vector3 Forward => Vector3.Normalize(TransformVector(Vector3.Forward));
-        public Vector3 Backward => Vector3.Normalize(TransformVector(Vector3.Backward));
-        public Vector3 Right => Vector3.Normalize(TransformVector(Vector3.Right));
-        public Vector3 Left => Vector3.Normalize(TransformVector(Vector3.Left));
-        public Vector3 Up => Vector3.Normalize(TransformVector(Vector3.Up));
-        public Vector3 Down => Vector3.Normalize(TransformVector(Vector3.Down));
+        public Vector3 Forward => m_WorldMatrix.Forward;
+        public Vector3 Backward => m_WorldMatrix.Backward;
+        public Vector3 Right => m_WorldMatrix.Right;
+        public Vector3 Left => m_WorldMatrix.Left;
 
         public Transform()
             : base()
