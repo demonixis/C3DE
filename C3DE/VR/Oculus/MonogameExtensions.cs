@@ -9,17 +9,17 @@ namespace Microsoft.Xna.Framework.Graphics
         {
             var graphicsDeviceType = typeof(GraphicsDevice);
 
-            var d3dDeviceInfo  = graphicsDeviceType.GetField("_d3dDevice", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
+            var d3dDeviceInfo = graphicsDeviceType.GetField("_d3dDevice", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
             var deviceObj = d3dDeviceInfo.GetValue(graphicsDevice);
             var deviceType = deviceObj.GetType();
             var devicePtrInfo = deviceType.GetProperty("NativePointer", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public);
-            dxDevicePtr =  (IntPtr)devicePtrInfo.GetValue(deviceObj);
+            dxDevicePtr = (IntPtr)devicePtrInfo.GetValue(deviceObj);
 
             var d3dContextInfo = graphicsDeviceType.GetField("_d3dContext", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
             var contextObj = d3dContextInfo.GetValue(graphicsDevice);
             var contextType = contextObj.GetType();
             var contextPtrInfo = contextType.GetProperty("NativePointer", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public);
-            dxContextPtr =  (IntPtr)contextPtrInfo.GetValue(contextObj);
+            dxContextPtr = (IntPtr)contextPtrInfo.GetValue(contextObj);
         }
 
         public static IntPtr GetNativeDxResource(this RenderTarget2D renderTarget2D)

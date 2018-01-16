@@ -9,29 +9,29 @@ namespace OculusRiftSample
 {
     public struct HmdInfo
     {
-	    public int Type;
-	    public int VendorId;
-	    public int ProductId;
-	    public int FirmwareMajor;
-	    public int FirmwareMinor;
-	    public Point DisplayResolution;
-	    public float DisplayRefreshRate;
+        public int Type;
+        public int VendorId;
+        public int ProductId;
+        public int FirmwareMajor;
+        public int FirmwareMinor;
+        public Point DisplayResolution;
+        public float DisplayRefreshRate;
         public FovPort DefaultFovLeft;
         public FovPort DefaultFovRight;
         public FovPort MaxFovLeft;
         public FovPort MaxFovRight;
-	    public uint AvailableHmdCaps;
-	    public uint DefaultHmdCaps;
-	    public uint AvailableTrackingCap;
-	    public uint DefaultTrackingCaps;
+        public uint AvailableHmdCaps;
+        public uint DefaultHmdCaps;
+        public uint AvailableTrackingCap;
+        public uint DefaultTrackingCaps;
     };
 
     public struct HeadTracking
     {
-	    public uint StatusFlags;
-	    public Matrix HeadPose;
-	    public Matrix EyePoseLeft;
-	    public Matrix EyePoseRight;
+        public uint StatusFlags;
+        public Matrix HeadPose;
+        public Matrix EyePoseLeft;
+        public Matrix EyePoseRight;
     };
 
     public struct FovPort
@@ -43,7 +43,7 @@ namespace OculusRiftSample
     }
 
 
-    public class OculusRift 
+    public class OculusRift
     {
         public HmdInfo HmdInfo;
         public HeadTracking HeadTracking;
@@ -52,12 +52,12 @@ namespace OculusRiftSample
         public Point[] RenderTargetRes = new Point[2]; // one for each eye
 
         GraphicsDevice graphicsDevice;
-        
+
         // the following functions should be called in order
-        public int Initialize(GraphicsDevice gd)
+        public int Init(GraphicsDevice gd)
         {
             graphicsDevice = gd;
-            
+
             IntPtr dxDevice, dxContext;
             graphicsDevice.GetNativeDxDeviceAndContext(out dxDevice, out dxContext);
 
@@ -74,7 +74,7 @@ namespace OculusRiftSample
             Point recommendTexResLeft = Point.Zero;
             Point recommendTexResRight = Point.Zero;
 
-            NativeRift.GetRecommendedRenderTargetRes(fovLeft, fovRight, 1, 
+            NativeRift.GetRecommendedRenderTargetRes(fovLeft, fovRight, 1,
                 ref recommendTexResLeft, ref recommendTexResRight);
 
             RenderTargetRes[0] = recommendTexResLeft;
@@ -89,8 +89,8 @@ namespace OculusRiftSample
             return 0;
         }
 
-        public RenderTarget2D CreateRenderTargetForEye(int eye, 
-            SurfaceFormat surfaceFormat = SurfaceFormat.ColorSRgb, 
+        public RenderTarget2D CreateRenderTargetForEye(int eye,
+            SurfaceFormat surfaceFormat = SurfaceFormat.ColorSRgb,
             DepthFormat depthFormat = DepthFormat.Depth24Stencil8)
         {
             Point res = RenderTargetRes[eye];
@@ -139,36 +139,36 @@ namespace OculusRiftSample
         }
     }
 
-     
-     // interface to native C++ dll
+
+    // interface to native C++ dll
     public static class NativeRift
     {
         [DllImport("OculusRift.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern int Init(IntPtr dxDevice, IntPtr dxContext);
-        
+
         [DllImport("OculusRift.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern HmdInfo GetHmdInfo();
-        
+
         [DllImport("OculusRift.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern void GetRecommendedRenderTargetRes(
             FovPort fovLeft, FovPort fovRight, float pixelsPerDisplayPixel,
             ref Point texResLeft, ref Point texResRight);
-        
+
         [DllImport("OculusRift.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern int CreateDXSwapChains(
             Point texResLeft, Point texResRight, FovPort fovLeft, FovPort fovRight);
-       
+
         [DllImport("OculusRift.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern Matrix GetProjectionMatrix(
             int eye, float nearClip, float farClip, uint projectionModeFlags);
-       
+
         [DllImport("OculusRift.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern HeadTracking TrackHead(int frame);
-       
+
         [DllImport("OculusRift.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern int SubmitRenderTargets(
             IntPtr dxTexResourceLeft, IntPtr dxTexResourceRight, int frame);
-      
+
         [DllImport("OculusRift.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern void Shutdown();
     }

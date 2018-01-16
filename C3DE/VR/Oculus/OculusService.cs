@@ -18,7 +18,9 @@ namespace C3DE.VR
         {
             _oculusRift = new OculusRift();
 
-            if (_oculusRift.Initialize(Game.GraphicsDevice) != 0)
+            var result = _oculusRift.Init(Game.GraphicsDevice);
+
+            if (result != 0)
                 return -1;
 
             return 0;
@@ -37,7 +39,7 @@ namespace C3DE.VR
 
         public override uint[] GetRenderTargetSize()
         {
-            throw new NotSupportedException("Can' get the render target size");
+            return new[] { (uint)_oculusRift.RenderTargetRes[0].X, (uint)_oculusRift.RenderTargetRes[0].Y };
         }
 
         public override void Update(GameTime gameTime)
