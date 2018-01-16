@@ -120,7 +120,6 @@ namespace C3DE.Graphics.Rendering
             Material material;
             ShaderMaterial shader;
             IMultipassLightingMaterial multiLightShader;
-            IEmissiveMaterial emissiveShader;
             var lights = scene.lights;
             var lightCount = lights.Count;
 
@@ -154,25 +153,6 @@ namespace C3DE.Graphics.Rendering
                     for (var l = 0; l < lightCount; l++)
                     {
                         multiLightShader.LightPass(renderer, lights[l]);
-                        renderer.Draw(m_graphicsDevice);
-                    }
-
-                    m_graphicsDevice.BlendState = BlendState.Opaque;
-                }
-
-                // Emissive pass
-                if (shader is IEmissiveMaterial)
-                {
-                    emissiveShader = (IEmissiveMaterial)shader;
-
-                    if (!emissiveShader.EmissiveEnabled)
-                        continue;
-
-                    m_graphicsDevice.BlendState = BlendState.Additive;
-
-                    for (var l = 0; l < scene.lights.Count; l++)
-                    {
-                        emissiveShader.EmissivePass(renderer);
                         renderer.Draw(m_graphicsDevice);
                     }
 

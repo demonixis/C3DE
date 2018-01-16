@@ -14,6 +14,11 @@ bool ReflectionTextureEnabled;
 float3 EyePosition = float3(1, 1, 0);
 float2 TextureTiling = float2(1, 1);
 
+// Emission
+float3 EmissiveColor;
+float EmissiveIntensity;
+bool EmissiveTextureEnabled;
+
 texture MainTexture;
 sampler diffuseSampler = sampler_state
 {
@@ -56,6 +61,17 @@ samplerCUBE reflectionSampler = sampler_state
     MipFilter = Linear;
     AddressU = Mirror;
     AddressV = Mirror;
+};
+
+texture EmissiveTexture;
+sampler2D emissiveSampler = sampler_state
+{
+    Texture = (EmissiveTexture);
+    MinFilter = Linear;
+    MagFilter = Linear;
+    MipFilter = Linear;
+    AddressU = Wrap;
+    AddressV = Wrap;
 };
 
 struct VertexShaderInput
@@ -124,8 +140,15 @@ PixelShaderOutput PixelShaderAmbient(VertexShaderOutput input)
 
     if (ReflectionTextureEnabled == true)
         output.Color *= texCUBE(reflectionSampler, normalize(input.Reflection));
+		
+	float3 emissiveColor = EmissiveColor;
+
+    if (EmissiveTextureEnabled == true)
+        emissiveColor = tex2D(emissiveSampler, input.UV * TextureTiling).xyz;
+
+    output.Color += float4(emissiveColor * EmissiveIntensity, 0.0);
     
-    float4 specularAttributes = float4(SpecularLightColor, SpecularPower);
+    float4 specularAttributes = float4(SpecularLightColor, SpecularPower / 255);
 
     if (SpecularTextureEnabled == true)
         specularAttributes = tex2D(specularSampler, input.UV * TextureTiling);

@@ -26,6 +26,10 @@ namespace C3DE.Graphics.Materials.Shaders
         protected EffectParameter m_EPSpecularIntensity;
         protected EffectParameter m_EPSpecularTextureEnabled;
         protected EffectParameter m_EPSpecularTexture;
+        protected EffectParameter m_EPEmissiveTextureEnabled;
+        protected EffectParameter m_EPEmissiveTexture;
+        protected EffectParameter m_EPEmissiveColor;
+        protected EffectParameter m_EPEmissiveIntensity;
 
         public DeferredStandard(StandardMaterial material)
         {
@@ -54,6 +58,10 @@ namespace C3DE.Graphics.Materials.Shaders
             m_EPNormalTextureEnabled = m_Effect.Parameters["NormalTextureEnabled"];
             m_EPReflectionTexture = m_Effect.Parameters["ReflectionTexture"];
             m_EPReflectionTextureEnabled = m_Effect.Parameters["ReflectionTextureEnabled"];
+            m_EPEmissiveTextureEnabled = m_Effect.Parameters["EmissiveTextureEnabled"];
+            m_EPEmissiveTexture = m_Effect.Parameters["EmissiveTexture"];
+            m_EPEmissiveColor = m_Effect.Parameters["EmissiveColor"];
+            m_EPEmissiveIntensity = m_Effect.Parameters["EmissiveIntensity"];
         }
 
         public override void PrePass(Camera camera)
@@ -66,6 +74,10 @@ namespace C3DE.Graphics.Materials.Shaders
 
         public override void Pass(Renderer renderable)
         {
+            m_EPEmissiveTextureEnabled.SetValue(m_Material.EmissiveTexture != null);
+            m_EPEmissiveTexture.SetValue(m_Material.EmissiveTexture);
+            m_EPEmissiveColor.SetValue(m_Material.EmissiveColor.ToVector3());
+            m_EPEmissiveIntensity.SetValue(m_Material.EmissiveIntensity);
             m_EPReflectionTexture.SetValue(m_Material.ReflectionTexture);
             m_EPReflectionTextureEnabled.SetValue(m_Material.ReflectionTexture != null);
             m_EPWorld.SetValue(renderable.Transform.m_WorldMatrix);

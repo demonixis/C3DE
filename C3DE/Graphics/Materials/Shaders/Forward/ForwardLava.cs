@@ -6,11 +6,10 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace C3DE.Graphics.Materials.Shaders
 {
-    public class ForwardLava : ShaderMaterial, IEmissiveMaterial
+    public class ForwardLava : ShaderMaterial
     {
         private LavaMaterial m_Material;
         private EffectPass m_PassAmbient;
-        private EffectPass m_PassEmissive;
         private EffectParameter m_EPView;
         private EffectParameter m_EPProjection;
         private EffectParameter m_EPTime;
@@ -32,7 +31,6 @@ namespace C3DE.Graphics.Materials.Shaders
         {
             m_Effect = content.Load<Effect>("Shaders/Forward/Lava");
             m_PassAmbient = m_Effect.CurrentTechnique.Passes["AmbientPass"];
-            m_PassEmissive = m_Effect.CurrentTechnique.Passes["EmissivePass"];
             m_EPView = m_Effect.Parameters["View"];
             m_EPProjection = m_Effect.Parameters["Projection"];
             m_EPTime = m_Effect.Parameters["Time"];
@@ -60,10 +58,6 @@ namespace C3DE.Graphics.Materials.Shaders
             m_EPWorld.SetValue(renderable.Transform.m_WorldMatrix);
             m_EPEmissiveIntensity.SetValue(m_Material.EmissiveIntensity);
             m_PassAmbient.Apply();
-        }
-
-        public void EmissivePass(Renderer renderer)
-        {
         }
     }
 }

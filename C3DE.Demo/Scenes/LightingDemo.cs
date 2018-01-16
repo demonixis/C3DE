@@ -19,11 +19,10 @@ namespace C3DE.Demo.Scenes
         {
             base.Initialize();
 
-            m_DirectionalLight.Intensity = 0.4f;
-            //Destroy(m_DirectionalLight);
+            Destroy(m_DirectionalLight);
 
             // Light
-            var padding = 20;
+            var padding = 5;
             var colors = new Color[] {
                 Color.Red,
                 Color.Green,
@@ -60,14 +59,13 @@ namespace C3DE.Demo.Scenes
                 light.ShadowGenerator.ShadowBias = 0.01f;
 
                 var ligthSphere = lightGo.AddComponent<MeshRenderer>();
-                ligthSphere.Geometry = new SphereMesh(2f, 16);
+                ligthSphere.Geometry = new SphereMesh(1f, 16);
                 ligthSphere.Geometry.Build();
                 ligthSphere.CastShadow = true;
                 ligthSphere.ReceiveShadow = false;
 
                 var sphereMaterial = new StandardMaterial();
                 sphereMaterial.DiffuseColor = colors[i];
-                sphereMaterial.EmissiveIntensity = 1;
                 sphereMaterial.EmissiveColor = colors[i];
                 sphereMaterial.EmissiveEnabled = true;
                 ligthSphere.Material = sphereMaterial;
@@ -97,7 +95,7 @@ namespace C3DE.Demo.Scenes
             // Model
             var model = Application.Content.Load<Model>("Models/Quandtum/Quandtum");
             var mesh = model.ToMeshRenderers(this);
-            mesh.Transform.LocalScale = new Vector3(0.1f);
+            mesh.Transform.LocalScale = new Vector3(0.25f);
             var renderer = mesh.GetComponentInChildren<MeshRenderer>();
             renderer.CastShadow = true;
             renderer.ReceiveShadow = true;

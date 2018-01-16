@@ -84,6 +84,7 @@ namespace C3DE.Graphics.Rendering
 
             for (int i = 0, l = scene.renderList.Count; i < l; i++)
             {
+                // TODO
                 m_DepthNormalEffect.Parameters["World"].SetValue(scene.renderList[i].Transform.m_WorldMatrix);
                 m_DepthNormalEffect.CurrentTechnique.Passes[0].Apply();
                 scene.renderList[i].Draw(m_graphicsDevice);

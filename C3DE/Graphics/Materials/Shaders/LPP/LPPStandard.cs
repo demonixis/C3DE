@@ -22,6 +22,10 @@ namespace C3DE.Graphics.Materials.Shaders
         protected EffectParameter m_EPReflectionTextureEnabled;
         protected EffectParameter m_EPLightMap;
         protected EffectParameter m_EPViewport;
+        protected EffectParameter m_EPEmissiveTextureEnabled;
+        protected EffectParameter m_EPEmissiveTexture;
+        protected EffectParameter m_EPEmissiveColor;
+        protected EffectParameter m_EPEmissiveIntensity;
 
         public LPPStandard(StandardMaterial material)
         {
@@ -44,6 +48,10 @@ namespace C3DE.Graphics.Materials.Shaders
             m_EPReflectionTextureEnabled = m_Effect.Parameters["ReflectionTextureEnabled"];
             m_EPLightMap = m_Effect.Parameters["LightMap"];
             m_EPViewport = m_Effect.Parameters["Viewport"];
+            m_EPEmissiveTextureEnabled = m_Effect.Parameters["EmissiveTextureEnabled"];
+            m_EPEmissiveTexture = m_Effect.Parameters["EmissiveTexture"];
+            m_EPEmissiveColor = m_Effect.Parameters["EmissiveColor"];
+            m_EPEmissiveIntensity = m_Effect.Parameters["EmissiveIntensity"];
         }
 
         public override void PrePass(Camera camera)
@@ -60,6 +68,10 @@ namespace C3DE.Graphics.Materials.Shaders
 
         public override void Pass(Renderer renderable, RenderTarget2D lightmap)
         {
+            m_EPEmissiveTextureEnabled.SetValue(m_Material.EmissiveTexture != null);
+            m_EPEmissiveTexture.SetValue(m_Material.EmissiveTexture);
+            m_EPEmissiveColor.SetValue(m_Material.EmissiveColor.ToVector3());
+            m_EPEmissiveIntensity.SetValue(m_Material.EmissiveIntensity);
             m_EPLightMap.SetValue(lightmap);
             m_EPViewport.SetValue(new Vector2(Screen.Width, Screen.Height));
             m_EPReflectionTexture.SetValue(m_Material.ReflectionTexture);

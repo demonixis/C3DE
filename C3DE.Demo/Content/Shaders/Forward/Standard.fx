@@ -1,7 +1,6 @@
 #include "../Common/ShadowMap.fxh"
 #include "../Common/Fog.fxh"
 #include "Lights.fxh"
-#include "Emissive.fxh"
 
 // Matrix
 float4x4 World;
@@ -15,6 +14,11 @@ bool NormalTextureEnabled;
 
 // Reflection
 bool ReflectionTextureEnabled;
+
+// Emission
+float3 EmissiveColor;
+float EmissiveIntensity;
+bool EmissiveTextureEnabled;
 
 // Misc
 float3 EyePosition = float3(1, 1, 0);
@@ -51,6 +55,17 @@ samplerCUBE reflectionSampler = sampler_state
     MipFilter = Linear;
     AddressU = Mirror;
     AddressV = Mirror;
+};
+
+texture EmissiveTexture;
+sampler2D emissiveSampler = sampler_state
+{
+    Texture = (EmissiveTexture);
+    MinFilter = Linear;
+    MagFilter = Linear;
+    MipFilter = Linear;
+    AddressU = Wrap;
+    AddressV = Wrap;
 };
 
 struct VertexShaderInput
@@ -135,12 +150,15 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
     float3 diffuse2 = lightFactor * shadow * diffuse;
     float3 specular = CalcSpecular(input.WorldPosition, input.WorldNormal, EyePosition, input.UV * TextureTiling);
     float3 compose = diffuse2 + specular;
-    return ApplyFog(compose, input.FogDistance);
-}
+	
+	float3 emissiveColor = EmissiveColor;
 
-float4 PixelShaderEmissive(VertexShaderOutput input) : COLOR0
-{
-    return CalcEmissiveColor(input.UV * TextureTiling);
+    if (EmissiveTextureEnabled == true)
+        emissiveColor = tex2D(emissiveSampler, input.UV * TextureTiling).xyz;
+
+    emissiveColor *= EmissiveIntensity;
+	
+    return ApplyFog(compose + emissiveColor, input.FogDistance);
 }
 
 technique Standard
@@ -162,15 +180,6 @@ technique Standard
 		PixelShader = compile ps_4_0_level_9_3 PixelShaderFunction();
 #else
         PixelShader = compile ps_3_0 PixelShaderFunction();
-#endif
-    }
-	
-    pass EmissivePass
-    {
-#if SM4
-		PixelShader = compile ps_4_0_level_9_3 PixelShaderEmissive();
-#else
-        PixelShader = compile ps_3_0 PixelShaderEmissive();
 #endif
     }
 }

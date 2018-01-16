@@ -75,8 +75,8 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
     float4 normal = (tex2D(normalSampler, texCoord) - 0.5) * 2;
 	
     //compute diffuse light
-    float3 directionToLight = normalize(LightPosition - pos);
-    float diffuseIntensity = saturate(dot(directionToLight, normal));
+    float3 directionToLight = normalize(LightPosition - pos.xyz);
+    float diffuseIntensity = saturate(dot(directionToLight, normal.xyz));
     float3 diffuseLight = diffuseIntensity * LightColor * LightIntensity;
     return float4(diffuseLight, 1);
 }
