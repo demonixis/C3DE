@@ -128,6 +128,22 @@ namespace C3DE.Components
             get { return m_ProjectionMatrix; }
         }
 
+        public Vector3 Forward => Vector3.Transform(Vector3.Forward, m_ViewMatrix);
+        public Vector3 BackWard => Vector3.Transform(Vector3.Backward, m_ViewMatrix);
+        public Vector3 Left => Vector3.Transform(Vector3.Left, m_ViewMatrix);
+
+        public Vector3 Rotation
+        {
+            get
+            {
+                Vector3 scale;
+                Quaternion rotation;
+                Vector3 translation;
+                m_ViewMatrix.Decompose(out scale, out rotation, out translation);
+                return rotation.ToEuler();
+            }
+        }
+
         public Camera()
             : base()
         {

@@ -112,12 +112,12 @@ namespace C3DE.Components
 
         public Matrix WorldMatrix => m_WorldMatrix;
 
-        public Vector3 Forward => TransformVector(Vector3.Forward);
-        public Vector3 Backward => TransformVector(Vector3.Backward);
-        public Vector3 Right => TransformVector(Vector3.Right);
-        public Vector3 Left => TransformVector(Vector3.Left);
-        public Vector3 Up => TransformVector(Vector3.Up);
-        public Vector3 Down => TransformVector(Vector3.Down);
+        public Vector3 Forward => Vector3.Normalize(TransformVector(Vector3.Forward));
+        public Vector3 Backward => Vector3.Normalize(TransformVector(Vector3.Backward));
+        public Vector3 Right => Vector3.Normalize(TransformVector(Vector3.Right));
+        public Vector3 Left => Vector3.Normalize(TransformVector(Vector3.Left));
+        public Vector3 Up => Vector3.Normalize(TransformVector(Vector3.Up));
+        public Vector3 Down => Vector3.Normalize(TransformVector(Vector3.Down));
 
         public Transform()
             : base()
@@ -224,7 +224,8 @@ namespace C3DE.Components
 
         public Vector3 TransformVector(Vector3 direction)
         {
-            return Vector3.Transform(direction, Matrix.CreateFromYawPitchRoll(m_LocalRotation.Y, m_LocalRotation.X, m_LocalRotation.Z));
+            UpdateWorldMatrix();
+            return Vector3.Transform(direction, m_WorldMatrix);
         }
 
         public override object Clone()
