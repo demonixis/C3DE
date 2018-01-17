@@ -129,7 +129,15 @@ namespace C3DE.Graphics.Rendering
             Dirty = true;
 
             VRManager.ActiveService = m_VRService;
-            Application.Engine.IsFixedTimeStep = !m_VREnabled;
+
+            if (m_VREnabled)
+            {
+                Application.Engine.IsFixedTimeStep = false;
+                //Application.Engine.TargetElapsedTime = TimeSpan.FromTicks(111111);
+                Application.GraphicsDeviceManager.SynchronizeWithVerticalRetrace = false;
+                Application.GraphicsDevice.PresentationParameters.PresentationInterval = PresentInterval.Immediate;
+            }
+
 
             return m_VREnabled;
         }

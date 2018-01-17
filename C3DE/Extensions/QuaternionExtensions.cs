@@ -38,9 +38,9 @@ namespace Microsoft.Xna.Framework
 
         public static void ToEuler(float x, float y, float z, float w, ref Vector3 result)
         {
-            Quaternion rotation = new Quaternion(x, y, z, w);
-            Vector3 forward = Vector3.Transform(Vector3.Forward, rotation);
-            Vector3 up = Vector3.Transform(Vector3.Up, rotation);
+            var rotation = new Quaternion(x, y, z, w);
+            var forward = Vector3.Transform(Vector3.Forward, rotation);
+            var up = Vector3.Transform(Vector3.Up, rotation);
             result = AngleTo(new Vector3(), forward);
             if (result.X == MathHelper.PiOver2)
             {
@@ -58,10 +58,6 @@ namespace Microsoft.Xna.Framework
                 up = Vector3.Transform(up, Matrix.CreateRotationX(-result.X));
                 result.Z = ArcTanAngle(up.Y, -up.X);
             }
-
-            var tmp = result.X;
-            result.X = result.Z;
-            result.Z = result.X;
         }
 
         public static void ToEuler(this Quaternion quaternion, ref Vector3 result)

@@ -1,6 +1,5 @@
 ﻿using C3DE.Components.Controllers.Mobile;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Runtime.Serialization;
@@ -131,6 +130,12 @@ namespace C3DE.Components.Controllers
 
             translation *= Velocity;
             rotation *= AngularVelocity;
+        }
+
+        private Vector3 RotationToDirection(Vector3 position, Vector3 rotation)
+        {
+            var matrix = Matrix.CreateFromYawPitchRoll(rotation.Y, rotation.X, rotation.Z);
+            return position + Vector3.Transform(Vector3.Forward, matrix);
         }
 
         protected override void UpdateInputs()

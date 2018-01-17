@@ -7,11 +7,11 @@ namespace C3DE.Graphics.Materials.Shaders
 {
     public class ForwardStandardTerrain : ForwardStandardBase
     {
-        private StandardTerrainMaterial m_Material;
-        private EffectParameter m_EPWeightTexture;
-        private EffectParameter m_EPRockTexture;
-        private EffectParameter m_EPSnowTexture;
-        private EffectParameter m_EPSandTexture;
+        protected StandardTerrainMaterial m_Material;
+        protected EffectParameter m_EPWeightTexture;
+        protected EffectParameter m_EPRockTexture;
+        protected EffectParameter m_EPSnowTexture;
+        protected EffectParameter m_EPSandTexture;
 
         public ForwardStandardTerrain(StandardTerrainMaterial material)
         {

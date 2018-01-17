@@ -1,7 +1,3 @@
-#include "../Forward/ShadowMap.fxh"
-#include "../Forward/Lights.fxh"
-#include "Lights.fxh"
-
 // Matrix
 float4x4 World;
 float4x4 View;

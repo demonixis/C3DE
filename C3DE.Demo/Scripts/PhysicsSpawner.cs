@@ -20,6 +20,15 @@ namespace C3DE.Demo.Scripts
         public override void Start()
         {
             VRManager.VRServiceChanged += OnVRChanged;
+
+            var go = new GameObject("Cube");
+            var cube = go.AddComponent<MeshRenderer>();
+            cube.Geometry = new CubeMesh();
+            cube.Geometry.Build();
+            cube.CastShadow = true;
+            cube.ReceiveShadow = false;
+            cube.Material = new UnlitMaterial();
+            cube.Material.DiffuseColor = Color.Red;
         }
 
         public override void Update()
@@ -27,7 +36,7 @@ namespace C3DE.Demo.Scripts
             base.Update();
 
             if (Input.Keys.JustPressed(Keys.Space) || Input.Keys.Pressed(Keys.LeftControl))
-                SpawnCubeAtPosition(Camera.Main.Transform.Position + Camera.Main.Forward * 5, Vector3.Forward);
+                SpawnCubeAtPosition(Camera.Main.Transform.Position + Camera.Main.Forward * 5, Camera.Main.Forward);
 
             if (m_VRService != null && m_RightHand != null && m_VRService.GetButtonDown(1, XRButton.Trigger))
                 SpawnCubeAtPosition(m_RightHand.Position, m_RightHand.Forward);
@@ -36,8 +45,7 @@ namespace C3DE.Demo.Scripts
         private void SpawnCubeAtPosition(Vector3 position, Vector3 forward)
         {
             var go = new GameObject("Cube");
-            Scene.current.Add(go);
-            go.Transform.LocalPosition = position;
+            go.Transform.LocalPosition = new Vector3(0, 1, 0);
            // go.Transform.LocalRotation = forward;
 
             var cube = go.AddComponent<MeshRenderer>();
@@ -56,6 +64,7 @@ namespace C3DE.Demo.Scripts
             var collider = cube.AddComponent<BoxCollider>();
             var rb = cube.AddComponent<Rigidbody>();
             rb.AddComponent<RigidbodyRenderer>();
+            rb.AddForce(forward * 500);
         }
 
         private void OnVRChanged(VRService service)

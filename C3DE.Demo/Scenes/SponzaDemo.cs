@@ -18,6 +18,8 @@ namespace C3DE.Demo.Scenes
         {
             base.Initialize();
 
+            m_DirectionalLight.Intensity = 0.0f;
+
             m_Camera.AddComponent<LightSpawner>();
             var vrPlayerEnabler = m_Camera.AddComponent<VRPlayerEnabler>();
             vrPlayerEnabler.Position = new Vector3(0, 1.0f, 0);

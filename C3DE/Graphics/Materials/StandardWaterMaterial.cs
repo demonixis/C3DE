@@ -35,6 +35,8 @@ namespace C3DE.Graphics.Materials
         {
             if (renderer is ForwardRenderer)
                 m_ShaderMaterial = new ForwardStandardWater(this);
+            else if (renderer is DeferredRenderer)
+                m_ShaderMaterial = new DeferredStandardWater(this);
 
             m_ShaderMaterial.LoadEffect(Application.Content);
         }

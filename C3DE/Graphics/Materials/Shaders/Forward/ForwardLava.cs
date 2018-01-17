@@ -30,6 +30,11 @@ namespace C3DE.Graphics.Materials.Shaders
         public override void LoadEffect(ContentManager content)
         {
             m_Effect = content.Load<Effect>("Shaders/Forward/Lava");
+            SetupParameters();
+        }
+
+        protected virtual void SetupParameters()
+        {
             m_PassAmbient = m_Effect.CurrentTechnique.Passes["AmbientPass"];
             m_EPView = m_Effect.Parameters["View"];
             m_EPProjection = m_Effect.Parameters["Projection"];

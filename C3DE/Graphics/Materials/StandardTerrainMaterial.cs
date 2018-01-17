@@ -17,6 +17,8 @@ namespace C3DE.Graphics.Materials
         {
             if (renderer is ForwardRenderer)
                 m_ShaderMaterial = new ForwardStandardTerrain(this);
+            else if (renderer is DeferredRenderer)
+                m_ShaderMaterial = new DeferredStandardTerrain(this);
 
             m_ShaderMaterial.LoadEffect(Application.Content);
         }

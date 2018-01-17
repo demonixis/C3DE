@@ -511,6 +511,18 @@
 /processorParam:TextureFormat=Compressed
 /build:Models/VRController/vr_controller_01_mrhat.obj
 
+#begin Models/VRController/vr_controller_01_mrhat_Illum.jpg
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Models/VRController/vr_controller_01_mrhat_Illum.jpg
+
 #begin Shaders/Copy.fx
 /importer:EffectImporter
 /processor:EffectProcessor
@@ -552,6 +564,12 @@
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
 /build:Shaders/Deferred/Standard.fx
+
+#begin Shaders/Deferred/StandardTerrain.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Shaders/Deferred/StandardTerrain.fx
 
 #begin Shaders/Deferred/StandardWater.fx
 /importer:EffectImporter

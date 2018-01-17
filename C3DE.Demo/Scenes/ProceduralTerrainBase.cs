@@ -53,6 +53,7 @@ namespace C3DE.Demo.Scenes
             SetupScene();
 
             m_Camera.AddComponent<Scripts.VRPlayerEnabler>();
+            m_Camera.AddComponent<Scripts.DeferredDebuger>();
         }
 
         protected abstract void SetupScene();

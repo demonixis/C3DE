@@ -1,4 +1,6 @@
 ﻿using C3DE.Components;
+using C3DE.Components.Rendering;
+using C3DE.Graphics.Materials;
 using C3DE.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -52,6 +54,16 @@ namespace C3DE.Demo.Scripts
 
             var cModel = Application.Content.Load<Model>("Models/VRController/vr_controller_01_mrhat");
             var controller = cModel.ToMeshRenderers();
+
+            var renderers = controller.GetComponentsInChildren<Renderer>();
+            foreach (var renderer in renderers)
+            {
+                var std = (StandardMaterial)renderer.Material;
+                std.MainTexture = Application.Content.Load<Texture2D>("Models/VRController/vr_controller_01_mrhat_0");
+                std.EmissiveTexture = Application.Content.Load<Texture2D>("Models/VRController/vr_controller_01_mrhat_Illum");
+                std.EmissiveEnabled = true;
+            }
+
             controller.Transform.Parent = m_Hands[id].Transform;
         }
 

@@ -148,15 +148,13 @@ PixelShaderOutput PixelShaderFunction(VertexShaderOutput input) : COLOR0
     input.UV.x = input.UV.x * 20.0 + sin(TotalTime * 3.0 + 10.0) / 256.0;
     input.UV.y = input.UV.y * 20.0;
 
-    float3 diffuse = tex2D(WaterMapSampler, input.UV * TextureTiling).xyz;
+    output.Color = tex2D(WaterMapSampler, input.UV * TextureTiling);
 	
     if (ReflectionTextureEnabled == true)
-        diffuse *= ReflectionColor * texCUBE(reflectiveSampler, normalize(input.Reflection)).xyz;
-
-    output.Color = float4(diffuse * DiffuseColor, 1);
+        output.Color.rgb *= ReflectionColor * texCUBE(reflectiveSampler, normalize(input.Reflection)).xyz;
 
     // Normal
-    float3 normal = input.WorldNormal;
+    output.Normal = float4(input.WorldNormal, 1);
 
     if (NormalTextureEnabled == true)
     {
@@ -169,10 +167,8 @@ PixelShaderOutput PixelShaderFunction(VertexShaderOutput input) : COLOR0
         normalMap = (normalMap + normalMap2) / 2.0;
         normalMap = normalize(mul(normalMap, input.WorldToTangentSpace));
 		
-        normal = normalMap;
+        output.Normal.rgb = normalMap;
     }
-
-    output.Normal = float4(normal, 1);
 
     // Specular
     float4 specularAttributes = float4(SpecularLightColor, SpecularPower);
@@ -180,9 +176,7 @@ PixelShaderOutput PixelShaderFunction(VertexShaderOutput input) : COLOR0
     if (SpecularTextureEnabled == true)
         specularAttributes = tex2D(specularSampler, input.UV * TextureTiling);
 
-    specularAttributes.rgb *= SpecularIntensity;
-
-    output.Color.a = specularAttributes.r;
+    output.Color.a = specularAttributes.r * SpecularIntensity;
     output.Normal.a = specularAttributes.a;
 
     // Depth
@@ -191,30 +185,15 @@ PixelShaderOutput PixelShaderFunction(VertexShaderOutput input) : COLOR0
     return output;
 }
 
-technique Water
+technique RenderTechnique
 {
-    pass AmbientPass
+    pass P0
     {
-        AlphaBlendEnable = TRUE;
-        DestBlend = INVSRCALPHA;
-        SrcBlend = SRCALPHA;
 #if SM4
 		VertexShader = compile vs_4_0_level_9_1 VertexShaderFunction();
-		PixelShader = compile ps_4_0_level_9_1 PixelShaderAmbient();
+		PixelShader = compile ps_4_0_level_9_1 PixelShaderFunction();
 #else
         VertexShader = compile vs_3_0 VertexShaderFunction();
-        PixelShader = compile ps_3_0 PixelShaderAmbient();
-#endif
-    }
-	
-    pass LightPass
-    {
-        AlphaBlendEnable = TRUE;
-        DestBlend = INVSRCALPHA;
-        SrcBlend = SRCALPHA;
-#if SM4
-		PixelShader = compile ps_4_0_level_9_3 PixelShaderFunction();
-#else
         PixelShader = compile ps_3_0 PixelShaderFunction();
 #endif
     }

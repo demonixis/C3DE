@@ -61,6 +61,8 @@
     <Compile Include="Extensions\MatrixExtensions.cs" />
     <Compile Include="Extensions\ModelExtensions.cs" />
     <Compile Include="GameObjectFactory.cs" />
+    <Compile Include="Graphics\Materials\Shaders\Deferred\DeferredLava.cs" />
+    <Compile Include="Graphics\Materials\Shaders\Deferred\DeferredStandardTerrain.cs" />
     <Compile Include="Graphics\Materials\Shaders\Deferred\DeferredStandardWater.cs" />
     <Compile Include="Graphics\Materials\Shaders\Deferred\DeferredTransparent.cs" />
     <Compile Include="Graphics\Materials\Shaders\Deferred\DeferredUnlit.cs" />

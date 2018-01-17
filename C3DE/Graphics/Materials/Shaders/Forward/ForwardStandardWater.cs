@@ -7,7 +7,7 @@ namespace C3DE.Graphics.Materials.Shaders
 {
     public class ForwardStandardWater : ForwardStandardBase
     {
-        private StandardWaterMaterial m_Material;
+        protected StandardWaterMaterial m_Material;
         protected EffectParameter m_EPReflectionTexture;
         protected EffectParameter m_EPReflectionTextureEnabled;
         protected EffectParameter m_EPReflectionColor;
