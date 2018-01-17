@@ -553,6 +553,24 @@
 /processorParam:DebugMode=Auto
 /build:Shaders/Deferred/Standard.fx
 
+#begin Shaders/Deferred/StandardWater.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Shaders/Deferred/StandardWater.fx
+
+#begin Shaders/Deferred/Transparent.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Shaders/Deferred/Transparent.fx
+
+#begin Shaders/Deferred/Unlit.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Shaders/Deferred/Unlit.fx
+
 #begin Shaders/Depth.fx
 /importer:EffectImporter
 /processor:EffectProcessor

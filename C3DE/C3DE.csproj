@@ -61,6 +61,9 @@
     <Compile Include="Extensions\MatrixExtensions.cs" />
     <Compile Include="Extensions\ModelExtensions.cs" />
     <Compile Include="GameObjectFactory.cs" />
+    <Compile Include="Graphics\Materials\Shaders\Deferred\DeferredStandardWater.cs" />
+    <Compile Include="Graphics\Materials\Shaders\Deferred\DeferredTransparent.cs" />
+    <Compile Include="Graphics\Materials\Shaders\Deferred\DeferredUnlit.cs" />
     <Compile Include="Graphics\Materials\Shaders\Forward\IMultipassLightingMaterial.cs" />
     <Compile Include="Graphics\Materials\Shaders\Deferred\DeferredSkybox.cs" />
     <Compile Include="Graphics\Materials\Shaders\Deferred\DeferredStandard.cs" />

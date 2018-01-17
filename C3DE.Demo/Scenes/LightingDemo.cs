@@ -96,6 +96,7 @@ namespace C3DE.Demo.Scenes
             var model = Application.Content.Load<Model>("Models/Quandtum/Quandtum");
             var mesh = model.ToMeshRenderers(this);
             mesh.Transform.LocalScale = new Vector3(0.25f);
+            mesh.Transform.Rotate(0, 0, -MathHelper.PiOver2);
             var renderer = mesh.GetComponentInChildren<MeshRenderer>();
             renderer.CastShadow = true;
             renderer.ReceiveShadow = true;

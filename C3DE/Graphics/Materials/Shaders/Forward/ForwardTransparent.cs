@@ -3,7 +3,7 @@ using C3DE.Components.Rendering;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace C3DE.Graphics.Materials.Shaders.Forward
+namespace C3DE.Graphics.Materials.Shaders
 {
     public class ForwardTransparent : ShaderMaterial
     {
@@ -28,7 +28,6 @@ namespace C3DE.Graphics.Materials.Shaders.Forward
         public override void Pass(Renderer renderable)
         {
             m_Effect.Parameters["TextureTiling"].SetValue(m_Material.Tiling);
-            m_Effect.Parameters["TextureOffset"].SetValue(m_Material.Offset);
             m_Effect.Parameters["AmbientColor"].SetValue(Scene.current.RenderSettings.ambientColor);
             m_Effect.Parameters["DiffuseColor"].SetValue(m_Material.m_DiffuseColor);
             m_Effect.Parameters["MainTexture"].SetValue(m_Material.MainTexture);

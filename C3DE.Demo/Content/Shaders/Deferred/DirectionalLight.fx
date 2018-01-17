@@ -85,7 +85,7 @@ float4 PixelShaderAmbient(VertexShaderOutput input) : COLOR0
     float depthVal = depth.r;
 
     // Unlit case: If all depth values are 9 we just draw the color on the lightmap.
-    if (depth.r == 0 && depth.g == 0 && depth.b == 0)
+    if (depth.r == 0 && depth.g == 0 && depth.b == 0 && depth.a == 0)
         return float4(color.rgb, 0);
 
     float4 normalData = tex2D(normalSampler, input.UV);

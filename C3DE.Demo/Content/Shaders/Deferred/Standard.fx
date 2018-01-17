@@ -171,6 +171,9 @@ PixelShaderOutput PixelShaderAmbient(VertexShaderOutput input)
     output.Normal.a = specularAttributes.a;
     output.Depth = input.Depth.x / input.Depth.y;
 
+    if (emissiveColor.r + emissiveColor.g + emissiveColor.b > 0)
+        output.Depth = 0;
+
     return output;
 }
 

@@ -11,6 +11,8 @@ namespace C3DE.Graphics.Materials
         {
             if (renderer is ForwardRenderer || renderer is LightPrePassRenderer)
                 m_ShaderMaterial = new ForwardUnlit(this);
+            else if (renderer is DeferredRenderer)
+                m_ShaderMaterial = new DeferredUnlit(this);
 
             m_ShaderMaterial.LoadEffect(Application.Content);
         }

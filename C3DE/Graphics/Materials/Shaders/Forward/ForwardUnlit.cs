@@ -25,6 +25,11 @@ namespace C3DE.Graphics.Materials.Shaders
         public override void LoadEffect(ContentManager content)
         {
             m_Effect = content.Load<Effect>("Shaders/Forward/Unlit");
+            SetupParamaters();
+        }
+
+        protected virtual void SetupParamaters()
+        {
             m_PassColor = m_Effect.CurrentTechnique.Passes["UnlitColor"];
             m_PassTexture = m_Effect.CurrentTechnique.Passes["UnlitTexture"];
             m_EPView = m_Effect.Parameters["View"];
