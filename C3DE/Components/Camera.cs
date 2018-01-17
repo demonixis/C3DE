@@ -175,11 +175,6 @@ namespace C3DE.Components
             _needProjectionUpdate = true;
         }
 
-        private void SyncTransform()
-        {
-
-        }
-
         public void Setup(Vector3 position, Vector3 camTarget, Vector3 upVector)
         {
             m_Transform.LocalPosition = position;
@@ -220,6 +215,12 @@ namespace C3DE.Components
             return frustrum.GetCorners();
         }
 
+        public void LookAt(Vector3 target)
+        {
+            var position = m_Transform.Position;
+            m_ViewMatrix = Matrix.CreateLookAt(position, target, _upVector);
+        }
+
         public override void Update()
         {
             if (_needProjectionUpdate)
@@ -227,7 +228,12 @@ namespace C3DE.Components
 
             if (!m_GameObject.IsStatic || _needUpdate)
             {
-                m_ViewMatrix = Matrix.CreateLookAt(m_Transform.m_WorldMatrix.Translation, _target, _upVector);
+                var position = m_Transform.Position;
+                var rotation = m_Transform.Rotation;
+                var matrix = Matrix.CreateFromYawPitchRoll(rotation.Y, rotation.X, rotation.Z);
+                var target = position + Vector3.Transform(Vector3.Forward, matrix);
+
+                m_ViewMatrix = Matrix.CreateLookAt(position, target, _upVector);
                 _needUpdate = false;
             }
         }

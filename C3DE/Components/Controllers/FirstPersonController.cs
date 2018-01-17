@@ -125,17 +125,8 @@ namespace C3DE.Components.Controllers
             m_Transform.Translate(ref _transformedReference);
             m_Transform.Rotate(ref rotation);
 
-            // Update target
-            _camera.Target = m_Transform.LocalPosition + Vector3.Transform(Vector3.Forward, _rotationMatrix);
-
             translation *= Velocity;
             rotation *= AngularVelocity;
-        }
-
-        private Vector3 RotationToDirection(Vector3 position, Vector3 rotation)
-        {
-            var matrix = Matrix.CreateFromYawPitchRoll(rotation.Y, rotation.X, rotation.Z);
-            return position + Vector3.Transform(Vector3.Forward, matrix);
         }
 
         protected override void UpdateInputs()

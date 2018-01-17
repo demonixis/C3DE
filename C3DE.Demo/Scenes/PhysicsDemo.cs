@@ -17,6 +17,8 @@ namespace C3DE.Demo.Scenes
 
             m_Camera.AddComponent<PhysicsSpawner>();
 
+            SetControlMode(ControllerSwitcher.ControllerType.FPS, new Vector3(0, 2, 0), Vector3.Zero, true);
+
             var terrainMaterial = new StandardMaterial();
             terrainMaterial.MainTexture = Application.Content.Load<Texture2D>("Textures/Terrain/Sand");
             terrainMaterial.NormalTexture = Application.Content.Load<Texture2D>("Textures/Terrain/Sand_Normal");
