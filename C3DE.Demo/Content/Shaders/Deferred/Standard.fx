@@ -1,7 +1,6 @@
 float4x4 World;
 float4x4 View;
 float4x4 Projection;
-float3 AmbientColor;
 float3 DiffuseColor;
 bool NormalTextureEnabled;
 bool SpecularTextureEnabled;
@@ -136,7 +135,7 @@ PixelShaderOutput PixelShaderAmbient(VertexShaderOutput input)
 {
     PixelShaderOutput output = (PixelShaderOutput) 0;
 
-    output.Color = float4(AmbientColor + (tex2D(diffuseSampler, input.UV * TextureTiling).rgb * DiffuseColor), 1.0f);
+    output.Color = float4((tex2D(diffuseSampler, input.UV * TextureTiling).rgb * DiffuseColor), 1.0f);
 
     if (ReflectionTextureEnabled == true)
         output.Color *= texCUBE(reflectionSampler, normalize(input.Reflection));

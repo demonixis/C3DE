@@ -48,6 +48,8 @@ namespace OculusRiftSample
         public HmdInfo HmdInfo;
         public HeadTracking HeadTracking;
 
+        public bool Initialized { get; private set; }
+
         Matrix[] ProjectionMatrix = new Matrix[2];     // one for each eye
         public Point[] RenderTargetRes = new Point[2]; // one for each eye
 
@@ -85,6 +87,8 @@ namespace OculusRiftSample
 
             for (int eye = 0; eye < 2; eye++)
                 ProjectionMatrix[eye] = NativeRift.GetProjectionMatrix(eye, 0.1f, 1000, 0);
+
+            Initialized = true;
 
             return 0;
         }

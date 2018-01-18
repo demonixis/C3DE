@@ -45,7 +45,7 @@ struct VertexShaderOutput
 VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
 {
     VertexShaderOutput output;
-    output.Position = mul(input.Position, WorldViewProjection);;
+    output.Position = mul(input.Position, WorldViewProjection);
     output.LightPosition = output.Position;
     return output;
 }

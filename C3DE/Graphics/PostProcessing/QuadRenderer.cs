@@ -14,46 +14,34 @@ namespace C3DE.Graphics.PostProcessing
     /// </summary>
     public sealed class QuadRenderer
     {
-        private readonly VertexPositionTexture[] _vertexBuffer;
-        private readonly short[] _indexBuffer;
+        private GraphicsDevice m_GraphicsDevice;
+        private readonly VertexPositionTexture[] m_VertexBuffer;
+        private readonly short[] m_IndexBuffer;
 
         public QuadRenderer(GraphicsDevice graphicsDevice)
         {
-            _vertexBuffer = new VertexPositionTexture[4];
-            _vertexBuffer[0] = new VertexPositionTexture(new Vector3(-1, 1, 1), new Vector2(0, 0));
-            _vertexBuffer[1] = new VertexPositionTexture(new Vector3(1, 1, 1), new Vector2(1, 0));
-            _vertexBuffer[2] = new VertexPositionTexture(new Vector3(-1, -1, 1), new Vector2(0, 1));
-            _vertexBuffer[3] = new VertexPositionTexture(new Vector3(1, -1, 1), new Vector2(1, 1));
-            _indexBuffer = new short[] { 0, 3, 2, 0, 1, 3 };
+            m_GraphicsDevice = graphicsDevice;
+            m_VertexBuffer = new VertexPositionTexture[4];
+            m_VertexBuffer[0] = new VertexPositionTexture(new Vector3(-1, 1, 1), new Vector2(0, 0));
+            m_VertexBuffer[1] = new VertexPositionTexture(new Vector3(1, 1, 1), new Vector2(1, 0));
+            m_VertexBuffer[2] = new VertexPositionTexture(new Vector3(-1, -1, 1), new Vector2(0, 1));
+            m_VertexBuffer[3] = new VertexPositionTexture(new Vector3(1, -1, 1), new Vector2(1, 1));
+            m_IndexBuffer = new short[] { 0, 3, 2, 0, 1, 3 };
         }
 
-        public void RenderQuad(GraphicsDevice device, Vector2 v1, Vector2 v2)
+        public void RenderQuad(Vector2 v1, Vector2 v2)
         {
-            _vertexBuffer[0].Position.X = v1.X;
-            _vertexBuffer[0].Position.Y = v2.Y;
-            _vertexBuffer[1].Position.X = v2.X;
-            _vertexBuffer[1].Position.Y = v2.Y;
-            _vertexBuffer[2].Position.X = v1.X;
-            _vertexBuffer[2].Position.Y = v1.Y;
-            _vertexBuffer[3].Position.X = v2.X;
-            _vertexBuffer[3].Position.Y = v1.Y;
-            device.DrawUserIndexedPrimitives(PrimitiveType.TriangleList, _vertexBuffer, 0, 4, _indexBuffer, 0, 2);
+            m_VertexBuffer[0].Position.X = v1.X;
+            m_VertexBuffer[0].Position.Y = v2.Y;
+            m_VertexBuffer[1].Position.X = v2.X;
+            m_VertexBuffer[1].Position.Y = v2.Y;
+            m_VertexBuffer[2].Position.X = v1.X;
+            m_VertexBuffer[2].Position.Y = v1.Y;
+            m_VertexBuffer[3].Position.X = v2.X;
+            m_VertexBuffer[3].Position.Y = v1.Y;
+            m_GraphicsDevice.DrawUserIndexedPrimitives(PrimitiveType.TriangleList, m_VertexBuffer, 0, 4, m_IndexBuffer, 0, 2);
         }
 
-        public void RenderFullscreenQuad(GraphicsDevice device) => RenderQuad(device, Vector2.One * -1, Vector2.One);
-
-        public void RenderQuadForEye(GraphicsDevice device, bool leftEye)
-        {
-            var left = new Vector2(-1.0f, -1.0f);
-            var right = new Vector2(0.0f, 1.0f);
-
-            if (!leftEye)
-            {
-                left.X = 0.0f;
-                right.X = 1.0f;
-            }
-
-            RenderQuad(device, left, right);
-        }
+        public void RenderFullscreenQuad() => RenderQuad(Vector2.One * -1, Vector2.One);
     }
 }

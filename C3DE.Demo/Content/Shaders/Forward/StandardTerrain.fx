@@ -8,12 +8,12 @@ float4x4 View;
 float4x4 Projection;
 
 // Material
-float3 AmbientColor = float3(1.0, 1.0, 1.0);
-float3 DiffuseColor = float3(1.0, 1.0, 1.0);
+float3 AmbientColor;
+float3 DiffuseColor;
 
 // Misc
-float2 TextureTiling = float2(1, 1);
-float3 EyePosition = float3(1, 1, 0);
+float2 TextureTiling;
+float3 EyePosition;
 
 texture2D MainTexture;
 sampler2D MainTextureSampler = sampler_state

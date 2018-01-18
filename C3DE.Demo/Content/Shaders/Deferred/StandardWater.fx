@@ -1,7 +1,6 @@
 float4x4 World;
 float4x4 View;
 float4x4 Projection;
-float3 AmbientColor;
 float3 DiffuseColor;
 
 bool ReflectionTextureEnabled = false;
@@ -125,19 +124,6 @@ VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
     output.WorldToTangentSpace[2] = input.Normal;
 
     return output;
-}
-
-float3 CalcDiffuseColor(VertexShaderOutput input)
-{
-    input.UV.x = input.UV.x * 20.0 + sin(TotalTime * 3.0 + 10.0) / 256.0;
-    input.UV.y = input.UV.y * 20.0;
-
-    float3 diffuse = tex2D(WaterMapSampler, input.UV * TextureTiling).xyz;
-	
-    if (ReflectionTextureEnabled == true)
-        return diffuse * ReflectionColor * texCUBE(reflectiveSampler, normalize(input.Reflection)).xyz;
-	
-    return diffuse * DiffuseColor;
 }
 
 PixelShaderOutput PixelShaderFunction(VertexShaderOutput input) : COLOR0

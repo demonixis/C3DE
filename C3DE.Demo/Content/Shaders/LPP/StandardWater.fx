@@ -4,7 +4,6 @@ float4x4 View;
 float4x4 Projection;
 
 // Material
-float3 AmbientColor;
 float3 DiffuseColor;
 
 bool ReflectionTextureEnabled = false;
@@ -135,8 +134,6 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
     diffuse = diffuse * DiffuseColor;
 
     float3 light = GetLightingValue(input.CopyPosition);
-    diffuse += AmbientColor;
-
     float shadow = CalcShadow(input.WorldPosition);
     float3 diffuse2 = light * shadow * diffuse;
     float3 specular = CalcSpecular(input.WorldPosition, normal, EyePosition, input.UV * TextureTiling);

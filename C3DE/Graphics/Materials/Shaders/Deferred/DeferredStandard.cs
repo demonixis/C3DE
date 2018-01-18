@@ -69,7 +69,6 @@ namespace C3DE.Graphics.Materials.Shaders
             m_EPView.SetValue(camera.m_ViewMatrix);
             m_EPProjection.SetValue(camera.m_ProjectionMatrix);
             m_EPEyePosition.SetValue(camera.Transform.LocalPosition);
-            m_EPAmbientColor.SetValue(Scene.current.RenderSettings.ambientColor);
         }
 
         public override void Pass(Renderer renderable)

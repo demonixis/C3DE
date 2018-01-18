@@ -14,14 +14,18 @@ namespace C3DE.Graphics.PostProcessing
         private RenderTarget2D m_SceneRenderTarget;
         private RenderTarget2D m_DepthBuffer;
         private QuadRenderer m_QuadRenderer;
-        private RenderSettings m_RenderSettings;
 
-        public bool DistanceFog = true;
-        public bool ExcludeFarPixels = true;
-        public bool UseRadialDistance = false;
-        public bool HeightFog = true;
-        public float Height = 50;
-        public float HeightDensity = 0.5f;
+        public FogMode Mode { get; set; } = FogMode.Linear;
+        public float Density { get; set; } = 0.0085f;
+        public float Start { get; set; } = 10;
+        public float End { get; set; } = 500;
+
+        public bool DistanceFog { get; set; } = true;
+        public bool ExcludeFarPixels { get; set; } = true;
+        public bool UseRadialDistance { get; set; } = false;
+        public bool HeightFog { get; set; } = true;
+        public float Height { get; set; } = 10;
+        public float HeightDensity { get; set; } = 0.5f;
 
         public bool ExcludeSkybox
         {
@@ -43,7 +47,7 @@ namespace C3DE.Graphics.PostProcessing
             }
         }
 
-        public GlobalFog(GraphicsDevice graphics, bool excludeSkybox = false) 
+        public GlobalFog(GraphicsDevice graphics, bool excludeSkybox = false)
             : base(graphics)
         {
             ExcludeSkybox = excludeSkybox;
@@ -80,13 +84,11 @@ namespace C3DE.Graphics.PostProcessing
             }
 
             m_QuadRenderer = new QuadRenderer(m_GraphicsDevice);
-            m_RenderSettings = Scene.current.RenderSettings;
-            m_RenderSettings.FogEnabled = false;
         }
 
         public override void Draw(SpriteBatch spriteBatch, RenderTarget2D renderTarget)
         {
-            if (m_RenderSettings.FogMode == FogMode.None)
+            if (Mode == FogMode.None)
                 return;
 
             m_GraphicsDevice.SetRenderTarget(m_SceneRenderTarget);
@@ -104,14 +106,14 @@ namespace C3DE.Graphics.PostProcessing
             var FdotC = camPos.Y - Height;
             var paramK = (FdotC <= 0.0f ? 1.0f : 0.0f);
             var excludeDepth = (ExcludeFarPixels ? 1.0f : 2.0f);
-            var sceneMode = m_RenderSettings.FogMode;
-            var sceneDensity = m_RenderSettings.FogDensity;
+            var sceneMode = Mode;
+            var sceneDensity = Density;
             var heightParams = new Vector4(Height, FdotC, paramK, HeightDensity * 0.5f);
-            var distanceParams = new Vector4(-Math.Max(m_RenderSettings.FogStart, 0.0f), excludeDepth, 0, 0);
+            var distanceParams = new Vector4(-Math.Max(Start, 0.0f), excludeDepth, 0, 0);
             var linear = sceneMode == FogMode.Linear;
-            var diff = linear ? m_RenderSettings.FogEnd - m_RenderSettings.FogStart : 0.0f;
+            var diff = linear ? End - Start : 0.0f;
             var invDiff = Math.Abs(diff) > 0.0001f ? 1.0f / diff : 0.0f;
-            var sceneParams = new Vector4(sceneDensity * 1.2011224087f, sceneDensity * 1.4426950408f, linear ? -invDiff : 0.0f, linear ? m_RenderSettings.FogEnd * invDiff : 0.0f);
+            var sceneParams = new Vector4(sceneDensity * 1.2011224087f, sceneDensity * 1.4426950408f, linear ? -invDiff : 0.0f, linear ? End * invDiff : 0.0f);
             var fogMode = new Vector4((int)sceneMode, UseRadialDistance ? 1 : 0, 0, 0);
             var textureSamplerTexelSize = new Vector4(1.0f / (float)renderTarget.Width, 1.0f / (float)renderTarget.Height, renderTarget.Width, renderTarget.Height);
             var projectionParams = new Vector4(1.0f, Camera.Main.Near, Camera.Main.Far, 1.0f / Camera.Main.Far);
@@ -137,7 +139,7 @@ namespace C3DE.Graphics.PostProcessing
                 passIndex = 2;
 
             m_Effect.CurrentTechnique.Passes[passIndex].Apply();
-            m_QuadRenderer.RenderFullscreenQuad(m_GraphicsDevice);
+            m_QuadRenderer.RenderFullscreenQuad();
 
             m_GraphicsDevice.SetRenderTarget(null);
             m_GraphicsDevice.Textures[1] = m_SceneRenderTarget;

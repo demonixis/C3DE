@@ -4,7 +4,6 @@ float4x4 View;
 float4x4 Projection;
 
 // Material
-float3 AmbientColor;
 float3 DiffuseColor;
 float3 SpecularLightColor;
 float SpecularPower;

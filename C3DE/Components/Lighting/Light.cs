@@ -18,6 +18,7 @@ namespace C3DE.Components.Lighting
         internal protected Matrix m_ProjectionMatrix;
         internal protected ShadowGenerator m_ShadowGenerator;
         internal protected Vector3 m_Color = Color.White.ToVector3();
+        private Effect m_DeferredAmbientEffect;
         private Effect m_DeferredDirLightEffect;
         private Effect m_DeferredPointLightEffect;
         private Effect m_LPPPointLightEffect;
@@ -107,6 +108,7 @@ namespace C3DE.Components.Lighting
             m_QuadRenderer = new QuadRenderer(Application.GraphicsDevice);
 
             var content = Application.Content;
+            m_DeferredAmbientEffect = content.Load<Effect>("Shaders/Deferred/AmbientLight");
             m_DeferredDirLightEffect = content.Load<Effect>("Shaders/Deferred/DirectionalLight");
             m_DeferredPointLightEffect = content.Load<Effect>("Shaders/Deferred/PointLight");
             m_LPPDirLightEffect = content.Load<Effect>("Shaders/LPP/DirectionalLight");
@@ -136,7 +138,13 @@ namespace C3DE.Components.Lighting
             var invViewProjection = Matrix.Invert(viewProjection);
             var viewport = new Vector2(Screen.Width, Screen.Height);
 
-            if (TypeLight == LightType.Directional)
+            if (TypeLight == LightType.Ambient)
+            {
+                m_DeferredAmbientEffect.Parameters["Color"].SetValue(m_Color);
+                m_DeferredAmbientEffect.CurrentTechnique.Passes[0].Apply();
+                m_QuadRenderer.RenderFullscreenQuad();
+            }
+            else if (TypeLight == LightType.Directional)
             {
                 m_LPPDirLightEffect.Parameters["NormalTexture"].SetValue(normal);
                 m_LPPDirLightEffect.Parameters["DepthTexture"].SetValue(depth);
@@ -146,7 +154,7 @@ namespace C3DE.Components.Lighting
                 m_LPPDirLightEffect.Parameters["LightPosition"].SetValue(Transform.Position);
                 m_LPPDirLightEffect.Parameters["LightIntensity"].SetValue(Intensity);
                 m_LPPDirLightEffect.CurrentTechnique.Passes[0].Apply();
-                m_QuadRenderer.RenderFullscreenQuad(Application.GraphicsDevice);
+                m_QuadRenderer.RenderFullscreenQuad();
             }
             else
             {
@@ -180,14 +188,15 @@ namespace C3DE.Components.Lighting
         {
             var graphics = Application.GraphicsDevice;
             var invertViewProjection = Matrix.Invert(camera.m_ViewMatrix * camera.m_ProjectionMatrix);
-            //var lightViewProjection = m_ViewMatrix * m_ProjectionMatrix;
 
-            if (TypeLight == LightType.Directional)
+            if (TypeLight == LightType.Ambient)
             {
-                /*m_DeferredDirLightEffect.Parameters["ShadowMap"].SetValue(m_ShadowGenerator.ShadowMap);
-                m_DeferredDirLightEffect.Parameters["ShadowBias"].SetValue(m_ShadowGenerator.ShadowBias);
-                m_DeferredDirLightEffect.Parameters["ShadowEnabled"].SetValue(m_ShadowGenerator.Enabled);
-                m_DeferredDirLightEffect.Parameters["LightViewProjection"].SetValue(lightViewProjection);*/
+                m_DeferredAmbientEffect.Parameters["Color"].SetValue(m_Color);
+                m_DeferredAmbientEffect.CurrentTechnique.Passes[0].Apply();
+                m_QuadRenderer.RenderFullscreenQuad();
+            }
+            else if (TypeLight == LightType.Directional)
+            {
                 m_DeferredDirLightEffect.Parameters["ColorMap"].SetValue(colorMap);
                 m_DeferredDirLightEffect.Parameters["NormalMap"].SetValue(normalMap);
                 m_DeferredDirLightEffect.Parameters["DepthMap"].SetValue(depthMap);
@@ -198,7 +207,7 @@ namespace C3DE.Components.Lighting
                 m_DeferredDirLightEffect.Parameters["LightPosition"].SetValue(m_Transform.LocalPosition);
                 m_DeferredDirLightEffect.Parameters["World"].SetValue(m_Transform.m_WorldMatrix);
                 m_DeferredDirLightEffect.CurrentTechnique.Passes[0].Apply();
-                m_QuadRenderer.RenderFullscreenQuad(Application.GraphicsDevice);
+                m_QuadRenderer.RenderFullscreenQuad();
             }
             else
             {

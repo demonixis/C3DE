@@ -529,6 +529,12 @@
 /processorParam:DebugMode=Auto
 /build:Shaders/Copy.fx
 
+#begin Shaders/Deferred/AmbientLight.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Shaders/Deferred/AmbientLight.fx
+
 #begin Shaders/Deferred/Clear.fx
 /importer:EffectImporter
 /processor:EffectProcessor

@@ -21,7 +21,7 @@ namespace C3DE.Demo.Scripts
                 
             var mat = renderer.Material as StandardTerrainMaterial;
             _material = mat ?? throw new Exception("You need to use a TerrainMaterial with a non null weightMap.");
-            _rect = new Rectangle(0, 0, 150, 150);
+            _rect = new Rectangle(0, Screen.VirtualHeight - 200, 150, 150);
         }
 
         public override void OnGUI(GUI gui)

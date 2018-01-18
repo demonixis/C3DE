@@ -32,7 +32,9 @@ namespace C3DE.VR
 
             if (_oculusRift != null)
             {
-                _oculusRift.Shutdown();
+                if (_oculusRift.Initialized)
+                    _oculusRift.Shutdown();
+
                 _oculusRift = null;
             }
         }

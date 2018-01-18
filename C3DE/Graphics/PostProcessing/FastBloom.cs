@@ -113,7 +113,7 @@ namespace C3DE.Graphics.PostProcessing
             m_Effect.Parameters["MainTexture"].SetValue(source);
             m_Effect.Parameters["MainTextureTexelSize"].SetValue(textureSamplerTexelSize);
             m_Effect.CurrentTechnique.Passes[pass].Apply();
-            m_QuadRenderer.RenderFullscreenQuad(m_GraphicsDevice);
+            m_QuadRenderer.RenderFullscreenQuad();
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using C3DE.Components;
+using C3DE.Components.Lighting;
 using C3DE.Graphics.PostProcessing;
 using C3DE.UI;
 using C3DE.VR;
@@ -16,6 +17,7 @@ namespace C3DE.Graphics.Rendering
         protected SpriteBatch m_spriteBatch;
         protected internal RenderTarget2D[] m_SceneRenderTargets = new RenderTarget2D[2];
         protected VRService m_VRService;
+        protected Light m_AmbientLight;
         protected internal GUI m_uiManager;
         protected bool m_IsDisposed;
         protected bool m_HDRSupport = false;
@@ -55,6 +57,10 @@ namespace C3DE.Graphics.Rendering
             m_spriteBatch = new SpriteBatch(m_graphicsDevice);
             m_uiManager = new GUI(m_spriteBatch);
             m_uiManager.LoadContent(content);
+
+            m_AmbientLight = new Light();
+            m_AmbientLight.TypeLight = LightType.Ambient;
+            m_AmbientLight.Start();
         }
 
         protected RenderTarget2D CreateRenderTarget(SurfaceFormat surfaceFormat = SurfaceFormat.Color, DepthFormat depthFormat = DepthFormat.Depth24, bool mipMap = false)

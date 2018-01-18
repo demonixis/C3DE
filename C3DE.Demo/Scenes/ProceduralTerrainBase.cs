@@ -34,26 +34,9 @@ namespace C3DE.Demo.Scenes
             terrainMaterial.WeightTexture = m_Terrain.GenerateWeightMap();
             terrainMaterial.Tiling = new Vector2(4);
 
-            // Sun Flares
-            var content = Application.Content;
-            var glowTexture = content.Load<Texture2D>("Textures/Flares/glow");
-            var flareTextures = new Texture2D[]
-            {
-                content.Load<Texture2D>("Textures/Flares/flare1"),
-                content.Load<Texture2D>("Textures/Flares/flare2"),
-                content.Load<Texture2D>("Textures/Flares/flare3")
-            };
-            var direction = m_DirectionalLight.Transform.LocalRotation;
-            direction.Normalize();
-
-            var sunflares = m_Camera.AddComponent<LensFlare>();
-            sunflares.LightDirection = direction;
-            sunflares.Setup(glowTexture, flareTextures);
-
             SetupScene();
 
             m_Camera.AddComponent<Scripts.VRPlayerEnabler>();
-            m_Camera.AddComponent<Scripts.DeferredDebuger>();
         }
 
         protected abstract void SetupScene();

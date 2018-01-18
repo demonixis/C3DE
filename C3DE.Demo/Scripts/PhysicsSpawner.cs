@@ -14,12 +14,20 @@ namespace C3DE.Demo.Scripts
 {
     public class PhysicsSpawner : Behaviour
     {
+        private bool m_VREnabled;
         private VRService m_VRService;
         private Transform m_RightHand;
+        private Transform m_LeftHand;
+        private StandardMaterial m_Material;
 
         public override void Start()
         {
             VRManager.VRServiceChanged += OnVRChanged;
+
+            m_Material = new StandardMaterial();
+            m_Material.DiffuseColor = RandomHelper.GetColor();
+            m_Material.MainTexture = Application.Content.Load<Texture2D>("Textures/Terrain/Rock");
+            m_Material.NormalTexture = Application.Content.Load<Texture2D>("Textures/Terrain/Rock_Normal");
 
             var go = new GameObject("Cube");
             var cube = go.AddComponent<MeshRenderer>();
@@ -27,8 +35,7 @@ namespace C3DE.Demo.Scripts
             cube.Geometry.Build();
             cube.CastShadow = true;
             cube.ReceiveShadow = false;
-            cube.Material = new UnlitMaterial();
-            cube.Material.DiffuseColor = Color.Red;
+            cube.Material = m_Material;
         }
 
         public override void Update()
@@ -40,6 +47,9 @@ namespace C3DE.Demo.Scripts
 
             if (m_VRService != null && m_RightHand != null && m_VRService.GetButtonDown(1, XRButton.Trigger))
                 SpawnCubeAtPosition(m_RightHand.Position, m_RightHand.Forward);
+
+            if (m_VRService != null && m_LeftHand != null && m_VRService.GetButtonDown(0, XRButton.Trigger))
+                SpawnCubeAtPosition(m_LeftHand.Position, m_LeftHand.Forward);
         }
 
         private void SpawnCubeAtPosition(Vector3 position, Vector3 forward)
@@ -49,27 +59,22 @@ namespace C3DE.Demo.Scripts
 
             var cube = go.AddComponent<MeshRenderer>();
             cube.Geometry = new CubeMesh();
-            cube.Geometry.Size = new Vector3(VRManager.Enabled ? 0.25f : 1.0f);
+            cube.Geometry.Size = new Vector3(m_VREnabled ? 0.25f : 1.0f);
             cube.Geometry.Build();
             cube.CastShadow = true;
-            cube.ReceiveShadow = false;
-
-             var material = new StandardMaterial();
-            material.DiffuseColor = RandomHelper.GetColor();
-            material.MainTexture = Application.Content.Load<Texture2D>("Textures/Terrain/Rock");
-            material.NormalTexture = Application.Content.Load<Texture2D>("Textures/Terrain/Rock_Normal");
-            cube.Material = material;
+            cube.ReceiveShadow = true;
+            cube.Material = m_Material;
 
             var collider = cube.AddComponent<BoxCollider>();
             var rb = cube.AddComponent<Rigidbody>();
             rb.AddComponent<RigidbodyRenderer>();
-            rb.AddForce(forward * 1250);
+            rb.AddForce(forward * (m_VREnabled ? 5 : 800));
         }
 
         private void OnVRChanged(VRService service)
         {
             m_VRService = service;
-
+            m_VREnabled = service != null;
             StartCoroutine(SetupVRPlayer());
         }
 
@@ -78,12 +83,16 @@ namespace C3DE.Demo.Scripts
             yield return Coroutine.WaitForSeconds(0.5f);
 
             var player = Camera.Main.Transform.Parent;
-            if (player != null)
+            if (player == null)
+                yield break;
+
+            var controllers = player.GetComponentsInChildren<MotionController>();
+            foreach (var controller in controllers)
             {
-                var controllers = player.GetComponentsInChildren<MotionController>();
-                foreach (var controller in controllers)
-                    if (!controller.LeftHand)
-                        m_RightHand = controller.Transform;
+                if (!controller.LeftHand)
+                    m_RightHand = controller.Transform;
+                else
+                    m_LeftHand = controller.Transform;
             }
         }
     }

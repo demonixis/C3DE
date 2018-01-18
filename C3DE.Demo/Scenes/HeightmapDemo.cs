@@ -1,6 +1,4 @@
-﻿using C3DE.Components;
-using C3DE.Components.Lighting;
-using C3DE.Components.Rendering;
+﻿using C3DE.Components.Rendering;
 using C3DE.Demo.Scripts;
 using C3DE.Graphics.Materials;
 using Microsoft.Xna.Framework;
@@ -19,8 +17,7 @@ namespace C3DE.Demo.Scenes
             var content = Application.Content;
 
             m_DirectionalLight.AddComponent<LightMover>();
-            m_DirectionalLight.AddComponent<LightSwitcher>().LogPositionRotation = false;
-            m_DirectionalLight.ShadowGenerator.ShadowStrength = 0.5f;
+            m_DirectionalLight.AddComponent<LightSwitcher>().SetBoxAlign(true);
 
             // Finally a terrain
             var terrainMaterial = new StandardTerrainMaterial();
@@ -49,25 +46,9 @@ namespace C3DE.Demo.Scenes
             water.Transform.Translate(0, 10.0f, 0);
             m_Scene.Add(water);
 
-            // Sun Flares
-            var glowTexture = content.Load<Texture2D>("Textures/Flares/glow");
-            var flareTextures = new Texture2D[]
-            {
-                content.Load<Texture2D>("Textures/Flares/flare1"),
-                content.Load<Texture2D>("Textures/Flares/flare2"),
-                content.Load<Texture2D>("Textures/Flares/flare3")
-            };
-
-            var direction = m_DirectionalLight.Transform.LocalRotation;
-            direction.Normalize();
-
-            var sunflares = m_Camera.AddComponent<LensFlare>();
-            sunflares.LightDirection = direction; 
-            sunflares.Setup(glowTexture, flareTextures);
-
             // And fog
             RenderSettings.FogDensity = 0.0085f;
-            RenderSettings.FogMode = FogMode.Exp2;
+            RenderSettings.FogMode = FogMode.None;
             RenderSettings.Skybox.FogSupported = true;
             RenderSettings.Skybox.OverrideSkyboxFog(FogMode.Exp2, 0.05f, 0, 0);
 

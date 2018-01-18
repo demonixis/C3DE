@@ -4,7 +4,6 @@ float4x4 View;
 float4x4 Projection;
 
 // Material
-float3 AmbientColor;
 float3 DiffuseColor;
 
 // Misc
@@ -59,7 +58,7 @@ PixelShaderOutput PixelShaderFunction(VertexShaderOutput input) : COLOR0
     PixelShaderOutput output = (PixelShaderOutput) 0;
 
     float4 diffuse = tex2D(textureSampler, input.UV * TextureTiling);
-    float4 finalColor = float4(AmbientColor + DiffuseColor * diffuse.xyz, 1.0);
+    float4 finalColor = float4(DiffuseColor * diffuse.xyz, 1.0);
 	
     clip(diffuse.a < 0.1f ? -1 : 1);
 

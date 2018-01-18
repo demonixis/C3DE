@@ -35,22 +35,9 @@ namespace C3DE.Demo.Scripts
 
             // Setup PostProcess.
 #if !DESKTOP
-            var colorGrading = new ColorGrading(graphics);
-            AddPostProcess(colorGrading);
-            colorGrading.LookUpTable = Application.Content.Load<Texture2D>("Textures/Luts/lut_default");
-
             var ssao = new ScreenSpaceAmbientObscurance(graphics);
             AddPostProcess(ssao);
 #endif
-
-            var oldBloom = new BloomLegacy(graphics);
-            AddPostProcess(oldBloom);
-            oldBloom.Settings = new BloomLegacySettings("Profile", 0.15f, 1f, 4.0f, 1.0f, 1f, 1f);
-
-            var newBloom = new Bloom(graphics);
-            AddPostProcess(newBloom);
-            newBloom.SetPreset(new float[] { 5, 1, 1, 1, 1 }, new float[] { 1, 1, 1, 1, 1 }, 1, 5);
-
             var fastBloom = new FastBloom(graphics);
             AddPostProcess(fastBloom);
 
@@ -79,13 +66,13 @@ namespace C3DE.Demo.Scripts
 
 #if !DESKTOP
             titles.AddRange(new string[] {
-                "Color Grading", "Ambient Obscurance"
+                "Ambient Obscurance"
             });
 #endif
 
             titles.AddRange(new string[]
             {
-                "Old Bloom", "New Bloom", "Fast Bloom", "C64 Filter",
+                "Bloom", "C64 Filter",
                 "CGA Filter", "Convolution", "Film",
                 "GrayScale", "Average Color", "Motion Blur",
                 "Refraction", "Vignette", "Global Fog", "FXAA"

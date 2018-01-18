@@ -126,6 +126,9 @@ namespace C3DE.Graphics.Rendering
             m_graphicsDevice.SetRenderTarget(m_LightTarget[eye]);
             m_graphicsDevice.Clear(Color.Transparent);
 
+            m_AmbientLight.Color = Scene.current.RenderSettings.AmbientColor;
+            m_AmbientLight.RenderDeferred(m_ColorTarget[eye], m_NormalTarget[eye], m_DepthTarget[eye], camera);
+
             foreach (var light in scene.lights)
                 light.RenderDeferred(m_ColorTarget[eye], m_NormalTarget[eye], m_DepthTarget[eye], camera);
         }
@@ -137,7 +140,7 @@ namespace C3DE.Graphics.Rendering
             foreach (var pass in m_ClearEffect.Techniques[0].Passes)
             {
                 pass.Apply();
-                m_QuadRenderer.RenderFullscreenQuad(m_graphicsDevice);
+                m_QuadRenderer.RenderFullscreenQuad();
             }
 
             using (m_graphicsDevice.GeometryState())
@@ -156,7 +159,7 @@ namespace C3DE.Graphics.Rendering
                     m_CombineEffect.Parameters["ColorMap"].SetValue(m_ColorTarget[eye]);
                     m_CombineEffect.Parameters["LightMap"].SetValue(m_LightTarget[eye]);
                     pass.Apply();
-                    m_QuadRenderer.RenderFullscreenQuad(m_graphicsDevice);
+                    m_QuadRenderer.RenderFullscreenQuad();
                 }
 
                 RenderPostProcess(scene.postProcessPasses, m_SceneRenderTargets[eye]);

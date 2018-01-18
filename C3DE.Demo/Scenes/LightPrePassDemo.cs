@@ -1,4 +1,5 @@
-﻿using C3DE.Graphics.Rendering;
+﻿using C3DE.Demo.Scripts;
+using C3DE.Graphics.Rendering;
 
 namespace C3DE.Demo.Scenes
 {
@@ -10,6 +11,8 @@ namespace C3DE.Demo.Scenes
         {
             base.Initialize();
             Application.Engine.Renderer = new LightPrePassRenderer(Application.GraphicsDevice);
+
+            m_Camera.AddComponent<LightPrePassDebuger>();
         }
 
         public override void Unload()

@@ -33,8 +33,8 @@ namespace C3DE.Demo.Scenes
 
             // And a light
             var lightGo = GameObjectFactory.CreateLight(LightType.Directional, Color.White, 1f);
-            lightGo.Transform.LocalPosition = new Vector3(150, 150, 0);
-            lightGo.Transform.LocalRotation = new Vector3(-MathHelper.PiOver2, -MathHelper.PiOver2, 0);
+            lightGo.Transform.LocalPosition = new Vector3(500, 500, 0);
+            lightGo.Transform.LocalRotation = new Vector3(MathHelper.PiOver2, -MathHelper.PiOver4, 0);
             m_DirectionalLight = lightGo.GetComponent<Light>();
 
             // Sun Flares

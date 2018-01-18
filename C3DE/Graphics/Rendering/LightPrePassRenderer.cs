@@ -95,7 +95,10 @@ namespace C3DE.Graphics.Rendering
         private void DrawLightMap(Scene scene, Camera camera, int eye)
         {
             m_graphicsDevice.SetRenderTarget(m_LightRT[eye]);
-            m_graphicsDevice.Clear(Color.Black);
+            m_graphicsDevice.Clear(Color.Transparent);
+
+            m_AmbientLight.Color = Scene.current.RenderSettings.AmbientColor;
+            m_AmbientLight.RenderLPP(m_NormalRT[eye], m_DepthRT[eye], camera);
 
             for (var i = 0; i < scene.lights.Count; i++)
                 scene.lights[i].RenderLPP(m_NormalRT[eye], m_DepthRT[eye], camera);

@@ -1,4 +1,5 @@
-﻿using C3DE.Components.Rendering;
+﻿using C3DE.Components;
+using C3DE.Components.Rendering;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -15,6 +16,13 @@ namespace C3DE.Graphics.Materials.Shaders
             m_Effect = content.Load<Effect>("Shaders/Deferred/StandardTerrain");
             SetupParamaters();
             m_PassAmbient = m_Effect.CurrentTechnique.Passes[0];
+        }
+
+        public override void PrePass(Camera camera)
+        {
+            m_EPView.SetValue(camera.m_ViewMatrix);
+            m_EPProjection.SetValue(camera.m_ProjectionMatrix);
+            m_EPEyePosition.SetValue(camera.Transform.LocalPosition);
         }
 
         public override void Pass(Renderer renderable)
