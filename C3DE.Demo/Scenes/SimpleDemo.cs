@@ -1,8 +1,10 @@
 ﻿using C3DE.Components;
 using C3DE.Components.Lighting;
+using C3DE.Components.Rendering;
 using C3DE.Demo.Scripts;
 using C3DE.UI;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace C3DE.Demo.Scenes
 {
@@ -31,9 +33,24 @@ namespace C3DE.Demo.Scenes
 
             // And a light
             var lightGo = GameObjectFactory.CreateLight(LightType.Directional, Color.White, 1f);
-            lightGo.Transform.LocalPosition = new Vector3(250, 500, 100);
-            lightGo.Transform.LocalRotation = new Vector3(1, 0.5f, 0);
+            lightGo.Transform.LocalPosition = new Vector3(150, 150, 0);
+            lightGo.Transform.LocalRotation = new Vector3(-MathHelper.PiOver2, -MathHelper.PiOver2, 0);
             m_DirectionalLight = lightGo.GetComponent<Light>();
+
+            // Sun Flares
+            var content = Application.Content;
+            var glowTexture = content.Load<Texture2D>("Textures/Flares/SunGlow");
+            var flareTextures = new Texture2D[]
+            {
+                content.Load<Texture2D>("Textures/Flares/circle"),
+                content.Load<Texture2D>("Textures/Flares/circle_sharp_1"),
+                content.Load<Texture2D>("Textures/Flares/circle_soft_1")
+            };
+
+            var direction = m_DirectionalLight.Direction;
+            var sunflares = m_Camera.AddComponent<LensFlare>();
+            sunflares.LightDirection = direction;
+            sunflares.Setup(glowTexture, flareTextures);
 
             // Skybox
             RenderSettings.Skybox.Generate(Application.GraphicsDevice, Application.Content, DemoGame.BlueSkybox);

@@ -18,8 +18,6 @@ namespace C3DE.Demo.Scenes
         {
             base.Initialize();
 
-            m_DirectionalLight.Intensity = 0.0f;
-
             m_Camera.AddComponent<LightSpawner>();
             var vrPlayerEnabler = m_Camera.AddComponent<VRPlayerEnabler>();
             vrPlayerEnabler.Position = new Vector3(0, 1.0f, 0);
@@ -32,20 +30,6 @@ namespace C3DE.Demo.Scenes
             var sponzaGo = sponzaModel.ToMeshRenderers(this);
             sponzaGo.Transform.Translate(0.0f, 1.0f, 0.0f);
             PatchMaterials(sponzaGo, content);
-
-            // Sun Flares
-            var glowTexture = content.Load<Texture2D>("Textures/Flares/SunGlow");
-            var flareTextures = new Texture2D[]
-            {
-                content.Load<Texture2D>("Textures/Flares/circle"),
-                content.Load<Texture2D>("Textures/Flares/circle_sharp_1"),
-                content.Load<Texture2D>("Textures/Flares/circle_soft_1")
-            };
-
-            var direction = m_DirectionalLight.Direction;
-            var sunflares = m_Camera.AddComponent<LensFlare>();
-            sunflares.LightDirection = direction;
-            sunflares.Setup(glowTexture, flareTextures);
         }
 
         private void PatchMaterials(GameObject sponzaGo, ContentManager content)

@@ -29,7 +29,16 @@ namespace C3DE.Components.Lighting
 
         public Matrix Projection => m_ProjectionMatrix;
 
-        public Vector3 Direction => Vector3.Normalize(m_Transform.LocalRotation);
+        public Vector3 Direction
+        {
+            get
+            {
+                var position = m_Transform.Position;
+                var rotation = m_Transform.Rotation;
+                var matrix = Matrix.CreateFromYawPitchRoll(rotation.Y, rotation.X, rotation.Z);
+                return position + Vector3.Transform(Vector3.Forward, matrix);
+            }
+        }
 
         [DataMember]
         public bool EnableShadow
