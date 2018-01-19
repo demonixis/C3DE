@@ -56,6 +56,7 @@ namespace C3DE.Editor.Core
         {
             base.Initialize();
 
+            DefaultMaterial = new UnlitMaterial();
             DefaultMaterial.MainTexture = GraphicsHelper.CreateBorderTexture(Color.DimGray, Color.LightGray, 128, 128, 2);
 
             camera = CreateAddSceneObject<Camera>("EditorCamera.Main");

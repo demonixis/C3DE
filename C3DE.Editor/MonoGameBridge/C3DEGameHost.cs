@@ -91,7 +91,7 @@ namespace C3DE.Editor.MonoGameBridge
             _scene.RenderSettings.Skybox.Generate();
 
             Application.SceneManager.Add(_scene, true);
-            Application.SceneManager.Update();
+            //Application.SceneManager.Update();
 
             MouseDown += C3DEGameHost_MouseDown;
             MouseUp += C3DEGameHost_MouseUp;

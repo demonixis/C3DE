@@ -86,7 +86,6 @@ namespace C3DE.Editor.MonoGameBridge
             StartRendering();
         }
 
-
         private void OnUnloaded(object sender, RoutedEventArgs eventArgs)
         {
             if (IsInDesignMode)
@@ -115,7 +114,6 @@ namespace C3DE.Editor.MonoGameBridge
                 }
             }
         }
-
 
         private static void UninitializeGraphicsDevice()
         {
@@ -214,7 +212,7 @@ namespace C3DE.Editor.MonoGameBridge
 
                 GraphicsDevice.SetRenderTarget(_renderTarget);
                 Draw(_renderTarget);
-  
+
                 GraphicsDevice.Flush();
             }
 
@@ -256,7 +254,7 @@ namespace C3DE.Editor.MonoGameBridge
 
         protected virtual void Initialize()
         {
-            
+
         }
 
         protected virtual void LoadContent()
@@ -276,7 +274,7 @@ namespace C3DE.Editor.MonoGameBridge
 
         protected virtual void Draw(RenderTarget2D renderTarget)
         {
-           
+
         }
 
         #endregion
