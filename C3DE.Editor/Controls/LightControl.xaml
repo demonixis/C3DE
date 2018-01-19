@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
-             mc:Ignorable="d" d:DesignHeight="200" d:DesignWidth="250">
+             mc:Ignorable="d" d:DesignHeight="180" d:DesignWidth="250">
 
     <Border BorderThickness="1" BorderBrush="LightGray" Margin="2">
         <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch">
@@ -20,7 +20,6 @@
                     <RowDefinition Height="25" />
                     <RowDefinition Height="25" />
                     <RowDefinition Height="25" />
-                    <RowDefinition Height="25" />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
@@ -31,7 +30,6 @@
                 <Label Style="{StaticResource Control_LeftText}" Grid.Row="2" Grid.Column="0" Content="Color" />
                 <Label Style="{StaticResource Control_LeftText}" Grid.Row="3" Grid.Column="0" Content="Intensity" />
                 <Label Style="{StaticResource Control_LeftText}" Grid.Row="4" Grid.Column="0" Content="Shadow Type" />
-                <Label Style="{StaticResource Control_LeftText}" Grid.Row="5" Grid.Column="0" Content="Lightmap" />
 
                 <ComboBox Grid.Row="0" Grid.Column="1" SelectedIndex="{Binding LightTypeLight}" x:Name="SelectLightType">
                     <ComboBoxItem>Ambient</ComboBoxItem>
@@ -45,10 +43,6 @@
                 <ComboBox x:Name="SelectShadowType" Grid.Row="4" Grid.Column="1" SelectedIndex="{Binding LightShadowType}">
                     <ComboBoxItem>None</ComboBoxItem>
                     <ComboBoxItem>Hard Shadow</ComboBoxItem>
-                </ComboBox>
-                <ComboBox x:Name="SelectLightmapType" Grid.Row="5" Grid.Column="1" SelectedIndex="{Binding LightmapType}">
-                    <ComboBoxItem>Realtime</ComboBoxItem>
-                    <ComboBoxItem>Backed</ComboBoxItem>
                 </ComboBox>
             </Grid>
         </StackPanel>

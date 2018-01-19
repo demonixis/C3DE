@@ -2,11 +2,9 @@
 using C3DE.Components.Rendering;
 using C3DE.Graphics.Materials;
 using C3DE.Graphics.Materials.Shaders;
-using C3DE.Graphics.PostProcessing;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using System.Collections.Generic;
 
 namespace C3DE.Graphics.Rendering
 {
@@ -82,6 +80,22 @@ namespace C3DE.Graphics.Rendering
             }
             else
                 RenderSceneForCamera(scene, camera, m_SceneRenderTargets[0]);
+        }
+
+        public void RenderEditor(Scene scene, Camera camera, RenderTarget2D target)
+        {
+            RebuildRenderTargets();
+
+            RenderShadowMaps(scene);
+            RenderObjects(scene, camera);
+            RenderToBackBuffer();
+            //renderPostProcess(scene.PostProcessPasses);
+            //renderUI(scene.Behaviours);
+
+            m_graphicsDevice.SetRenderTarget(target);
+            m_spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Opaque, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone);
+            m_spriteBatch.Draw(m_SceneRenderTargets[0], Vector2.Zero, Color.White);
+            m_spriteBatch.End();
         }
 
         protected virtual void RenderSceneForCamera(Scene scene, Camera camera, RenderTarget2D renderTarget)

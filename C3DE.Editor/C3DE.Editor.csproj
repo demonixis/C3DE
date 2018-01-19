@@ -118,9 +118,6 @@
     <Compile Include="Core\EDScene.cs" />
     <Compile Include="Core\EDSettings.cs" />
     <Compile Include="Core\SceneObjectSelector.cs" />
-    <Compile Include="Exporters\MeshMerger.cs" />
-    <Compile Include="Exporters\OBJExporter.cs" />
-    <Compile Include="Exporters\STLExporter.cs" />
     <Compile Include="Core\Events\BasicMessage.cs" />
     <Compile Include="Core\Events\CustomMessage.cs" />
     <Compile Include="Core\Events\Messenger.cs" />

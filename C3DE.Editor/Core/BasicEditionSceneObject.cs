@@ -1,4 +1,4 @@
-﻿using C3DE.Components.Renderers;
+﻿using C3DE.Components.Rendering;
 using C3DE.Editor.Events;
 using System;
 

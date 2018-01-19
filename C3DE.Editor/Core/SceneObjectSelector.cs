@@ -1,4 +1,4 @@
-﻿using C3DE.Components.Renderers;
+﻿using C3DE.Components.Rendering;
 
 namespace C3DE.Editor.Core
 {

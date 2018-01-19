@@ -1,4 +1,4 @@
-﻿using C3DE.Components.Lights;
+﻿using C3DE.Components.Lighting;
 using System.Windows.Controls;
 using System.Windows.Media;
 
@@ -104,22 +104,6 @@ namespace C3DE.Editor.Controls
             {
                 if (light != null)
                     light.ShadowGenerator.Enabled = value > 0;
-            }
-        }
-
-        public int LightmapType
-        {
-            get
-            {
-                if (light != null)
-                    return (int)light.Backing;
-
-                return 0;
-            }
-            set
-            {
-                if (light != null)
-                    light.Backing = (LightRenderMode)value;
             }
         }
 

@@ -1,18 +1,5 @@
-﻿using C3DE.Components.Colliders;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using C3DE.Components.Physics;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace C3DE.Editor.Controls
 {
@@ -180,18 +167,18 @@ namespace C3DE.Editor.Controls
             {
                 if (_collider != null)
                 {
-                    var sceneObject = _collider.SceneObject;
+                    var gameObject = _collider.GameObject;
                     var size = _collider.Size;
                     var center = _collider.Center;
                     var pick = _collider.IsPickable;
                     var trigger = _collider.IsTrigger;
 
-                    sceneObject.RemoveComponent(_collider);
+                    gameObject.RemoveComponent(_collider);
 
                     if (value == 0)
-                        _collider = sceneObject.AddComponent<BoxCollider>();
+                        _collider = gameObject.AddComponent<BoxCollider>();
                     else
-                        _collider = sceneObject.AddComponent<SphereCollider>();
+                        _collider = gameObject.AddComponent<SphereCollider>();
 
                     _collider.Size = size;
                     _collider.Center = center;

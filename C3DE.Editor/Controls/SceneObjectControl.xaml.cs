@@ -6,23 +6,23 @@ namespace C3DE.Editor.Controls
     /// <summary>
     /// Logique d'interaction pour SceneObjectControl.xaml
     /// </summary>
-    public partial class SceneObjectControl : UserControl
+    public partial class GameObjectControl : UserControl
     {
-        private GameObject sceneObject;
+        private GameObject gameObject;
 
         public bool SceneObjectEnabled
         {
             get
             {
-                if (sceneObject != null)
-                    return sceneObject.Enabled;
+                if (gameObject != null)
+                    return gameObject.Enabled;
 
                 return false;
             }
             set
             {
-                if (sceneObject != null)
-                    sceneObject.Enabled = value;
+                if (gameObject != null)
+                    gameObject.Enabled = value;
             }
         }
 
@@ -30,36 +30,36 @@ namespace C3DE.Editor.Controls
         {
             get
             {
-                if (sceneObject != null)
-                    return sceneObject.Name;
+                if (gameObject != null)
+                    return gameObject.Name;
 
                 return string.Empty;
             }
             set
             {
-                if (sceneObject != null)
+                if (gameObject != null)
                 {
-                    sceneObject.Name = value;
-                    Messenger.Notify(EditorEvent.SceneObjectRenamed, sceneObject.Id);
+                    gameObject.Name = value;
+                    Messenger.Notify(EditorEvent.SceneObjectRenamed, gameObject.Id);
                 }
             }
         }
 
-        public SceneObjectControl()
+        public GameObjectControl()
         {
             InitializeComponent();
         }
 
-        public SceneObjectControl(GameObject so)
+        public GameObjectControl(GameObject so)
             : this()
         {
-            sceneObject = so;
+            gameObject = so;
             DataContext = this;
         }
 
         public void Set(GameObject so)
         {
-            sceneObject = so;
+            gameObject = so;
             DataContext = this;
         }
     }

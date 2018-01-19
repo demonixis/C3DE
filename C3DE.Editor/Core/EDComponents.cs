@@ -1,6 +1,5 @@
-﻿using C3DE.Components.Colliders;
-using C3DE.Components.Renderers;
-using System.Runtime.Serialization;
+﻿using C3DE.Components.Physics;
+using C3DE.Components.Rendering;
 
 namespace C3DE.Editor.Core
 {

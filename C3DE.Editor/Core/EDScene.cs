@@ -1,14 +1,12 @@
 ﻿using C3DE.Components;
-using C3DE.Components.Colliders;
-using C3DE.Components.Lights;
-using C3DE.Components.Renderers;
+using C3DE.Components.Lighting;
+using C3DE.Components.Physics;
+using C3DE.Components.Rendering;
 using C3DE.Editor.Core.Components;
 using C3DE.Editor.Events;
-using C3DE.Geometries;
+using C3DE.Graphics.Materials;
+using C3DE.Graphics.Primitives;
 using C3DE.Inputs;
-using C3DE.Materials;
-using C3DE.Prefabs;
-using C3DE.Prefabs.Meshes;
 using C3DE.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -26,7 +24,7 @@ namespace C3DE.Editor.Core
         internal const string EditorTag = "C3DE_Editor";
         internal Camera camera;
         internal Light light;
-        internal TerrainPrefab grid;
+        internal Terrain grid;
         private List<string> _addList;
         private List<GameObject> _removeList;
         private SceneObjectSelector _selectedObject;
@@ -58,7 +56,7 @@ namespace C3DE.Editor.Core
         {
             base.Initialize();
 
-            DefaultMaterial.Texture = GraphicsHelper.CreateBorderTexture(Color.DimGray, Color.LightGray, 128, 128, 2);
+            DefaultMaterial.MainTexture = GraphicsHelper.CreateBorderTexture(Color.DimGray, Color.LightGray, 128, 128, 2);
 
             camera = CreateAddSceneObject<Camera>("EditorCamera.Main");
             camera.Setup(new Vector3(0.0f, 10.0f, 30.0f), Vector3.Zero, Vector3.Up);
@@ -69,7 +67,6 @@ namespace C3DE.Editor.Core
             light.Transform.Position = new Vector3(250, 500, 500);
             light.Transform.Rotation = new Vector3(-0.6f, 1, 0.6f);
             light.TypeLight = LightType.Directional;
-            light.Backing = LightRenderMode.RealTime;
             light.Color = Color.White;
             light.EnableShadow = true;
             light.Intensity = 1.0f;
@@ -77,18 +74,18 @@ namespace C3DE.Editor.Core
             light.ShadowGenerator.ShadowStrength = 0.4f;
 
             // Grid
-            var gridMaterial = new StandardMaterial(this, "GridMaterial");
-            gridMaterial.Texture = GraphicsHelper.CreateCheckboardTexture(new Color(0.6f, 0.6f, 0.6f), new Color(0.95f, 0.95f, 0.95f), 256, 256); ;
+            var gridMaterial = new StandardMaterial("GridMaterial");
+            gridMaterial.MainTexture = GraphicsHelper.CreateCheckboardTexture(new Color(0.6f, 0.6f, 0.6f), new Color(0.95f, 0.95f, 0.95f), 256, 256); ;
             gridMaterial.Tiling = new Vector2(24);
 
-            grid = new TerrainPrefab("Editor_Grid");
-            grid.Tag = EditorTag;
+            var terrain = GameObjectFactory.CreateTerrain();
+            terrain.Tag = EditorTag;
+            grid = terrain.GetComponent<Terrain>();
             grid.Renderer.Material = gridMaterial;
             grid.Renderer.ReceiveShadow = true;
             grid.Renderer.CastShadow = false;
             grid.Flatten();
             grid.Transform.SetPosition(-grid.Width / 2, -1, -grid.Depth / 2);
-            Add(grid);
 
             CreateMaterialCollection();
 
@@ -153,8 +150,8 @@ namespace C3DE.Editor.Core
             CreateBillboardMaterial("ED_Light", "Icons/Light_Icon");
 
             // Water material
-            var waterMaterial = new WaterMaterial(this, "WaterMaterial");
-            waterMaterial.Texture = Asset.LoadTexture("Textures/water");
+            var waterMaterial = new StandardWaterMaterial();
+            waterMaterial.MainTexture = Asset.LoadTexture("Textures/water");
             waterMaterial.NormalMap = Asset.LoadTexture("Textures/wavesbump");
         }
 
@@ -173,17 +170,17 @@ namespace C3DE.Editor.Core
             Material material = null;
 
             if (name.Contains("_alpha"))
-                material = new TransparentMaterial(this, name.Replace("_alpha", ""));
+                material = new TransparentMaterial(name.Replace("_alpha", ""));
             else
-                material = new StandardMaterial(this, name);
+                material = new StandardMaterial(name);
 
-            material.Texture = texture;
+            material.MainTexture = texture;
         }
 
         private void CreateBillboardMaterial(string name, Texture2D texture)
         {
-            var mat = new BillboardMaterial(this, name);
-            mat.Texture = texture;
+            var mat = new BillboardMaterial(name);
+            mat.MainTexture = texture;
         }
 
         public override void Update()
@@ -227,16 +224,16 @@ namespace C3DE.Editor.Core
 
                 if (Raycast(ray, 100, out info))
                 {
-                    if (info.Collider.SceneObject == _selectedObject.SceneObject)
+                    if (info.Collider.GameObject == _selectedObject.SceneObject)
                         return;
 
-                    if (info.Collider.SceneObject.Tag == EditorTag)
+                    if (info.Collider.GameObject.Tag == EditorTag)
                         return;
 
-                    if (info.Collider.SceneObject != _selectedObject.SceneObject)
+                    if (info.Collider.GameObject != _selectedObject.SceneObject)
                         UnselectObject();
 
-                    SelectObject(info.Collider.SceneObject);
+                    SelectObject(info.Collider.GameObject);
                 }
             }
         }
@@ -313,33 +310,55 @@ namespace C3DE.Editor.Core
             }
         }
 
+        public enum Primitive
+        {
+            Cube, Cylinder, Quad, Plane, Pyramid, Sphere, Torus
+        }
+
+        private GameObject CreatePrimitive(Primitive type)
+        {
+            var go = new GameObject();
+            var mr = go.AddComponent<MeshRenderer>();
+
+            switch (type)
+            {
+                case Primitive.Cube: mr.Geometry = new CubeMesh(); break;
+                case Primitive.Cylinder: mr.Geometry = new CylinderMesh(); break;
+                case Primitive.Plane: mr.Geometry = new PlaneMesh(); break;
+                case Primitive.Pyramid: mr.Geometry = new PyramidMesh(); break;
+                case Primitive.Quad: mr.Geometry = new QuadMesh(); break;
+                case Primitive.Sphere: mr.Geometry = new SphereMesh(); break;
+                case Primitive.Torus: mr.Geometry = new TorusMesh(); break;
+            }
+
+            mr.Geometry.Build();
+
+            return go;
+        }
+
         private void InternalAddSceneObject(string type)
         {
             GameObject sceneObject = null;
 
             switch (type)
             {
-                case "Cube": sceneObject = new MeshPrefab(type, new CubeGeometry()); break;
-                case "Cylinder": sceneObject = new MeshPrefab(type, new CylinderGeometry()); break;
-                case "Quad": sceneObject = new MeshPrefab(type, new QuadGeometry()); break;
-                case "Plane": sceneObject = new MeshPrefab(type, new PlaneGeometry()); break;
-                case "Pyramid": sceneObject = new MeshPrefab(type, new PyramidGeometry()); break;
-                case "Sphere": sceneObject = new MeshPrefab(type, new SphereGeometry()); break;
-                case "Torus": sceneObject = new MeshPrefab(type, new TorusGeometry()); break;
+                case "Cube": sceneObject = CreatePrimitive(Primitive.Cube); break;
+                case "Cylinder": sceneObject = CreatePrimitive(Primitive.Cylinder); break;
+                case "Quad": sceneObject = CreatePrimitive(Primitive.Quad); break;
+                case "Plane": sceneObject = CreatePrimitive(Primitive.Plane); break;
+                case "Pyramid": sceneObject = CreatePrimitive(Primitive.Pyramid); break;
+                case "Sphere": sceneObject = CreatePrimitive(Primitive.Sphere); break;
+                case "Torus": sceneObject = CreatePrimitive(Primitive.Torus); break;
 
                 case "Terrain":
-                    var terrain = new TerrainPrefab(type);
+                    var go = GameObjectFactory.CreateTerrain();
+                    var terrain = go.GetComponent<Terrain>();
                     terrain.Flatten();
                     terrain.Renderer.Material = DefaultMaterial;
-                    sceneObject = terrain;
+                    sceneObject = go;
                     break;
 
                 case "Water":
-                    var water = new WaterPrefab(type);
-                    Add(water);
-                    water.Generate(string.Empty, string.Empty, new Vector3(10));
-                    water.Renderer.Material = GetMaterialByName("WaterMaterial");
-                    sceneObject = water;
                     break;
 
                 case "Directional": sceneObject = CreateLightNode(type, LightType.Directional); break;
@@ -347,13 +366,13 @@ namespace C3DE.Editor.Core
                 case "Spot": sceneObject = CreateLightNode(type, LightType.Spot); break;
 
                 case "Camera":
-                    sceneObject = new CameraPrefab(type);
+                    sceneObject = GameObjectFactory.CreateCamera();
                     sceneObject.AddComponent<EDBoxCollider>();
 
                     var camRenderer = sceneObject.AddComponent<EDMeshRenderer>();
                     camRenderer.CastShadow = false;
                     camRenderer.ReceiveShadow = false;
-                    camRenderer.Geometry = new QuadGeometry();
+                    camRenderer.Geometry = new QuadMesh();
                     camRenderer.Geometry.Build();
                     camRenderer.Material = GetMaterialByName("Camera");
                     break;
@@ -374,7 +393,7 @@ namespace C3DE.Editor.Core
             var lightRenderer = sceneObject.AddComponent<EDMeshRenderer>();
             lightRenderer.CastShadow = false;
             lightRenderer.ReceiveShadow = false;
-            lightRenderer.Geometry = new QuadGeometry();
+            lightRenderer.Geometry = new QuadMesh();
             lightRenderer.Geometry.Build();
             lightRenderer.Material = GetMaterialByName("Light");
 
@@ -487,7 +506,7 @@ namespace C3DE.Editor.Core
             var list = new List<Material>();
 
             for (int i = 0, l = renderers.Length; i < l; i++)
-                if (renderers[i].SceneObject.Tag != EditorTag && renderers[i].Material != null)
+                if (renderers[i].GameObject.Tag != EditorTag && renderers[i].Material != null)
                     list.Add(renderers[i].Material);
 
             return list.ToArray();

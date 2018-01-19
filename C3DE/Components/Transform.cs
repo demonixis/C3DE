@@ -116,6 +116,7 @@ namespace C3DE.Components
         public Vector3 Backward => m_WorldMatrix.Backward;
         public Vector3 Right => m_WorldMatrix.Right;
         public Vector3 Left => m_WorldMatrix.Left;
+        public Vector3 Up => Vector3.Transform(Vector3.Up, m_WorldMatrix);
 
         public Transform()
             : base()

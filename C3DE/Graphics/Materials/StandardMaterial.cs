@@ -28,6 +28,13 @@ namespace C3DE.Graphics.Materials
         
         public Texture2D EmissiveTexture { get; set; }
 
+        public StandardMaterial() : base() { }
+
+        public StandardMaterial(string name) : base()
+        {
+            Name = name;
+        }
+
         protected override void SetupShaderMaterial(BaseRenderer renderer)
         {
             if (renderer is ForwardRenderer)

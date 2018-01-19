@@ -4,14 +4,13 @@ using System.Windows.Controls;
 namespace C3DE.Editor
 {
     using C3DE.Components;
-    using C3DE.Components.Colliders;
-    using C3DE.Components.Lights;
-    using C3DE.Components.Renderers;
+    using C3DE.Components.Lighting;
+    using C3DE.Components.Physics;
+    using C3DE.Components.Rendering;
     using C3DE.Editor.Controls;
     using C3DE.Editor.Core;
     using C3DE.Editor.Core.Components;
     using C3DE.Editor.Events;
-    using System;
     using System.IO;
     using System.Windows.Input;
     using Winforms = System.Windows.Forms;
@@ -48,7 +47,7 @@ namespace C3DE.Editor
 
             if (sceneObject != null)
             {
-                var soEdition = new SceneObjectControl(sceneObject);
+                var soEdition = new GameObjectControl(sceneObject);
                 var transform = new TransformControl(sceneObject.Transform);
 
                 componentContainer.Children.Add(soEdition);

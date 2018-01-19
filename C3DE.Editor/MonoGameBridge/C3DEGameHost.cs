@@ -1,9 +1,6 @@
 ﻿using C3DE.Components;
-using C3DE.Components.Renderers;
 using C3DE.Editor.Core;
-using C3DE.Editor.Exporters;
-using C3DE.Prefabs;
-using C3DE.Rendering;
+using C3DE.Graphics.Rendering;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -45,9 +42,9 @@ namespace C3DE.Editor.MonoGameBridge
             int height = (int)sizeInfo.NewSize.Height;
 
             Screen.Setup(width, height, null, null);
-            Camera.main.ComputeProjectionMatrix(MathHelper.PiOver4, (float)width / (float)height, 1, 2000);
+            Camera.Main.ComputeProjectionMatrix(MathHelper.PiOver4, (float)width / (float)height, 1, 2000);
 
-            _renderer.NeedsBufferUpdate = true;
+            _renderer.Dirty = true;
         }
 
         #endregion
@@ -74,12 +71,13 @@ namespace C3DE.Editor.MonoGameBridge
 
             Application.Content = _content;
             Application.GraphicsDevice = GraphicsDevice;
+            Application.SceneManager = new SceneManager();
 
             _gameComponents.Add(EDRegistry.Mouse);
             _gameComponents.Add(EDRegistry.Keys);
             _gameComponents.Add(new Time());
 
-            _renderer = new ForwardRenderer();
+            _renderer = new ForwardRenderer(Application.GraphicsDevice);
             _renderer.Initialize(_content);
 
             foreach (var component in _gameComponents)
@@ -92,11 +90,13 @@ namespace C3DE.Editor.MonoGameBridge
             _scene.Initialize();
             _scene.RenderSettings.Skybox.Generate();
 
+            Application.SceneManager.Add(_scene, true);
+            Application.SceneManager.Update();
+
             MouseDown += C3DEGameHost_MouseDown;
             MouseUp += C3DEGameHost_MouseUp;
 
-            if (EngineReady != null)
-                EngineReady();
+            EngineReady?.Invoke();
         }
 
         void C3DEGameHost_MouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
@@ -163,12 +163,12 @@ namespace C3DE.Editor.MonoGameBridge
             {
                 var serScene = new SerializedScene()
                 {
-                    Materials = _scene.GetUsedMaterials(),
-                    SceneObjects = _scene.GetUsedSceneObjects(),
+                    Materials = _scene.Materials.ToArray(),
+                    GameObjects = _scene.GetUsedSceneObjects(),
                     RenderSettings = _scene.RenderSettings
                 };
 
-                Serializr.Serialize(path, serScene);
+                Serializer.Serialize(path, serScene);
             }
             catch (Exception ex)
             {
@@ -185,16 +185,13 @@ namespace C3DE.Editor.MonoGameBridge
 
             try
             {
-                var data = Serializr.Deserialize(path, typeof(SerializedScene));
+                var data = Serializer.Deserialize(path, typeof(SerializedScene));
                 var serializedScene = data as SerializedScene;
                 if (serializedScene != null)
                 {
                     NewScene();
 
-                    foreach (var mat in serializedScene.Materials)
-                        _scene.Add(mat);
-
-                    foreach (var so in serializedScene.SceneObjects)
+                    foreach (var so in serializedScene.GameObjects)
                     {
                         so.PostDeserialize();
                         _scene.Add(so);
@@ -236,22 +233,9 @@ namespace C3DE.Editor.MonoGameBridge
             return _projectContent.Load<Effect>(assetName);
         }
 
-        public ModelPrefab AddModelFromTemp(string assetName)
+        public Model AddModelFromTemp(string assetName)
         {
-            var sceneObject = new ModelPrefab(assetName);
-
-            try
-            {
-                var model = LoadTempModel(assetName);
-                sceneObject.SetModel(model);
-                _scene.Add(sceneObject);
-            }
-            catch (Exception ex)
-            {
-                Debug.Log(ex.Message);
-            }
-
-            return sceneObject;
+            return null;
         }
 
         #endregion
@@ -260,23 +244,7 @@ namespace C3DE.Editor.MonoGameBridge
 
         public string[] ExportSceneTo(string format)
         {
-            string[] result = null;
-
-            var renderers = Scene.FindObjectsOfType<MeshRenderer>();
-
-            if (format == "stl")
-            {
-                result = new string[1];
-                result[0] = STLExporter.ExportMeshes(renderers);
-            }
-            else if (format == "obj")
-            {
-                result = new string[2];
-                //result[0] = OBJExporter.ExportMesh(_selectedObject.SceneObject.GetComponent<MeshRenderer>());
-                result[1] = string.Empty;
-            }
-
-            return result;
+            return null;
         }
 
         #endregion

@@ -1,5 +1,5 @@
-﻿using C3DE.Components.Renderers;
-using C3DE.Geometries;
+﻿using C3DE.Components.Rendering;
+using C3DE.Graphics.Primitives;
 using System;
 using System.Windows.Controls;
 
@@ -58,7 +58,7 @@ namespace C3DE.Editor.Controls
 
                     if (geometry != null)
                     {
-                        meshRenderer.Geometry = geometry as Geometry;
+                        meshRenderer.Geometry = geometry as Mesh;
                         meshRenderer.Geometry.Build();
                     }
                 }
@@ -237,7 +237,7 @@ namespace C3DE.Editor.Controls
             this.DataContext = this;
         }
 
-        private int GetGeometryIndex(Geometry geometry)
+        private int GetGeometryIndex(Mesh geometry)
         {
             var tmp = geometry.ToString().Split('.');
             var geo = tmp[tmp.Length - 1];
