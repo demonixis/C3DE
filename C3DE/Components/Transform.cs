@@ -53,11 +53,11 @@ namespace C3DE.Components
                 UpdateWorldMatrix();
                 return m_WorldMatrix.Translation;
             }
-            set
+            /*set
             {
                 UpdateWorldMatrix();
                 m_LocalPosition = Vector3.Transform(value, Matrix.Invert(m_WorldMatrix));
-            }
+            }*/
         }
 
         [DataMember]
@@ -76,11 +76,11 @@ namespace C3DE.Components
                 m_WorldMatrix.ExtractRotation(ref rotation);
                 return rotation.ToEuler();
             }
-            set
+            /*set
             {
                 var result = Quaternion.Euler(value) * Quaternion.Inverse(m_Parent.Quaternion);
                 m_LocalRotation = result.ToEuler();
-            }
+            }*/
         }
 
         public Matrix RotationMatrix => Matrix.CreateFromYawPitchRoll(m_LocalRotation.Y, m_LocalRotation.X, m_LocalRotation.Z);

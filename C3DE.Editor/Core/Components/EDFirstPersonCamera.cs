@@ -27,26 +27,26 @@ namespace C3DE.Editor.Core.Components
             UpdateInputs();
 
             // Limits on X axis
-            if (transform.Rotation.X <= -MathHelper.PiOver2)
+            if (m_Transform.Rotation.X <= -MathHelper.PiOver2)
             {
-                transform.SetRotation(-MathHelper.PiOver2 + 0.001f, null, null);
+                m_Transform.SetRotation(-MathHelper.PiOver2 + 0.001f, null, null);
                 rotation = Vector3.Zero;
             }
-            else if (transform.Rotation.X >= MathHelper.PiOver2)
+            else if (m_Transform.Rotation.X >= MathHelper.PiOver2)
             {
-                transform.SetRotation(MathHelper.PiOver2 - 0.001f, null, null);
+                m_Transform.SetRotation(MathHelper.PiOver2 - 0.001f, null, null);
                 rotation = Vector3.Zero;
             }
 
-            _rotationMatrix = Matrix.CreateFromYawPitchRoll(transform.Rotation.Y, transform.Rotation.X, 0.0f);
+            _rotationMatrix = Matrix.CreateFromYawPitchRoll(m_Transform.Rotation.Y, m_Transform.Rotation.X, 0.0f);
             _transformedReference = Vector3.Transform(translation, _rotationMatrix);
 
             // Translate and rotate
-            transform.Translate(ref _transformedReference);
-            transform.Rotate(ref rotation);
+            m_Transform.Translate(ref _transformedReference);
+            m_Transform.Rotate(ref rotation);
 
             // Update target
-            EDRegistry.Camera.Target = transform.Position + Vector3.Transform(Vector3.Forward, _rotationMatrix);
+            EDRegistry.Camera.Target = m_Transform.Position + Vector3.Transform(Vector3.Forward, _rotationMatrix);
 
             translation = Vector3.Zero;
             rotation = Vector3.Zero;

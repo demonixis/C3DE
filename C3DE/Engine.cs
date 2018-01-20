@@ -19,6 +19,7 @@ namespace C3DE
         private BaseRenderer m_nextRenderer;
         protected SceneManager _sceneManager;
         protected bool _initialized;
+        protected GraphicsDevice m_GraphicsDevice;
 
         public BaseRenderer Renderer
         {
@@ -95,15 +96,39 @@ namespace C3DE
             renderer.Dirty = true;
         }
 
+        public void InitializeEditor(GraphicsDevice device)
+        {
+            m_GraphicsDevice = device;
+            Initialize();
+        }
+
+        public void UpdateEditor()
+        {
+            Update(null);
+        }
+
+        public void DrawEditor()
+        {
+            Draw(null);
+        }
+
+        public void EndDrawEditor()
+        {
+            EndDraw();
+        }
+
         protected override void Initialize()
         {
+            if (GraphicsDevice != null && m_GraphicsDevice == null)
+                m_GraphicsDevice = GraphicsDevice;
+
             if (Application.GraphicsDevice == null)
-                Application.GraphicsDevice = GraphicsDevice;
+                Application.GraphicsDevice = m_GraphicsDevice;
 
             if (_autoDetectResolution)
                 Screen.SetBestResolution(_requestFullscreen);
 
-            renderer.m_graphicsDevice = GraphicsDevice;
+            renderer.m_graphicsDevice = m_GraphicsDevice;
             renderer.Initialize(Content);
             RendererChanged?.Invoke(renderer);
 
@@ -134,7 +159,7 @@ namespace C3DE
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.Black);
+            m_GraphicsDevice.Clear(Color.Black);
             renderer.Render(_sceneManager.ActiveScene);
             base.Draw(gameTime);
         }

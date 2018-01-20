@@ -1051,7 +1051,7 @@ namespace XNAGizmo
 
             //entity.Transform.Forward = newRot.Forward;
             //entity.Up = newRot.Up;
-            entity.Transform.Position = newRot.Translation + pos;
+            entity.Transform.LocalPosition = newRot.Translation + pos;
         }
 
         public void ToggleActiveSpace()

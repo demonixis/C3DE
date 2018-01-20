@@ -61,12 +61,12 @@ namespace C3DE.Editor.Core
 
             camera = CreateAddSceneObject<Camera>("EditorCamera.Main");
             camera.Setup(new Vector3(0.0f, 10.0f, 30.0f), Vector3.Zero, Vector3.Up);
-            camera.Transform.Rotation = new Vector3(-MathHelper.Pi / 6, 0.0f, 0.0f);
+            camera.Transform.LocalRotation = new Vector3(-MathHelper.Pi / 6, 0.0f, 0.0f);
             camera.AddComponent<EDFirstPersonCamera>();
 
             light = CreateAddSceneObject<Light>("Directional Light", false);
-            light.Transform.Position = new Vector3(250, 500, 500);
-            light.Transform.Rotation = new Vector3(-0.6f, 1, 0.6f);
+            light.Transform.LocalPosition = new Vector3(250, 500, 500);
+            light.Transform.LocalRotation = new Vector3(-0.6f, 1, 0.6f);
             light.TypeLight = LightType.Directional;
             light.Color = Color.White;
             light.EnableShadow = true;
@@ -122,23 +122,6 @@ namespace C3DE.Editor.Core
 
             for (i = 0; i < size; i++)
                 CreateMaterial(string.Format("Checkboard {0}", names[i]), GraphicsHelper.CreateCheckboardTexture(colors[i], Color.LightGray, 64, 64));
-
-            // Voxel pack by Kenney Vleugels for Kenney (www.kenney.nl) / License (Creative Commons Zero, CC0)
-            var path = Path.Combine("Content", "Textures", "VoxelPack");
-            var files = Directory.GetFiles(Path.Combine(path, "Tiles"));
-            var name = string.Empty;
-            for (i = 0; i < files.Length; i++)
-            {
-                name = Path.GetFileNameWithoutExtension(files[i]);
-                CreateMaterial(name, "Textures/VoxelPack/Tiles/" + name);
-            }
-
-            files = Directory.GetFiles(Path.Combine(path, "Tiles", "Details"));
-            for (i = 0; i < files.Length; i++)
-            {
-                name = Path.GetFileNameWithoutExtension(files[i]);
-                CreateBillboardMaterial(name, "Textures/VoxelPack/Tiles/Details/" + name);
-            }
 
             // Terrain textures
             CreateMaterial("Terrain Grass", "Textures/Terrain/Grass");
@@ -256,7 +239,7 @@ namespace C3DE.Editor.Core
                 }
             }
             else
-                target.Position += value;
+                target.LocalPosition += value;
 
             Messenger.Notify(EditorEvent.TransformUpdated);
         }

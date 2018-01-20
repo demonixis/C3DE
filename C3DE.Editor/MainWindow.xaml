@@ -101,7 +101,7 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <local:C3DEGameHost Grid.Row="0" Grid.Column="0" x:Name="editorGameHost" Margin="0" SnapsToDevicePixels="True" Stretch="Fill" Drop="OnDrop" />
+            <local:C3DEGameHost Grid.Row="0" Grid.Column="0" x:Name="editorGameHost" Margin="0" SnapsToDevicePixels="True" Drop="OnDrop" />
         </Grid>
         <TabControl Grid.Row="1" Grid.RowSpan="2" Grid.Column="1" x:Name="MainTabControl">
             <TabItem Header="Inspector">

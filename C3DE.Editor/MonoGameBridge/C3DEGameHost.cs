@@ -1,87 +1,53 @@
-﻿using C3DE.Components;
-using C3DE.Editor.Core;
-using C3DE.Graphics.Rendering;
+﻿using C3DE.Editor.Core;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
 using XNAGizmo;
+using MerjTek.WpfIntegration;
 
 namespace C3DE.Editor.MonoGameBridge
 {
-    public sealed class C3DEGameHost : D3D11Host, IServiceProvider
+    public sealed class C3DEGameHost : MonoGameControl
     {
         public const string EditorTag = "C3DE_Editor";
 
         private GameTime _gameTime;
-        private GameServiceContainer _services;
-        private List<GameComponent> _gameComponents;
-        private ForwardRenderer _renderer;
-        private ContentManager _content;
-        private ContentManager _projectContent;
         private EDScene _scene;
         internal GizmoComponent gizmoComponent;
 
         public Action EngineReady = null;
 
-        #region GameHost implementation
-
-        public object GetService(Type serviceType)
+        public C3DEGameHost()
+            : base()
         {
-            return _services.GetService(serviceType);
+            ControlLoaded += C3DEGameHost_ControlLoaded;
         }
 
-        protected override void OnRenderSizeChanged(System.Windows.SizeChangedInfo sizeInfo)
+        private void C3DEGameHost_ControlLoaded(object sender, GraphicsDeviceEventArgs e)
         {
-            base.OnRenderSizeChanged(sizeInfo);
-
-            int width = (int)sizeInfo.NewSize.Width;
-            int height = (int)sizeInfo.NewSize.Height;
-
-            Screen.Setup(width, height, null, null);
-            Camera.Main.ComputeProjectionMatrix(MathHelper.PiOver4, (float)width / (float)height, 1, 2000);
-
-            _renderer.Dirty = true;
+            Initialize(e.GraphicsDevice);
+            Render += C3DEGameHost_Render;
         }
 
-        #endregion
+        private void C3DEGameHost_Render(object sender, GraphicsDeviceEventArgs e)
+        {
+            Draw(e.GraphicsDevice);
+        }
 
         #region Life cycle
 
-        protected override void Initialize()
+        private void Initialize(GraphicsDevice graphicsDevice)
         {
-            base.Initialize();
-
             _gameTime = new GameTime(TimeSpan.Zero, TimeSpan.Zero);
-            _gameComponents = new List<GameComponent>();
-
-            _services = new GameServiceContainer();
-            _services.AddService<IGraphicsDeviceService>(new GraphicsDeviceService(graphicsDevice));
-
-            _content = new ContentManager(this);
-            _content.RootDirectory = "Content";
-
-            _projectContent = new ContentManager(this);
-            _projectContent.RootDirectory = EDRegistry.ContentTempPath;
 
             AssetImporter.CreateFolderStructure("Temp");
 
-            Application.Content = _content;
-            Application.GraphicsDevice = GraphicsDevice;
-            Application.SceneManager = new SceneManager();
+            var engine = GraphicsDeviceService.Instance.Engine;
+            engine.Services.RemoveService(typeof(IGraphicsDeviceService));
 
-            _gameComponents.Add(EDRegistry.Mouse);
-            _gameComponents.Add(EDRegistry.Keys);
-            _gameComponents.Add(new Time());
-
-            _renderer = new ForwardRenderer(Application.GraphicsDevice);
-            _renderer.Initialize(_content);
-
-            foreach (var component in _gameComponents)
-                component.Initialize();
+            Application.Engine = engine;
+            Application.Engine.Services.AddService<IGraphicsDeviceService>(GraphicsDeviceService.Instance);
+            Application.Engine.InitializeEditor(GraphicsDevice);
 
             gizmoComponent = new GizmoComponent(GraphicsDevice);
             gizmoComponent.ActiveMode = GizmoMode.Translate;
@@ -91,7 +57,6 @@ namespace C3DE.Editor.MonoGameBridge
             _scene.RenderSettings.Skybox.Generate();
 
             Application.SceneManager.Add(_scene, true);
-            //Application.SceneManager.Update();
 
             MouseDown += C3DEGameHost_MouseDown;
             MouseUp += C3DEGameHost_MouseUp;
@@ -117,29 +82,25 @@ namespace C3DE.Editor.MonoGameBridge
             Cursor = System.Windows.Input.Cursors.None;
         }
 
-        protected override void Update(Stopwatch timer)
+        private void Update()
         {
-            base.Update(timer);
-
-            _gameTime.ElapsedGameTime = timer.Elapsed;
-            _gameTime.TotalGameTime += timer.Elapsed;
-
-            foreach (var component in _gameComponents)
-                component.Update(_gameTime);
-
-            _scene.Update();
-
+            Application.Engine.UpdateEditor();
             gizmoComponent.Update();
         }
 
-        protected override void Draw(RenderTarget2D renderTarget)
+        private void Draw(GraphicsDevice graphicsDevice)
         {
+            Update();
+
             graphicsDevice.Clear(Color.CornflowerBlue);
-            _renderer.RenderEditor(_scene, _scene.camera, renderTarget);
+          
+            Application.Engine.DrawEditor();
             gizmoComponent.Draw();
 
             if (Screen.LockCursor && EDSettings.current.AllowLockCursor)
                 EDRegistry.Mouse.SetPosition(Screen.WidthPerTwo, Screen.HeightPerTwo);
+
+            Application.Engine.EndDrawEditor();
         }
 
         #endregion
@@ -213,30 +174,11 @@ namespace C3DE.Editor.MonoGameBridge
 
         #region Live import
 
-        public Texture2D LoadTempTexture(string assetName)
-        {
-            return _projectContent.Load<Texture2D>(assetName);
-        }
-
-        public Model LoadTempModel(string assetName)
-        {
-            return _projectContent.Load<Model>(assetName);
-        }
-
-        public SpriteFont LoadTempFont(string assetName)
-        {
-            return _projectContent.Load<SpriteFont>(assetName);
-        }
-
-        public Effect LoadTempEffect(string assetName)
-        {
-            return _projectContent.Load<Effect>(assetName);
-        }
-
-        public Model AddModelFromTemp(string assetName)
-        {
-            return null;
-        }
+        public Texture2D LoadTempTexture(string assetName) => null;
+        public Model LoadTempModel(string assetName) => null;
+        public SpriteFont LoadTempFont(string assetName) => null;
+        public Effect LoadTempEffect(string assetName) => null;
+        public Model AddModelFromTemp(string assetName) => null;
 
         #endregion
 
