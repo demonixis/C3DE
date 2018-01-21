@@ -90,7 +90,7 @@ namespace C3DE.Demo.Scripts
 
             // Draw the header and the footer.
             GUI.Skin.TextColor = Color.Black;
-            gui.Label(ref _titleRect, "C3DE Demos", _titleSize);
+            gui.Label(ref _titleRect, "C3DE Demos", null, _titleSize);
             gui.Label(ref _footerRect, "Gets the source : https://github.com/demonixis/C3DE");
 
             // Draw buttons.

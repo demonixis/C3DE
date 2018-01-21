@@ -106,12 +106,12 @@ namespace C3DE.UI
 
         #region Button Widget
 
-        public bool Button(Rectangle rect, string text)
+        public bool Button(Rectangle rect, string text, Color? textColor = null)
         {
             return Button(ref rect, text);
         }
 
-        public bool Button(ref Rectangle rect, string text, float labelScale = 1.0f)
+        public bool Button(ref Rectangle rect, string text, Color? textColor = null, float labelScale = 1.0f)
         {
             var index = 0;
 
@@ -129,7 +129,7 @@ namespace C3DE.UI
             _cacheVec2 = Skin.Font.MeasureString(text) * labelScale;
             _cacheVec2.X = (rect.X + rect.Width / 2) - (_cacheVec2.X / 2);
             _cacheVec2.Y = (rect.Y + rect.Height / 2) - (_cacheVec2.Y / 2);
-            Label(_cacheVec2, text, labelScale, 0.0f);
+            Label(_cacheVec2, text, textColor, labelScale, 0.0f);
 
             return index == 2;
         }
@@ -248,16 +248,16 @@ namespace C3DE.UI
 
         #region Label Widget
 
-        public void Label(Vector2 position, string text, float scale = 1.0f, float rotation = 0.0f)
+        public void Label(Vector2 position, string text, Color? color = null, float scale = 1.0f, float rotation = 0.0f)
         {
-            Label(ref position, text, scale, rotation);
+            Label(ref position, text, color, scale, rotation);
         }
 
-        public void Label(ref Vector2 position, string text, float scale = 1.0f, float rotation = 0.0f)
+        public void Label(ref Vector2 position, string text, Color? color = null, float scale = 1.0f, float rotation = 0.0f)
         {
             _cacheVec2.X = scale;
             _cacheVec2.Y = scale;
-            _spriteBatch.DrawString(Skin.Font, text, position, Skin.TextColor, rotation, Vector2.Zero, _cacheVec2, SpriteEffects.None, 1);
+            _spriteBatch.DrawString(Skin.Font, text, position, color.HasValue ? color.Value : Skin.TextColor, rotation, Vector2.Zero, _cacheVec2, SpriteEffects.None, 1);
         }
 
         #endregion

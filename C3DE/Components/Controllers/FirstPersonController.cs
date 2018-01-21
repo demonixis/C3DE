@@ -29,6 +29,8 @@ namespace C3DE.Components.Controllers
         [DataMember]
         public bool Fly { get; set; }
 
+        public bool DontUpdateOnClick { get; set; } = false;
+
         [DataMember]
         public bool VirtualInputEnabled
         {
@@ -175,6 +177,9 @@ namespace C3DE.Components.Controllers
 
         protected override void UpdateMouseInput()
         {
+            if (!MouseEnabled)
+                return;
+
             if (!_lockCursor && Input.Mouse.Drag())
             {
                 rotation.Y -= Input.Mouse.Delta.X * RotationSpeed * MouseSensibility.Y * Time.DeltaTime;

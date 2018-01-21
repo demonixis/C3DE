@@ -60,6 +60,7 @@
   <ItemGroup>
     <Compile Include="DemoGame.cs" />
     <Compile Include="Scenes\DeferredDemo.cs" />
+    <Compile Include="Scenes\EditorDemo.cs" />
     <Compile Include="Scenes\SimpleDemo.cs" />
     <Compile Include="Scenes\GUIDemo.cs" />
     <Compile Include="Scenes\LightPrePassDemo.cs" />
@@ -75,6 +76,13 @@
     <Compile Include="Scripts\DeferredDebuger.cs" />
     <Compile Include="Scripts\DemoBehaviour.cs" />
     <Compile Include="Scripts\DemoSceneMenu.cs" />
+    <Compile Include="Scripts\Editor\EditorApp.cs" />
+    <Compile Include="Scripts\Editor\UI\MenuBar.cs" />
+    <Compile Include="Scripts\Editor\UI\MenuItem.cs" />
+    <Compile Include="Scripts\Editor\ObjectSelector.cs" />
+    <Compile Include="Scripts\Editor\XNA\GizmoModel.cs" />
+    <Compile Include="Scripts\Editor\XNA\Quad.cs" />
+    <Compile Include="Scripts\Editor\XNA\XNAGizmo.cs" />
     <Compile Include="Scripts\HexaGridBuilder.cs" />
     <Compile Include="Scripts\LightMover.cs" />
     <Compile Include="Scripts\LightMoverKeys.cs" />
