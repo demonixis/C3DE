@@ -1,5 +1,4 @@
-﻿using C3DE.Components.Controllers;
-using C3DE.Components.Lighting;
+﻿using C3DE.Components.Lighting;
 using C3DE.Components.Rendering;
 using C3DE.Demo.Scripts;
 using C3DE.Graphics.Primitives;
@@ -115,7 +114,7 @@ namespace C3DE.Demo.Scenes
             renderer.Transform.Rotate(0, -MathHelper.PiOver2, 0);
             renderer.Transform.Translate(-0.1f, 0, 0);
 
-            m_Camera.AddComponent<Scripts.VRPlayerEnabler>();
+            m_Camera.AddComponent<VRPlayerEnabler>();
         }
     }
 }

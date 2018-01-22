@@ -108,7 +108,7 @@ namespace C3DE
             Generate(device, content, textures, size);
         }
 
-        public void Generate()
+        public void Generate(float size = 250.0f)
         {
             var skyTop = GraphicsHelper.CreateTexture(new Color(168, 189, 255), 64, 64);
             var skySide = GraphicsHelper.CreateGradiantTexture(new Color(168, 189, 255), Color.White, 64, 64);
@@ -121,7 +121,7 @@ namespace C3DE
                 skyBottom,
                 skySide,
                 skySide
-            }, 1000.0f);
+            }, size);
         }
 
         public void Draw(GraphicsDevice device, Camera camera)

@@ -6,6 +6,7 @@ using C3DE.Demo;
 using C3DE.Demo.Scripts;
 using C3DE.Graphics.Materials;
 using C3DE.Graphics.Primitives;
+using C3DE.Inputs;
 using C3DE.UI;
 using C3DE.Utils;
 using Microsoft.Xna.Framework;
@@ -30,22 +31,24 @@ namespace C3DE.Editor
         private EditorApp m_EditorApp;
         private GizmoComponent m_Gizmo;
         private ObjectSelector m_ObjectSelector;
-        private UnlitMaterial m_DefaultMaterial;
-        private List<string> _addList;
-        private List<GameObject> _removeList;
-        private CopyPast _editionSceneObject;
-
-        private bool pendingAdd = false;
-
-        private bool pendingRemove = false;
+        private StandardMaterial m_DefaultMaterial;
+        private List<string> m_AddList;
+        private List<GameObject> m_RemoveList;
+        private CopyPast m_EditionSceneObject;
 
         public EditorDemo() : base("3D Editor")
         {
-            _addList = new List<string>();
-            _removeList = new List<GameObject>();
+            m_AddList = new List<string>();
+            m_RemoveList = new List<GameObject>();
             m_ObjectSelector = new ObjectSelector();
-            _editionSceneObject = new CopyPast();
-            _editionSceneObject.GameObjectAdded += InternalAddSceneObject;
+            m_EditionSceneObject = new CopyPast();
+            m_EditionSceneObject.GameObjectAdded += InternalAddSceneObject;
+        }
+
+        public void Reset()
+        {
+            Unload();
+            Initialize();
         }
 
         public override void Initialize()
@@ -53,11 +56,15 @@ namespace C3DE.Editor
             base.Initialize();
 
             GUI.Skin = DemoGame.CreateSkin(Application.Content, false);
+            GUI.Skin.Font = Application.Content.Load<SpriteFont>("Font/Menu");
+            GUI.Skin.TextColor = Color.White;
 
             // Add a camera with a FPS controller
             var camera = GameObjectFactory.CreateCamera(new Vector3(0, 2, -10), new Vector3(0, 0, 0), Vector3.Up);
 
             m_Camera = camera.GetComponent<Camera>();
+            m_Camera.Setup(new Vector3(0, 10, 0), Vector3.Forward, Vector3.Up);
+            m_Camera.Far = 2000;
             m_Camera.AddComponent<DemoBehaviour>();
             m_Camera.AddComponent<EditorController>();
 
@@ -85,14 +92,8 @@ namespace C3DE.Editor
             // Skybox
             RenderSettings.Skybox.Generate(Application.GraphicsDevice, Application.Content, DemoGame.BlueSkybox);
 
-            // Fog: Setup fog mode with some value. It's still disabled, but those values are used by the post processing fog effect.
-            RenderSettings.FogDensity = 0.0085f;
-            RenderSettings.FogMode = FogMode.None;
-            RenderSettings.FogColor = Color.FloralWhite;
-
-
             m_EditorApp = m_Camera.AddComponent<EditorApp>();
-            m_EditorApp.Clicked += M_EditorApp_Clicked;
+            m_EditorApp.Clicked += OnObjectSelected;
             m_Gizmo = new GizmoComponent(Application.Engine, Application.GraphicsDevice);
             m_Gizmo.ActiveMode = GizmoMode.Translate;
 
@@ -107,22 +108,23 @@ namespace C3DE.Editor
             // Grid
             var gridMaterial = new UnlitMaterial();
             gridMaterial.MainTexture = GraphicsHelper.CreateCheckboardTexture(new Color(0.6f, 0.6f, 0.6f), new Color(0.95f, 0.95f, 0.95f), 256, 256); ;
-            gridMaterial.Tiling = new Vector2(24);
+            gridMaterial.Tiling = new Vector2(32);
 
             var terrain = GameObjectFactory.CreateTerrain();
             terrain.Tag = EditorTag;
 
             var grid = terrain.GetComponent<Terrain>();
+            grid.Geometry.Size = new Vector3(2.0f);
             grid.Renderer.Material = gridMaterial;
             grid.Renderer.ReceiveShadow = true;
             grid.Renderer.CastShadow = false;
             grid.Flatten();
 
-            m_DefaultMaterial = new UnlitMaterial();
-            m_DefaultMaterial.MainTexture = GraphicsHelper.CreateCheckboardTexture(Color.WhiteSmoke, Color.DarkSlateGray);
+            m_DefaultMaterial = new StandardMaterial();
+            m_DefaultMaterial.MainTexture = GraphicsHelper.CreateTexture(Color.WhiteSmoke, 1, 1);
         }
 
-        private void M_EditorApp_Clicked(string name)
+        private void OnObjectSelected(string name)
         {
             GameObject selected = InternalAddSceneObject(name);
 
@@ -138,6 +140,49 @@ namespace C3DE.Editor
             base.Unload();
             Application.Engine.Components.Remove(m_Gizmo);
         }
+
+        public override void Update()
+        {
+            base.Update();
+
+            if (m_RemoveList.Count > 0)
+            {
+                foreach (var sceneObject in m_RemoveList)
+                    InternalRemoveSceneObject(sceneObject);
+
+                m_RemoveList.Clear();
+            }
+
+            if (m_AddList.Count > 0)
+            {
+                foreach (var type in m_AddList)
+                    InternalAddSceneObject(type);
+
+                m_AddList.Clear();
+            }
+
+            if (Input.Mouse.JustClicked(MouseButton.Left) && m_Gizmo.ActiveAxis == GizmoAxis.None)
+            {
+                var ray = Camera.Main.GetRay(Input.Mouse.Position);
+                RaycastInfo info;
+
+                if (Raycast(ray, 100, out info))
+                {
+                    if (info.Collider.GameObject == m_ObjectSelector.GameObject)
+                        return;
+
+                    if (info.Collider.GameObject.Tag == EditorTag)
+                        return;
+
+                    if (info.Collider.GameObject != m_ObjectSelector.GameObject)
+                        UnselectObject();
+
+                    SelectObject(info.Collider.GameObject);
+                }
+            }
+        }
+
+        #region Gizmo Management
 
         private void M_Gizmo_ScaleEvent(Transform target, TransformationEventArgs e)
         {
@@ -174,6 +219,8 @@ namespace C3DE.Editor
                 target.LocalPosition += value;
         }
 
+        #endregion
+
         #region Add
 
         private GameObject CreatePrimitive(Primitive type)
@@ -194,6 +241,10 @@ namespace C3DE.Editor
             }
 
             meshRenderer.Geometry.Build();
+
+            gameObject.AddComponent<SphereCollider>();
+            gameObject.Transform.Translate(0, meshRenderer.BoundingSphere.Radius, 0);
+
             return gameObject;
         }
 
@@ -212,14 +263,14 @@ namespace C3DE.Editor
                 case "Torus": gameObject = CreatePrimitive(Primitive.Torus); break;
 
                 case "Terrain":
-                    var go = GameObjectFactory.CreateTerrain();
-                    var terrain = go.GetComponent<Terrain>();
+                    gameObject = GameObjectFactory.CreateTerrain();
+                    var terrain = gameObject.GetComponent<Terrain>();
                     terrain.Flatten();
-                    terrain.Renderer.Material = DefaultMaterial;
-                    gameObject = go;
+                    terrain.Renderer.Material = m_DefaultMaterial;
                     break;
 
                 case "Water":
+                    gameObject = GameObjectFactory.CreateWater(GraphicsHelper.CreateTexture(Color.AliceBlue, 1, 1), GraphicsHelper.CreateRandomTexture(32), Vector3.One);
                     break;
 
                 case "Directional": gameObject = CreateLightNode(type, LightType.Directional); break;
@@ -289,7 +340,7 @@ namespace C3DE.Editor
 
             m_ObjectSelector.Set(sceneObject);
             m_ObjectSelector.Select(true);
-            _editionSceneObject.Selected = sceneObject;
+            m_EditionSceneObject.Selected = sceneObject;
             m_Gizmo.Selection.Add(sceneObject.Transform);
         }
 
@@ -297,7 +348,7 @@ namespace C3DE.Editor
         {
             m_Gizmo.Clear();
             m_ObjectSelector.Select(false);
-            _editionSceneObject.Reset();
+            m_EditionSceneObject.Reset();
         }
 
         public void SetSeletected(string id)
@@ -311,43 +362,24 @@ namespace C3DE.Editor
                 return;
 
             m_ObjectSelector.Select(false);
-            _editionSceneObject.Reset();
+            m_EditionSceneObject.Reset();
 
             m_ObjectSelector.Set(sceneObject);
             m_ObjectSelector.Select(true);
-            _editionSceneObject.Selected = sceneObject;
+            m_EditionSceneObject.Selected = sceneObject;
         }
 
         #endregion
 
-
-        #region Copy/Duplicate/Past
-
-        public void CopySelection()
+        public GameObject[] GetUsedSceneObjects()
         {
-            _editionSceneObject.CopySelection();
+            var list = new List<GameObject>();
+
+            foreach (var gameObject in gameObjects)
+                if (gameObject.Tag != EditorTag)
+                    list.Add(gameObject);
+
+            return list.ToArray();
         }
-
-        public void DuplicateSelection()
-        {
-            _editionSceneObject.Copy = m_ObjectSelector.GameObject;
-            _editionSceneObject.PastSelection();
-        }
-
-        public void PastSelection()
-        {
-            _editionSceneObject.PastSelection();
-        }
-
-        public void DeleteSelection()
-        {
-            if (m_ObjectSelector.IsNull())
-                return;
-
-            InternalRemoveSceneObject(m_ObjectSelector.GameObject);
-            UnselectObject();
-        }
-
-        #endregion
     }
 }

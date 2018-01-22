@@ -86,7 +86,7 @@ namespace C3DE.Editor.UI
 
                 Children[i].Position = position;
                 Children[i].Rectangle = rectangle;
-                m_ChildRectangle.Width = Math.Max(m_ChildRectangle.Width, rectangle.Width + padding * 2);
+                m_ChildRectangle.Width = Math.Max(m_ChildRectangle.Width, rectangle.Width + padding * 6);
             }
 
             m_ChildRectangle.X = (int)position.X - padding;
@@ -137,11 +137,11 @@ namespace C3DE.Editor.UI
         private Color GetColor()
         {
             if (State == MenuItemState.Over)
-                return new Color(0.15f, 0.15f, 0.15f);
+                return new Color(0.75f, 0.75f, 0.75f);
             else if (State == MenuItemState.Pressed)
-                return new Color(0.3f, 0.3f, 0.3f);
+                return new Color(0.65f, 0.65f, 0.65f);
             else
-                return Color.Black;
+                return GUI.Skin.TextColor;
         }
 
         public Vector2 GetHeaderSize(SpriteFont font) => font.MeasureString(Header);

@@ -4,31 +4,32 @@ namespace C3DE.Editor
 {
     public class ObjectSelector
     {
+        private BoundingBoxRenderer m_BoudingBoxRenderer;
+        private Renderer m_Renderer;
+
         public GameObject GameObject { get; private set; }
-        private BoundingBoxRenderer _boundingBoxRenderer;
-        private Renderer _renderer;
 
-        public void Set(GameObject sceneObject)
+        public void Set(GameObject gameObject)
         {
-            GameObject = sceneObject;
+            GameObject = gameObject;
 
-            _boundingBoxRenderer = sceneObject.GetComponent<BoundingBoxRenderer>();
-            if (_boundingBoxRenderer == null)
-                _boundingBoxRenderer = sceneObject.AddComponent<BoundingBoxRenderer>();
+            m_BoudingBoxRenderer = gameObject.GetComponent<BoundingBoxRenderer>();
+            if (m_BoudingBoxRenderer == null)
+                m_BoudingBoxRenderer = gameObject.AddComponent<BoundingBoxRenderer>();
 
-            _renderer = sceneObject.GetComponent<Renderer>();
+            m_Renderer = gameObject.GetComponent<Renderer>();
         }
 
         public void Select(bool isSelected)
         {
             if (GameObject != null)
             {
-                _boundingBoxRenderer.Enabled = isSelected;
+                m_BoudingBoxRenderer.Enabled = isSelected;
 
                 if (!isSelected)
                 {
-                    _renderer = null;
-                    _boundingBoxRenderer = null;
+                    m_Renderer = null;
+                    m_BoudingBoxRenderer = null;
                     GameObject = null;
                 }
             }

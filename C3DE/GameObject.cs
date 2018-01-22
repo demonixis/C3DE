@@ -489,7 +489,7 @@ namespace C3DE
 
         public static GameObject Find(string name)
         {
-            var gameObjects = Scene.current.sceneObjects;
+            var gameObjects = Scene.current.gameObjects;
             foreach (var gameObject in gameObjects)
                 if (gameObject.Name == name)
                     return gameObject;

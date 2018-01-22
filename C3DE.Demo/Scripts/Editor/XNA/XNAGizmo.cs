@@ -1,4 +1,6 @@
 ﻿using C3DE;
+using C3DE.Components;
+using C3DE.Inputs;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -29,22 +31,15 @@ using System.Collections.Generic;
 
 namespace XNAGizmo
 {
-    using C3DE.Components;
-    using C3DE.Inputs;
-    using WinInput = System.Windows.Input;
-
     public class GizmoComponent : DrawableGameComponent
     {
         /// <summary>
         /// only active if atleast one entity is selected.
         /// </summary>
         private bool _isActive = true;
-
-
         private readonly GraphicsDevice _graphics;
         private readonly BasicEffect _lineEffect;
         private readonly BasicEffect _meshEffect;
-
         private Matrix _view = Matrix.Identity;
         private Matrix _projection = Matrix.Identity;
         private Vector3 _cameraPosition;
@@ -95,8 +90,6 @@ namespace XNAGizmo
         public TransformSpace ActiveSpace = TransformSpace.Local;
         public PivotType ActivePivot = PivotType.SelectionCenter;
 
-        // -- BoundingBoxes -- //
-
         #region BoundingBoxes
 
         private const float MULTI_AXIS_THICKNESS = 0.05f;
@@ -133,8 +126,6 @@ namespace XNAGizmo
         }
 
         #endregion
-
-        // -- BoundingSpheres -- //
 
         #region BoundingSpheres
 
@@ -185,7 +176,8 @@ namespace XNAGizmo
 
         public GizmoComponent(Game game, GraphicsDevice graphics)
             : this(game, graphics, Matrix.Identity)
-        { }
+        {
+        }
 
         public GizmoComponent(Game game, GraphicsDevice graphics, Matrix world)
             : base(game)
@@ -572,7 +564,7 @@ namespace XNAGizmo
             _screenScaleMatrix = Matrix.CreateScale(new Vector3(_screenScale));
 
             _localForward = Selection[0].Transform.Forward;
-            _localUp = Selection[0].Transform.Up;
+            _localUp = Vector3.Up;// Selection[0].Transform.Up;
             // -- Vector Rotation (Local/World) -- //
             _localForward.Normalize();
             _localRight = Vector3.Cross(_localForward, _localUp);

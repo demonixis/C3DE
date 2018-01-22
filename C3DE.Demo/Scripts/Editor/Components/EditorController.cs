@@ -1,16 +1,15 @@
-﻿using C3DE.Components;
-using C3DE.Components.Controllers;
+﻿using C3DE.Components.Controllers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
 namespace C3DE.Editor
 {
-    public class EditorController : Controller
+    public sealed class EditorController : Controller
     {
-        private Matrix _rotationMatrix;
-        private Vector3 _transformedReference;
-        protected Vector3 translation = Vector3.Zero;
-        protected Vector3 rotation = Vector3.Zero;
+        private Matrix m_RotationMatrix;
+        private Vector3 m_TransformedReference;
+        private Vector3 m_Translation;
+        private Vector3 m_Rotation;
 
         public EditorController()
             : base()
@@ -30,23 +29,23 @@ namespace C3DE.Editor
             if (m_Transform.Rotation.X <= -MathHelper.PiOver2)
             {
                 m_Transform.SetRotation(-MathHelper.PiOver2 + 0.001f, null, null);
-                rotation = Vector3.Zero;
+                m_Rotation = Vector3.Zero;
             }
             else if (m_Transform.Rotation.X >= MathHelper.PiOver2)
             {
                 m_Transform.SetRotation(MathHelper.PiOver2 - 0.001f, null, null);
-                rotation = Vector3.Zero;
+                m_Rotation = Vector3.Zero;
             }
 
-            _rotationMatrix = Matrix.CreateFromYawPitchRoll(m_Transform.Rotation.Y, m_Transform.Rotation.X, 0.0f);
-            _transformedReference = Vector3.Transform(translation, _rotationMatrix);
+            m_RotationMatrix = Matrix.CreateFromYawPitchRoll(m_Transform.Rotation.Y, m_Transform.Rotation.X, 0.0f);
+            m_TransformedReference = Vector3.Transform(m_Translation, m_RotationMatrix);
 
             // Translate and rotate
-            m_Transform.Translate(ref _transformedReference);
-            m_Transform.Rotate(ref rotation);
+            m_Transform.Translate(ref m_TransformedReference);
+            m_Transform.Rotate(ref m_Rotation);
 
-            translation *= Velocity;
-            rotation *= AngularVelocity;
+            m_Translation *= Velocity;
+            m_Rotation *= AngularVelocity;
         }
 
         protected override void UpdateInputs()
@@ -58,16 +57,16 @@ namespace C3DE.Editor
         protected override void UpdateKeyboardInput()
         {
             if (Input.Keys.Pressed(Keys.Up))
-                translation.Z -= MoveSpeed * Time.DeltaTime;
+                m_Translation.Z -= MoveSpeed * Time.DeltaTime;
 
             else if (Input.Keys.Pressed(Keys.Down))
-                translation.Z += MoveSpeed * Time.DeltaTime;
+                m_Translation.Z += MoveSpeed * Time.DeltaTime;
 
             if (Input.Keys.Pressed(Keys.Left))
-                translation.X -= MoveSpeed * Time.DeltaTime / 2.0f;
+                m_Translation.X -= MoveSpeed * Time.DeltaTime / 2.0f;
 
             else if (Input.Keys.Pressed(Keys.Right))
-                translation.X += MoveSpeed * Time.DeltaTime / 2.0f;
+                m_Translation.X += MoveSpeed * Time.DeltaTime / 2.0f;
         }
 
         protected override void UpdateMouseInput()
@@ -85,17 +84,17 @@ namespace C3DE.Editor
                         delta.Y = 0;
                 }
 
-                rotation.Y -= delta.X * LookSpeed * MouseSensibility.Y * Time.DeltaTime;
-                rotation.X -= delta.Y * LookSpeed * MouseSensibility.X * Time.DeltaTime;
+                m_Rotation.Y -= delta.X * LookSpeed * MouseSensibility.Y * Time.DeltaTime;
+                m_Rotation.X -= delta.Y * LookSpeed * MouseSensibility.X * Time.DeltaTime;
             }
 
             if (Input.Mouse.Down(Inputs.MouseButton.Middle))
             {
-                translation.Y += delta.Y * StrafeSpeed * MouseSensibility.Y * Time.DeltaTime;
-                translation.X -= delta.X * StrafeSpeed * MouseSensibility.X * Time.DeltaTime;
+                m_Translation.Y += delta.Y * StrafeSpeed * MouseSensibility.Y * Time.DeltaTime;
+                m_Translation.X -= delta.X * StrafeSpeed * MouseSensibility.X * Time.DeltaTime;
             }
 
-            translation.Z -= MoveSpeed * Input.Mouse.Wheel * Time.DeltaTime;
+            m_Translation.Z -= MoveSpeed * Input.Mouse.Wheel * Time.DeltaTime;
         }
 
         protected override void UpdateGamepadInput()
@@ -103,10 +102,6 @@ namespace C3DE.Editor
         }
 
         protected override void UpdateTouchInput()
-        {
-        }
-
-        protected virtual void SetVirtualInputSupport(bool active)
         {
         }
     }

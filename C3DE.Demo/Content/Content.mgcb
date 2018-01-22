@@ -20,6 +20,13 @@
 /processorParam:TextureFormat=Compressed
 /build:Font/Default.spritefont
 
+#begin Font/Menu.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Font/Menu.spritefont
+
 #begin Font/SegoeUILight.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor

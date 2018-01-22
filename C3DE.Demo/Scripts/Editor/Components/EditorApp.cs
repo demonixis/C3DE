@@ -1,4 +1,5 @@
 ﻿using C3DE.Components;
+using C3DE.Demo.Scripts.Editor.Components;
 using C3DE.Editor.UI;
 using C3DE.UI;
 using C3DE.Utils;
@@ -39,6 +40,12 @@ namespace C3DE.Editor
                     new MenuItem("Torus", OnGameObjectSelected),
                     new MenuItem("Terrain", OnGameObjectSelected),
                     new MenuItem("Water", OnGameObjectSelected),
+                    new MenuItem("Light", null, new[]
+                    {
+                        new MenuItem("Directional"),
+                        new MenuItem("Point"),
+                        new MenuItem("Spot")
+                    })
                 }),
                 new MenuItem("Help",OnMainItemSelected, new []
                 {
@@ -46,8 +53,8 @@ namespace C3DE.Editor
                 })
             };
 
-            m_MenuBar = new MenuBar(items, GraphicsHelper.CreateTexture(Color.LightGray, 1, 1));
-            m_MenuBar.Compute(35, 5);
+            m_MenuBar = new MenuBar(items, GraphicsHelper.CreateTexture(new Color(30, 30, 30), 1, 1));
+            m_MenuBar.Compute(25, 5);
         }
 
         public void OnCommandSelected(MenuItem item) => CommandSelected?.Invoke(item.Header);
