@@ -1,16 +1,16 @@
 ﻿using C3DE.Components.Rendering;
 
-namespace C3DE.Editor.Core
+namespace C3DE.Editor
 {
     public class ObjectSelector
     {
-        public GameObject SceneObject { get; private set; }
+        public GameObject GameObject { get; private set; }
         private BoundingBoxRenderer _boundingBoxRenderer;
         private Renderer _renderer;
 
         public void Set(GameObject sceneObject)
         {
-            SceneObject = sceneObject;
+            GameObject = sceneObject;
 
             _boundingBoxRenderer = sceneObject.GetComponent<BoundingBoxRenderer>();
             if (_boundingBoxRenderer == null)
@@ -21,7 +21,7 @@ namespace C3DE.Editor.Core
 
         public void Select(bool isSelected)
         {
-            if (SceneObject != null)
+            if (GameObject != null)
             {
                 _boundingBoxRenderer.Enabled = isSelected;
 
@@ -29,22 +29,22 @@ namespace C3DE.Editor.Core
                 {
                     _renderer = null;
                     _boundingBoxRenderer = null;
-                    SceneObject = null;
+                    GameObject = null;
                 }
             }
         }
 
         public bool IsEqualTo(GameObject other)
         {
-            if (SceneObject == null)
+            if (GameObject == null)
                 return false;
 
-            return other == SceneObject;
+            return other == GameObject;
         }
 
         public bool IsNull()
         {
-            return SceneObject == null;
+            return GameObject == null;
         }
     }
 }

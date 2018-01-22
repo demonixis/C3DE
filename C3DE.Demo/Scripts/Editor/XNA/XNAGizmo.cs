@@ -450,7 +450,13 @@ namespace XNAGizmo
                                 {
                                     // transform (local or world)
                                     delta = Vector3.Transform(delta, _rotationMatrix);
+
+                                    // Temporary hack
+                                    if (ActiveAxis == GizmoAxis.X)
+                                        delta.Y = 0;
+
                                     _translationDelta = delta;
+                                    
                                 }
                                 else if (ActiveMode == GizmoMode.NonUniformScale || ActiveMode == GizmoMode.UniformScale)
                                 {

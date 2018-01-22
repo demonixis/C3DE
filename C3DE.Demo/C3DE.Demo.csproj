@@ -76,7 +76,9 @@
     <Compile Include="Scripts\DeferredDebuger.cs" />
     <Compile Include="Scripts\DemoBehaviour.cs" />
     <Compile Include="Scripts\DemoSceneMenu.cs" />
+    <Compile Include="Scripts\Editor\CopyPast.cs" />
     <Compile Include="Scripts\Editor\EditorApp.cs" />
+    <Compile Include="Scripts\Editor\EditorController.cs" />
     <Compile Include="Scripts\Editor\UI\MenuBar.cs" />
     <Compile Include="Scripts\Editor\UI\MenuItem.cs" />
     <Compile Include="Scripts\Editor\ObjectSelector.cs" />

@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace C3DE.Demo.Scripts.Editor
+namespace C3DE.Editor.UI
 {
     public class MenuBar
     {
