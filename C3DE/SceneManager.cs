@@ -108,7 +108,6 @@ namespace C3DE
                     _activeSceneIndex = _scenes.Count - 1;
 
                 _scenes[index].Unload();
-
                 _scenes.RemoveAt(index);
             }
         }

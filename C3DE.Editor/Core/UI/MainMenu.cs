@@ -1,22 +1,22 @@
-﻿using C3DE.Components;
-using C3DE.Demo.Scripts.Editor.Components;
-using C3DE.Editor.UI;
-using C3DE.UI;
+﻿using C3DE.Editor.UI;
 using C3DE.Utils;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 
 namespace C3DE.Editor
 {
-    public class EditorApp : Behaviour
+    public class MainMenu : DrawableGameComponent
     {
+        private SpriteBatch m_SpriteBatch;
         private MenuBar m_MenuBar;
         private MenuItem m_LastSelected;
 
         public event Action<string> CommandSelected = null;
-        public event Action<string> Clicked = null;
+        public event Action<string> GameObjectSelected = null;
 
-        public override void Start()
+        public MainMenu(Game game) 
+            : base(game)
         {
             var items = new[]
             {
@@ -40,6 +40,7 @@ namespace C3DE.Editor
                     new MenuItem("Torus", OnGameObjectSelected),
                     new MenuItem("Terrain", OnGameObjectSelected),
                     new MenuItem("Water", OnGameObjectSelected),
+                    new MenuItem("-----"),
                     new MenuItem("Light", null, new[]
                     {
                         new MenuItem("Directional"),
@@ -55,11 +56,13 @@ namespace C3DE.Editor
 
             m_MenuBar = new MenuBar(items, GraphicsHelper.CreateTexture(new Color(30, 30, 30), 1, 1));
             m_MenuBar.Compute(25, 5);
+
+            m_SpriteBatch = new SpriteBatch(game.GraphicsDevice);
         }
 
         public void OnCommandSelected(MenuItem item) => CommandSelected?.Invoke(item.Header);
 
-        private void OnGameObjectSelected(MenuItem item) => Clicked?.Invoke(item.Header);
+        private void OnGameObjectSelected(MenuItem item) => GameObjectSelected?.Invoke(item.Header);
 
         private void OnMainItemSelected(MenuItem item)
         {
@@ -75,14 +78,18 @@ namespace C3DE.Editor
             m_LastSelected = item;
         }
 
-        public override void Update()
+        public override void Update(GameTime gameTime)
         {
+            base.Update(gameTime);
             m_MenuBar.Update();
         }
 
-        public override void OnGUI(GUI ui)
+        public override void Draw(GameTime gameTime)
         {
-            m_MenuBar.Draw(ui);
+            base.Draw(gameTime);
+            m_SpriteBatch.Begin();
+            m_MenuBar.Draw(m_SpriteBatch);
+            m_SpriteBatch.End();
         }
     }
 }

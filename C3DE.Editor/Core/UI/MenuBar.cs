@@ -26,6 +26,8 @@ namespace C3DE.Editor.UI
             m_BarRectangle.Width = Screen.Width;
             m_BarRectangle.Height = height;
 
+            var font = Application.Content.Load<SpriteFont>("Font/Menu");
+
             for (var i = 0; i < m_Items.Length; i++)
             {
                 x += padding;
@@ -33,12 +35,13 @@ namespace C3DE.Editor.UI
                 if (i > 0)
                     x += size.X + padding;
 
-                size = m_Items[i].GetHeaderSize(GUI.Skin.Font);
+                size = m_Items[i].GetHeaderSize(font);
 
                 y = (int)(height / 2 - size.Y / 2);
 
-                m_Items[i].Compute(GUI.Skin.Font, x, y, padding);
-                m_Items[i].ComputeChildren(GUI.Skin.Font, height, padding, Background);
+                
+                m_Items[i].Compute(font, x, y, padding);
+                m_Items[i].ComputeChildren(font, height, padding, Background);
             }
         }
 
@@ -48,12 +51,12 @@ namespace C3DE.Editor.UI
                 m_Items[i].Update();
         }
 
-        public void Draw(GUI ui)
+        public void Draw(SpriteBatch spriteBatch)
         {
-            ui.DrawTexture(m_BarRectangle, Background);
+            spriteBatch.Draw(Background, m_BarRectangle, Color.White);
 
             for (var i = 0; i < m_Items.Length; i++)
-                m_Items[i].Draw(ui);
+                m_Items[i].Draw(spriteBatch);
         }
     }
 }

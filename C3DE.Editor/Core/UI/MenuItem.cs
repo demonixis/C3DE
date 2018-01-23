@@ -33,8 +33,6 @@ namespace C3DE.Editor.UI
                 children[i].Parent = this;
         }
 
-        public void Close() => m_Show = false;
-
         public void Compute(SpriteFont font, float x, float y, int padding)
         {
             var size = GetHeaderSize(font);
@@ -94,6 +92,14 @@ namespace C3DE.Editor.UI
             m_ChildRectangle.Height = (int)((size.Y + padding * 2) * Children.Length);
         }
 
+        public void Close()
+        {
+            m_Show = false;
+
+            foreach (var child in Children)
+                child.Close();
+        }
+
         public void Update()
         {
             var overlap = Rectangle.Contains(Input.Mouse.Position);
@@ -121,17 +127,17 @@ namespace C3DE.Editor.UI
                 Children[i].Update();
         }
 
-        public void Draw(GUI ui)
+        public void Draw(SpriteBatch spriteBatch)
         {
-            ui.Label(Position, Header, GetColor());
+            spriteBatch.DrawString(GUI.Skin.Font, Header, Position, GetColor());
 
             if (Children.Length == 0 || !m_Show)
                 return;
 
-            ui.DrawTexture(m_ChildRectangle, m_ChildTexture);
+            spriteBatch.Draw(m_ChildTexture, m_ChildRectangle, Color.White);
 
             for (var i = 0; i < Children.Length; i++)
-                ui.Label(Children[i].Position, Children[i].Header, Children[i].GetColor());
+                spriteBatch.DrawString(GUI.Skin.Font, Children[i].Header, Children[i].Position, Children[i].GetColor());
         }
 
         private Color GetColor()

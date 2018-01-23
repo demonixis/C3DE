@@ -65,7 +65,7 @@
     <Compile Include="Core\CommandManager.cs" />
     <Compile Include="Core\Components\HotkeyManager.cs" />
     <Compile Include="Core\CopyPast.cs" />
-    <Compile Include="Core\Components\EditorApp.cs" />
+    <Compile Include="Core\UI\MainMenu.cs" />
     <Compile Include="Core\Components\EditorController.cs" />
     <Compile Include="Core\UI\MenuBar.cs" />
     <Compile Include="Core\UI\MenuItem.cs" />

@@ -318,6 +318,9 @@ namespace XNAGizmo
         {
             base.Update(gameTime);
 
+            if (Camera.Main == null)
+                return;
+
             _view = Camera.Main.ViewMatrix;
             _projection = Camera.Main.ProjectionMatrix;
             _cameraPosition = Camera.Main.Transform.Position;
@@ -448,7 +451,7 @@ namespace XNAGizmo
                                         delta.Y = 0;
 
                                     _translationDelta = delta;
-                                    
+
                                 }
                                 else if (ActiveMode == GizmoMode.NonUniformScale || ActiveMode == GizmoMode.UniformScale)
                                 {

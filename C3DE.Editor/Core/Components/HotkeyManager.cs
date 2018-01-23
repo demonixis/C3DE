@@ -1,40 +1,41 @@
-﻿using C3DE.Components;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using System;
 
-namespace C3DE.Demo.Scripts.Editor.Components
+namespace C3DE.Editor
 {
-    public class HotkeyManager : Behaviour
+    public class HotkeyManager : GameComponent
     {
-        public enum ActionKeys
+        public event Action<string> ActionKeyJustPressed = null;
+
+        public HotkeyManager(Game game) : base(game)
         {
-            All = 0, Copy, Cut, Past, Shift, Ctrl, Suppr,
-            Save
         }
 
-        public event Action<ActionKeys> ActionKeyJustPressed = null;
-
-        public override void Update()
+        public override void Update(GameTime gameTime)
         {
             var keys = Input.Keys;
 
             if (keys.JustPressed(Keys.Delete))
-                ActionKeyJustPressed?.Invoke(ActionKeys.Suppr);
+                ActionKeyJustPressed?.Invoke("Delete");
 
             if (keys.JustPressed(Keys.S))
-                ActionKeyJustPressed?.Invoke(ActionKeys.Save);
+                ActionKeyJustPressed?.Invoke("Save");
+
+            if (keys.JustPressed(Keys.O))
+                ActionKeyJustPressed?.Invoke("Load");
 
             if (keys.Pressed(Keys.LeftControl) && keys.JustPressed(Keys.A))
-                ActionKeyJustPressed?.Invoke(ActionKeys.All);
+                ActionKeyJustPressed?.Invoke("Select All");
 
             if (keys.Pressed(Keys.LeftControl) && keys.JustPressed(Keys.C))
-                ActionKeyJustPressed?.Invoke(ActionKeys.Copy);
+                ActionKeyJustPressed?.Invoke("Copy");
 
             if (keys.Pressed(Keys.LeftControl) && keys.JustPressed(Keys.X))
-                ActionKeyJustPressed?.Invoke(ActionKeys.Cut);
+                ActionKeyJustPressed?.Invoke("Cut");
 
             if (keys.Pressed(Keys.LeftControl) && keys.JustPressed(Keys.V))
-                ActionKeyJustPressed?.Invoke(ActionKeys.Past);
+                ActionKeyJustPressed?.Invoke("Past");
         }
     }
 }

@@ -2,12 +2,9 @@
 using C3DE.Components.Lighting;
 using C3DE.Components.Physics;
 using C3DE.Components.Rendering;
-using C3DE.Demo;
-using C3DE.Demo.Scripts;
 using C3DE.Graphics.Materials;
 using C3DE.Graphics.Primitives;
 using C3DE.Inputs;
-using C3DE.UI;
 using C3DE.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -28,13 +25,15 @@ namespace C3DE.Editor
         private const string EditorTag = "Editor_Object";
         protected Camera m_Camera;
         protected Light m_DirectionalLight;
-        private EditorApp m_EditorApp;
         private GizmoComponent m_Gizmo;
         private ObjectSelector m_ObjectSelector;
         private StandardMaterial m_DefaultMaterial;
         private List<string> m_AddList;
         private List<GameObject> m_RemoveList;
         private CopyPast m_EditionSceneObject;
+
+        public event Action<GameObject, bool> GameObjectAdded = null;
+        public event Action<GameObject> GameObjectSelected = null;
 
         public EditorScene() : base("3D Editor")
         {
@@ -59,7 +58,7 @@ namespace C3DE.Editor
             var camera = GameObjectFactory.CreateCamera(new Vector3(0, 2, -10), new Vector3(0, 0, 0), Vector3.Up);
 
             m_Camera = camera.GetComponent<Camera>();
-            m_Camera.Setup(new Vector3(0, 10, 0), Vector3.Forward, Vector3.Up);
+            m_Camera.Setup(new Vector3(0, 2, 5), Vector3.Forward, Vector3.Up);
             m_Camera.Far = 10000;
             m_Camera.AddComponent<EditorController>();
 
@@ -97,13 +96,11 @@ namespace C3DE.Editor
             };
             RenderSettings.Skybox.Generate(Application.GraphicsDevice, Application.Content, blueSkybox);
 
-            m_EditorApp = m_Camera.AddComponent<EditorApp>();
-            m_EditorApp.Clicked += OnObjectSelected;
-            m_Gizmo = new GizmoComponent(Application.Engine, Application.GraphicsDevice);
+            foreach (var component in Application.Engine.Components)
+                if (component is GizmoComponent)
+                    m_Gizmo = (GizmoComponent)component;
+
             m_Gizmo.ActiveMode = GizmoMode.Translate;
-
-            Application.Engine.Components.Add(m_Gizmo);
-
             m_Gizmo.TranslateEvent += M_Gizmo_TranslateEvent;
             m_Gizmo.RotateEvent += M_Gizmo_RotateEvent;
             m_Gizmo.ScaleEvent += M_Gizmo_ScaleEvent;
@@ -113,13 +110,13 @@ namespace C3DE.Editor
             // Grid
             var gridMaterial = new UnlitMaterial();
             gridMaterial.MainTexture = GraphicsHelper.CreateCheckboardTexture(new Color(0.6f, 0.6f, 0.6f), new Color(0.95f, 0.95f, 0.95f), 256, 256); ;
-            gridMaterial.Tiling = new Vector2(32);
 
             var terrain = GameObjectFactory.CreateTerrain();
             terrain.Tag = EditorTag;
 
             var grid = terrain.GetComponent<Terrain>();
-            grid.Geometry.Size = new Vector3(2.0f);
+            grid.Geometry.Size = new Vector3(1.0f);
+            grid.Geometry.TextureRepeat = new Vector2(96);
             grid.Renderer.Material = gridMaterial;
             grid.Renderer.ReceiveShadow = true;
             grid.Renderer.CastShadow = false;
@@ -129,9 +126,9 @@ namespace C3DE.Editor
             m_DefaultMaterial.MainTexture = GraphicsHelper.CreateTexture(Color.WhiteSmoke, 1, 1);
         }
 
-        private void OnObjectSelected(string name)
+        public void AddObject(string name)
         {
-            GameObject selected = InternalAddSceneObject(name);
+            var selected = InternalAddSceneObject(name);
 
             if (selected != null)
             {
@@ -142,8 +139,10 @@ namespace C3DE.Editor
 
         public override void Unload()
         {
+            m_Gizmo.TranslateEvent -= M_Gizmo_TranslateEvent;
+            m_Gizmo.RotateEvent -= M_Gizmo_RotateEvent;
+            m_Gizmo.ScaleEvent -= M_Gizmo_ScaleEvent;
             base.Unload();
-            Application.Engine.Components.Remove(m_Gizmo);
         }
 
         public override void Update()
