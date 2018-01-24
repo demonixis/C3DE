@@ -680,13 +680,6 @@ namespace Gwen.Control
 			GC.SuppressFinalize(this);
 		}
 
-#if DEBUG
-		~ControlBase()
-		{
-			throw new InvalidOperationException(String.Format("IDisposable object {{{0}}} finalized.", this));
-		}
-#endif
-
 		/// <summary>
 		/// Detaches the control from canvas and adds to the deletion queue (processed in Canvas.DoThink).
 		/// </summary>

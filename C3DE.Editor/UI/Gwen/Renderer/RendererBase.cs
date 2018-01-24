@@ -43,14 +43,6 @@ namespace Gwen.Renderer
             GC.SuppressFinalize(this);
         }
 
-#if DEBUG
-        ~RendererBase()
-        {
-            throw new InvalidOperationException(String.Format("IDisposable object finalized: {0}", GetType()));
-            //Debug.Print(String.Format("IDisposable object finalized: {0}", GetType()));
-        }
-#endif
-
         /// <summary>
         /// Starts rendering.
         /// </summary>

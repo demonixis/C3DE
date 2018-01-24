@@ -1,3 +1,4 @@
+using C3DE.Editor.UI;
 using C3DE.UI;
 using System;
 using XNAGizmo;
@@ -6,7 +7,7 @@ namespace C3DE.Editor
 {
     public class EditorGame : Engine
     {
-        private MainMenu m_MainMenu;
+        private UIManager m_UIManager;
         private GizmoComponent m_Gizmo;
         private EditorScene m_EditorScene;
 
@@ -19,10 +20,11 @@ namespace C3DE.Editor
         {
             base.Initialize();
 
-            m_MainMenu = new MainMenu(this);
-            m_MainMenu.CommandSelected += OnCommandSelected;
-            m_MainMenu.GameObjectSelected += OnGameObjectSelected;
-            Components.Add(m_MainMenu);
+            m_UIManager = new UIManager(this);
+            m_UIManager.Initialize(m_GraphicsDeviceManager);
+            m_UIManager.CommandSelected += OnCommandSelected;
+            m_UIManager.GameObjectSelected += OnGameObjectSelected;
+            Components.Add(m_UIManager);
 
             m_Gizmo = new GizmoComponent(this, GraphicsDevice);
             Components.Add(m_Gizmo);
@@ -45,7 +47,9 @@ namespace C3DE.Editor
                 case "Load": LoadScene(); break;
                 case "Save": SaveScene(); break;
                 case "Exit": Exit(); break;
-                case "About": break;
+                case "About":
+                    m_UIManager.OpenMessageBox("About", "C3DE Editor is a 3D Game Engine powered by MonoGame.");
+                    break;
                 case "Copy": break;
                 case "Cut": break;
                 case "Past": break;

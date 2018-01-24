@@ -63,14 +63,6 @@ namespace Gwen.Skin
 			GC.SuppressFinalize(this);
 		}
 
-#if DEBUG
-		~SkinBase()
-		{
-			throw new InvalidOperationException(String.Format("IDisposable object finalized: {0}", GetType()));
-			//Debug.Print(String.Format("IDisposable object finalized: {0}", GetType()));
-		}
-#endif
-
 		#region UI elements
 		public virtual void DrawButton(Control.ControlBase control, bool depressed, bool hovered, bool disabled) { }
 		public virtual void DrawTabButton(Control.ControlBase control, bool active, Dock dir) { }

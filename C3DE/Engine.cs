@@ -14,7 +14,7 @@ namespace C3DE
     {
         private bool _autoDetectResolution;
         private bool _requestFullscreen;
-        protected GraphicsDeviceManager _graphics;
+        protected GraphicsDeviceManager m_GraphicsDeviceManager;
         protected BaseRenderer renderer;
         private BaseRenderer m_nextRenderer;
         protected SceneManager _sceneManager;
@@ -44,8 +44,8 @@ namespace C3DE
         public Engine(string title = "C3DE Game", int width = 0, int height = 0, bool fullscreen = false)
             : base()
         {
-            _graphics = new GraphicsDeviceManager(this);
-            _graphics.GraphicsProfile = GraphicsProfile.HiDef;
+            m_GraphicsDeviceManager = new GraphicsDeviceManager(this);
+            m_GraphicsDeviceManager.GraphicsProfile = GraphicsProfile.HiDef;
             _sceneManager = new SceneManager();
             _initialized = false;
             _autoDetectResolution = false;
@@ -59,7 +59,7 @@ namespace C3DE
             Application.Content = Content;
             Application.Engine = this;
             Application.GraphicsDevice = GraphicsDevice;
-            Application.GraphicsDeviceManager = _graphics;
+            Application.GraphicsDeviceManager = m_GraphicsDeviceManager;
             Application.SceneManager = _sceneManager;
 
 #if WINDOWS || DESKTOP
@@ -67,8 +67,8 @@ namespace C3DE
 
             if (!_autoDetectResolution)
             {
-                _graphics.PreferredBackBufferWidth = width;
-                _graphics.PreferredBackBufferHeight = height;
+                m_GraphicsDeviceManager.PreferredBackBufferWidth = width;
+                m_GraphicsDeviceManager.PreferredBackBufferHeight = height;
             }
 #else
             if (width == 0 || height == 0)
@@ -120,7 +120,7 @@ namespace C3DE
             Components.Add(Input.Gamepad);
             Components.Add(Input.Touch);
 
-            _graphics.PreparingDeviceSettings += OnResize;
+            m_GraphicsDeviceManager.PreparingDeviceSettings += OnResize;
             _initialized = true;
 
             base.Initialize();

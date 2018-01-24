@@ -106,14 +106,6 @@ namespace Gwen
 			GC.SuppressFinalize(this);
 		}
 
-#if DEBUG
-        ~Font()
-        {
-            throw new InvalidOperationException(String.Format("IDisposable object finalized: {0}", GetType()));
-            //Debug.Print(String.Format("IDisposable object finalized: {0}", GetType()));
-        }
-#endif
-
 		/// <summary>
 		/// Duplicates font data (except renderer data which must be reinitialized).
 		/// </summary>

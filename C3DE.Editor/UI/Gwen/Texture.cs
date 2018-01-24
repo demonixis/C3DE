@@ -83,14 +83,5 @@ namespace Gwen
             m_Renderer.FreeTexture(this);
             GC.SuppressFinalize(this);
         }
-
-#if DEBUG
-        ~Texture()
-        {
-            throw new InvalidOperationException(String.Format("IDisposable object finalized: {0}", GetType()));
-            //Debug.Print(String.Format("IDisposable object finalized: {0}", GetType()));
-        }
-#endif
-
    }
 }

@@ -320,6 +320,9 @@ namespace C3DE.Editor
 
         private void InternalAddSceneObject(GameObject sceneObject)
         {
+            if (sceneObject == null)
+                return;
+
             var collider = sceneObject.GetComponent<Collider>();
             if (collider != null)
                 collider.IsPickable = true;

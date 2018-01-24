@@ -69,10 +69,7 @@
     <Compile Include="Core\AssetImporter.cs" />
     <Compile Include="Core\Components\HotkeyManager.cs" />
     <Compile Include="Core\CopyPast.cs" />
-    <Compile Include="Core\UI\MainMenu.cs" />
     <Compile Include="Core\Components\EditorController.cs" />
-    <Compile Include="Core\UI\MenuBar.cs" />
-    <Compile Include="Core\UI\MenuItem.cs" />
     <Compile Include="Core\ObjectSelector.cs" />
     <Compile Include="Core\XNA\GizmoModel.cs" />
     <Compile Include="Core\XNA\Quad.cs" />
@@ -268,6 +265,9 @@
     </MonoGameContentReference>
   </ItemGroup>
   <ItemGroup>
+    <MonoGameContentReference Include="Content\Content.mgcb" />
+  </ItemGroup>
+  <ItemGroup>
     <None Include="UI\Gwen\obj\Debug\DesignTimeResolveAssemblyReferences.cache" />
     <None Include="UI\Gwen\obj\Debug\DesignTimeResolveAssemblyReferencesInput.cache" />
     <None Include="UI\Gwen\obj\Debug\Gwen.csproj.CoreCompileInputs.cache" />
@@ -276,6 +276,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="UI\Gwen\obj\Debug\TempPE\" />
+    <Folder Include="UI\Items\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Content.Builder.targets" />
