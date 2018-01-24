@@ -1,6 +1,5 @@
 ﻿using Gwen;
 using Gwen.Control;
-using Gwen.Control.Layout;
 using Gwen.Platform;
 using Gwen.Renderer.MonoGame;
 using Gwen.Renderer.MonoGame.Input;
@@ -21,6 +20,7 @@ namespace C3DE.Editor.UI
         private GraphicsDeviceManager m_GraphicsDeviceManager;
         private int m_Time;
         private StatusBar m_StatusBar;
+        private TreeControl m_SceneTreeControl;
 
         public event Action<string> CommandSelected = null;
         public event Action<string> GameObjectSelected = null;
@@ -117,22 +117,50 @@ namespace C3DE.Editor.UI
 
             #region Main Dock
 
-            var dock = new DockControl(m_Canvas);
-            dock.Dock = Dock.Fill;
+            var mainDock = new DockControl(m_Canvas);
+            mainDock.Dock = Dock.Fill;
+            mainDock.RightDock.Width = 250;
 
-            var list = new CollapsibleList(m_Canvas);
-            
-            dock.RightDock.Add("Inspector", list);
-            dock.RightDock.Width = 150;
-            dock.RightDock.Margin = new Margin(0);
+            m_SceneTreeControl = new TreeControl(m_Canvas);
 
-            list.Add("Transform");
+            var ptree = new PropertyTree(m_Canvas);
+            ptree.Add("Position");
+            ptree.Add("Rotation");
+            ptree.Add("Local Scale");
+
+            mainDock.RightDock.Add("Scene", m_SceneTreeControl);
+            mainDock.RightDock.Add("Inspector", ptree);
 
             m_StatusBar = new StatusBar(m_Canvas);
             m_StatusBar.Dock = Dock.Bottom;
             m_StatusBar.Text = "C3DE Editor Ready";
 
             #endregion
+        }
+
+        public void AddGameObject(GameObject go)
+        {
+            var node = m_SceneTreeControl.AddNode(go.Name);
+            node.UserData = go.Id;
+        }
+
+        public void RemoveGameObject(GameObject go)
+        {
+            var node = m_SceneTreeControl.FindNodeByUserData(go.Id, true);
+            if (node != null)
+                m_SceneTreeControl.RemoveNode(node);
+        }
+
+        public void SelectGameObject(GameObject go, bool selected)
+        {
+            var node = m_SceneTreeControl.FindNodeByUserData(go.Id, true);
+            if (node != null)
+                node.IsSelected = selected;
+        }
+
+        public void ClearGameObjects()
+        {
+            m_SceneTreeControl.RemoveAllNodes();
         }
 
         private void OnCommandSelected(ControlBase sender, System.EventArgs arguments)

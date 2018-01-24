@@ -73,6 +73,8 @@ namespace C3DE.Editor
                 Application.SceneManager.Remove(m_EditorScene);
             }
 
+            m_UIManager.ClearGameObjects();
+
             m_EditorScene = new EditorScene();
             m_EditorScene.GameObjectAdded += OnGameObjectAdded;
             m_EditorScene.GameObjectSelected += OnGameObjectSelected;
@@ -81,12 +83,17 @@ namespace C3DE.Editor
             Application.SceneManager.LoadLevel(0);
         }
 
-        private void OnGameObjectSelected(GameObject gameObject)
+        private void OnGameObjectSelected(GameObject gameObject, bool selected)
         {
+            m_UIManager.SelectGameObject(gameObject, selected);
         }
 
-        private void OnGameObjectAdded(GameObject gameObject, bool removed)
+        private void OnGameObjectAdded(GameObject gameObject, bool added)
         {
+            if (added)
+                m_UIManager.AddGameObject(gameObject);
+            else
+                m_UIManager.RemoveGameObject(gameObject);
         }
 
         public void SaveScene()

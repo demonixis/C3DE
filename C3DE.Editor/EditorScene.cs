@@ -33,7 +33,7 @@ namespace C3DE.Editor
         private CopyPast m_EditionSceneObject;
 
         public event Action<GameObject, bool> GameObjectAdded = null;
-        public event Action<GameObject> GameObjectSelected = null;
+        public event Action<GameObject, bool> GameObjectSelected = null;
 
         public EditorScene() : base("3D Editor")
         {
@@ -124,6 +124,9 @@ namespace C3DE.Editor
 
             m_DefaultMaterial = new StandardMaterial();
             m_DefaultMaterial.MainTexture = GraphicsHelper.CreateTexture(Color.WhiteSmoke, 1, 1);
+
+            GameObjectAdded?.Invoke(camera, true);
+            GameObjectAdded?.Invoke(lightGo, true);
         }
 
         public void AddObject(string name)
@@ -330,11 +333,13 @@ namespace C3DE.Editor
             Add(sceneObject, true);
 
             SelectObject(sceneObject);
+            GameObjectAdded?.Invoke(sceneObject, true);
         }
 
         private void InternalRemoveSceneObject(GameObject sceneObject)
         {
             Remove(sceneObject, true);
+            GameObjectAdded?.Invoke(sceneObject, false);
         }
 
         #endregion
