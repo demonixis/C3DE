@@ -9,7 +9,6 @@ namespace C3DE.Graphics.PostProcessing
     {
         private Effect m_Effect;
         private RenderTarget2D m_SceneRenderTarget;
-        private RenderTarget2D m_DepthBuffer;
         private QuadRenderer m_QuadRenderer;
 
         public enum Resolution

@@ -8,7 +8,6 @@ namespace C3DE.Graphics.Materials.Shaders
     public class DeferredSkybox : ShaderMaterial
     {
         private Skybox m_Skybox;
-        private EffectPass m_DefaultPass;
         protected EffectParameter m_EPWorld;
         protected EffectParameter m_EPView;
         protected EffectParameter m_EPProjection;
