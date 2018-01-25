@@ -41,7 +41,7 @@ namespace C3DE.Editor
             m_RemoveList = new List<GameObject>();
             m_ObjectSelector = new ObjectSelector();
             m_EditionSceneObject = new CopyPast();
-            m_EditionSceneObject.GameObjectAdded += InternalAddSceneObject;
+            m_EditionSceneObject.GameObjectAdded += AddGameObject;
         }
 
         public void Reset()
@@ -101,9 +101,9 @@ namespace C3DE.Editor
                     m_Gizmo = (GizmoComponent)component;
 
             m_Gizmo.ActiveMode = GizmoMode.Translate;
-            m_Gizmo.TranslateEvent += M_Gizmo_TranslateEvent;
-            m_Gizmo.RotateEvent += M_Gizmo_RotateEvent;
-            m_Gizmo.ScaleEvent += M_Gizmo_ScaleEvent;
+            m_Gizmo.TranslateEvent += OnGizmoTranslated;
+            m_Gizmo.RotateEvent += OnGizmoRotated;
+            m_Gizmo.ScaleEvent += OnGizmoScaled;
 
             m_ObjectSelector = new ObjectSelector();
 
@@ -131,7 +131,7 @@ namespace C3DE.Editor
 
         public void AddObject(string name)
         {
-            var selected = InternalAddSceneObject(name);
+            var selected = CreateGameObjectOfType(name);
 
             if (selected != null)
             {
@@ -142,9 +142,9 @@ namespace C3DE.Editor
 
         public override void Unload()
         {
-            m_Gizmo.TranslateEvent -= M_Gizmo_TranslateEvent;
-            m_Gizmo.RotateEvent -= M_Gizmo_RotateEvent;
-            m_Gizmo.ScaleEvent -= M_Gizmo_ScaleEvent;
+            m_Gizmo.TranslateEvent -= OnGizmoTranslated;
+            m_Gizmo.RotateEvent -= OnGizmoRotated;
+            m_Gizmo.ScaleEvent -= OnGizmoScaled;
             base.Unload();
         }
 
@@ -155,7 +155,7 @@ namespace C3DE.Editor
             if (m_RemoveList.Count > 0)
             {
                 foreach (var sceneObject in m_RemoveList)
-                    InternalRemoveSceneObject(sceneObject);
+                    RemoveGameObject(sceneObject);
 
                 m_RemoveList.Clear();
             }
@@ -163,7 +163,7 @@ namespace C3DE.Editor
             if (m_AddList.Count > 0)
             {
                 foreach (var type in m_AddList)
-                    InternalAddSceneObject(type);
+                    CreateGameObjectOfType(type);
 
                 m_AddList.Clear();
             }
@@ -182,16 +182,16 @@ namespace C3DE.Editor
                         return;
 
                     if (info.Collider.GameObject != m_ObjectSelector.GameObject)
-                        UnselectObject();
+                        UnselectGameObject();
 
-                    SelectObject(info.Collider.GameObject);
+                    SelectGameObject(info.Collider.GameObject);
                 }
             }
         }
 
         #region Gizmo Management
 
-        private void M_Gizmo_ScaleEvent(Transform target, TransformationEventArgs e)
+        private void OnGizmoScaled(Transform target, TransformationEventArgs e)
         {
             Vector3 delta = (Vector3)e.Value;
 
@@ -203,12 +203,12 @@ namespace C3DE.Editor
             target.LocalScale = Vector3.Clamp(target.LocalScale, Vector3.Zero, target.LocalScale);
         }
 
-        private void M_Gizmo_RotateEvent(Transform target, TransformationEventArgs e)
+        private void OnGizmoRotated(Transform target, TransformationEventArgs e)
         {
             m_Gizmo.RotationHelper(target, e);
         }
 
-        private void M_Gizmo_TranslateEvent(Transform target, TransformationEventArgs e)
+        private void OnGizmoTranslated(Transform target, TransformationEventArgs e)
         {
             var value = (Vector3)e.Value;
 
@@ -232,10 +232,6 @@ namespace C3DE.Editor
 
         public void AddComponent(string name)
         {
-            switch (name)
-            {
-
-            }
         }
 
         private GameObject CreatePrimitive(Primitive type)
@@ -263,7 +259,7 @@ namespace C3DE.Editor
             return gameObject;
         }
 
-        private GameObject InternalAddSceneObject(string type)
+        private GameObject CreateGameObjectOfType(string type)
         {
             GameObject gameObject = null;
 
@@ -288,9 +284,9 @@ namespace C3DE.Editor
                     gameObject = GameObjectFactory.CreateWater(GraphicsHelper.CreateTexture(Color.AliceBlue, 1, 1), GraphicsHelper.CreateRandomTexture(32), Vector3.One);
                     break;
 
-                case "Directional": gameObject = CreateLightNode(type, LightType.Directional); break;
-                case "Point": gameObject = CreateLightNode(type, LightType.Point); break;
-                case "Spot": gameObject = CreateLightNode(type, LightType.Spot); break;
+                case "Directional": gameObject = CreateLight(type, LightType.Directional); break;
+                case "Point": gameObject = CreateLight(type, LightType.Point); break;
+                case "Spot": gameObject = CreateLight(type, LightType.Spot); break;
 
                 case "Camera":
                     gameObject = GameObjectFactory.CreateCamera();
@@ -308,12 +304,12 @@ namespace C3DE.Editor
 
             gameObject.Name = type;
 
-            InternalAddSceneObject(gameObject);
+            AddGameObject(gameObject);
 
             return gameObject;
         }
 
-        private GameObject CreateLightNode(string name, LightType type)
+        private GameObject CreateLight(string name, LightType type)
         {
             var gameObject = new GameObject(name);
             gameObject.AddComponent<BoxCollider>();
@@ -331,7 +327,7 @@ namespace C3DE.Editor
             return gameObject;
         }
 
-        private void InternalAddSceneObject(GameObject sceneObject)
+        private void AddGameObject(GameObject sceneObject)
         {
             if (sceneObject == null)
                 return;
@@ -342,13 +338,13 @@ namespace C3DE.Editor
 
             Add(sceneObject, true);
 
-            SelectObject(sceneObject);
+            SelectGameObject(sceneObject);
             GameObjectAdded?.Invoke(sceneObject, true);
         }
 
-        private void InternalRemoveSceneObject(GameObject sceneObject)
+        private void RemoveGameObject(GameObject sceneObject)
         {
-            Remove(sceneObject, true);
+            Remove(sceneObject);
             GameObjectAdded?.Invoke(sceneObject, false);
         }
 
@@ -356,42 +352,63 @@ namespace C3DE.Editor
 
         #region Select / Unselect a SceneObject
 
-        private void SelectObject(GameObject sceneObject)
+        public void SelectGameObject(string id, bool notify = true)
         {
-            UnselectObject();
-
-            m_ObjectSelector.Set(sceneObject);
-            m_ObjectSelector.Select(true);
-            m_EditionSceneObject.Selected = sceneObject;
-            m_Gizmo.Selection.Add(sceneObject.Transform);
+            var gameObject = FindById(id);
+            SelectGameObject(gameObject, notify);
         }
 
-        private void UnselectObject()
+        private void SelectGameObject(GameObject gameObject, bool notify = true)
         {
-            m_Gizmo.Clear();
-            m_ObjectSelector.Select(false);
-            m_EditionSceneObject.Reset();
-        }
-
-        public void SetSeletected(string id)
-        {
-            SetSelected(FindById(id));
-        }
-
-        private void SetSelected(GameObject sceneObject)
-        {
-            if (sceneObject == null)
+            if (gameObject == null)
                 return;
 
             m_ObjectSelector.Select(false);
             m_EditionSceneObject.Reset();
 
-            m_ObjectSelector.Set(sceneObject);
+            m_ObjectSelector.Set(gameObject);
             m_ObjectSelector.Select(true);
-            m_EditionSceneObject.Selected = sceneObject;
+            m_EditionSceneObject.Selected = gameObject;
+            m_Gizmo.Selection.Clear();
+            m_Gizmo.Selection.Add(gameObject.Transform);
+
+            if (notify)
+                GameObjectSelected?.Invoke(gameObject, true);
+        }
+
+        private void UnselectGameObject(bool notify = true)
+        {
+            var gameObject = m_ObjectSelector.GameObject;
+
+            m_Gizmo.Clear();
+            m_ObjectSelector.Select(false);
+            m_EditionSceneObject.Reset();
+
+            if (notify)
+                GameObjectSelected?.Invoke(gameObject, false);
         }
 
         #endregion
+
+        public void RemoveSelection()
+        {
+            var gameObject = m_ObjectSelector.GameObject;
+
+            UnselectGameObject(false);
+
+            if (gameObject != null)
+                RemoveGameObject(gameObject);
+        }
+
+        public void DuplicateSelection()
+        {
+            var gameObject = m_ObjectSelector.GameObject;
+
+            UnselectGameObject(false);
+
+            var clone = gameObject.Clone();
+            AddGameObject((GameObject)clone);
+        }
 
         public GameObject[] GetUsedSceneObjects()
         {

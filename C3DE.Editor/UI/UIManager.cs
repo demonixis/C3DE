@@ -22,9 +22,10 @@ namespace C3DE.Editor.UI
         private StatusBar m_StatusBar;
         private TreeControl m_SceneTreeControl;
 
-        public event Action<string> CommandSelected = null;
-        public event Action<string> GameObjectSelected = null;
-        public event Action<string> ComponentSelected = null;
+        public event Action<string> MenuCommandSelected = null;
+        public event Action<string> MenuGameObjectSelected = null;
+        public event Action<string> MenuComponentSelected = null;
+        public event Action<string> TreeViewGameObjectSelected = null;
 
         public UIManager(Game game)
             : base(game)
@@ -85,6 +86,7 @@ namespace C3DE.Editor.UI
             var file = menu.AddItem("File");
             file.AddItem("New", string.Empty, "Ctrl+N").Selected += OnCommandSelected;
             file.AddItem("Save", string.Empty, "Ctrl+S").Selected += OnCommandSelected;
+            file.AddItem("Save As", string.Empty, "Ctrl+Maj+S").Selected += OnCommandSelected;
             file.AddItem("Load", string.Empty, "Ctrl+L").Selected += OnCommandSelected;
             file.AddItem("Exit").Selected += OnCommandSelected;
 
@@ -92,6 +94,9 @@ namespace C3DE.Editor.UI
             edit.AddItem("Copy", string.Empty, "Ctrl+C").Selected += OnCommandSelected;
             edit.AddItem("Cut", string.Empty, "Ctrl+X").Selected += OnCommandSelected;
             edit.AddItem("Past", string.Empty, "Ctrl+V").Selected += OnCommandSelected;
+            edit.AddItem("Duplicate", string.Empty, "Ctrl+D").Selected += OnCommandSelected;
+            edit.AddItem("Delete", string.Empty, "Suppr").Selected += OnCommandSelected;
+            edit.AddItem("Select All", string.Empty, "Ctrl+A").Selected += OnCommandSelected;
             edit.AddItem("Settings").Selected += OnCommandSelected;
 
             var gameObject = menu.AddItem("GameObject");
@@ -141,6 +146,7 @@ namespace C3DE.Editor.UI
             mainDock.RightDock.Width = 250;
 
             m_SceneTreeControl = new TreeControl(m_Canvas);
+            m_SceneTreeControl.Selected += OnSceneTreeNodeSelected;
 
             var ptree = new PropertyTree(m_Canvas);
             ptree.Add("Position");
@@ -157,10 +163,16 @@ namespace C3DE.Editor.UI
             #endregion
         }
 
+        private void OnSceneTreeNodeSelected(ControlBase sender, EventArgs arguments)
+        {
+            TreeViewGameObjectSelected?.Invoke(m_SceneTreeControl.SelectedNode.UserData.ToString());
+        }
+
         public void AddGameObject(GameObject go)
         {
             var node = m_SceneTreeControl.AddNode(go.Name);
             node.UserData = go.Id;
+            node.IsSelected = true;
         }
 
         public void RemoveGameObject(GameObject go)
@@ -185,19 +197,19 @@ namespace C3DE.Editor.UI
         private void OnCommandSelected(ControlBase sender, System.EventArgs arguments)
         {
             var item = (MenuItem)sender;
-            CommandSelected?.Invoke(item.Text);
+            MenuCommandSelected?.Invoke(item.Text);
         }
 
         private void OnGameObjectSelected(ControlBase sender, System.EventArgs arguments)
         {
             var item = (MenuItem)sender;
-            GameObjectSelected?.Invoke(item.Text);
+            MenuGameObjectSelected?.Invoke(item.Text);
         }
 
         private void OnComponentSelected(ControlBase sender, EventArgs arguments)
         {
             var item = (MenuItem)sender;
-            ComponentSelected?.Invoke(item.Text);
+            MenuComponentSelected?.Invoke(item.Text);
         }
 
         protected override void UnloadContent()

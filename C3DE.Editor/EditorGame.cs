@@ -22,9 +22,10 @@ namespace C3DE.Editor
 
             m_UIManager = new UIManager(this);
             m_UIManager.Initialize(m_GraphicsDeviceManager);
-            m_UIManager.CommandSelected += OnCommandSelected;
-            m_UIManager.GameObjectSelected += OnGameObjectSelected;
-            m_UIManager.ComponentSelected += OnComponentSelected;
+            m_UIManager.MenuCommandSelected += OnCommandSelected;
+            m_UIManager.MenuGameObjectSelected += OnGameObjectAdded;
+            m_UIManager.MenuComponentSelected += OnComponentSelected;
+            m_UIManager.TreeViewGameObjectSelected += OnGameObjectSelected;
             Components.Add(m_UIManager);
 
             m_Gizmo = new GizmoComponent(this, GraphicsDevice);
@@ -34,6 +35,11 @@ namespace C3DE.Editor
             GUI.Skin.LoadContent(Content);
 
             NewScene();
+        }
+
+        private void OnGameObjectSelected(string obj)
+        {
+            m_EditorScene.SelectGameObject(obj, false);
         }
 
         private void OnCommandSelected(string command)
@@ -50,12 +56,18 @@ namespace C3DE.Editor
                 case "Copy": break;
                 case "Cut": break;
                 case "Past": break;
+                case "Delete":
+                    m_EditorScene.RemoveSelection();
+                    break;
+                case "Duplicate":
+                    m_EditorScene.DuplicateSelection();
+                    break;
                 case "Select All": break;
                 default: break;
             }
         }
 
-        private void OnGameObjectSelected(string name)
+        private void OnGameObjectAdded(string name)
         {
             m_EditorScene.AddObject(name);
         }
