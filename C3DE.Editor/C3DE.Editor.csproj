@@ -67,7 +67,6 @@
     <Compile Include="EditorScene.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Core\AssetImporter.cs" />
-    <Compile Include="Core\Components\HotkeyManager.cs" />
     <Compile Include="Core\CopyPast.cs" />
     <Compile Include="Core\Components\EditorController.cs" />
     <Compile Include="Core\ObjectSelector.cs" />

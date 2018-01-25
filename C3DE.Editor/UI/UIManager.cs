@@ -24,6 +24,7 @@ namespace C3DE.Editor.UI
 
         public event Action<string> CommandSelected = null;
         public event Action<string> GameObjectSelected = null;
+        public event Action<string> ComponentSelected = null;
 
         public UIManager(Game game)
             : base(game)
@@ -88,6 +89,9 @@ namespace C3DE.Editor.UI
             file.AddItem("Exit").Selected += OnCommandSelected;
 
             var edit = menu.AddItem("Edit");
+            edit.AddItem("Copy", string.Empty, "Ctrl+C").Selected += OnCommandSelected;
+            edit.AddItem("Cut", string.Empty, "Ctrl+X").Selected += OnCommandSelected;
+            edit.AddItem("Past", string.Empty, "Ctrl+V").Selected += OnCommandSelected;
             edit.AddItem("Settings").Selected += OnCommandSelected;
 
             var gameObject = menu.AddItem("GameObject");
@@ -99,7 +103,7 @@ namespace C3DE.Editor.UI
             gameObject.AddItem("Sphere").Selected += OnGameObjectSelected;
             gameObject.AddItem("Torus").Selected += OnGameObjectSelected;
             gameObject.AddItem("Camera").Selected += OnGameObjectSelected;
-
+            
             var terrain = gameObject.AddItem("Terrain");
             terrain.AddItem("Terrain").Selected += OnGameObjectSelected;
             terrain.AddItem("Lava").Selected += OnGameObjectSelected;
@@ -109,6 +113,21 @@ namespace C3DE.Editor.UI
             lights.AddItem("Directional").Selected += OnGameObjectSelected;
             lights.AddItem("Point").Selected += OnGameObjectSelected;
             lights.AddItem("Spot").Selected += OnGameObjectSelected;
+
+            var component = menu.AddItem("Components");
+            var pp = component.AddItem("Post Processing");
+            pp.AddItem("AverageColor").Selected += OnComponentSelected;
+            pp.AddItem("C64").Selected += OnComponentSelected;
+            pp.AddItem("CGA").Selected += OnComponentSelected;
+            pp.AddItem("Convolution").Selected += OnComponentSelected;
+            pp.AddItem("Bloom").Selected += OnComponentSelected;
+            pp.AddItem("Film").Selected += OnComponentSelected;
+            pp.AddItem("FXAA").Selected += OnComponentSelected;
+            pp.AddItem("GlobalFog").Selected += OnComponentSelected;
+            pp.AddItem("MotionBlur").Selected += OnComponentSelected;
+            pp.AddItem("Screen Space Ambient Obscurance").Selected += OnComponentSelected;
+            pp.AddItem("Simple Blur").Selected += OnComponentSelected;
+            pp.AddItem("Vignette").Selected += OnComponentSelected;
 
             var help = menu.AddItem("Help");
             help.AddItem("About").Selected += OnCommandSelected;
@@ -165,14 +184,20 @@ namespace C3DE.Editor.UI
 
         private void OnCommandSelected(ControlBase sender, System.EventArgs arguments)
         {
-            var item = (Gwen.Control.MenuItem)sender;
+            var item = (MenuItem)sender;
             CommandSelected?.Invoke(item.Text);
         }
 
         private void OnGameObjectSelected(ControlBase sender, System.EventArgs arguments)
         {
-            var item = (Gwen.Control.MenuItem)sender;
+            var item = (MenuItem)sender;
             GameObjectSelected?.Invoke(item.Text);
+        }
+
+        private void OnComponentSelected(ControlBase sender, EventArgs arguments)
+        {
+            var item = (MenuItem)sender;
+            ComponentSelected?.Invoke(item.Text);
         }
 
         protected override void UnloadContent()

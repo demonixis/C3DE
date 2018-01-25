@@ -123,7 +123,6 @@ namespace C3DE
         }
 
         public GameObject(string name)
-            : this()
         {
             InternalConstructor(name);
         }
@@ -146,8 +145,8 @@ namespace C3DE
                 IsStatic = false;
                 IsPrefab = false;
 
-                Id = "SO_" + Guid.NewGuid();
-                Name = string.IsNullOrEmpty(name) ? "SceneObject-" + Guid.NewGuid() : name;
+                Id = Guid.NewGuid().ToString();
+                Name = string.IsNullOrEmpty(name) ? Id : name;
 
                 Scene.current?.Add(this);
             }

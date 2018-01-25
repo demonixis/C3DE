@@ -230,6 +230,14 @@ namespace C3DE.Editor
 
         #region Add
 
+        public void AddComponent(string name)
+        {
+            switch (name)
+            {
+
+            }
+        }
+
         private GameObject CreatePrimitive(Primitive type)
         {
             var gameObject = new GameObject();
@@ -297,6 +305,8 @@ namespace C3DE.Editor
                     break;
                 default: break;
             }
+
+            gameObject.Name = type;
 
             InternalAddSceneObject(gameObject);
 

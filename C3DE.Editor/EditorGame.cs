@@ -24,14 +24,11 @@ namespace C3DE.Editor
             m_UIManager.Initialize(m_GraphicsDeviceManager);
             m_UIManager.CommandSelected += OnCommandSelected;
             m_UIManager.GameObjectSelected += OnGameObjectSelected;
+            m_UIManager.ComponentSelected += OnComponentSelected;
             Components.Add(m_UIManager);
 
             m_Gizmo = new GizmoComponent(this, GraphicsDevice);
             Components.Add(m_Gizmo);
-
-            var hotkeys = new HotkeyManager(this);
-            hotkeys.ActionKeyJustPressed += OnCommandSelected;
-            Components.Add(hotkeys);
 
             GUI.Skin = new GUISkin("Font/Menu");
             GUI.Skin.LoadContent(Content);
@@ -61,6 +58,11 @@ namespace C3DE.Editor
         private void OnGameObjectSelected(string name)
         {
             m_EditorScene.AddObject(name);
+        }
+
+        private void OnComponentSelected(string name)
+        {
+            m_EditorScene.AddComponent(name);
         }
 
         public void NewScene()
