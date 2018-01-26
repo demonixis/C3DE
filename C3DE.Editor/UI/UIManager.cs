@@ -25,7 +25,7 @@ namespace C3DE.Editor.UI
         public event Action<string> MenuCommandSelected = null;
         public event Action<string> MenuGameObjectSelected = null;
         public event Action<string> MenuComponentSelected = null;
-        public event Action<string> TreeViewGameObjectSelected = null;
+        public event Action<string, bool> TreeViewGameObjectSelected = null;
 
         public UIManager(Game game)
             : base(game)
@@ -165,7 +165,7 @@ namespace C3DE.Editor.UI
 
         private void OnSceneTreeNodeSelected(ControlBase sender, EventArgs arguments)
         {
-            TreeViewGameObjectSelected?.Invoke(m_SceneTreeControl.SelectedNode.UserData.ToString());
+            TreeViewGameObjectSelected?.Invoke(m_SceneTreeControl.SelectedNode.UserData.ToString(), true);
         }
 
         public void AddGameObject(GameObject go)

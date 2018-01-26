@@ -1,11 +1,7 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
+﻿using C3DE.Components.Lighting;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace C3DE.Components.Rendering
 {
@@ -38,6 +34,8 @@ namespace C3DE.Components.Rendering
         private OcclusionQuery m_OcclusionQuery;
         private bool m_OcclusionQueryActive;
         private float m_OcclusionAlpha;
+        private Light m_Light;
+        private Vector3 m_Direction = Vector3.Normalize(new Vector3(-1, -0.1f, 0.3f));
 
         private readonly Flare[] m_Flares =
         {
@@ -53,7 +51,17 @@ namespace C3DE.Components.Rendering
             new Flare( 2.0f, 1.4f, new Color( 25,  50, 100), 2),
         };
 
-        public Vector3 LightDirection = Vector3.Normalize(new Vector3(-1, -0.1f, 0.3f));
+        public Vector3 LightDirection
+        {
+            get
+            {
+                if (m_Light == null)
+                    m_Light = GetComponent<Light>();
+                
+                return m_Light?.Direction ?? m_Direction;
+            }
+        }
+
         public Texture2D GlowTexture { get; set; }
         public Texture2D[] FlareTextures { get; set; }
         public float GlowSize { get; set; } = 400;
@@ -83,10 +91,7 @@ namespace C3DE.Components.Rendering
             m_OcclusionQuery = new OcclusionQuery(m_GraphicsDevice);
 
             m_SpriteBatch = new SpriteBatch(m_GraphicsDevice);
-            m_Camera = GetComponent<Camera>();
-
-            if (m_Camera == null)
-                throw new Exception("A LensFlare component have to be attached on a camera.");
+            m_Light = GetComponent<Light>();
         }
 
         public void Setup(Texture2D glow, Texture2D[] flares)
@@ -108,12 +113,16 @@ namespace C3DE.Components.Rendering
 
         private void UpdateOcclusion()
         {
-            var infiniteView = m_Camera.m_ViewMatrix;
+            var camera = Camera.Main;
+            if (camera == null)
+                return;
+
+            var infiniteView = camera.m_ViewMatrix;
             infiniteView.Translation = Vector3.Zero;
 
             // Project the light position into 2D screen space.
             var viewport = m_GraphicsDevice.Viewport;
-            var projectedPosition = viewport.Project(-LightDirection, m_Camera.m_ProjectionMatrix, infiniteView, Matrix.Identity);
+            var projectedPosition = viewport.Project(-LightDirection, camera.m_ProjectionMatrix, infiniteView, Matrix.Identity);
 
             // Don't draw any flares if the light is behind the camera.
             if ((projectedPosition.Z < 0) || (projectedPosition.Z > Math.PI))

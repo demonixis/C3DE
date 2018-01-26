@@ -5,6 +5,11 @@ using System.Runtime.Serialization;
 
 namespace C3DE.Graphics.Primitives
 {
+    public enum PrimitiveTypes
+    {
+        Cube, Cylinder, Quad, Plane, Pyramid, Sphere, Torus
+    }
+
     public enum VertexType
     {
         Position = 0, Normal

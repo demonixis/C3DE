@@ -1,4 +1,8 @@
 ﻿using C3DE.Components;
+using C3DE.Components.Physics;
+using C3DE.Components.Rendering;
+using C3DE.Graphics.Materials;
+using C3DE.Graphics.Primitives;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
@@ -455,6 +459,31 @@ namespace C3DE
         }
 
         #region Static Methods
+
+        public static GameObject CreatePrimitive(PrimitiveTypes type, Material material = null)
+        {
+            var gameObject = new GameObject();
+            var meshRenderer = gameObject.AddComponent<MeshRenderer>();
+
+            switch (type)
+            {
+                case PrimitiveTypes.Cube: meshRenderer.Geometry = new CubeMesh(); break;
+                case PrimitiveTypes.Cylinder: meshRenderer.Geometry = new CylinderMesh(); break;
+                case PrimitiveTypes.Plane: meshRenderer.Geometry = new PlaneMesh(); break;
+                case PrimitiveTypes.Pyramid: meshRenderer.Geometry = new PyramidMesh(); break;
+                case PrimitiveTypes.Quad: meshRenderer.Geometry = new QuadMesh(); break;
+                case PrimitiveTypes.Sphere: meshRenderer.Geometry = new SphereMesh(); break;
+                case PrimitiveTypes.Torus: meshRenderer.Geometry = new TorusMesh(); break;
+            }
+
+            meshRenderer.Geometry.Build();
+            meshRenderer.Material = material ?? Scene.current?.defaultMaterial;
+
+            gameObject.AddComponent<SphereCollider>();
+            gameObject.Transform.Translate(0, meshRenderer.BoundingSphere.Radius, 0);
+
+            return gameObject;
+        }
 
         public static GameObject Instanciate(GameObject sceneObject)
         {
