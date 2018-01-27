@@ -100,6 +100,8 @@ namespace C3DE
             if (Application.GraphicsDevice == null)
                 Application.GraphicsDevice = GraphicsDevice;
 
+            GraphicsDevice.PresentationParameters.MultiSampleCount = 8;
+
             if (_autoDetectResolution)
                 Screen.SetBestResolution(_requestFullscreen);
 

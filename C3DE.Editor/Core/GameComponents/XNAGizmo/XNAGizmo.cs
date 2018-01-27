@@ -174,27 +174,27 @@ namespace XNAGizmo
         private Vector3 _translationScaleSnapDelta;
         private float _rotationSnapDelta;
 
-        public GizmoComponent(Game game, GraphicsDevice graphics)
-            : this(game, graphics, Matrix.Identity)
+        public GizmoComponent(Game game)
+            : this(game, Matrix.Identity)
         {
         }
 
-        public GizmoComponent(Game game, GraphicsDevice graphics, Matrix world)
+        public GizmoComponent(Game game, Matrix world)
             : base(game)
         {
             SceneWorld = world;
-            _graphics = graphics;
+            _graphics = game.GraphicsDevice;
 
-            _lineEffect = new BasicEffect(graphics)
+            _lineEffect = new BasicEffect(_graphics)
             {
                 VertexColorEnabled = true,
                 AmbientLightColor = Vector3.One,
                 EmissiveColor = Vector3.One
             };
 
-            _meshEffect = new BasicEffect(graphics);
+            _meshEffect = new BasicEffect(_graphics);
 
-            _quadEffect = new BasicEffect(graphics)
+            _quadEffect = new BasicEffect(_graphics)
             {
                 World = Matrix.Identity,
                 DiffuseColor = _highlightColor.ToVector3(),

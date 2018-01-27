@@ -63,6 +63,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core\Components\Grid.cs" />
     <Compile Include="EditorGame.cs" />
     <Compile Include="Core\EditorScene.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -70,9 +71,9 @@
     <Compile Include="Core\CopyPast.cs" />
     <Compile Include="Core\Components\EditorController.cs" />
     <Compile Include="Core\ObjectSelector.cs" />
-    <Compile Include="Core\XNA\GizmoModel.cs" />
-    <Compile Include="Core\XNA\Quad.cs" />
-    <Compile Include="Core\XNA\XNAGizmo.cs" />
+    <Compile Include="Core\GameComponents\XNAGizmo\GizmoModel.cs" />
+    <Compile Include="Core\GameComponents\XNAGizmo\Quad.cs" />
+    <Compile Include="Core\GameComponents\XNAGizmo\XNAGizmo.cs" />
     <Compile Include="UI\Gwen.MonoGame\FileLoader.cs" />
     <Compile Include="UI\Gwen.MonoGame\Input\MonoGame.cs" />
     <Compile Include="UI\Gwen.MonoGame\Loader\MonoGameAssetLoader.cs" />

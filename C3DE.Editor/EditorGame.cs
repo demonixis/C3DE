@@ -1,4 +1,5 @@
 using C3DE.Components;
+using C3DE.Editor.GameComponents;
 using C3DE.Editor.UI;
 using C3DE.Inputs;
 using C3DE.UI;
@@ -37,15 +38,16 @@ namespace C3DE.Editor
             m_UIManager.MenuGameObjectSelected += OnMenuGameObjectSelected;
             m_UIManager.MenuComponentSelected += OnMenuComponentSelected;
             m_UIManager.TreeViewGameObjectSelected += SelectGameObject;
+            m_UIManager.DrawOrder = 1000;
             Components.Add(m_UIManager);
 
-            m_Gizmo = new GizmoComponent(this, GraphicsDevice);
+            m_Gizmo = new GizmoComponent(this);
             m_Gizmo.ActiveMode = GizmoMode.Translate;
             m_Gizmo.TranslateEvent += OnGizmoTranslated;
             m_Gizmo.RotateEvent += OnGizmoRotated;
             m_Gizmo.ScaleEvent += OnGizmoScaled;
             Components.Add(m_Gizmo);
-
+            
             GUI.Skin = new GUISkin("Font/Menu");
             GUI.Skin.LoadContent(Content);
 

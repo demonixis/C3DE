@@ -63,7 +63,7 @@ namespace C3DE.Graphics.Rendering
             m_AmbientLight.Start();
         }
 
-        protected RenderTarget2D CreateRenderTarget(SurfaceFormat surfaceFormat = SurfaceFormat.Color, DepthFormat depthFormat = DepthFormat.Depth24, bool mipMap = false)
+        protected RenderTarget2D CreateRenderTarget(SurfaceFormat surfaceFormat = SurfaceFormat.Color, DepthFormat depthFormat = DepthFormat.Depth24, bool mipMap = false, int preferredMultiSampleCount = 0, RenderTargetUsage usage = RenderTargetUsage.DiscardContents)
         {
             var width = m_graphicsDevice.PresentationParameters.BackBufferWidth;
             var height = m_graphicsDevice.PresentationParameters.BackBufferHeight;
@@ -74,7 +74,7 @@ namespace C3DE.Graphics.Rendering
                 height = m_SceneRenderTargets[0].Height;
             }
 
-            return new RenderTarget2D(m_graphicsDevice, width, height, mipMap, surfaceFormat, depthFormat);
+            return new RenderTarget2D(m_graphicsDevice, width, height, mipMap, surfaceFormat, depthFormat, preferredMultiSampleCount, usage);
         }
 
         /// <summary>

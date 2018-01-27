@@ -2,16 +2,14 @@
 using C3DE.Components.Lighting;
 using C3DE.Components.Physics;
 using C3DE.Components.Rendering;
+using C3DE.Editor.GameComponents;
 using C3DE.Graphics.Materials;
 using C3DE.Graphics.Primitives;
-using C3DE.Inputs;
 using C3DE.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
-using XNAGizmo;
 
 namespace C3DE.Editor
 {
@@ -38,7 +36,7 @@ namespace C3DE.Editor
         public override void Initialize()
         {
             base.Initialize();
-
+            
             // Add a camera with a FPS controller
             var cameraGo = GameObjectFactory.CreateCamera(new Vector3(0, 2, -10), new Vector3(0, 0, 0), Vector3.Up);
 
@@ -84,16 +82,9 @@ namespace C3DE.Editor
             var gridMaterial = new UnlitMaterial();
             gridMaterial.MainTexture = GraphicsHelper.CreateCheckboardTexture(new Color(0.6f, 0.6f, 0.6f), new Color(0.95f, 0.95f, 0.95f), 256, 256); ;
 
-            var terrain = GameObjectFactory.CreateTerrain();
-            terrain.Tag = EditorGame.EditorTag;
-
-            var grid = terrain.GetComponent<Terrain>();
-            grid.Geometry.Size = new Vector3(1.0f);
-            grid.Geometry.TextureRepeat = new Vector2(96);
-            grid.Renderer.Material = gridMaterial;
-            grid.Renderer.ReceiveShadow = true;
-            grid.Renderer.CastShadow = false;
-            grid.Flatten();
+            var grid = new GameObject("Grid");
+            grid.Tag = EditorGame.EditorTag;
+            grid.AddComponent<Grid>();
 
             m_DefaultMaterial = new StandardMaterial();
             m_DefaultMaterial.MainTexture = GraphicsHelper.CreateTexture(Color.WhiteSmoke, 1, 1);
