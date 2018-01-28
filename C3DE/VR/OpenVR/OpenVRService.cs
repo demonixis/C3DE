@@ -72,7 +72,9 @@ namespace C3DE.VR
             uint height = 0;
             m_System.GetRecommendedRenderTargetSize(ref width, ref height);
 
-            var renderTarget = new RenderTarget2D(Game.GraphicsDevice, (int)width, (int)height, false, SurfaceFormat.ColorSRgb, DepthFormat.Depth24Stencil8, 2, RenderTargetUsage.PreserveContents);
+            var pp = Application.GraphicsDevice.PresentationParameters;
+
+            var renderTarget = new RenderTarget2D(Game.GraphicsDevice, (int)width, (int)height, false, SurfaceFormat.ColorSRgb, DepthFormat.Depth24Stencil8, pp.MultiSampleCount, RenderTargetUsage.PreserveContents);
 
             m_Textures[eye] = new Texture_t();
 

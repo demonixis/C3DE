@@ -1,9 +1,12 @@
-﻿using Gwen;
+﻿using C3DE.Editor.UI.Items;
+using Gwen;
+using Gwen.CommonDialog;
 using Gwen.Control;
 using Gwen.Platform;
 using Gwen.Renderer.MonoGame;
 using Gwen.Renderer.MonoGame.Input;
 using Gwen.Skin;
+using Gwen.Xml;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -58,6 +61,24 @@ namespace C3DE.Editor.UI
             Game.Window.ClientSizeChanged += OnClientSizeChanged;
 
             BuildUI();
+        }
+
+        public void OpenSave(Action<string> callback)
+        {
+            var dialog = Component.Create<SaveFileDialog>(m_Canvas);
+            dialog.EnableNewFolder = true;
+            dialog.InitialFolder = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            dialog.Title = "Save scene";
+            dialog.Callback = callback;
+        }
+
+        public void OpenLoadDialog(Action<string> callback)
+        {
+            OpenFileDialog dialog = Component.Create<OpenFileDialog>(m_Canvas);
+            dialog.InitialFolder = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            dialog.Filters = "C3DE Scene Files (*.c3de)|*.c3de|All Files (*.*)|*.*";
+            dialog.Title = "Load a scene";
+            dialog.Callback = callback;
         }
 
         public void OpenMessageBox(string title, string text, int width = 320, int height = 200)
@@ -148,10 +169,7 @@ namespace C3DE.Editor.UI
             m_SceneTreeControl = new TreeControl(m_Canvas);
             m_SceneTreeControl.Selected += OnSceneTreeNodeSelected;
 
-            var ptree = new PropertyTree(m_Canvas);
-            ptree.Add("Position");
-            ptree.Add("Rotation");
-            ptree.Add("Local Scale");
+            var ptree = new TransformControl(m_Canvas);
 
             mainDock.RightDock.Add("Scene", m_SceneTreeControl);
             mainDock.RightDock.Add("Inspector", ptree);

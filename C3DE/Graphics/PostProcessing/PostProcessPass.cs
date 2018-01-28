@@ -46,7 +46,7 @@ namespace C3DE.Graphics.PostProcessing
                 height = (int)size[1];
             }
 
-            return new RenderTarget2D(Application.GraphicsDevice, width, height, false, format, pp.DepthStencilFormat, pp.MultiSampleCount, targetUsage);
+            return new RenderTarget2D(Application.GraphicsDevice, width, height, false, format, pp.DepthStencilFormat, Math.Max(2, pp.MultiSampleCount), targetUsage);
         }
 
         protected void DrawFullscreenQuad(SpriteBatch spriteBatch, Texture2D texture, RenderTarget2D renderTarget, Effect effect)

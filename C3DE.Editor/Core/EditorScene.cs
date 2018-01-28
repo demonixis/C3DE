@@ -36,7 +36,7 @@ namespace C3DE.Editor
         public override void Initialize()
         {
             base.Initialize();
-            
+
             // Add a camera with a FPS controller
             var cameraGo = GameObjectFactory.CreateCamera(new Vector3(0, 2, -10), new Vector3(0, 0, 0), Vector3.Up);
 
@@ -205,5 +205,16 @@ namespace C3DE.Editor
         }
 
         #endregion
+
+        public GameObject[] GetGameObjects()
+        {
+            var list = new List<GameObject>();
+
+            foreach (var go in gameObjects)
+                if (go.Tag != EditorGame.EditorTag)
+                    list.Add(go);
+
+            return list.ToArray();
+        }
     }
 }

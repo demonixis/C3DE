@@ -47,9 +47,11 @@ namespace C3DE.Editor
             m_Gizmo.RotateEvent += OnGizmoRotated;
             m_Gizmo.ScaleEvent += OnGizmoScaled;
             Components.Add(m_Gizmo);
-            
+
             GUI.Skin = new GUISkin("Font/Menu");
             GUI.Skin.LoadContent(Content);
+
+            Serializer.AddTypes(typeof(EditorGame));
 
             NewScene();
         }
@@ -162,24 +164,22 @@ namespace C3DE.Editor
 
         public void SaveScene()
         {
-            SaveScene(""); // TODO: Display a dialog
+            m_UIManager.OpenSave(SaveScene);
         }
 
         public void LoadScene()
         {
-            LoadScene(""); // TODO: Display a dialog
+            m_UIManager.OpenLoadDialog(LoadScene);
         }
 
-        public bool SaveScene(string path)
+        public void SaveScene(string path)
         {
-            var result = true;
-
             try
             {
                 var serScene = new SerializedScene()
                 {
                     Materials = m_EditorScene.Materials.ToArray(),
-                    //GameObjects = m_EditorScene.(),
+                    GameObjects = m_EditorScene.GetGameObjects(),
                     RenderSettings = m_EditorScene.RenderSettings
                 };
 
@@ -187,17 +187,12 @@ namespace C3DE.Editor
             }
             catch (Exception ex)
             {
-                result = false;
                 Debug.Log(ex.Message);
             }
-
-            return result;
         }
 
-        public bool LoadScene(string path)
+        public void LoadScene(string path)
         {
-            var result = true;
-
             try
             {
                 var data = Serializer.Deserialize(path, typeof(SerializedScene));
@@ -218,10 +213,7 @@ namespace C3DE.Editor
             catch (Exception ex)
             {
                 Debug.Log(ex.Message);
-                result = false;
             }
-
-            return result;
         }
 
         #endregion

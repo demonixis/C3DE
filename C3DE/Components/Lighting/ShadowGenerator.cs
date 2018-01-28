@@ -82,7 +82,7 @@ namespace C3DE.Components.Lighting
 #if ANDROID
 			shadowMap = new RenderTarget2D (device, size, size);
 #else
-            shadowMap = new RenderTarget2D(device, size, size, false, SurfaceFormat.Single, DepthFormat.Depth24, 0, RenderTargetUsage.DiscardContents);
+            shadowMap = new RenderTarget2D(device, size, size, false, SurfaceFormat.Single, DepthFormat.Depth24, 2, RenderTargetUsage.DiscardContents);
 #endif
             shadowData.X = size;
         }

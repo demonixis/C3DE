@@ -63,10 +63,13 @@ namespace C3DE.Graphics.Rendering
             m_AmbientLight.Start();
         }
 
-        protected RenderTarget2D CreateRenderTarget(SurfaceFormat surfaceFormat = SurfaceFormat.Color, DepthFormat depthFormat = DepthFormat.Depth24, bool mipMap = false, int preferredMultiSampleCount = 0, RenderTargetUsage usage = RenderTargetUsage.DiscardContents)
+        protected RenderTarget2D CreateRenderTarget(SurfaceFormat surfaceFormat = SurfaceFormat.Color, DepthFormat depthFormat = DepthFormat.Depth24, bool mipMap = false, int preferredMultiSampleCount = -1, RenderTargetUsage usage = RenderTargetUsage.DiscardContents)
         {
             var width = m_graphicsDevice.PresentationParameters.BackBufferWidth;
             var height = m_graphicsDevice.PresentationParameters.BackBufferHeight;
+
+            if (preferredMultiSampleCount == -1)
+                preferredMultiSampleCount = m_graphicsDevice.PresentationParameters.MultiSampleCount;
 
             if (m_VREnabled)
             {
