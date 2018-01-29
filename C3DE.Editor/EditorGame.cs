@@ -248,7 +248,7 @@ namespace C3DE.Editor
                     var x = target.Position.X + Math.Sign(value.X);
                     var y = target.Position.Y + Math.Sign(value.Y);
                     var z = target.Position.Z + Math.Sign(value.Z);
-                    target.SetPosition(x, y, z);
+                    target.SetLocalPosition(x, y, z);
                 }
             }
             else

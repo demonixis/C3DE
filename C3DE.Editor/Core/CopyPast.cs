@@ -41,7 +41,7 @@ namespace C3DE.Editor
                 var x = Copy.Transform.Position.X;
                 x += Copy.GetComponent<Renderer>().BoundingSphere.Radius * 2.0f;
 
-                sceneObject.Transform.SetPosition(x, null, null);
+                sceneObject.Transform.SetLocalPosition(x, null, null);
 
                 if (Input.Keys.Pressed(Keys.LeftControl))
                     Copy = Selected;

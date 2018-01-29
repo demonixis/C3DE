@@ -24,6 +24,7 @@ namespace C3DE.Editor.UI
         private int m_Time;
         private StatusBar m_StatusBar;
         private TreeControl m_SceneTreeControl;
+        private TransformControl m_TransformControl;
 
         public event Action<string> MenuCommandSelected = null;
         public event Action<string> MenuGameObjectSelected = null;
@@ -129,7 +130,7 @@ namespace C3DE.Editor.UI
             gameObject.AddItem("Sphere").Selected += OnGameObjectSelected;
             gameObject.AddItem("Torus").Selected += OnGameObjectSelected;
             gameObject.AddItem("Camera").Selected += OnGameObjectSelected;
-            
+
             var terrain = gameObject.AddItem("Terrain");
             terrain.AddItem("Terrain").Selected += OnGameObjectSelected;
             terrain.AddItem("Lava").Selected += OnGameObjectSelected;
@@ -164,15 +165,15 @@ namespace C3DE.Editor.UI
 
             var mainDock = new DockControl(m_Canvas);
             mainDock.Dock = Dock.Fill;
-            mainDock.RightDock.Width = 250;
+            mainDock.RightDock.Width = 300;
 
             m_SceneTreeControl = new TreeControl(m_Canvas);
             m_SceneTreeControl.Selected += OnSceneTreeNodeSelected;
 
-            var ptree = new TransformControl(m_Canvas);
+            m_TransformControl = new TransformControl(m_Canvas);
 
             mainDock.RightDock.Add("Scene", m_SceneTreeControl);
-            mainDock.RightDock.Add("Inspector", ptree);
+            mainDock.RightDock.Add("Inspector", m_TransformControl);
 
             m_StatusBar = new StatusBar(m_Canvas);
             m_StatusBar.Dock = Dock.Bottom;
@@ -191,25 +192,35 @@ namespace C3DE.Editor.UI
             var node = m_SceneTreeControl.AddNode(go.Name);
             node.UserData = go.Id;
             node.IsSelected = true;
+            m_TransformControl.SetGameObject(go);
         }
 
         public void RemoveGameObject(GameObject go)
         {
             var node = m_SceneTreeControl.FindNodeByUserData(go.Id, true);
             if (node != null)
+            {
+                if (node.IsSelected)
+                    m_TransformControl.SetGameObject(null);
+
                 m_SceneTreeControl.RemoveNode(node);
+            }
         }
 
         public void SelectGameObject(GameObject go, bool selected)
         {
             var node = m_SceneTreeControl.FindNodeByUserData(go.Id, true);
             if (node != null)
+            {
                 node.IsSelected = selected;
+                m_TransformControl.SetGameObject(selected ? go : null);
+            }
         }
 
         public void ClearGameObjects()
         {
             m_SceneTreeControl.RemoveAllNodes();
+            m_TransformControl.SetGameObject(null);
         }
 
         private void OnCommandSelected(ControlBase sender, System.EventArgs arguments)

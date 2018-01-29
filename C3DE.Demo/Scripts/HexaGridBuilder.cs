@@ -107,7 +107,7 @@ namespace C3DE.Demo.Scripts
                         cache.Transform.LocalScale += new Vector3(0.0f, 1.5f, 0.0f);
                     }
 
-                    cache.Transform.SetPosition(null, _gridPrefab.BoundingSphere.Radius * cache.Transform.LocalScale.Y / 2, null);
+                    cache.Transform.SetLocalPosition(null, _gridPrefab.BoundingSphere.Radius * cache.Transform.LocalScale.Y / 2, null);
                 }
             }
         }

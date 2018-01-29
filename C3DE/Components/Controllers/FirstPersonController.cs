@@ -110,12 +110,12 @@ namespace C3DE.Components.Controllers
             // Limits on X axis
             if (m_Transform.LocalRotation.X <= -MathHelper.PiOver2)
             {
-                m_Transform.SetRotation(-MathHelper.PiOver2 + 0.001f, null, null);
+                m_Transform.SetLocalRotation(-MathHelper.PiOver2 + 0.001f, null, null);
                 rotation = Vector3.Zero;
             }
             else if (m_Transform.LocalRotation.X >= MathHelper.PiOver2)
             {
-                m_Transform.SetRotation(MathHelper.PiOver2 - 0.001f, null, null);
+                m_Transform.SetLocalRotation(MathHelper.PiOver2 - 0.001f, null, null);
                 rotation = Vector3.Zero;
             }
 

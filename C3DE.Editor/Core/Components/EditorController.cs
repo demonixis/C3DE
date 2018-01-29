@@ -28,12 +28,12 @@ namespace C3DE.Editor
             // Limits on X axis
             if (m_Transform.Rotation.X <= -MathHelper.PiOver2)
             {
-                m_Transform.SetRotation(-MathHelper.PiOver2 + 0.001f, null, null);
+                m_Transform.SetLocalRotation(-MathHelper.PiOver2 + 0.001f, null, null);
                 m_Rotation = Vector3.Zero;
             }
             else if (m_Transform.Rotation.X >= MathHelper.PiOver2)
             {
-                m_Transform.SetRotation(MathHelper.PiOver2 - 0.001f, null, null);
+                m_Transform.SetLocalRotation(MathHelper.PiOver2 - 0.001f, null, null);
                 m_Rotation = Vector3.Zero;
             }
 

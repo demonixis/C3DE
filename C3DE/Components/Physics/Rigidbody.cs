@@ -142,8 +142,8 @@ namespace C3DE.Components.Physics
 
             if (!IsKinematic)
             {
-                m_Transform.SetPosition(ToVector3(m_rigidBody.Position));
-                m_Transform.SetRotation(ToMatrix(m_rigidBody.Orientation));
+                m_Transform.SetLocalPosition(ToVector3(m_rigidBody.Position));
+                m_Transform.SetLocalRotation(ToMatrix(m_rigidBody.Orientation));
             }
             else
                 SyncTransform();

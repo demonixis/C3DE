@@ -165,35 +165,35 @@ namespace C3DE.Components
             Rotate(ref rotation);
         }
 
-        public void SetPosition(float? x, float? y, float? z)
+        public void SetLocalPosition(float? x, float? y, float? z)
         {
             m_LocalPosition.X = x.HasValue ? x.Value : m_LocalPosition.X;
             m_LocalPosition.Y = y.HasValue ? y.Value : m_LocalPosition.Y;
             m_LocalPosition.Z = z.HasValue ? z.Value : m_LocalPosition.Z;
         }
 
-        public void SetPosition(Vector3 position)
+        public void SetLocalPosition(Vector3 position)
         {
             m_LocalPosition.X = position.X;
             m_LocalPosition.Y = position.Y;
             m_LocalPosition.Z = position.Z;
         }
 
-        public void SetRotation(float? x, float? y, float? z)
+        public void SetLocalRotation(float? x, float? y, float? z)
         {
             m_LocalRotation.X = x.HasValue ? x.Value : m_LocalRotation.X;
             m_LocalRotation.Y = y.HasValue ? y.Value : m_LocalRotation.Y;
             m_LocalRotation.Z = z.HasValue ? z.Value : m_LocalRotation.Z;
         }
 
-        public void SetRotation(Matrix matrix)
+        public void SetLocalRotation(Matrix matrix)
         {
             var quaternion = Quaternion.CreateFromRotationMatrix(matrix);
             var rotation = quaternion.ToEuler();
-            SetRotation(rotation.X, rotation.Y, rotation.Z);
+            SetLocalRotation(rotation.X, rotation.Y, rotation.Z);
         }
 
-        public void SetScale(float? x, float? y, float? z)
+        public void SetLocalScale(float? x, float? y, float? z)
         {
             m_LocalScale.X = x.HasValue ? x.Value : m_LocalScale.X;
             m_LocalScale.Y = y.HasValue ? y.Value : m_LocalScale.Y;
