@@ -2,6 +2,7 @@
 using C3DE.Components.Lighting;
 using C3DE.Components.Physics;
 using C3DE.Components.Rendering;
+using C3DE.Editor.Core.Components;
 using C3DE.Editor.GameComponents;
 using C3DE.Graphics.Materials;
 using C3DE.Graphics.Primitives;
@@ -38,7 +39,7 @@ namespace C3DE.Editor
             base.Initialize();
 
             // Add a camera with a FPS controller
-            var cameraGo = GameObjectFactory.CreateCamera(new Vector3(0, 2, -10), new Vector3(0, 0, 0), Vector3.Up);
+            var cameraGo = AddGameObject("Camera"); GameObjectFactory.CreateCamera(new Vector3(0, 2, -10), new Vector3(0, 0, 0), Vector3.Up);
 
             var camera = cameraGo.GetComponent<Camera>();
             camera.Setup(new Vector3(0, 2, 5), Vector3.Forward, Vector3.Up);
@@ -46,7 +47,7 @@ namespace C3DE.Editor
             camera.AddComponent<EditorController>();
 
             // And a light
-            var lightGo = GameObjectFactory.CreateLight(LightType.Directional, Color.White, 1f);
+            var lightGo = AddGameObject("Directional");
             lightGo.Transform.LocalPosition = new Vector3(500, 500, 0);
             lightGo.Transform.LocalRotation = new Vector3(MathHelper.PiOver2, -MathHelper.PiOver4, 0);
             var directionalLight = lightGo.GetComponent<Light>();
@@ -79,9 +80,6 @@ namespace C3DE.Editor
             RenderSettings.Skybox.Generate(Application.GraphicsDevice, Application.Content, blueSkybox);
 
             // Grid
-            var gridMaterial = new UnlitMaterial();
-            gridMaterial.MainTexture = GraphicsHelper.CreateCheckboardTexture(new Color(0.6f, 0.6f, 0.6f), new Color(0.95f, 0.95f, 0.95f), 256, 256); ;
-
             var grid = new GameObject("Grid");
             grid.Tag = EditorGame.EditorTag;
             grid.AddComponent<Grid>();
@@ -150,14 +148,9 @@ namespace C3DE.Editor
 
                 case "Camera":
                     gameObject = GameObjectFactory.CreateCamera();
-                    gameObject.AddComponent<BoxCollider>();
-
-                    var camRenderer = gameObject.AddComponent<MeshRenderer>();
-                    camRenderer.CastShadow = false;
-                    camRenderer.ReceiveShadow = false;
-                    camRenderer.Geometry = new QuadMesh();
-                    camRenderer.Geometry.Build();
-                    camRenderer.Material = m_DefaultMaterial;
+                    var cameraRenderer = gameObject.AddComponent<EditorIconRenderer>();
+                    cameraRenderer.Setup("Camera_Icon");
+                    cameraRenderer.AddComponent<SphereCollider>();
                     break;
                 default: break;
             }
@@ -184,18 +177,14 @@ namespace C3DE.Editor
         private GameObject CreateLight(string name, LightType type)
         {
             var gameObject = new GameObject(name);
-            gameObject.AddComponent<BoxCollider>();
+            gameObject.AddComponent<SphereCollider>();
 
             var light = gameObject.AddComponent<Light>();
             light.TypeLight = type;
 
-            var lightRenderer = gameObject.AddComponent<MeshRenderer>();
-            lightRenderer.CastShadow = false;
-            lightRenderer.ReceiveShadow = false;
-            lightRenderer.Geometry = new QuadMesh();
-            lightRenderer.Geometry.Build();
-            lightRenderer.Material = m_DefaultMaterial;
-
+            var lightRenderer = light.AddComponent<EditorIconRenderer>();
+            lightRenderer.Setup("Light_Icon");
+            lightRenderer.AddComponent<SphereCollider>();
             return gameObject;
         }
 

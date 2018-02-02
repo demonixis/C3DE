@@ -7,6 +7,9 @@ namespace C3DE.Graphics.Materials
     [DataContract]
     public class UnlitMaterial : Material
     {
+        public UnlitMaterial() : base() { }
+        public UnlitMaterial(string name) : base(name) { }
+
         protected override void SetupShaderMaterial(BaseRenderer renderer)
         {
             if (renderer is ForwardRenderer || renderer is LightPrePassRenderer)

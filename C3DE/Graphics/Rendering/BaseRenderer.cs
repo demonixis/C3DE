@@ -69,7 +69,12 @@ namespace C3DE.Graphics.Rendering
             var height = m_graphicsDevice.PresentationParameters.BackBufferHeight;
 
             if (preferredMultiSampleCount == -1)
-                preferredMultiSampleCount = m_graphicsDevice.PresentationParameters.MultiSampleCount;
+            {
+                if (m_VREnabled)
+                    preferredMultiSampleCount = 0;
+                else
+                    preferredMultiSampleCount = m_graphicsDevice.PresentationParameters.MultiSampleCount;
+            }
 
             if (m_VREnabled)
             {
