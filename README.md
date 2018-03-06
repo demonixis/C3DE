@@ -30,11 +30,10 @@ This project is in early stage. Use the `master` branch for testing and the `dev
 C3DE supports Windows, Universal Windows Platform, Linux and Mac using [MonoGame](https://github.com/MonoGame/MonoGame) (both DirectX and DesktopGL). The OpenGL shader compiler is limited to the shader model 3, some effects are not supported on this platform. Android support is paused for now.
 
 ### Virtual Reality
-The OpenVR support is ready to use now, if you want additional details, please [take a look at the wiki](https://github.com/demonixis/C3DE/wiki/Virtual-Reality).
+Many VR vendors are already supported on all Renderers. If you want additional details, please [take a look at the wiki](https://github.com/demonixis/C3DE/wiki/Virtual-Reality).
 
 ## Requirement
 You **must** install the [MonoGame Framework](http://www.monogame.net/downloads/) from the installer. **You'll not be able to build the solution without it**.
-
 
 ## Contributions
 You're **free** to submit pull request, however thank you to follow the [coding convention](https://msdn.microsoft.com/en-US/library/ff926074.aspx). 
