@@ -16,26 +16,22 @@ namespace C3DE.Graphics.Rendering
     public class DeferredRenderer : BaseRenderer
     {
         private QuadRenderer m_QuadRenderer;
-        private RenderTarget2D[] m_ColorTarget;
-        private RenderTarget2D[] m_DepthTarget;
-        private RenderTarget2D[] m_NormalTarget;
-        private RenderTarget2D[] m_LightTarget;
+        private RenderTarget2D m_ColorTarget;
+        private RenderTarget2D m_DepthTarget;
+        private RenderTarget2D m_NormalTarget;
+        private RenderTarget2D m_LightTarget;
         private Effect m_ClearEffect;
         private Effect m_CombineEffect;
 
-        public RenderTarget2D ColorBuffer => m_ColorTarget[0];
-        public RenderTarget2D NormalMap => m_NormalTarget[0];
-        public RenderTarget2D DepthBuffer => m_DepthTarget[0];
-        public RenderTarget2D LightMap => m_LightTarget[0];
+        public RenderTarget2D ColorBuffer => m_ColorTarget;
+        public RenderTarget2D NormalMap => m_NormalTarget;
+        public RenderTarget2D DepthBuffer => m_DepthTarget;
+        public RenderTarget2D LightMap => m_LightTarget;
 
         public DeferredRenderer(GraphicsDevice graphics)
             : base(graphics)
         {
             m_QuadRenderer = new QuadRenderer(graphics);
-            m_ColorTarget = new RenderTarget2D[2];
-            m_DepthTarget = new RenderTarget2D[2];
-            m_NormalTarget = new RenderTarget2D[2];
-            m_LightTarget = new RenderTarget2D[2];
         }
 
         public override void Initialize(ContentManager content)
@@ -56,17 +52,10 @@ namespace C3DE.Graphics.Rendering
 
             base.RebuildRenderTargets();
 
-            for (var i = 0; i < 2; i++)
-            {
-                // Do not create secondary render targets if VR is not enabled.
-                if (i > 0 && !m_VREnabled)
-                    continue;
-
-                m_ColorTarget[i] = CreateRenderTarget(SurfaceFormat.Color);
-                m_NormalTarget[i] = CreateRenderTarget(SurfaceFormat.Color);
-                m_DepthTarget[i] = CreateRenderTarget(SurfaceFormat.Single);
-                m_LightTarget[i] = CreateRenderTarget(SurfaceFormat.Color);
-            }
+            m_ColorTarget = CreateRenderTarget(SurfaceFormat.Color);
+            m_NormalTarget = CreateRenderTarget(SurfaceFormat.Color);
+            m_DepthTarget = CreateRenderTarget(SurfaceFormat.Single);
+            m_LightTarget = CreateRenderTarget(SurfaceFormat.Color);
         }
 
         public override void Dispose(bool disposing)
@@ -86,7 +75,7 @@ namespace C3DE.Graphics.Rendering
                 m_IsDisposed = true;
             }
         }
-        
+
         private void RenderObjects(Scene scene, Camera camera)
         {
             using (m_graphicsDevice.GeometryUnlitState())
@@ -123,19 +112,19 @@ namespace C3DE.Graphics.Rendering
         private void RenderLights(Scene scene, Camera camera, int eye)
         {
             m_graphicsDevice.SetRenderTargets(null);
-            m_graphicsDevice.SetRenderTarget(m_LightTarget[eye]);
+            m_graphicsDevice.SetRenderTarget(m_LightTarget);
             m_graphicsDevice.Clear(Color.Transparent);
 
             m_AmbientLight.Color = Scene.current.RenderSettings.AmbientColor;
-            m_AmbientLight.RenderDeferred(m_ColorTarget[eye], m_NormalTarget[eye], m_DepthTarget[eye], camera);
+            m_AmbientLight.RenderDeferred(m_ColorTarget, m_NormalTarget, m_DepthTarget, camera);
 
             foreach (var light in scene.lights)
-                light.RenderDeferred(m_ColorTarget[eye], m_NormalTarget[eye], m_DepthTarget[eye], camera);
+                light.RenderDeferred(m_ColorTarget, m_NormalTarget, m_DepthTarget, camera);
         }
 
         protected virtual void RenderSceneForCamera(Scene scene, Camera camera, int eye)
         {
-            m_graphicsDevice.SetRenderTargets(m_ColorTarget[eye], m_NormalTarget[eye], m_DepthTarget[eye]);
+            m_graphicsDevice.SetRenderTargets(m_ColorTarget, m_NormalTarget, m_DepthTarget);
 
             foreach (var pass in m_ClearEffect.Techniques[0].Passes)
             {
@@ -156,8 +145,8 @@ namespace C3DE.Graphics.Rendering
             {
                 foreach (var pass in m_CombineEffect.Techniques[0].Passes)
                 {
-                    m_CombineEffect.Parameters["ColorMap"].SetValue(m_ColorTarget[eye]);
-                    m_CombineEffect.Parameters["LightMap"].SetValue(m_LightTarget[eye]);
+                    m_CombineEffect.Parameters["ColorMap"].SetValue(m_ColorTarget);
+                    m_CombineEffect.Parameters["LightMap"].SetValue(m_LightTarget);
                     pass.Apply();
                     m_QuadRenderer.RenderFullscreenQuad();
                 }

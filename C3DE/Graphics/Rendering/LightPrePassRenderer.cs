@@ -14,21 +14,18 @@ namespace C3DE.Graphics.Rendering
 {
     public class LightPrePassRenderer : BaseRenderer
     {
-        internal RenderTarget2D[] m_DepthRT;
-        internal RenderTarget2D[] m_NormalRT;
-        internal RenderTarget2D[] m_LightRT;
+        internal RenderTarget2D m_DepthRT;
+        internal RenderTarget2D m_NormalRT;
+        internal RenderTarget2D m_LightRT;
         private Effect m_DepthNormalEffect;
 
-        public RenderTarget2D DepthBuffer => m_DepthRT[0];
-        public RenderTarget2D NormalBuffer => m_NormalRT[0];
-        public RenderTarget2D LightBuffer => m_LightRT[0];
+        public RenderTarget2D DepthBuffer => m_DepthRT;
+        public RenderTarget2D NormalBuffer => m_NormalRT;
+        public RenderTarget2D LightBuffer => m_LightRT;
 
         public LightPrePassRenderer(GraphicsDevice graphics)
             : base(graphics)
         {
-            m_DepthRT = new RenderTarget2D[2];
-            m_NormalRT = new RenderTarget2D[2];
-            m_LightRT = new RenderTarget2D[2];
         }
 
         public override void Initialize(ContentManager content)
@@ -44,16 +41,9 @@ namespace C3DE.Graphics.Rendering
 
             base.RebuildRenderTargets();
 
-            for (var i = 0; i < 2; i++)
-            {
-                // Do not create secondary render targets if VR is not enabled.
-                if (i > 0 && !m_VREnabled)
-                    continue;
-
-                m_DepthRT[i] = CreateRenderTarget();
-                m_NormalRT[i] = CreateRenderTarget();
-                m_LightRT[i] = CreateRenderTarget();
-            }
+            m_DepthRT = CreateRenderTarget();
+            m_NormalRT = CreateRenderTarget();
+            m_LightRT = CreateRenderTarget();
         }
 
         public override void Dispose(bool disposing)
@@ -76,7 +66,7 @@ namespace C3DE.Graphics.Rendering
 
         private void DrawDepthNormalMap(Scene scene, Camera camera, int eye)
         {
-            m_graphicsDevice.SetRenderTargets(m_NormalRT[eye], m_DepthRT[eye]);
+            m_graphicsDevice.SetRenderTargets(m_NormalRT, m_DepthRT);
             m_graphicsDevice.Clear(Color.White);
 
             m_DepthNormalEffect.Parameters["View"].SetValue(camera.m_ViewMatrix);
@@ -94,14 +84,14 @@ namespace C3DE.Graphics.Rendering
 
         private void DrawLightMap(Scene scene, Camera camera, int eye)
         {
-            m_graphicsDevice.SetRenderTarget(m_LightRT[eye]);
+            m_graphicsDevice.SetRenderTarget(m_LightRT);
             m_graphicsDevice.Clear(Color.Transparent);
 
             m_AmbientLight.Color = Scene.current.RenderSettings.AmbientColor;
-            m_AmbientLight.RenderLPP(m_NormalRT[eye], m_DepthRT[eye], camera);
+            m_AmbientLight.RenderLPP(m_NormalRT, m_DepthRT, camera);
 
             for (var i = 0; i < scene.lights.Count; i++)
-                scene.lights[i].RenderLPP(m_NormalRT[eye], m_DepthRT[eye], camera);
+                scene.lights[i].RenderLPP(m_NormalRT, m_DepthRT, camera);
 
             m_graphicsDevice.SetRenderTarget(null);
         }
@@ -136,7 +126,7 @@ namespace C3DE.Graphics.Rendering
 
                 // Ambient pass
                 shader.PrePass(camera);
-                shader.Pass(scene.RenderList[i], m_LightRT[eye]);
+                shader.Pass(scene.RenderList[i], m_LightRT);
                 renderer.Draw(m_graphicsDevice);
             }
         }
