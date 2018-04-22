@@ -95,7 +95,7 @@
     <Compile Include="Graphics\PostProcessing\RenderTexture.cs" />
     <Compile Include="Graphics\PostProcessing\ScreenSpaceAmbientObscurance.cs" />
     <Compile Include="Graphics\PostProcessing\Vignette.cs" />
-    <Compile Include="Graphics\ReflectionProbe.cs" />
+    <Compile Include="Components\Rendering\ReflectionProbe.cs" />
     <Compile Include="Graphics\Rendering\DeferredRenderer.cs" />
     <Compile Include="Graphics\Rendering\DeviceState.cs" />
     <Compile Include="Graphics\Rendering\GraphicsDeviceExtensions.cs" />

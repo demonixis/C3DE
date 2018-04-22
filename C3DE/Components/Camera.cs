@@ -183,7 +183,6 @@ namespace C3DE.Components
 
         public void Setup(Vector3 position, Vector3 camTarget, Vector3 upVector)
         {
-            m_Transform.LocalPosition = position;
             _target = camTarget;
             _upVector = upVector;
 

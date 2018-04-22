@@ -56,12 +56,13 @@ namespace C3DE.Graphics.Rendering
                 return;
 
             if (camera == null)
+            {
                 camera = scene.cameras[0];
 
-            var cameraParent = Matrix.Identity;
-            var parent = camera.m_Transform.Parent;
-            if (parent != null)
-                cameraParent = parent.m_WorldMatrix;
+                if (scene.m_ReflectionProbes.Count > 0)
+                    for (var i = 0; i < scene.m_ReflectionProbes.Count; i++)
+                        scene.m_ReflectionProbes[i].Draw(this);
+            }
 
             RebuildRenderTargets();
 
@@ -69,6 +70,12 @@ namespace C3DE.Graphics.Rendering
 
             if (m_VREnabled)
             {
+                // Apply camera parenting
+                var cameraParent = Matrix.Identity;
+                var parent = camera.m_Transform.Parent;
+                if (parent != null)
+                    cameraParent = parent.m_WorldMatrix;
+
                 for (var eye = 0; eye < 2; eye++)
                 {
                     camera.m_ProjectionMatrix = m_VRService.GetProjectionMatrix(eye);

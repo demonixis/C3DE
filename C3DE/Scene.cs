@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Jitter.Collision;
 using Jitter;
+using C3DE.Graphics;
 
 namespace C3DE
 {
@@ -62,6 +63,7 @@ namespace C3DE
         internal protected List<Camera> cameras;
         internal protected List<Light> lights;
         internal protected List<Behaviour> scripts;
+        internal protected List<ReflectionProbe> m_ReflectionProbes;
 
         [DataMember]
         internal protected List<GameObject> prefabs;
@@ -159,6 +161,7 @@ namespace C3DE
             RenderSettings = new RenderSettings();
             m_PhysicsCollisionSystem = new CollisionSystemSAP();
             m_PhysicsWorld = new World(m_PhysicsCollisionSystem);
+            m_ReflectionProbes = new List<ReflectionProbe>();
         }
 
         public Scene(string name)
@@ -379,6 +382,16 @@ namespace C3DE
                     AddLight(light);
                 else if (type == ComponentChangeType.Remove)
                     RemoveLight(light);
+            }
+
+            else if (component is ReflectionProbe)
+            {
+                var probe = component as ReflectionProbe;
+
+                if (type == ComponentChangeType.Add && !m_ReflectionProbes.Contains(probe))
+                    m_ReflectionProbes.Add(probe);
+                else if (type == ComponentChangeType.Remove && m_ReflectionProbes.Contains(probe))
+                    m_ReflectionProbes.Remove(probe);
             }
         }
 
