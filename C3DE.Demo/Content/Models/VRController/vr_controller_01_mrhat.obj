@@ -13419,8 +13419,8 @@ vn 1.000000 0.000001 0.000001
 vn 1.000000 0.000001 0.000001
 vn 1.000000 0.000001 0.000001
 s off
-g vr_controller_01_mrhat_vrtroller_mrhat
-usemtl vr_controller_01_mrhat_vrtroller_mrhat_mat
+g vr_controller_01_mrhat_vrtroller_mrhat_diff_mat
+usemtl vr_controller_01_mrhat_vrtroller_mrhat_diff_mat
 f 1/1/1 2/2/2 3/3/3
 f 1/1/4 3/3/5 4/4/6
 f 2/2/7 5/5/8 6/6/9

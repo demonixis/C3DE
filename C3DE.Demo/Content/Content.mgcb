@@ -169,7 +169,7 @@
 /build:Models/Quandtum/textures/Turret-Specular.jpg
 
 #begin Models/Sponza/sponza.obj
-/importer:OpenAssetImporter
+/importer:FbxImporter
 /processor:ModelProcessor
 /processorParam:ColorKeyColor=0,0,0,0
 /processorParam:ColorKeyEnabled=True
@@ -500,7 +500,7 @@
 /build:Models/Sponza/textures/vase_round_spec.jpg
 
 #begin Models/VRController/vr_controller_01_mrhat.obj
-/importer:OpenAssetImporter
+/importer:FbxImporter
 /processor:ModelProcessor
 /processorParam:ColorKeyColor=0,0,0,0
 /processorParam:ColorKeyEnabled=True
