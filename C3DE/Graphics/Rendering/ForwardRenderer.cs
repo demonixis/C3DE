@@ -50,12 +50,14 @@ namespace C3DE.Graphics.Rendering
         /// </summary>
         /// <param name="scene">The scene to render.</param>
         /// <param name="camera">The camera to use for render.</param>
-        public override void Render(Scene scene)
+        public override void Render(Scene scene, Camera camera = null)
         {
             if (scene == null || scene?.cameras.Count == 0)
                 return;
 
-            var camera = scene.cameras[0];
+            if (camera == null)
+                camera = scene.cameras[0];
+
             var cameraParent = Matrix.Identity;
             var parent = camera.m_Transform.Parent;
             if (parent != null)
@@ -82,32 +84,24 @@ namespace C3DE.Graphics.Rendering
                 RenderSceneForCamera(scene, camera, m_SceneRenderTargets[0]);
         }
 
-        public void RenderEditor(Scene scene, Camera camera, RenderTarget2D target)
-        {
-            RebuildRenderTargets();
-
-            RenderShadowMaps(scene);
-            RenderObjects(scene, camera);
-            RenderToBackBuffer();
-            //renderPostProcess(scene.PostProcessPasses);
-            //renderUI(scene.Behaviours);
-
-            m_graphicsDevice.SetRenderTarget(target);
-            m_spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Opaque, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone);
-            m_spriteBatch.Draw(m_SceneRenderTargets[0], Vector2.Zero, Color.White);
-            m_spriteBatch.End();
-        }
-
         protected virtual void RenderSceneForCamera(Scene scene, Camera camera, RenderTarget2D renderTarget)
         {
             if (m_DepthRenderer.Enabled)
                 m_DepthRenderer.Draw(m_graphicsDevice);
 
             m_graphicsDevice.SetRenderTarget(renderTarget);
+
+            var renderToRT = camera.RenderTarget != null;
+            if (renderToRT)
+                m_graphicsDevice.SetRenderTarget(camera.RenderTarget);
+
             m_graphicsDevice.Clear(camera.clearColor);
 
             RenderObjects(scene, camera);
             RenderPostProcess(scene.postProcessPasses, renderTarget);
+
+            if (renderToRT)
+                return;
 
             if (!m_VREnabled)
             {

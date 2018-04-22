@@ -154,12 +154,14 @@ namespace C3DE.Graphics.Rendering
             }
         }
 
-        public override void Render(Scene scene)
+        public override void Render(Scene scene, Camera camera = null)
         {
             if (scene == null || scene?.cameras.Count == 0)
                 return;
 
-            var camera = scene.cameras[0];
+            if (camera == null)
+                camera = scene.cameras[0];
+
             var cameraParent = Matrix.Identity;
             var parent = camera.m_Transform.Parent;
             if (parent != null)

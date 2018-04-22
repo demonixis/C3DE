@@ -222,7 +222,7 @@ namespace C3DE.Graphics.Rendering
         /// Render the scene.
         /// </summary>
         /// <param name="scene">The scene to render.</param>
-        public abstract void Render(Scene scene);
+        public abstract void Render(Scene scene, Camera camera = null);
 
         /// <summary>
         /// Draws the VR Preview to the Back Buffer

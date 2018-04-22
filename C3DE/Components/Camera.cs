@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
 using System.Runtime.Serialization;
 
 namespace C3DE.Components
@@ -116,6 +117,11 @@ namespace C3DE.Components
                     _needProjectionUpdate = true;
                 }
             }
+        }
+
+        public RenderTarget2D RenderTarget
+        {
+            get; set;
         }
 
         public Matrix ViewMatrix
