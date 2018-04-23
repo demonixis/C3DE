@@ -30,6 +30,10 @@ namespace C3DE.Demo.Scenes
             var sponzaGo = sponzaModel.ToMeshRenderers(this);
             sponzaGo.Transform.Translate(0.0f, 1.0f, 0.0f);
             PatchMaterials(sponzaGo, content);
+
+            var probe = m_Camera.AddComponent<ReflectionProbe>();
+            probe.Mode = ReflectionProbe.RenderingMode.Realtime;
+            m_Camera.AddComponent<ReflectionProbeDebugger>();
         }
 
         private void PatchMaterials(GameObject sponzaGo, ContentManager content)

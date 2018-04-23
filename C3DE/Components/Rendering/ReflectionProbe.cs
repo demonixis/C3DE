@@ -129,17 +129,17 @@ namespace C3DE.Components.Rendering
         {
             // PosX/NegX/PosY/NegY/PosZ/NegZ to fit the CubeMapFace enum
             if (index == 0)
-                return Vector3.Right;
-            else if (index == 1)
                 return Vector3.Left;
+            else if (index == 1)
+                return Vector3.Right;
             else if (index == 2)
                 return Vector3.Up;
             else if (index == 3)
                 return Vector3.Down;
             else if (index == 4)
-                return Vector3.Forward;
-            else
                 return Vector3.Backward;
+            else
+                return Vector3.Forward;
         }
 
         public void Draw(BaseRenderer renderer)
@@ -149,7 +149,7 @@ namespace C3DE.Components.Rendering
 
             for (var i = 0; i < 6; i++)
             {
-                renderer.Render(Scene.current, m_Cameras[i]);
+                renderer.RenderReflectionProbe(m_Cameras[i]);
                 
                 m_Cameras[i].RenderTarget.GetData<Color>(m_ColorBuffer);
                 m_ReflectionTexture.SetData<Color>((CubeMapFace)i, m_ColorBuffer);

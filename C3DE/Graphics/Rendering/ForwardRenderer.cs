@@ -50,19 +50,16 @@ namespace C3DE.Graphics.Rendering
         /// </summary>
         /// <param name="scene">The scene to render.</param>
         /// <param name="camera">The camera to use for render.</param>
-        public override void Render(Scene scene, Camera camera = null)
+        public override void Render(Scene scene)
         {
             if (scene == null || scene?.cameras.Count == 0)
                 return;
 
-            if (camera == null)
-            {
-                camera = scene.cameras[0];
+            var camera = scene.cameras[0];
 
-                if (scene.m_ReflectionProbes.Count > 0)
-                    for (var i = 0; i < scene.m_ReflectionProbes.Count; i++)
-                        scene.m_ReflectionProbes[i].Draw(this);
-            }
+            if (scene.m_ReflectionProbes.Count > 0)
+                for (var i = 0; i < scene.m_ReflectionProbes.Count; i++)
+                    scene.m_ReflectionProbes[i].Draw(this);
 
             RebuildRenderTargets();
 
@@ -174,6 +171,18 @@ namespace C3DE.Graphics.Rendering
                     m_graphicsDevice.BlendState = BlendState.Opaque;
                 }
             }
+        }
+
+        public override void RenderReflectionProbe(Camera camera)
+        {
+            var renderTargets = m_graphicsDevice.GetRenderTargets();
+
+            m_graphicsDevice.SetRenderTarget(camera.RenderTarget);
+            m_graphicsDevice.Clear(camera.clearColor);
+
+            RenderObjects(Scene.current, camera);
+
+            m_graphicsDevice.SetRenderTargets(renderTargets);
         }
     }
 }

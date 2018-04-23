@@ -43,10 +43,6 @@ namespace C3DE.Demo.Scenes
             rb.IsKinematic = true;
 
             m_Camera.AddComponent<Scripts.VRPlayerEnabler>();
-
-            var probe = m_Camera.AddComponent<ReflectionProbe>();
-            probe.Mode = ReflectionProbe.RenderingMode.Realtime;
-            m_Camera.AddComponent<ReflectionProbeDebugger>();
         }
     }
 }

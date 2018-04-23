@@ -154,25 +154,23 @@ namespace C3DE.Graphics.Rendering
             }
         }
 
-        public override void Render(Scene scene, Camera camera = null)
+        public override void Render(Scene scene)
         {
             if (scene == null || scene?.cameras.Count == 0)
                 return;
 
-            if (camera == null)
-                camera = scene.cameras[0];
-
-            var cameraParent = Matrix.Identity;
-            var parent = camera.m_Transform.Parent;
-            if (parent != null)
-                cameraParent = parent.m_WorldMatrix;
+            var camera = scene.cameras[0];
 
             RebuildRenderTargets();
-
             RenderShadowMaps(scene);
 
             if (m_VREnabled)
             {
+                var cameraParent = Matrix.Identity;
+                var parent = camera.m_Transform.Parent;
+                if (parent != null)
+                    cameraParent = parent.m_WorldMatrix;
+
                 for (var eye = 0; eye < 2; eye++)
                 {
                     camera.m_ProjectionMatrix = m_VRService.GetProjectionMatrix(eye);
@@ -186,6 +184,10 @@ namespace C3DE.Graphics.Rendering
             }
             else
                 RenderSceneForCamera(scene, camera, 0);
+        }
+
+        public override void RenderReflectionProbe(Camera camera)
+        {
         }
     }
 }
