@@ -180,7 +180,53 @@ namespace C3DE.Graphics.Rendering
             m_graphicsDevice.SetRenderTarget(camera.RenderTarget);
             m_graphicsDevice.Clear(camera.clearColor);
 
-            RenderObjects(Scene.current, camera);
+            m_graphicsDevice.DepthStencilState = DepthStencilState.Default;
+            m_graphicsDevice.BlendState = BlendState.Opaque;
+
+            var scene = Scene.current;
+            var ambientColor = scene.RenderSettings.ambientColor;
+            scene.RenderSettings.ambientColor = Color.White.ToVector3();
+
+            if (scene.RenderSettings.Skybox.Enabled)
+                scene.RenderSettings.Skybox.Draw(m_graphicsDevice, camera);
+
+            var renderCount = scene.renderList.Count;
+
+            Renderer renderer;
+            Material material;
+            ShaderMaterial shader;
+            var lights = scene.lights;
+            var lightCount = lights.Count;
+
+            // Pass, Update matrix, material attributes, etc.
+            for (var i = 0; i < renderCount; i++)
+            {
+                renderer = scene.renderList[i];
+
+                var isMeshRenderer = renderer is MeshRenderer;
+                var isModelRenderer = renderer is ModelRenderer;
+
+                if (!isMeshRenderer && !isModelRenderer)
+                    continue;
+
+                material = scene.renderList[i].Material;
+
+                // A specific renderer that uses its own draw logic.
+                if (material == null)
+                {
+                    renderer.Draw(m_graphicsDevice);
+                    continue;
+                }
+
+                shader = material.m_ShaderMaterial;
+
+                // Ambient pass
+                shader.PrePass(camera);
+                shader.Pass(scene.RenderList[i]);
+                renderer.Draw(m_graphicsDevice);
+            }
+
+            scene.RenderSettings.ambientColor = ambientColor;
 
             m_graphicsDevice.SetRenderTargets(renderTargets);
         }

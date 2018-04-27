@@ -94,6 +94,7 @@
     <Compile Include="Extensions\QuaternionExtensions.cs" />
     <Compile Include="Graphics\PostProcessing\RenderTexture.cs" />
     <Compile Include="Graphics\PostProcessing\ScreenSpaceAmbientObscurance.cs" />
+    <Compile Include="Graphics\PostProcessing\ScreenSpaceGlobalIllumination.cs" />
     <Compile Include="Graphics\PostProcessing\Vignette.cs" />
     <Compile Include="Components\Rendering\ReflectionProbe.cs" />
     <Compile Include="Graphics\Rendering\DeferredRenderer.cs" />

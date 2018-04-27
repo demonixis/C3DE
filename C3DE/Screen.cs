@@ -17,6 +17,8 @@ namespace C3DE
         /// </summary>
         public static Rectangle ScreenRect { get; internal set; }
 
+        public static float AspectRatio => (float)Width / (float)Height;
+
         public static bool Fullscreen
         {
             get { return Application.GraphicsDeviceManager.IsFullScreen; }

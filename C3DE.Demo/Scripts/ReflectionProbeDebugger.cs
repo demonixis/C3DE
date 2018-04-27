@@ -39,7 +39,7 @@ namespace C3DE.Demo.Scripts
             {
                 //ui.DrawTexture(new Rectangle(0, height * i, width, height), m_BorderTexture);
                 ui.DrawTexture(new Rectangle(2, 2 + height * i, width - 4, height - 4), m_ReflectionProbe.GetRenderTarget((CubeMapFace)i));
-                ui.Label(new Vector2(5, i * (height - 25)), ((CubeMapFace)i).ToString());
+                ui.Label(new Vector2(5, height - 28 + (i * height)), ((CubeMapFace)i).ToString());
             }
         }
     }

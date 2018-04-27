@@ -37,6 +37,9 @@ namespace C3DE.Demo.Scripts
 #if !DESKTOP
             var ssao = new ScreenSpaceAmbientObscurance(graphics);
             AddPostProcess(ssao);
+
+            var ssgi = new ScreenSpaceGlobalIllumination(graphics);
+            AddPostProcess(ssgi);
 #endif
             var fastBloom = new FastBloom(graphics);
             AddPostProcess(fastBloom);
@@ -66,7 +69,8 @@ namespace C3DE.Demo.Scripts
 
 #if !DESKTOP
             titles.AddRange(new string[] {
-                "Ambient Obscurance"
+                "Ambient Obscurance",
+                "SSGI"
             });
 #endif
 

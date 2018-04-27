@@ -85,10 +85,13 @@ namespace C3DE.Components.Rendering
             for (var i = 0; i < 6; i++)
             {
                 go = new GameObject($"ReflectionProbe_{i}_{GameObject.Id}");
+                go.IsStatic = GameObject.IsStatic;
+                go.Transform.Parent = Transform;
                 go.Transform.LocalPosition = m_Transform.LocalPosition;
                 go.Transform.LocalRotation = GetFacingVector(ref i) * 90.0f;
                 m_Cameras[i] = go.AddComponent<Camera>();
             }
+
             UpdateMatrix();
             UpdateRenderTargets();
         }
@@ -97,11 +100,13 @@ namespace C3DE.Components.Rendering
         {
             for (var i = 0; i < 6; i++)
             {
+                m_Cameras[i].clearColor = Color.Transparent;
                 m_Cameras[i].Near = NearClip;
                 m_Cameras[i].Far = FarClip;
                 m_Cameras[i].AspectRatio = 1.0f;
                 m_Cameras[i].FieldOfView = FieldOfView;
-                m_Cameras[i].Setup(m_Transform.Position, Vector3.Forward, Vector3.Up);
+                m_Cameras[i].Setup(m_Transform.Position, GetFacingVector(ref i), Vector3.Up);
+                m_Cameras[i].Update();
             }
 
             Dirty = true;
