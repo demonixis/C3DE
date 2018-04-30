@@ -19,12 +19,17 @@ namespace C3DE
         private BaseRenderer m_nextRenderer;
         protected SceneManager _sceneManager;
         protected bool _initialized;
+        private int m_TotalFrames;
+        private float m_ElapsedTime;
+        private int m_FPS = 0;
 
         public BaseRenderer Renderer
         {
-            get { return renderer; }
-            set { m_nextRenderer = value; }
+            get => renderer;
+            set => m_nextRenderer = value;
         }
+
+        public float FPS => m_FPS;
 
         public event Action<BaseRenderer> RendererChanged = null;
 
@@ -130,12 +135,22 @@ namespace C3DE
 
         protected override void Update(GameTime gameTime)
         {
+            m_ElapsedTime += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+
+            if (m_ElapsedTime > 1000.0f)
+            {
+                m_FPS = m_TotalFrames;
+                m_TotalFrames = 0;
+                m_ElapsedTime = 0;
+            }
+
             base.Update(gameTime);
             _sceneManager.Update();
         }
 
         protected override void Draw(GameTime gameTime)
         {
+            m_TotalFrames++;
             GraphicsDevice.Clear(Color.Black);
             renderer.Render(_sceneManager.ActiveScene);
             base.Draw(gameTime);

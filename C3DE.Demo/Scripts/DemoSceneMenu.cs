@@ -1,5 +1,6 @@
 ﻿using C3DE.Components;
 using C3DE.UI;
+using Microsoft.Xna.Framework;
 
 namespace C3DE.Demo.Scripts
 {
@@ -7,6 +8,7 @@ namespace C3DE.Demo.Scripts
     {
         private Behaviour[] m_Behaviours;
         private SideMenu m_SideMenu;
+        private Vector2 m_FPSPosition;
 
         public override void Start()
         {
@@ -24,6 +26,8 @@ namespace C3DE.Demo.Scripts
             m_SideMenu.SelectionChanged += OnSelectionChanged;
             m_SideMenu.SetHorizontal(false);
 
+            m_FPSPosition = new Vector2(Screen.WidthPerTwo - 5, 15);
+
             OnSelectionChanged(-1);
         }
 
@@ -31,6 +35,8 @@ namespace C3DE.Demo.Scripts
         {
             base.OnGUI(ui);
             m_SideMenu.Draw(ui);
+
+            ui.Label(m_FPSPosition, Application.Engine.FPS.ToString());
         }
 
         private void OnSelectionChanged(int item)

@@ -101,7 +101,7 @@ namespace C3DE.Graphics.Materials.Shaders
             m_EPLightPosition.SetValue(light.m_Transform.LocalPosition);
             m_EPLightSpotAngle.SetValue(light.Angle);
             m_EPLightIntensity.SetValue(light.Intensity);
-            m_EPLightRange.SetValue(light.Range);
+            m_EPLightRange.SetValue(light.Radius);
             m_EPLightFallOff.SetValue(light.FallOf);
             m_EPLightType.SetValue((int)light.TypeLight);
 

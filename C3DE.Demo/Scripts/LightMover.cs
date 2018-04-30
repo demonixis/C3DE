@@ -46,9 +46,9 @@ namespace C3DE.Demo.Scripts
                 rotation.X -= 0.01f;
 
             if (Input.Keys.Pressed(Keys.Add))
-                _light.Range += 0.1f;
+                _light.Radius += 0.1f;
             else if (Input.Keys.Pressed(Keys.Subtract))
-                _light.Range -= 0.1f;
+                _light.Radius -= 0.1f;
 
             if (Input.Keys.Pressed(Keys.Divide))
                 _light.Intensity += 0.1f;

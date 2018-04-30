@@ -17,6 +17,9 @@ namespace C3DE.Graphics.Rendering
 
         public DepthRenderer DepthRenderer => m_DepthRenderer;
 
+        public bool LightCulling { get; set; } = true;
+        public bool FrustrumCulling { get; set; } = false;
+
         public ForwardRenderer(GraphicsDevice graphics)
            : base(graphics)
         {
@@ -99,7 +102,7 @@ namespace C3DE.Graphics.Rendering
             if (renderToRT)
                 m_graphicsDevice.SetRenderTarget(camera.RenderTarget);
 
-            m_graphicsDevice.Clear(camera.clearColor);
+            m_graphicsDevice.Clear(camera.m_ClearColor);
 
             RenderObjects(scene, camera);
             RenderPostProcess(scene.postProcessPasses, renderTarget);
@@ -141,6 +144,12 @@ namespace C3DE.Graphics.Rendering
                 renderer = scene.renderList[i];
                 material = scene.renderList[i].Material;
 
+                if (FrustrumCulling)
+                {
+                    if (!camera.m_BoundingFrustrum.Intersects(renderer.boundingSphere))
+                        continue;
+                }
+
                 // A specific renderer that uses its own draw logic.
                 if (material == null)
                 {
@@ -164,6 +173,12 @@ namespace C3DE.Graphics.Rendering
 
                     for (var l = 0; l < lightCount; l++)
                     {
+                        if (LightCulling)
+                        {
+                            if (lights[l].TypeLight != Components.Lighting.LightType.Directional && !lights[l].BoundingSphere.Intersects(renderer.boundingSphere))
+                                continue;
+                        }
+
                         multiLightShader.LightPass(renderer, lights[l]);
                         renderer.Draw(m_graphicsDevice);
                     }
@@ -178,7 +193,7 @@ namespace C3DE.Graphics.Rendering
             var renderTargets = m_graphicsDevice.GetRenderTargets();
 
             m_graphicsDevice.SetRenderTarget(camera.RenderTarget);
-            m_graphicsDevice.Clear(camera.clearColor);
+            m_graphicsDevice.Clear(camera.m_ClearColor);
 
             m_graphicsDevice.DepthStencilState = DepthStencilState.Default;
             m_graphicsDevice.BlendState = BlendState.Opaque;

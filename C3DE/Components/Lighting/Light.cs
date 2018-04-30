@@ -25,6 +25,7 @@ namespace C3DE.Components.Lighting
         private Effect m_LPPDirLightEffect;
         private QuadRenderer m_QuadRenderer;
         private SphereMesh m_SphereMesh;
+        private BoundingSphere m_BoundingSphere;
 
         public Matrix View => m_ViewMatrix;
 
@@ -40,6 +41,8 @@ namespace C3DE.Components.Lighting
                 return position + Vector3.Transform(Vector3.Forward, matrix);
             }
         }
+
+        public BoundingSphere BoundingSphere => m_BoundingSphere;
 
         [DataMember]
         public bool EnableShadow
@@ -75,7 +78,7 @@ namespace C3DE.Components.Lighting
         /// The maximum distance of emission.
         /// </summary>
         [DataMember]
-        public float Range { get; set; } = 25;
+        public float Radius { get; set; } = 25;
 
         [DataMember]
         public float FallOf { get; set; } = 5.0f;
@@ -103,9 +106,14 @@ namespace C3DE.Components.Lighting
 
         public override void Start()
         {
+            base.Start();
+
             m_ShadowGenerator.Initialize();
 
             m_QuadRenderer = new QuadRenderer(Application.GraphicsDevice);
+
+            if (m_Transform != null)
+                m_BoundingSphere = new BoundingSphere(m_Transform.Position, Radius);
 
             var content = Application.Content;
             m_DeferredAmbientEffect = content.Load<Effect>("Shaders/Deferred/AmbientLight");
@@ -115,6 +123,17 @@ namespace C3DE.Components.Lighting
             m_LPPPointLightEffect = content.Load<Effect>("Shaders/LPP/PointLight");
             m_SphereMesh = new SphereMesh(1, 8);
             m_SphereMesh.Build();
+        }
+
+        public override void Update()
+        {
+            base.Update();
+
+            if (!m_GameObject.IsStatic)
+            {
+                m_BoundingSphere.Radius = Radius;
+                m_BoundingSphere.Center = m_Transform.Position;
+            }
         }
 
         // Need to be changed quickly !
@@ -163,15 +182,15 @@ namespace C3DE.Components.Lighting
                 m_LPPPointLightEffect.Parameters["DepthTexture"].SetValue(depth);
                 m_LPPPointLightEffect.Parameters["InvViewProjection"].SetValue(invViewProjection);
 
-                var worldViewProjection = (Matrix.CreateScale(Range) * m_Transform.m_WorldMatrix) * viewProjection;
+                var worldViewProjection = (Matrix.CreateScale(Radius) * m_Transform.m_WorldMatrix) * viewProjection;
                 m_LPPPointLightEffect.Parameters["WorldViewProjection"].SetValue(worldViewProjection);
                 m_LPPPointLightEffect.Parameters["LightColor"].SetValue(m_Color);
                 m_LPPPointLightEffect.Parameters["LightAttenuation"].SetValue(FallOf);
                 m_LPPPointLightEffect.Parameters["LightPosition"].SetValue(Transform.Position);
-                m_LPPPointLightEffect.Parameters["LightRange"].SetValue(Range);
+                m_LPPPointLightEffect.Parameters["LightRange"].SetValue(Radius);
                 m_LPPPointLightEffect.Parameters["LightIntensity"].SetValue(Intensity);
 
-                var inside = Vector3.Distance(camera.m_Transform.Position, m_Transform.Position) < (Range * 1.25f);
+                var inside = Vector3.Distance(camera.m_Transform.Position, m_Transform.Position) < (Radius * 1.25f);
                 graphics.RasterizerState = inside ? RasterizerState.CullClockwise : RasterizerState.CullCounterClockwise;
 
                 m_LPPPointLightEffect.CurrentTechnique.Passes[0].Apply();
@@ -212,7 +231,7 @@ namespace C3DE.Components.Lighting
             else
             {
                 var previousRS = graphics.RasterizerState;
-                var sphereWorldMatrix = Matrix.CreateScale(Range) * Matrix.CreateTranslation(m_Transform.Position);
+                var sphereWorldMatrix = Matrix.CreateScale(Radius) * Matrix.CreateTranslation(m_Transform.Position);
 
                 m_DeferredPointLightEffect.Parameters["ColorMap"].SetValue(colorMap);
                 m_DeferredPointLightEffect.Parameters["NormalMap"].SetValue(normalMap);
@@ -220,14 +239,14 @@ namespace C3DE.Components.Lighting
                 m_DeferredPointLightEffect.Parameters["World"].SetValue(sphereWorldMatrix);
                 m_DeferredPointLightEffect.Parameters["LightPosition"].SetValue(m_Transform.Position);
                 m_DeferredPointLightEffect.Parameters["Color"].SetValue(m_Color);
-                m_DeferredPointLightEffect.Parameters["Radius"].SetValue(Range);
+                m_DeferredPointLightEffect.Parameters["Radius"].SetValue(Radius);
                 m_DeferredPointLightEffect.Parameters["Intensity"].SetValue(Intensity);
                 m_DeferredPointLightEffect.Parameters["View"].SetValue(camera.m_ViewMatrix);
                 m_DeferredPointLightEffect.Parameters["Projection"].SetValue(camera.m_ProjectionMatrix);
                 m_DeferredPointLightEffect.Parameters["InvertViewProjection"].SetValue(invertViewProjection);
                 m_DeferredPointLightEffect.Parameters["CameraPosition"].SetValue(camera.m_Transform.Position);
 
-                var inside = Vector3.Distance(camera.m_Transform.Position, m_Transform.Position) < (Range * 1.25f);
+                var inside = Vector3.Distance(camera.m_Transform.Position, m_Transform.Position) < (Radius * 1.25f);
                 graphics.RasterizerState = inside ? RasterizerState.CullClockwise : RasterizerState.CullCounterClockwise;
 
                 m_DeferredPointLightEffect.CurrentTechnique.Passes[0].Apply();

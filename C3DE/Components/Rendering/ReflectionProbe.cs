@@ -100,7 +100,7 @@ namespace C3DE.Components.Rendering
         {
             for (var i = 0; i < 6; i++)
             {
-                m_Cameras[i].clearColor = Color.Transparent;
+                m_Cameras[i].m_ClearColor = Color.Transparent;
                 m_Cameras[i].Near = NearClip;
                 m_Cameras[i].Far = FarClip;
                 m_Cameras[i].AspectRatio = 1.0f;

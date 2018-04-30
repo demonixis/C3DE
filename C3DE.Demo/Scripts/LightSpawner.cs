@@ -52,7 +52,7 @@ namespace C3DE.Demo.Scripts
             Scene.current.Add(lightGo);
 
             var light = lightGo.GetComponent<Light>();
-            light.Range = 5;
+            light.Radius = 5;
             light.ShadowGenerator.ShadowStrength = 1;
             light.ShadowGenerator.Enabled = ShadowMapEnabled;
 

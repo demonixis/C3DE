@@ -99,7 +99,7 @@ namespace C3DE.Graphics.Rendering
         private void DrawObjects(Scene scene, Camera camera, int eye)
         {
             m_graphicsDevice.SetRenderTarget(m_SceneRenderTargets[eye]);
-            m_graphicsDevice.Clear(camera.clearColor);
+            m_graphicsDevice.Clear(camera.m_ClearColor);
 
             if (scene.RenderSettings.Skybox.Enabled)
                 scene.RenderSettings.Skybox.Draw(m_graphicsDevice, camera);

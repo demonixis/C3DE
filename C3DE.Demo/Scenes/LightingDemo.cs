@@ -53,7 +53,7 @@ namespace C3DE.Demo.Scenes
                 Add(lightGo);
                 
                 var light = lightGo.GetComponent<Light>();
-                light.Range = 25;
+                light.Radius = 25;
                 light.ShadowGenerator.ShadowStrength = 1;
                 light.ShadowGenerator.ShadowBias = 0.01f;
 
