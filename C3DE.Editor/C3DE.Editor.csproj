@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>C3DE.Editor</RootNamespace>
     <AssemblyName>C3DE.Editor</AssemblyName>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProductVersion>8.0.30703</ProductVersion>
     <MonoGamePlatform>Windows</MonoGamePlatform>
@@ -272,6 +272,7 @@
     <MonoGameContentReference Include="Content\Content.mgcb" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="UI\Gwen\obj\Debug\DesignTimeResolveAssemblyReferences.cache" />
     <None Include="UI\Gwen\obj\Debug\DesignTimeResolveAssemblyReferencesInput.cache" />
     <None Include="UI\Gwen\obj\Debug\Gwen.csproj.CoreCompileInputs.cache" />

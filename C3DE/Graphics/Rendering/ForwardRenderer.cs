@@ -1,10 +1,12 @@
 ﻿using C3DE.Components;
+using C3DE.Components.Lighting;
 using C3DE.Components.Rendering;
 using C3DE.Graphics.Materials;
 using C3DE.Graphics.Materials.Shaders;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using System.Collections.Generic;
 
 namespace C3DE.Graphics.Rendering
 {
@@ -16,9 +18,6 @@ namespace C3DE.Graphics.Rendering
         private DepthRenderer m_DepthRenderer;
 
         public DepthRenderer DepthRenderer => m_DepthRenderer;
-
-        public bool LightCulling { get; set; } = true;
-        public bool FrustrumCulling { get; set; } = false;
 
         public ForwardRenderer(GraphicsDevice graphics)
            : base(graphics)
@@ -65,7 +64,6 @@ namespace C3DE.Graphics.Rendering
                     scene.m_ReflectionProbes[i].Draw(this);
 
             RebuildRenderTargets();
-
             RenderShadowMaps(scene);
 
             if (m_VREnabled)
@@ -144,12 +142,6 @@ namespace C3DE.Graphics.Rendering
                 renderer = scene.renderList[i];
                 material = scene.renderList[i].Material;
 
-                if (FrustrumCulling)
-                {
-                    if (!camera.m_BoundingFrustrum.Intersects(renderer.boundingSphere))
-                        continue;
-                }
-
                 // A specific renderer that uses its own draw logic.
                 if (material == null)
                 {
@@ -173,12 +165,6 @@ namespace C3DE.Graphics.Rendering
 
                     for (var l = 0; l < lightCount; l++)
                     {
-                        if (LightCulling)
-                        {
-                            if (lights[l].TypeLight != Components.Lighting.LightType.Directional && !lights[l].BoundingSphere.Intersects(renderer.boundingSphere))
-                                continue;
-                        }
-
                         multiLightShader.LightPass(renderer, lights[l]);
                         renderer.Draw(m_graphicsDevice);
                     }
@@ -244,6 +230,43 @@ namespace C3DE.Graphics.Rendering
             scene.RenderSettings.ambientColor = ambientColor;
 
             m_graphicsDevice.SetRenderTargets(renderTargets);
+        }
+
+        public static int[] CullLights(List<Light> lights, Renderer mesh, int limit)
+        {
+            var candidates = new List<(float, int)>();
+
+            for (var i = 0; i < lights.Count; i++)
+            {
+                if (lights[i].TypeLight == LightType.Directional)
+                {
+                    candidates.Add((float.MaxValue, i));
+                    continue;
+                }
+
+                if (mesh.BoundingSphere.Intersects(lights[i].BoundingSphere))
+                {
+                    var distance = Vector3.Distance(lights[i].Transform.Position, mesh.Transform.Position);
+                    candidates.Add((distance, i));
+                }
+            }
+
+            candidates.Sort((l1, li2) =>
+            {
+                if (l1.Item1 > li2.Item1)
+                    return 1;
+                else if (l1.Item1 < li2.Item1)
+                    return -1;
+
+                return 0;
+            });
+
+            var max = MathHelper.Min(limit, candidates.Count);
+            var result = new int[max];
+            for (var i = 0; i < max; i++)
+                result[i] = candidates[i].Item2;
+
+            return result;
         }
     }
 }
