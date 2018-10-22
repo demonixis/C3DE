@@ -8,7 +8,7 @@ namespace C3DE.UI
     public class GUI
     {
         internal static Effect uiEffect;
-        internal static Matrix uiMatrix;
+        internal static Matrix uiMatrix = Matrix.Identity;
         private SpriteBatch _spriteBatch;
         private bool _loaded;
         private Vector2 _cacheVec2;
@@ -17,7 +17,7 @@ namespace C3DE.UI
         /// <summary>
         /// Enable or disable the UI rendering.
         /// </summary>
-        public static bool Enabled { get; set; }
+        public static bool Enabled { get; set; } = true;
 
         /// <summary>
         /// Gets or sets the Skin used to draw the UI.
@@ -32,9 +32,8 @@ namespace C3DE.UI
             get { return new Vector2(uiMatrix[0], uiMatrix[5]); }
             set
             {
-                uiMatrix.M11 = value.X;
-                uiMatrix.M22 = value.Y;
-                uiMatrix.M33 = 1.0f;
+                uiMatrix[0] = value.X;
+                uiMatrix[5] = value.Y;
             }
         }
 
@@ -46,7 +45,7 @@ namespace C3DE.UI
 
         public static Matrix Matrix
         {
-            get { return uiMatrix; }
+            get => uiMatrix;
             set { uiMatrix = value; }
         }
 
@@ -56,9 +55,9 @@ namespace C3DE.UI
             _loaded = false;
             _cacheRect = Rectangle.Empty;
             _cacheVec2 = Vector2.Zero;
-            uiMatrix = Matrix.CreateScale(1.0f);
-            uiEffect = null;
-            Enabled = true;
+
+            if (uiMatrix[0] == 1 && uiMatrix[5] == 1)
+                uiMatrix = Matrix.Identity;
         }
 
         public void LoadContent(ContentManager content)
@@ -93,6 +92,9 @@ namespace C3DE.UI
         {
             _spriteBatch.Draw(Skin.Box, rect, Color.White);
 
+            if (string.IsNullOrEmpty(text))
+                return;
+
             _cacheVec2 = Skin.Font.MeasureString(text);
             _cacheVec2.X = (rect.X + rect.Width / 2) - (_cacheVec2.X / 2);
             _cacheVec2.Y = rect.Y + Skin.TextMargin;
@@ -104,12 +106,12 @@ namespace C3DE.UI
 
         #region Button Widget
 
-        public bool Button(Rectangle rect, string text)
+        public bool Button(Rectangle rect, string text, Color? textColor = null)
         {
             return Button(ref rect, text);
         }
 
-        public bool Button(ref Rectangle rect, string text, float labelScale = 1.0f)
+        public bool Button(ref Rectangle rect, string text, Color? textColor = null, float labelScale = 1.0f)
         {
             var index = 0;
 
@@ -127,7 +129,7 @@ namespace C3DE.UI
             _cacheVec2 = Skin.Font.MeasureString(text) * labelScale;
             _cacheVec2.X = (rect.X + rect.Width / 2) - (_cacheVec2.X / 2);
             _cacheVec2.Y = (rect.Y + rect.Height / 2) - (_cacheVec2.Y / 2);
-            Label(_cacheVec2, text, labelScale, 0.0f);
+            Label(_cacheVec2, text, textColor, labelScale, 0.0f);
 
             return index == 2;
         }
@@ -246,16 +248,16 @@ namespace C3DE.UI
 
         #region Label Widget
 
-        public void Label(Vector2 position, string text, float scale = 1.0f, float rotation = 0.0f)
+        public void Label(Vector2 position, string text, Color? color = null, float scale = 1.0f, float rotation = 0.0f)
         {
-            Label(ref position, text, scale, rotation);
+            Label(ref position, text, color, scale, rotation);
         }
 
-        public void Label(ref Vector2 position, string text, float scale = 1.0f, float rotation = 0.0f)
+        public void Label(ref Vector2 position, string text, Color? color = null, float scale = 1.0f, float rotation = 0.0f)
         {
             _cacheVec2.X = scale;
             _cacheVec2.Y = scale;
-            _spriteBatch.DrawString(Skin.Font, text, position, Skin.TextColor, rotation, Vector2.Zero, _cacheVec2, SpriteEffects.None, 1);
+            _spriteBatch.DrawString(Skin.Font, text, position, color.HasValue ? color.Value : Skin.TextColor, rotation, Vector2.Zero, _cacheVec2, SpriteEffects.None, 1);
         }
 
         #endregion

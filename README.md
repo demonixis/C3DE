@@ -1,83 +1,42 @@
-C3DE : Cool 3D Engine
-=====================
+# C3DE : Cool 3D Engine
 
-### What is it ?
-C3DE is a research/learning project. The aim is to create a modest but powerful enough 3D engine powered by the MonoGame Framework. This project is composed of
-* An engine
-* An editor (Windows only for now)
-* A player (later)
+## The project
+C3DE aims to become a 3D game engine powered by the MonoGame Framework with all features you can except from a modern "Garage Game Dev Tool". It features a Forward, Light PrePass and Deferred Renderer, as well as *Virtual Reality* support. Please take a look at features below.
 
-![](http://41.media.tumblr.com/f184d022630b0bc245246b146ace8cc7/tumblr_nrzrcmzCLo1s15knro1_1280.png)
+![preview](http://78.media.tumblr.com/9a7fd3f3dd743e8d32c8f4e1f98ffe79/tumblr_p26hge9n4w1s15knro2_1280.jpg)
 
-### Features
+## Status & branch strategy
+This project is in early stage. Use the `master` branch for testing and the `develop` branch for latest and **instable** changes. Keep in mind that all branches other than `master` are probably broken on non Windows targets.
 
-- Scene (parent/child)
+## Features
+- Scenegraph
 - Component based
-- 3D Model (FBX/X)*
-- Custom Mesh geometry)
-- Terrain: Flat, Random, Heightmap, multi textured
-- Materials: Standard, Simple, Reflective, Water, Lava, Custom
+- 3D Model support + Custom Mesh geometry
+- Terrain: Flat, Random, Heightmap
+- Materials: Standard (Phong + Extras), Terrain (multi-textured) and few extras
+- Lighting: Directional, Point, Spot
+- Forward Renderer: Unlimlited number of light with the multipass lighting
+- Light PrePass Renderer
+- Deferred Renderer
 - Shadow mapping (Hard shadow)
 - Input management: Keyboard, Mouse, Gamepad, Touch
 - Procedural texture generation
-- Post Processing support (need rewrite)
-- Multiple cameras
-- UI management (Button, Checkbox, Label, Slider, Texture) 
+- Post Processing
+- Instant GUI system
+- Virtual Reality (supported on all renderers)
+- Physics using Jitter Physics
 
-* Models support is not yet complete because the engine uses its own format for rendering things. It's planned later in the roadmap to convert an XNA model into a C3DE model.
+## Platforms
+C3DE supports Windows, Universal Windows Platform, Linux and Mac using [MonoGame](https://github.com/MonoGame/MonoGame) (both DirectX and DesktopGL). The OpenGL shader compiler is limited to the shader model 3, some effects are not supported on this platform. Android support is paused for now.
 
-### Sample
+### Virtual Reality
+Many VR vendors are already supported on all Renderers. If you want additional details, please [take a look at the wiki](https://github.com/demonixis/C3DE/wiki/Virtual-Reality).
 
-```C#
-public class SuperCoolGame : Scene
-{
-	protected override void Initialize()
-    {
-        base.Initialize();
+## Requirement
+You **must** install the [MonoGame Framework](http://www.monogame.net/downloads/) from the installer. **You'll not be able to build the solution without it**.
 
-        // Create a camera node with an orbit controller.
-        var camera = new CameraPrefab("camera");
-        camera.AddComponent<OrbitController>();
-		Add(camera);
+## Contributions
+You're **free** to submit pull request, however thank you to follow the [coding convention](https://msdn.microsoft.com/en-US/library/ff926074.aspx). 
 
-        // Add a light with shadows
-        var lightPrefab = new LightPrefab("light", LightType.Directional);
-        lightPrefab.EnableShadows = true;
-		Add(lightPrefab);
-
-        // Add a terrain generated with Pelrin Noise.
-        var terrain = new TerrainPrefab("terrain");
-        terrain.TextureRepeat = new Vector2(16);
-        terrain.Randomize();
-        terrain.Renderer.Material = new StandardMaterial(this);
-        terrain.Renderer.Material.MainTexture = Content.Load<Texture2D>("Textures/terrain");
-		Add(terrain);
-    }
-}
-```
-
-### What's next ?
-- Post processing (manager to allow chaining)
-- More light types (Spot, Area)
-- PreLightRenderer (in progress)
-- True collision system / Physics engine
-- Network (Check the network branch)
-- Player for loading a game made with the editor
-
-### Supported Platforms
-- Windows (DirectX)
-
-I'm currently in a big refactoring step. Due to the complexity of managing multiples solutions, the develop branch only supports Windows. When the refactoring will be done, I'll re add support for
-- Desktop GL (Linux, Mac, Windows)
-- Android
-- Windows Universal Apps
-
-### Requirement
-You must install the [MonoGame Framework](http://www.monogame.net/downloads/) from the installer or update the solution with your custom build of the Framework.
-If you want to build the editor or the demos, you must install MonoGame because projects uses the new Content Build System.
-
-### Editor
-First you have to build the demo project and copy the content folder with all xnb into the generated build folder of the editor.
-
-### Licence
+## License
 C3DE is released under the MIT License, please take your time to read the LICENSE file for more informations.

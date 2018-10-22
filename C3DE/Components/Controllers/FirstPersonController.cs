@@ -1,6 +1,5 @@
 ﻿using C3DE.Components.Controllers.Mobile;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Runtime.Serialization;
@@ -13,6 +12,7 @@ namespace C3DE.Components.Controllers
     [DataContract]
     public class FirstPersonController : Controller
     {
+        private bool _azertyKeyboard = false;
         private Camera _camera;
         private Matrix _rotationMatrix;
         private Vector3 _transformedReference;
@@ -28,6 +28,8 @@ namespace C3DE.Components.Controllers
         /// </summar>
         [DataMember]
         public bool Fly { get; set; }
+
+        public bool DontUpdateOnClick { get; set; } = false;
 
         [DataMember]
         public bool VirtualInputEnabled
@@ -68,6 +70,7 @@ namespace C3DE.Components.Controllers
             Fly = false;
             _virtualInputEnabled = false;
             _lockCursor = false;
+            _azertyKeyboard = System.Globalization.CultureInfo.CurrentCulture.TwoLetterISOLanguageName == "fr";
         }
 
         public override void OnDisabled()
@@ -105,27 +108,24 @@ namespace C3DE.Components.Controllers
             UpdateInputs();
 
             // Limits on X axis
-            if (transform.Rotation.X <= -MathHelper.PiOver2)
+            if (m_Transform.LocalRotation.X <= -MathHelper.PiOver2)
             {
-                transform.SetRotation(-MathHelper.PiOver2 + 0.001f, null, null);
+                m_Transform.SetLocalRotation(-MathHelper.PiOver2 + 0.001f, null, null);
                 rotation = Vector3.Zero;
             }
-            else if (transform.Rotation.X >= MathHelper.PiOver2)
+            else if (m_Transform.LocalRotation.X >= MathHelper.PiOver2)
             {
-                transform.SetRotation(MathHelper.PiOver2 - 0.001f, null, null);
+                m_Transform.SetLocalRotation(MathHelper.PiOver2 - 0.001f, null, null);
                 rotation = Vector3.Zero;
             }
 
-            _rotationMatrix = Matrix.CreateFromYawPitchRoll(transform.Rotation.Y, transform.Rotation.X, 0.0f);
+            _rotationMatrix = Matrix.CreateFromYawPitchRoll(m_Transform.LocalRotation.Y, m_Transform.LocalRotation.X, 0.0f);
 
-            _transformedReference = Vector3.Transform(translation, !Fly ? Matrix.CreateRotationY(transform.Rotation.Y) : _rotationMatrix);
+            _transformedReference = Vector3.Transform(translation, !Fly ? Matrix.CreateRotationY(m_Transform.LocalRotation.Y) : _rotationMatrix);
 
             // Translate and rotate
-            transform.Translate(ref _transformedReference);
-            transform.Rotate(ref rotation);
-
-            // Update target
-            _camera.Target = transform.Position + Vector3.Transform(Vector3.Forward, _rotationMatrix);
+            m_Transform.Translate(ref _transformedReference);
+            m_Transform.Rotate(ref rotation);
 
             translation *= Velocity;
             rotation *= AngularVelocity;
@@ -141,19 +141,19 @@ namespace C3DE.Components.Controllers
 
         protected override void UpdateKeyboardInput()
         {
-            if (Input.Keys.Up || Input.Keys.Pressed(Keys.W))
-                translation.Z += MoveSpeed * Time.DeltaTime;
-
-            else if (Input.Keys.Pressed(Keys.Down) || Input.Keys.Pressed(Keys.S))
+            if (Input.Keys.Up || (_azertyKeyboard ? Input.Keys.Pressed(Keys.Z) : Input.Keys.Pressed(Keys.W)))
                 translation.Z -= MoveSpeed * Time.DeltaTime;
 
-            if (Input.Keys.Pressed(Keys.A))
-                translation.X += MoveSpeed * Time.DeltaTime / 2.0f;
+            else if (Input.Keys.Pressed(Keys.Down) || Input.Keys.Pressed(Keys.S))
+                translation.Z += MoveSpeed * Time.DeltaTime;
 
-            else if (Input.Keys.Pressed(Keys.D))
+            if (_azertyKeyboard ? Input.Keys.Pressed(Keys.Q) : Input.Keys.Pressed(Keys.A))
                 translation.X -= MoveSpeed * Time.DeltaTime / 2.0f;
 
-            if (Input.Keys.Pressed(Keys.A))
+            else if (Input.Keys.Pressed(Keys.D))
+                translation.X += MoveSpeed * Time.DeltaTime / 2.0f;
+
+            if (_azertyKeyboard ? Input.Keys.Pressed(Keys.A) : Input.Keys.Pressed(Keys.Q))
                 translation.Y += StrafeSpeed * Time.DeltaTime;
 
             else if (Input.Keys.Pressed(Keys.E))
@@ -177,15 +177,18 @@ namespace C3DE.Components.Controllers
 
         protected override void UpdateMouseInput()
         {
+            if (!MouseEnabled)
+                return;
+
             if (!_lockCursor && Input.Mouse.Drag())
             {
                 rotation.Y -= Input.Mouse.Delta.X * RotationSpeed * MouseSensibility.Y * Time.DeltaTime;
-                rotation.X += Input.Mouse.Delta.Y * RotationSpeed * MouseSensibility.X * Time.DeltaTime;
+                rotation.X -= Input.Mouse.Delta.Y * RotationSpeed * MouseSensibility.X * Time.DeltaTime;
             }
             else if (_lockCursor)
             {
                 rotation.Y -= Input.Mouse.Delta.X * RotationSpeed * MouseSensibility.Y * Time.DeltaTime;
-                rotation.X += Input.Mouse.Delta.Y * LookSpeed * MouseSensibility.X * Time.DeltaTime;
+                rotation.X -= Input.Mouse.Delta.Y * LookSpeed * MouseSensibility.X * Time.DeltaTime;
             }
 
             if (Input.Mouse.Drag(Inputs.MouseButton.Middle))
@@ -225,13 +228,13 @@ namespace C3DE.Components.Controllers
         {
             if (active && leftVirtaulStick == null && rightSwipeZone == null)
             {
-                leftVirtaulStick = sceneObject.AddComponent<VirtualGamepad>();
-                rightSwipeZone = sceneObject.AddComponent<SwipeZone>();
+                leftVirtaulStick = m_GameObject.AddComponent<VirtualGamepad>();
+                rightSwipeZone = m_GameObject.AddComponent<SwipeZone>();
             }
             else if (!active && leftVirtaulStick != null && rightSwipeZone != null)
             {
-                sceneObject.RemoveComponent(leftVirtaulStick);
-                sceneObject.RemoveComponent(rightSwipeZone);
+                m_GameObject.RemoveComponent(leftVirtaulStick);
+                m_GameObject.RemoveComponent(rightSwipeZone);
             }
 
             _virtualInputEnabled = leftVirtaulStick != null && rightSwipeZone != null;

@@ -18,6 +18,11 @@ namespace C3DE
             get { return _scenes[index]; }
         }
 
+        public Scene ActiveScene
+        {
+            get { return _activeSceneIndex >= 0 ? _scenes[_activeSceneIndex] : null; }
+        }
+
         public int Count
         {
             get { return _scenes.Count; }
@@ -85,7 +90,7 @@ namespace C3DE
                 _scenes.Add(scene);
 
                 if (isActive)
-                    _activeSceneIndex = _scenes.Count - 1;
+                    _levelToLoad = _scenes.Count - 1;
             }
         }
 
@@ -103,7 +108,6 @@ namespace C3DE
                     _activeSceneIndex = _scenes.Count - 1;
 
                 _scenes[index].Unload();
-
                 _scenes.RemoveAt(index);
             }
         }
@@ -121,13 +125,14 @@ namespace C3DE
                 if (_activeSceneIndex > -1)
                     _scenes[_activeSceneIndex].Unload();
 
-                Camera.main = null;
+                _activeSceneIndex = _levelToLoad;
+
+                Camera.Main = null;
                 GUI.Enabled = true;
                 GUI.Effect = null;
+                Scene.current = _scenes[_activeSceneIndex];
 
-                _activeSceneIndex = _levelToLoad;
                 _levelToLoad = -1;
-
                 _scenes[_activeSceneIndex].Initialize();
             }
 

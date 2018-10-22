@@ -65,6 +65,18 @@ namespace C3DE.Components.Controllers
         [DataMember]
         public float TouchSensibility { get; set; }
 
+        [DataMember]
+        public bool KeyboardEnabled { get; set; } = true;
+
+        [DataMember]
+        public bool MouseEnabled { get; set; } = true;
+
+        [DataMember]
+        public bool TouchEnabled { get; set; } = true;
+
+        [DataMember]
+        public bool GamepadEnabled { get; set; } = true;
+
         #endregion
 
         #region Input

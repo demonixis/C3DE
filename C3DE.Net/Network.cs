@@ -1,7 +1,6 @@
 ﻿using C3DE.Components;
 using C3DE.Components.Net;
-using C3DE.Geometries;
-using C3DE.Prefabs.Meshes;
+
 using Lidgren.Network;
 using Microsoft.Xna.Framework;
 using System;
@@ -66,8 +65,12 @@ namespace C3DE.Net
         private int GetNetViewBySceneObjectId(int id)
         {
             for (int i = 0, l = netViews.Count; i < l; i++)
-                if (netViews[i].SceneObject.Id == id)
+            {
+                var strId = id.ToString(); // FIXME
+
+                if (netViews[i].GameObject.Id == strId)
                     return i;
+            }
             return -1;
         }
 
@@ -129,8 +132,9 @@ namespace C3DE.Net
                                 var rotation = NetHelper.StringToVector3(incMessage.ReadString());
                                 var scale = NetHelper.StringToVector3(incMessage.ReadString());
 
-                                if (networkId != Id)
-                                    Instanciate(SceneObject.FindById(prefabId), position, rotation, networkId, false);
+                                // FIXME
+                                //if (networkId != Id)
+                                    //Instanciate(Scene.FindById(prefabId), position, rotation, networkId, false);
 
                                 if (_prefabs.ContainsKey(prefabId))
                                     _prefabs[prefabId]++;
@@ -160,18 +164,20 @@ namespace C3DE.Net
 
                                 if (netViews.Count < worldSize)
                                 {
-                                    SceneObject[] soCache = null;
+                                    GameObject[] soCache = null;
 
                                     foreach (var keyValue in _prefabs)
                                     {
-                                        soCache = SceneObject.FindSceneObjectsById(keyValue.Key);
+                                        // FIXME
+                                        //soCache = Scene.FindSceneObjectsById(keyValue.Key);
                                         int max = keyValue.Value;
 
                                         if (soCache.Length > 0)
                                             max = max - soCache.Length;
 
-                                        for (int i = 0; i < max; i++)
-                                            Instanciate(SceneObject.FindById(keyValue.Key), Vector3.Zero, Vector3.Zero, -1, false);
+                                        // FIXME
+                                        //for (int i = 0; i < max; i++)
+                                            //Instanciate(Scene.FindById(keyValue.Key), Vector3.Zero, Vector3.Zero, -1, false);
                                     }
                                 }
 
@@ -229,12 +235,12 @@ namespace C3DE.Net
             client.SendMessage(message, NetDeliveryMethod.ReliableOrdered, 0);
         }
 
-        public static SceneObject Instanciate(SceneObject sceneObject, Vector3 position, Vector3 rotation)
+        public static GameObject Instanciate(GameObject sceneObject, Vector3 position, Vector3 rotation)
         {
             return Instanciate(sceneObject, position, rotation, Id, true);
         }
 
-        private static SceneObject Instanciate(SceneObject sceneObject, Vector3 position, Vector3 rotation, int uniqId, bool notifyServer)
+        private static GameObject Instanciate(GameObject sceneObject, Vector3 position, Vector3 rotation, int uniqId, bool notifyServer)
         {
             var clone = Scene.Instanciate(sceneObject, position, rotation);
             clone.Transform.Position = position;
@@ -263,7 +269,7 @@ namespace C3DE.Net
             return sceneObject;
         }
 
-        private static void Destroy(SceneObject sceneObject)
+        private static void Destroy(GameObject sceneObject)
         {
             var netView = sceneObject.GetComponent<NetworkView>();
 

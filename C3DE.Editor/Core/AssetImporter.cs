@@ -1,24 +1,34 @@
 ﻿using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Media;
+using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace C3DE.Editor.Core
+namespace C3DE.Editor
 {
+    public class AskXnbWindow
+    {
+        public string Filepath { get; set; }
+
+        public void Show() { }
+
+        public event Action<string, Type> TypeSelected = null;
+    }
+
     public class AssetImporter
     {
         public static string ActiveRootFolder { get; set; }
 
         public static readonly Dictionary<string, string> Folders = new Dictionary<string, string>
-        { 
-            { "Sound", "Audio/Sounds" }, 
-            { "Music", "Audio/Musics" }, 
-            { "Effect", "Effects" }, 
-            { "Font", "Fonts" }, 
-            { "Model", "Models" }, 
+        {
+            { "Sound", "Audio/Sounds" },
+            { "Music", "Audio/Musics" },
+            { "Effect", "Effects" },
+            { "Font", "Fonts" },
+            { "Model", "Models" },
             { "Script", "Scripts" },
-            { "Texture", "Textures" } 
+            { "Texture", "Textures" }
         };
 
         private static AskXnbWindow askXnbWindow = null;
@@ -55,31 +65,31 @@ namespace C3DE.Editor.Core
             }
         }
 
-        private static void OnTypeSelected(object sender, TypeSelectedEventArgs e)
+        private static void OnTypeSelected(string path, Type type)
         {
-            var filename = Path.GetFileName(e.Path);
+            var filename = Path.GetFileName(path);
             var assetKey = string.Empty;
 
-            if (e.Type == typeof(Effect))
+            if (type == typeof(Effect))
                 assetKey = Folders["Effect"];
 
-            else if (e.Type == typeof(SpriteFont))
+            else if (type == typeof(SpriteFont))
                 assetKey = Folders["Font"];
 
-            else if (e.Type == typeof(Model))
+            else if (type == typeof(Model))
                 assetKey = Folders["Model"];
 
-            else if (e.Type == typeof(SoundEffect))
+            else if (type == typeof(SoundEffect))
                 assetKey = Folders["Sound"];
 
-            else if (e.Type == typeof(Song))
+            else if (type == typeof(Song))
                 assetKey = Folders["Music"];
 
-            else if (e.Type == typeof(Texture2D))
+            else if (type == typeof(Texture2D))
                 assetKey = Folders["Texture"];
 
             if (!string.IsNullOrEmpty(assetKey))
-                File.Copy(e.Path, Path.Combine(ActiveRootFolder, Folders[assetKey], filename), true);
+                File.Copy(path, Path.Combine(ActiveRootFolder, Folders[assetKey], filename), true);
         }
     }
 }

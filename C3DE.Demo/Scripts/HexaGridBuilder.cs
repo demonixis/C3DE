@@ -1,7 +1,6 @@
 ﻿using C3DE.Components;
-using C3DE.Components.Renderers;
-using C3DE.Materials;
-using C3DE.Prefabs;
+using C3DE.Components.Rendering;
+using C3DE.Graphics.Materials;
 using C3DE.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -10,7 +9,7 @@ namespace C3DE.Demo.Scripts
 {
     public class HexaGridBuilder : Behaviour
     {
-        private ModelPrefab _gridPrefab;
+        private ModelRenderer _gridPrefab;
         private float _hexWidth;
         private float _hexDepth;
 
@@ -25,22 +24,22 @@ namespace C3DE.Demo.Scripts
             GridWidth = 10;
             GridDepth = 10;
             Margin = 0.86f;
-            TileScale = 0.5f;
+            TileScale = 1.0f;
         }
 
         public override void Start()
         {
-            _gridPrefab = new ModelPrefab("Hexa Tile");
+            var go = GameObjectFactory.CreateXNAModel(Application.Content, "Models/HexGrid");
+            _gridPrefab = go.GetComponent<ModelRenderer>();
             _gridPrefab.Transform.LocalScale = new Vector3(TileScale, 0.5f * TileScale, TileScale);
-            _gridPrefab.Transform.Rotation = new Vector3(0, MathHelper.Pi / 6, 0);
-            _gridPrefab.LoadModel("Models/hexagone");
-            _gridPrefab.Renderer.Material = new SimpleMaterial(sceneObject.Scene);
-            _gridPrefab.Renderer.Material.Texture = Application.Content.Load<Texture2D>("Models/hexagone_basic");
+            _gridPrefab.Transform.LocalRotation = new Vector3(0, MathHelper.Pi / 6, 0);
+            _gridPrefab.Material = new StandardMaterial();
+            _gridPrefab.Material.MainTexture = Application.Content.Load<Texture2D>("Models/hexagone_basic");
             _gridPrefab.Enabled = false;
-            sceneObject.Scene.Add(_gridPrefab);
+            m_GameObject.Scene.Add(go);
 
-            _hexWidth = _gridPrefab.Renderer.BoundingSphere.Radius * 2 * 0.85f * Margin;
-            _hexDepth = _gridPrefab.Renderer.BoundingSphere.Radius * 2 * Margin;
+            _hexWidth = _gridPrefab.BoundingSphere.Radius * 2 * 0.85f * Margin;
+            _hexDepth = _gridPrefab.BoundingSphere.Radius * 2 * Margin;
 
             GenerateHexaGrid();
         }
@@ -71,15 +70,15 @@ namespace C3DE.Demo.Scripts
 
         private void GenerateHexaGrid()
         {
-            SceneObject cache = null;
+            GameObject cache = null;
 
-            var waterMaterial = _gridPrefab.Renderer.Material;
+            var waterMaterial = _gridPrefab.Material;
 
-            var groundMaterial = new StandardMaterial(Scene.current);
-            groundMaterial.Texture = Application.Content.Load<Texture2D>("Models/hexagone_green");
+            var groundMaterial = new StandardMaterial();
+            groundMaterial.MainTexture = Application.Content.Load<Texture2D>("Models/hexagone_green");
 
-            var montainMaterial = new StandardMaterial(Scene.current);
-            montainMaterial.Texture = Application.Content.Load<Texture2D>("Models/hexagone_brown");
+            var montainMaterial = new StandardMaterial();
+            montainMaterial.MainTexture = Application.Content.Load<Texture2D>("Models/hexagone_brown");
             montainMaterial.DiffuseColor = Color.Red;
 
             int rand = 0;
@@ -91,9 +90,9 @@ namespace C3DE.Demo.Scripts
                 {
                     rand = RandomHelper.Range(0, 10);
 
-                    cache = Scene.Instanciate(_gridPrefab);
-                    cache.Transform.Position = GetWorldCoordinate(x, z);
-                    cache.Transform.Parent = transform;
+                    cache = Scene.Instanciate(_gridPrefab.GameObject);
+                    cache.Transform.LocalPosition = GetWorldCoordinate(x, z);
+                    cache.Transform.Parent = m_Transform;
 
                     mRenderer = cache.GetComponent<ModelRenderer>();
 
@@ -108,7 +107,7 @@ namespace C3DE.Demo.Scripts
                         cache.Transform.LocalScale += new Vector3(0.0f, 1.5f, 0.0f);
                     }
 
-                    cache.Transform.SetPosition(null, _gridPrefab.Renderer.BoundingSphere.Radius * cache.Transform.LocalScale.Y / 2, null);
+                    cache.Transform.SetLocalPosition(null, _gridPrefab.BoundingSphere.Radius * cache.Transform.LocalScale.Y / 2, null);
                 }
             }
         }

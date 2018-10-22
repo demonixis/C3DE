@@ -1,55 +1,29 @@
 ﻿using System.Reflection;
-using System.Resources;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
-using System.Windows;
+#if __ANDROID__
+using Android.App;
+#endif
 
-// Les informations générales relatives à un assembly dépendent de 
-// l'ensemble d'attributs suivant. Changez les valeurs de ces attributs pour modifier les informations
-// associées à un assembly.
-[assembly: AssemblyTitle("C3DE Editor")]
-[assembly: AssemblyDescription("An editor for C3DE engine")]
+// Information about this assembly is defined by the following attributes. 
+// Change them to the values specific to your project.
+
+[assembly: AssemblyTitle("C3DE.Demo")]
+[assembly: AssemblyDescription("C3DE Demo")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("The C3DE Team")]
-[assembly: AssemblyProduct("C3DE Editor")]
-[assembly: AssemblyCopyright("Copyright © C3DE 2015")]
+[assembly: AssemblyProduct("C3DE Demos")]
+[assembly: AssemblyCopyright("Copyright © C3DE 2014-2017")]
 [assembly: AssemblyTrademark("C3DE")]
 [assembly: AssemblyCulture("")]
 
-// L'affectation de la valeur false à ComVisible rend les types invisibles dans cet assembly 
-// aux composants COM.  Si vous devez accéder à un type dans cet assembly à partir de 
-// COM, affectez la valeur true à l'attribut ComVisible sur ce type.
-[assembly: ComVisible(false)]
+// The assembly version has the format "{Major}.{Minor}.{Build}.{Revision}".
+// The form "{Major}.{Minor}.*" will automatically update the build and revision,
+// and "{Major}.{Minor}.{Build}.*" will update just the revision.
 
-//Pour commencer à générer des applications localisables, définissez 
-//<UICulture>CultureYouAreCodingWith</UICulture> dans votre fichier .csproj
-//dans <PropertyGroup>.  Par exemple, si vous utilisez le français
-//dans vos fichiers sources, définissez <UICulture> à fr-FR.  Puis, supprimez les marques de commentaire de
-//l'attribut NeutralResourceLanguage ci-dessous.  Mettez à jour "fr-FR" dans
-//la ligne ci-après pour qu'elle corresponde au paramètre UICulture du fichier projet.
+[assembly: AssemblyVersion("1.0.0")]
 
-//[assembly: NeutralResourcesLanguage("en-US", UltimateResourceFallbackLocation.Satellite)]
+// The following attributes are used to specify the signing key for the assembly, 
+// if desired. See the Mono documentation for more information about signing.
 
-
-[assembly: ThemeInfo(
-    ResourceDictionaryLocation.None, //où se trouvent les dictionnaires de ressources spécifiques à un thème
-    //(utilisé si une ressource est introuvable dans la page, 
-    // ou dictionnaires de ressources de l'application)
-    ResourceDictionaryLocation.SourceAssembly //où se trouve le dictionnaire de ressources générique
-    //(utilisé si une ressource est introuvable dans la page, 
-    // dans l'application ou dans l'un des dictionnaires de ressources spécifiques à un thème)
-)]
-
-
-// Les informations de version pour un assembly se composent des quatre valeurs suivantes :
-//
-//      Version principale
-//      Version secondaire 
-//      Numéro de build
-//      Révision
-//
-// Vous pouvez spécifier toutes les valeurs ou indiquer les numéros de build et de révision par défaut 
-// en utilisant '*', comme indiqué ci-dessous :
-// [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("1.0.0.0")]
+//[assembly: AssemblyDelaySign(false)]
+//[assembly: AssemblyKeyFile("")]

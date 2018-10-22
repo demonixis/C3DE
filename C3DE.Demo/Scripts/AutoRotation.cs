@@ -9,7 +9,7 @@ namespace C3DE.Demo.Scripts
 
         public override void Update()
         {
-            sceneObject.Transform.Rotate(Rotation * Time.DeltaTime);
+            m_GameObject.Transform.Rotate(Rotation * Time.DeltaTime);
         }
     }
 }

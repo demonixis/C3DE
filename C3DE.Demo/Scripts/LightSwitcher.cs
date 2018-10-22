@@ -1,5 +1,5 @@
 ﻿using C3DE.Components;
-using C3DE.Components.Lights;
+using C3DE.Components.Lighting;
 using C3DE.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -12,18 +12,26 @@ namespace C3DE.Demo.Scripts
         private Rectangle _btn1;
         private Rectangle _btn2;
         private Rectangle _btn3;
+        private Rectangle _btn4;
         private Light _light;
+
+        public bool LogPositionRotation { get; set; } = false;
 
         public override void Start()
         {
-            _box = new Rectangle(Screen.VirtualWidth - 150, 10, 140, 150);
-            _btn1 = new Rectangle(_box.X + 10, _box.Y + 30, _box.Width - 20, 30);
-            _btn2 = new Rectangle(_box.X + 10, _btn1.Y + 40, _box.Width - 20, 30);
-            _btn3 = new Rectangle(_box.X + 10, _btn2.Y + 40, _box.Width - 20, 30);
-
+            SetBoxAlign(false);
             _light = GetComponent<Light>();
 
             GUI.Skin.Font = Application.Content.Load<SpriteFont>("Font/Default");
+        }
+
+        public void SetBoxAlign(bool left)
+        {
+            _box = new Rectangle(left ? 10 : Screen.VirtualWidth - 150, 10, 140, 200);
+            _btn1 = new Rectangle(_box.X + 10, _box.Y + 30, _box.Width - 20, 30);
+            _btn2 = new Rectangle(_box.X + 10, _btn1.Y + 40, _box.Width - 20, 30);
+            _btn3 = new Rectangle(_box.X + 10, _btn2.Y + 40, _box.Width - 20, 30);
+            _btn4 = new Rectangle(_box.X + 10, _btn3.Y + 40, _box.Width - 20, 30);
         }
 
         public override void OnGUI(GUI gui)
@@ -38,6 +46,12 @@ namespace C3DE.Demo.Scripts
 
             if (gui.Button(_btn3, "Point"))
                 _light.TypeLight = LightType.Point;
+
+            if (gui.Button(_btn4, "Spot"))
+                _light.TypeLight = LightType.Spot;
+
+            if (LogPositionRotation)
+                Debug.Log($"p: {m_Transform.Position} r: {m_Transform.Rotation}");
         }
     }
 }

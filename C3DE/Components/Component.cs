@@ -11,63 +11,63 @@ namespace C3DE.Components
     [DataContract]
     public abstract class Component : IComparable, ICloneable, IDisposable
     {
-        internal protected bool initialized;
-        protected bool enabled;
-        protected int order = 1;
-        internal protected SceneObject sceneObject;
-        internal protected Transform transform;
+        internal protected bool m_Started;
+        protected bool m_Enabled;
+        protected int m_Order = 1;
+        internal protected GameObject m_GameObject;
+        internal protected Transform m_Transform;
 
         #region Fields
 
         [DataMember]
         public bool Enabled
         {
-            get { return enabled; }
+            get { return m_Enabled; }
             set
             {
-                if (value != enabled)
+                if (value != m_Enabled)
                 {
-                    enabled = value;
+                    m_Enabled = value;
 
-                    if (enabled)
+                    if (m_Enabled)
                         OnEnabled();
                     else
                         OnDisabled();
 
                     NotifyPropertyChanged("Enabled");
-                }  
+                }
             }
         }
 
         public bool Initialized
         {
-            get { return initialized; }
+            get { return m_Started; }
         }
 
         [DataMember]
         public string Id { get; set; }
 
-        public SceneObject SceneObject
+        public GameObject GameObject
         {
-            get { return sceneObject; }
-            internal set { sceneObject = value; }
+            get { return m_GameObject; }
+            internal set { m_GameObject = value; }
         }
 
         public Transform Transform
         {
-            get { return transform; }
-            internal set { transform = value; }
+            get { return m_Transform; }
+            internal set { m_Transform = value; }
         }
 
         [DataMember]
         public int Order
         {
-            get { return order; }
+            get { return m_Order; }
             protected set
             {
-                if (value != order)
+                if (value != m_Order)
                 {
-                    order = value;
+                    m_Order = value;
                     NotifyPropertyChanged("Order");
                 }
             }
@@ -92,8 +92,8 @@ namespace C3DE.Components
         /// </summary>
         public Component()
         {
-            initialized = false;
-            enabled = true;
+            m_Started = false;
+            m_Enabled = true;
             Id = "CPN-" + Guid.NewGuid();
         }
 
@@ -107,8 +107,8 @@ namespace C3DE.Components
 
         public virtual void Awake()
         {
-            if (transform == null)
-                transform = GetComponent<Transform>();
+            if (m_Transform == null)
+                m_Transform = GetComponent<Transform>();
         }
 
         /// <summary>
@@ -117,7 +117,7 @@ namespace C3DE.Components
         /// <param name="content"></param>
         public virtual void Start()
         {
-            initialized = true;
+            m_Started = true;
         }
 
         /// <summary>
@@ -134,28 +134,52 @@ namespace C3DE.Components
             if (component == null)
                 return 1;
 
-            if (order == component.order)
+            if (m_Order == component.m_Order)
                 return 0;
-            else if (order > component.order)
+            else if (m_Order > component.m_Order)
                 return 1;
             else
                 return -1;
         }
 
+#region Add / Get Component
+
         public T AddComponent<T>() where T : Component, new()
         {
-            return sceneObject.AddComponent<T>();
+            return m_GameObject.AddComponent<T>();
         }
 
         public T GetComponent<T>() where T : Component
         {
-            return sceneObject.GetComponent<T>();
+            return m_GameObject.GetComponent<T>();
         }
 
         public T[] GetComponents<T>() where T : Component
         {
-            return sceneObject.GetComponents<T>();
+            return m_GameObject.GetComponents<T>();
         }
+
+        public T GetComponentInChildren<T>() where T : Component
+        {
+            return m_GameObject.GetComponentInChildren<T>();
+        }
+
+        public T[] GetComponentsInChildren<T>() where T : Component
+        {
+            return m_GameObject.GetComponentsInChildren<T>();
+        }
+
+        public T GetComponentInParent<T>() where T : Component
+        {
+            return m_GameObject.GetComponentInParent<T>();
+        }
+
+        public T[] GetComponentsInParent<T>() where T : Component
+        {
+            return m_GameObject.GetComponentsInParent<T>();
+        }
+
+        #endregion
 
         public virtual void Reset()
         {

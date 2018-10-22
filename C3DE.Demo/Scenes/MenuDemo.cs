@@ -1,23 +1,18 @@
 ﻿using C3DE.Demo.Scripts;
-using C3DE.Prefabs;
 using C3DE.UI;
 
 namespace C3DE.Demo.Scenes
 {
-    public class MenuDemo : Scene
+    public class MenuDemo : SimpleDemo
     {
-        public MenuDemo() : base("Menu demo") { }
+        public MenuDemo() : base("Menu") { }
 
         public override void Initialize()
         {
             base.Initialize();
-
+            OptimizeFor2D();
             GUI.Skin = DemoGame.CreateSkin(Application.Content, false);
-
-            var camera = new CameraPrefab("cam");
-            camera.AddComponent<MenuBehaviour>();
-            camera.AddComponent<PointerCoordDebug>();
-            Add(camera);
+            m_Camera.AddComponent<MenuBehaviour>();
         }
     }
 }

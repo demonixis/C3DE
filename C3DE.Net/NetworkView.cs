@@ -39,7 +39,7 @@ namespace C3DE.Components.Net
 
         public new Transform Transform
         {
-            get { return transform; }
+            get { return m_Transform; }
             set { SetTransform(value); }
         }
 
@@ -67,13 +67,13 @@ namespace C3DE.Components.Net
                 if (_elapsedTime >= Network.SendRate)
                 {
                     _lastPosition = _position;
-                    _position = transform.Position;
+                    _position = m_Transform.Position;
 
                     _lastRotation = _rotation;
-                    _rotation = transform.Rotation;
+                    _rotation = m_Transform.Rotation;
 
                     _lastScale = _scale;
-                    _scale = transform.LocalScale;
+                    _scale = m_Transform.LocalScale;
 
                     if (_lastPosition != _position)
                         SendTransformChange(MSTransformType.Translation, ref _position);
@@ -98,24 +98,24 @@ namespace C3DE.Components.Net
             _outMessage = Network.Client.CreateMessage();
             _outMessage.Write((byte)MSPacketType.Transform);
             _outMessage.Write((byte)type);
-            _outMessage.Write(sceneObject.Id);
+            _outMessage.Write(m_GameObject.Id);
             _outMessage.Write(NetHelper.Vector3ToString(vector));
             Network.SendMessage(_outMessage);
         }
 
         internal void SetTransform(Transform tr)
         {
-            transform = tr;
+            m_Transform = tr;
         }
 
         internal void SetTransform(MSTransformType type, Vector3 value)
         {
             if (type == MSTransformType.Translation)
-                transform.Position = value;
+                m_Transform.Position = value;
             else if (type == MSTransformType.Rotation)
-                transform.Rotation = value;
+                m_Transform.Rotation = value;
             else
-                transform.LocalScale = value;
+                m_Transform.LocalScale = value;
         }
 
         public override object Clone()

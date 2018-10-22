@@ -1,8 +1,9 @@
 ﻿using C3DE.Inputs;
-using C3DE.Rendering;
+using C3DE.Graphics.Rendering;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
 
 namespace C3DE
 {
@@ -11,23 +12,30 @@ namespace C3DE
     /// </summary>
     public class Engine : Game
     {
-        private IRenderer _rendererToChange;
-        private bool _needRendererChange;
         private bool _autoDetectResolution;
         private bool _requestFullscreen;
-        protected GraphicsDeviceManager graphics;
-        protected IRenderer renderer;
-        protected SceneManager sceneManager;
-        protected bool initialized;
+        protected GraphicsDeviceManager m_GraphicsDeviceManager;
+        protected BaseRenderer renderer;
+        private BaseRenderer m_nextRenderer;
+        protected SceneManager _sceneManager;
+        protected bool _initialized;
+        private int m_TotalFrames;
+        private float m_ElapsedTime;
+        private int m_FPS = 0;
 
-        public IRenderer Renderer
+        public BaseRenderer Renderer
         {
-            get { return renderer; }
-            set
-            {
-                _rendererToChange = value;
-                _needRendererChange = true;
-            }
+            get => renderer;
+            set => m_nextRenderer = value;
+        }
+
+        public float FPS => m_FPS;
+
+        public event Action<BaseRenderer> RendererChanged = null;
+
+        public Engine()
+            : this("C3DE Game")
+        {
         }
 
         /// <summary>
@@ -38,60 +46,58 @@ namespace C3DE
         /// <param name="width">Desired screen width.</param>
         /// <param name="height">Desired screen height.</param>
         /// <param name="fullscreen">Sets to true to use the fullscreen mode.</param>
-        public Engine(string title = "C3DE Game Demo", int width = 0, int height = 0, bool fullscreen = false)
+        public Engine(string title = "C3DE Game", int width = 0, int height = 0, bool fullscreen = false)
             : base()
         {
-            graphics = new GraphicsDeviceManager(this);
-            graphics.PreparingDeviceSettings += OnResize;
+            m_GraphicsDeviceManager = new GraphicsDeviceManager(this);
+            m_GraphicsDeviceManager.GraphicsProfile = GraphicsProfile.HiDef;
+            _sceneManager = new SceneManager();
+            _initialized = false;
+            _autoDetectResolution = false;
+            _requestFullscreen = false;
 
             Window.Title = title;
             Content.RootDirectory = "Content";
-            sceneManager = new SceneManager();
-            initialized = false;
-            _autoDetectResolution = false;
-            _requestFullscreen = false;
-            _needRendererChange = false;
+
+            renderer = new ForwardRenderer(GraphicsDevice);
 
             Application.Content = Content;
             Application.Engine = this;
             Application.GraphicsDevice = GraphicsDevice;
-            Application.GraphicsDeviceManager = graphics;
-            Application.SceneManager = sceneManager;
+            Application.GraphicsDeviceManager = m_GraphicsDeviceManager;
+            Application.SceneManager = _sceneManager;
 
-#if !ANDROID && !WINDOWS_APP
+#if WINDOWS || DESKTOP
             _autoDetectResolution = width == 0 || height == 0;
 
             if (!_autoDetectResolution)
             {
-                graphics.PreferredBackBufferWidth = width;
-                graphics.PreferredBackBufferHeight = height;
+                m_GraphicsDeviceManager.PreferredBackBufferWidth = width;
+                m_GraphicsDeviceManager.PreferredBackBufferHeight = height;
+            }
+#else
+            if (width == 0 || height == 0)
+            {
+                width = Window.ClientBounds.Width;
+                height = Window.ClientBounds.Height;
             }
 #endif
 
-            Screen.Setup(width, height, false, true); 
+            Screen.Setup(width, height, false, true);
+            Screen.SetVirtualResolution(width, height, false);
         }
 
         private void OnResize(object sender, PreparingDeviceSettingsEventArgs e)
         {
-            int width = e.GraphicsDeviceInformation.PresentationParameters.BackBufferWidth;
-            int height = e.GraphicsDeviceInformation.PresentationParameters.BackBufferHeight;
+            var pp = e.GraphicsDeviceInformation.PresentationParameters;
+            var width = pp.BackBufferWidth;
+            var height = pp.BackBufferHeight;
             Screen.Setup(width, height, null, null);
-        }
 
-        protected void SetRenderer(IRenderer iRenderer)
-        {
-            renderer = iRenderer;
+            if (UI.GUI.Scale != Vector2.One)
+                UI.GUI.Scale = Screen.GetScale();
 
-            if (initialized)
-            {
-#if ANDROID
-                Screen.Setup (GraphicsDevice.Adapter.CurrentDisplayMode.Width, GraphicsDevice.Adapter.CurrentDisplayMode.Height, null, null);
-#elif LINUX
-                Screen.Setup(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight, null, null);
-                GraphicsDevice.Viewport = new Viewport(0, 0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
-#endif
-                renderer.Initialize(Content);
-            }
+            renderer.Dirty = true;
         }
 
         protected override void Initialize()
@@ -99,22 +105,16 @@ namespace C3DE
             if (Application.GraphicsDevice == null)
                 Application.GraphicsDevice = GraphicsDevice;
 
-#if ANDROID
-			Screen.Setup (GraphicsDevice.Adapter.CurrentDisplayMode.Width, GraphicsDevice.Adapter.CurrentDisplayMode.Height, null, null);
-#elif LINUX
-			Screen.Setup(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight, null, null);
-			GraphicsDevice.Viewport = new Viewport(0, 0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
-#endif
+            GraphicsDevice.PresentationParameters.MultiSampleCount = 8;
 
             if (_autoDetectResolution)
                 Screen.SetBestResolution(_requestFullscreen);
 
-            if (renderer == null)
-                renderer = new ForwardRenderer();
-
+            renderer.m_graphicsDevice = GraphicsDevice;
             renderer.Initialize(Content);
+            RendererChanged?.Invoke(renderer);
 
-            Serializr.AddTypes(typeof(Engine));
+            Serializer.AddTypes(typeof(Engine));
 
             Input.Keys = new KeyboardComponent(this);
             Input.Mouse = new MouseComponent(this);
@@ -127,22 +127,33 @@ namespace C3DE
             Components.Add(Input.Gamepad);
             Components.Add(Input.Touch);
 
-            initialized = true;
+            m_GraphicsDeviceManager.PreparingDeviceSettings += OnResize;
+            _initialized = true;
 
             base.Initialize();
         }
 
         protected override void Update(GameTime gameTime)
         {
+            m_ElapsedTime += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+
+            if (m_ElapsedTime > 1000.0f)
+            {
+                m_FPS = m_TotalFrames;
+                m_TotalFrames = 0;
+                m_ElapsedTime = 0;
+            }
+
             base.Update(gameTime);
-            sceneManager.Update();
+            _sceneManager.Update();
         }
 
         protected override void Draw(GameTime gameTime)
         {
+            m_TotalFrames++;
             GraphicsDevice.Clear(Color.Black);
-            renderer.Render(Scene.current);
-			base.Draw(gameTime);
+            renderer.Render(_sceneManager.ActiveScene);
+            base.Draw(gameTime);
         }
 
         protected override void EndDraw()
@@ -150,13 +161,19 @@ namespace C3DE
             if (Screen.LockCursor)
                 Mouse.SetPosition(Screen.WidthPerTwo, Screen.HeightPerTwo);
 
-            if (_needRendererChange)
-            {
-                SetRenderer(_rendererToChange);
-                _needRendererChange = false;
-            }
 
             base.EndDraw();
+
+            if (m_nextRenderer != null)
+            {
+                renderer?.Dispose();
+
+                renderer = m_nextRenderer;
+                renderer.Initialize(Content);
+                m_nextRenderer = null;
+
+                RendererChanged?.Invoke(renderer);
+            }
         }
     }
 }

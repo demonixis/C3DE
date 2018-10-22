@@ -10,10 +10,12 @@ namespace C3DE.Demo
     {
         public const int ScreenWidth = 1280;
         public const int ScreenHeight = 800;
+        public const int UIWidth = 1280;
+        public const int UIHeight = 800;
 
-        public static string[] BlueSkybox = new string[6] 
+        public static string[] BlueSkybox = new string[6]
         {
-            "Textures/Skybox/bluesky/px",   
+            "Textures/Skybox/bluesky/px",
             "Textures/Skybox/bluesky/nx",
             "Textures/Skybox/bluesky/py",
             "Textures/Skybox/bluesky/ny",
@@ -21,9 +23,9 @@ namespace C3DE.Demo
             "Textures/Skybox/bluesky/nz"
         };
 
-        public static string[] StarsSkybox = new string[] 
+        public static string[] StarsSkybox = new string[]
         {
-            "Textures/Skybox/starfield/px",   
+            "Textures/Skybox/starfield/px",
             "Textures/Skybox/starfield/nx",
             "Textures/Skybox/starfield/py",
             "Textures/Skybox/starfield/ny",
@@ -50,18 +52,33 @@ namespace C3DE.Demo
                 skin.TextColor = Color.Black;
             }
 
-            //GUI.Scale = Screen.GetScale();
-
             return skin;
         }
 
-#if !NETFX_CORE && !ANDROID
+        public static void InitializeGame()
+        {
+            Application.SceneManager.Add(new MenuDemo(), true);
+            Application.SceneManager.Add(new HeightmapDemo());
+            Application.SceneManager.Add(new ProceduralTerrainWater());
+            Application.SceneManager.Add(new ProceduralTerrainLava());
+            Application.SceneManager.Add(new LightingDemo());
+            Application.SceneManager.Add(new PhysicsDemo());
+            Application.SceneManager.Add(new SponzaDemo());
+            Application.SceneManager.Add(new GUIDemo());
+            Application.SceneManager.Add(new DeferredDemo());
+            Application.SceneManager.Add(new LightPrePassDemo());
+            Application.SceneManager.LoadLevel(0);
+            Screen.SetVirtualResolution(UIWidth, UIHeight, true);
+        }
+
+#if !ANDROID && !NETFX_CORE
 
         // Entry point.
         static void Main(string[] args)
         {
             using (var game = new Engine("C3DE Game Engine", ScreenWidth, ScreenHeight))
             {
+<<<<<<< HEAD
                 //Screen.SetVirtualResolution(1280, 800);
                 Application.SceneManager.Add(new MenuDemo(), true);
                 Application.SceneManager.Add(new HeightmapDemo());
@@ -76,6 +93,9 @@ namespace C3DE.Demo
 
                 Application.LoadLevel(0);
                 //Screen.Fullscreen = true;
+=======
+                InitializeGame();
+>>>>>>> develop
                 game.Run();
             }
         }

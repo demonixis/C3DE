@@ -10,12 +10,14 @@ namespace C3DE
     /// </summary>
     public class Screen
     {
-        public static event EventHandler<EventArgs> ScreenSizeChanged = null;
+        public static event Action<int, int> ScreenSizeChanged = null;
 
         /// <summary>
         /// Gets the rectangle that represent the screen size
         /// </summary>
         public static Rectangle ScreenRect { get; internal set; }
+
+        public static float AspectRatio => (float)Width / (float)Height;
 
         public static bool Fullscreen
         {
@@ -107,18 +109,10 @@ namespace C3DE
         /// <param name="showCursor">Indicates whether the cursor is visible.</param>
         public static void Setup(int width, int height, bool? lockCursor, bool? showCursor)
         {
-            if (width == 0)
-                width = 800;
-            if (height == 0)
-                height = 480;
-
             ScreenRect = new Rectangle(0, 0, width, height);
 
             WidthPerTwo = width >> 1;
             HeightPerTwo = height >> 1;
-
-            if (VirtualWidth == 0 || VirtualHeight == 0)
-                SetVirtualResolution(width, height);
 
             if (lockCursor.HasValue)
                 LockCursor = lockCursor.Value;
@@ -126,8 +120,7 @@ namespace C3DE
             if (showCursor.HasValue)
                 ShowCursor = showCursor.Value;
 
-            if (ScreenSizeChanged != null)
-                ScreenSizeChanged(Application.Engine, EventArgs.Empty);
+            ScreenSizeChanged?.Invoke(width, height);
         }
 
         public static void SetVirtualResolution(int width, int height, bool applyToGUI = true)
@@ -145,7 +138,7 @@ namespace C3DE
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        public static float GetScaleX(float value)
+        public static float ScaleX(float value)
         {
             return (((float)Width * value) / (float)VirtualWidth);
         }
@@ -155,7 +148,7 @@ namespace C3DE
         /// </summary>
         /// <param name="value">The default Y coordinate used with the reference height</param>
         /// <returns>A scaled Y coordinate</returns>
-        public static float GetScaleY(float value)
+        public static float ScaleY(float value)
         {
             return (((float)Height * value) / (float)VirtualHeight);
         }
@@ -166,9 +159,11 @@ namespace C3DE
         /// <returns>The scale difference between the current resolution and the reference resolution of the screen</returns>
         public static Vector2 GetScale()
         {
-            return new Vector2(
+            var scale = new Vector2(
                 (float)((float)Width / (float)VirtualWidth),
                 (float)((float)Height / (float)VirtualHeight));
+
+            return scale;
         }
 
         /// <summary>
@@ -193,8 +188,8 @@ namespace C3DE
 
             Setup(width, height, null, null);
 
-            if (Application.GraphicsDeviceManager.IsFullScreen && fullscreen)
-                Application.GraphicsDeviceManager.ToggleFullScreen();
+            Application.GraphicsDeviceManager.IsFullScreen = fullscreen;
+            GUI.Scale = GetScale();
         }
 
         /// <summary>

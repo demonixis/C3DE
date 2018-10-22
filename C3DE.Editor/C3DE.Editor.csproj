@@ -1,285 +1,287 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProjectGuid>{BDFCE17A-2E64-4D11-9AFA-E7C2A97AAE9B}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>C3DE.Editor</RootNamespace>
     <AssemblyName>C3DE.Editor</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <WarningLevel>4</WarningLevel>
-    <PublishUrl>publier\</PublishUrl>
-    <Install>true</Install>
-    <InstallFrom>Disk</InstallFrom>
-    <UpdateEnabled>false</UpdateEnabled>
-    <UpdateMode>Foreground</UpdateMode>
-    <UpdateInterval>7</UpdateInterval>
-    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
-    <UpdatePeriodically>false</UpdatePeriodically>
-    <UpdateRequired>false</UpdateRequired>
-    <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
-    <UseApplicationTrust>false</UseApplicationTrust>
-    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <ProductVersion>8.0.30703</ProductVersion>
     <MonoGamePlatform>Windows</MonoGamePlatform>
     <MonoGameContentBuilderExe>
     </MonoGameContentBuilderExe>
+    <TargetFrameworkProfile />
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <OutputPath>bin\$(MonoGamePlatform)\$(Platform)\$(Configuration)\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;WINDOWS</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <OutputPath>bin\$(MonoGamePlatform)\$(Platform)\$(Configuration)\</OutputPath>
+    <DefineConstants>TRACE;WINDOWS</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>Editor.App</StartupObject>
+    <StartupObject>C3DE.Editor.EditorGame</StartupObject>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Content Include="Icon.ico" />
+    <Content Include="UI\Gwen\obj\Debug\Gwen.csproj.FileListAbsolute.txt" />
+    <Content Include="UI\Gwen\obj\Debug\Gwen.dll" />
+    <Content Include="UI\Gwen\obj\Debug\Gwen.pdb" />
+  </ItemGroup>
+  <ItemGroup>
     <Reference Include="MonoGame.Framework">
-      <HintPath>$(MSBuildProgramFiles32)\MonoGame\v3.0\Assemblies\Windows\MonoGame.Framework.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="SharpDX">
-      <HintPath>$(MSBuildProgramFiles32)\MonoGame\v3.0\Assemblies\Windows\SharpDX.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpDX.Direct3D11">
-      <HintPath>$(MSBuildProgramFiles32)\MonoGame\v3.0\Assemblies\Windows\SharpDX.Direct3D11.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpDX.Direct3D9">
-      <HintPath>$(MSBuildProgramFiles32)\MonoGame\v3.0\Assemblies\Windows\SharpDX.Direct3D9.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpDX.DXGI">
-      <HintPath>$(MSBuildProgramFiles32)\MonoGame\v3.0\Assemblies\Windows\SharpDX.DXGI.dll</HintPath>
+      <HintPath>$(MonoGameInstallDirectory)\MonoGame\v3.0\Assemblies\Windows\MonoGame.Framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Xaml">
-      <RequiredTargetFramework>4.0</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="System.Xml.Serialization" />
-    <Reference Include="WindowsBase" />
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
-    <Reference Include="Xceed.Wpf.Toolkit">
-      <HintPath>..\packages\Extended.Wpf.Toolkit.2.5\lib\net40\Xceed.Wpf.Toolkit.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <ApplicationDefinition Include="App.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </ApplicationDefinition>
-    <Compile Include="AskXnbWindow.xaml.cs">
-      <DependentUpon>AskXnbWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\ColliderControl.xaml.cs">
-      <DependentUpon>ColliderControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\FileExplorerControl.xaml.cs">
-      <DependentUpon>FileExplorerControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\TerrainControl.xaml.cs">
-      <DependentUpon>TerrainControl.xaml</DependentUpon>
-    </Compile>
+    <ProjectReference Include="..\C3DE\C3DE.csproj">
+      <Project>{706F6462-A341-44A2-9F16-E8ECB53F5DFB}</Project>
+      <Name>C3DE</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Core\Components\EditorIconRenderer.cs" />
+    <Compile Include="Core\Components\Grid.cs" />
+    <Compile Include="EditorGame.cs" />
+    <Compile Include="Core\EditorScene.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Core\AssetImporter.cs" />
-    <Compile Include="Core\BasicEditionSceneObject.cs" />
-    <Compile Include="Core\Components\EDFirstPersonCamera.cs" />
-    <Compile Include="Core\Components\EDKeyboardComponent.cs" />
-    <Compile Include="Core\Components\EDMouseComponent.cs" />
-    <Compile Include="Core\EDComponents.cs" />
-    <Compile Include="Core\EDRegistry.cs" />
-    <Compile Include="Core\EDScene.cs" />
-    <Compile Include="Core\EDSettings.cs" />
-    <Compile Include="Core\SceneObjectSelector.cs" />
-    <Compile Include="Exporters\MeshMerger.cs" />
-    <Compile Include="Exporters\OBJExporter.cs" />
-    <Compile Include="Exporters\STLExporter.cs" />
-    <Compile Include="Core\Events\BasicMessage.cs" />
-    <Compile Include="Core\Events\CustomMessage.cs" />
-    <Compile Include="Core\Events\Messenger.cs" />
-    <Compile Include="MonoGameBridge\C3DEGameHost.cs" />
-    <Compile Include="MonoGameBridge\GraphicsDeviceService.cs" />
-    <Compile Include="Controls\CameraControl.xaml.cs">
-      <DependentUpon>CameraControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\LightControl.xaml.cs">
-      <DependentUpon>LightControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\MeshRendererControl.xaml.cs">
-      <DependentUpon>MeshRendererControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\SceneListControl.xaml.cs">
-      <DependentUpon>SceneListControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\SceneObjectControl.xaml.cs">
-      <DependentUpon>SceneObjectControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="RenderSettingsWindow.xaml.cs">
-      <DependentUpon>RenderSettingsWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="XNAGizmo\Geometry.cs" />
-    <Compile Include="XNAGizmo\GizmoComponent.cs" />
-    <Compile Include="XNAGizmo\Quad.cs" />
-    <Page Include="AskXnbWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\ColliderControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\CameraControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\FileExplorerControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\LightControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\MeshRendererControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\SceneListControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\SceneObjectControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\TerrainControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\TransformControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="MainWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="App.xaml.cs">
-      <DependentUpon>App.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Controls\TransformControl.xaml.cs">
-      <DependentUpon>TransformControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="MainWindow.xaml.cs">
-      <DependentUpon>MainWindow.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Page Include="RenderSettingsWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
+    <Compile Include="Core\CopyPast.cs" />
+    <Compile Include="Core\Components\EditorController.cs" />
+    <Compile Include="Core\ObjectSelector.cs" />
+    <Compile Include="Core\GameComponents\XNAGizmo\GizmoModel.cs" />
+    <Compile Include="Core\GameComponents\XNAGizmo\Quad.cs" />
+    <Compile Include="Core\GameComponents\XNAGizmo\XNAGizmo.cs" />
+    <Compile Include="UI\Gwen.MonoGame\FileLoader.cs" />
+    <Compile Include="UI\Gwen.MonoGame\Input\MonoGame.cs" />
+    <Compile Include="UI\Gwen.MonoGame\Loader\MonoGameAssetLoader.cs" />
+    <Compile Include="UI\Gwen.MonoGame\Platform\MonoGamePlatform.cs" />
+    <Compile Include="UI\Gwen.MonoGame\Renderer\GwenEffect.cs" />
+    <Compile Include="UI\Gwen.MonoGame\Renderer\MonoGame.cs" />
+    <Compile Include="UI\Gwen\Alignment.cs" />
+    <Compile Include="UI\Gwen\Anchor.cs" />
+    <Compile Include="UI\Gwen\Anim\Animation.cs" />
+    <Compile Include="UI\Gwen\Anim\Size\Height.cs" />
+    <Compile Include="UI\Gwen\Anim\Size\Width.cs" />
+    <Compile Include="UI\Gwen\Anim\TimedAnimation.cs" />
+    <Compile Include="UI\Gwen\Color.cs" />
+    <Compile Include="UI\Gwen\CommonDialog\FileDialog.cs" />
+    <Compile Include="UI\Gwen\CommonDialog\FolderBrowserDialog.cs" />
+    <Compile Include="UI\Gwen\CommonDialog\OpenFileDialog.cs" />
+    <Compile Include="UI\Gwen\CommonDialog\SaveFileDialog.cs" />
+    <Compile Include="UI\Gwen\Control\Border.cs" />
+    <Compile Include="UI\Gwen\Control\Button.cs" />
+    <Compile Include="UI\Gwen\Control\Canvas.cs" />
+    <Compile Include="UI\Gwen\Control\CheckBox.cs" />
+    <Compile Include="UI\Gwen\Control\CollapsibleCategory.cs" />
+    <Compile Include="UI\Gwen\Control\CollapsibleList.cs" />
+    <Compile Include="UI\Gwen\Control\ColorLerpBox.cs" />
+    <Compile Include="UI\Gwen\Control\ColorPicker.cs" />
+    <Compile Include="UI\Gwen\Control\ColorSlider.cs" />
+    <Compile Include="UI\Gwen\Control\ComboBox.cs" />
+    <Compile Include="UI\Gwen\Control\ControlBase.cs" />
+    <Compile Include="UI\Gwen\Control\CrossSplitter.cs" />
+    <Compile Include="UI\Gwen\Control\DockControl.cs" />
+    <Compile Include="UI\Gwen\Control\EditableComboBox.cs" />
+    <Compile Include="UI\Gwen\Control\EnumRadioButtonGroup.cs" />
+    <Compile Include="UI\Gwen\Control\EventArguments\ClickedEventArgs.cs" />
+    <Compile Include="UI\Gwen\Control\EventArguments\ItemSelectedEventArgs.cs" />
+    <Compile Include="UI\Gwen\Control\GroupBox.cs" />
+    <Compile Include="UI\Gwen\Control\HorizontalScrollBar.cs" />
+    <Compile Include="UI\Gwen\Control\HorizontalSlider.cs" />
+    <Compile Include="UI\Gwen\Control\HorizontalSplitter.cs" />
+    <Compile Include="UI\Gwen\Control\HSVColorPicker.cs" />
+    <Compile Include="UI\Gwen\Control\IColorPicker.cs" />
+    <Compile Include="UI\Gwen\Control\ImagePanel.cs" />
+    <Compile Include="UI\Gwen\Control\Internal\ButtonBase.cs" />
+    <Compile Include="UI\Gwen\Control\Internal\CategoryButton.cs" />
+    <Compile Include="UI\Gwen\Control\Internal\CategoryHeaderButton.cs" />
+    <Compile Include="UI\Gwen\Control\Internal\CloseButton.cs" />
+    <Compile Include="UI\Gwen\Control\Internal\ColorButton.cs" />
+    <Compile Include="UI\Gwen\Control\Internal\ColorDisplay.cs" />
+    <Compile Include="UI\Gwen\Control\Internal\ComboBoxBase.cs" />
+    <Compile Include="UI\Gwen\Control\Internal\ComboBoxButton.cs" />
+    <Compile Include="UI\Gwen\Control\Internal\ContentControl.cs" />
+    <Compile Include="UI\Gwen\Control\Internal\DockedTabControl.cs" />
+    <Compile Include="UI\Gwen\Control\Internal\DownArrow.cs" />
+    <Compile Include="UI\Gwen\Control\Internal\Dragger.cs" />
+    <Compile Include="UI\Gwen\Control\Internal\Highlight.cs" />
+    <Compile Include="UI\Gwen\Control\Internal\InnerContentControl.cs" />
+    <Compile Include="UI\Gwen\Control\Internal\MenuDivider.cs" />
+    <Compile Include="UI\Gwen\Control\Internal\Modal.cs" />
+    <Compile Include="UI\Gwen\Control\Internal\MultilineText.cs" />
+    <Compile Include="UI\Gwen\Control\Internal\PropertyRowLabel.cs" />
+    <Compile Include="UI\Gwen\Control\Internal\PropertyTreeNode.cs" />
+    <Compile Include="UI\Gwen\Control\Internal\Resizer.cs" />
+    <Compile Include="UI\Gwen\Control\Internal\RightArrow.cs" />
+    <Compile Include="UI\Gwen\Control\Internal\ScrollArea.cs" />
+    <Compile Include="UI\Gwen\Control\Internal\ScrollBar.cs" />
+    <Compile Include="UI\Gwen\Control\Internal\ScrollBarBar.cs" />
+    <Compile Include="UI\Gwen\Control\Internal\ScrollBarButton.cs" />
+    <Compile Include="UI\Gwen\Control\Internal\Slider.cs" />
+    <Compile Include="UI\Gwen\Control\Internal\SliderBar.cs" />
+    <Compile Include="UI\Gwen\Control\Internal\SplitterBar.cs" />
+    <Compile Include="UI\Gwen\Control\Internal\TabButton.cs" />
+    <Compile Include="UI\Gwen\Control\Internal\TabControlInner.cs" />
+    <Compile Include="UI\Gwen\Control\Internal\TabStrip.cs" />
+    <Compile Include="UI\Gwen\Control\Internal\TabTitleBar.cs" />
+    <Compile Include="UI\Gwen\Control\Internal\Text.cs" />
+    <Compile Include="UI\Gwen\Control\Internal\TreeNodeLabel.cs" />
+    <Compile Include="UI\Gwen\Control\Internal\TreeToggleButton.cs" />
+    <Compile Include="UI\Gwen\Control\Internal\UpDownButton_Down.cs" />
+    <Compile Include="UI\Gwen\Control\Internal\UpDownButton_Up.cs" />
+    <Compile Include="UI\Gwen\Control\Internal\WindowBase.cs" />
+    <Compile Include="UI\Gwen\Control\Internal\WindowTitleBar.cs" />
+    <Compile Include="UI\Gwen\Control\Label.cs" />
+    <Compile Include="UI\Gwen\Control\LabeledCheckBox.cs" />
+    <Compile Include="UI\Gwen\Control\LabeledRadioButton.cs" />
+    <Compile Include="UI\Gwen\Control\Layout\AnchorLayout.cs" />
+    <Compile Include="UI\Gwen\Control\Layout\DockLayout.cs" />
+    <Compile Include="UI\Gwen\Control\Layout\FlowLayout.cs" />
+    <Compile Include="UI\Gwen\Control\Layout\GridLayout.cs" />
+    <Compile Include="UI\Gwen\Control\Layout\HorizontalLayout.cs" />
+    <Compile Include="UI\Gwen\Control\Layout\Splitter.cs" />
+    <Compile Include="UI\Gwen\Control\Layout\StackLayout.cs" />
+    <Compile Include="UI\Gwen\Control\Layout\VerticalLayout.cs" />
+    <Compile Include="UI\Gwen\Control\LinkLabel.cs" />
+    <Compile Include="UI\Gwen\Control\ListBox.cs" />
+    <Compile Include="UI\Gwen\Control\ListBoxRow.cs" />
+    <Compile Include="UI\Gwen\Control\Menu.cs" />
+    <Compile Include="UI\Gwen\Control\MenuItem.cs" />
+    <Compile Include="UI\Gwen\Control\MenuStrip.cs" />
+    <Compile Include="UI\Gwen\Control\MessageBox.cs" />
+    <Compile Include="UI\Gwen\Control\MultilineTextBox.cs" />
+    <Compile Include="UI\Gwen\Control\NumericUpDown.cs" />
+    <Compile Include="UI\Gwen\Control\Popup.cs" />
+    <Compile Include="UI\Gwen\Control\ProgressBar.cs" />
+    <Compile Include="UI\Gwen\Control\Properties.cs" />
+    <Compile Include="UI\Gwen\Control\PropertyRow.cs" />
+    <Compile Include="UI\Gwen\Control\PropertyTree.cs" />
+    <Compile Include="UI\Gwen\Control\Property\Check.cs" />
+    <Compile Include="UI\Gwen\Control\Property\Color.cs" />
+    <Compile Include="UI\Gwen\Control\Property\PropertyBase.cs" />
+    <Compile Include="UI\Gwen\Control\Property\Text.cs" />
+    <Compile Include="UI\Gwen\Control\RadioButton.cs" />
+    <Compile Include="UI\Gwen\Control\RadioButtonGroup.cs" />
+    <Compile Include="UI\Gwen\Control\ResizableControl.cs" />
+    <Compile Include="UI\Gwen\Control\RichLabel.cs" />
+    <Compile Include="UI\Gwen\Control\ScrollControl.cs" />
+    <Compile Include="UI\Gwen\Control\StatusBar.cs" />
+    <Compile Include="UI\Gwen\Control\TabControl.cs" />
+    <Compile Include="UI\Gwen\Control\Table.cs" />
+    <Compile Include="UI\Gwen\Control\TableRow.cs" />
+    <Compile Include="UI\Gwen\Control\TableRowFactory.cs" />
+    <Compile Include="UI\Gwen\Control\TextBox.cs" />
+    <Compile Include="UI\Gwen\Control\TextBoxNumeric.cs" />
+    <Compile Include="UI\Gwen\Control\TextBoxPassword.cs" />
+    <Compile Include="UI\Gwen\Control\ToolWindow.cs" />
+    <Compile Include="UI\Gwen\Control\TreeControl.cs" />
+    <Compile Include="UI\Gwen\Control\TreeNode.cs" />
+    <Compile Include="UI\Gwen\Control\VerticalScrollBar.cs" />
+    <Compile Include="UI\Gwen\Control\VerticalSlider.cs" />
+    <Compile Include="UI\Gwen\Control\VerticalSplitter.cs" />
+    <Compile Include="UI\Gwen\Control\Window.cs" />
+    <Compile Include="UI\Gwen\Cursor.cs" />
+    <Compile Include="UI\Gwen\Dock.cs" />
+    <Compile Include="UI\Gwen\DragDrop\DragAndDrop.cs" />
+    <Compile Include="UI\Gwen\DragDrop\Package.cs" />
+    <Compile Include="UI\Gwen\Font.cs" />
+    <Compile Include="UI\Gwen\FontCache.cs" />
+    <Compile Include="UI\Gwen\FontMetrics.cs" />
+    <Compile Include="UI\Gwen\HSV.cs" />
+    <Compile Include="UI\Gwen\Input\InputHandler.cs" />
+    <Compile Include="UI\Gwen\Input\KeyData.cs" />
+    <Compile Include="UI\Gwen\Key.cs" />
+    <Compile Include="UI\Gwen\Loader\EmbeddedResourceLoader.cs" />
+    <Compile Include="UI\Gwen\Loader\ILoader.cs" />
+    <Compile Include="UI\Gwen\Loader\LoaderBase.cs" />
+    <Compile Include="UI\Gwen\Margin.cs" />
+    <Compile Include="UI\Gwen\Padding.cs" />
+    <Compile Include="UI\Gwen\Platform\IPlatform.cs" />
+    <Compile Include="UI\Gwen\Platform\Platform.cs" />
+    <Compile Include="UI\Gwen\Point.cs" />
+    <Compile Include="UI\Gwen\Rectangle.cs" />
+    <Compile Include="UI\Gwen\Renderer\ICacheToTexture.cs" />
+    <Compile Include="UI\Gwen\Renderer\RendererBase.cs" />
+    <Compile Include="UI\Gwen\RichText\Document.cs" />
+    <Compile Include="UI\Gwen\RichText\FontPart.cs" />
+    <Compile Include="UI\Gwen\RichText\ImageParagraph.cs" />
+    <Compile Include="UI\Gwen\RichText\KnuthPlass\Formatter.cs" />
+    <Compile Include="UI\Gwen\RichText\KnuthPlass\LeftFormatter.cs" />
+    <Compile Include="UI\Gwen\RichText\KnuthPlass\LineBreaker.cs" />
+    <Compile Include="UI\Gwen\RichText\KnuthPlass\Node.cs" />
+    <Compile Include="UI\Gwen\RichText\LineBreaker.cs" />
+    <Compile Include="UI\Gwen\RichText\LineBreakPart.cs" />
+    <Compile Include="UI\Gwen\RichText\LinkPart.cs" />
+    <Compile Include="UI\Gwen\RichText\Paragraph.cs" />
+    <Compile Include="UI\Gwen\RichText\Part.cs" />
+    <Compile Include="UI\Gwen\RichText\Simple\LineBreaker.cs" />
+    <Compile Include="UI\Gwen\RichText\TextBlock.cs" />
+    <Compile Include="UI\Gwen\RichText\TextPart.cs" />
+    <Compile Include="UI\Gwen\Size.cs" />
+    <Compile Include="UI\Gwen\Skin\SkinBase.cs" />
+    <Compile Include="UI\Gwen\Skin\SkinColors.cs" />
+    <Compile Include="UI\Gwen\Skin\TexturedBase.cs" />
+    <Compile Include="UI\Gwen\Skin\Texturing\Bordered.cs" />
+    <Compile Include="UI\Gwen\Skin\Texturing\Single.cs" />
+    <Compile Include="UI\Gwen\Texture.cs" />
+    <Compile Include="UI\Gwen\Timer.cs" />
+    <Compile Include="UI\Gwen\ToolTip.cs" />
+    <Compile Include="UI\Gwen\Util.cs" />
+    <Compile Include="UI\Gwen\Xml\Attributes.cs" />
+    <Compile Include="UI\Gwen\Xml\Component.cs" />
+    <Compile Include="UI\Gwen\Xml\EventHandler.cs" />
+    <Compile Include="UI\Gwen\Xml\Parser.cs" />
+    <Compile Include="UI\Gwen\Xml\XmlHelper.cs" />
+    <Compile Include="UI\Gwen\Xml\XmlSource.cs" />
+    <Compile Include="UI\Gwen.MonoGame\Windows.cs" />
+    <Compile Include="UI\Items\Toolbar.cs" />
+    <Compile Include="UI\Items\TransformControl.cs" />
+    <Compile Include="UI\Items\Vector3Control.cs" />
+    <Compile Include="UI\UIManager.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MonoGameBridge\D3D11Host.cs" />
-    <Compile Include="MonoGameBridge\D3D11Image.cs" />
-    <Compile Include="MonoGameBridge\D3D9.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-    </Compile>
-    <None Include="packages.config" />
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
-    <AppDesigner Include="Properties\" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Icon.ico" />
+    <MonoGameContentReference Include="..\C3DE.Demo\Content\Content.mgcb">
+      <Link>Content\Content.mgcb</Link>
+    </MonoGameContentReference>
   </ItemGroup>
   <ItemGroup>
     <MonoGameContentReference Include="Content\Content.mgcb" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\C3DE\C3DE.csproj">
-      <Project>{706f6462-a341-44a2-9f16-e8ecb53f5dfb}</Project>
-      <Name>C3DE</Name>
-    </ProjectReference>
+    <None Include="app.config" />
+    <None Include="UI\Gwen\obj\Debug\DesignTimeResolveAssemblyReferences.cache" />
+    <None Include="UI\Gwen\obj\Debug\DesignTimeResolveAssemblyReferencesInput.cache" />
+    <None Include="UI\Gwen\obj\Debug\Gwen.csproj.CoreCompileInputs.cache" />
+    <None Include="UI\Gwen\obj\Debug\Gwen.csprojResolveAssemblyReference.cache" />
+    <None Include="UI\Gwen\obj\Gwen.csproj.nuget.cache" />
   </ItemGroup>
   <ItemGroup>
-    <BootstrapperPackage Include=".NETFramework,Version=v4.5">
-      <Visible>False</Visible>
-      <ProductName>Microsoft .NET Framework 4.5 %28x86 et x64%29</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
+    <Folder Include="UI\Gwen\obj\Debug\TempPE\" />
   </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Images\Icon_Rotation.png" />
-    <Resource Include="Resources\Images\Icon_Scale.png" />
-    <Resource Include="Resources\Images\Icon_Translation.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Images\Icon_Precision.png" />
-    <Resource Include="Resources\Images\Icon_UScale.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Images\Icon_Grid.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Images\Icon_Lock.png" />
-  </ItemGroup>
-  <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Content.Builder.targets" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+  <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Content.Builder.targets" />
 </Project>

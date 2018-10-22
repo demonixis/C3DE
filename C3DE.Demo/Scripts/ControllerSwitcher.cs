@@ -7,16 +7,33 @@ namespace C3DE.Demo.Scripts
 {
     public class ControllerSwitcher : Behaviour
     {
+        public enum ControllerType
+        {
+            Orbit, FPS
+        }
+
         private Camera _camera;
         private OrbitController _orbitController;
         private FirstPersonController _fpController;
         private Rectangle _box;
         private Rectangle _btn1;
         private Rectangle _btn2;
-        private Rectangle _checkRect;
+        private Rectangle _btn3;
         private Rectangle _checkRect2;
-        private bool _resetPosition;
         private bool _flyMode;
+
+        public bool FlyMode
+        {
+            get => _flyMode;
+            set
+            {
+                _flyMode = value;
+                _fpController.Fly = value;
+            }
+        }
+
+        public Vector3 DefaultPosition { get; set; } = new Vector3(0.0f, 2.0f, 0.0f);
+        public Vector3 DefaultRotation { get; set; } = Vector3.Zero;
 
         public override void Start()
         {
@@ -31,29 +48,19 @@ namespace C3DE.Demo.Scripts
             _box = new Rectangle(Screen.VirtualWidth - width - 10, Screen.VirtualHeight - height - 10, width, height);
             _btn1 = new Rectangle(_box.X + 10, _box.Y + 30, _box.Width - 20, 30);
             _btn2 = new Rectangle(_box.X + 10, _btn1.Y + 40, _box.Width - 20, 30);
-            _checkRect = new Rectangle(_box.X + 10, _btn2.Y + 40, _box.Width - 20, 30);
-            _checkRect2 = new Rectangle(_box.X + 10, _checkRect.Y + 40, _box.Width - 20, 30);
-            _resetPosition = true;
-            _flyMode = false;
+            _btn3 = new Rectangle(_box.X + 10, _btn2.Y + 40, _box.Width - 20, 30);
+            _checkRect2 = new Rectangle(_box.X + 10, _btn3.Y + 40, _box.Width - 20, 30);
 
             _orbitController.MaxDistance = 200;
+
+            m_Transform.LocalPosition = DefaultPosition;
+            _camera.Target = DefaultRotation;
         }
 
-        public void SetControllerActive(int id)
+        public void SetControllerActive(ControllerType type)
         {
-            _orbitController.Enabled = (id == 0) ? true : false;
-            _fpController.Enabled = !_orbitController.Enabled;
-
-            if (_fpController.Enabled)
-            {
-                if (_resetPosition)
-                {
-                    transform.Position = new Vector3(0, 2, 0);
-                    _camera.Target = Vector3.Zero;
-                }
-
-                _fpController.Fly = _flyMode;
-            }
+            _orbitController.Enabled = type == ControllerType.Orbit;
+            _fpController.Enabled = type == ControllerType.FPS;
         }
 
         public override void OnGUI(GUI gui)
@@ -61,13 +68,18 @@ namespace C3DE.Demo.Scripts
             gui.Box(_box, "Controller");
 
             if (gui.Button(_btn1, "Orbit"))
-                SetControllerActive(0);
+                SetControllerActive(ControllerType.Orbit);
 
             if (gui.Button(_btn2, "First Person"))
-                SetControllerActive(1);
+                SetControllerActive(ControllerType.FPS);
 
-            _resetPosition = gui.Checkbox(_checkRect, "Reset position", _resetPosition);
-            _flyMode = gui.Checkbox(_checkRect2, "Fly Mode", _flyMode);
+            if (gui.Button(_btn3, "Reset position"))
+            {
+                m_Transform.LocalPosition = DefaultPosition;
+                _camera.Target = DefaultRotation;
+            }
+
+            FlyMode = gui.Checkbox(_checkRect2, "Fly Mode", FlyMode);           
         }
     }
 }

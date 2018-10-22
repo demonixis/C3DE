@@ -1,66 +1,59 @@
-﻿using C3DE.Components.Lights;
+﻿using C3DE.Components.Rendering;
 using C3DE.Demo.Scripts;
-using C3DE.Materials;
-using C3DE.Prefabs;
+using C3DE.Graphics.Materials;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace C3DE.Demo.Scenes
 {
-    public class HeightmapDemo : Scene
+    public class HeightmapDemo : SimpleDemo
     {
-        public HeightmapDemo() : base("Heightmap terrrain") { }
+        public HeightmapDemo() : base("Heightmap Terrain") { }
 
         public override void Initialize()
         {
             base.Initialize();
 
-            // Add a camera with a FPS controller
-            var camera = new CameraPrefab("camera");
-            camera.Setup(new Vector3(0, 2, -10), new Vector3(0, 0, 0), Vector3.Up);
-            camera.AddComponent<ControllerSwitcher>();
-            Add(camera);
+            var content = Application.Content;
 
-            // And a light
-            var lightPrefab = new LightPrefab("light", LightType.Directional);
-            Add(lightPrefab);
-            lightPrefab.Transform.Rotation = new Vector3(-1, 1, 0);
-            lightPrefab.Light.Color = Color.LightSkyBlue;
-            lightPrefab.Light.Intensity = 1.0f;
-            lightPrefab.AddComponent<DemoBehaviour>();
-            lightPrefab.EnableShadows = true;
+            m_DirectionalLight.AddComponent<LightMover>();
+            m_DirectionalLight.AddComponent<LightSwitcher>().SetBoxAlign(true);
 
             // Finally a terrain
-            var terrainMat = new TerrainMaterial(scene);
+            var terrainMaterial = new StandardTerrainMaterial();
+            terrainMaterial.MainTexture = content.Load<Texture2D>("Textures/Terrain/Grass");
+            terrainMaterial.SandTexture = content.Load<Texture2D>("Textures/Terrain/Sand");
+            terrainMaterial.SnowTexture = content.Load<Texture2D>("Textures/Terrain/Snow");
+            terrainMaterial.RockTexture = content.Load<Texture2D>("Textures/Terrain/Rock");
 
-            var terrain = new TerrainPrefab("terrain");
-            scene.Add(terrain);
+            var terrainGo = GameObjectFactory.CreateTerrain();
+            
+            m_Scene.Add(terrainGo);
+
+            var terrain = terrainGo.GetComponent<Terrain>();
             terrain.LoadHeightmap("Textures/heightmap");
-            terrain.Renderer.Material = terrainMat;
-            terrain.Transform.Translate(-terrain.Width >> 1, -10, -terrain.Depth >> 1);
-            terrain.AddComponent<WeightMapViewer>();
-            var map = terrain.GenerateWeightMap();
+            terrain.Renderer.Material = terrainMaterial;
 
-            terrainMat.Texture = Application.Content.Load<Texture2D>("Textures/Terrain/Grass");
-            terrainMat.SandTexture = Application.Content.Load<Texture2D>("Textures/Terrain/Sand");
-            terrainMat.SnowTexture = Application.Content.Load<Texture2D>("Textures/Terrain/Snow");
-            terrainMat.RockTexture = Application.Content.Load<Texture2D>("Textures/Terrain/Rock");
-            terrainMat.WeightTexture = map;
-            terrainMat.Tiling = new Vector2(4);
+            var weightMap = terrain.GenerateWeightMap();           
+            terrainMaterial.WeightTexture = weightMap;
+            terrainMaterial.Tiling = new Vector2(4);
+            terrainGo.AddComponent<WeightMapViewer>();
 
             // With water !
-            var water = new WaterPrefab("water");
-            scene.Add(water);
-            water.Generate("Textures/water", "Textures/wavesbump", new Vector3(terrain.Width * 0.5f));
-
-            Screen.ShowCursor = true;
-
-            // Don't miss the Skybox ;)
-            RenderSettings.Skybox.Generate(Application.GraphicsDevice, Application.Content, DemoGame.BlueSkybox);
+            var waterTexture = content.Load<Texture2D>("Textures/water");
+            var bumpTexture = content.Load<Texture2D>("Textures/wavesbump");
+            var water = GameObjectFactory.CreateWater(waterTexture, bumpTexture, new Vector3(terrain.Width * 0.5f));
+            water.Transform.Translate(0, 10.0f, 0);
+            m_Scene.Add(water);
 
             // And fog
             RenderSettings.FogDensity = 0.0085f;
-            RenderSettings.FogMode = FogMode.Exp2;
+            RenderSettings.FogMode = FogMode.None;
+            RenderSettings.Skybox.FogSupported = true;
+            RenderSettings.Skybox.OverrideSkyboxFog(FogMode.Exp2, 0.05f, 0, 0);
+
+            var vrPlayerEnabler = m_Camera.AddComponent<VRPlayerEnabler>();
+            vrPlayerEnabler.Position = new Vector3(0, water.Transform.Position.Y + 0.5f, 0);
         }
     }
 }
