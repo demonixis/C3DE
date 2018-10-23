@@ -36,11 +36,11 @@ namespace C3DE.Components.Controllers
                 UpdateKeyboardInput();
                 UpdateGamepadInput();
 
-                _transformedReference = Vector3.Transform(_translation, Matrix.CreateRotationY(transform.Rotation.Y));
+                _transformedReference = Vector3.Transform(_translation, Matrix.CreateRotationY(m_Transform.Rotation.Y));
 
                 // Translate and rotate
-                transform.Translate(ref _transformedReference);
-                transform.Rotate(ref _rotation);
+                m_Transform.Translate(ref _transformedReference);
+                m_Transform.Rotate(ref _rotation);
 
                 _translation *= Velocity;
                 _rotation *= AngularVelocity;

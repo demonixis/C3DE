@@ -2,29 +2,35 @@
 using C3DE.UI;
 using Microsoft.Xna.Framework;
 using C3DE.Net;
-using C3DE.Prefabs.Meshes;
-using C3DE.Geometries;
 using C3DE.Components.Net;
 using C3DE.Components.Controllers;
 using C3DE.Utils;
 
 namespace C3DE.Demo.Scripts
 {
+    public class Player : GameObject
+    {
+        public Player()
+            : base()
+        {
+            AddComponent<NetworkView>();
+            AddComponent<NetThirdPersonController>();
+            Transform.Position = new Vector3(0, -5, 0);
+            IsPrefab = true;
+        }
+    }
+
     public class NetworkManager : Behaviour
     {
         private NetworkView _netView;
-        private MeshPrefab<CubeGeometry> _player;
+        private Player _player;
 
         public override void Start()
         {
             Application.Engine.Components.Add(new Network(Application.Engine));
             _netView = AddComponent<NetworkView>();
 
-            _player = new MeshPrefab<CubeGeometry>("Player");
-            _player.Transform.Position = new Vector3(0, -5, 0);
-            _player.AddComponent<NetworkView>();
-            _player.AddComponent<NetThirdPersonController>();
-            //_player.Enabled = false;
+            _player = new Player();
 
             Application.SceneManager.ActiveScene.Add(_player);
         }
@@ -58,7 +64,7 @@ namespace C3DE.Demo.Scripts
 
         private void SpawnPlayer()
         {
-            sceneObject.Scene.MainCamera.GetComponent<OrbitController>().Enabled = false;
+            Camera.Main.GetComponent<OrbitController>().Enabled = false;
             Network.Instanciate(_player, RandomHelper.GetVector3(-5, 0.5f, -5, 5, 0.5f, 5), Vector3.Zero);
         }
     }

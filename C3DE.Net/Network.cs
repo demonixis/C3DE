@@ -17,7 +17,7 @@ namespace C3DE.Net
         private static NetOutgoingMessage outMessage;
         private static float _sendRate;
         private float _elapsedTime;
-        private Dictionary<int, int> _prefabs;
+        private Dictionary<string, int> _prefabs;
         private List<NetworkView> netViews;
         private List<Behaviour> _behaviours;
         public static int Id = -1;
@@ -52,7 +52,7 @@ namespace C3DE.Net
             _sendRate = 0.05f; // 50 ms 
             _elapsedTime = 0;
             netViews = new List<NetworkView>();
-            _prefabs = new Dictionary<int, int>();
+            _prefabs = new Dictionary<string, int>();
             game.Exiting += OnGameExiting;
         }
 
@@ -62,13 +62,11 @@ namespace C3DE.Net
                 server.Stop();
         }
 
-        private int GetNetViewBySceneObjectId(int id)
+        private int GetNetViewBySceneObjectId(string id)
         {
             for (int i = 0, l = netViews.Count; i < l; i++)
             {
-                var strId = id.ToString(); // FIXME
-
-                if (netViews[i].GameObject.Id == strId)
+                if (netViews[i].GameObject.Id == id)
                     return i;
             }
             return -1;
@@ -116,8 +114,8 @@ namespace C3DE.Net
                                     {
                                         temp2 = temp[i].Split(new char[] { '_' });
 
-                                        int prefabId = int.Parse(temp2[0]);
-                                        int prefabCount = int.Parse(temp2[1]);
+                                        var prefabId = temp2[0];
+                                        var prefabCount = int.Parse(temp2[1]);
 
                                         _prefabs.Add(prefabId, prefabCount);
                                     }
@@ -126,15 +124,15 @@ namespace C3DE.Net
                             else if (messageType == (byte)MSPacketType.New)
                             {
                                 var wSize = incMessage.ReadInt32();
-                                var prefabId = incMessage.ReadInt32();
+                                var prefabId = incMessage.ReadString();
                                 var networkId = incMessage.ReadInt32();
                                 var position = NetHelper.StringToVector3(incMessage.ReadString());
                                 var rotation = NetHelper.StringToVector3(incMessage.ReadString());
                                 var scale = NetHelper.StringToVector3(incMessage.ReadString());
 
                                 // FIXME
-                                //if (networkId != Id)
-                                    //Instanciate(Scene.FindById(prefabId), position, rotation, networkId, false);
+                                if (networkId != Id)
+                                    Instanciate(Scene.FindById(prefabId), position, rotation, networkId, false);
 
                                 if (_prefabs.ContainsKey(prefabId))
                                     _prefabs[prefabId]++;
@@ -148,7 +146,7 @@ namespace C3DE.Net
                             else if (messageType == (byte)MSPacketType.Transform)
                             {
                                 var type = (MSTransformType)incMessage.ReadByte();
-                                var id = incMessage.ReadInt32();
+                                var id = incMessage.ReadString();
                                 var vec = NetHelper.StringToVector3(incMessage.ReadString());
                                 var index = GetNetViewBySceneObjectId(id);
 
@@ -169,15 +167,15 @@ namespace C3DE.Net
                                     foreach (var keyValue in _prefabs)
                                     {
                                         // FIXME
-                                        //soCache = Scene.FindSceneObjectsById(keyValue.Key);
+                                        soCache = Scene.FindGameObjectsById(keyValue.Key);
                                         int max = keyValue.Value;
 
                                         if (soCache.Length > 0)
                                             max = max - soCache.Length;
 
                                         // FIXME
-                                        //for (int i = 0; i < max; i++)
-                                            //Instanciate(Scene.FindById(keyValue.Key), Vector3.Zero, Vector3.Zero, -1, false);
+                                        for (int i = 0; i < max; i++)
+                                            Instanciate(Scene.FindById(keyValue.Key), Vector3.Zero, Vector3.Zero, -1, false);
                                     }
                                 }
 
