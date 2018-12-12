@@ -231,42 +231,5 @@ namespace C3DE.Graphics.Rendering
 
             m_graphicsDevice.SetRenderTargets(renderTargets);
         }
-
-        public static int[] CullLights(List<Light> lights, Renderer mesh, int limit)
-        {
-            var candidates = new List<(float, int)>();
-
-            for (var i = 0; i < lights.Count; i++)
-            {
-                if (lights[i].TypeLight == LightType.Directional)
-                {
-                    candidates.Add((float.MaxValue, i));
-                    continue;
-                }
-
-                if (mesh.BoundingSphere.Intersects(lights[i].BoundingSphere))
-                {
-                    var distance = Vector3.Distance(lights[i].Transform.Position, mesh.Transform.Position);
-                    candidates.Add((distance, i));
-                }
-            }
-
-            candidates.Sort((l1, li2) =>
-            {
-                if (l1.Item1 > li2.Item1)
-                    return 1;
-                else if (l1.Item1 < li2.Item1)
-                    return -1;
-
-                return 0;
-            });
-
-            var max = MathHelper.Min(limit, candidates.Count);
-            var result = new int[max];
-            for (var i = 0; i < max; i++)
-                result[i] = candidates[i].Item2;
-
-            return result;
-        }
     }
 }

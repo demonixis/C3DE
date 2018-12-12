@@ -43,24 +43,25 @@
     <Optimize>true</Optimize>
     <PlatformTarget>x64</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="OSVR.ClientKit">
       <HintPath>..\Deps\OSVR.ClientKit.dll</HintPath>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="MonoGame.Framework">
-      <HintPath>$(MonoGameInstallDirectory)\MonoGame\v3.0\Assemblies\DesktopGL\MonoGame.Framework.dll</HintPath>
-    </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Serialization" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="Jitter.Standard">
       <HintPath>..\Deps\Jitter.Standard\Jitter.Standard.dll</HintPath>
+    </Reference>
+    <Reference Include="MonoGame.Framework">
+      <HintPath>..\..\..\..\..\Library\Frameworks\Mono.framework\External\xbuild\MonoGame\v3.0\Assemblies\DesktopGL\MonoGame.Framework.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -91,6 +92,11 @@
     <Compile Include="Extensions\MatrixExtensions.cs" />
     <Compile Include="Extensions\ModelExtensions.cs" />
     <Compile Include="GameObjectFactory.cs" />
+    <Compile Include="Graphics\Materials\Shaders\Deferred\DeferredLava.cs" />
+    <Compile Include="Graphics\Materials\Shaders\Deferred\DeferredStandardTerrain.cs" />
+    <Compile Include="Graphics\Materials\Shaders\Deferred\DeferredStandardWater.cs" />
+    <Compile Include="Graphics\Materials\Shaders\Deferred\DeferredTransparent.cs" />
+    <Compile Include="Graphics\Materials\Shaders\Deferred\DeferredUnlit.cs" />
     <Compile Include="Graphics\Materials\Shaders\Forward\IMultipassLightingMaterial.cs" />
     <Compile Include="Graphics\Materials\Shaders\Deferred\DeferredSkybox.cs" />
     <Compile Include="Graphics\Materials\Shaders\Deferred\DeferredStandard.cs" />
@@ -111,8 +117,6 @@
     <Compile Include="Graphics\Materials\StandardMaterial.cs" />
     <Compile Include="Graphics\Materials\StandardMaterialBase.cs" />
     <Compile Include="Graphics\PostProcessing\AverageColorFilter.cs" />
-    <Compile Include="Graphics\PostProcessing\Bloom.cs" />
-    <Compile Include="Graphics\PostProcessing\ColorGrading.cs" />
     <Compile Include="Graphics\PostProcessing\FastBloom.cs" />
     <Compile Include="Graphics\PostProcessing\FullScreenQuadRenderer.cs" />
     <Compile Include="Graphics\PostProcessing\GlobalFog.cs" />
@@ -121,8 +125,8 @@
     <Compile Include="Extensions\QuaternionExtensions.cs" />
     <Compile Include="Graphics\PostProcessing\RenderTexture.cs" />
     <Compile Include="Graphics\PostProcessing\ScreenSpaceAmbientObscurance.cs" />
-    <Compile Include="Graphics\PostProcessing\ScreenSpaceAmbientOcclusion.cs" />
     <Compile Include="Graphics\PostProcessing\Vignette.cs" />
+    <Compile Include="Components\Rendering\ReflectionProbe.cs" />
     <Compile Include="Graphics\Rendering\DeferredRenderer.cs" />
     <Compile Include="Graphics\Rendering\DeviceState.cs" />
     <Compile Include="Graphics\Rendering\GraphicsDeviceExtensions.cs" />
@@ -133,8 +137,6 @@
     <Compile Include="Graphics\PostProcessing\PostProcessManager.cs" />
     <Compile Include="Graphics\Materials\LavaMaterial.cs" />
     <Compile Include="Graphics\Materials\StandardTerrainMaterial.cs" />
-    <Compile Include="Graphics\PostProcessing\BloomLegacy.cs" />
-    <Compile Include="Graphics\PostProcessing\BloomLegacySettings.cs" />
     <Compile Include="Graphics\PostProcessing\C64Filter.cs" />
     <Compile Include="Graphics\PostProcessing\CGAFilter.cs" />
     <Compile Include="Graphics\PostProcessing\ConvolutionFilter.cs" />
@@ -218,6 +220,9 @@
     <Compile Include="VR\OSVR\OSVR.MonoGame\XnaPoseInterface.cs" />
     <Compile Include="VR\OSVR\OSVR.MonoGame\XnaPosition2DInterface.cs" />
     <Compile Include="VR\OSVR\OSVR.MonoGame\XnaPositionInterface.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
