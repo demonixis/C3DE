@@ -18,20 +18,20 @@ namespace C3DE.Graphics.PostProcessing
 
         public float NoiseIntensity
         {
-            get { return _noiseIntensity; }
-            set { _noiseIntensity = MathHelper.Clamp(value, 0.0f, 1.0f); }
+            get => _noiseIntensity;
+            set => MathHelper.Clamp(value, 0.0f, 1.0f);
         }
 
         public float ScanlineIntensity
         {
-            get { return _scanlineIntensity; }
-            set { _scanlineIntensity = MathHelper.Clamp(value, 0.0f, 1.0f); }
+            get => _scanlineIntensity;
+            set => _scanlineIntensity = MathHelper.Clamp(value, 0.0f, 1.0f);
         }
 
         public float ScanlineCount
         {
-            get { return _scanlineCount; }
-            set { _scanlineCount = MathHelper.Clamp(value, 0.0f, 4096.0f); }
+            get => _scanlineCount;
+            set => _scanlineCount = MathHelper.Clamp(value, 0.0f, 4096.0f);
         }
 
         public FilmFilter(GraphicsDevice graphics) : base(graphics)

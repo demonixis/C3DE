@@ -34,17 +34,10 @@ namespace C3DE.Demo.Scripts
             var graphics = Application.GraphicsDevice;
 
             // Setup PostProcess.
-#if !DESKTOP
-            var ssao = new ScreenSpaceAmbientObscurance(graphics);
-            AddPostProcess(ssao);
-
-            // var ssgi = new ScreenSpaceGlobalIllumination(graphics);
-            //AddPostProcess(ssgi);
-#endif
+            AddPostProcess(new FastPostProcessing(graphics));
             var fastBloom = new FastBloom(graphics);
             AddPostProcess(fastBloom);
             AddPostProcess(new Tonemapping(graphics));
-            AddPostProcess(new FastPostProcessing(graphics));
             AddPostProcess(new C64Filter(graphics));
             AddPostProcess(new CGAFilter(graphics));
             AddPostProcess(new ConvolutionFilter(graphics));
@@ -53,31 +46,15 @@ namespace C3DE.Demo.Scripts
             AddPostProcess(new AverageColorFilter(graphics));
             AddPostProcess(new MotionBlur(graphics));
 
-            var refractionPass = new Refraction(graphics);
-            AddPostProcess(refractionPass);
-            refractionPass.RefractionTexture = Application.Content.Load<Texture2D>("Textures/hexagrid");
-            refractionPass.TextureTiling = new Vector2(0.5f);
-
             var vignette = new Vignette(graphics);
             AddPostProcess(vignette);
 
             AddPostProcess(new GlobalFog(graphics));
 
-            AddPostProcess(new FXAA(graphics));
-
             // Setup UI
-            var titles = new List<string>();
-
-#if !DESKTOP
-            titles.AddRange(new string[] {
-                "Ambient Obscurance",
-               // "SSGI"
-            });
-#endif
-
-            titles.AddRange(new string[]
+            var titles = new List<string>(new []
             {
-                "Bloom", "Tonemapping", "Fast PP", "C64 Filter",
+                "Fast PP", "Bloom", "Tonemapping", "C64 Filter",
                 "CGA Filter", "Convolution", "Film",
                 "GrayScale", "Average Color", "Motion Blur",
                 "Refraction", "Vignette", "Global Fog", "FXAA"

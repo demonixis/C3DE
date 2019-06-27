@@ -637,18 +637,6 @@
 /processorParam:DebugMode=Auto
 /build:Shaders/PostProcessing/Bloom.fx
 
-#begin Shaders/PostProcessing/BloomCombine.fx
-/importer:EffectImporter
-/processor:EffectProcessor
-/processorParam:DebugMode=Auto
-/build:Shaders/PostProcessing/BloomCombine.fx
-
-#begin Shaders/PostProcessing/BloomExtract.fx
-/importer:EffectImporter
-/processor:EffectProcessor
-/processorParam:DebugMode=Auto
-/build:Shaders/PostProcessing/BloomExtract.fx
-
 #begin Shaders/PostProcessing/C64Filter.fx
 /importer:EffectImporter
 /processor:EffectProcessor
@@ -679,17 +667,17 @@
 /processorParam:DebugMode=Auto
 /build:Shaders/PostProcessing/FastBloom.fx
 
+#begin Shaders/PostProcessing/FastPP.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Shaders/PostProcessing/FastPP.fx
+
 #begin Shaders/PostProcessing/Film.fx
 /importer:EffectImporter
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
 /build:Shaders/PostProcessing/Film.fx
-
-#begin Shaders/PostProcessing/FXAA.fx
-/importer:EffectImporter
-/processor:EffectProcessor
-/processorParam:DebugMode=Auto
-/build:Shaders/PostProcessing/FXAA.fx
 
 #begin Shaders/PostProcessing/GaussianBlur.fx
 /importer:EffectImporter
@@ -721,29 +709,17 @@
 /processorParam:DebugMode=Auto
 /build:Shaders/PostProcessing/OsvrDistortion.fx
 
-#begin Shaders/PostProcessing/Refraction.fx
-/importer:EffectImporter
-/processor:EffectProcessor
-/processorParam:DebugMode=Auto
-/build:Shaders/PostProcessing/Refraction.fx
-
 #begin Shaders/PostProcessing/SimpleBlur.fx
 /importer:EffectImporter
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
 /build:Shaders/PostProcessing/SimpleBlur.fx
 
-#begin Shaders/PostProcessing/SSAmbientObscurance.fx
+#begin Shaders/PostProcessing/Tonemapping.fx
 /importer:EffectImporter
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
-/build:Shaders/PostProcessing/SSAmbientObscurance.fx
-
-#begin Shaders/PostProcessing/SSAmbientOcclusion.fx
-/importer:EffectImporter
-/processor:EffectProcessor
-/processorParam:DebugMode=Auto
-/build:Shaders/PostProcessing/SSAmbientOcclusion.fx
+/build:Shaders/PostProcessing/Tonemapping.fx
 
 #begin Shaders/PostProcessing/Vignette.fx
 /importer:EffectImporter
@@ -1404,3 +1380,4 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Textures/wavesbump.png
+

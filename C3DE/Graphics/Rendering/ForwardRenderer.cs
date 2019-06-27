@@ -59,10 +59,10 @@ namespace C3DE.Graphics.Rendering
 
             var camera = scene.cameras[0];
 
-            if (scene.m_ReflectionProbes.Count > 0)
+            if (scene._reflectionProbes.Count > 0)
             {
-                for (var i = 0; i < scene.m_ReflectionProbes.Count; i++)
-                    scene.m_ReflectionProbes[i].Draw(this);
+                for (var i = 0; i < scene._reflectionProbes.Count; i++)
+                    scene._reflectionProbes[i].Draw(this);
             }
 
             RebuildRenderTargets();

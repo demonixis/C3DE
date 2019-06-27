@@ -121,10 +121,18 @@ namespace C3DE.Graphics.Rendering
             if (enabled)
             {
                 var service = VRManager.GetVRAvailableVRService();
+
                 if (service != null)
                 {
+                    if (m_VRService != null)
+                    {
+                        engine.Components.Remove(m_VRService);
+                        m_VRService.Dispose();
+                    }
+
                     m_VRService = service;
                     m_VREnabled = true;
+
                     engine.Components.Add(m_VRService);
                 }
             }
@@ -147,7 +155,6 @@ namespace C3DE.Graphics.Rendering
             if (m_VREnabled)
             {
                 Application.Engine.IsFixedTimeStep = false;
-                //Application.Engine.TargetElapsedTime = TimeSpan.FromTicks(111111);
                 Application.GraphicsDeviceManager.SynchronizeWithVerticalRetrace = false;
                 Application.GraphicsDevice.PresentationParameters.PresentationInterval = PresentInterval.Immediate;
             }

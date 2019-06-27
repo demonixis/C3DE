@@ -118,13 +118,14 @@
     <Compile Include="Graphics\Materials\StandardMaterialBase.cs" />
     <Compile Include="Graphics\PostProcessing\AverageColorFilter.cs" />
     <Compile Include="Graphics\PostProcessing\FastBloom.cs" />
+    <Compile Include="Graphics\PostProcessing\FastPostProcessing.cs" />
     <Compile Include="Graphics\PostProcessing\FullScreenQuadRenderer.cs" />
     <Compile Include="Graphics\PostProcessing\GlobalFog.cs" />
     <Compile Include="Graphics\PostProcessing\MotionBlur.cs" />
     <Compile Include="Graphics\PostProcessing\QuadRenderer.cs" />
     <Compile Include="Extensions\QuaternionExtensions.cs" />
     <Compile Include="Graphics\PostProcessing\RenderTexture.cs" />
-    <Compile Include="Graphics\PostProcessing\ScreenSpaceAmbientObscurance.cs" />
+    <Compile Include="Graphics\PostProcessing\Tonemapping.cs" />
     <Compile Include="Graphics\PostProcessing\Vignette.cs" />
     <Compile Include="Components\Rendering\ReflectionProbe.cs" />
     <Compile Include="Graphics\Rendering\DeferredRenderer.cs" />
@@ -141,9 +142,7 @@
     <Compile Include="Graphics\PostProcessing\CGAFilter.cs" />
     <Compile Include="Graphics\PostProcessing\ConvolutionFilter.cs" />
     <Compile Include="Graphics\PostProcessing\FilmFilter.cs" />
-    <Compile Include="Graphics\PostProcessing\FXAA.cs" />
     <Compile Include="Graphics\PostProcessing\GrayScaleFilter.cs" />
-    <Compile Include="Graphics\PostProcessing\Refraction.cs" />
     <Compile Include="Graphics\Primitives\CubeMesh.cs" />
     <Compile Include="Graphics\Primitives\CylinderMesh.cs" />
     <Compile Include="Graphics\Primitives\Mesh.cs" />

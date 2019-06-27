@@ -33,7 +33,7 @@ namespace C3DE.Editor
             base.Initialize();
 
             m_UIManager = new UIManager(this);
-            m_UIManager.Initialize(m_GraphicsDeviceManager);
+            m_UIManager.Initialize(_graphicsDeviceManager);
             m_UIManager.MenuCommandSelected += OnMenuCommandSelectd;
             m_UIManager.MenuGameObjectSelected += OnMenuGameObjectSelected;
             m_UIManager.MenuComponentSelected += OnMenuComponentSelected;

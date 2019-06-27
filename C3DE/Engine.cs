@@ -14,22 +14,22 @@ namespace C3DE
     {
         private bool _autoDetectResolution;
         private bool _requestFullscreen;
-        protected GraphicsDeviceManager m_GraphicsDeviceManager;
+        protected GraphicsDeviceManager _graphicsDeviceManager;
         protected BaseRenderer renderer;
-        private BaseRenderer m_nextRenderer;
+        private BaseRenderer _nextRenderer;
         protected SceneManager _sceneManager;
         protected bool _initialized;
         private int m_TotalFrames;
-        private float m_ElapsedTime;
-        private int m_FPS = 0;
+        private float _elapsedTime;
+        private int _FPS = 0;
 
         public BaseRenderer Renderer
         {
             get => renderer;
-            set => m_nextRenderer = value;
+            set => _nextRenderer = value;
         }
 
-        public float FPS => m_FPS;
+        public float FPS => _FPS;
 
         public event Action<BaseRenderer> RendererChanged = null;
 
@@ -49,8 +49,8 @@ namespace C3DE
         public Engine(string title = "C3DE Game", int width = 0, int height = 0, bool fullscreen = false)
             : base()
         {
-            m_GraphicsDeviceManager = new GraphicsDeviceManager(this);
-            m_GraphicsDeviceManager.GraphicsProfile = GraphicsProfile.HiDef;
+            _graphicsDeviceManager = new GraphicsDeviceManager(this);
+            _graphicsDeviceManager.GraphicsProfile = GraphicsProfile.HiDef;
             _sceneManager = new SceneManager();
             _initialized = false;
             _autoDetectResolution = false;
@@ -64,7 +64,7 @@ namespace C3DE
             Application.Content = Content;
             Application.Engine = this;
             Application.GraphicsDevice = GraphicsDevice;
-            Application.GraphicsDeviceManager = m_GraphicsDeviceManager;
+            Application.GraphicsDeviceManager = _graphicsDeviceManager;
             Application.SceneManager = _sceneManager;
 
 #if WINDOWS || DESKTOP
@@ -72,8 +72,8 @@ namespace C3DE
 
             if (!_autoDetectResolution)
             {
-                m_GraphicsDeviceManager.PreferredBackBufferWidth = width;
-                m_GraphicsDeviceManager.PreferredBackBufferHeight = height;
+                _graphicsDeviceManager.PreferredBackBufferWidth = width;
+                _graphicsDeviceManager.PreferredBackBufferHeight = height;
             }
 #else
             if (width == 0 || height == 0)
@@ -127,7 +127,7 @@ namespace C3DE
             Components.Add(Input.Gamepad);
             Components.Add(Input.Touch);
 
-            m_GraphicsDeviceManager.PreparingDeviceSettings += OnResize;
+            _graphicsDeviceManager.PreparingDeviceSettings += OnResize;
             _initialized = true;
 
             base.Initialize();
@@ -135,13 +135,13 @@ namespace C3DE
 
         protected override void Update(GameTime gameTime)
         {
-            m_ElapsedTime += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+            _elapsedTime += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
 
-            if (m_ElapsedTime > 1000.0f)
+            if (_elapsedTime > 1000.0f)
             {
-                m_FPS = m_TotalFrames;
+                _FPS = m_TotalFrames;
                 m_TotalFrames = 0;
-                m_ElapsedTime = 0;
+                _elapsedTime = 0;
             }
 
             base.Update(gameTime);
@@ -161,16 +161,15 @@ namespace C3DE
             if (Screen.LockCursor)
                 Mouse.SetPosition(Screen.WidthPerTwo, Screen.HeightPerTwo);
 
-
             base.EndDraw();
 
-            if (m_nextRenderer != null)
+            if (_nextRenderer != null)
             {
                 renderer?.Dispose();
 
-                renderer = m_nextRenderer;
+                renderer = _nextRenderer;
                 renderer.Initialize(Content);
-                m_nextRenderer = null;
+                _nextRenderer = null;
 
                 RendererChanged?.Invoke(renderer);
             }

@@ -18,7 +18,7 @@ namespace C3DE
     {
         #region Private/protected declarations
 
-        protected Transform m_Transform;
+        protected Transform _transform;
         protected Scene m_Scene;
         protected bool m_Enabled;
 
@@ -59,10 +59,10 @@ namespace C3DE
 
                     NotifyPropertyChanged("Enabled");
 
-                    if (m_Transform != null)
+                    if (_transform != null)
                     {
-                        for (int i = 0, l = m_Transform.Transforms.Count; i < l; i++)
-                            m_Transform.Transforms[i].GameObject.Enabled = value;
+                        for (int i = 0, l = _transform.Transforms.Count; i < l; i++)
+                            _transform.Transforms[i].GameObject.Enabled = value;
                     }
                 }
             }
@@ -70,8 +70,8 @@ namespace C3DE
 
         public Transform Transform
         {
-            get { return m_Transform; }
-            protected set { m_Transform = value; }
+            get { return _transform; }
+            protected set { _transform = value; }
         }
 
         public Scene Scene
@@ -133,16 +133,16 @@ namespace C3DE
 
         private void InternalConstructor(string name = "")
         {
-            if (m_Transform == null)
+            if (_transform == null)
             {
                 m_Components = new List<Component>(5);
 
-                m_Transform = new Transform();
-                m_Transform.m_Transform = m_Transform;
-                m_Transform.GameObject = this;
-                m_Transform.PropertyChanged += OnComponentChanged;
-                m_Transform.Awake();
-                m_Components.Add(m_Transform);
+                _transform = new Transform();
+                _transform.m_Transform = _transform;
+                _transform.GameObject = this;
+                _transform.PropertyChanged += OnComponentChanged;
+                _transform.Awake();
+                m_Components.Add(_transform);
 
                 m_Enabled = true;
                 m_Initialized = false;
@@ -200,7 +200,7 @@ namespace C3DE
         /// <returns>Return true if added, otherwise return false.</returns>
         public virtual bool Add(GameObject newGameObject)
         {
-            if (!m_Transform.Transforms.Contains(newGameObject.m_Transform) && newGameObject != this)
+            if (!_transform.Transforms.Contains(newGameObject._transform) && newGameObject != this)
             {
                 // Add the scene object to the scene if not yet added.
                 if (this != m_Scene)
@@ -216,9 +216,9 @@ namespace C3DE
                     newGameObject.Transform.Parent.Transforms.Remove(newGameObject.Transform);
 
                 // Add to current transform
-                newGameObject.m_Transform.Parent = m_Transform;
-                newGameObject.m_Transform.Root = m_Transform.Root;
-                m_Transform.Transforms.Add(newGameObject.m_Transform);
+                newGameObject._transform.Parent = _transform;
+                newGameObject._transform.Root = _transform.Root;
+                _transform.Transforms.Add(newGameObject._transform);
                 newGameObject.Enabled = m_Enabled;
 
                 return true;
@@ -234,10 +234,10 @@ namespace C3DE
         /// <returns>Return true if succed, otherwise return false.</returns>
         public virtual bool Remove(GameObject sceneObject)
         {
-            if (sceneObject.m_Transform.Parent == m_Transform)
+            if (sceneObject._transform.Parent == _transform)
             {
-                m_Transform.Transforms.Remove(sceneObject.m_Transform);
-                sceneObject.m_Transform.Parent = m_Transform.Root;
+                _transform.Transforms.Remove(sceneObject._transform);
+                sceneObject._transform.Parent = _transform.Root;
                 return true;
             }
 
@@ -260,14 +260,14 @@ namespace C3DE
             {
                 // The constructor hasn't be called
                 InternalConstructor(Name);
-                m_Transform.LocalPosition = serializedTransform.LocalPosition;
-                m_Transform.LocalRotation = serializedTransform.LocalRotation;
-                m_Transform.LocalScale = serializedTransform.LocalScale;
+                _transform.LocalPosition = serializedTransform.LocalPosition;
+                _transform.LocalRotation = serializedTransform.LocalRotation;
+                _transform.LocalScale = serializedTransform.LocalScale;
             }
             else
             {
                 component.GameObject = this;
-                component.m_Transform = m_Transform;
+                component.m_Transform = _transform;
                 component.Awake();
                 component.PropertyChanged += OnComponentChanged;
                 m_Components.Add(component);
@@ -329,7 +329,7 @@ namespace C3DE
 
         public T GetComponentInChildren<T>() where T : Component
         {
-            var transforms = m_Transform.Transforms;
+            var transforms = _transform.Transforms;
             var size = transforms.Count;
             var cpns = (Component[])null;
 
@@ -357,7 +357,7 @@ namespace C3DE
             var list = new List<T>();
             list.AddRange(GetComponents<T>());
 
-            foreach (var tr in m_Transform.Transforms)
+            foreach (var tr in _transform.Transforms)
                 list.AddRange(tr.GameObject.GetComponentsInChildren<T>());
 
             return list.ToArray();
@@ -365,12 +365,12 @@ namespace C3DE
 
         public T GetComponentInParent<T>() where T : Component
         {
-            return m_Transform.Parent.GetComponent<T>();
+            return _transform.Parent.GetComponent<T>();
         }
 
         public T[] GetComponentsInParent<T>() where T : Component
         {
-            return m_Transform.Parent.GetComponents<T>();
+            return _transform.Parent.GetComponents<T>();
         }
 
         /// <summary>
@@ -380,7 +380,7 @@ namespace C3DE
         /// <returns>Return true if the component has been removed, otherwise return false.</returns>
         public bool RemoveComponent(Component component)
         {
-            if (component == m_Transform)
+            if (component == _transform)
                 return false;
 
             var result = m_Components.Remove(component);
@@ -436,12 +436,12 @@ namespace C3DE
 
             if (size > 0)
             {
-                m_Transform = GetComponent<Transform>();
+                _transform = GetComponent<Transform>();
 
                 for (i = 0; i < size; i++)
                 {
                     m_Components[i].m_GameObject = this;
-                    m_Components[i].m_Transform = m_Transform;
+                    m_Components[i].m_Transform = _transform;
                 }
 
                 for (i = 0; i < size; i++)
@@ -487,14 +487,14 @@ namespace C3DE
 
         public static GameObject Instanciate(GameObject sceneObject)
         {
-            return Instanciate(sceneObject, sceneObject.m_Transform.LocalPosition, sceneObject.m_Transform.LocalRotation);
+            return Instanciate(sceneObject, sceneObject._transform.LocalPosition, sceneObject._transform.LocalRotation);
         }
 
         public static GameObject Instanciate(GameObject sceneObject, Vector3 position, Vector3 rotation)
         {
             GameObject clone = (GameObject)sceneObject.Clone();
-            clone.m_Transform.LocalPosition = position;
-            clone.m_Transform.LocalRotation = rotation;
+            clone._transform.LocalPosition = position;
+            clone._transform.LocalRotation = rotation;
 
             Scene.current.Add(clone);
 

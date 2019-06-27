@@ -93,7 +93,7 @@ namespace C3DE.Components.Physics
 
             if (!m_AddedToScene && Scene.current != null)
             {
-                Scene.current.m_PhysicsWorld.AddBody(m_rigidBody);
+                Scene.current._physicsWorld.AddBody(m_rigidBody);
                 m_AddedToScene = true;
             }
         }
@@ -152,7 +152,7 @@ namespace C3DE.Components.Physics
         public override void Dispose()
         {
             if (m_rigidBody != null)
-                Scene.current?.m_PhysicsWorld.RemoveBody(m_rigidBody);
+                Scene.current?._physicsWorld.RemoveBody(m_rigidBody);
         }
 
         public static Vector3 ToVector3(JVector jVector) => new Vector3(jVector.X, jVector.Y, jVector.Z);

@@ -63,77 +63,53 @@ namespace C3DE
         internal protected List<Camera> cameras;
         internal protected List<Light> lights;
         internal protected List<Behaviour> scripts;
-        internal protected List<ReflectionProbe> m_ReflectionProbes;
+        internal protected List<ReflectionProbe> _reflectionProbes;
 
         [DataMember]
         internal protected List<GameObject> prefabs;
         internal protected List<PostProcessPass> postProcessPasses;
 
-        internal protected CollisionSystem m_PhysicsCollisionSystem;
-        internal protected World m_PhysicsWorld;
+        internal protected CollisionSystem _physicsCollisionSystem;
+        internal protected World _physicsWorld;
 
         public RenderSettings RenderSettings { get; private set; }
 
         /// <summary>
         /// Gets the collection of renderable scene objects.
         /// </summary>
-        public List<Renderer> RenderList
-        {
-            get { return renderList; }
-        }
+        public List<Renderer> RenderList => renderList;
 
         /// <summary>
         /// Gets materials.
         /// </summary>
-        public List<Material> Materials
-        {
-            get { return materials; }
-        }
+        public List<Material> Materials => materials;
 
         /// <summary>
         /// Gets colliders.
         /// </summary>
-        public List<Collider> Colliders
-        {
-            get { return colliders; }
-        }
+        public List<Collider> Colliders => colliders;
 
         /// <summary>
         /// Gets lights.
         /// </summary>
-        public List<Light> Lights
-        {
-            get { return lights; }
-        }
+        public List<Light> Lights => lights;
 
         /// <summary>
         /// Gets cameras.
         /// </summary>
-        public List<Camera> Cameras
-        {
-            get { return cameras; }
-        }
+        public List<Camera> Cameras => cameras;
 
         /// <summary>
         /// Gets scripts.
         /// </summary>
-        public List<Behaviour> Behaviours
-        {
-            get { return scripts; }
-        }
+        public List<Behaviour> Behaviours => scripts;
 
         /// <summary>
         /// Gets prefabs.
         /// </summary>
-        public List<GameObject> Prefabs
-        {
-            get { return prefabs; }
-        }
+        public List<GameObject> Prefabs => prefabs;
 
-        public List<PostProcessPass> PostProcessPasses
-        {
-            get { return postProcessPasses; }
-        }
+        public List<PostProcessPass> PostProcessPasses => postProcessPasses;
 
         /// <summary>
         /// The root scene object which contains all scene objects.
@@ -141,8 +117,8 @@ namespace C3DE
         public Scene()
             : base()
         {
-            Name = "SCENE-" + Guid.NewGuid();
-            m_Transform.Root = m_Transform;
+            Name = "Scene-" + Guid.NewGuid();
+            _transform.Root = _transform;
             gameObjects = new List<GameObject>();
             m_Scene = this;
             renderList = new List<Renderer>(10);
@@ -159,9 +135,9 @@ namespace C3DE
             _needRemoveCheck = false;
             defaultMaterial = new UnlitMaterial();
             RenderSettings = new RenderSettings();
-            m_PhysicsCollisionSystem = new CollisionSystemSAP();
-            m_PhysicsWorld = new World(m_PhysicsCollisionSystem);
-            m_ReflectionProbes = new List<ReflectionProbe>();
+            _physicsCollisionSystem = new CollisionSystemSAP();
+            _physicsWorld = new World(_physicsCollisionSystem);
+            _reflectionProbes = new List<ReflectionProbe>();
         }
 
         public Scene(string name)
@@ -198,7 +174,7 @@ namespace C3DE
         {
             base.Update();
 
-            m_PhysicsWorld.Step(Time.DeltaTime, true);
+            _physicsWorld.Step(Time.DeltaTime, true);
 
             // First - Check if we need to remove some components.
             if (_needRemoveCheck)
@@ -280,7 +256,7 @@ namespace C3DE
                 {
                     gameObjects.Add(gameObject);
                     gameObject.Scene = this;
-                    gameObject.Transform.Root = m_Transform;
+                    gameObject.Transform.Root = _transform;
 
                     if (gameObject.Enabled)
                     {
@@ -388,10 +364,10 @@ namespace C3DE
             {
                 var probe = component as ReflectionProbe;
 
-                if (type == ComponentChangeType.Add && !m_ReflectionProbes.Contains(probe))
-                    m_ReflectionProbes.Add(probe);
-                else if (type == ComponentChangeType.Remove && m_ReflectionProbes.Contains(probe))
-                    m_ReflectionProbes.Remove(probe);
+                if (type == ComponentChangeType.Add && !_reflectionProbes.Contains(probe))
+                    _reflectionProbes.Add(probe);
+                else if (type == ComponentChangeType.Remove && _reflectionProbes.Contains(probe))
+                    _reflectionProbes.Remove(probe);
             }
         }
 
