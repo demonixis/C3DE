@@ -17,8 +17,9 @@ namespace C3DE.Demo.Scripts
 
             var h = service.GetAxis(0, XRAxis.TouchpadX);
             var v = service.GetAxis(0, XRAxis.TouchpadY);
+            var vRight = service.GetAxis(1, XRAxis.TouchpadY);
 
-            var translation = new Vector3(h * Speed * Time.DeltaTime, 0, -v * Speed * Time.DeltaTime);
+            var translation = new Vector3(-h * Speed * Time.DeltaTime, vRight * Speed * Time.DeltaTime, v * Speed * Time.DeltaTime);
             var transformedTranslation = Vector3.Transform(translation, Matrix.CreateRotationY(m_Transform.LocalRotation.Y));
 
             // Translate and rotate

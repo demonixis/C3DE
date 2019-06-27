@@ -74,7 +74,7 @@ namespace C3DE.VR
 
             var pp = Application.GraphicsDevice.PresentationParameters;
 
-            var renderTarget = new RenderTarget2D(Game.GraphicsDevice, (int)width, (int)height, false, SurfaceFormat.ColorSRgb, DepthFormat.Depth24Stencil8, pp.MultiSampleCount, RenderTargetUsage.PreserveContents);
+            var renderTarget = new RenderTarget2D(Game.GraphicsDevice, (int)width, (int)height, false, SurfaceFormat.Color, DepthFormat.Depth24Stencil8, pp.MultiSampleCount, RenderTargetUsage.PreserveContents);
 
             m_Textures[eye] = new Texture_t();
 
@@ -89,7 +89,7 @@ namespace C3DE.VR
             m_Textures[eye].handle = new System.IntPtr(glTexture);
             m_Textures[eye].eType = ETextureType.OpenGL;
 #endif
-            m_Textures[eye].eColorSpace = EColorSpace.Auto;
+            m_Textures[eye].eColorSpace = EColorSpace.Gamma;
             m_TextureBounds[eye].uMin = 0;
             m_TextureBounds[eye].uMax = 1;
             m_TextureBounds[eye].vMin = 0;

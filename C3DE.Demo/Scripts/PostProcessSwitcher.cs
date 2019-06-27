@@ -38,12 +38,13 @@ namespace C3DE.Demo.Scripts
             var ssao = new ScreenSpaceAmbientObscurance(graphics);
             AddPostProcess(ssao);
 
-           // var ssgi = new ScreenSpaceGlobalIllumination(graphics);
+            // var ssgi = new ScreenSpaceGlobalIllumination(graphics);
             //AddPostProcess(ssgi);
 #endif
             var fastBloom = new FastBloom(graphics);
             AddPostProcess(fastBloom);
-
+            AddPostProcess(new Tonemapping(graphics));
+            AddPostProcess(new FastPostProcessing(graphics));
             AddPostProcess(new C64Filter(graphics));
             AddPostProcess(new CGAFilter(graphics));
             AddPostProcess(new ConvolutionFilter(graphics));
@@ -76,7 +77,7 @@ namespace C3DE.Demo.Scripts
 
             titles.AddRange(new string[]
             {
-                "Bloom", "C64 Filter",
+                "Bloom", "Tonemapping", "Fast PP", "C64 Filter",
                 "CGA Filter", "Convolution", "Film",
                 "GrayScale", "Average Color", "Motion Blur",
                 "Refraction", "Vignette", "Global Fog", "FXAA"
