@@ -32,7 +32,7 @@ namespace C3DE.Graphics.Materials.Shaders
 
         public override void Pass(Renderer renderable, RenderTarget2D lightmap)
         {
-            _effect.Parameters["World"].SetValue(renderable.m_Transform.m_WorldMatrix);
+            _effect.Parameters["World"].SetValue(renderable.m_Transform._worldMatrix);
             _effect.Parameters["MainTexture"].SetValue(renderable.material.MainTexture);
             _effect.Parameters["AmbientColor"].SetValue(Scene.current.RenderSettings.ambientColor);
             _effect.Parameters["DiffuseColor"].SetValue(m_Material._diffuseColor);

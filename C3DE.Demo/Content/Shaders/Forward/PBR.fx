@@ -1,4 +1,5 @@
 const float PI = 3.14159265359;
+const float GAMMA_CORRECTION = 0.45454545;
 
 int Debug;
 // Matrix
@@ -7,7 +8,7 @@ float4x4 View;
 float4x4 Projection;
 
 float3 EyePosition;
-float Exposure;
+float GammaCorrection = 2.2;
 
 float3 LightPosition;
 float3 LightColor;
@@ -136,33 +137,37 @@ float3 FresnelSchlick(float cosTheta, float3 F0)
 	return F0 + (1.0 - F0) * pow(1.0 - cosTheta, 5.0);
 }
 
+float3 Float3(float value)
+{
+	return float3(value, value, value);
+}
+
 float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 {
-	float3 gamma = float3(2.2, 2.2, 2.2);
-	float3 diffuse = pow(tex2D(albedoSampler, input.UV), gamma);
-	float3 rms = pow(tex2D(rmsSampler, input.UV), gamma);
-	float3 ao = pow(tex2D(aoSampler, input.UV), gamma);
+	float3 diffuse = pow(tex2D(albedoSampler, input.UV).xyz, Float3(2.2));
+	float3 rms = tex2D(rmsSampler, input.UV).xyz;
+	float3 ao = tex2D(aoSampler, input.UV).xyz;
 
-	float3 normal = (2.0 * (pow(tex2D(normalSampler, input.UV), gamma))) - 1.0;
+	float3 normal = (2.0 * (tex2D(normalSampler, input.UV).xyz)) - 1.0;
 	normal = normalize(mul(normal, input.WorldToTangentSpace));
 
 	float3 N = normal;
-	float3 V = normalize(EyePosition - input.WorldPosition);
+	float3 V = normalize(EyePosition - input.WorldPosition.xyz);
 	float3 R = reflect(-V, N);
 
-	float3 F0 = float3(0.04, 0.04, 0.04);
+	float3 F0 = Float3(0.04);
 	F0 = lerp(F0, diffuse, rms.g);
 
-	float3 Lo = float3(0, 0, 0);
+	float3 Lo = Float3(0.0);
 
 	// ------
 	// Lighting (one light for now)
 	//---------
 
 	// Radiance
-	float3 L = normalize(LightPosition - input.WorldPosition);
+	float3 L = normalize(LightPosition - input.WorldPosition.xyz);
 	float3 H = normalize(V + L);
-	float distance = length(LightPosition - input.WorldPosition);
+	float distance = length(LightPosition - input.WorldPosition.xyz);
 	float attenuation = 1.0 / distance * distance;
 	float3 radiance = LightColor * attenuation;
 
@@ -176,7 +181,7 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 	float3 brdf = nominator / denominator;
 
 	float3 kS = F;
-	float3 kD = float3(1.0, 1.0, 1.0) - kS;
+	float3 kD = Float3(1.0) - kS;
 	kD *= 1.0 - rms.g;
 
 	// Scale light 
@@ -192,12 +197,10 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 	float3 color = (ambient + Lo);
 
 	// HDR + Gamma correction
-	color = color / (color + float3(1.0, 1.0, 1.0));
+	color = color / (color + Float3(1.0));
+	color = pow(color, Float3(1.0 / GammaCorrection));
 
-	float exp = 1.0 / Exposure;
-	color = pow(color, float3(exp, exp, exp));
-
-	return float4(pow(color, float3(1 / 2.2, 1/2.2, 1/2.2)), 1.0);
+	return float4(color, 1.0);
 }
 
 technique PBR

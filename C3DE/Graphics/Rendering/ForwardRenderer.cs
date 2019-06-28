@@ -74,7 +74,7 @@ namespace C3DE.Graphics.Rendering
                 var cameraParent = Matrix.Identity;
                 var parent = camera.m_Transform.Parent;
                 if (parent != null)
-                    cameraParent = parent.m_WorldMatrix;
+                    cameraParent = parent._worldMatrix;
 
                 for (var eye = 0; eye < 2; eye++)
                 {

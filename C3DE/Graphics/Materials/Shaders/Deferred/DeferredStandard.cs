@@ -79,7 +79,7 @@ namespace C3DE.Graphics.Materials.Shaders
             m_EPEmissiveIntensity.SetValue(m_Material.EmissiveIntensity);
             m_EPReflectionTexture.SetValue(m_Material.ReflectionTexture);
             m_EPReflectionTextureEnabled.SetValue(m_Material.ReflectionTexture != null);
-            m_EPWorld.SetValue(renderable.Transform.m_WorldMatrix);
+            m_EPWorld.SetValue(renderable.Transform._worldMatrix);
             m_EPTextureTilling.SetValue(m_Material.Tiling);
             m_EPDiffuseColor.SetValue(m_Material._diffuseColor);
             m_EPMainTexture.SetValue(m_Material.MainTexture);

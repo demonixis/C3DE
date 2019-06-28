@@ -10,7 +10,7 @@ namespace C3DE.Components
     [DataContract]
     public class Transform : Component
     {
-        internal Matrix m_WorldMatrix;
+        internal Matrix _worldMatrix;
         private Vector3 m_LocalRotation;
         private Vector3 m_LocalPosition;
         private Vector3 m_LocalScale;
@@ -51,12 +51,12 @@ namespace C3DE.Components
             get
             {
                 UpdateWorldMatrix();
-                return m_WorldMatrix.Translation;
+                return _worldMatrix.Translation;
             }
             set
             {
                 UpdateWorldMatrix();
-                m_LocalPosition = Vector3.Transform(value, Matrix.Invert(m_WorldMatrix));
+                m_LocalPosition = Vector3.Transform(value, Matrix.Invert(_worldMatrix));
             }
         }
 
@@ -73,7 +73,7 @@ namespace C3DE.Components
             {
                 UpdateWorldMatrix();
                 var rotation = Quaternion.Identity;
-                m_WorldMatrix.ExtractRotation(ref rotation);
+                _worldMatrix.ExtractRotation(ref rotation);
                 return rotation.ToEuler();
             }
             set
@@ -110,13 +110,13 @@ namespace C3DE.Components
             set { m_LocalScale = value; }
         }
 
-        public Matrix WorldMatrix => m_WorldMatrix;
+        public Matrix WorldMatrix => _worldMatrix;
 
-        public Vector3 Forward => m_WorldMatrix.Forward;
-        public Vector3 Backward => m_WorldMatrix.Backward;
-        public Vector3 Right => m_WorldMatrix.Right;
-        public Vector3 Left => m_WorldMatrix.Left;
-        public Vector3 Up => Vector3.Normalize(Position + Vector3.Transform(Vector3.Up, m_WorldMatrix));
+        public Vector3 Forward => _worldMatrix.Forward;
+        public Vector3 Backward => _worldMatrix.Backward;
+        public Vector3 Right => _worldMatrix.Right;
+        public Vector3 Left => _worldMatrix.Left;
+        public Vector3 Up => Vector3.Normalize(Position + Vector3.Transform(Vector3.Up, _worldMatrix));
 
         public Transform()
             : base()
@@ -128,7 +128,7 @@ namespace C3DE.Components
             m_Root = null;
             m_Transforms = new List<Transform>();
             m_Dirty = false;
-            m_WorldMatrix = Matrix.Identity;
+            _worldMatrix = Matrix.Identity;
         }
 
         public void Translate(float x, float y, float z)
@@ -212,19 +212,19 @@ namespace C3DE.Components
 
         public void UpdateWorldMatrix()
         {
-            m_WorldMatrix = Matrix.Identity;
-            m_WorldMatrix *= Matrix.CreateScale(m_LocalScale);
-            m_WorldMatrix *= Matrix.CreateFromYawPitchRoll(m_LocalRotation.Y, m_LocalRotation.X, m_LocalRotation.Z);
-            m_WorldMatrix *= Matrix.CreateTranslation(m_LocalPosition);
+            _worldMatrix = Matrix.Identity;
+            _worldMatrix *= Matrix.CreateScale(m_LocalScale);
+            _worldMatrix *= Matrix.CreateFromYawPitchRoll(m_LocalRotation.Y, m_LocalRotation.X, m_LocalRotation.Z);
+            _worldMatrix *= Matrix.CreateTranslation(m_LocalPosition);
 
             if (m_Parent != null)
-                m_WorldMatrix *= m_Parent.m_WorldMatrix;
+                _worldMatrix *= m_Parent._worldMatrix;
         }
 
         public Vector3 TransformVector(Vector3 direction)
         {
             UpdateWorldMatrix();
-            return Vector3.Transform(direction, m_WorldMatrix);
+            return Vector3.Transform(direction, _worldMatrix);
         }
 
         public override object Clone()

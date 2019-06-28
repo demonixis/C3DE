@@ -121,7 +121,7 @@ namespace C3DE.Components.Lighting
             {
                 if (renderList[i].CastShadow)
                 {
-                    _shadowEffect.Parameters["World"].SetValue(renderList[i].m_Transform.m_WorldMatrix);
+                    _shadowEffect.Parameters["World"].SetValue(renderList[i].m_Transform._worldMatrix);
                     _shadowEffect.CurrentTechnique.Passes[0].Apply();
                     renderList[i].Draw(device);
                 }

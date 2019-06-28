@@ -31,7 +31,7 @@ namespace C3DE.Graphics.Materials.Shaders
             _effect.Parameters["AmbientColor"].SetValue(Scene.current.RenderSettings.ambientColor);
             _effect.Parameters["DiffuseColor"].SetValue(_material._diffuseColor);
             _effect.Parameters["MainTexture"].SetValue(_material.MainTexture);
-            _effect.Parameters["World"].SetValue(renderable.GameObject.Transform.m_WorldMatrix);
+            _effect.Parameters["World"].SetValue(renderable.GameObject.Transform._worldMatrix);
             _effect.CurrentTechnique.Passes[0].Apply();
         }
     }

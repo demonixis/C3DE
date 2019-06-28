@@ -168,7 +168,7 @@ namespace C3DE.Components.Lighting
                 m_LPPDirLightEffect.Parameters["NormalTexture"].SetValue(normal);
                 m_LPPDirLightEffect.Parameters["DepthTexture"].SetValue(depth);
                 m_LPPDirLightEffect.Parameters["InvViewProjection"].SetValue(invViewProjection);
-                m_LPPDirLightEffect.Parameters["WorldViewProjection"].SetValue(m_Transform.m_WorldMatrix * viewProjection);
+                m_LPPDirLightEffect.Parameters["WorldViewProjection"].SetValue(m_Transform._worldMatrix * viewProjection);
                 m_LPPDirLightEffect.Parameters["LightColor"].SetValue(m_Color);
                 m_LPPDirLightEffect.Parameters["LightPosition"].SetValue(Transform.Position);
                 m_LPPDirLightEffect.Parameters["LightIntensity"].SetValue(Intensity);
@@ -182,7 +182,7 @@ namespace C3DE.Components.Lighting
                 m_LPPPointLightEffect.Parameters["DepthTexture"].SetValue(depth);
                 m_LPPPointLightEffect.Parameters["InvViewProjection"].SetValue(invViewProjection);
 
-                var worldViewProjection = (Matrix.CreateScale(Radius) * m_Transform.m_WorldMatrix) * viewProjection;
+                var worldViewProjection = (Matrix.CreateScale(Radius) * m_Transform._worldMatrix) * viewProjection;
                 m_LPPPointLightEffect.Parameters["WorldViewProjection"].SetValue(worldViewProjection);
                 m_LPPPointLightEffect.Parameters["LightColor"].SetValue(m_Color);
                 m_LPPPointLightEffect.Parameters["LightAttenuation"].SetValue(FallOf);
@@ -224,7 +224,7 @@ namespace C3DE.Components.Lighting
                 m_DeferredDirLightEffect.Parameters["CameraPosition"].SetValue(camera.m_Transform.Position);
                 m_DeferredDirLightEffect.Parameters["InvertViewProjection"].SetValue(invertViewProjection);
                 m_DeferredDirLightEffect.Parameters["LightPosition"].SetValue(m_Transform.LocalPosition);
-                m_DeferredDirLightEffect.Parameters["World"].SetValue(m_Transform.m_WorldMatrix);
+                m_DeferredDirLightEffect.Parameters["World"].SetValue(m_Transform._worldMatrix);
                 m_DeferredDirLightEffect.CurrentTechnique.Passes[0].Apply();
                 m_QuadRenderer.RenderFullscreenQuad();
             }

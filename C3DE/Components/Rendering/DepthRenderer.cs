@@ -56,7 +56,7 @@ namespace C3DE.Components.Rendering
 
                 for (int i = 0, l = renderList.Count; i < l; i++)
                 {
-                    m_Effect.Parameters["World"].SetValue(renderList[i].Transform.m_WorldMatrix);
+                    m_Effect.Parameters["World"].SetValue(renderList[i].Transform._worldMatrix);
                     m_Effect.CurrentTechnique.Passes[0].Apply();
                     renderList[i].Draw(device);
                 }

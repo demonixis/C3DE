@@ -84,7 +84,7 @@ namespace C3DE.Graphics.Materials.Shaders
 
         protected void BasePass(StandardMaterialBase material, Renderer renderable)
         {
-            m_EPWorld.SetValue(renderable.Transform.m_WorldMatrix);
+            m_EPWorld.SetValue(renderable.Transform._worldMatrix);
             m_EPTextureTilling.SetValue(material.Tiling);
             m_EPDiffuseColor.SetValue(material._diffuseColor);
             m_EPMainTexture.SetValue(material.MainTexture);

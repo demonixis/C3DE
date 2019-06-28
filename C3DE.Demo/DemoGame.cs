@@ -58,6 +58,7 @@ namespace C3DE.Demo
         public static void InitializeGame()
         {
             Application.SceneManager.Add(new MenuDemo(), true);
+            Application.SceneManager.Add(new PBRDemo());
             Application.SceneManager.Add(new HeightmapDemo());
             Application.SceneManager.Add(new ProceduralTerrainWater());
             Application.SceneManager.Add(new ProceduralTerrainLava());
@@ -67,7 +68,7 @@ namespace C3DE.Demo
             Application.SceneManager.Add(new GUIDemo());
             Application.SceneManager.Add(new DeferredDemo());
             Application.SceneManager.Add(new LightPrePassDemo());
-            Application.SceneManager.LoadLevel(5);
+            Application.SceneManager.LoadLevel(1);
             Screen.SetVirtualResolution(UIWidth, UIHeight, true);
         }
 

@@ -74,7 +74,7 @@ namespace C3DE.Graphics.Rendering
 
             for (int i = 0, l = scene.renderList.Count; i < l; i++)
             {
-                m_DepthNormalEffect.Parameters["World"].SetValue(scene.renderList[i].Transform.m_WorldMatrix);
+                m_DepthNormalEffect.Parameters["World"].SetValue(scene.renderList[i].Transform._worldMatrix);
                 m_DepthNormalEffect.CurrentTechnique.Passes[0].Apply();
                 scene.renderList[i].Draw(m_graphicsDevice);
             }
@@ -169,7 +169,7 @@ namespace C3DE.Graphics.Rendering
                 var cameraParent = Matrix.Identity;
                 var parent = camera.m_Transform.Parent;
                 if (parent != null)
-                    cameraParent = parent.m_WorldMatrix;
+                    cameraParent = parent._worldMatrix;
 
                 for (var eye = 0; eye < 2; eye++)
                 {
