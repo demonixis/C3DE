@@ -48,14 +48,14 @@ namespace C3DE.Demo.Scenes
             var content = Application.Content;
             var mat = new PBRMaterial
             {
-                MainTexture = content.Load<Texture2D>("Textures/pbr/cerberus_A"),
-                NormalMap = content.Load<Texture2D>("Textures/pbr/cerberus_N"),
-                AOMap = GraphicsHelper.CreateTexture(Color.White, 1, 1)
+                MainTexture = content.Load<Texture2D>("Textures/pbr/darktiles1_basecolor"),
+                NormalMap = content.Load<Texture2D>("Textures/pbr/darktiles1_Normal-OGL"),
+                AOMap = content.Load<Texture2D>("Textures/pbr/darktiles1_AO"),
             };
 
             mat.CreateRMSFromTextures(
-                content.Load<Texture2D>("Textures/pbr/cerberus_R"),
-                content.Load<Texture2D>("Textures/pbr/cerberus_M"),
+                GraphicsHelper.CreateTexture(Color.White, 1, 1),
+                GraphicsHelper.CreateTexture(Color.White, 1, 1),
                 GraphicsHelper.CreateTexture(Color.White, 1, 1));
 
             var cube = GameObjectFactory.CreateMesh(GeometryType.Cube);

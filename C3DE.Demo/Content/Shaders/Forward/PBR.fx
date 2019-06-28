@@ -138,11 +138,12 @@ float3 FresnelSchlick(float cosTheta, float3 F0)
 
 float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 {
-	float3 diffuse = tex2D(albedoSampler, input.UV);
-	float3 rms = tex2D(rmsSampler, input.UV);
-	float3 ao = tex2D(aoSampler, input.UV);
+	float3 gamma = float3(2.2, 2.2, 2.2);
+	float3 diffuse = pow(tex2D(albedoSampler, input.UV), gamma);
+	float3 rms = pow(tex2D(rmsSampler, input.UV), gamma);
+	float3 ao = pow(tex2D(aoSampler, input.UV), gamma);
 
-	float3 normal = (2.0 * (tex2D(normalSampler, input.UV))) - 1.0;
+	float3 normal = (2.0 * (pow(tex2D(normalSampler, input.UV), gamma))) - 1.0;
 	normal = normalize(mul(normal, input.WorldToTangentSpace));
 
 	float3 N = normal;
@@ -187,8 +188,8 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 	// Ambient Lighting
 	//---------
 
-	float3 ambient = float3(0.03, 0.03, 0.03) * diffuse;
-	float3 color = (ambient + Lo) * ao.r;
+	float3 ambient = float3(0.03, 0.03, 0.03) * diffuse * ao.r;
+	float3 color = (ambient + Lo);
 
 	// HDR + Gamma correction
 	color = color / (color + float3(1.0, 1.0, 1.0));
@@ -196,7 +197,7 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 	float exp = 1.0 / Exposure;
 	color = pow(color, float3(exp, exp, exp));
 
-	return float4(color, 1.0);
+	return float4(pow(color, float3(1 / 2.2, 1/2.2, 1/2.2)), 1.0);
 }
 
 technique PBR
