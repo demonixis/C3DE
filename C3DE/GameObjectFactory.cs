@@ -11,6 +11,11 @@ using C3DE.Demo.Scripts;
 
 namespace C3DE
 {
+    public enum GeometryType
+    {
+        Cube = 0, Sphere, Cylinder,
+    }
+
     public static class GameObjectFactory
     {
         public static GameObject CreateCamera() => CreateCamera(new Vector3(0, 0, -10), new Vector3(0, 0, 0), Vector3.Up);
@@ -43,7 +48,7 @@ namespace C3DE
         {
             var gameObject = new GameObject($"Mesh_{nameof(geometry)}");
             var renderer = gameObject.AddComponent<MeshRenderer>();
-            renderer.Geometry = geometry;
+            renderer.Mesh = geometry;
             renderer.ReceiveShadow = receiveShadow;
             renderer.CastShadow = castShadow;
 
@@ -52,6 +57,31 @@ namespace C3DE
 
             if (geometry != null && !geometry.Built)
                 geometry.Build();
+
+            return gameObject;
+        }
+
+        public static GameObject CreateMesh(GeometryType type, bool receiveShadow = true, bool castShadow = true, bool collider = true)
+        {
+            Mesh mesh = null;
+            if (type == GeometryType.Cube)
+                mesh = new CubeMesh();
+            else if (type == GeometryType.Sphere)
+                mesh = new SphereMesh();
+            else
+                mesh = new CylinderMesh();
+
+            var gameObject = new GameObject($"Mesh_{type}");
+            var renderer = gameObject.AddComponent<MeshRenderer>();
+            renderer.Mesh = mesh;
+            renderer.ReceiveShadow = receiveShadow;
+            renderer.CastShadow = castShadow;
+
+            if (collider)
+                gameObject.AddComponent<BoxCollider>();
+
+            if (mesh != null && !mesh.Built)
+                mesh.Build();
 
             return gameObject;
         }
@@ -89,7 +119,7 @@ namespace C3DE
             var renderer = gameObject.AddComponent<MeshRenderer>();
             renderer.CastShadow = false;
             renderer.ReceiveShadow = false;
-            renderer.Geometry = new PlaneMesh();
+            renderer.Mesh = new PlaneMesh();
 
             var collider = gameObject.AddComponent<BoxCollider>();
             collider.IsPickable = false;
@@ -99,8 +129,8 @@ namespace C3DE
             material.NormalTexture = normalTexture;
 
             renderer.Material = material;
-            renderer.Geometry.Size = size;
-            renderer.Geometry.Build();
+            renderer.Mesh.Size = size;
+            renderer.Mesh.Build();
 
             //collider.BoundingBox = new BoundingBox(transform.Position, size);
 
@@ -114,7 +144,7 @@ namespace C3DE
             var renderer = gameObject.AddComponent<MeshRenderer>();
             renderer.CastShadow = false;
             renderer.ReceiveShadow = false;
-            renderer.Geometry = new PlaneMesh();
+            renderer.Mesh = new PlaneMesh();
 
             var collider = gameObject.AddComponent<BoxCollider>();
             collider.IsPickable = false;
@@ -124,8 +154,8 @@ namespace C3DE
             material.NormalMap = normalTexture;
 
             renderer.Material = material;
-            renderer.Geometry.Size = size;
-            renderer.Geometry.Build();
+            renderer.Mesh.Size = size;
+            renderer.Mesh.Build();
 
             //collider.BoundingBox = new BoundingBox(transform.Position, size);
 

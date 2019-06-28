@@ -67,7 +67,7 @@ namespace C3DE.Demo
             Application.SceneManager.Add(new GUIDemo());
             Application.SceneManager.Add(new DeferredDemo());
             Application.SceneManager.Add(new LightPrePassDemo());
-            Application.SceneManager.LoadLevel(0);
+            Application.SceneManager.LoadLevel(5);
             Screen.SetVirtualResolution(UIWidth, UIHeight, true);
         }
 

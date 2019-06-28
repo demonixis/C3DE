@@ -34,24 +34,24 @@ namespace C3DE.Graphics.Materials.Shaders
 
         public override void LoadEffect(ContentManager content)
         {
-            m_Effect = content.Load<Effect>("Shaders/LPP/Standard");
-            m_PassLight = m_Effect.CurrentTechnique.Passes[0];
-            m_EPView = m_Effect.Parameters["View"];
-            m_EPProjection = m_Effect.Parameters["Projection"];
-            m_EPEyePosition = m_Effect.Parameters["EyePosition"];
-            m_EPAmbientColor = m_Effect.Parameters["AmbientColor"];
-            m_EPWorld = m_Effect.Parameters["World"];
-            m_EPTextureTilling = m_Effect.Parameters["TextureTiling"];
-            m_EPDiffuseColor = m_Effect.Parameters["DiffuseColor"];
-            m_EPMainTexture = m_Effect.Parameters["MainTexture"];
-            m_EPReflectionTexture = m_Effect.Parameters["ReflectionTexture"];
-            m_EPReflectionTextureEnabled = m_Effect.Parameters["ReflectionTextureEnabled"];
-            m_EPLightMap = m_Effect.Parameters["LightMap"];
-            m_EPViewport = m_Effect.Parameters["Viewport"];
-            m_EPEmissiveTextureEnabled = m_Effect.Parameters["EmissiveTextureEnabled"];
-            m_EPEmissiveTexture = m_Effect.Parameters["EmissiveTexture"];
-            m_EPEmissiveColor = m_Effect.Parameters["EmissiveColor"];
-            m_EPEmissiveIntensity = m_Effect.Parameters["EmissiveIntensity"];
+            _effect = content.Load<Effect>("Shaders/LPP/Standard");
+            m_PassLight = _effect.CurrentTechnique.Passes[0];
+            m_EPView = _effect.Parameters["View"];
+            m_EPProjection = _effect.Parameters["Projection"];
+            m_EPEyePosition = _effect.Parameters["EyePosition"];
+            m_EPAmbientColor = _effect.Parameters["AmbientColor"];
+            m_EPWorld = _effect.Parameters["World"];
+            m_EPTextureTilling = _effect.Parameters["TextureTiling"];
+            m_EPDiffuseColor = _effect.Parameters["DiffuseColor"];
+            m_EPMainTexture = _effect.Parameters["MainTexture"];
+            m_EPReflectionTexture = _effect.Parameters["ReflectionTexture"];
+            m_EPReflectionTextureEnabled = _effect.Parameters["ReflectionTextureEnabled"];
+            m_EPLightMap = _effect.Parameters["LightMap"];
+            m_EPViewport = _effect.Parameters["Viewport"];
+            m_EPEmissiveTextureEnabled = _effect.Parameters["EmissiveTextureEnabled"];
+            m_EPEmissiveTexture = _effect.Parameters["EmissiveTexture"];
+            m_EPEmissiveColor = _effect.Parameters["EmissiveColor"];
+            m_EPEmissiveIntensity = _effect.Parameters["EmissiveIntensity"];
         }
 
         public override void PrePass(Camera camera)
@@ -78,7 +78,7 @@ namespace C3DE.Graphics.Materials.Shaders
             m_EPReflectionTextureEnabled.SetValue(m_Material.ReflectionTexture != null);
             m_EPWorld.SetValue(renderable.Transform.m_WorldMatrix);
             m_EPTextureTilling.SetValue(m_Material.Tiling);
-            m_EPDiffuseColor.SetValue(m_Material.m_DiffuseColor);
+            m_EPDiffuseColor.SetValue(m_Material._diffuseColor);
             m_EPMainTexture.SetValue(m_Material.MainTexture);
             m_PassLight.Apply();
         }

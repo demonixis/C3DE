@@ -13,9 +13,9 @@ namespace C3DE.Graphics.Materials.Shaders
 
         public override void LoadEffect(ContentManager content)
         {
-            m_Effect = content.Load<Effect>("Shaders/Deferred/StandardTerrain");
+            _effect = content.Load<Effect>("Shaders/Deferred/StandardTerrain");
             SetupParamaters();
-            m_PassAmbient = m_Effect.CurrentTechnique.Passes[0];
+            m_PassAmbient = _effect.CurrentTechnique.Passes[0];
         }
 
         public override void PrePass(Camera camera)

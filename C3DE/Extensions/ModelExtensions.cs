@@ -58,7 +58,7 @@ namespace Microsoft.Xna.Framework.Graphics
                     geometry.VertexBuffer = part.VertexBuffer;
                     geometry.IndexBuffer = part.IndexBuffer;
 
-                    renderer.Geometry = geometry;
+                    renderer.Mesh = geometry;
 
                     child.Transform.Parent = parent.Transform;
                 }

@@ -58,8 +58,8 @@ namespace C3DE.Demo.Scenes
                 light.ShadowGenerator.ShadowBias = 0.01f;
 
                 var ligthSphere = lightGo.AddComponent<MeshRenderer>();
-                ligthSphere.Geometry = new SphereMesh(1f, 16);
-                ligthSphere.Geometry.Build();
+                ligthSphere.Mesh = new SphereMesh(1f, 16);
+                ligthSphere.Mesh.Build();
                 ligthSphere.CastShadow = true;
                 ligthSphere.ReceiveShadow = false;
 

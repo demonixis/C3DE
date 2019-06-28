@@ -30,16 +30,16 @@ namespace C3DE.Graphics.Materials.Shaders
 
         public override void LoadEffect(ContentManager content)
         {
-            m_Effect = content.Load<Effect>("Shaders/Forward/Skybox");
-            m_DefaultPass = m_Effect.CurrentTechnique.Passes["AmbientPass"];
-            m_EPView = m_Effect.Parameters["View"];
-            m_EPProjection = m_Effect.Parameters["Projection"];
-            m_EPMainTexture = m_Effect.Parameters["MainTexture"];
-            m_EPEyePosition = m_Effect.Parameters["EyePosition"];
-            m_EPWorld = m_Effect.Parameters["World"];
-            m_EPFogEnabled = m_Effect.Parameters["FogEnabled"];
-            m_EPFogColor = m_Effect.Parameters["FogColor"];
-            m_EPFogData = m_Effect.Parameters["FogData"];
+            _effect = content.Load<Effect>("Shaders/Forward/Skybox");
+            m_DefaultPass = _effect.CurrentTechnique.Passes["AmbientPass"];
+            m_EPView = _effect.Parameters["View"];
+            m_EPProjection = _effect.Parameters["Projection"];
+            m_EPMainTexture = _effect.Parameters["MainTexture"];
+            m_EPEyePosition = _effect.Parameters["EyePosition"];
+            m_EPWorld = _effect.Parameters["World"];
+            m_EPFogEnabled = _effect.Parameters["FogEnabled"];
+            m_EPFogColor = _effect.Parameters["FogColor"];
+            m_EPFogData = _effect.Parameters["FogData"];
         }
 
         public override void Pass(Renderer renderable)

@@ -467,16 +467,16 @@ namespace C3DE
 
             switch (type)
             {
-                case PrimitiveTypes.Cube: meshRenderer.Geometry = new CubeMesh(); break;
-                case PrimitiveTypes.Cylinder: meshRenderer.Geometry = new CylinderMesh(); break;
-                case PrimitiveTypes.Plane: meshRenderer.Geometry = new PlaneMesh(); break;
-                case PrimitiveTypes.Pyramid: meshRenderer.Geometry = new PyramidMesh(); break;
-                case PrimitiveTypes.Quad: meshRenderer.Geometry = new QuadMesh(); break;
-                case PrimitiveTypes.Sphere: meshRenderer.Geometry = new SphereMesh(); break;
-                case PrimitiveTypes.Torus: meshRenderer.Geometry = new TorusMesh(); break;
+                case PrimitiveTypes.Cube: meshRenderer.Mesh = new CubeMesh(); break;
+                case PrimitiveTypes.Cylinder: meshRenderer.Mesh = new CylinderMesh(); break;
+                case PrimitiveTypes.Plane: meshRenderer.Mesh = new PlaneMesh(); break;
+                case PrimitiveTypes.Pyramid: meshRenderer.Mesh = new PyramidMesh(); break;
+                case PrimitiveTypes.Quad: meshRenderer.Mesh = new QuadMesh(); break;
+                case PrimitiveTypes.Sphere: meshRenderer.Mesh = new SphereMesh(); break;
+                case PrimitiveTypes.Torus: meshRenderer.Mesh = new TorusMesh(); break;
             }
 
-            meshRenderer.Geometry.Build();
+            meshRenderer.Mesh.Build();
             meshRenderer.Material = material ?? Scene.current?.defaultMaterial;
 
             gameObject.AddComponent<SphereCollider>();

@@ -1,7 +1,4 @@
-﻿using C3DE.Components;
-using C3DE.Components.Lighting;
-using C3DE.Components.Rendering;
-using C3DE.Graphics.Materials.Shaders;
+﻿using C3DE.Graphics.Materials.Shaders;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -13,7 +10,7 @@ namespace C3DE.Graphics.Materials
     [DataContract]
     public abstract class Material : IDisposable
     {
-        protected internal Vector3 m_DiffuseColor;
+        protected internal Vector3 _diffuseColor;
         protected internal bool m_hasAlpha;
         protected internal ShaderMaterial m_ShaderMaterial;
 
@@ -26,8 +23,8 @@ namespace C3DE.Graphics.Materials
         [DataMember]
         public Color DiffuseColor
         {
-            get { return new Color(m_DiffuseColor); }
-            set { m_DiffuseColor = value.ToVector3(); }
+            get { return new Color(_diffuseColor); }
+            set { _diffuseColor = value.ToVector3(); }
         }
 
         public Texture2D MainTexture { get; set; }
@@ -40,7 +37,7 @@ namespace C3DE.Graphics.Materials
 
         public Material()
         {
-            m_DiffuseColor = Color.White.ToVector3();
+            _diffuseColor = Color.White.ToVector3();
             Id = "MAT-" + Guid.NewGuid();
             Name = "Material_" + Id;
             Tiling = Vector2.One;

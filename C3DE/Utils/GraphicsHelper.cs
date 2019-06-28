@@ -214,6 +214,41 @@ namespace C3DE.Utils
             return (Texture2D)renderTarget;
         }
 
+        public static Texture2D Resize(Texture2D target, int newWidth, int newHeight)
+        {
+            var renderTarget = new RenderTarget2D(Application.GraphicsDevice, newWidth, newHeight);
+            var spriteBatch = new SpriteBatch(Application.GraphicsDevice);
+            var previousRTs = Application.GraphicsDevice.GetRenderTargets();
+
+            Application.GraphicsDevice.SetRenderTarget(renderTarget);
+            Application.GraphicsDevice.Clear(Color.Transparent);
+
+            spriteBatch.Begin();
+            spriteBatch.Draw(target, Vector2.Zero, Color.White);
+            spriteBatch.End();
+
+            Application.GraphicsDevice.SetRenderTargets(previousRTs);
+
+            spriteBatch.Dispose();
+
+            return (Texture2D)renderTarget;
+        }
+
+        public static Texture2D TryResize(Texture2D target, int width, int height)
+        {
+            if (target.Width != width || target.Height != height)
+                return Resize(target, width, height);
+
+            return target;
+        }
+
+        public static Color[] ExtractColors(Texture2D texture)
+        {
+            var colors = new Color[texture.Width * texture.Height];
+            texture.GetData<Color>(colors);
+            return colors;
+        }
+
         private static float ComputeZCoordinate(ref Point p1, ref Point p2, ref Point p3)
         {
             return p1.X * (p2.Y - p3.Y) + p2.X * (p3.Y - p1.Y) + p3.X * (p1.Y - p2.Y);

@@ -2,6 +2,7 @@
 using C3DE.Components.Rendering;
 using C3DE.Demo.Scripts;
 using C3DE.Graphics.Materials;
+using C3DE.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -43,6 +44,25 @@ namespace C3DE.Demo.Scenes
             rb.IsKinematic = true;
 
             m_Camera.AddComponent<Scripts.VRPlayerEnabler>();
+
+            var content = Application.Content;
+            var mat = new PBRMaterial
+            {
+                MainTexture = content.Load<Texture2D>("Textures/pbr/cerberus_A"),
+                NormalMap = content.Load<Texture2D>("Textures/pbr/cerberus_N"),
+                AOMap = GraphicsHelper.CreateTexture(Color.White, 1, 1)
+            };
+
+            mat.CreateRMSFromTextures(
+                content.Load<Texture2D>("Textures/pbr/cerberus_R"),
+                content.Load<Texture2D>("Textures/pbr/cerberus_M"),
+                GraphicsHelper.CreateTexture(Color.White, 1, 1));
+
+            var cube = GameObjectFactory.CreateMesh(GeometryType.Cube);
+            cube.Transform.Translate(0, 3, -5);
+            cube.Transform.LocalScale = new Vector3(3);
+            var rc = cube.GetComponent<Renderer>();
+            rc.Material = mat;
         }
     }
 }

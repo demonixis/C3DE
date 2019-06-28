@@ -7,7 +7,7 @@ namespace C3DE.Graphics.Materials.Shaders
 {
     public abstract class ShaderMaterial
     {
-        protected internal Effect m_Effect;
+        protected internal Effect _effect;
 
         public abstract void LoadEffect(ContentManager content);
 

@@ -26,7 +26,7 @@ namespace C3DE.Graphics.Materials.Shaders
 
         public override void LoadEffect(ContentManager content)
         {
-            m_Effect = content.Load<Effect>("Shaders/Forward/Standard");
+            _effect = content.Load<Effect>("Shaders/Forward/Standard");
             SetupParamaters();
         }
 
@@ -34,14 +34,14 @@ namespace C3DE.Graphics.Materials.Shaders
         {
             base.SetupParamaters();
 
-            m_EPNormalTexture = m_Effect.Parameters["NormalTexture"];
-            m_EPNormalTextureEnabled = m_Effect.Parameters["NormalTextureEnabled"];
-            m_EPReflectionTexture = m_Effect.Parameters["ReflectionTexture"];
-            m_EPReflectionTextureEnabled = m_Effect.Parameters["ReflectionTextureEnabled"];
-            m_EPEmissiveTextureEnabled = m_Effect.Parameters["EmissiveTextureEnabled"];
-            m_EPEmissiveTexture = m_Effect.Parameters["EmissiveTexture"];
-            m_EPEmissiveColor = m_Effect.Parameters["EmissiveColor"];
-            m_EPEmissiveIntensity = m_Effect.Parameters["EmissiveIntensity"];
+            m_EPNormalTexture = _effect.Parameters["NormalTexture"];
+            m_EPNormalTextureEnabled = _effect.Parameters["NormalTextureEnabled"];
+            m_EPReflectionTexture = _effect.Parameters["ReflectionTexture"];
+            m_EPReflectionTextureEnabled = _effect.Parameters["ReflectionTextureEnabled"];
+            m_EPEmissiveTextureEnabled = _effect.Parameters["EmissiveTextureEnabled"];
+            m_EPEmissiveTexture = _effect.Parameters["EmissiveTexture"];
+            m_EPEmissiveColor = _effect.Parameters["EmissiveColor"];
+            m_EPEmissiveIntensity = _effect.Parameters["EmissiveIntensity"];
         }
 
         public override void Pass(Renderer renderable)

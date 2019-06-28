@@ -17,13 +17,13 @@ namespace C3DE.Graphics.Materials.Shaders
 
         public override void LoadEffect(ContentManager content)
         {
-            m_Effect = content.Load<Effect>("Shaders/LPP/Standard");
+            _effect = content.Load<Effect>("Shaders/LPP/Standard");
         }
 
         public override void PrePass(Camera camera)
         {
-            m_Effect.Parameters["View"].SetValue(camera.m_ViewMatrix);
-            m_Effect.Parameters["Projection"].SetValue(camera.m_ProjectionMatrix);
+            _effect.Parameters["View"].SetValue(camera.m_ViewMatrix);
+            _effect.Parameters["Projection"].SetValue(camera.m_ProjectionMatrix);
         }
 
         public override void Pass(Renderer renderable)
@@ -32,13 +32,13 @@ namespace C3DE.Graphics.Materials.Shaders
 
         public override void Pass(Renderer renderable, RenderTarget2D lightmap)
         {
-            m_Effect.Parameters["World"].SetValue(renderable.m_Transform.m_WorldMatrix);
-            m_Effect.Parameters["MainTexture"].SetValue(renderable.material.MainTexture);
-            m_Effect.Parameters["AmbientColor"].SetValue(Scene.current.RenderSettings.ambientColor);
-            m_Effect.Parameters["DiffuseColor"].SetValue(m_Material.m_DiffuseColor);
-            m_Effect.Parameters["LightMap"].SetValue(lightmap);
-            m_Effect.Parameters["Viewport"].SetValue(new Vector2(Screen.Width, Screen.Height));
-            m_Effect.CurrentTechnique.Passes[0].Apply();
+            _effect.Parameters["World"].SetValue(renderable.m_Transform.m_WorldMatrix);
+            _effect.Parameters["MainTexture"].SetValue(renderable.material.MainTexture);
+            _effect.Parameters["AmbientColor"].SetValue(Scene.current.RenderSettings.ambientColor);
+            _effect.Parameters["DiffuseColor"].SetValue(m_Material._diffuseColor);
+            _effect.Parameters["LightMap"].SetValue(lightmap);
+            _effect.Parameters["Viewport"].SetValue(new Vector2(Screen.Width, Screen.Height));
+            _effect.CurrentTechnique.Passes[0].Apply();
         }
     }
 }

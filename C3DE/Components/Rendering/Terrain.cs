@@ -39,7 +39,7 @@ namespace C3DE.Components.Rendering
             if (m_Renderer == null)
                 m_Renderer = AddComponent<MeshRenderer>();
 
-            m_Renderer.Geometry = m_Geometry;
+            m_Renderer.Mesh = m_Geometry;
             m_Renderer.CastShadow = false;
             m_Renderer.ReceiveShadow = true;
 
@@ -105,7 +105,7 @@ namespace C3DE.Components.Rendering
 
         public void Build()
         {
-            m_Renderer.Geometry.Build();
+            m_Renderer.Mesh.Build();
         }
 
         public void ApplyCollision(Transform tr)

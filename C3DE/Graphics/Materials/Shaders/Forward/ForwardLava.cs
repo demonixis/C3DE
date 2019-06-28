@@ -29,22 +29,22 @@ namespace C3DE.Graphics.Materials.Shaders
 
         public override void LoadEffect(ContentManager content)
         {
-            m_Effect = content.Load<Effect>("Shaders/Forward/Lava");
+            _effect = content.Load<Effect>("Shaders/Forward/Lava");
             SetupParameters();
         }
 
         protected virtual void SetupParameters()
         {
-            m_PassAmbient = m_Effect.CurrentTechnique.Passes["AmbientPass"];
-            m_EPView = m_Effect.Parameters["View"];
-            m_EPProjection = m_Effect.Parameters["Projection"];
-            m_EPTime = m_Effect.Parameters["Time"];
-            m_EPMainTexture = m_Effect.Parameters["MainTexture"];
-            m_EPNormalTexture = m_Effect.Parameters["NormalTexture"];
-            m_EPTextureTilling = m_Effect.Parameters["TextureTiling"];
-            m_EPDiffuseColor = m_Effect.Parameters["DiffuseColor"];
-            m_EPWorld = m_Effect.Parameters["World"];
-            m_EPEmissiveIntensity = m_Effect.Parameters["EmissiveIntensity"];
+            m_PassAmbient = _effect.CurrentTechnique.Passes["AmbientPass"];
+            m_EPView = _effect.Parameters["View"];
+            m_EPProjection = _effect.Parameters["Projection"];
+            m_EPTime = _effect.Parameters["Time"];
+            m_EPMainTexture = _effect.Parameters["MainTexture"];
+            m_EPNormalTexture = _effect.Parameters["NormalTexture"];
+            m_EPTextureTilling = _effect.Parameters["TextureTiling"];
+            m_EPDiffuseColor = _effect.Parameters["DiffuseColor"];
+            m_EPWorld = _effect.Parameters["World"];
+            m_EPEmissiveIntensity = _effect.Parameters["EmissiveIntensity"];
         }
 
         public override void PrePass(Camera camera)
@@ -59,7 +59,7 @@ namespace C3DE.Graphics.Materials.Shaders
             m_EPMainTexture.SetValue(m_Material.MainTexture);
             m_EPNormalTexture.SetValue(m_Material.NormalTexture);
             m_EPTextureTilling.SetValue(m_Material.Tiling);
-            m_EPDiffuseColor.SetValue(m_Material.m_DiffuseColor);
+            m_EPDiffuseColor.SetValue(m_Material._diffuseColor);
             m_EPWorld.SetValue(renderable.Transform.m_WorldMatrix);
             m_EPEmissiveIntensity.SetValue(m_Material.EmissiveIntensity);
             m_PassAmbient.Apply();

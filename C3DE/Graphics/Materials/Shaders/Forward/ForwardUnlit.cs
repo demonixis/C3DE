@@ -24,20 +24,20 @@ namespace C3DE.Graphics.Materials.Shaders
 
         public override void LoadEffect(ContentManager content)
         {
-            m_Effect = content.Load<Effect>("Shaders/Forward/Unlit");
+            _effect = content.Load<Effect>("Shaders/Forward/Unlit");
             SetupParamaters();
         }
 
         protected virtual void SetupParamaters()
         {
-            m_PassColor = m_Effect.CurrentTechnique.Passes["UnlitColor"];
-            m_PassTexture = m_Effect.CurrentTechnique.Passes["UnlitTexture"];
-            m_EPView = m_Effect.Parameters["View"];
-            m_EPProjection = m_Effect.Parameters["Projection"];
-            m_EPWorld = m_Effect.Parameters["World"];
-            m_EPTextureTilling = m_Effect.Parameters["TextureTilling"];
-            m_EPDiffuseColor = m_Effect.Parameters["DiffuseColor"];
-            m_EPMainTexture = m_Effect.Parameters["MainTexture"];
+            m_PassColor = _effect.CurrentTechnique.Passes["UnlitColor"];
+            m_PassTexture = _effect.CurrentTechnique.Passes["UnlitTexture"];
+            m_EPView = _effect.Parameters["View"];
+            m_EPProjection = _effect.Parameters["Projection"];
+            m_EPWorld = _effect.Parameters["World"];
+            m_EPTextureTilling = _effect.Parameters["TextureTilling"];
+            m_EPDiffuseColor = _effect.Parameters["DiffuseColor"];
+            m_EPMainTexture = _effect.Parameters["MainTexture"];
         }
 
         public override void PrePass(Camera camera)
@@ -50,7 +50,7 @@ namespace C3DE.Graphics.Materials.Shaders
         {
             m_EPWorld.SetValue(renderable.Transform.m_WorldMatrix);
             m_EPTextureTilling.SetValue(m_Material.Tiling);
-            m_EPDiffuseColor.SetValue(m_Material.m_DiffuseColor);
+            m_EPDiffuseColor.SetValue(m_Material._diffuseColor);
             m_EPMainTexture.SetValue(m_Material.MainTexture);
 
             if (m_Material.MainTexture == null)

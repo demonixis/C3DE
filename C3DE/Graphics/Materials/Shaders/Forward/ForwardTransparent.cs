@@ -7,32 +7,32 @@ namespace C3DE.Graphics.Materials.Shaders
 {
     public class ForwardTransparent : ShaderMaterial
     {
-        private TransparentMaterial m_Material;
+        private TransparentMaterial _material;
 
         public ForwardTransparent(TransparentMaterial material)
         {
-            m_Material = material;
+            _material = material;
         }
 
         public override void LoadEffect(ContentManager content)
         {
-            m_Effect = content.Load<Effect>("Shaders/Forward/Transparent");
+            _effect = content.Load<Effect>("Shaders/Forward/Transparent");
         }
 
         public override void PrePass(Camera camera)
         {
-            m_Effect.Parameters["View"].SetValue(camera.m_ViewMatrix);
-            m_Effect.Parameters["Projection"].SetValue(camera.m_ProjectionMatrix);
+            _effect.Parameters["View"].SetValue(camera.m_ViewMatrix);
+            _effect.Parameters["Projection"].SetValue(camera.m_ProjectionMatrix);
         }
 
         public override void Pass(Renderer renderable)
         {
-            m_Effect.Parameters["TextureTiling"].SetValue(m_Material.Tiling);
-            m_Effect.Parameters["AmbientColor"].SetValue(Scene.current.RenderSettings.ambientColor);
-            m_Effect.Parameters["DiffuseColor"].SetValue(m_Material.m_DiffuseColor);
-            m_Effect.Parameters["MainTexture"].SetValue(m_Material.MainTexture);
-            m_Effect.Parameters["World"].SetValue(renderable.GameObject.Transform.m_WorldMatrix);
-            m_Effect.CurrentTechnique.Passes[0].Apply();
+            _effect.Parameters["TextureTiling"].SetValue(_material.Tiling);
+            _effect.Parameters["AmbientColor"].SetValue(Scene.current.RenderSettings.ambientColor);
+            _effect.Parameters["DiffuseColor"].SetValue(_material._diffuseColor);
+            _effect.Parameters["MainTexture"].SetValue(_material.MainTexture);
+            _effect.Parameters["World"].SetValue(renderable.GameObject.Transform.m_WorldMatrix);
+            _effect.CurrentTechnique.Passes[0].Apply();
         }
     }
 }

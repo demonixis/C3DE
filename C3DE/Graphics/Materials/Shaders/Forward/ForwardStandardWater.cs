@@ -22,7 +22,7 @@ namespace C3DE.Graphics.Materials.Shaders
 
         public override void LoadEffect(ContentManager content)
         {
-            m_Effect = content.Load<Effect>("Shaders/Forward/StandardWater");
+            _effect = content.Load<Effect>("Shaders/Forward/StandardWater");
             SetupParamaters();
         }
 
@@ -30,12 +30,12 @@ namespace C3DE.Graphics.Materials.Shaders
         {
             base.SetupParamaters();
 
-            m_EPReflectionTexture = m_Effect.Parameters["ReflectionTexture"];
-            m_EPReflectionTextureEnabled = m_Effect.Parameters["ReflectionTextureEnabled"];
-            m_EPReflectionColor = m_Effect.Parameters["ReflectionColor"];
-            m_EPNormalMap = m_Effect.Parameters["NormalTexture"];
-            m_EPNormalMapEnabled = m_Effect.Parameters["NormalTextureEnabled"];
-            m_EPTotalTime = m_Effect.Parameters["TotalTime"];
+            m_EPReflectionTexture = _effect.Parameters["ReflectionTexture"];
+            m_EPReflectionTextureEnabled = _effect.Parameters["ReflectionTextureEnabled"];
+            m_EPReflectionColor = _effect.Parameters["ReflectionColor"];
+            m_EPNormalMap = _effect.Parameters["NormalTexture"];
+            m_EPNormalMapEnabled = _effect.Parameters["NormalTextureEnabled"];
+            m_EPTotalTime = _effect.Parameters["TotalTime"];
         }
 
         public override void Pass(Renderer renderable)

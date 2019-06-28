@@ -38,30 +38,30 @@ namespace C3DE.Graphics.Materials.Shaders
 
         public override void LoadEffect(ContentManager content)
         {
-            m_Effect = content.Load<Effect>("Shaders/Deferred/Standard");
+            _effect = content.Load<Effect>("Shaders/Deferred/Standard");
 
-            m_PassLight = m_Effect.CurrentTechnique.Passes[0];
-            m_EPView = m_Effect.Parameters["View"];
-            m_EPProjection = m_Effect.Parameters["Projection"];
-            m_EPEyePosition = m_Effect.Parameters["EyePosition"];
-            m_EPAmbientColor = m_Effect.Parameters["AmbientColor"];
-            m_EPWorld = m_Effect.Parameters["World"];
-            m_EPTextureTilling = m_Effect.Parameters["TextureTiling"];
-            m_EPDiffuseColor = m_Effect.Parameters["DiffuseColor"];
-            m_EPMainTexture = m_Effect.Parameters["MainTexture"];
-            m_EPSpecularLightColor = m_Effect.Parameters["SpecularLightColor"];
-            m_EPSpecularPower = m_Effect.Parameters["SpecularPower"];
-            m_EPSpecularIntensity = m_Effect.Parameters["SpecularIntensity"];
-            m_EPSpecularTextureEnabled = m_Effect.Parameters["SpecularTextureEnabled"];
-            m_EPSpecularTexture = m_Effect.Parameters["SpecularMap"];
-            m_EPNormalTexture = m_Effect.Parameters["NormalMap"];
-            m_EPNormalTextureEnabled = m_Effect.Parameters["NormalTextureEnabled"];
-            m_EPReflectionTexture = m_Effect.Parameters["ReflectionTexture"];
-            m_EPReflectionTextureEnabled = m_Effect.Parameters["ReflectionTextureEnabled"];
-            m_EPEmissiveTextureEnabled = m_Effect.Parameters["EmissiveTextureEnabled"];
-            m_EPEmissiveTexture = m_Effect.Parameters["EmissiveTexture"];
-            m_EPEmissiveColor = m_Effect.Parameters["EmissiveColor"];
-            m_EPEmissiveIntensity = m_Effect.Parameters["EmissiveIntensity"];
+            m_PassLight = _effect.CurrentTechnique.Passes[0];
+            m_EPView = _effect.Parameters["View"];
+            m_EPProjection = _effect.Parameters["Projection"];
+            m_EPEyePosition = _effect.Parameters["EyePosition"];
+            m_EPAmbientColor = _effect.Parameters["AmbientColor"];
+            m_EPWorld = _effect.Parameters["World"];
+            m_EPTextureTilling = _effect.Parameters["TextureTiling"];
+            m_EPDiffuseColor = _effect.Parameters["DiffuseColor"];
+            m_EPMainTexture = _effect.Parameters["MainTexture"];
+            m_EPSpecularLightColor = _effect.Parameters["SpecularLightColor"];
+            m_EPSpecularPower = _effect.Parameters["SpecularPower"];
+            m_EPSpecularIntensity = _effect.Parameters["SpecularIntensity"];
+            m_EPSpecularTextureEnabled = _effect.Parameters["SpecularTextureEnabled"];
+            m_EPSpecularTexture = _effect.Parameters["SpecularMap"];
+            m_EPNormalTexture = _effect.Parameters["NormalMap"];
+            m_EPNormalTextureEnabled = _effect.Parameters["NormalTextureEnabled"];
+            m_EPReflectionTexture = _effect.Parameters["ReflectionTexture"];
+            m_EPReflectionTextureEnabled = _effect.Parameters["ReflectionTextureEnabled"];
+            m_EPEmissiveTextureEnabled = _effect.Parameters["EmissiveTextureEnabled"];
+            m_EPEmissiveTexture = _effect.Parameters["EmissiveTexture"];
+            m_EPEmissiveColor = _effect.Parameters["EmissiveColor"];
+            m_EPEmissiveIntensity = _effect.Parameters["EmissiveIntensity"];
         }
 
         public override void PrePass(Camera camera)
@@ -81,7 +81,7 @@ namespace C3DE.Graphics.Materials.Shaders
             m_EPReflectionTextureEnabled.SetValue(m_Material.ReflectionTexture != null);
             m_EPWorld.SetValue(renderable.Transform.m_WorldMatrix);
             m_EPTextureTilling.SetValue(m_Material.Tiling);
-            m_EPDiffuseColor.SetValue(m_Material.m_DiffuseColor);
+            m_EPDiffuseColor.SetValue(m_Material._diffuseColor);
             m_EPMainTexture.SetValue(m_Material.MainTexture);
             m_EPSpecularLightColor.SetValue(m_Material.SpecularColor.ToVector3());
             m_EPSpecularPower.SetValue(m_Material.Shininess);

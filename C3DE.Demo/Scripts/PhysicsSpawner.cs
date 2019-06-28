@@ -31,8 +31,8 @@ namespace C3DE.Demo.Scripts
 
             var go = new GameObject("Cube");
             var cube = go.AddComponent<MeshRenderer>();
-            cube.Geometry = new CubeMesh();
-            cube.Geometry.Build();
+            cube.Mesh = new CubeMesh();
+            cube.Mesh.Build();
             cube.CastShadow = true;
             cube.ReceiveShadow = false;
             cube.Material = m_Material;
@@ -58,9 +58,9 @@ namespace C3DE.Demo.Scripts
             go.Transform.LocalPosition = position;
 
             var cube = go.AddComponent<MeshRenderer>();
-            cube.Geometry = new CubeMesh();
-            cube.Geometry.Size = new Vector3(m_VREnabled ? 0.25f : 1.0f);
-            cube.Geometry.Build();
+            cube.Mesh = new CubeMesh();
+            cube.Mesh.Size = new Vector3(m_VREnabled ? 0.25f : 1.0f);
+            cube.Mesh.Build();
             cube.CastShadow = true;
             cube.ReceiveShadow = true;
             cube.Material = m_Material;

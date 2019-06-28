@@ -59,8 +59,8 @@ namespace C3DE.Demo.Scripts
             if (ShowDebugMesh)
             {
                 var ligthSphere = lightGo.AddComponent<MeshRenderer>();
-                ligthSphere.Geometry = new SphereMesh(0.05f, 12);
-                ligthSphere.Geometry.Build();
+                ligthSphere.Mesh = new SphereMesh(0.05f, 12);
+                ligthSphere.Mesh.Build();
                 ligthSphere.CastShadow = true;
                 ligthSphere.ReceiveShadow = false;
 

@@ -13,7 +13,7 @@ namespace C3DE.Components.Rendering
         protected Mesh m_Geometry;
 
         [DataMember]
-        public Mesh Geometry
+        public Mesh Mesh
         {
             get { return m_Geometry; }
             set

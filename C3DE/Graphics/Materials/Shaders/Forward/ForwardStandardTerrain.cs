@@ -20,18 +20,18 @@ namespace C3DE.Graphics.Materials.Shaders
 
         public override void LoadEffect(ContentManager content)
         {
-            m_Effect = content.Load<Effect>("Shaders/Forward/StandardTerrain");
+            _effect = content.Load<Effect>("Shaders/Forward/StandardTerrain");
             SetupParamaters();
         }
 
         protected override void SetupParamaters()
         {
             base.SetupParamaters();
-            m_EPMainTexture = m_Effect.Parameters["MainTexture"];
-            m_EPWeightTexture = m_Effect.Parameters["WeightMap"];
-            m_EPRockTexture = m_Effect.Parameters["RockTexture"];
-            m_EPSnowTexture = m_Effect.Parameters["SnowTexture"];
-            m_EPSandTexture = m_Effect.Parameters["SandTexture"];
+            m_EPMainTexture = _effect.Parameters["MainTexture"];
+            m_EPWeightTexture = _effect.Parameters["WeightMap"];
+            m_EPRockTexture = _effect.Parameters["RockTexture"];
+            m_EPSnowTexture = _effect.Parameters["SnowTexture"];
+            m_EPSandTexture = _effect.Parameters["SandTexture"];
         }
 
         public override void Pass(Renderer renderable)

@@ -11,7 +11,7 @@ namespace C3DE.Graphics.Materials.Shaders
 
         public override void LoadEffect(ContentManager content)
         {
-            m_Effect = content.Load<Effect>("Shaders/Deferred/Unlit");
+            _effect = content.Load<Effect>("Shaders/Deferred/Unlit");
             SetupParamaters();
         }
     }
