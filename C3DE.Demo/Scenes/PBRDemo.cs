@@ -15,7 +15,6 @@ namespace C3DE.Demo.Scenes
         {
             base.Initialize();
 
-            m_Camera.AddComponent<PhysicsSpawner>();
             m_Camera.AddComponent<VRPlayerEnabler>();
             Destroy(m_DirectionalLight.GetComponent<LensFlare>());
 
@@ -41,7 +40,7 @@ namespace C3DE.Demo.Scenes
             // Generate the Sky
             var content = Application.Content;
 
-            var skyTextures = new[]
+            RenderSettings.Skybox.Generate(Application.GraphicsDevice, new[]
             {
                 content.Load<Texture2D>("Textures/pbr/env/sky_right"),
                 content.Load<Texture2D>("Textures/pbr/env/sky_left"),
@@ -49,9 +48,9 @@ namespace C3DE.Demo.Scenes
                 content.Load<Texture2D>("Textures/pbr/env/sky_bottom"),
                 content.Load<Texture2D>("Textures/pbr/env/sky_forward"),
                 content.Load<Texture2D>("Textures/pbr/env/sky_backward")
-            };
+            }, 256);
 
-            var irradianceTexture = GraphicsHelper.CreateCubeMap(new[]
+            var irradianceMap = GraphicsHelper.CreateCubeMap(new[]
             {
                 content.Load<Texture2D>("Textures/pbr/env/irradiance_right"),
                 content.Load<Texture2D>("Textures/pbr/env/irradiance_left"),
@@ -61,45 +60,43 @@ namespace C3DE.Demo.Scenes
                 content.Load<Texture2D>("Textures/pbr/env/irradiance_backward")
             });
 
-            RenderSettings.Skybox.Generate(Application.GraphicsDevice, skyTextures, 256);
+            // Caches
+            GameObject cube = null;
+            PBRMaterial pbrMaterial = null;
+            Renderer renderer = null;
 
             // Generates the grid of spheres
-            var startPos = -5f;
-            var x = startPos;
-            var z = startPos;
-            var margin = 3.0f;
+            var startPos = 7.0f;
+            var x = -startPos;
+            var z = -startPos;
+            var margin = 2.5f;
 
-            for (var i = 0; i < 5; i++)
+            for (var i = 0; i < (int)startPos; i++)
             {
-                for (var j = 0; j < 5; j++)
+                for (var j = 0; j < (int)startPos; j++)
                 {
-                    var cube = GameObjectFactory.CreateMesh(GeometryType.Sphere);
+                    cube = GameObjectFactory.CreateMesh(GeometryType.Sphere);
                     cube.Transform.Translate(x, 1.5f, z);
-                    cube.Transform.LocalScale = new Vector3(1);
 
-                    var mat = new PBRMaterial
+                    pbrMaterial = new PBRMaterial
                     {
                         MainTexture = GraphicsHelper.CreateTexture(Color.White, 1, 1),
-                        NormalMap = content.Load<Texture2D>("Textures/pbr/Metal01_nrm"),
-                        AOMap = GraphicsHelper.CreateTexture(Color.White, 1, 1),
-                        IrradianceMap = irradianceTexture
+                        IrradianceMap = irradianceMap
                     };
 
-                    var r = (float)i / 5.0f;
-                    var m = (float)j / 5.0f;
+                    var roughness = (float)i / startPos;
+                    var metallic = (float)j / startPos;
 
-                    mat.CreateRMSFromTextures(
-                        GraphicsHelper.CreateTexture(new Color(r, r, r), 1, 1),
-                        GraphicsHelper.CreateTexture(new Color(m, m, m), 1, 1),
-                        null);
+                    pbrMaterial.CreateRMSFromValues(roughness, metallic);
 
-                    var rc = cube.GetComponent<Renderer>();
-                    rc.Material = mat;
+                    renderer = cube.GetComponent<Renderer>();
+                    renderer.Material = pbrMaterial;
 
                     z += margin;
                 }
+
                 x += margin;
-                z = startPos;
+                z = -startPos;
             }
         }
     }

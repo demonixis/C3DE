@@ -14,8 +14,8 @@ namespace C3DE.Graphics.Primitives
         [DataMember]
         public int TessellationLevel { get; set; }
 
-       public SphereMesh()
-           : this(1, 8)
+        public SphereMesh()
+            : this(1, 8)
         {
         }
 
@@ -55,7 +55,7 @@ namespace C3DE.Graphics.Primitives
                             Y = (Radius * (float)(Math.Sin(theta))),
                             Z = (Radius * (float)(Math.Cos(theta) * Math.Sin(phi)))
                         },
-                        
+
                         TextureCoordinate = new Vector2()
                         {
                             X = ((float)i / (float)TessellationLevel),

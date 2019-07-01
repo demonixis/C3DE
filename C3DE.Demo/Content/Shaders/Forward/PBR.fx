@@ -1,18 +1,22 @@
+// Constants
 const float PI = 3.14159265359;
 const float GAMMA_CORRECTION = 0.45454545;
 
-int Debug;
 // Matrix
 float4x4 World;
 float4x4 View;
 float4x4 Projection;
 
+// Variables
 float3 EyePosition;
 float GammaCorrection = 2.2;
+float2 Features;
 
+// Lighting
 float3 LightPosition;
 float3 LightColor;
 
+// Textures
 texture AlbedoMap;
 sampler2D albedoSampler = sampler_state
 {
@@ -35,10 +39,10 @@ sampler2D normalSampler = sampler_state
 	AddressV = Wrap;
 };
 
-texture RMSMap;
-sampler2D rmsSampler = sampler_state
+texture RMSAOMap;
+sampler2D rmsaoSampler = sampler_state
 {
-	Texture = (RMSMap);
+	Texture = (RMSAOMap);
 	MinFilter = Point;
 	MagFilter = Point;
 	MipFilter = Point;
@@ -46,10 +50,10 @@ sampler2D rmsSampler = sampler_state
 	AddressV = Wrap;
 };
 
-texture AOMap;
-sampler2D aoSampler = sampler_state
+texture EmissiveMap;
+sampler2D emissiveSampler = sampler_state
 {
-	Texture = (AOMap);
+	Texture = (EmissiveMap);
 	MinFilter = Point;
 	MagFilter = Point;
 	MipFilter = Point;
@@ -84,7 +88,8 @@ struct VertexShaderOutput
 	float4 Position : POSITION0;
 	float2 UV : TEXCOORD0;
 	float4 WorldPosition : TEXCOORD1;
-	float3x3 WorldToTangentSpace : TEXCOORD2;
+	float3 WorldNormal : TEXCOORD2;
+	float3x3 WorldToTangentSpace : TEXCOORD3;
 };
 
 VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
@@ -96,6 +101,7 @@ VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
 	output.Position = mul(viewPosition, Projection);
 	output.UV = input.UV;
 	output.WorldPosition = worldPosition;
+	output.WorldNormal = mul(input.Normal, World);
 
 	float3 c1 = cross(input.Normal, float3(0.0, 0.0, 1.0));
 	float3 c2 = cross(input.Normal, float3(0.0, 1.0, 0.0));
@@ -148,28 +154,36 @@ float3 FresnelSchlick(float cosTheta, float3 F0)
 	return F0 + (1.0 - F0) * pow(1.0 - cosTheta, 5.0);
 }
 
-float3 Float3(float value)
+float3 NewFloat3(float value)
 {
 	return float3(value, value, value);
 }
 
 float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 {
-	float3 albedo = pow(tex2D(albedoSampler, input.UV).xyz, Float3(2.2));
-	float3 rms = tex2D(rmsSampler, input.UV).xyz;
-	float3 ao = tex2D(aoSampler, input.UV).xyz;
+	float3 albedo = pow(tex2D(albedoSampler, input.UV).xyz, NewFloat3(2.2));
+	float4 rmsao = tex2D(rmsaoSampler, input.UV);
+	float roughness = rmsao.r;
+	float metallic = rmsao.g;
+	float specular = rmsao.b;
+	float ao = rmsao.a;
 
-	float3 normal = (2.0 * (tex2D(normalSampler, input.UV).xyz)) - 1.0;
-	normal = normalize(mul(normal, input.WorldToTangentSpace));
+	float3 normal = input.WorldNormal;
+	
+	if (Features.x > 0)
+	{
+		normal = (2.0 * (tex2D(normalSampler, input.UV).xyz)) - 1.0;
+		normal = normalize(mul(normal, input.WorldToTangentSpace));
+	}
 
 	float3 N = normal;
 	float3 V = normalize(EyePosition - input.WorldPosition.xyz);
 	float3 R = reflect(-V, N);
 
-	float3 F0 = Float3(0.04);
-	F0 = lerp(F0, albedo, rms.g);
+	float3 F0 = NewFloat3(0.04);
+	F0 = lerp(F0, albedo, metallic);
 
-	float3 Lo = Float3(0.0);
+	float3 Lo = NewFloat3(0.0);
 
 	// ------
 	// Lighting (one light for now)
@@ -183,8 +197,8 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 		float3 radiance = LightColor * attenuation;
 
 		// Cook-Torrance BRDF
-		float NDF = DistributionGGX(N, H, rms.r);
-		float G = GeometrySmith(N, V, L, rms.r);
+		float NDF = DistributionGGX(N, H, roughness);
+		float G = GeometrySmith(N, V, L, roughness);
 		float3 F = FresnelSchlick(max(dot(H, V), 0.0), F0);
 
 		float3 nominator = NDF * G * F;
@@ -192,8 +206,8 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 		float3 brdf = nominator / denominator;
 
 		float3 kS = F;
-		float3 kD = Float3(1.0) - kS;
-		kD *= 1.0 - rms.g;
+		float3 kD = NewFloat3(1.0) - kS;
+		kD *= 1.0 - metallic;
 
 		// Scale light 
 		float NdotL = max(dot(N, L), 0.0);
@@ -202,19 +216,25 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 	}
 
 	// ------
+	// Emissive Lighting
+	// ------
+	if (Features.y > 0)
+		Lo += tex2D(emissiveSampler, input.UV).xyz;
+
+	// ------
 	// Ambient Lighting
 	//---------
 	float3 kS = FresnelSchlick(max(dot(N, V), 0.0), F0);
 	float3 kD = 1.0 - kS;
-	kD *= 1.0 - rms.y;
+	kD *= 1.0 - metallic;
 	float3 irradiance = texCUBE(irradianceSampler, N).xyz;
 	float3 diffuse = irradiance * albedo;
 	float3 ambient = (kD * diffuse) * ao;
 	float3 color = ambient + Lo;
 
 	// HDR + Gamma correction
-	color = color / (color + Float3(1.0));
-	color = pow(color, Float3(1.0 / GammaCorrection));
+	color = color / (color + NewFloat3(1.0));
+	color = pow(color, NewFloat3(1.0 / GammaCorrection));
 
 	return float4(color, 1.0);
 }
