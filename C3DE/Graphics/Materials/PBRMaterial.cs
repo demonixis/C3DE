@@ -28,12 +28,17 @@ namespace C3DE.Graphics.Materials
         public Texture2D NormalMap { get; set; }
         public Texture2D RMSMap => _rmsMap;
         public Texture2D AOMap { get; set; }
+        public TextureCube IrradianceMap { get; private set; }
 
         // TODO;
         public Texture2D EmissionMap { get; set; }
         public float EmissionIntensity { get; set; }
 
-        public PBRMaterial() : base() { }
+        public PBRMaterial() : base()
+        {
+            IrradianceMap = Scene.current.RenderSettings.Skybox.Texture;
+        }
+
         public PBRMaterial(string name) : base(name) { }
 
         public void CreateRMSFromValues(float roughness, float metallic, float specular)
@@ -50,6 +55,9 @@ namespace C3DE.Graphics.Materials
 
         public void CreateRMSFromTextures(Texture2D roughness, Texture2D metallic, Texture2D specular)
         {
+            if (specular == null)
+                specular = GraphicsHelper.CreateTexture(Color.Black, 1, 1);
+
             var width = roughness.Width;
             var height = roughness.Height;
             var rColors = GraphicsHelper.ExtractColors(roughness);

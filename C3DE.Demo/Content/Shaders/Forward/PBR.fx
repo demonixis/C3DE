@@ -57,6 +57,17 @@ sampler2D aoSampler = sampler_state
 	AddressV = Wrap;
 };
 
+texture IrradianceMap;
+samplerCUBE irradianceSampler = sampler_state
+{
+	Texture = <IrradianceMap>;
+	MinFilter = Linear;
+	MagFilter = Linear;
+	MipFilter = Linear;
+	AddressU = Mirror;
+	AddressV = Mirror;
+};
+
 struct VertexShaderInput
 {
 #if SM4
@@ -144,7 +155,7 @@ float3 Float3(float value)
 
 float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 {
-	float3 diffuse = pow(tex2D(albedoSampler, input.UV).xyz, Float3(2.2));
+	float3 albedo = pow(tex2D(albedoSampler, input.UV).xyz, Float3(2.2));
 	float3 rms = tex2D(rmsSampler, input.UV).xyz;
 	float3 ao = tex2D(aoSampler, input.UV).xyz;
 
@@ -156,45 +167,50 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 	float3 R = reflect(-V, N);
 
 	float3 F0 = Float3(0.04);
-	F0 = lerp(F0, diffuse, rms.g);
+	F0 = lerp(F0, albedo, rms.g);
 
 	float3 Lo = Float3(0.0);
 
 	// ------
 	// Lighting (one light for now)
 	//---------
+	{
+		// Radiance
+		float3 L = normalize(LightPosition - input.WorldPosition.xyz);
+		float3 H = normalize(V + L);
+		float distance = length(LightPosition - input.WorldPosition.xyz);
+		float attenuation = 1.0 / distance * distance;
+		float3 radiance = LightColor * attenuation;
 
-	// Radiance
-	float3 L = normalize(LightPosition - input.WorldPosition.xyz);
-	float3 H = normalize(V + L);
-	float distance = length(LightPosition - input.WorldPosition.xyz);
-	float attenuation = 1.0 / distance * distance;
-	float3 radiance = LightColor * attenuation;
+		// Cook-Torrance BRDF
+		float NDF = DistributionGGX(N, H, rms.r);
+		float G = GeometrySmith(N, V, L, rms.r);
+		float3 F = FresnelSchlick(max(dot(H, V), 0.0), F0);
 
-	// Cook-Torrance BRDF
-	float NDF = DistributionGGX(N, H, rms.r);
-	float G = GeometrySmith(N, V, L, rms.r);
-	float3 F = FresnelSchlick(max(dot(H, V), 0.0), F0);
+		float3 nominator = NDF * G * F;
+		float denominator = 4.0 * max(dot(V, N), 0.0) * max(dot(L, N), 0.0) + 0.001f; // 0.001 to prevent divide by zero.
+		float3 brdf = nominator / denominator;
 
-	float3 nominator = NDF * G * F;
-	float denominator = 4.0 * max(dot(V, N), 0.0) * max(dot(L, N), 0.0) + 0.001f; // 0.001 to prevent divide by zero.
-	float3 brdf = nominator / denominator;
+		float3 kS = F;
+		float3 kD = Float3(1.0) - kS;
+		kD *= 1.0 - rms.g;
 
-	float3 kS = F;
-	float3 kD = Float3(1.0) - kS;
-	kD *= 1.0 - rms.g;
+		// Scale light 
+		float NdotL = max(dot(N, L), 0.0);
 
-	// Scale light 
-	float NdotL = max(dot(N, L), 0.0);
-
-	Lo += (kD * diffuse / PI + brdf) * radiance * NdotL;
+		Lo += (kD * albedo / PI + brdf) * radiance * NdotL;
+	}
 
 	// ------
 	// Ambient Lighting
 	//---------
-
-	float3 ambient = float3(0.03, 0.03, 0.03) * diffuse * ao.r;
-	float3 color = (ambient + Lo);
+	float3 kS = FresnelSchlick(max(dot(N, V), 0.0), F0);
+	float3 kD = 1.0 - kS;
+	kD *= 1.0 - rms.y;
+	float3 irradiance = texCUBE(irradianceSampler, N).xyz;
+	float3 diffuse = irradiance * albedo;
+	float3 ambient = (kD * diffuse) * ao;
+	float3 color = ambient + Lo;
 
 	// HDR + Gamma correction
 	color = color / (color + Float3(1.0));

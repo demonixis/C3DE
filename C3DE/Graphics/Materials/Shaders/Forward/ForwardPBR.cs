@@ -44,7 +44,8 @@ namespace C3DE.Graphics.Materials.Shaders.Forward
             _effect.Parameters["NormalMap"].SetValue(_material.NormalMap);
             _effect.Parameters["RMSMap"].SetValue(_material.RMSMap);
             _effect.Parameters["AOMap"].SetValue(_material.AOMap);
-            _effect.Parameters["Debug"].SetValue(1);
+            //_effect.Parameters["Debug"].SetValue(1);
+            _effect.Parameters["IrradianceMap"].SetValue(_material.IrradianceMap);
 
             _effect.CurrentTechnique.Passes[0].Apply();
         }

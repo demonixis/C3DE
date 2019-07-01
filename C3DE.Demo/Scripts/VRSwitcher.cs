@@ -52,6 +52,10 @@ namespace C3DE.Demo.Scripts
             m_Hands[id].AddComponent<MotionController>().LeftHand = id == 0;
             m_Hands[id].Enabled = false;
 
+#if DESKTOP
+            var controller = GameObjectFactory.CreateMesh(GeometryType.Cube);
+            controller.Transform.LocalScale = new Vector3(0.1f);
+#else
             var cModel = Application.Content.Load<Model>("Models/VRController/vr_controller_01_mrhat");
             var controller = cModel.ToMeshRenderers();
 
@@ -63,6 +67,7 @@ namespace C3DE.Demo.Scripts
                 std.EmissiveTexture = Application.Content.Load<Texture2D>("Models/VRController/vr_controller_01_mrhat_Illum");
                 std.EmissiveEnabled = true;
             }
+#endif
 
             controller.Transform.Parent = m_Hands[id].Transform;
         }

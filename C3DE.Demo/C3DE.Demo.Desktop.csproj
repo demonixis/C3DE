@@ -59,6 +59,7 @@
   <ItemGroup>
     <Compile Include="DemoGame.cs" />
     <Compile Include="Scenes\DeferredDemo.cs" />
+    <Compile Include="Scenes\PBRDemo.cs" />
     <Compile Include="Scenes\SimpleDemo.cs" />
     <Compile Include="Scenes\GUIDemo.cs" />
     <Compile Include="Scenes\LightPrePassDemo.cs" />

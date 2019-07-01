@@ -517,6 +517,12 @@
 /processorParam:DebugMode=Auto
 /build:Shaders/Copy.fx
 
+#begin Shaders/Deferred/AmbientLight.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Shaders/Deferred/AmbientLight.fx
+
 #begin Shaders/Deferred/Clear.fx
 /importer:EffectImporter
 /processor:EffectProcessor
@@ -535,11 +541,23 @@
 /processorParam:DebugMode=Auto
 /build:Shaders/Deferred/DirectionalLight.fx
 
+#begin Shaders/Deferred/Lava.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Shaders/Deferred/Lava.fx
+
 #begin Shaders/Deferred/PointLight.fx
 /importer:EffectImporter
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
 /build:Shaders/Deferred/PointLight.fx
+
+#begin Shaders/Deferred/Skybox.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Shaders/Deferred/Skybox.fx
 
 #begin Shaders/Deferred/Skybox.fx
 /importer:EffectImporter
@@ -553,6 +571,30 @@
 /processorParam:DebugMode=Auto
 /build:Shaders/Deferred/Standard.fx
 
+#begin Shaders/Deferred/StandardTerrain.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Shaders/Deferred/StandardTerrain.fx
+
+#begin Shaders/Deferred/StandardWater.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Shaders/Deferred/StandardWater.fx
+
+#begin Shaders/Deferred/Transparent.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Shaders/Deferred/Transparent.fx
+
+#begin Shaders/Deferred/Unlit.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Shaders/Deferred/Unlit.fx
+
 #begin Shaders/Depth.fx
 /importer:EffectImporter
 /processor:EffectProcessor
@@ -564,6 +606,12 @@
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
 /build:Shaders/Forward/Lava.fx
+
+#begin Shaders/Forward/PBR.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Shaders/Forward/PBR.fx
 
 #begin Shaders/Forward/Skybox.fx
 /importer:EffectImporter
@@ -1093,7 +1141,7 @@
 /processorParam:TextureFormat=Color
 /build:Textures/pbr/cerberus_S.png
 
-#begin Textures/pbr/darktiles1_AO.png
+#begin Textures/pbr/Metal01_col.jpg
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -1103,9 +1151,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Textures/pbr/darktiles1_AO.png
+/build:Textures/pbr/Metal01_col.jpg
 
-#begin Textures/pbr/darktiles1_basecolor.png
+#begin Textures/pbr/Metal01_disp.jpg
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -1115,9 +1163,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Textures/pbr/darktiles1_basecolor.png
+/build:Textures/pbr/Metal01_disp.jpg
 
-#begin Textures/pbr/darktiles1_metallic.png
+#begin Textures/pbr/Metal01_met.jpg
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -1127,9 +1175,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Textures/pbr/darktiles1_metallic.png
+/build:Textures/pbr/Metal01_met.jpg
 
-#begin Textures/pbr/darktiles1_Normal-OGL.png
+#begin Textures/pbr/Metal01_nrm.jpg
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -1139,7 +1187,19 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Textures/pbr/darktiles1_Normal-OGL.png
+/build:Textures/pbr/Metal01_nrm.jpg
+
+#begin Textures/pbr/Metal01_rgh.jpg
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/pbr/Metal01_rgh.jpg
 
 #begin Textures/Skybox/bluesky/nx.jpg
 /importer:TextureImporter
