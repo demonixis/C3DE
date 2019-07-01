@@ -28,7 +28,7 @@ namespace C3DE.Graphics.Materials
         public Texture2D NormalMap { get; set; }
         public Texture2D RMSMap => _rmsMap;
         public Texture2D AOMap { get; set; }
-        public TextureCube IrradianceMap { get; private set; }
+        public TextureCube IrradianceMap { get; set; }
 
         // TODO;
         public Texture2D EmissionMap { get; set; }

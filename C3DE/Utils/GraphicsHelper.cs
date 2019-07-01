@@ -153,6 +153,33 @@ namespace C3DE.Utils
             return cubeMap;
         }
 
+        /// <summary>
+        /// PX, NX, PY, NY, PZ, NZ
+        /// </summary>
+        /// <param name="textures"></param>
+        /// <returns></returns>
+        public static TextureCube CreateCubeMap(Texture2D[] textures)
+        {
+            if (textures.Length != 6)
+                throw new Exception($"Can't create the CubeMap, 6 textures required, {textures.Length} provided.");
+
+            var width = textures[0].Width;
+            var height = textures[0].Height;
+            var cubeMap = new TextureCube(Application.GraphicsDevice, width, false, SurfaceFormat.Color);
+            var textureData = new Color[width * height];
+
+            for (var i = 0; i < 6; i++)
+            {
+                if (textures[i].Width != width || textures[i].Height != height)
+                    throw new Exception($"The size of the texture at index {i} have not the same size of the first texture. {width}x{height} required.");
+
+                textures[i].GetData<Color>(textureData);
+                cubeMap.SetData<Color>((CubeMapFace)i, textureData);
+            }
+
+            return cubeMap;
+        }
+
         public static Texture2D CreateTriangleTexture(Color first, Color second, int width = 128, int height = 128)
         {
             Texture2D texture = new Texture2D(Application.GraphicsDevice, width, height);

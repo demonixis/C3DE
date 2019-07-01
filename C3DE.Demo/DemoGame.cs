@@ -8,8 +8,8 @@ namespace C3DE.Demo
 {
     public static class DemoGame
     {
-        public const int ScreenWidth = 1280;
-        public const int ScreenHeight = 800;
+        public const int ScreenWidth = 800;
+        public const int ScreenHeight = 480;
         public const int UIWidth = 1280;
         public const int UIHeight = 800;
 
@@ -68,7 +68,7 @@ namespace C3DE.Demo
             Application.SceneManager.Add(new GUIDemo());
             Application.SceneManager.Add(new DeferredDemo());
             Application.SceneManager.Add(new LightPrePassDemo());
-            Application.SceneManager.LoadLevel(1);
+            Application.SceneManager.LoadLevel(0);
             Screen.SetVirtualResolution(UIWidth, UIHeight, true);
         }
 

@@ -76,7 +76,7 @@ namespace C3DE
             m_OverrideFog = mode != FogMode.None;
         }
 
-        public void Generate(GraphicsDevice device, ContentManager content, Texture2D[] textures, float size = 250.0f)
+        public void Generate(GraphicsDevice device, Texture2D[] textures, float size = 250.0f)
         {
             if (textures.Length != 6)
                 throw new Exception("The array of texture names must contains 6 elements.");
@@ -105,7 +105,7 @@ namespace C3DE
             for (int i = 0; i < 6; i++)
                 textures[i] = content.Load<Texture2D>(textureNames[i]);
 
-            Generate(device, content, textures, size);
+            Generate(device, textures, size);
         }
 
         public void Generate(float size = 250.0f)
@@ -114,7 +114,7 @@ namespace C3DE
             var skySide = GraphicsHelper.CreateGradiantTexture(new Color(168, 189, 255), Color.White, 64, 64);
             var skyBottom = GraphicsHelper.CreateTexture(Color.White, 64, 64);
 
-            Generate(Application.GraphicsDevice, Application.Content, new Texture2D[] {
+            Generate(Application.GraphicsDevice, new Texture2D[] {
                 skySide,
                 skySide,
                 skyTop,

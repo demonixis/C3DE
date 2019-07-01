@@ -32,7 +32,7 @@ namespace C3DE.Demo.Scenes
             m_DemoSceneMenu = m_Camera.AddComponent<DemoSceneMenu>();
 
             // And a light
-            var lightGo = GameObjectFactory.CreateLight(LightType.Directional, Color.White, 1f, 4096);
+            var lightGo = GameObjectFactory.CreateLight(LightType.Directional, Color.White, 1f, 2048);
             lightGo.Transform.LocalPosition = new Vector3(500, 500, 0);
             lightGo.Transform.LocalRotation = new Vector3(MathHelper.PiOver2, -MathHelper.PiOver4, 0);
             m_DirectionalLight = lightGo.GetComponent<Light>();

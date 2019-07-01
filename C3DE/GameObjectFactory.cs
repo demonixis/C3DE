@@ -67,7 +67,7 @@ namespace C3DE
             if (type == GeometryType.Cube)
                 mesh = new CubeMesh();
             else if (type == GeometryType.Sphere)
-                mesh = new SphereMesh(1, 32);
+                mesh = new SphereMesh(1, 64);
             else
                 mesh = new CylinderMesh();
 
