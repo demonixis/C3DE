@@ -133,6 +133,7 @@
     <Compile Include="Graphics\Rendering\DeviceState.cs" />
     <Compile Include="Graphics\Rendering\GraphicsDeviceExtensions.cs" />
     <Compile Include="Graphics\Rendering\LightPrePassRenderer.cs" />
+    <Compile Include="Graphics\TextureFactory.cs" />
     <Compile Include="Input.cs" />
     <Compile Include="Graphics\Materials\BillboardMaterial.cs" />
     <Compile Include="Graphics\Materials\UnlitMaterial.cs" />
@@ -166,7 +167,6 @@
     <Compile Include="Serializer.cs" />
     <Compile Include="UI\GUISkin.cs" />
     <Compile Include="UI\GUI.cs" />
-    <Compile Include="Utils\GraphicsHelper.cs" />
     <Compile Include="Graphics\Materials\StandardWaterMaterial.cs" />
     <Compile Include="Components\Component.cs" />
     <Compile Include="Components\Rendering\ModelRenderer.cs" />

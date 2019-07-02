@@ -1,4 +1,5 @@
-﻿using C3DE.Components.Rendering;
+﻿using C3DE.Components.Lighting;
+using C3DE.Components.Rendering;
 using C3DE.Demo.Scripts;
 using C3DE.Graphics;
 using C3DE.Graphics.Materials;
@@ -61,8 +62,11 @@ namespace C3DE.Demo.Scenes
                 content.Load<Texture2D>("Textures/pbr/env/irradiance_backward")
             });
 
+            RenderSettings.FogMode = FogMode.None;
+
             // Caches
             GameObject cube = null;
+            GameObject light = null;
             PBRMaterial pbrMaterial = null;
             Renderer renderer = null;
 
@@ -92,6 +96,12 @@ namespace C3DE.Demo.Scenes
 
                     renderer = cube.GetComponent<Renderer>();
                     renderer.Material = pbrMaterial;
+
+                    light = GameObjectFactory.CreateLight(LightType.Point, RandomHelper.GetColor(), 2, 0);
+                    light.Transform.Position = new Vector3(x, 5, z);
+
+                    light = GameObjectFactory.CreateLight(LightType.Point, RandomHelper.GetColor(), 2, 0);
+                    light.Transform.Position = new Vector3(x + 5, -15, z - 5);
 
                     z += margin;
                 }

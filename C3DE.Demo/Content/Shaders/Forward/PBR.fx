@@ -1,4 +1,9 @@
 // Constants
+#if SM4
+#define MAX_LIGHT_COUNT 64
+#else
+#define MAX_LIGHT_COUNT 8
+#endif
 const float PI = 3.14159265359;
 const float GAMMA_CORRECTION = 0.45454545;
 
@@ -11,10 +16,12 @@ float4x4 Projection;
 float3 EyePosition;
 float GammaCorrection = 2.2;
 float2 Features;
+float2 TextureTiling;
 
 // Lighting
-float3 LightPosition;
-float3 LightColor;
+float3 LightPosition[MAX_LIGHT_COUNT];
+float3 LightColor[MAX_LIGHT_COUNT];
+int LightCount = 0;
 
 // Textures
 texture AlbedoMap;
@@ -161,8 +168,8 @@ float3 NewFloat3(float value)
 
 float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 {
-	float3 albedo = pow(tex2D(albedoSampler, input.UV).xyz, NewFloat3(2.2));
-	float4 rmsao = tex2D(rmsaoSampler, input.UV);
+	float3 albedo = pow(tex2D(albedoSampler, input.UV * TextureTiling).xyz, NewFloat3(2.2));
+	float4 rmsao = tex2D(rmsaoSampler, input.UV * TextureTiling);
 	float roughness = rmsao.r;
 	float metallic = rmsao.g;
 	float specular = rmsao.b;
@@ -172,7 +179,7 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 	
 	if (Features.x > 0)
 	{
-		normal = (2.0 * (tex2D(normalSampler, input.UV).xyz)) - 1.0;
+		normal = (2.0 * (tex2D(normalSampler, input.UV * TextureTiling).xyz)) - 1.0;
 		normal = normalize(mul(normal, input.WorldToTangentSpace));
 	}
 
@@ -188,13 +195,14 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 	// ------
 	// Lighting (one light for now)
 	//---------
+	for (int i = 0; i < LightCount; i++)
 	{
 		// Radiance
-		float3 L = normalize(LightPosition - input.WorldPosition.xyz);
+		float3 L = normalize(LightPosition[i] - input.WorldPosition.xyz);
 		float3 H = normalize(V + L);
-		float distance = length(LightPosition - input.WorldPosition.xyz);
+		float distance = length(LightPosition[i] - input.WorldPosition.xyz);
 		float attenuation = 1.0 / distance * distance;
-		float3 radiance = LightColor * attenuation;
+		float3 radiance = LightColor[i] * attenuation;
 
 		// Cook-Torrance BRDF
 		float NDF = DistributionGGX(N, H, roughness);
@@ -219,7 +227,7 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 	// Emissive Lighting
 	// ------
 	if (Features.y > 0)
-		Lo += tex2D(emissiveSampler, input.UV).xyz;
+		Lo += tex2D(emissiveSampler, input.UV * TextureTiling).xyz;
 
 	// ------
 	// Ambient Lighting
@@ -244,8 +252,8 @@ technique PBR
 	pass PBRPass
 	{
 #if SM4
-		VertexShader = compile vs_4_0_level_9_3 VertexShaderFunction();
-		PixelShader = compile ps_4_0_level_9_3 PixelShaderFunction();
+		VertexShader = compile vs_4_0 VertexShaderFunction();
+		PixelShader = compile ps_4_0 PixelShaderFunction();
 #else
 		VertexShader = compile vs_3_0 VertexShaderFunction();
 		PixelShader = compile ps_3_0 PixelShaderFunction();

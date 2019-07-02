@@ -17,7 +17,7 @@ namespace C3DE.Components.Lighting
         internal protected Matrix m_ViewMatrix;
         internal protected Matrix m_ProjectionMatrix;
         internal protected ShadowGenerator m_ShadowGenerator;
-        internal protected Vector3 m_Color = Color.White.ToVector3();
+        internal protected Vector3 _color = Color.White.ToVector3();
         private Effect m_DeferredAmbientEffect;
         private Effect m_DeferredDirLightEffect;
         private Effect m_DeferredPointLightEffect;
@@ -64,8 +64,8 @@ namespace C3DE.Components.Lighting
         [DataMember]
         public Color Color
         {
-            get => new Color(m_Color);
-            set { m_Color = value.ToVector3(); }
+            get => new Color(_color);
+            set { _color = value.ToVector3(); }
         }
 
         /// <summary>
@@ -159,7 +159,7 @@ namespace C3DE.Components.Lighting
 
             if (TypeLight == LightType.Ambient)
             {
-                m_DeferredAmbientEffect.Parameters["Color"].SetValue(m_Color);
+                m_DeferredAmbientEffect.Parameters["Color"].SetValue(_color);
                 m_DeferredAmbientEffect.CurrentTechnique.Passes[0].Apply();
                 m_QuadRenderer.RenderFullscreenQuad();
             }
@@ -169,7 +169,7 @@ namespace C3DE.Components.Lighting
                 m_LPPDirLightEffect.Parameters["DepthTexture"].SetValue(depth);
                 m_LPPDirLightEffect.Parameters["InvViewProjection"].SetValue(invViewProjection);
                 m_LPPDirLightEffect.Parameters["WorldViewProjection"].SetValue(m_Transform._worldMatrix * viewProjection);
-                m_LPPDirLightEffect.Parameters["LightColor"].SetValue(m_Color);
+                m_LPPDirLightEffect.Parameters["LightColor"].SetValue(_color);
                 m_LPPDirLightEffect.Parameters["LightPosition"].SetValue(Transform.Position);
                 m_LPPDirLightEffect.Parameters["LightIntensity"].SetValue(Intensity);
                 m_LPPDirLightEffect.CurrentTechnique.Passes[0].Apply();
@@ -184,7 +184,7 @@ namespace C3DE.Components.Lighting
 
                 var worldViewProjection = (Matrix.CreateScale(Radius) * m_Transform._worldMatrix) * viewProjection;
                 m_LPPPointLightEffect.Parameters["WorldViewProjection"].SetValue(worldViewProjection);
-                m_LPPPointLightEffect.Parameters["LightColor"].SetValue(m_Color);
+                m_LPPPointLightEffect.Parameters["LightColor"].SetValue(_color);
                 m_LPPPointLightEffect.Parameters["LightAttenuation"].SetValue(FallOf);
                 m_LPPPointLightEffect.Parameters["LightPosition"].SetValue(Transform.Position);
                 m_LPPPointLightEffect.Parameters["LightRange"].SetValue(Radius);
@@ -210,7 +210,7 @@ namespace C3DE.Components.Lighting
 
             if (TypeLight == LightType.Ambient)
             {
-                m_DeferredAmbientEffect.Parameters["Color"].SetValue(m_Color);
+                m_DeferredAmbientEffect.Parameters["Color"].SetValue(_color);
                 m_DeferredAmbientEffect.CurrentTechnique.Passes[0].Apply();
                 m_QuadRenderer.RenderFullscreenQuad();
             }
@@ -219,7 +219,7 @@ namespace C3DE.Components.Lighting
                 m_DeferredDirLightEffect.Parameters["ColorMap"].SetValue(colorMap);
                 m_DeferredDirLightEffect.Parameters["NormalMap"].SetValue(normalMap);
                 m_DeferredDirLightEffect.Parameters["DepthMap"].SetValue(depthMap);
-                m_DeferredDirLightEffect.Parameters["Color"].SetValue(m_Color);
+                m_DeferredDirLightEffect.Parameters["Color"].SetValue(_color);
                 m_DeferredDirLightEffect.Parameters["Intensity"].SetValue(Intensity);
                 m_DeferredDirLightEffect.Parameters["CameraPosition"].SetValue(camera.m_Transform.Position);
                 m_DeferredDirLightEffect.Parameters["InvertViewProjection"].SetValue(invertViewProjection);
@@ -238,7 +238,7 @@ namespace C3DE.Components.Lighting
                 m_DeferredPointLightEffect.Parameters["DepthMap"].SetValue(depthMap);
                 m_DeferredPointLightEffect.Parameters["World"].SetValue(sphereWorldMatrix);
                 m_DeferredPointLightEffect.Parameters["LightPosition"].SetValue(m_Transform.Position);
-                m_DeferredPointLightEffect.Parameters["Color"].SetValue(m_Color);
+                m_DeferredPointLightEffect.Parameters["Color"].SetValue(_color);
                 m_DeferredPointLightEffect.Parameters["Radius"].SetValue(Radius);
                 m_DeferredPointLightEffect.Parameters["Intensity"].SetValue(Intensity);
                 m_DeferredPointLightEffect.Parameters["View"].SetValue(camera.m_ViewMatrix);
