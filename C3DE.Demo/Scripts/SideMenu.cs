@@ -1,4 +1,5 @@
-﻿using C3DE.UI;
+﻿using C3DE.Graphics;
+using C3DE.UI;
 using C3DE.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -37,7 +38,7 @@ namespace C3DE.Demo.Scripts
                 m_Widgets[i].Selected = i == selectedIndex;
             }
 
-            m_BackgroundTexture = GraphicsHelper.CreateTexture(Color.CornflowerBlue, 1, 1);
+            m_BackgroundTexture = TextureFactory.CreateColor(Color.CornflowerBlue, 1, 1);
 
             SetVertical(false);
         }

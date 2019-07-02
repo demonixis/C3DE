@@ -16,7 +16,7 @@ namespace C3DE.Demo.Scripts
 
         public override void Start()
         {
-            m_BorderTexture = GraphicsHelper.CreateTexture(Color.Black, 1, 1);
+            m_BorderTexture = TextureFactory.CreateColor(Color.Black, 1, 1);
         }
 
         public override void OnGUI(GUI ui)

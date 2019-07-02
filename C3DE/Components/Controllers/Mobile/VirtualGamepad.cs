@@ -1,4 +1,5 @@
-﻿using C3DE.UI;
+﻿using C3DE.Graphics;
+using C3DE.UI;
 using C3DE.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -73,9 +74,9 @@ namespace C3DE.Components.Controllers.Mobile
         {
             if (_texture == null)
             {
-                var t1 = GraphicsHelper.CreateCircleTexture(Color.Black, 150);
-                var t2 = GraphicsHelper.CreateCircleTexture(Color.GhostWhite, 135);
-                _texture = GraphicsHelper.Combine(t1, t2);
+                var t1 = TextureFactory.CreateCircle(Color.Black, 150);
+                var t2 = TextureFactory.CreateCircle(Color.GhostWhite, 135);
+                _texture = TextureFactory.Combine(t1, t2);
             }
 
             var x = (_texture.Width * Scale) / 2;

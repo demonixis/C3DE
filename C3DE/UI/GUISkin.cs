@@ -1,4 +1,5 @@
-﻿using C3DE.Utils;
+﻿using C3DE.Graphics;
+using C3DE.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -35,20 +36,20 @@ namespace C3DE.UI
 
         public void LoadContent(ContentManager content)
         {
-            Box = GraphicsHelper.CreateBorderTexture(Color.White, new Color(0.08f, 0.12f, 0.16f, 0.7f), 128, 128, 1);
+            Box = TextureFactory.CreateBorder(Color.White, new Color(0.08f, 0.12f, 0.16f, 0.7f), 128, 128, 1);
 
-            Border = GraphicsHelper.CreateBorderTexture(Color.White, new Color(0.08f, 0.12f, 0.16f, 0.7f), 128, 128, 1);
+            Border = TextureFactory.CreateBorder(Color.White, new Color(0.08f, 0.12f, 0.16f, 0.7f), 128, 128, 1);
 
-            Buttons[0] = GraphicsHelper.CreateBorderTexture(Color.White, new Color(0.08f, 0.12f, 0.16f, 0.7f), 128, 48, 1);
-            Buttons[1] = GraphicsHelper.CreateBorderTexture(Color.WhiteSmoke, new Color(0.16f, 0.19f, 0.23f, 0.7f), 128, 48, 1);
-            Buttons[2] =  GraphicsHelper.CreateBorderTexture(Color.LightGray, new Color(0.19f, 0.23f, 0.27f, 0.7f), 128, 48, 1);
+            Buttons[0] = TextureFactory.CreateBorder(Color.White, new Color(0.08f, 0.12f, 0.16f, 0.7f), 128, 48, 1);
+            Buttons[1] = TextureFactory.CreateBorder(Color.WhiteSmoke, new Color(0.16f, 0.19f, 0.23f, 0.7f), 128, 48, 1);
+            Buttons[2] =  TextureFactory.CreateBorder(Color.LightGray, new Color(0.19f, 0.23f, 0.27f, 0.7f), 128, 48, 1);
 
-            Checkbox[0] = GraphicsHelper.CreateBorderTexture(Color.White, new Color(0.08f, 0.12f, 0.16f, 0.7f), 48, 48, 2);
-            Checkbox[1] = GraphicsHelper.CreateTexture(Color.DarkGray, 1, 1);                        
-            Checkbox[2] = GraphicsHelper.CreateTexture(Color.White, 1, 1);
+            Checkbox[0] = TextureFactory.CreateBorder(Color.White, new Color(0.08f, 0.12f, 0.16f, 0.7f), 48, 48, 2);
+            Checkbox[1] = TextureFactory.CreateColor(Color.DarkGray, 1, 1);                        
+            Checkbox[2] = TextureFactory.CreateColor(Color.White, 1, 1);
 
-            Sliders[0] = GraphicsHelper.CreateTexture(new Color(0.08f, 0.12f, 0.16f, 0.7f), 1, 1);
-            Sliders[1] = GraphicsHelper.CreateGradiantTexture(Color.LightBlue, Color.CadetBlue, 16, 16);
+            Sliders[0] = TextureFactory.CreateColor(new Color(0.08f, 0.12f, 0.16f, 0.7f), 1, 1);
+            Sliders[1] = TextureFactory.CreateGradiant(Color.LightBlue, Color.CadetBlue, 16, 16);
 
             if (!string.IsNullOrEmpty(_fontName))
                 Font = content.Load<SpriteFont>(_fontName);

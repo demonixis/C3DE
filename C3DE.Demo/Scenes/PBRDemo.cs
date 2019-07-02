@@ -1,5 +1,6 @@
 ﻿using C3DE.Components.Rendering;
 using C3DE.Demo.Scripts;
+using C3DE.Graphics;
 using C3DE.Graphics.Materials;
 using C3DE.Utils;
 using Microsoft.Xna.Framework;
@@ -22,7 +23,7 @@ namespace C3DE.Demo.Scenes
 
             // Setup the terrain.
             var terrainMaterial = new StandardMaterial();
-            terrainMaterial.MainTexture = GraphicsHelper.CreateTexture(Color.White, 1, 1);
+            terrainMaterial.MainTexture = TextureFactory.CreateColor(Color.White, 1, 1);
             terrainMaterial.Shininess = 32;
             terrainMaterial.Tiling = new Vector2(16);
 
@@ -50,7 +51,7 @@ namespace C3DE.Demo.Scenes
                 content.Load<Texture2D>("Textures/pbr/env/sky_backward")
             }, 256);
 
-            var irradianceMap = GraphicsHelper.CreateCubeMap(new[]
+            var irradianceMap = TextureFactory.CreateCubeMap(new[]
             {
                 content.Load<Texture2D>("Textures/pbr/env/irradiance_right"),
                 content.Load<Texture2D>("Textures/pbr/env/irradiance_left"),
@@ -80,7 +81,7 @@ namespace C3DE.Demo.Scenes
 
                     pbrMaterial = new PBRMaterial
                     {
-                        MainTexture = GraphicsHelper.CreateTexture(Color.White, 1, 1),
+                        MainTexture = TextureFactory.CreateColor(Color.White, 1, 1),
                         IrradianceMap = irradianceMap
                     };
 

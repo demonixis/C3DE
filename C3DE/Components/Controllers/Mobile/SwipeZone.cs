@@ -1,4 +1,5 @@
-﻿using C3DE.UI;
+﻿using C3DE.Graphics;
+using C3DE.UI;
 using C3DE.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -50,7 +51,7 @@ namespace C3DE.Components.Controllers.Mobile
                 _borderZone = new Rectangle(Screen.VirtualWidthPerTwo, 10, Screen.VirtualWidthPerTwo, Screen.VirtualHeight - Screen.VirtualHeight / 3);
 
             if (_borderTexture == null)
-                _borderTexture = GraphicsHelper.CreateBorderTexture(new Color(0.3f, 0.3f, 0.3f, 0.6f), Color.Transparent, _borderZone.Width, _borderZone.Height, 2);
+                _borderTexture = TextureFactory.CreateBorder(new Color(0.3f, 0.3f, 0.3f, 0.6f), Color.Transparent, _borderZone.Width, _borderZone.Height, 2);
         }
 
         public override void OnGUI(GUI ui)

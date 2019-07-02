@@ -1,4 +1,5 @@
 ﻿using C3DE.Components;
+using C3DE.Graphics;
 using C3DE.Graphics.Materials.Shaders;
 using C3DE.Graphics.Primitives;
 using C3DE.Graphics.Rendering;
@@ -110,9 +111,9 @@ namespace C3DE
 
         public void Generate(float size = 250.0f)
         {
-            var skyTop = GraphicsHelper.CreateTexture(new Color(168, 189, 255), 64, 64);
-            var skySide = GraphicsHelper.CreateGradiantTexture(new Color(168, 189, 255), Color.White, 64, 64);
-            var skyBottom = GraphicsHelper.CreateTexture(Color.White, 64, 64);
+            var skyTop = TextureFactory.CreateColor(new Color(168, 189, 255), 64, 64);
+            var skySide = TextureFactory.CreateGradiant(new Color(168, 189, 255), Color.White, 64, 64);
+            var skyBottom = TextureFactory.CreateColor(Color.White, 64, 64);
 
             Generate(Application.GraphicsDevice, new Texture2D[] {
                 skySide,

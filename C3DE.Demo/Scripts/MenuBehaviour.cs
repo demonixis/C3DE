@@ -1,4 +1,5 @@
 ﻿using C3DE.Components;
+using C3DE.Graphics;
 using C3DE.UI;
 using C3DE.Utils;
 using Microsoft.Xna.Framework;
@@ -50,7 +51,7 @@ namespace C3DE.Demo.Scripts
         {
             _margin = 15;
 
-            _background = GraphicsHelper.CreateGradiantTexture(Color.LightSteelBlue, Color.Linen, Screen.VirtualWidth, Screen.VirtualHeight);
+            _background = TextureFactory.CreateGradiant(Color.LightSteelBlue, Color.Linen, Screen.VirtualWidth, Screen.VirtualHeight);
             _backgroundRect = new Rectangle(0, 0, Screen.VirtualWidth, Screen.VirtualHeight);
 
             var tempVec2 = GUI.Skin.Font.MeasureString("C3DE Demos");

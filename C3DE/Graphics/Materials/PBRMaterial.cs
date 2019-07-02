@@ -2,7 +2,7 @@
 using C3DE.Graphics.Rendering;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using static C3DE.Utils.GraphicsHelper;
+using static C3DE.Graphics.TextureFactory;
 
 namespace C3DE.Graphics.Materials
 {
@@ -31,10 +31,10 @@ namespace C3DE.Graphics.Materials
         public void CreateRMSFromValues(float roughness = 0.5f, float metallic = 0.5f, float specular = 0.5f, float ao = 1.0f)
         {
             CreateRMSFromTextures(
-                CreateTexture(GetColor(roughness), 1, 1),
-                CreateTexture(GetColor(metallic), 1, 1),
-                CreateTexture(GetColor(specular), 1, 1),
-                CreateTexture(GetColor(ao), 1, 1));
+                CreateColor(GetColor(roughness), 1, 1),
+                CreateColor(GetColor(metallic), 1, 1),
+                CreateColor(GetColor(specular), 1, 1),
+                CreateColor(GetColor(ao), 1, 1));
         }
 
         public void CreateRMSFromTextures(Texture2D roughness, Texture2D metallic, Texture2D specular, Texture2D ao)
@@ -44,10 +44,10 @@ namespace C3DE.Graphics.Materials
 
             var width = roughness.Width;
             var height = roughness.Height;
-            var rColors = ExtractColors(roughness);
-            var gColors = ExtractColors(TryResize(metallic, width, height));
-            var bColors = ExtractColors(TryResize(specular, width, height));
-            var aColors = ExtractColors(TryResize(ao, width, height));
+            var rColors = GetColors(roughness);
+            var gColors = GetColors(TryResize(metallic, width, height));
+            var bColors = GetColors(TryResize(specular, width, height));
+            var aColors = GetColors(TryResize(ao, width, height));
             var colors = new Color[rColors.Length];
 
             for (var i = 0; i < rColors.Length; i++)

@@ -85,7 +85,7 @@ namespace C3DE.Editor
             grid.AddComponent<Grid>();
 
             m_DefaultMaterial = new StandardMaterial();
-            m_DefaultMaterial.MainTexture = GraphicsHelper.CreateTexture(Color.WhiteSmoke, 1, 1);
+            m_DefaultMaterial.MainTexture = TextureFactory.CreateColor(Color.WhiteSmoke, 1, 1);
 
             SceneInitialized?.Invoke(new[] { cameraGo, lightGo });
         }
@@ -139,7 +139,7 @@ namespace C3DE.Editor
                     break;
 
                 case "Water":
-                    gameObject = GameObjectFactory.CreateWater(GraphicsHelper.CreateTexture(Color.AliceBlue, 1, 1), GraphicsHelper.CreateRandomTexture(32), Vector3.One);
+                    gameObject = GameObjectFactory.CreateWater(TextureFactory.CreateColor(Color.AliceBlue, 1, 1), TextureFactory.CreateNoise(32), Vector3.One);
                     break;
 
                 case "Directional": gameObject = CreateLight(type, LightType.Directional); break;

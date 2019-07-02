@@ -1,12 +1,13 @@
-﻿using Microsoft.Xna.Framework;
+﻿using C3DE.Utils;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 
-namespace C3DE.Utils
+namespace C3DE.Graphics
 {
-    public class GraphicsHelper
+    public class TextureFactory
     {
-        public static Texture2D CreateGradiantTexture(Color start, Color end, int width = 128, int height = 128)
+        public static Texture2D CreateGradiant(Color start, Color end, int width = 128, int height = 128)
         {
             Texture2D texture = new Texture2D(Application.GraphicsDevice, width, height);
             Color[] colors = new Color[width * height];
@@ -24,7 +25,7 @@ namespace C3DE.Utils
             return texture;
         }
 
-        public static Texture2D CreateCheckboardTexture(Color firstTile, Color secondTile, int width = 128, int height = 128)
+        public static Texture2D CreateCheckboard(Color firstTile, Color secondTile, int width = 128, int height = 128)
         {
             Texture2D texture = new Texture2D(Application.GraphicsDevice, width, height);
             Color[] colors = new Color[width * height];
@@ -48,7 +49,7 @@ namespace C3DE.Utils
             return texture;
         }
 
-        public static Texture2D CreateCircleTexture(Color circleColor, Color exteriorColor, int radius)
+        public static Texture2D CreateCircle(Color circleColor, Color exteriorColor, int radius)
         {
             Texture2D texture = new Texture2D(Application.GraphicsDevice, radius, radius);
             Color[] colors = new Color[radius * radius];
@@ -79,12 +80,12 @@ namespace C3DE.Utils
             return texture;
         }
 
-        public static Texture2D CreateCircleTexture(Color circleColor, int radius)
+        public static Texture2D CreateCircle(Color circleColor, int radius)
         {
-            return CreateCircleTexture(circleColor, Color.Transparent, radius);
+            return CreateCircle(circleColor, Color.Transparent, radius);
         }
 
-        public static Texture2D CreateBorderTexture(Color borderColor, Color color, int width, int height, int thickness)
+        public static Texture2D CreateBorder(Color borderColor, Color color, int width, int height, int thickness)
         {
             Texture2D texture = new Texture2D(Application.GraphicsDevice, width, height);
             Color[] colors = new Color[width * height];
@@ -105,7 +106,7 @@ namespace C3DE.Utils
             return texture;
         }
 
-        public static Color[] CreateColor(Color desiredColor, int width, int height)
+        public static Color[] GetColors(Color desiredColor, int width, int height)
         {
             Color[] color = new Color[width * height];
             for (int i = 0; i < color.Length; i++)
@@ -113,14 +114,21 @@ namespace C3DE.Utils
             return color;
         }
 
-        public static Texture2D CreateTexture(Color color, int width, int height)
+        public static Color[] GetColors(Texture2D texture)
+        {
+            var colors = new Color[texture.Width * texture.Height];
+            texture.GetData<Color>(colors);
+            return colors;
+        }
+
+        public static Texture2D CreateColor(Color color, int width, int height)
         {
             Texture2D texture2D = new Texture2D(Application.GraphicsDevice, width, height);
-            texture2D.SetData(CreateColor(color, width, height));
+            texture2D.SetData(GetColors(color, width, height));
             return texture2D;
         }
 
-        public static Texture2D CreateRandomTexture(int width, int height = 0)
+        public static Texture2D CreateNoise(int width, int height = 0)
         {
             if (height == 0)
                 height = width;
@@ -138,6 +146,39 @@ namespace C3DE.Utils
             noiseImage.SetData(noisyColors);
 
             return noiseImage;
+        }
+
+        public static Texture2D CreateTriangle(Color first, Color second, int width = 128, int height = 128)
+        {
+            Texture2D texture = new Texture2D(Application.GraphicsDevice, width, height);
+            Color[] colors = new Color[width * height];
+
+            var triangle = new Point[3]
+            {
+                new Point(0, 0),
+                new Point(0, height),
+                new Point(width, height)
+            };
+
+            Point p;
+
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    p.X = x;
+                    p.Y = y;
+
+                    if (IsPointInsideTriangle(ref triangle, ref p))
+                        colors[x + y * width] = first;
+                    else
+                        colors[x + y * width] = second;
+                }
+            }
+
+            texture.SetData<Color>(colors);
+
+            return texture;
         }
 
         public static TextureCube CreateCubeMap(Texture2D texture)
@@ -178,39 +219,6 @@ namespace C3DE.Utils
             }
 
             return cubeMap;
-        }
-
-        public static Texture2D CreateTriangleTexture(Color first, Color second, int width = 128, int height = 128)
-        {
-            Texture2D texture = new Texture2D(Application.GraphicsDevice, width, height);
-            Color[] colors = new Color[width * height];
-
-            var triangle = new Point[3]
-            {
-                new Point(0, 0),
-                new Point(0, height),
-                new Point(width, height)
-            };
-
-            Point p;
-
-            for (int y = 0; y < height; y++)
-            {
-                for (int x = 0; x < width; x++)
-                {
-                    p.X = x;
-                    p.Y = y;
-
-                    if (IsPointInsideTriangle(ref triangle, ref p))
-                        colors[x + y * width] = first;
-                    else
-                        colors[x + y * width] = second;
-                }
-            }
-
-            texture.SetData<Color>(colors);
-
-            return texture;
         }
 
         /// <summary>
@@ -269,19 +277,12 @@ namespace C3DE.Utils
             return target;
         }
 
-        public static Color[] ExtractColors(Texture2D texture)
-        {
-            var colors = new Color[texture.Width * texture.Height];
-            texture.GetData<Color>(colors);
-            return colors;
-        }
-
         private static float ComputeZCoordinate(ref Point p1, ref Point p2, ref Point p3)
         {
             return p1.X * (p2.Y - p3.Y) + p2.X * (p3.Y - p1.Y) + p3.X * (p1.Y - p2.Y);
         }
 
-        public static bool IsPointInsideTriangle(ref Point[] triangle, ref Point point)
+        private static bool IsPointInsideTriangle(ref Point[] triangle, ref Point point)
         {
             float z1 = ComputeZCoordinate(ref triangle[0], ref triangle[1], ref point);
             float z2 = ComputeZCoordinate(ref triangle[1], ref triangle[2], ref point);

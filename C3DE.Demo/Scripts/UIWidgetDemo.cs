@@ -1,4 +1,5 @@
 ﻿using C3DE.Components;
+using C3DE.Graphics;
 using C3DE.UI;
 using C3DE.Utils;
 using Microsoft.Xna.Framework;
@@ -46,7 +47,7 @@ namespace C3DE.Demo.Scripts
             _text1Value = "Welcome to the Graphics User Interface module";
             _text2Value = "This is a label which you can use to display informations.\nIt's multiline you just have to use the '\\n' character.";
 
-            _background = GraphicsHelper.CreateGradiantTexture(Color.LightSkyBlue, Color.LightSteelBlue, 64, 64);
+            _background = TextureFactory.CreateGradiant(Color.LightSkyBlue, Color.LightSteelBlue, 64, 64);
             _backgroundRect = Screen.VirtualScreenRect;
 
             var width = 600;

@@ -1,4 +1,5 @@
 ﻿using C3DE.Components;
+using C3DE.Graphics;
 using C3DE.Graphics.PostProcessing;
 using C3DE.UI;
 using C3DE.Utils;
@@ -35,8 +36,7 @@ namespace C3DE.Demo.Scripts
 
             // Setup PostProcess.
             AddPostProcess(new FastPostProcessing(graphics));
-            var fastBloom = new FastBloom(graphics);
-            AddPostProcess(fastBloom);
+            AddPostProcess(new FastBloom(graphics));
             AddPostProcess(new Tonemapping(graphics));
             AddPostProcess(new C64Filter(graphics));
             AddPostProcess(new CGAFilter(graphics));
@@ -45,10 +45,7 @@ namespace C3DE.Demo.Scripts
             AddPostProcess(new GrayScaleFilter(graphics));
             AddPostProcess(new AverageColorFilter(graphics));
             AddPostProcess(new MotionBlur(graphics));
-
-            var vignette = new Vignette(graphics);
-            AddPostProcess(vignette);
-
+            AddPostProcess(new Vignette(graphics));
             AddPostProcess(new GlobalFog(graphics));
 
             // Setup UI
@@ -57,7 +54,7 @@ namespace C3DE.Demo.Scripts
                 "Fast PP", "Bloom", "Tonemapping", "C64 Filter",
                 "CGA Filter", "Convolution", "Film",
                 "GrayScale", "Average Color", "Motion Blur",
-                "Refraction", "Vignette", "Global Fog", "FXAA"
+                "Vignette", "Global Fog"
             });
 
             var count = titles.Count;
@@ -77,7 +74,7 @@ namespace C3DE.Demo.Scripts
                 _widgets[i].RectExt = new Rectangle(_widgets[i].Rect.X - 1, _widgets[i].Rect.Y - 1, _widgets[i].Rect.Width + 1, _widgets[i].Rect.Height + 1);
             }
 
-            _backgroundTexture = GraphicsHelper.CreateTexture(Color.CornflowerBlue, 1, 1);
+            _backgroundTexture = TextureFactory.CreateColor(Color.CornflowerBlue, 1, 1);
 
             var renderSettings = Scene.current.RenderSettings;
             renderSettings.FogDensity = 0.0085f;

@@ -135,7 +135,7 @@
     <Compile Include="Serializer.cs" />
     <Compile Include="UI\GUISkin.cs" />
     <Compile Include="UI\GUI.cs" />
-    <Compile Include="Utils\GraphicsHelper.cs" />
+    <Compile Include="Graphics\TextureFactory.cs" />
     <Compile Include="Graphics\Materials\StandardWaterMaterial.cs" />
     <Compile Include="Components\Component.cs" />
     <Compile Include="Components\Rendering\ModelRenderer.cs" />

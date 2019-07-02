@@ -1,4 +1,5 @@
 ﻿using C3DE.Components;
+using C3DE.Graphics;
 using C3DE.Graphics.Rendering;
 using C3DE.UI;
 using C3DE.Utils;
@@ -14,7 +15,7 @@ namespace C3DE.Demo.Scripts
 
         public override void Start()
         {
-            m_BorderTexture = GraphicsHelper.CreateTexture(Color.Black, 1, 1);
+            m_BorderTexture = TextureFactory.CreateColor(Color.Black, 1, 1);
         }
 
         public override void OnGUI(GUI ui)
