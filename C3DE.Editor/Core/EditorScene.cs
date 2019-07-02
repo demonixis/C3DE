@@ -4,6 +4,7 @@ using C3DE.Components.Physics;
 using C3DE.Components.Rendering;
 using C3DE.Editor.Core.Components;
 using C3DE.Editor.GameComponents;
+using C3DE.Graphics;
 using C3DE.Graphics.Materials;
 using C3DE.Graphics.Primitives;
 using C3DE.Utils;
