@@ -14,8 +14,8 @@ namespace C3DE.Demo.Scenes
             _directionalLight.Transform.LocalPosition = new Vector3(250, 500, 100);
 
             // Water
-            var waterTexture = Application.Content.Load<Texture2D>("Textures/water");
-            var lavaNormal = Application.Content.Load<Texture2D>("Textures/wavesbump");
+            var waterTexture = Application.Content.Load<Texture2D>("Textures/Fluids/water");
+            var lavaNormal = Application.Content.Load<Texture2D>("Textures/Fluids/wavesbump");
             var waterGo = GameObjectFactory.CreateWater(waterTexture, lavaNormal, new Vector3(_terrain.Width * 0.5f));
             Add(waterGo);
 

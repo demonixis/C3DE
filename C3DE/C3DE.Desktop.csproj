@@ -133,6 +133,7 @@
     <Compile Include="Graphics\Rendering\DeviceState.cs" />
     <Compile Include="Graphics\Rendering\GraphicsDeviceExtensions.cs" />
     <Compile Include="Graphics\Rendering\LightPrePassRenderer.cs" />
+    <Compile Include="Graphics\ShadowGenerator.cs" />
     <Compile Include="Graphics\TextureFactory.cs" />
     <Compile Include="Input.cs" />
     <Compile Include="Graphics\Materials\BillboardMaterial.cs" />
@@ -184,7 +185,6 @@
     <Compile Include="GameObject.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Graphics\Rendering\ForwardRenderer.cs" />
-    <Compile Include="Components\Lighting\ShadowGenerator.cs" />
     <Compile Include="Skybox.cs" />
     <Compile Include="Time.cs" />
     <Compile Include="Utils\NoiseGenerator.cs" />
@@ -205,21 +205,6 @@
     <Compile Include="VR\OpenHMD\OpenHMDService.cs" />
     <Compile Include="Components\CoroutineManager.cs" />
     <Compile Include="Components\Coroutine.cs" />
-    <Compile Include="VR\OSVR\MonoGameGraphicsToolkit.cs" />
-    <Compile Include="VR\OSVR\OSVR.MonoGame\DeviceDescriptor.cs" />
-    <Compile Include="VR\OSVR\OSVR.MonoGame\Math.cs" />
-    <Compile Include="VR\OSVR\OSVR.MonoGame\Sample\Axes.cs" />
-    <Compile Include="VR\OSVR\OSVR.MonoGame\Sample\MouselookPoseSignal.cs" />
-    <Compile Include="VR\OSVR\OSVR.MonoGame\Sample\SampleGame.cs" />
-    <Compile Include="VR\OSVR\OSVRService.cs" />
-    <Compile Include="VR\OSVR\OSVR.MonoGame\ReportTypes.cs" />
-    <Compile Include="VR\OSVR\OSVR.MonoGame\VREye.cs" />
-    <Compile Include="VR\OSVR\OSVR.MonoGame\VRHead.cs" />
-    <Compile Include="VR\OSVR\OSVR.MonoGame\XnaEyeTracker3DInterface.cs" />
-    <Compile Include="VR\OSVR\OSVR.MonoGame\XnaOrientationInterface.cs" />
-    <Compile Include="VR\OSVR\OSVR.MonoGame\XnaPoseInterface.cs" />
-    <Compile Include="VR\OSVR\OSVR.MonoGame\XnaPosition2DInterface.cs" />
-    <Compile Include="VR\OSVR\OSVR.MonoGame\XnaPositionInterface.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -53,6 +53,7 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
     float sampleDelta = 0.025;
     float nrSamples = 0.0;
 	
+#if SM4
     for(float phi = 0.0; phi < 2.0 * PI; phi += sampleDelta)
     {
         for(float theta = 0.0; theta < 0.5 * PI; theta += sampleDelta)
@@ -66,6 +67,21 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
             nrSamples++;
         }
     }
+#else
+	float phis[6] = { 0.0, 0.5, 1.0, 2.0, 4.0, 6.0 };
+	float thetas[6] = { 0.0, 0.25, 0.5, 0.75, 1.0, 1.5 };
+
+	for (int i = 0; i < 6; i++)
+	{
+		// spherical to cartesian (in tangent space)
+		float3 tangentSample = float3(sin(thetas[i]) * cos(phis[i]), sin(thetas[i]) * sin(phis[i]), cos(thetas[i]));
+		// tangent space to world
+		float3 sampleVec = tangentSample.x * right + tangentSample.y * up + tangentSample.z * N;
+
+		irradiance += texCUBE(EnvironmentSampler, sampleVec).rgb * cos(thetas[i]) * sin(thetas[i]);
+		nrSamples++;
+	}
+#endif
 	
     irradiance = PI * irradiance * (1.0 / float(nrSamples));
     

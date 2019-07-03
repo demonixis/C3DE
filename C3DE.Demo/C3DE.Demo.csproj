@@ -101,7 +101,14 @@
     <Compile Include="Scenes\HeightmapDemo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <MonoGameContentReference Include="Content\Content.mgcb" />
+    <MonoGameContentReference Include="Content\Content.mgcb">
+      <Link>Content\Content.mgcb</Link>
+    </MonoGameContentReference>
+  </ItemGroup>
+  <ItemGroup>
+    <MonoGameContentReference Include="..\C3DE.Content\Shaders.mgcb">
+      <Link>Content\Shaders.mgcb</Link>
+    </MonoGameContentReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

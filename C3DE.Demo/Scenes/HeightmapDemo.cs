@@ -40,8 +40,8 @@ namespace C3DE.Demo.Scenes
             terrainGo.AddComponent<WeightMapViewer>();
 
             // With water !
-            var waterTexture = content.Load<Texture2D>("Textures/water");
-            var bumpTexture = content.Load<Texture2D>("Textures/wavesbump");
+            var waterTexture = content.Load<Texture2D>("Textures/Fluids/water");
+            var bumpTexture = content.Load<Texture2D>("Textures/Fluids/wavesbump");
             var water = GameObjectFactory.CreateWater(waterTexture, bumpTexture, new Vector3(terrain.Width * 0.5f));
             water.Transform.Translate(0, 10.0f, 0);
             _scene.Add(water);

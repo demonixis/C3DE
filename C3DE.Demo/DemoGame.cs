@@ -8,12 +8,12 @@ namespace C3DE.Demo
 {
     public static class DemoGame
     {
-        public const int ScreenWidth = 1280;
-        public const int ScreenHeight = 800;
+        public const int ScreenWidth = 800;
+        public const int ScreenHeight = 480;
         public const int UIWidth = 1280;
         public const int UIHeight = 800;
 
-        public static string[] BlueSkybox = new string[6]
+        public static string[] BlueSkybox =
         {
             "Textures/Skybox/bluesky/px",
             "Textures/Skybox/bluesky/nx",
@@ -23,7 +23,7 @@ namespace C3DE.Demo
             "Textures/Skybox/bluesky/nz"
         };
 
-        public static string[] StarsSkybox = new string[]
+        public static string[] StarsSkybox =
         {
             "Textures/Skybox/starfield/px",
             "Textures/Skybox/starfield/nx",
@@ -31,6 +31,26 @@ namespace C3DE.Demo
             "Textures/Skybox/starfield/ny",
             "Textures/Skybox/starfield/pz",
             "Textures/Skybox/starfield/nz"
+        };
+
+        public static string[] NatureSkybox =
+        {
+            "Textures/Skybox/nature/sky_right",
+            "Textures/Skybox/nature/sky_left",
+            "Textures/Skybox/nature/sky_top",
+            "Textures/Skybox/nature/sky_bottom",
+            "Textures/Skybox/nature/sky_forward",
+            "Textures/Skybox/nature/sky_backward"
+        };
+
+        public static string[] CloudSkybox =
+        {
+            "Textures/Skybox/clouds1/clouds1_east",
+            "Textures/Skybox/clouds1/clouds1_west",
+            "Textures/Skybox/clouds1/clouds1_up",
+            "Textures/Skybox/clouds1/clouds1_down",
+            "Textures/Skybox/clouds1/clouds1_north",
+            "Textures/Skybox/clouds1/clouds1_south"
         };
 
         public static GUISkin CreateSkin(ContentManager content, bool customSkin = true)

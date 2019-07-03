@@ -106,7 +106,7 @@ namespace C3DE
         {
             var textures = new Texture2D[6];
 
-            for (int i = 0; i < 6; i++)
+            for (var i = 0; i < 6; i++)
                 textures[i] = Application.Content.Load<Texture2D>(textureNames[i]);
 
             Generate(device, textures, size);
@@ -118,7 +118,7 @@ namespace C3DE
             var skySide = TextureFactory.CreateGradiant(new Color(168, 189, 255), Color.White, 64, 64);
             var skyBottom = TextureFactory.CreateColor(Color.White, 64, 64);
 
-            Generate(Application.GraphicsDevice, new [] 
+            Generate(Application.GraphicsDevice, new[]
             {
                 skySide,
                 skySide,

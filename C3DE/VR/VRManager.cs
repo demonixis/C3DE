@@ -33,13 +33,9 @@ namespace C3DE.VR
             {
 #if WINDOWS
                 AvailableDrivers.Add(new VRDriver(new OculusRiftService(Application.Engine), true, 0));
+#endif
                 AvailableDrivers.Add(new VRDriver(new OpenVRService(Application.Engine), true, 1));
                 AvailableDrivers.Add(new VRDriver(new OpenHMDService(Application.Engine), true, 0));
-#elif DESKTOP
-                AvailableDrivers.Add(new VRDriver(new OSVRService(Application.Engine), false, 2));
-                AvailableDrivers.Add(new VRDriver(new OpenVRService(Application.Engine), false, 1));
-                AvailableDrivers.Add(new VRDriver(new OpenHMDService(Application.Engine), false, 0));      
-#endif
             }
 
             AvailableDrivers.Sort();

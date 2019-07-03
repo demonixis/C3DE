@@ -14,6 +14,7 @@ namespace C3DE.Graphics.Materials
         public Texture2D RoughnessMetalicSpecularAOMap => _rmsaoMap;
         public Texture2D EmissiveMap { get; set; }
 
+        public PBRMaterial() : base() { }
         public PBRMaterial(string name) : base(name) { }
 
         public void CreateRMSFromValues(float roughness = 0.5f, float metallic = 0.5f, float specular = 0.5f, float ao = 1.0f)

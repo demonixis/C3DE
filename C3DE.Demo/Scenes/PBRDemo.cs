@@ -1,11 +1,8 @@
-﻿using C3DE.Components.Lighting;
-using C3DE.Components.Rendering;
+﻿using C3DE.Components.Rendering;
 using C3DE.Demo.Scripts;
 using C3DE.Graphics;
 using C3DE.Graphics.Materials;
-using C3DE.Utils;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace C3DE.Demo.Scenes
 {
@@ -42,27 +39,7 @@ namespace C3DE.Demo.Scenes
             // Generate the Sky
             var content = Application.Content;
 
-            RenderSettings.Skybox.Generate(Application.GraphicsDevice, new[]
-            {
-                content.Load<Texture2D>("Textures/pbr/env/sky_right"),
-                content.Load<Texture2D>("Textures/pbr/env/sky_left"),
-                content.Load<Texture2D>("Textures/pbr/env/sky_top"),
-                content.Load<Texture2D>("Textures/pbr/env/sky_bottom"),
-                content.Load<Texture2D>("Textures/pbr/env/sky_forward"),
-                content.Load<Texture2D>("Textures/pbr/env/sky_backward")
-            }, 256);
-
-            var irradianceMap = TextureFactory.CreateCubeMap(new[]
-            {
-                content.Load<Texture2D>("Textures/pbr/env/irradiance_right"),
-                content.Load<Texture2D>("Textures/pbr/env/irradiance_left"),
-                content.Load<Texture2D>("Textures/pbr/env/irradiance_top"),
-                content.Load<Texture2D>("Textures/pbr/env/irradiance_bottom"),
-                content.Load<Texture2D>("Textures/pbr/env/irradiance_forward"),
-                content.Load<Texture2D>("Textures/pbr/env/irradiance_backward")
-            });
-
-            //RenderSettings.Skybox.Generate(Application.GraphicsDevice, DemoGame.StarsSkybox, 256);
+            RenderSettings.Skybox.Generate(Application.GraphicsDevice, DemoGame.NatureSkybox, 256);
 
             RenderSettings.FogMode = FogMode.None;
 

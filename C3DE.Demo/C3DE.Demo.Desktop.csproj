@@ -86,6 +86,7 @@
     <Compile Include="Scripts\PostProcessSwitcher.cs" />
     <Compile Include="Scripts\RayPickingTester.cs" />
     <Compile Include="Scripts\RendererSwitcher.cs" />
+    <Compile Include="Scripts\ShadowMapViewer.cs" />
     <Compile Include="Scripts\SideMenu.cs" />
     <Compile Include="Scripts\SimplePath.cs" />
     <Compile Include="Scripts\SinMovement.cs" />
@@ -98,14 +99,20 @@
     <Compile Include="Scenes\HeightmapDemo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.manifest" />
     <None Include="Icon.png" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Icon.ico" />
   </ItemGroup>
   <ItemGroup>
-    <MonoGameContentReference Include="Content\Content.Desktop.mgcb" />
+    <MonoGameContentReference Include="Content\Content.mgcb">
+      <Link>Content\Content.mgcb</Link>
+    </MonoGameContentReference>
+  </ItemGroup>
+  <ItemGroup>
+    <MonoGameContentReference Include="..\C3DE.Content\Shaders.Desktop.mgcb">
+      <Link>Content\Shaders.Desktop.mgcb</Link>
+    </MonoGameContentReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="x64\libopenal.so.1">

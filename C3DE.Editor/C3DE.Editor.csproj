@@ -264,8 +264,18 @@
     <Compile Include="UI\UIManager.cs" />
   </ItemGroup>
   <ItemGroup>
-    <MonoGameContentReference Include="..\C3DE.Demo\Content\Content.mgcb">
+    <MonoGameContentReference Include="Content\Content.mgcb">
       <Link>Content\Content.mgcb</Link>
+    </MonoGameContentReference>
+  </ItemGroup>
+  <ItemGroup>
+    <MonoGameContentReference Include="..\C3DE.Content\Shaders.mgcb">
+      <Link>Content\Shaders.mgcb</Link>
+    </MonoGameContentReference>
+  </ItemGroup>
+  <ItemGroup>
+    <MonoGameContentReference Include="..\C3DE.Demo\Content\Content.mgcb">
+      <Link>Content\Content.Demo.mgcb</Link>
     </MonoGameContentReference>
   </ItemGroup>
   <ItemGroup>
