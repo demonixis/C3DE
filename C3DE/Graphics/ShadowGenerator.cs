@@ -73,7 +73,7 @@ namespace C3DE.Graphics
         public void SetShadowMapSize(GraphicsDevice device, int size)
         {
 #if ANDROID
-			shadowMap = new RenderTarget2D (device, size, size);
+            _shadowMap = new RenderTarget2D (device, size, size);
 #else
             _shadowMap = new RenderTarget2D(device, size, size, false, SurfaceFormat.Single, DepthFormat.Depth24, 2, RenderTargetUsage.DiscardContents);
 #endif

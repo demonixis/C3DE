@@ -37,9 +37,13 @@ namespace C3DE.Resources
 
         public static Texture2D LoadTexture(string name, string path = "C3DE.Resources.Images")
         {
+#if ANDROID
+            return null;
+#else
             var stream = GetAssembly().GetManifestResourceStream(string.Concat("{0}.{1}", path, name));
 
             return Texture2D.FromStream(Application.GraphicsDevice, stream);
+#endif
         }
     }
 }

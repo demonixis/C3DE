@@ -8,6 +8,9 @@ namespace C3DE
     {
         public static Texture2D LoadTexture(string path, bool isExternal = false)
         {
+#if ANDROID
+            return Application.Content.Load<Texture2D>(path);
+#else
             Texture2D texture = null;
 
             if (!isExternal)
@@ -19,6 +22,7 @@ namespace C3DE
                 texture.Tag = String.Format("{0}|{1}", path, isExternal);
 
             return texture;
+#endif
         }
 
         public static Model LoadModel(string path)

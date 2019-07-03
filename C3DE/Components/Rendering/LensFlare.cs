@@ -5,6 +5,19 @@ using System;
 
 namespace C3DE.Components.Rendering
 {
+#if ANDROID
+    class OcclusionQuery
+    {
+        public int PixelCount => 0;
+        public bool IsComplete => false;
+
+        public OcclusionQuery(GraphicsDevice device) { }
+
+        public void Begin() { }
+        public void End() { }
+    }
+#endif
+
     public class LensFlare : Renderer
     {
         public class Flare
@@ -57,7 +70,7 @@ namespace C3DE.Components.Rendering
             {
                 if (_light == null)
                     _light = GetComponent<Light>();
-                
+
                 return _light?.Direction ?? _direction;
             }
         }
