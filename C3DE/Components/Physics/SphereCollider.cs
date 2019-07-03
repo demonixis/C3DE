@@ -33,8 +33,8 @@ namespace C3DE.Components.Physics
 
         public override void Update()
         {
-            if (!m_GameObject.IsStatic)
-                _sphere.Center = m_Transform.LocalPosition;
+            if (!_gameObject.IsStatic)
+                _sphere.Center = _transform.LocalPosition;
         }
 
         public override void Compute()

@@ -56,8 +56,8 @@ namespace C3DE.Graphics.Materials.Shaders
 
         public override void PrePass(Camera camera)
         {
-            m_EPView.SetValue(camera.m_ViewMatrix);
-            m_EPProjection.SetValue(camera.m_ProjectionMatrix);
+            m_EPView.SetValue(camera._viewMatrix);
+            m_EPProjection.SetValue(camera._projectionMatrix);
             m_EPEyePosition.SetValue(camera.Transform.LocalPosition);
             m_EPAmbientColor.SetValue(Scene.current.RenderSettings.ambientColor);
         }

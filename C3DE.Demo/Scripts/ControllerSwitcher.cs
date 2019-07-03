@@ -53,7 +53,7 @@ namespace C3DE.Demo.Scripts
 
             _orbitController.MaxDistance = 200;
 
-            m_Transform.LocalPosition = DefaultPosition;
+            _transform.LocalPosition = DefaultPosition;
             _camera.Target = DefaultRotation;
         }
 
@@ -75,7 +75,7 @@ namespace C3DE.Demo.Scripts
 
             if (gui.Button(_btn3, "Reset position"))
             {
-                m_Transform.LocalPosition = DefaultPosition;
+                _transform.LocalPosition = DefaultPosition;
                 _camera.Target = DefaultRotation;
             }
 

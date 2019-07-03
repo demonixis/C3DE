@@ -10,7 +10,7 @@ namespace C3DE.Demo.Scenes
         {
             base.Initialize();
             OptimizeFor2D();
-            m_Camera.AddComponent<UIWidgetDemo>();
+            _camera.AddComponent<UIWidgetDemo>();
         }
     }
 }

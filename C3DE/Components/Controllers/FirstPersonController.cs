@@ -108,24 +108,24 @@ namespace C3DE.Components.Controllers
             UpdateInputs();
 
             // Limits on X axis
-            if (m_Transform.LocalRotation.X <= -MathHelper.PiOver2)
+            if (_transform.LocalRotation.X <= -MathHelper.PiOver2)
             {
-                m_Transform.SetLocalRotation(-MathHelper.PiOver2 + 0.001f, null, null);
+                _transform.SetLocalRotation(-MathHelper.PiOver2 + 0.001f, null, null);
                 rotation = Vector3.Zero;
             }
-            else if (m_Transform.LocalRotation.X >= MathHelper.PiOver2)
+            else if (_transform.LocalRotation.X >= MathHelper.PiOver2)
             {
-                m_Transform.SetLocalRotation(MathHelper.PiOver2 - 0.001f, null, null);
+                _transform.SetLocalRotation(MathHelper.PiOver2 - 0.001f, null, null);
                 rotation = Vector3.Zero;
             }
 
-            _rotationMatrix = Matrix.CreateFromYawPitchRoll(m_Transform.LocalRotation.Y, m_Transform.LocalRotation.X, 0.0f);
+            _rotationMatrix = Matrix.CreateFromYawPitchRoll(_transform.LocalRotation.Y, _transform.LocalRotation.X, 0.0f);
 
-            _transformedReference = Vector3.Transform(translation, !Fly ? Matrix.CreateRotationY(m_Transform.LocalRotation.Y) : _rotationMatrix);
+            _transformedReference = Vector3.Transform(translation, !Fly ? Matrix.CreateRotationY(_transform.LocalRotation.Y) : _rotationMatrix);
 
             // Translate and rotate
-            m_Transform.Translate(ref _transformedReference);
-            m_Transform.Rotate(ref rotation);
+            _transform.Translate(ref _transformedReference);
+            _transform.Rotate(ref rotation);
 
             translation *= Velocity;
             rotation *= AngularVelocity;
@@ -228,13 +228,13 @@ namespace C3DE.Components.Controllers
         {
             if (active && leftVirtaulStick == null && rightSwipeZone == null)
             {
-                leftVirtaulStick = m_GameObject.AddComponent<VirtualGamepad>();
-                rightSwipeZone = m_GameObject.AddComponent<SwipeZone>();
+                leftVirtaulStick = _gameObject.AddComponent<VirtualGamepad>();
+                rightSwipeZone = _gameObject.AddComponent<SwipeZone>();
             }
             else if (!active && leftVirtaulStick != null && rightSwipeZone != null)
             {
-                m_GameObject.RemoveComponent(leftVirtaulStick);
-                m_GameObject.RemoveComponent(rightSwipeZone);
+                _gameObject.RemoveComponent(leftVirtaulStick);
+                _gameObject.RemoveComponent(rightSwipeZone);
             }
 
             _virtualInputEnabled = leftVirtaulStick != null && rightSwipeZone != null;

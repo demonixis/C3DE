@@ -11,22 +11,22 @@ namespace C3DE.Demo.Scripts
 {
     public class ReflectionProbeDebugger : Behaviour
     {
-        private Texture2D m_BorderTexture;
-        private ReflectionProbe m_ReflectionProbe;
+        private Texture2D _borderTexture;
+        private ReflectionProbe _reflectionProbe;
 
         public override void Start()
         {
-            m_BorderTexture = TextureFactory.CreateColor(Color.Black, 1, 1);
+            _borderTexture = TextureFactory.CreateColor(Color.Black, 1, 1);
         }
 
         public override void OnGUI(GUI ui)
         {
             base.OnGUI(ui);
 
-            if (m_ReflectionProbe == null)
+            if (_reflectionProbe == null)
             {
-                m_ReflectionProbe = GetComponent<ReflectionProbe>();
-                if (m_ReflectionProbe == null)
+                _reflectionProbe = GetComponent<ReflectionProbe>();
+                if (_reflectionProbe == null)
                     return;
             }
 
@@ -38,7 +38,7 @@ namespace C3DE.Demo.Scripts
             for (var i = 0; i < 6; i++)
             {
                 //ui.DrawTexture(new Rectangle(0, height * i, width, height), m_BorderTexture);
-                ui.DrawTexture(new Rectangle(2, 2 + height * i, width - 4, height - 4), m_ReflectionProbe.GetRenderTarget((CubeMapFace)i));
+                ui.DrawTexture(new Rectangle(2, 2 + height * i, width - 4, height - 4), _reflectionProbe.GetRenderTarget((CubeMapFace)i));
                 ui.Label(new Vector2(5, height - 28 + (i * height)), ((CubeMapFace)i).ToString());
             }
         }

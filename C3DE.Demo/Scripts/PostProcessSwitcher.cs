@@ -2,7 +2,6 @@
 using C3DE.Graphics;
 using C3DE.Graphics.PostProcessing;
 using C3DE.UI;
-using C3DE.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -105,7 +104,7 @@ namespace C3DE.Demo.Scripts
         private void AddPostProcess(PostProcessPass pass)
         {
             pass.Enabled = false;
-            m_GameObject.Scene.Add(pass);
+            _gameObject.Scene.Add(pass);
             _passes.Add(pass);
         }
 

@@ -12,7 +12,7 @@ namespace C3DE.Demo.Scenes
             base.Initialize();
             Application.Engine.Renderer = new LightPrePassRenderer(Application.GraphicsDevice);
 
-            m_Camera.AddComponent<LightPrePassDebuger>();
+            _camera.AddComponent<LightPrePassDebuger>();
         }
 
         public override void Unload()

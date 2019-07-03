@@ -668,6 +668,12 @@
 /processorParam:DebugMode=Auto
 /build:Shaders/Forward/Unlit.fx
 
+#begin Shaders/IrradianceConvolution.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Shaders/IrradianceConvolution.fx
+
 #begin Shaders/LPP/DepthNormal.fx
 /importer:EffectImporter
 /processor:EffectProcessor

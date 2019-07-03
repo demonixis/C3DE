@@ -51,7 +51,7 @@ namespace C3DE.Demo.Scripts
                 _light.TypeLight = LightType.Spot;
 
             if (LogPositionRotation)
-                Debug.Log($"p: {m_Transform.Position} r: {m_Transform.Rotation}");
+                Debug.Log($"p: {_transform.Position} r: {_transform.Rotation}");
         }
     }
 }

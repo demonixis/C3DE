@@ -13,8 +13,8 @@ namespace C3DE.Demo.Scripts
 {
     public sealed class LightSpawner : Behaviour
     {
-        private VRService m_VRService;
-        private Transform m_RightHand;
+        private VRService _VRService;
+        private Transform _rightHand;
 
         public bool ShowDebugMesh { get; set; } = false;
         public bool ShadowMapEnabled { get; set; } = false;
@@ -28,7 +28,7 @@ namespace C3DE.Demo.Scripts
 
         private void OnVRChanged(VRService service)
         {
-            m_VRService = service;
+            _VRService = service;
 
             StartCoroutine(SetupVRPlayer());
         }
@@ -38,10 +38,10 @@ namespace C3DE.Demo.Scripts
             base.Update();
 
             if (Input.Keys.JustPressed(Keys.Space))
-                SpawnLightAt(m_Transform.Position);
+                SpawnLightAt(_transform.Position);
 
-            if (m_VRService != null && m_RightHand != null && m_VRService.GetButtonDown(1, XRButton.Trigger))
-                SpawnLightAt(m_RightHand.Position);
+            if (_VRService != null && _rightHand != null && _VRService.GetButtonDown(1, XRButton.Trigger))
+                SpawnLightAt(_rightHand.Position);
         }
 
         private void SpawnLightAt(Vector3 position)
@@ -80,7 +80,7 @@ namespace C3DE.Demo.Scripts
                 var controllers = player.GetComponentsInChildren<MotionController>();
                 foreach (var controller in controllers)
                     if (!controller.LeftHand)
-                        m_RightHand = controller.Transform;
+                        _rightHand = controller.Transform;
             }
         }
     }

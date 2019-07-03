@@ -14,31 +14,31 @@ namespace C3DE.Components
     public class Camera : Component
     {
         public static Camera Main { get; internal set; }
-        protected internal Matrix m_ViewMatrix;
-        protected internal Matrix m_ProjectionMatrix;
-        protected internal Color m_ClearColor;
-        protected internal BoundingFrustum m_BoundingFrustrum;
-        protected internal short m_Depth;
-        private Vector3 m_Target;
-        private Vector3 m_UpVector;
-        private float m_FieldOfView;
-        private float m_AspectRatio;
-        private float m_NearPlane;
-        private float m_FarPlane;
-        private CameraProjectionType m_ProjectionType;
-        private bool m_NeedUpdate;
-        private bool m_NeedProjectionUpdate;
+        protected internal Matrix _viewMatrix;
+        protected internal Matrix _projectionMatrix;
+        protected internal Color _clearColor;
+        protected internal BoundingFrustum _boundingFrustrum;
+        protected internal short _depth;
+        private Vector3 _target;
+        private Vector3 _upVector;
+        private float _fieldOfView;
+        private float _aspectRatio;
+        private float _nearPlane;
+        private float _farPlane;
+        private CameraProjectionType _projectionType;
+        private bool _needUpdate;
+        private bool _needProjectionUpdate;
 
         [DataMember]
         public float AspectRatio
         {
-            get { return m_AspectRatio; }
+            get => _aspectRatio;
             set
             {
-                if (m_AspectRatio != value)
+                if (_aspectRatio != value)
                 {
-                    m_AspectRatio = value;
-                    m_NeedProjectionUpdate = true;
+                    _aspectRatio = value;
+                    _needProjectionUpdate = true;
                 }
             }
         }
@@ -46,27 +46,27 @@ namespace C3DE.Components
         [DataMember]
         public Color ClearColor
         {
-            get { return m_ClearColor; }
-            set { m_ClearColor = value; }
+            get => _clearColor;
+            set => _clearColor = value;
         }
 
         [DataMember]
         public short Depth
         {
-            get { return m_Depth; }
-            set { m_Depth = value; }
+            get => _depth;
+            set => _depth = value;
         }
 
         [DataMember]
         public float FieldOfView
         {
-            get { return m_FieldOfView; }
+            get => _fieldOfView;
             set
             {
-                if (m_FieldOfView != value)
+                if (_fieldOfView != value)
                 {
-                    m_FieldOfView = value;
-                    m_NeedProjectionUpdate = true;
+                    _fieldOfView = value;
+                    _needProjectionUpdate = true;
                 }
             }
         }
@@ -74,13 +74,13 @@ namespace C3DE.Components
         [DataMember]
         public float Near
         {
-            get { return m_NearPlane; }
+            get => _nearPlane;
             set
             {
-                if (m_NearPlane != value)
+                if (_nearPlane != value)
                 {
-                    m_NearPlane = value;
-                    m_NeedProjectionUpdate = true;
+                    _nearPlane = value;
+                    _needProjectionUpdate = true;
                 }
             }
         }
@@ -88,13 +88,13 @@ namespace C3DE.Components
         [DataMember]
         public float Far
         {
-            get { return m_FarPlane; }
+            get => _farPlane;
             set
             {
-                if (m_FarPlane != value)
+                if (_farPlane != value)
                 {
-                    m_FarPlane = value;
-                    m_NeedProjectionUpdate = true;
+                    _farPlane = value;
+                    _needProjectionUpdate = true;
                 }
             }
         }
@@ -102,43 +102,34 @@ namespace C3DE.Components
         [DataMember]
         public Vector3 Target
         {
-            get { return m_Target; }
-            set { m_Target = value; }
+            get => _target;
+            set => _target = value;
         }
 
         [DataMember]
         public CameraProjectionType ProjectionType
         {
-            get { return m_ProjectionType; }
+            get => _projectionType;
             set
             {
-                if (value != m_ProjectionType)
+                if (value != _projectionType)
                 {
-                    m_ProjectionType = value;
-                    m_NeedProjectionUpdate = true;
+                    _projectionType = value;
+                    _needProjectionUpdate = true;
                 }
             }
         }
 
-        public RenderTarget2D RenderTarget
-        {
-            get; set;
-        }
+        public RenderTarget2D RenderTarget { get; set; }
 
-        public Matrix ViewMatrix
-        {
-            get { return m_ViewMatrix; }
-        }
+        public Matrix ViewMatrix => _viewMatrix; 
 
-        public Matrix ProjectionMatrix
-        {
-            get { return m_ProjectionMatrix; }
-        }
+        public Matrix ProjectionMatrix =>  _projectionMatrix; 
 
-        public Vector3 Forward => m_ViewMatrix.Forward;
-        public Vector3 BackWard => m_ViewMatrix.Backward;
-        public Vector3 Left => m_ViewMatrix.Left;
-        public Vector3 Right => m_ViewMatrix.Right;
+        public Vector3 Forward => _viewMatrix.Forward;
+        public Vector3 BackWard => _viewMatrix.Backward;
+        public Vector3 Left => _viewMatrix.Left;
+        public Vector3 Right => _viewMatrix.Right;
 
         public Vector3 Rotation
         {
@@ -147,7 +138,7 @@ namespace C3DE.Components
                 Vector3 scale;
                 Quaternion rotation;
                 Vector3 translation;
-                m_ViewMatrix.Decompose(out scale, out rotation, out translation);
+                _viewMatrix.Decompose(out scale, out rotation, out translation);
                 return rotation.ToEuler();
             }
         }
@@ -155,18 +146,18 @@ namespace C3DE.Components
         public Camera()
             : base()
         {
-            m_FieldOfView = MathHelper.ToRadians(45);
-            m_AspectRatio = (float)Application.GraphicsDevice.Viewport.Width / (float)Application.GraphicsDevice.Viewport.Height;
-            m_NearPlane = 1.0f;
-            m_FarPlane = 500.0f;
-            m_ProjectionType = CameraProjectionType.Perspective;
-            m_ClearColor = Color.Black;
-            m_Depth = 0;
+            _fieldOfView = MathHelper.ToRadians(45);
+            _aspectRatio = (float)Application.GraphicsDevice.Viewport.Width / (float)Application.GraphicsDevice.Viewport.Height;
+            _nearPlane = 1.0f;
+            _farPlane = 500.0f;
+            _projectionType = CameraProjectionType.Perspective;
+            _clearColor = Color.Black;
+            _depth = 0;
         }
 
         public override void Start()
         {
-            Setup(m_Transform.LocalPosition, Vector3.Zero, Vector3.Up);
+            Setup(_transform.LocalPosition, Vector3.Zero, Vector3.Up);
             Screen.ScreenSizeChanged += OnScreenChanged;
         }
 
@@ -178,78 +169,77 @@ namespace C3DE.Components
 
         private void OnScreenChanged(int width, int height)
         {
-            m_AspectRatio = (float)width / (float)height;
-            m_NeedProjectionUpdate = true;
+            _aspectRatio = (float)width / (float)height;
+            _needProjectionUpdate = true;
         }
 
         public void Setup(Vector3 position, Vector3 camTarget, Vector3 upVector)
         {
-            m_Target = camTarget;
-            m_UpVector = upVector;
-
-            m_ViewMatrix = Matrix.CreateLookAt(position, m_Target, Vector3.Up);
+            _target = camTarget;
+            _upVector = upVector;
+            _viewMatrix = Matrix.CreateLookAt(position, _target, Vector3.Up);
 
             ComputeProjectionMatrix();
 
-            m_BoundingFrustrum = new BoundingFrustum(m_ViewMatrix * m_ProjectionMatrix);
+            _boundingFrustrum = new BoundingFrustum(_viewMatrix * _projectionMatrix);
         }
 
         public void ComputeProjectionMatrix()
         {
-            if (m_ProjectionType == CameraProjectionType.Perspective)
-                m_ProjectionMatrix = Matrix.CreatePerspectiveFieldOfView(m_FieldOfView, m_AspectRatio, m_NearPlane, m_FarPlane);
+            if (_projectionType == CameraProjectionType.Perspective)
+                _projectionMatrix = Matrix.CreatePerspectiveFieldOfView(_fieldOfView, _aspectRatio, _nearPlane, _farPlane);
             else
-                m_ProjectionMatrix = Matrix.CreateOrthographic(Application.GraphicsDevice.Viewport.Width, Application.GraphicsDevice.Viewport.Height, m_NearPlane, m_FarPlane);
+                _projectionMatrix = Matrix.CreateOrthographic(Application.GraphicsDevice.Viewport.Width, Application.GraphicsDevice.Viewport.Height, _nearPlane, _farPlane);
 
-            m_NeedProjectionUpdate = false;
+            _needProjectionUpdate = false;
         }
 
         public void ComputeProjectionMatrix(float fov, float aspect, float near, float far)
         {
-            m_FieldOfView = fov;
-            m_AspectRatio = aspect;
-            m_NearPlane = near;
-            m_FarPlane = far;
+            _fieldOfView = fov;
+            _aspectRatio = aspect;
+            _nearPlane = near;
+            _farPlane = far;
 
             ComputeProjectionMatrix();
         }
 
         public Vector3[] CalculateFrustumCorners(Rectangle viewport, float z, int eye)
         {
-            m_NeedProjectionUpdate = true;
-            m_NeedUpdate = true;
+            _needProjectionUpdate = true;
+            _needUpdate = true;
             Update();
-            BoundingFrustum frustrum = new BoundingFrustum(m_ViewMatrix * m_ProjectionMatrix);
+            BoundingFrustum frustrum = new BoundingFrustum(_viewMatrix * _projectionMatrix);
             return frustrum.GetCorners();
         }
 
         public void LookAt(Vector3 target)
         {
-            var position = m_Transform.Position;
-            m_ViewMatrix = Matrix.CreateLookAt(position, target, m_UpVector);
+            var position = _transform.Position;
+            _viewMatrix = Matrix.CreateLookAt(position, target, _upVector);
         }
 
         public override void Update()
         {
-            if (m_NeedProjectionUpdate)
+            if (_needProjectionUpdate)
                 ComputeProjectionMatrix();
 
-            if (!m_GameObject.IsStatic || m_NeedUpdate)
+            if (!_gameObject.IsStatic || _needUpdate)
             {
-                var position = m_Transform.Position;
-                var rotation = m_Transform.Rotation;
+                var position = _transform.Position;
+                var rotation = _transform.Rotation;
                 var matrix = Matrix.CreateFromYawPitchRoll(rotation.Y, rotation.X, rotation.Z);
                 var target = position + Vector3.Transform(Vector3.Forward, matrix);
 
-                m_ViewMatrix = Matrix.CreateLookAt(position, target, m_UpVector);
-                m_BoundingFrustrum.Matrix = m_ViewMatrix * m_ProjectionMatrix;
-                m_NeedUpdate = false;
+                _viewMatrix = Matrix.CreateLookAt(position, target, _upVector);
+                _boundingFrustrum.Matrix = _viewMatrix * _projectionMatrix;
+                _needUpdate = false;
             }
         }
 
         public Vector3 WorldToScreenPoint(Vector3 position)
         {
-            return Application.GraphicsDevice.Viewport.Project(position, m_ProjectionMatrix, m_ViewMatrix, Matrix.Identity);
+            return Application.GraphicsDevice.Viewport.Project(position, _projectionMatrix, _viewMatrix, Matrix.Identity);
         }
 
         /// <summary>
@@ -263,8 +253,8 @@ namespace C3DE.Components
             var device = Application.GraphicsDevice;
             var nearScreenPoint = new Vector3(x, y, 0.0f);
             var farScreenPoint = new Vector3(x, y, 1.0f);
-            var nearWorldPoint = device.Viewport.Unproject(nearScreenPoint, m_ProjectionMatrix, m_ViewMatrix, Matrix.Identity);
-            var farWorldPoint = device.Viewport.Unproject(farScreenPoint, m_ProjectionMatrix, m_ViewMatrix, Matrix.Identity);
+            var nearWorldPoint = device.Viewport.Unproject(nearScreenPoint, _projectionMatrix, _viewMatrix, Matrix.Identity);
+            var farWorldPoint = device.Viewport.Unproject(farScreenPoint, _projectionMatrix, _viewMatrix, Matrix.Identity);
             var direction = farWorldPoint - nearWorldPoint;
             var zFactor = -nearWorldPoint.Y / direction.Y;
             return nearWorldPoint + direction * zFactor;
@@ -282,8 +272,8 @@ namespace C3DE.Components
             Vector3 nearPoint = new Vector3(position, 0);
             Vector3 farPoint = new Vector3(position, 1);
 
-            nearPoint = Application.GraphicsDevice.Viewport.Unproject(nearPoint, m_ProjectionMatrix, m_ViewMatrix, Matrix.Identity);
-            farPoint = Application.GraphicsDevice.Viewport.Unproject(farPoint, m_ProjectionMatrix, m_ViewMatrix, Matrix.Identity);
+            nearPoint = Application.GraphicsDevice.Viewport.Unproject(nearPoint, _projectionMatrix, _viewMatrix, Matrix.Identity);
+            farPoint = Application.GraphicsDevice.Viewport.Unproject(farPoint, _projectionMatrix, _viewMatrix, Matrix.Identity);
 
             // Get the direction
             Vector3 direction = farPoint - nearPoint;
@@ -299,9 +289,9 @@ namespace C3DE.Components
             if (camera == null)
                 return 1;
 
-            if (m_Depth == camera.m_Depth)
+            if (_depth == camera._depth)
                 return 0;
-            else if (m_Depth > camera.m_Depth)
+            else if (_depth > camera._depth)
                 return 1;
             else
                 return -1;

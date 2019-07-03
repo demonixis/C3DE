@@ -15,16 +15,16 @@ namespace C3DE.Editor.UI
 {
     public sealed class UIManager : DrawableGameComponent
     {
-        private MonoGameInput m_Input;
-        private MonoGameRenderer m_Renderer;
-        private SkinBase m_Skin;
-        private Canvas m_Canvas;
-        private bool m_ChangeGraphicsSettings;
-        private GraphicsDeviceManager m_GraphicsDeviceManager;
-        private int m_Time;
-        private StatusBar m_StatusBar;
-        private TreeControl m_SceneTreeControl;
-        private TransformControl m_TransformControl;
+        private MonoGameInput _input;
+        private MonoGameRenderer _renderer;
+        private SkinBase _skin;
+        private Canvas _canvas;
+        private bool _changeGraphicsSettings;
+        private GraphicsDeviceManager _graphicsDeviceManager;
+        private int _time;
+        private StatusBar _statusBar;
+        private TreeControl _sceneTreeControl;
+        private TransformControl _transformControl;
 
         public event Action<string> MenuCommandSelected = null;
         public event Action<string> MenuGameObjectSelected = null;
@@ -38,23 +38,23 @@ namespace C3DE.Editor.UI
 
         public void Initialize(GraphicsDeviceManager graphicsDeviceManager)
         {
-            m_GraphicsDeviceManager = graphicsDeviceManager;
+            _graphicsDeviceManager = graphicsDeviceManager;
 
             Platform.Init(new Gwen.Platform.MonoGame.MonoGamePlatform());
             Gwen.Loader.LoaderBase.Init(new Gwen.Loader.MonoGame.MonoGameAssetLoader(Game.Content));
 
-            m_Renderer = new MonoGameRenderer(GraphicsDevice, Game.Content, Game.Content.Load<Effect>("Gwen/Shaders/GwenEffect"));
-            m_Renderer.Resize(graphicsDeviceManager.PreferredBackBufferWidth, graphicsDeviceManager.PreferredBackBufferHeight);
+            _renderer = new MonoGameRenderer(GraphicsDevice, Game.Content, Game.Content.Load<Effect>("Gwen/Shaders/GwenEffect"));
+            _renderer.Resize(graphicsDeviceManager.PreferredBackBufferWidth, graphicsDeviceManager.PreferredBackBufferHeight);
 
-            m_Skin = new TexturedBase(m_Renderer, "Gwen/Skins/DefaultSkin");
-            m_Skin.DefaultFont = new Font(m_Renderer, "Gwen/Fonts/Arial", 11);
-            m_Canvas = new Canvas(m_Skin);
-            m_Input = new MonoGameInput(Game);
-            m_Input.Initialize(m_Canvas);
+            _skin = new TexturedBase(_renderer, "Gwen/Skins/DefaultSkin");
+            _skin.DefaultFont = new Font(_renderer, "Gwen/Fonts/Arial", 11);
+            _canvas = new Canvas(_skin);
+            _input = new MonoGameInput(Game);
+            _input.Initialize(_canvas);
 
-            m_Canvas.SetSize(graphicsDeviceManager.PreferredBackBufferWidth, graphicsDeviceManager.PreferredBackBufferHeight);
-            m_Canvas.ShouldDrawBackground = false;
-            m_Canvas.BackgroundColor = new Gwen.Color(255, 150, 170, 170);
+            _canvas.SetSize(graphicsDeviceManager.PreferredBackBufferWidth, graphicsDeviceManager.PreferredBackBufferHeight);
+            _canvas.ShouldDrawBackground = false;
+            _canvas.BackgroundColor = new Gwen.Color(255, 150, 170, 170);
 
             graphicsDeviceManager.PreparingDeviceSettings += OnPreparingDeviceSettings;
             Game.Window.AllowUserResizing = true;
@@ -66,7 +66,7 @@ namespace C3DE.Editor.UI
 
         public void OpenSave(Action<string> callback)
         {
-            var dialog = Component.Create<SaveFileDialog>(m_Canvas);
+            var dialog = Component.Create<SaveFileDialog>(_canvas);
             dialog.EnableNewFolder = true;
             dialog.InitialFolder = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
             dialog.Title = "Save scene";
@@ -75,7 +75,7 @@ namespace C3DE.Editor.UI
 
         public void OpenLoadDialog(Action<string> callback)
         {
-            OpenFileDialog dialog = Component.Create<OpenFileDialog>(m_Canvas);
+            OpenFileDialog dialog = Component.Create<OpenFileDialog>(_canvas);
             dialog.InitialFolder = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
             dialog.Filters = "C3DE Scene Files (*.c3de)|*.c3de|All Files (*.*)|*.*";
             dialog.Title = "Load a scene";
@@ -84,25 +84,25 @@ namespace C3DE.Editor.UI
 
         public void OpenMessageBox(string title, string text, int width = 320, int height = 200)
         {
-            var window = new MessageBox(m_Canvas, text);
+            var window = new MessageBox(_canvas, text);
             window.Title = title;
 
             if (width > 0 && height > 0)
                 window.SetSize(width, height);
 
-            window.SetPosition(m_Canvas.ActualWidth / 2 - window.ActualWidth / 2, m_Canvas.ActualHeight / 2 - window.ActualHeight / 2);
+            window.SetPosition(_canvas.ActualWidth / 2 - window.ActualWidth / 2, _canvas.ActualHeight / 2 - window.ActualHeight / 2);
         }
 
         public void SetStatusMessage(string message)
         {
-            m_StatusBar.Text = message;
+            _statusBar.Text = message;
         }
 
         private void BuildUI()
         {
             #region Main Menu
 
-            var menu = new MenuStrip(m_Canvas);
+            var menu = new MenuStrip(_canvas);
             menu.Dock = Dock.Top;
 
             var file = menu.AddItem("File");
@@ -163,64 +163,64 @@ namespace C3DE.Editor.UI
 
             #region Main Dock
 
-            var mainDock = new DockControl(m_Canvas);
+            var mainDock = new DockControl(_canvas);
             mainDock.Dock = Dock.Fill;
             mainDock.RightDock.Width = 300;
 
-            m_SceneTreeControl = new TreeControl(m_Canvas);
-            m_SceneTreeControl.Selected += OnSceneTreeNodeSelected;
+            _sceneTreeControl = new TreeControl(_canvas);
+            _sceneTreeControl.Selected += OnSceneTreeNodeSelected;
 
-            m_TransformControl = new TransformControl(m_Canvas);
+            _transformControl = new TransformControl(_canvas);
 
-            mainDock.RightDock.Add("Scene", m_SceneTreeControl);
-            mainDock.RightDock.Add("Inspector", m_TransformControl);
+            mainDock.RightDock.Add("Scene", _sceneTreeControl);
+            mainDock.RightDock.Add("Inspector", _transformControl);
 
-            m_StatusBar = new StatusBar(m_Canvas);
-            m_StatusBar.Dock = Dock.Bottom;
-            m_StatusBar.Text = "C3DE Editor Ready";
+            _statusBar = new StatusBar(_canvas);
+            _statusBar.Dock = Dock.Bottom;
+            _statusBar.Text = "C3DE Editor Ready";
 
             #endregion
         }
 
         private void OnSceneTreeNodeSelected(ControlBase sender, EventArgs arguments)
         {
-            TreeViewGameObjectSelected?.Invoke(m_SceneTreeControl.SelectedNode.UserData.ToString(), true);
+            TreeViewGameObjectSelected?.Invoke(_sceneTreeControl.SelectedNode.UserData.ToString(), true);
         }
 
         public void AddGameObject(GameObject go)
         {
-            var node = m_SceneTreeControl.AddNode(go.Name);
+            var node = _sceneTreeControl.AddNode(go.Name);
             node.UserData = go.Id;
             node.IsSelected = true;
-            m_TransformControl.SetGameObject(go);
+            _transformControl.SetGameObject(go);
         }
 
         public void RemoveGameObject(GameObject go)
         {
-            var node = m_SceneTreeControl.FindNodeByUserData(go.Id, true);
+            var node = _sceneTreeControl.FindNodeByUserData(go.Id, true);
             if (node != null)
             {
                 if (node.IsSelected)
-                    m_TransformControl.SetGameObject(null);
+                    _transformControl.SetGameObject(null);
 
-                m_SceneTreeControl.RemoveNode(node);
+                _sceneTreeControl.RemoveNode(node);
             }
         }
 
         public void SelectGameObject(GameObject go, bool selected)
         {
-            var node = m_SceneTreeControl.FindNodeByUserData(go.Id, true);
+            var node = _sceneTreeControl.FindNodeByUserData(go.Id, true);
             if (node != null)
             {
                 node.IsSelected = selected;
-                m_TransformControl.SetGameObject(selected ? go : null);
+                _transformControl.SetGameObject(selected ? go : null);
             }
         }
 
         public void ClearGameObjects()
         {
-            m_SceneTreeControl.RemoveAllNodes();
-            m_TransformControl.SetGameObject(null);
+            _sceneTreeControl.RemoveAllNodes();
+            _transformControl.SetGameObject(null);
         }
 
         private void OnCommandSelected(ControlBase sender, System.EventArgs arguments)
@@ -245,63 +245,63 @@ namespace C3DE.Editor.UI
         {
             base.UnloadContent();
 
-            if (m_Canvas != null)
+            if (_canvas != null)
             {
-                m_Canvas.Dispose();
-                m_Canvas = null;
+                _canvas.Dispose();
+                _canvas = null;
             }
-            if (m_Skin != null)
+            if (_skin != null)
             {
-                m_Skin.Dispose();
-                m_Skin = null;
+                _skin.Dispose();
+                _skin = null;
             }
-            if (m_Renderer != null)
+            if (_renderer != null)
             {
-                m_Renderer.Dispose();
-                m_Renderer = null;
+                _renderer.Dispose();
+                _renderer = null;
             }
         }
 
         public override void Update(GameTime gameTime)
         {
-            if (m_ChangeGraphicsSettings)
+            if (_changeGraphicsSettings)
             {
-                m_GraphicsDeviceManager.ApplyChanges();
-                m_ChangeGraphicsSettings = false;
+                _graphicsDeviceManager.ApplyChanges();
+                _changeGraphicsSettings = false;
             }
 
-            m_Time += gameTime.ElapsedGameTime.Milliseconds;
+            _time += gameTime.ElapsedGameTime.Milliseconds;
 
-            if (m_Time > 1000)
+            if (_time > 1000)
             {
-                m_Time = 0;
+                _time = 0;
 
-                if (m_Renderer.TextCacheSize > 1000)
-                    m_Renderer.FlushTextCache();
+                if (_renderer.TextCacheSize > 1000)
+                    _renderer.FlushTextCache();
             }
 
-            m_Input.ProcessMouseState();
-            m_Input.ProcessKeyboardState();
-            m_Input.ProcessTouchState();
+            _input.ProcessMouseState();
+            _input.ProcessKeyboardState();
+            _input.ProcessTouchState();
 
             base.Update(gameTime);
         }
 
         public override void Draw(GameTime gameTime)
         {
-            m_Canvas.RenderCanvas();
+            _canvas.RenderCanvas();
             base.Draw(gameTime);
         }
 
         private void OnClientSizeChanged(object sender, EventArgs e)
         {
-            m_GraphicsDeviceManager.PreferredBackBufferWidth = Game.Window.ClientBounds.Width;
-            m_GraphicsDeviceManager.PreferredBackBufferHeight = Game.Window.ClientBounds.Height;
+            _graphicsDeviceManager.PreferredBackBufferWidth = Game.Window.ClientBounds.Width;
+            _graphicsDeviceManager.PreferredBackBufferHeight = Game.Window.ClientBounds.Height;
 
-            m_ChangeGraphicsSettings = true;
+            _changeGraphicsSettings = true;
 
-            m_Renderer.Resize(m_GraphicsDeviceManager.PreferredBackBufferWidth, m_GraphicsDeviceManager.PreferredBackBufferHeight);
-            m_Canvas.SetSize(m_GraphicsDeviceManager.PreferredBackBufferWidth, m_GraphicsDeviceManager.PreferredBackBufferHeight);
+            _renderer.Resize(_graphicsDeviceManager.PreferredBackBufferWidth, _graphicsDeviceManager.PreferredBackBufferHeight);
+            _canvas.SetSize(_graphicsDeviceManager.PreferredBackBufferWidth, _graphicsDeviceManager.PreferredBackBufferHeight);
         }
 
         private void OnPreparingDeviceSettings(object sender, PreparingDeviceSettingsEventArgs e)

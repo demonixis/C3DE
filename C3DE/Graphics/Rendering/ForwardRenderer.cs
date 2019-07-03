@@ -72,14 +72,14 @@ namespace C3DE.Graphics.Rendering
             {
                 // Apply camera parenting
                 var cameraParent = Matrix.Identity;
-                var parent = camera.m_Transform.Parent;
+                var parent = camera._transform.Parent;
                 if (parent != null)
                     cameraParent = parent._worldMatrix;
 
                 for (var eye = 0; eye < 2; eye++)
                 {
-                    camera.m_ProjectionMatrix = m_VRService.GetProjectionMatrix(eye);
-                    camera.m_ViewMatrix = m_VRService.GetViewMatrix(eye, cameraParent);
+                    camera._projectionMatrix = m_VRService.GetProjectionMatrix(eye);
+                    camera._viewMatrix = m_VRService.GetViewMatrix(eye, cameraParent);
                     RenderSceneForCamera(scene, camera, m_SceneRenderTargets[eye]);
                 }
 
@@ -102,7 +102,7 @@ namespace C3DE.Graphics.Rendering
             if (renderToRT)
                 m_graphicsDevice.SetRenderTarget(camera.RenderTarget);
 
-            m_graphicsDevice.Clear(camera.m_ClearColor);
+            m_graphicsDevice.Clear(camera._clearColor);
 
             RenderObjects(scene, camera);
             RenderPostProcess(scene.postProcessPasses, renderTarget);
@@ -181,7 +181,7 @@ namespace C3DE.Graphics.Rendering
             var renderTargets = m_graphicsDevice.GetRenderTargets();
 
             m_graphicsDevice.SetRenderTarget(camera.RenderTarget);
-            m_graphicsDevice.Clear(camera.m_ClearColor);
+            m_graphicsDevice.Clear(camera._clearColor);
 
             m_graphicsDevice.DepthStencilState = DepthStencilState.Default;
             m_graphicsDevice.BlendState = BlendState.Opaque;

@@ -70,7 +70,7 @@ namespace C3DE.Graphics.PostProcessing
             {
                 var forward = (ForwardRenderer)renderer;
                 forward.DepthRenderer.Enabled = true;
-                m_DepthBuffer = forward.DepthRenderer.m_DepthRT;
+                m_DepthBuffer = forward.DepthRenderer._depthRT;
             }
             else if (renderer is DeferredRenderer)
             {
@@ -95,7 +95,7 @@ namespace C3DE.Graphics.PostProcessing
             m_GraphicsDevice.SamplerStates[1] = SamplerState.LinearClamp;
 
             var camera = Camera.Main;
-            var cameraTransform = camera.m_Transform;
+            var cameraTransform = camera._transform;
             var frustumCorners = camera.CalculateFrustumCorners(new Rectangle(0, 0, 1, 1), camera.Far, 0);
             var bottomLeft = cameraTransform.TransformVector(frustumCorners[4]);
             var topLeft = cameraTransform.TransformVector(frustumCorners[5]);

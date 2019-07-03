@@ -6,8 +6,8 @@ namespace C3DE.Demo.Scripts
 {
     public class VRPlayerEnabler : Behaviour
     {
-        private Transform m_PlayerTransform;
-        private Transform m_CameraTransform;
+        private Transform _payerTransform;
+        private Transform _cameraTransform;
 
         public Vector3 Position { get; set; }
 
@@ -21,19 +21,19 @@ namespace C3DE.Demo.Scripts
 
             player.AddComponent<VRMovement>();
 
-            m_PlayerTransform = player.Transform;
-            m_CameraTransform = Camera.Main.Transform;
+            _payerTransform = player.Transform;
+            _cameraTransform = Camera.Main.Transform;
         }
 
         private void OnVRChanged(VRService service)
         {
             if (service != null)
             {
-                m_PlayerTransform.Position = Position;
-                m_CameraTransform.Parent = m_PlayerTransform;
+                _payerTransform.Position = Position;
+                _cameraTransform.Parent = _payerTransform;
             }
             else
-                m_CameraTransform.Parent = null;
+                _cameraTransform.Parent = null;
         }
     }
 }

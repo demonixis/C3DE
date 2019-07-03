@@ -6,20 +6,20 @@ namespace C3DE.Demo.Scripts
 {
     public sealed class RendererSwitcher : Behaviour
     {
-        private SideMenu m_SideMenu;
+        private SideMenu _sideMenu;
 
         public override void Start()
         {
             base.Start();
 
-            m_SideMenu = new SideMenu("Renderers", new[] { "Forward", "Deferred", "Light PrePass" }, 0);
-            m_SideMenu.SelectionChanged += SetRenderSelected;
+            _sideMenu = new SideMenu("Renderers", new[] { "Forward", "Deferred", "Light PrePass" }, 0);
+            _sideMenu.SelectionChanged += SetRenderSelected;
         }
         
         public override void OnGUI(GUI ui)
         {
             base.OnGUI(ui);
-            m_SideMenu.Draw(ui);
+            _sideMenu.Draw(ui);
         }
 
         private void SetRenderSelected(int index)

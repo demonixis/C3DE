@@ -6,25 +6,25 @@ namespace C3DE.Components.Rendering
 {
     public class DepthRenderer
     {
-        internal RenderTarget2D m_DepthRT;
-        private Effect m_Effect;
+        internal RenderTarget2D _depthRT;
+        private Effect _effect;
 
         public Camera Camera { get; set; }
-        public Texture2D DepthBuffer => m_DepthRT;
+        public Texture2D DepthBuffer => _depthRT;
         public bool Enabled { get; set; }
         public bool ExcludeSkybox { get; set; } = true;
 
         public DepthRenderer()
         {
             CreateRenderTargets();
-            m_Effect = Application.Content.Load<Effect>("Shaders/Depth");
+            _effect = Application.Content.Load<Effect>("Shaders/Depth");
         }
 
         public void CreateRenderTargets()
         {
             var device = Application.GraphicsDevice;
             var pp = device.PresentationParameters;
-            m_DepthRT = new RenderTarget2D(device, pp.BackBufferWidth, pp.BackBufferHeight, false, SurfaceFormat.Single, DepthFormat.Depth24);
+            _depthRT = new RenderTarget2D(device, pp.BackBufferWidth, pp.BackBufferHeight, false, SurfaceFormat.Single, DepthFormat.Depth24);
         }
 
         public void Draw(GraphicsDevice device)
@@ -34,12 +34,12 @@ namespace C3DE.Components.Rendering
                 if (Camera == null)
                     Camera = Camera.Main;
 
-                m_Effect.Parameters["View"].SetValue(Camera.m_ViewMatrix);
-                m_Effect.Parameters["Projection"].SetValue(Camera.m_ProjectionMatrix);
+                _effect.Parameters["View"].SetValue(Camera._viewMatrix);
+                _effect.Parameters["Projection"].SetValue(Camera._projectionMatrix);
 
                 var previousRTs = device.GetRenderTargets();
 
-                device.SetRenderTarget(m_DepthRT);
+                device.SetRenderTarget(_depthRT);
                 device.Clear(Color.White);
 
                 var scene = Scene.current;
@@ -47,8 +47,8 @@ namespace C3DE.Components.Rendering
 
                 if (!ExcludeSkybox && skybox.Enabled)
                 {
-                    m_Effect.Parameters["World"].SetValue(skybox.WorldMatrix);
-                    m_Effect.CurrentTechnique.Passes[0].Apply();
+                    _effect.Parameters["World"].SetValue(skybox.WorldMatrix);
+                    _effect.CurrentTechnique.Passes[0].Apply();
                     skybox.DrawNoEffect(device);
                 }
 
@@ -56,8 +56,8 @@ namespace C3DE.Components.Rendering
 
                 for (int i = 0, l = renderList.Count; i < l; i++)
                 {
-                    m_Effect.Parameters["World"].SetValue(renderList[i].Transform._worldMatrix);
-                    m_Effect.CurrentTechnique.Passes[0].Apply();
+                    _effect.Parameters["World"].SetValue(renderList[i].Transform._worldMatrix);
+                    _effect.CurrentTechnique.Passes[0].Apply();
                     renderList[i].Draw(device);
                 }
 

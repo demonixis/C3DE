@@ -7,7 +7,7 @@ namespace C3DE.Demo.Scenes
 {
     public abstract class ProceduralTerrainBase : SimpleDemo
     {
-        protected Terrain m_Terrain;
+        protected Terrain _terrain;
 
         public ProceduralTerrainBase(string name) : base(name) { }
 
@@ -23,20 +23,20 @@ namespace C3DE.Demo.Scenes
             terrainMaterial.RockTexture = Application.Content.Load<Texture2D>("Textures/Terrain/Rock");
 
             var terrainGo = GameObjectFactory.CreateTerrain();
-            m_Terrain = terrainGo.GetComponent<Terrain>();
+            _terrain = terrainGo.GetComponent<Terrain>();
 
-            m_Terrain.Randomize(4, 12);
-            m_Terrain.Renderer.Material = terrainMaterial;
+            _terrain.Randomize(4, 12);
+            _terrain.Renderer.Material = terrainMaterial;
             Add(terrainGo);
 
-            m_Terrain.SetWeightData(0.5f, 4, 15, 30);
+            _terrain.SetWeightData(0.5f, 4, 15, 30);
 
-            terrainMaterial.WeightTexture = m_Terrain.GenerateWeightMap();
+            terrainMaterial.WeightTexture = _terrain.GenerateWeightMap();
             terrainMaterial.Tiling = new Vector2(4);
 
             SetupScene();
 
-            m_Camera.AddComponent<Scripts.VRPlayerEnabler>();
+            _camera.AddComponent<Scripts.VRPlayerEnabler>();
         }
 
         protected abstract void SetupScene();

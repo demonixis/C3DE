@@ -12,7 +12,7 @@ namespace C3DE.Demo.Scenes
             base.Initialize();
             OptimizeFor2D();
             GUI.Skin = DemoGame.CreateSkin(Application.Content, false);
-            m_Camera.AddComponent<MenuBehaviour>();
+            _camera.AddComponent<MenuBehaviour>();
         }
     }
 }

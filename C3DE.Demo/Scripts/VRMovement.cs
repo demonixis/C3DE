@@ -20,11 +20,11 @@ namespace C3DE.Demo.Scripts
             var vRight = service.GetAxis(1, XRAxis.TouchpadY);
 
             var translation = new Vector3(-h * Speed * Time.DeltaTime, vRight * Speed * Time.DeltaTime, v * Speed * Time.DeltaTime);
-            var transformedTranslation = Vector3.Transform(translation, Matrix.CreateRotationY(m_Transform.LocalRotation.Y));
+            var transformedTranslation = Vector3.Transform(translation, Matrix.CreateRotationY(_transform.LocalRotation.Y));
 
             // Translate and rotate
-            m_Transform.Translate(transformedTranslation);
-            m_Transform.Rotate(0, -service.GetAxis(1, XRAxis.TouchpadX) * Time.DeltaTime * Rotation, 0);
+            _transform.Translate(transformedTranslation);
+            _transform.Rotate(0, -service.GetAxis(1, XRAxis.TouchpadX) * Time.DeltaTime * Rotation, 0);
         }
     }
 }

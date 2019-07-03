@@ -17,8 +17,8 @@ namespace C3DE.Demo.Scenes
         {
             base.Initialize();
 
-            m_Camera.AddComponent<VRPlayerEnabler>();
-            Destroy(m_DirectionalLight.GetComponent<LensFlare>());
+            _camera.AddComponent<VRPlayerEnabler>();
+            Destroy(_directionalLight.GetComponent<LensFlare>());
 
             SetControlMode(ControllerSwitcher.ControllerType.FPS, new Vector3(0, 2, 0), Vector3.Zero, true);
 
@@ -62,6 +62,8 @@ namespace C3DE.Demo.Scenes
                 content.Load<Texture2D>("Textures/pbr/env/irradiance_backward")
             });
 
+            //RenderSettings.Skybox.Generate(Application.GraphicsDevice, DemoGame.StarsSkybox, 256);
+
             RenderSettings.FogMode = FogMode.None;
 
             // Caches
@@ -86,7 +88,7 @@ namespace C3DE.Demo.Scenes
                     pbrMaterial = new PBRMaterial
                     {
                         MainTexture = TextureFactory.CreateColor(Color.White, 1, 1),
-                        IrradianceMap = irradianceMap
+                        //IrradianceMap = irradianceMap
                     };
 
                     var roughness = (float)i / startPos;
@@ -97,11 +99,11 @@ namespace C3DE.Demo.Scenes
                     renderer = cube.GetComponent<Renderer>();
                     renderer.Material = pbrMaterial;
 
-                    light = GameObjectFactory.CreateLight(LightType.Point, RandomHelper.GetColor(), 2, 0);
+                   /* light = GameObjectFactory.CreateLight(LightType.Point, RandomHelper.GetColor(), 2, 0);
                     light.Transform.Position = new Vector3(x, 5, z);
 
                     light = GameObjectFactory.CreateLight(LightType.Point, RandomHelper.GetColor(), 2, 0);
-                    light.Transform.Position = new Vector3(x + 5, -15, z - 5);
+                    light.Transform.Position = new Vector3(x + 5, -15, z - 5);*/
 
                     z += margin;
                 }

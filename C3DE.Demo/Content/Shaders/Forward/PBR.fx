@@ -1,4 +1,5 @@
 #include "../Common/PBR.fxh"
+#include "../Common/ShadowMap.fxh"
 
 // Constants
 #if SM4
@@ -8,6 +9,8 @@
 #endif
 
 const float GAMMA_CORRECTION = 0.45454545;
+
+int Debug = 0;
 
 // Matrix
 float4x4 World;
@@ -138,7 +141,7 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 	float ao = rmsao.a;
 
 	float3 normal = input.WorldNormal;
-	
+
 	if (Features.x > 0)
 	{
 		normal = (2.0 * (tex2D(normalSampler, input.UV * TextureTiling).xyz)) - 1.0;
@@ -186,10 +189,15 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 	}
 
 	// ------
+	// Shadows
+	// ------
+	Lo *= CalcShadow(input.WorldPosition);
+
+	// ------
 	// Emissive Lighting
 	// ------
 	if (Features.y > 0)
-		Lo += tex2D(emissiveSampler, input.UV * TextureTiling).xyz;
+		Lo += tex2D(emissiveSampler, input.UV * TextureTiling).rgba;
 
 	// ------
 	// Ambient Lighting

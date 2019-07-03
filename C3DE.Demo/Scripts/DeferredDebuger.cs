@@ -10,22 +10,22 @@ namespace C3DE.Demo.Scripts
 {
     public class DeferredDebuger : Behaviour
     {
-        private Texture2D m_BorderTexture;
-        private DeferredRenderer m_renderer;
+        private Texture2D _borderTexture;
+        private DeferredRenderer _renderer;
 
         public override void Start()
         {
-            m_BorderTexture = TextureFactory.CreateColor(Color.Black, 1, 1);
+            _borderTexture = TextureFactory.CreateColor(Color.Black, 1, 1);
         }
 
         public override void OnGUI(GUI ui)
         {
             base.OnGUI(ui);
 
-            if (m_renderer == null)
+            if (_renderer == null)
             {
-                m_renderer = Application.Engine.Renderer as DeferredRenderer;
-                if (m_renderer == null)
+                _renderer = Application.Engine.Renderer as DeferredRenderer;
+                if (_renderer == null)
                     return;
             }
 
@@ -34,17 +34,17 @@ namespace C3DE.Demo.Scripts
 
             GUI.Skin.TextColor = Color.White;
 
-            ui.DrawTexture(new Rectangle(0, 0, width, height), m_BorderTexture);
-            ui.DrawTexture(new Rectangle(2, 2, width - 4, height - 4), m_renderer.ColorBuffer);
+            ui.DrawTexture(new Rectangle(0, 0, width, height), _borderTexture);
+            ui.DrawTexture(new Rectangle(2, 2, width - 4, height - 4), _renderer.ColorBuffer);
 
-            ui.DrawTexture(new Rectangle(0, height, width, height), m_BorderTexture);
-            ui.DrawTexture(new Rectangle(2, 2 + height, width - 4, height - 4), m_renderer.NormalMap);
+            ui.DrawTexture(new Rectangle(0, height, width, height), _borderTexture);
+            ui.DrawTexture(new Rectangle(2, 2 + height, width - 4, height - 4), _renderer.NormalMap);
 
-            ui.DrawTexture(new Rectangle(0, height * 2, width, height), m_BorderTexture);
-            ui.DrawTexture(new Rectangle(2, 2 + height * 2, width - 4, height - 4), m_renderer.DepthBuffer);
+            ui.DrawTexture(new Rectangle(0, height * 2, width, height), _borderTexture);
+            ui.DrawTexture(new Rectangle(2, 2 + height * 2, width - 4, height - 4), _renderer.DepthBuffer);
 
-            ui.DrawTexture(new Rectangle(0, height * 3, width, height), m_BorderTexture);
-            ui.DrawTexture(new Rectangle(2, 2 + height * 3, width - 4, height - 4), m_renderer.LightMap);
+            ui.DrawTexture(new Rectangle(0, height * 3, width, height), _borderTexture);
+            ui.DrawTexture(new Rectangle(2, 2 + height * 3, width - 4, height - 4), _renderer.LightMap);
 
             ui.Label(new Vector2(5, height - 25), "Color Buffer");
             ui.Label(new Vector2(5, 2 * height - 25), "Normal Buffer");

@@ -33,6 +33,6 @@ float CalcShadow(float4 worldPosition)
     
     if (shadowdepth < ourdepth)
         return 0.5f / ShadowStrength;
-    
+		    
     return 1.0f;
 }

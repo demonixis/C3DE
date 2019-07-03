@@ -60,8 +60,8 @@ namespace C3DE.Components.Rendering
 
         public override void Update()
         {
-            if (!m_GameObject.IsStatic)
-                boundingSphere.Center = m_Transform.LocalPosition;
+            if (!_gameObject.IsStatic)
+                boundingSphere.Center = _transform.LocalPosition;
         }
 
         /// <summary>
@@ -101,9 +101,9 @@ namespace C3DE.Components.Rendering
             if (material == null || Material == null)
                 return base.CompareTo(obj);
 
-            if (Material.m_hasAlpha == material.m_hasAlpha)
+            if (Material._hasAlpha == material._hasAlpha)
                 return 0;
-            else if (Material.m_hasAlpha && !material.m_hasAlpha)
+            else if (Material._hasAlpha && !material._hasAlpha)
                 return 1;
             else
                 return -1;

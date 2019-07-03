@@ -17,28 +17,28 @@ namespace C3DE.Demo.Scripts
 
     public class SideMenu
     {
-        private Rectangle m_BoxRect;
-        private Widget[] m_Widgets;
-        private Texture2D m_BackgroundTexture;
-        private string m_Title;
+        private Rectangle _boxRect;
+        private Widget[] _widgets;
+        private Texture2D _backgroundTexture;
+        private string _title;
 
         public event Action<int> SelectionChanged = null;
 
         public SideMenu(string title, string[] names, int selectedIndex)
         {
-            m_Title = title;
+            _title = title;
 
             var count = names.Length;
-            m_Widgets = new Widget[count];
+            _widgets = new Widget[count];
 
             for (int i = 0; i < count; i++)
             {
-                m_Widgets[i] = new Widget();
-                m_Widgets[i].Name = names[i];
-                m_Widgets[i].Selected = i == selectedIndex;
+                _widgets[i] = new Widget();
+                _widgets[i].Name = names[i];
+                _widgets[i].Selected = i == selectedIndex;
             }
 
-            m_BackgroundTexture = TextureFactory.CreateColor(Color.CornflowerBlue, 1, 1);
+            _backgroundTexture = TextureFactory.CreateColor(Color.CornflowerBlue, 1, 1);
 
             SetVertical(false);
         }
@@ -48,59 +48,59 @@ namespace C3DE.Demo.Scripts
             var offset = 10;
             var itemWidth = 160;
             var itemHeight = 25;
-            var width = (itemWidth + 2 * offset) * m_Widgets.Length;
+            var width = (itemWidth + 2 * offset) * _widgets.Length;
             var height = 35;
 
-            m_BoxRect = new Rectangle(Screen.VirtualWidthPerTwo - width / 2, top ? offset : Screen.VirtualHeight - height - offset, width, height);
+            _boxRect = new Rectangle(Screen.VirtualWidthPerTwo - width / 2, top ? offset : Screen.VirtualHeight - height - offset, width, height);
 
-            for (int i = 0; i < m_Widgets.Length; i++)
+            for (int i = 0; i < _widgets.Length; i++)
             {
                 if (i == 0)
-                    m_Widgets[i].Rect = new Rectangle(m_BoxRect.X + 10, m_BoxRect.Y + height / 2 - itemHeight / 2, itemWidth, itemHeight);
+                    _widgets[i].Rect = new Rectangle(_boxRect.X + 10, _boxRect.Y + height / 2 - itemHeight / 2, itemWidth, itemHeight);
                 else
-                    m_Widgets[i].Rect = new Rectangle(m_Widgets[i - 1].Rect.X + 10 + itemWidth, m_Widgets[i - 1].Rect.Y, itemWidth, itemHeight);
+                    _widgets[i].Rect = new Rectangle(_widgets[i - 1].Rect.X + 10 + itemWidth, _widgets[i - 1].Rect.Y, itemWidth, itemHeight);
 
-                m_Widgets[i].RectExt = new Rectangle(m_Widgets[i].Rect.X - 1, m_Widgets[i].Rect.Y - 1, m_Widgets[i].Rect.Width + 1, m_Widgets[i].Rect.Height + 1);
+                _widgets[i].RectExt = new Rectangle(_widgets[i].Rect.X - 1, _widgets[i].Rect.Y - 1, _widgets[i].Rect.Width + 1, _widgets[i].Rect.Height + 1);
             }
         }
 
         public void SetVertical(bool left)
         {
-            m_BoxRect = new Rectangle(left ? 10 : Screen.VirtualWidth - 220, 10, 210, 50 * m_Widgets.Length);
+            _boxRect = new Rectangle(left ? 10 : Screen.VirtualWidth - 220, 10, 210, 50 * _widgets.Length);
 
-            for (int i = 0; i < m_Widgets.Length; i++)
+            for (int i = 0; i < _widgets.Length; i++)
             {
                 if (i == 0)
-                    m_Widgets[i].Rect = new Rectangle(m_BoxRect.X + 10, m_BoxRect.Y + 30, m_BoxRect.Width - 20, 30);
+                    _widgets[i].Rect = new Rectangle(_boxRect.X + 10, _boxRect.Y + 30, _boxRect.Width - 20, 30);
                 else
-                    m_Widgets[i].Rect = new Rectangle(m_BoxRect.X + 10, m_Widgets[i - 1].Rect.Y + 40, m_BoxRect.Width - 20, 30);
+                    _widgets[i].Rect = new Rectangle(_boxRect.X + 10, _widgets[i - 1].Rect.Y + 40, _boxRect.Width - 20, 30);
 
-                m_Widgets[i].RectExt = new Rectangle(m_Widgets[i].Rect.X - 1, m_Widgets[i].Rect.Y - 1, m_Widgets[i].Rect.Width + 1, m_Widgets[i].Rect.Height + 1);
+                _widgets[i].RectExt = new Rectangle(_widgets[i].Rect.X - 1, _widgets[i].Rect.Y - 1, _widgets[i].Rect.Width + 1, _widgets[i].Rect.Height + 1);
             }
         }
 
         public void Draw(GUI ui)
         {
-            ui.Box(ref m_BoxRect, m_Title);
+            ui.Box(ref _boxRect, _title);
 
-            for (int i = 0, l = m_Widgets.Length; i < l; i++)
+            for (int i = 0, l = _widgets.Length; i < l; i++)
             {
-                if (m_Widgets[i].Selected)
-                    ui.DrawTexture(m_Widgets[i].RectExt, m_BackgroundTexture);
+                if (_widgets[i].Selected)
+                    ui.DrawTexture(_widgets[i].RectExt, _backgroundTexture);
 
-                if (ui.Button(m_Widgets[i].Rect, m_Widgets[i].Name))
-                    SetSelected(m_Widgets[i].Selected ? - 1 : i);
+                if (ui.Button(_widgets[i].Rect, _widgets[i].Name))
+                    SetSelected(_widgets[i].Selected ? - 1 : i);
             }
         }
 
         public void SetSelected(int index)
         {
-            for (var i = 0; i < m_Widgets.Length; i++)
+            for (var i = 0; i < _widgets.Length; i++)
             {
                 if (i == index)
-                    m_Widgets[i].Selected = !m_Widgets[i].Selected;
+                    _widgets[i].Selected = !_widgets[i].Selected;
                 else
-                    m_Widgets[i].Selected = false;
+                    _widgets[i].Selected = false;
             }
 
             SelectionChanged?.Invoke(index);

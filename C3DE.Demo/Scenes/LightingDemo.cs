@@ -18,7 +18,7 @@ namespace C3DE.Demo.Scenes
         {
             base.Initialize();
 
-            Destroy(m_DirectionalLight);
+            Destroy(_directionalLight);
 
             // Light
             var padding = 5;
@@ -50,15 +50,19 @@ namespace C3DE.Demo.Scenes
                 var lightGo = GameObjectFactory.CreateLight(LightType.Point, colors[i], 0.5f, 1024);
                 lightGo.Transform.LocalRotation = new Vector3(0.0f, 0.5f, 0);
                 lightGo.Transform.LocalPosition = pos[i];
-                Add(lightGo);
-                
+                  
                 var light = lightGo.GetComponent<Light>();
                 light.Radius = 25;
                 light.ShadowGenerator.ShadowStrength = 1;
                 light.ShadowGenerator.ShadowBias = 0.01f;
 
+                if (i == 0)
+                    light.AddComponent<ShadowMapViewer>();
+                else
+                    light.ShadowEnabled = false;
+
                 var ligthSphere = lightGo.AddComponent<MeshRenderer>();
-                ligthSphere.Mesh = new SphereMesh(1f, 16);
+                ligthSphere.Mesh = new SphereMesh(0.5f, 16);
                 ligthSphere.Mesh.Build();
                 ligthSphere.CastShadow = true;
                 ligthSphere.ReceiveShadow = false;
@@ -87,34 +91,34 @@ namespace C3DE.Demo.Scenes
             terrain.Geometry.Build();
             terrain.Flatten();
             terrain.Renderer.Material = terrainMaterial;
-            terrain.Renderer.ReceiveShadow = true;
+            terrain.Renderer.ReceiveShadow = false;
             terrain.Renderer.CastShadow = false;
-            Add(terrainGo);
 
             // Model
             var model = Application.Content.Load<Model>("Models/Quandtum/Quandtum");
             var mesh = model.ToMeshRenderers(this);
             mesh.Transform.LocalScale = new Vector3(0.25f);
             mesh.Transform.Rotate(0, 0, -MathHelper.PiOver2);
+
             var renderer = mesh.GetComponentInChildren<MeshRenderer>();
             renderer.CastShadow = true;
             renderer.ReceiveShadow = true;
-
-            var material = (StandardMaterial)renderer.Material;
-            material.MainTexture = Application.Content.Load<Texture2D>("Models/Quandtum/textures/Turret-Diffuse");
-            material.SpecularTexture = Application.Content.Load<Texture2D>("Models/Quandtum/textures/Turret-Specular");
-            material.NormalTexture = Application.Content.Load<Texture2D>("Models/Quandtum/textures/Turret-Normal");
-            material.EmissiveTexture = Application.Content.Load<Texture2D>("Models/Quandtum/textures/Turret-Emission");
-            material.EmissiveEnabled = true;
-            material.EmissiveIntensity = 2.0f;
-            material.EmissiveColor = Color.Red;
-            material.ReflectionTexture = RenderSettings.Skybox.Texture;
-            material.Shininess = 250;
             renderer.Transform.LocalScale = new Vector3(0.035f);
             renderer.Transform.Rotate(0, -MathHelper.PiOver2, 0);
             renderer.Transform.Translate(-0.1f, 0, 0);
 
-            m_Camera.AddComponent<VRPlayerEnabler>();
+            var pbrMaterial = new PBRMaterial()
+            {
+                MainTexture = Application.Content.Load<Texture2D>("Models/Quandtum/textures/Turret-Diffuse"),
+                NormalMap = Application.Content.Load<Texture2D>("Models/Quandtum/textures/Turret-Normal"),
+                EmissiveMap = Application.Content.Load<Texture2D>("Models/Quandtum/textures/Turret-Emission")
+            };
+
+            pbrMaterial.CreateRMSFromValues(0.1f, 0.7f);
+
+            renderer.Material = pbrMaterial;
+
+            _camera.AddComponent<VRPlayerEnabler>();
         }
     }
 }

@@ -174,14 +174,14 @@ namespace C3DE.Graphics.Rendering
             if (m_VREnabled)
             {
                 var cameraParent = Matrix.Identity;
-                var parent = camera.m_Transform.Parent;
+                var parent = camera._transform.Parent;
                 if (parent != null)
                     cameraParent = parent._worldMatrix;
 
                 for (var eye = 0; eye < 2; eye++)
                 {
-                    camera.m_ProjectionMatrix = m_VRService.GetProjectionMatrix(eye);
-                    camera.m_ViewMatrix = m_VRService.GetViewMatrix(eye, cameraParent);
+                    camera._projectionMatrix = m_VRService.GetProjectionMatrix(eye);
+                    camera._viewMatrix = m_VRService.GetViewMatrix(eye, cameraParent);
                     RenderSceneForCamera(scene, camera, eye);
                 }
 

@@ -18,8 +18,8 @@ namespace C3DE.Demo.Scenes
         {
             base.Initialize();
 
-            m_Camera.AddComponent<LightSpawner>();
-            var vrPlayerEnabler = m_Camera.AddComponent<VRPlayerEnabler>();
+            _camera.AddComponent<LightSpawner>();
+            var vrPlayerEnabler = _camera.AddComponent<VRPlayerEnabler>();
             vrPlayerEnabler.Position = new Vector3(0, 1.0f, 0);
 
             SetControlMode(ControllerSwitcher.ControllerType.FPS, new Vector3(-10.0f, 2.0f, 0.45f), new Vector3(0.0f, -1.4f, 0.0f), true);

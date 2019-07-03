@@ -47,9 +47,9 @@ namespace C3DE.Components.Rendering
                 foreach (ModelMesh mesh in model.Meshes)
                     boundingSphere = BoundingSphere.CreateMerged(boundingSphere, mesh.BoundingSphere);
 
-                boundingSphere.Center = m_GameObject.Transform.LocalPosition;
-                boundingSphere.Transform(m_GameObject.Transform._worldMatrix);
-                boundingSphere.Radius *= Math.Max(Math.Max(m_Transform.LocalScale.X, m_Transform.LocalScale.Y), m_Transform.LocalScale.Z);
+                boundingSphere.Center = _gameObject.Transform.LocalPosition;
+                boundingSphere.Transform(_gameObject.Transform._worldMatrix);
+                boundingSphere.Radius *= Math.Max(Math.Max(_transform.LocalScale.X, _transform.LocalScale.Y), _transform.LocalScale.Z);
 
                 UpdateColliders();
             }
@@ -82,9 +82,9 @@ namespace C3DE.Components.Rendering
             {
                 foreach (BasicEffect effect in mesh.Effects)
                 {
-                    effect.World = boneTransforms[mesh.ParentBone.Index] * m_Transform._worldMatrix;
-                    effect.View = camera.m_ViewMatrix;
-                    effect.Projection = camera.m_ProjectionMatrix;
+                    effect.World = boneTransforms[mesh.ParentBone.Index] * _transform._worldMatrix;
+                    effect.View = camera._viewMatrix;
+                    effect.Projection = camera._projectionMatrix;
                     effect.EnableDefaultLighting();
                     effect.CurrentTechnique.Passes[0].Apply();
                 }

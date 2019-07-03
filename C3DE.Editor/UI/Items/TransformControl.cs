@@ -8,10 +8,10 @@ namespace C3DE.Editor.UI.Items
 {
     public class TransformControl : ControlBase
     {
-        private Vector3Control m_Position;
-        private Vector3Control m_Rotation;
-        private Vector3Control m_Scale;
-        private Transform m_Transform;
+        private Vector3Control _position;
+        private Vector3Control _rotation;
+        private Vector3Control _scale;
+        private Transform _transform;
 
         public event Action<string, string, float> ValueChanged = null;
 
@@ -24,9 +24,9 @@ namespace C3DE.Editor.UI.Items
             tree.AutoSizeToContent = true;
 
             var transform = tree.Add("Transform");
-            m_Position = AddControl(transform, "Translation", UpdateTranslation);
-            m_Rotation = AddControl(transform, "Rotation", UpdateRotation);
-            m_Scale = AddControl(transform, "Scale", UpdateScale);
+            _position = AddControl(transform, "Translation", UpdateTranslation);
+            _rotation = AddControl(transform, "Rotation", UpdateRotation);
+            _scale = AddControl(transform, "Scale", UpdateScale);
         }
 
         private Vector3Control AddControl(Properties parent, string label, Action<Vector3Control, float, float, float> callback)
@@ -40,43 +40,43 @@ namespace C3DE.Editor.UI.Items
 
         private void UpdateTranslation(Vector3Control control, float x, float y, float z)
         {
-            if (m_Transform == null)
+            if (_transform == null)
                 return;
 
-            m_Transform.SetLocalPosition(x, y, z);
+            _transform.SetLocalPosition(x, y, z);
         }
 
         private void UpdateRotation(Vector3Control control, float x, float y, float z)
         {
-            if (m_Transform == null)
+            if (_transform == null)
                 return;
 
-            m_Transform.SetLocalRotation(x, y, z);
+            _transform.SetLocalRotation(x, y, z);
         }
 
         private void UpdateScale(Vector3Control control, float x, float y, float z)
         {
-            if (m_Transform == null)
+            if (_transform == null)
                 return;
 
-            m_Transform.SetLocalScale(x, y, z);
+            _transform.SetLocalScale(x, y, z);
         }
 
         public void SetGameObject(GameObject gameObject)
         {
-            m_Transform = gameObject?.Transform;
+            _transform = gameObject?.Transform;
 
-            if (m_Transform == null)
+            if (_transform == null)
             {
-                m_Position.SetVector(Vector3.Zero);
-                m_Rotation.SetVector(Vector3.Zero);
-                m_Scale.SetVector(Vector3.Zero);
+                _position.SetVector(Vector3.Zero);
+                _rotation.SetVector(Vector3.Zero);
+                _scale.SetVector(Vector3.Zero);
             }
             else
             {
-                m_Position.SetVector(m_Transform.LocalPosition);
-                m_Rotation.SetVector(m_Transform.LocalRotation);
-                m_Scale.SetVector(m_Transform.LocalScale);
+                _position.SetVector(_transform.LocalPosition);
+                _rotation.SetVector(_transform.LocalRotation);
+                _scale.SetVector(_transform.LocalScale);
             }
         }
     }

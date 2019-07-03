@@ -6,8 +6,8 @@ using System;
 
 public sealed class SinMovement : Behaviour
 {
-    private Vector3 m_Position = Vector3.Zero;
-    private float m_Y = 0;
+    private Vector3 _position = Vector3.Zero;
+    private float _Y = 0;
 
     public float Min { get; set; } = 15.5f;
     public float Max { get; set; } = 15.5f;
@@ -25,11 +25,11 @@ public sealed class SinMovement : Behaviour
 
     public override void Update()
     {
-        m_Position = m_Transform.LocalPosition;
-        m_Y = (Time.TotalTime + Phase) * Frequency;
-        m_Y = m_Y - (float)Math.Floor((double)m_Y); // normalized value to 0..1
-        m_Position.Y = (float)((Max * Math.Sin(2 * MathHelper.Pi * m_Y)) + Min);
+        _position = _transform.LocalPosition;
+        _Y = (Time.TotalTime + Phase) * Frequency;
+        _Y = _Y - (float)Math.Floor((double)_Y); // normalized value to 0..1
+        _position.Y = (float)((Max * Math.Sin(2 * MathHelper.Pi * _Y)) + Min);
 
-        m_Transform.LocalPosition = m_Position;
+        _transform.LocalPosition = _position;
     }
 }

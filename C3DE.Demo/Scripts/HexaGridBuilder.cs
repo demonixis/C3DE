@@ -36,7 +36,7 @@ namespace C3DE.Demo.Scripts
             _gridPrefab.Material = new StandardMaterial();
             _gridPrefab.Material.MainTexture = Application.Content.Load<Texture2D>("Models/hexagone_basic");
             _gridPrefab.Enabled = false;
-            m_GameObject.Scene.Add(go);
+            _gameObject.Scene.Add(go);
 
             _hexWidth = _gridPrefab.BoundingSphere.Radius * 2 * 0.85f * Margin;
             _hexDepth = _gridPrefab.BoundingSphere.Radius * 2 * Margin;
@@ -92,7 +92,7 @@ namespace C3DE.Demo.Scripts
 
                     cache = Scene.Instanciate(_gridPrefab.GameObject);
                     cache.Transform.LocalPosition = GetWorldCoordinate(x, z);
-                    cache.Transform.Parent = m_Transform;
+                    cache.Transform.Parent = _transform;
 
                     mRenderer = cache.GetComponent<ModelRenderer>();
 

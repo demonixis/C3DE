@@ -19,7 +19,7 @@ namespace C3DE
         private BaseRenderer _nextRenderer;
         protected SceneManager _sceneManager;
         protected bool _initialized;
-        private int m_TotalFrames;
+        private int _totalFrames;
         private float _elapsedTime;
         private int _FPS = 0;
 
@@ -139,8 +139,8 @@ namespace C3DE
 
             if (_elapsedTime > 1000.0f)
             {
-                _FPS = m_TotalFrames;
-                m_TotalFrames = 0;
+                _FPS = _totalFrames;
+                _totalFrames = 0;
                 _elapsedTime = 0;
             }
 
@@ -150,7 +150,7 @@ namespace C3DE
 
         protected override void Draw(GameTime gameTime)
         {
-            m_TotalFrames++;
+            _totalFrames++;
             GraphicsDevice.Clear(Color.Black);
             renderer.Render(_sceneManager.ActiveScene);
             base.Draw(gameTime);

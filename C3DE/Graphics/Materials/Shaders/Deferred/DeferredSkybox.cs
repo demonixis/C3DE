@@ -7,7 +7,7 @@ namespace C3DE.Graphics.Materials.Shaders
 {
     public class DeferredSkybox : ShaderMaterial
     {
-        private Skybox m_Skybox;
+        private Skybox _skybox;
         protected EffectParameter m_EPWorld;
         protected EffectParameter m_EPView;
         protected EffectParameter m_EPProjection;
@@ -19,7 +19,7 @@ namespace C3DE.Graphics.Materials.Shaders
 
         public DeferredSkybox(Skybox skybox)
         {
-            m_Skybox = skybox;
+            _skybox = skybox;
         }
 
         public override void LoadEffect(ContentManager content)
@@ -39,10 +39,10 @@ namespace C3DE.Graphics.Materials.Shaders
 
         public override void PrePass(Camera camera)
         {
-            m_EPWorld.SetValue(m_Skybox.WorldMatrix);
-            m_EPProjection.SetValue(camera.m_ProjectionMatrix);
-            m_EPView.SetValue(camera.m_ViewMatrix);
-            m_EPMainTexture.SetValue(m_Skybox.Texture);
+            m_EPWorld.SetValue(_skybox.WorldMatrix);
+            m_EPProjection.SetValue(camera._projectionMatrix);
+            m_EPView.SetValue(camera._viewMatrix);
+            m_EPMainTexture.SetValue(_skybox.Texture);
             m_EPEyePosition.SetValue(camera.Transform.Position);
             _effect.CurrentTechnique.Passes[0].Apply();
         }

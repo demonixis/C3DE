@@ -120,7 +120,7 @@ namespace C3DE
             Name = "Scene-" + Guid.NewGuid();
             _transform.Root = _transform;
             gameObjects = new List<GameObject>();
-            m_Scene = this;
+            _scene = this;
             renderList = new List<Renderer>(10);
             materials = new List<Material>(5);
             effects = new List<Effect>(5);
@@ -156,7 +156,7 @@ namespace C3DE
         /// <param name="content"></param>
         public override void Initialize()
         {
-            m_Initialized = true;
+            _initialized = true;
 
             RenderSettings.Skybox.LoadContent(Application.Content);
 
@@ -265,7 +265,7 @@ namespace C3DE
                         gameObject.ComponentChanged += OnGameObjectComponentChanged;
                     }
 
-                    if (m_Initialized && !gameObject.Initialized)
+                    if (_initialized && !gameObject.Initialized)
                         gameObject.Initialize();
                 }
                 else

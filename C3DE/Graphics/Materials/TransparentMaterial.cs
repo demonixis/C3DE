@@ -10,7 +10,7 @@ namespace C3DE.Graphics.Materials
         public TransparentMaterial(string name = "Transparent Material")
             : base(name)
         {
-            m_hasAlpha = true;
+            _hasAlpha = true;
         }
 
         protected override void SetupShaderMaterial(BaseRenderer renderer)

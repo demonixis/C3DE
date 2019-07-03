@@ -21,8 +21,8 @@ namespace C3DE.Graphics.Materials.Shaders
 
         public override void PrePass(Camera camera)
         {
-            _effect.Parameters["View"].SetValue(camera.m_ViewMatrix);
-            _effect.Parameters["Projection"].SetValue(camera.m_ProjectionMatrix);
+            _effect.Parameters["View"].SetValue(camera._viewMatrix);
+            _effect.Parameters["Projection"].SetValue(camera._projectionMatrix);
         }
 
         public override void Pass(Renderer renderable)

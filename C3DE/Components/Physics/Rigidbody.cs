@@ -10,59 +10,59 @@ namespace C3DE.Components.Physics
 {
     public class Rigidbody : Component
     {
-        private JRigidBody m_rigidBody;
-        private bool m_AddedToScene;
+        private JRigidBody _rigidBody;
+        private bool _addedToScene;
 
         public bool IsStatic
         {
-            get => m_rigidBody.IsStatic;
-            set => m_rigidBody.IsStatic = value;
+            get => _rigidBody.IsStatic;
+            set => _rigidBody.IsStatic = value;
         }
 
         public bool AffectedByGravity
         {
-            get => m_rigidBody?.AffectedByGravity ?? false;
-            set => m_rigidBody.AffectedByGravity = value;
+            get => _rigidBody?.AffectedByGravity ?? false;
+            set => _rigidBody.AffectedByGravity = value;
         }
 
         public Vector3 AngularVelocity
         {
-            get => ToVector3(m_rigidBody.AngularVelocity);
-            set => m_rigidBody.AngularVelocity = ToJVector(value);
+            get => ToVector3(_rigidBody.AngularVelocity);
+            set => _rigidBody.AngularVelocity = ToJVector(value);
         }
 
         public Vector3 Velocity
         {
-            get => ToVector3(m_rigidBody.LinearVelocity);
-            set => m_rigidBody.LinearVelocity = ToJVector(value);
+            get => ToVector3(_rigidBody.LinearVelocity);
+            set => _rigidBody.LinearVelocity = ToJVector(value);
         }
 
         public Material PhysicsMaterial
         {
-            get => m_rigidBody.Material;
-            set => m_rigidBody.Material = value;
+            get => _rigidBody.Material;
+            set => _rigidBody.Material = value;
         }
 
         public float Mass
         {
-            get => m_rigidBody.Mass;
-            set => m_rigidBody.Mass = value;
+            get => _rigidBody.Mass;
+            set => _rigidBody.Mass = value;
         }
 
         public bool IsKinematic { get; set; } = false;
 
         public JRigidBody JitterRigidbody
         {
-            get => m_rigidBody;
+            get => _rigidBody;
         }
 
-        public Shape Shape => m_rigidBody.Shape;
+        public Shape Shape => _rigidBody.Shape;
 
         public Rigidbody()
             : base()
         {
             var shape = new BoxShape(1.0f, 1.0f, 1.0f);
-            m_rigidBody = new JRigidBody(shape);
+            _rigidBody = new JRigidBody(shape);
         }
 
         public override void Start()
@@ -80,21 +80,21 @@ namespace C3DE.Components.Physics
 
         public void SyncTransform()
         {
-            m_rigidBody.Position = ToJVector(m_Transform.LocalPosition);
-            m_rigidBody.Orientation = ToJMatrix(Matrix.CreateFromYawPitchRoll(m_Transform.LocalRotation.Y, m_Transform.LocalRotation.Y, m_Transform.LocalRotation.Z));
+            _rigidBody.Position = ToJVector(_transform.LocalPosition);
+            _rigidBody.Orientation = ToJMatrix(Matrix.CreateFromYawPitchRoll(_transform.LocalRotation.Y, _transform.LocalRotation.Y, _transform.LocalRotation.Z));
         }
 
         public void SetShape(Shape shape)
         {
-            m_rigidBody.Shape = shape;
+            _rigidBody.Shape = shape;
 
             SyncTransform();
             shape.UpdateShape();
 
-            if (!m_AddedToScene && Scene.current != null)
+            if (!_addedToScene && Scene.current != null)
             {
-                Scene.current._physicsWorld.AddBody(m_rigidBody);
-                m_AddedToScene = true;
+                Scene.current._physicsWorld.AddBody(_rigidBody);
+                _addedToScene = true;
             }
         }
 
@@ -120,30 +120,30 @@ namespace C3DE.Components.Physics
 
         public void AddForce(Vector3 force)
         {
-            m_rigidBody.AddForce(ToJVector(force));
+            _rigidBody.AddForce(ToJVector(force));
         }
 
         public void AddForceAtPosition(Vector3 force, Vector3 position)
         {
-            m_rigidBody.AddForce(ToJVector(force), ToJVector(position));
+            _rigidBody.AddForce(ToJVector(force), ToJVector(position));
         }
 
         public void AddTorque(Vector3 torque)
         {
-            m_rigidBody.AddTorque(ToJVector(torque));
+            _rigidBody.AddTorque(ToJVector(torque));
         }
 
         public override void Update()
         {
             base.Update();
 
-            if (!m_AddedToScene)
+            if (!_addedToScene)
                 return;
 
             if (!IsKinematic)
             {
-                m_Transform.SetLocalPosition(ToVector3(m_rigidBody.Position));
-                m_Transform.SetLocalRotation(ToMatrix(m_rigidBody.Orientation));
+                _transform.SetLocalPosition(ToVector3(_rigidBody.Position));
+                _transform.SetLocalRotation(ToMatrix(_rigidBody.Orientation));
             }
             else
                 SyncTransform();
@@ -151,8 +151,8 @@ namespace C3DE.Components.Physics
 
         public override void Dispose()
         {
-            if (m_rigidBody != null)
-                Scene.current?._physicsWorld.RemoveBody(m_rigidBody);
+            if (_rigidBody != null)
+                Scene.current?._physicsWorld.RemoveBody(_rigidBody);
         }
 
         public static Vector3 ToVector3(JVector jVector) => new Vector3(jVector.X, jVector.Y, jVector.Z);

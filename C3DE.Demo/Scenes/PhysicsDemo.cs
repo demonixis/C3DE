@@ -15,7 +15,7 @@ namespace C3DE.Demo.Scenes
         {
             base.Initialize();
 
-            m_Camera.AddComponent<PhysicsSpawner>();
+            _camera.AddComponent<PhysicsSpawner>();
 
             SetControlMode(ControllerSwitcher.ControllerType.FPS, new Vector3(0, 2, 0), Vector3.Zero, true);
 
@@ -42,7 +42,7 @@ namespace C3DE.Demo.Scenes
             rb.AddComponent<BoundingBoxRenderer>().LineColor = Color.Red;
             rb.IsKinematic = true;
 
-            m_Camera.AddComponent<VRPlayerEnabler>();
+            _camera.AddComponent<VRPlayerEnabler>();
         }
     }
 }

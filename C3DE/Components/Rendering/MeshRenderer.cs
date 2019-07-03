@@ -9,27 +9,27 @@ namespace C3DE.Components.Rendering
     [DataContract]
     public class MeshRenderer : Renderer
     {
-        private bool m_HaveListener;
-        protected Mesh m_Geometry;
+        private bool _haveListener;
+        protected Mesh _geometry;
 
         [DataMember]
         public Mesh Mesh
         {
-            get { return m_Geometry; }
+            get => _geometry;
             set
             {
-                if (value != m_Geometry && value != null)
+                if (value != _geometry && value != null)
                 {
-                    if (m_Geometry != null && m_HaveListener)
+                    if (_geometry != null && _haveListener)
                     {
-                        m_Geometry.ConstructionDone -= ComputeBoundingInfos;
-                        m_HaveListener = false;
+                        _geometry.ConstructionDone -= ComputeBoundingInfos;
+                        _haveListener = false;
                     }
 
-                    m_Geometry = value;
+                    _geometry = value;
 
-                    m_Geometry.ConstructionDone += ComputeBoundingInfos;
-                    m_HaveListener = true;
+                    _geometry.ConstructionDone += ComputeBoundingInfos;
+                    _haveListener = true;
                 }
             }
         }
@@ -41,12 +41,12 @@ namespace C3DE.Components.Rendering
 
         public override void ComputeBoundingInfos()
         {
-            if (m_Geometry == null)
+            if (_geometry == null)
                 return;
 
             var min = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
             var max = new Vector3(float.MinValue, float.MinValue, float.MinValue);
-            var vertices = m_Geometry.GetVertices(VertexType.Position);
+            var vertices = _geometry.GetVertices(VertexType.Position);
 
             for (int i = 0, l = vertices.Length; i < l; i++)
             {
@@ -66,45 +66,45 @@ namespace C3DE.Components.Rendering
             var dz = max.Z - min.Z;
 
             boundingSphere.Radius = (float)Math.Max(Math.Max(dx, dy), dz) / 2.0f;
-            boundingSphere.Center = m_Transform.LocalPosition;
+            boundingSphere.Center = _transform.LocalPosition;
 
             UpdateColliders();
         }
 
         public override void Draw(GraphicsDevice device)
         {
-            device.SetVertexBuffer(m_Geometry.VertexBuffer);
-            device.Indices = m_Geometry.IndexBuffer;
-            device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, m_Geometry.IndexBuffer.IndexCount / 3);
+            device.SetVertexBuffer(_geometry.VertexBuffer);
+            device.Indices = _geometry.IndexBuffer;
+            device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, _geometry.IndexBuffer.IndexCount / 3);
         }
 
         public override void Dispose()
         {
-            if (m_Geometry != null)
+            if (_geometry != null)
             {
-                m_Geometry.Dispose();
-                m_Geometry = null;
+                _geometry.Dispose();
+                _geometry = null;
             }
         }
 
         public override void PostDeserialize()
         {
-            if (m_Geometry != null && m_Geometry.Built)
-                m_Geometry.Build();
+            if (_geometry != null && _geometry.Built)
+                _geometry.Build();
         }
 
         public override object Clone()
         {
             var clone = (MeshRenderer)base.Clone();
 
-            if (m_Geometry != null)
+            if (_geometry != null)
             {
-                clone.m_Geometry = (Mesh)Activator.CreateInstance(m_Geometry.GetType());
-                clone.m_Geometry.Size = m_Geometry.Size;
-                clone.m_Geometry.TextureRepeat = m_Geometry.TextureRepeat;
+                clone._geometry = (Mesh)Activator.CreateInstance(_geometry.GetType());
+                clone._geometry.Size = _geometry.Size;
+                clone._geometry.TextureRepeat = _geometry.TextureRepeat;
 
-                if (m_Geometry.Built)
-                    clone.m_Geometry.Build();
+                if (_geometry.Built)
+                    clone._geometry.Build();
             }
               
             return clone;

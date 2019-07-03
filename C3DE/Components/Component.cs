@@ -11,25 +11,25 @@ namespace C3DE.Components
     [DataContract]
     public abstract class Component : IComparable, ICloneable, IDisposable
     {
-        internal protected bool m_Started;
-        protected bool m_Enabled;
-        protected int m_Order = 1;
-        internal protected GameObject m_GameObject;
-        internal protected Transform m_Transform;
+        internal protected bool _started;
+        protected bool _enabled;
+        protected int _order = 1;
+        internal protected GameObject _gameObject;
+        internal protected Transform _transform;
 
         #region Fields
 
         [DataMember]
         public bool Enabled
         {
-            get { return m_Enabled; }
+            get { return _enabled; }
             set
             {
-                if (value != m_Enabled)
+                if (value != _enabled)
                 {
-                    m_Enabled = value;
+                    _enabled = value;
 
-                    if (m_Enabled)
+                    if (_enabled)
                         OnEnabled();
                     else
                         OnDisabled();
@@ -41,7 +41,7 @@ namespace C3DE.Components
 
         public bool Initialized
         {
-            get { return m_Started; }
+            get { return _started; }
         }
 
         [DataMember]
@@ -49,25 +49,25 @@ namespace C3DE.Components
 
         public GameObject GameObject
         {
-            get { return m_GameObject; }
-            internal set { m_GameObject = value; }
+            get { return _gameObject; }
+            internal set { _gameObject = value; }
         }
 
         public Transform Transform
         {
-            get { return m_Transform; }
-            internal set { m_Transform = value; }
+            get { return _transform; }
+            internal set { _transform = value; }
         }
 
         [DataMember]
         public int Order
         {
-            get { return m_Order; }
+            get { return _order; }
             protected set
             {
-                if (value != m_Order)
+                if (value != _order)
                 {
-                    m_Order = value;
+                    _order = value;
                     NotifyPropertyChanged("Order");
                 }
             }
@@ -92,8 +92,8 @@ namespace C3DE.Components
         /// </summary>
         public Component()
         {
-            m_Started = false;
-            m_Enabled = true;
+            _started = false;
+            _enabled = true;
             Id = "CPN-" + Guid.NewGuid();
         }
 
@@ -107,8 +107,8 @@ namespace C3DE.Components
 
         public virtual void Awake()
         {
-            if (m_Transform == null)
-                m_Transform = GetComponent<Transform>();
+            if (_transform == null)
+                _transform = GetComponent<Transform>();
         }
 
         /// <summary>
@@ -117,7 +117,7 @@ namespace C3DE.Components
         /// <param name="content"></param>
         public virtual void Start()
         {
-            m_Started = true;
+            _started = true;
         }
 
         /// <summary>
@@ -134,9 +134,9 @@ namespace C3DE.Components
             if (component == null)
                 return 1;
 
-            if (m_Order == component.m_Order)
+            if (_order == component._order)
                 return 0;
-            else if (m_Order > component.m_Order)
+            else if (_order > component._order)
                 return 1;
             else
                 return -1;
@@ -146,37 +146,37 @@ namespace C3DE.Components
 
         public T AddComponent<T>() where T : Component, new()
         {
-            return m_GameObject.AddComponent<T>();
+            return _gameObject.AddComponent<T>();
         }
 
         public T GetComponent<T>() where T : Component
         {
-            return m_GameObject.GetComponent<T>();
+            return _gameObject.GetComponent<T>();
         }
 
         public T[] GetComponents<T>() where T : Component
         {
-            return m_GameObject.GetComponents<T>();
+            return _gameObject.GetComponents<T>();
         }
 
         public T GetComponentInChildren<T>() where T : Component
         {
-            return m_GameObject.GetComponentInChildren<T>();
+            return _gameObject.GetComponentInChildren<T>();
         }
 
         public T[] GetComponentsInChildren<T>() where T : Component
         {
-            return m_GameObject.GetComponentsInChildren<T>();
+            return _gameObject.GetComponentsInChildren<T>();
         }
 
         public T GetComponentInParent<T>() where T : Component
         {
-            return m_GameObject.GetComponentInParent<T>();
+            return _gameObject.GetComponentInParent<T>();
         }
 
         public T[] GetComponentsInParent<T>() where T : Component
         {
-            return m_GameObject.GetComponentsInParent<T>();
+            return _gameObject.GetComponentsInParent<T>();
         }
 
         #endregion

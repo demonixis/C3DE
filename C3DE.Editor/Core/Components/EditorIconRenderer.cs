@@ -15,10 +15,10 @@ namespace C3DE.Editor.Core.Components
         {
             CastShadow = false;
             ReceiveShadow = false;
-            m_Geometry = new QuadMesh();
-            m_Geometry.Size = new Vector3(0.5f);
-            m_Geometry.TextureRepeat = new Vector2(2);
-            m_Geometry.Build();
+            _geometry = new QuadMesh();
+            _geometry.Size = new Vector3(0.5f);
+            _geometry.TextureRepeat = new Vector2(2);
+            _geometry.Build();
 
             boundingBox = new BoundingBox(new Vector3(-0.25f), new Vector3(0.25f));
 

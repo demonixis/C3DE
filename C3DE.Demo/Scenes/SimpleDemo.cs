@@ -10,10 +10,10 @@ namespace C3DE.Demo.Scenes
 {
     public class SimpleDemo : Scene
     {
-        protected Camera m_Camera;
-        protected Light m_DirectionalLight;
-        protected ControllerSwitcher m_ControllerSwitcher;
-        protected DemoSceneMenu m_DemoSceneMenu;
+        protected Camera _camera;
+        protected Light _directionalLight;
+        protected ControllerSwitcher _controllerSwitcher;
+        protected DemoSceneMenu _demoSceneMenu;
 
         public SimpleDemo(string name) : base(name) { }
 
@@ -26,16 +26,16 @@ namespace C3DE.Demo.Scenes
             // Add a camera with a FPS controller
             var camera = GameObjectFactory.CreateCamera(new Vector3(0, 2, -10), new Vector3(0, 0, 0), Vector3.Up);
 
-            m_Camera = camera.GetComponent<Camera>();
-            m_Camera.AddComponent<DemoBehaviour>();
-            m_ControllerSwitcher = m_Camera.AddComponent<ControllerSwitcher>();
-            m_DemoSceneMenu = m_Camera.AddComponent<DemoSceneMenu>();
+            _camera = camera.GetComponent<Camera>();
+            _camera.AddComponent<DemoBehaviour>();
+            _controllerSwitcher = _camera.AddComponent<ControllerSwitcher>();
+            _demoSceneMenu = _camera.AddComponent<DemoSceneMenu>();
 
             // And a light
             var lightGo = GameObjectFactory.CreateLight(LightType.Directional, Color.White, 1f, 2048);
             lightGo.Transform.LocalPosition = new Vector3(500, 500, 0);
             lightGo.Transform.LocalRotation = new Vector3(MathHelper.PiOver2, -MathHelper.PiOver4, 0);
-            m_DirectionalLight = lightGo.GetComponent<Light>();
+            _directionalLight = lightGo.GetComponent<Light>();
 
             // Sun Flares
             var content = Application.Content;
@@ -47,11 +47,11 @@ namespace C3DE.Demo.Scenes
                 content.Load<Texture2D>("Textures/Flares/circle_soft_1")
             };
 
-            var sunflares = m_DirectionalLight.AddComponent<LensFlare>();
+            var sunflares = _directionalLight.AddComponent<LensFlare>();
             sunflares.Setup(glowTexture, flareTextures);
 
             // Skybox
-            RenderSettings.Skybox.Generate(Application.GraphicsDevice, Application.Content, DemoGame.BlueSkybox);
+            RenderSettings.Skybox.Generate(Application.GraphicsDevice, DemoGame.BlueSkybox);
 
             // Fog: Setup fog mode with some value. It's still disabled, but those values are used by the post processing fog effect.
             RenderSettings.FogDensity = 0.0085f;
@@ -61,17 +61,17 @@ namespace C3DE.Demo.Scenes
 
         public void OptimizeFor2D()
         {
-            Destroy(m_DirectionalLight);
-            Destroy(m_DemoSceneMenu);
+            Destroy(_directionalLight);
+            Destroy(_demoSceneMenu);
             RenderSettings.Skybox.Enabled = false;
         }
 
         public void SetControlMode(ControllerSwitcher.ControllerType type, Vector3 position, Vector3 rotation, bool fly = true)
         {
-            m_ControllerSwitcher.DefaultPosition = position;
-            m_ControllerSwitcher.DefaultRotation = rotation;
-            m_ControllerSwitcher.FlyMode = fly;
-            m_ControllerSwitcher.SetControllerActive(type);
+            _controllerSwitcher.DefaultPosition = position;
+            _controllerSwitcher.DefaultRotation = rotation;
+            _controllerSwitcher.FlyMode = fly;
+            _controllerSwitcher.SetControllerActive(type);
         }
     }
 }

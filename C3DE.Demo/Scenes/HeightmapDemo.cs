@@ -16,8 +16,8 @@ namespace C3DE.Demo.Scenes
 
             var content = Application.Content;
 
-            m_DirectionalLight.AddComponent<LightMover>();
-            m_DirectionalLight.AddComponent<LightSwitcher>().SetBoxAlign(true);
+            _directionalLight.AddComponent<LightMover>();
+            _directionalLight.AddComponent<LightSwitcher>().SetBoxAlign(true);
 
             // Finally a terrain
             var terrainMaterial = new StandardTerrainMaterial();
@@ -28,7 +28,7 @@ namespace C3DE.Demo.Scenes
 
             var terrainGo = GameObjectFactory.CreateTerrain();
             
-            m_Scene.Add(terrainGo);
+            _scene.Add(terrainGo);
 
             var terrain = terrainGo.GetComponent<Terrain>();
             terrain.LoadHeightmap("Textures/heightmap");
@@ -44,7 +44,7 @@ namespace C3DE.Demo.Scenes
             var bumpTexture = content.Load<Texture2D>("Textures/wavesbump");
             var water = GameObjectFactory.CreateWater(waterTexture, bumpTexture, new Vector3(terrain.Width * 0.5f));
             water.Transform.Translate(0, 10.0f, 0);
-            m_Scene.Add(water);
+            _scene.Add(water);
 
             // And fog
             RenderSettings.FogDensity = 0.0085f;
@@ -52,7 +52,7 @@ namespace C3DE.Demo.Scenes
             RenderSettings.Skybox.FogSupported = true;
             RenderSettings.Skybox.OverrideSkyboxFog(FogMode.Exp2, 0.05f, 0, 0);
 
-            var vrPlayerEnabler = m_Camera.AddComponent<VRPlayerEnabler>();
+            var vrPlayerEnabler = _camera.AddComponent<VRPlayerEnabler>();
             vrPlayerEnabler.Position = new Vector3(0, water.Transform.Position.Y + 0.5f, 0);
         }
     }

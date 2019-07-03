@@ -28,7 +28,7 @@ namespace C3DE.Graphics.Materials
         public StandardWaterMaterial()
             : base()
         {
-            m_hasAlpha = true;
+            _hasAlpha = true;
         }
 
         protected override void SetupShaderMaterial(BaseRenderer renderer)

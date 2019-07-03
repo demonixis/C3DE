@@ -11,7 +11,7 @@ namespace C3DE.Graphics.Materials
     public abstract class Material : IDisposable
     {
         protected internal Vector3 _diffuseColor;
-        protected internal bool m_hasAlpha;
+        protected internal bool _hasAlpha;
         protected internal ShaderMaterial m_ShaderMaterial;
 
         [DataMember]
@@ -42,7 +42,7 @@ namespace C3DE.Graphics.Materials
             Name = "Material_" + Id;
             Tiling = Vector2.One;
             Offset = Vector2.Zero;
-            m_hasAlpha = false;
+            _hasAlpha = false;
             Scene.current?.AddMaterial(this);
         }
 

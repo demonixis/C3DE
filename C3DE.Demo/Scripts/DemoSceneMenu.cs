@@ -6,15 +6,15 @@ namespace C3DE.Demo.Scripts
 {
     public sealed class DemoSceneMenu : Behaviour
     {
-        private Behaviour[] m_Behaviours;
-        private SideMenu m_SideMenu;
-        private Vector2 m_FPSPosition;
+        private Behaviour[] _behaviours;
+        private SideMenu _sideMenu;
+        private Vector2 _FPSPosition;
 
         public override void Start()
         {
             var camera = Camera.Main;
 
-            m_Behaviours = new Behaviour[]
+            _behaviours = new Behaviour[]
             {
                 camera.GetComponent<ControllerSwitcher>(),
                 camera.AddComponent<PostProcessSwitcher>(),
@@ -22,11 +22,11 @@ namespace C3DE.Demo.Scripts
                 camera.AddComponent<VRSwitcher>()
             };
 
-            m_SideMenu = new SideMenu(null, new[] { "Controls", "Post Process", "Renderers", "Virtual Reality", "Cancel" }, -1);
-            m_SideMenu.SelectionChanged += OnSelectionChanged;
-            m_SideMenu.SetHorizontal(false);
+            _sideMenu = new SideMenu(null, new[] { "Controls", "Post Process", "Renderers", "Virtual Reality", "Cancel" }, -1);
+            _sideMenu.SelectionChanged += OnSelectionChanged;
+            _sideMenu.SetHorizontal(false);
 
-            m_FPSPosition = new Vector2(Screen.WidthPerTwo - 5, 15);
+            _FPSPosition = new Vector2(Screen.WidthPerTwo - 5, 15);
 
             OnSelectionChanged(-1);
         }
@@ -34,30 +34,30 @@ namespace C3DE.Demo.Scripts
         public override void OnGUI(GUI ui)
         {
             base.OnGUI(ui);
-            m_SideMenu.Draw(ui);
+            _sideMenu.Draw(ui);
 
-            ui.Label(m_FPSPosition, Application.Engine.FPS.ToString());
+            ui.Label(_FPSPosition, Application.Engine.FPS.ToString());
         }
 
         private void OnSelectionChanged(int item)
         {
-            var count = m_Behaviours.Length;
+            var count = _behaviours.Length;
             if (item >= count)
             {
-                foreach (var behaviour in m_Behaviours)
+                foreach (var behaviour in _behaviours)
                     behaviour.Enabled = false;
             }
             else
             {
                 for (var i = 0; i < count; i++)
                 {
-                    if (m_Behaviours[i] is VRSwitcher)
+                    if (_behaviours[i] is VRSwitcher)
                     {
-                        if (m_Behaviours[i].Enabled)
+                        if (_behaviours[i].Enabled)
                             continue;
                     }
 
-                    m_Behaviours[i].Enabled = item == i;
+                    _behaviours[i].Enabled = item == i;
                 }
             }
         }

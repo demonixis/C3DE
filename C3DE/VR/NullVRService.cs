@@ -36,7 +36,7 @@ namespace C3DE.VR
             return new RenderTarget2D(Game.GraphicsDevice, Screen.Width / 2, Screen.Height, false, SurfaceFormat.Color, DepthFormat.Depth24Stencil8);
         }
 
-        public override Matrix GetProjectionMatrix(int eye) => Camera.Main.m_ProjectionMatrix;
+        public override Matrix GetProjectionMatrix(int eye) => Camera.Main._projectionMatrix;
 
 		public override Matrix GetViewMatrix(int eye, Matrix playerPose)
         {

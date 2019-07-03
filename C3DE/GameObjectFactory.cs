@@ -39,7 +39,7 @@ namespace C3DE
             light._color = color.ToVector3();
 
             if (shadowMapSize > 0)
-                light.m_ShadowGenerator.SetShadowMapSize(Application.GraphicsDevice, shadowMapSize);
+                light._shadowGenerator.SetShadowMapSize(Application.GraphicsDevice, shadowMapSize);
 
             return gameObject;
         }

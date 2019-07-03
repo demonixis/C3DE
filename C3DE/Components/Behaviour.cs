@@ -7,13 +7,13 @@ namespace C3DE.Components
     [DataContract]
     public class Behaviour : Component
     {
-        private CoroutineManager m_CoroutineManager = new CoroutineManager();
+        private CoroutineManager _coroutineManager = new CoroutineManager();
 
         public Behaviour() : base() { }
 
         public override void Update()
         {
-            m_CoroutineManager.Update();
+            _coroutineManager.Update();
         }
 
         public virtual void OnGUI(GUI ui) { }
@@ -30,17 +30,17 @@ namespace C3DE.Components
 
         public void StartCoroutine(IEnumerator coroutine)
         {
-            m_CoroutineManager.Start(coroutine);
+            _coroutineManager.Start(coroutine);
         }
 
         public void StopCoroutine(IEnumerator coroutine)
         {
-            m_CoroutineManager.Stop(coroutine);
+            _coroutineManager.Stop(coroutine);
         }
 
         public void StopAllCoroutine()
         {
-            m_CoroutineManager.StopAll();
+            _coroutineManager.StopAll();
         }
     }
 }

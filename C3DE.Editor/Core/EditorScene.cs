@@ -7,7 +7,6 @@ using C3DE.Editor.GameComponents;
 using C3DE.Graphics;
 using C3DE.Graphics.Materials;
 using C3DE.Graphics.Primitives;
-using C3DE.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -17,16 +16,16 @@ namespace C3DE.Editor
 {
     public class EditorScene : Scene
     {
-        private StandardMaterial m_DefaultMaterial;
-        private List<string> m_AddList;
-        private List<GameObject> m_RemoveList;
+        private StandardMaterial _defaultMaterial;
+        private List<string> _addList;
+        private List<GameObject> _removeList;
 
         public event Action<GameObject[]> SceneInitialized = null;
 
         public EditorScene() : base("3D Editor")
         {
-            m_AddList = new List<string>();
-            m_RemoveList = new List<GameObject>();
+            _addList = new List<string>();
+            _removeList = new List<GameObject>();
         }
 
         public void Reset()
@@ -78,15 +77,15 @@ namespace C3DE.Editor
                 "Textures/Skybox/bluesky/nz"
             };
 
-            RenderSettings.Skybox.Generate(Application.GraphicsDevice, Application.Content, blueSkybox);
+            RenderSettings.Skybox.Generate(Application.GraphicsDevice, blueSkybox);
 
             // Grid
             var grid = new GameObject("Grid");
             grid.Tag = EditorGame.EditorTag;
             grid.AddComponent<Grid>();
 
-            m_DefaultMaterial = new StandardMaterial();
-            m_DefaultMaterial.MainTexture = TextureFactory.CreateColor(Color.WhiteSmoke, 1, 1);
+            _defaultMaterial = new StandardMaterial();
+            _defaultMaterial.MainTexture = TextureFactory.CreateColor(Color.WhiteSmoke, 1, 1);
 
             SceneInitialized?.Invoke(new[] { cameraGo, lightGo });
         }
@@ -95,20 +94,20 @@ namespace C3DE.Editor
         {
             base.Update();
 
-            if (m_RemoveList.Count > 0)
+            if (_removeList.Count > 0)
             {
-                foreach (var sceneObject in m_RemoveList)
+                foreach (var sceneObject in _removeList)
                     RemoveGameObject(sceneObject);
 
-                m_RemoveList.Clear();
+                _removeList.Clear();
             }
 
-            if (m_AddList.Count > 0)
+            if (_addList.Count > 0)
             {
-                foreach (var type in m_AddList)
+                foreach (var type in _addList)
                     AddGameObject(type);
 
-                m_AddList.Clear();
+                _addList.Clear();
             }
         }
 
@@ -124,19 +123,19 @@ namespace C3DE.Editor
 
             switch (type)
             {
-                case "Cube": gameObject = GameObject.CreatePrimitive(PrimitiveTypes.Cube, m_DefaultMaterial); break;
-                case "Cylinder": gameObject = GameObject.CreatePrimitive(PrimitiveTypes.Cylinder, m_DefaultMaterial); break;
-                case "Quad": gameObject = GameObject.CreatePrimitive(PrimitiveTypes.Quad, m_DefaultMaterial); break;
-                case "Plane": gameObject = GameObject.CreatePrimitive(PrimitiveTypes.Plane, m_DefaultMaterial); break;
-                case "Pyramid": gameObject = GameObject.CreatePrimitive(PrimitiveTypes.Pyramid, m_DefaultMaterial); break;
-                case "Sphere": gameObject = GameObject.CreatePrimitive(PrimitiveTypes.Sphere, m_DefaultMaterial); break;
-                case "Torus": gameObject = GameObject.CreatePrimitive(PrimitiveTypes.Torus, m_DefaultMaterial); break;
+                case "Cube": gameObject = GameObject.CreatePrimitive(PrimitiveTypes.Cube, _defaultMaterial); break;
+                case "Cylinder": gameObject = GameObject.CreatePrimitive(PrimitiveTypes.Cylinder, _defaultMaterial); break;
+                case "Quad": gameObject = GameObject.CreatePrimitive(PrimitiveTypes.Quad, _defaultMaterial); break;
+                case "Plane": gameObject = GameObject.CreatePrimitive(PrimitiveTypes.Plane, _defaultMaterial); break;
+                case "Pyramid": gameObject = GameObject.CreatePrimitive(PrimitiveTypes.Pyramid, _defaultMaterial); break;
+                case "Sphere": gameObject = GameObject.CreatePrimitive(PrimitiveTypes.Sphere, _defaultMaterial); break;
+                case "Torus": gameObject = GameObject.CreatePrimitive(PrimitiveTypes.Torus, _defaultMaterial); break;
 
                 case "Terrain":
                     gameObject = GameObjectFactory.CreateTerrain();
                     var terrain = gameObject.GetComponent<Terrain>();
                     terrain.Flatten();
-                    terrain.Renderer.Material = m_DefaultMaterial;
+                    terrain.Renderer.Material = _defaultMaterial;
                     break;
 
                 case "Water":

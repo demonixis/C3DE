@@ -69,8 +69,8 @@ namespace C3DE.Graphics.Rendering
             m_graphicsDevice.SetRenderTargets(m_NormalRT, m_DepthRT);
             m_graphicsDevice.Clear(Color.White);
 
-            m_DepthNormalEffect.Parameters["View"].SetValue(camera.m_ViewMatrix);
-            m_DepthNormalEffect.Parameters["Projection"].SetValue(camera.m_ProjectionMatrix);
+            m_DepthNormalEffect.Parameters["View"].SetValue(camera._viewMatrix);
+            m_DepthNormalEffect.Parameters["Projection"].SetValue(camera._projectionMatrix);
 
             for (int i = 0, l = scene.renderList.Count; i < l; i++)
             {
@@ -99,7 +99,7 @@ namespace C3DE.Graphics.Rendering
         private void DrawObjects(Scene scene, Camera camera, int eye)
         {
             m_graphicsDevice.SetRenderTarget(m_SceneRenderTargets[eye]);
-            m_graphicsDevice.Clear(camera.m_ClearColor);
+            m_graphicsDevice.Clear(camera._clearColor);
 
             if (scene.RenderSettings.Skybox.Enabled)
                 scene.RenderSettings.Skybox.Draw(m_graphicsDevice, camera);
@@ -167,14 +167,14 @@ namespace C3DE.Graphics.Rendering
             if (m_VREnabled)
             {
                 var cameraParent = Matrix.Identity;
-                var parent = camera.m_Transform.Parent;
+                var parent = camera._transform.Parent;
                 if (parent != null)
                     cameraParent = parent._worldMatrix;
 
                 for (var eye = 0; eye < 2; eye++)
                 {
-                    camera.m_ProjectionMatrix = m_VRService.GetProjectionMatrix(eye);
-                    camera.m_ViewMatrix = m_VRService.GetViewMatrix(eye, cameraParent);
+                    camera._projectionMatrix = m_VRService.GetProjectionMatrix(eye);
+                    camera._viewMatrix = m_VRService.GetViewMatrix(eye, cameraParent);
                     RenderSceneForCamera(scene, camera, eye);
                 }
 

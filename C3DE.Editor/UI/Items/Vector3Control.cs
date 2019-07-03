@@ -9,9 +9,9 @@ namespace C3DE.Editor.UI.Items
 {
     public class Vector3Control : PropertyBase
     {
-        private NumericUpDown m_X;
-        private NumericUpDown m_Y;
-        private NumericUpDown m_Z;
+        private NumericUpDown _X;
+        private NumericUpDown _Y;
+        private NumericUpDown _Z;
 
         public event Action<Vector3Control, float, float, float> Vector3Changed = null;
 
@@ -21,9 +21,9 @@ namespace C3DE.Editor.UI.Items
             layout.Dock = Dock.Top;
             layout.MinimumSize = new Size(300, 30);
 
-            m_X = AddControl(layout, "X");
-            m_Y = AddControl(layout, "Y");
-            m_Z = AddControl(layout, "Z");
+            _X = AddControl(layout, "X");
+            _Y = AddControl(layout, "Y");
+            _Z = AddControl(layout, "Z");
         }
 
         private NumericUpDown AddControl(ControlBase parent, string text)
@@ -46,14 +46,14 @@ namespace C3DE.Editor.UI.Items
 
         public void SetVector(Vector3 vector)
         {
-            m_X.Value = vector.X;
-            m_Y.Value = vector.Y;
-            m_Z.Value = vector.Z;
+            _X.Value = vector.X;
+            _Y.Value = vector.Y;
+            _Z.Value = vector.Z;
         }
 
         private void OnUpDownChanged(ControlBase sender, EventArgs arguments)
         {
-            Vector3Changed?.Invoke(this, m_X.Value, m_Y.Value, m_Z.Value);
+            Vector3Changed?.Invoke(this, _X.Value, _Y.Value, _Z.Value);
         }
     }
 }

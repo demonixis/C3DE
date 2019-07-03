@@ -13,18 +13,8 @@ namespace C3DE.Graphics.Materials
         public Texture2D NormalMap { get; set; }
         public Texture2D RoughnessMetalicSpecularAOMap => _rmsaoMap;
 
-        /// <summary>
-        /// Irradiance Map. Will be generated from the Skybox in the near future.
-        /// </summary>
-        public TextureCube IrradianceMap { get; set; }
-
         // TODO;
         public Texture2D EmissiveMap { get; set; }
-
-        public PBRMaterial() : base()
-        {
-            IrradianceMap = Scene.current.RenderSettings.Skybox.Texture;
-        }
 
         public PBRMaterial(string name) : base(name) { }
 

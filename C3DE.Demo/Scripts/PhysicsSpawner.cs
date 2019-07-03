@@ -14,20 +14,20 @@ namespace C3DE.Demo.Scripts
 {
     public class PhysicsSpawner : Behaviour
     {
-        private bool m_VREnabled;
-        private VRService m_VRService;
-        private Transform m_RightHand;
-        private Transform m_LeftHand;
-        private StandardMaterial m_Material;
+        private bool _VREnabled;
+        private VRService _VRService;
+        private Transform _rightHand;
+        private Transform _leftHand;
+        private StandardMaterial _material;
 
         public override void Start()
         {
             VRManager.VRServiceChanged += OnVRChanged;
 
-            m_Material = new StandardMaterial();
-            m_Material.DiffuseColor = RandomHelper.GetColor();
-            m_Material.MainTexture = Application.Content.Load<Texture2D>("Textures/Terrain/Rock");
-            m_Material.NormalTexture = Application.Content.Load<Texture2D>("Textures/Terrain/Rock_Normal");
+            _material = new StandardMaterial();
+            _material.DiffuseColor = RandomHelper.GetColor();
+            _material.MainTexture = Application.Content.Load<Texture2D>("Textures/Terrain/Rock");
+            _material.NormalTexture = Application.Content.Load<Texture2D>("Textures/Terrain/Rock_Normal");
 
             var go = new GameObject("Cube");
             var cube = go.AddComponent<MeshRenderer>();
@@ -35,7 +35,7 @@ namespace C3DE.Demo.Scripts
             cube.Mesh.Build();
             cube.CastShadow = true;
             cube.ReceiveShadow = false;
-            cube.Material = m_Material;
+            cube.Material = _material;
         }
 
         public override void Update()
@@ -45,11 +45,11 @@ namespace C3DE.Demo.Scripts
             if (Input.Keys.JustPressed(Keys.Space) || Input.Keys.Pressed(Keys.LeftControl))
                 SpawnCubeAtPosition(Camera.Main.Transform.Position, Camera.Main.Transform.Forward);
 
-            if (m_VRService != null && m_RightHand != null && m_VRService.GetButtonDown(1, XRButton.Trigger))
-                SpawnCubeAtPosition(m_RightHand.Position, m_RightHand.Forward);
+            if (_VRService != null && _rightHand != null && _VRService.GetButtonDown(1, XRButton.Trigger))
+                SpawnCubeAtPosition(_rightHand.Position, _rightHand.Forward);
 
-            if (m_VRService != null && m_LeftHand != null && m_VRService.GetButtonDown(0, XRButton.Trigger))
-                SpawnCubeAtPosition(m_LeftHand.Position, m_LeftHand.Forward);
+            if (_VRService != null && _leftHand != null && _VRService.GetButtonDown(0, XRButton.Trigger))
+                SpawnCubeAtPosition(_leftHand.Position, _leftHand.Forward);
         }
 
         private void SpawnCubeAtPosition(Vector3 position, Vector3 forward)
@@ -59,22 +59,22 @@ namespace C3DE.Demo.Scripts
 
             var cube = go.AddComponent<MeshRenderer>();
             cube.Mesh = new CubeMesh();
-            cube.Mesh.Size = new Vector3(m_VREnabled ? 0.25f : 1.0f);
+            cube.Mesh.Size = new Vector3(_VREnabled ? 0.25f : 1.0f);
             cube.Mesh.Build();
             cube.CastShadow = true;
             cube.ReceiveShadow = true;
-            cube.Material = m_Material;
+            cube.Material = _material;
 
             var collider = cube.AddComponent<BoxCollider>();
             var rb = cube.AddComponent<Rigidbody>();
             rb.AddComponent<RigidbodyRenderer>();
-            rb.AddForce(forward * (m_VREnabled ? 5 : 800));
+            rb.AddForce(forward * (_VREnabled ? 5 : 800));
         }
 
         private void OnVRChanged(VRService service)
         {
-            m_VRService = service;
-            m_VREnabled = service != null;
+            _VRService = service;
+            _VREnabled = service != null;
             StartCoroutine(SetupVRPlayer());
         }
 
@@ -90,9 +90,9 @@ namespace C3DE.Demo.Scripts
             foreach (var controller in controllers)
             {
                 if (!controller.LeftHand)
-                    m_RightHand = controller.Transform;
+                    _rightHand = controller.Transform;
                 else
-                    m_LeftHand = controller.Transform;
+                    _leftHand = controller.Transform;
             }
         }
     }

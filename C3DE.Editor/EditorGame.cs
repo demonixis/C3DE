@@ -13,17 +13,17 @@ namespace C3DE.Editor
     public class EditorGame : Engine
     {
         public const string EditorTag = "Editor_Object";
-        private UIManager m_UIManager;
-        private GizmoComponent m_Gizmo;
-        private EditorScene m_EditorScene;
-        private ObjectSelector m_ObjectSelector;
-        private CopyPast m_CopyPast;
+        private UIManager _UIManager;
+        private GizmoComponent _gizmo;
+        private EditorScene _editorScene;
+        private ObjectSelector _objectSelector;
+        private CopyPast _copyPast;
 
         public EditorGame()
             : base("C3DE Editor", 1440, 900, false)
         {
-            m_ObjectSelector = new ObjectSelector();
-            m_CopyPast = new CopyPast();
+            _objectSelector = new ObjectSelector();
+            _copyPast = new CopyPast();
         }
 
         #region Life Cycle
@@ -32,21 +32,21 @@ namespace C3DE.Editor
         {
             base.Initialize();
 
-            m_UIManager = new UIManager(this);
-            m_UIManager.Initialize(_graphicsDeviceManager);
-            m_UIManager.MenuCommandSelected += OnMenuCommandSelectd;
-            m_UIManager.MenuGameObjectSelected += OnMenuGameObjectSelected;
-            m_UIManager.MenuComponentSelected += OnMenuComponentSelected;
-            m_UIManager.TreeViewGameObjectSelected += SelectGameObject;
-            m_UIManager.DrawOrder = 1000;
-            Components.Add(m_UIManager);
+            _UIManager = new UIManager(this);
+            _UIManager.Initialize(_graphicsDeviceManager);
+            _UIManager.MenuCommandSelected += OnMenuCommandSelectd;
+            _UIManager.MenuGameObjectSelected += OnMenuGameObjectSelected;
+            _UIManager.MenuComponentSelected += OnMenuComponentSelected;
+            _UIManager.TreeViewGameObjectSelected += SelectGameObject;
+            _UIManager.DrawOrder = 1000;
+            Components.Add(_UIManager);
 
-            m_Gizmo = new GizmoComponent(this);
-            m_Gizmo.ActiveMode = GizmoMode.Translate;
-            m_Gizmo.TranslateEvent += OnGizmoTranslated;
-            m_Gizmo.RotateEvent += OnGizmoRotated;
-            m_Gizmo.ScaleEvent += OnGizmoScaled;
-            Components.Add(m_Gizmo);
+            _gizmo = new GizmoComponent(this);
+            _gizmo.ActiveMode = GizmoMode.Translate;
+            _gizmo.TranslateEvent += OnGizmoTranslated;
+            _gizmo.RotateEvent += OnGizmoRotated;
+            _gizmo.ScaleEvent += OnGizmoScaled;
+            Components.Add(_gizmo);
 
             GUI.Skin = new GUISkin("Font/Menu");
             GUI.Skin.LoadContent(Content);
@@ -64,7 +64,7 @@ namespace C3DE.Editor
 
         private void CheckScene()
         {
-            var check = Input.Mouse.JustClicked(MouseButton.Left) && m_Gizmo.ActiveAxis == GizmoAxis.None;
+            var check = Input.Mouse.JustClicked(MouseButton.Left) && _gizmo.ActiveAxis == GizmoAxis.None;
 
             if (!check)
                 return;
@@ -72,15 +72,15 @@ namespace C3DE.Editor
             var ray = Camera.Main.GetRay(Input.Mouse.Position);
             RaycastInfo info;
 
-            if (m_EditorScene.Raycast(ray, 100, out info))
+            if (_editorScene.Raycast(ray, 100, out info))
             {
-                if (info.Collider.GameObject == m_ObjectSelector.GameObject)
+                if (info.Collider.GameObject == _objectSelector.GameObject)
                     return;
 
                 if (info.Collider.GameObject.Tag == EditorTag)
                     return;
 
-                if (info.Collider.GameObject != m_ObjectSelector.GameObject)
+                if (info.Collider.GameObject != _objectSelector.GameObject)
                     UnselectGameObject();
 
                 SelectGameObject(info.Collider.GameObject);
@@ -98,14 +98,14 @@ namespace C3DE.Editor
                 case "Save": SaveScene(); break;
                 case "Exit": Exit(); break;
                 case "About":
-                    m_UIManager.OpenMessageBox("About", "C3DE Editor is a 3D Game Engine powered by MonoGame.");
+                    _UIManager.OpenMessageBox("About", "C3DE Editor is a 3D Game Engine powered by MonoGame.");
                     break;
                 case "Copy":
-                    m_CopyPast.Copy = m_ObjectSelector.GameObject;
+                    _copyPast.Copy = _objectSelector.GameObject;
                     break;
                 case "Cut": break;
                 case "Past":
-                    if (m_CopyPast.Copy != null)
+                    if (_copyPast.Copy != null)
                         DuplicateSelection();
                     break;
                 case "Delete":
@@ -121,40 +121,40 @@ namespace C3DE.Editor
 
         private void AddGameObject(GameObject gameObject)
         {
-            m_UIManager.AddGameObject(gameObject);
+            _UIManager.AddGameObject(gameObject);
             SelectGameObject(gameObject);
         }
 
         private void OnMenuGameObjectSelected(string name)
         {
-            var gameObject = m_EditorScene.AddGameObject(name);
+            var gameObject = _editorScene.AddGameObject(name);
             AddGameObject(gameObject);
         }
 
         private void OnMenuComponentSelected(string name)
         {
-            m_EditorScene.AddComponent(name);
+            _editorScene.AddComponent(name);
         }
 
         #region New
 
         public void NewScene()
         {
-            if (m_EditorScene != null)
+            if (_editorScene != null)
             {
-                m_Gizmo.Selection.Clear();
-                m_UIManager.ClearGameObjects();
-                Application.SceneManager.Remove(m_EditorScene);
+                _gizmo.Selection.Clear();
+                _UIManager.ClearGameObjects();
+                Application.SceneManager.Remove(_editorScene);
             }
 
-            m_EditorScene = new EditorScene();
-            m_EditorScene.SceneInitialized += (gameObjects) =>
+            _editorScene = new EditorScene();
+            _editorScene.SceneInitialized += (gameObjects) =>
             {
                 for (var i = 0; i < gameObjects.Length; i++)
                     AddGameObject(gameObjects[i]);
             };
 
-            Application.SceneManager.Add(m_EditorScene);
+            Application.SceneManager.Add(_editorScene);
             Application.SceneManager.LoadLevel(0);
         }
 
@@ -164,12 +164,12 @@ namespace C3DE.Editor
 
         public void SaveScene()
         {
-            m_UIManager.OpenSave(SaveScene);
+            _UIManager.OpenSave(SaveScene);
         }
 
         public void LoadScene()
         {
-            m_UIManager.OpenLoadDialog(LoadScene);
+            _UIManager.OpenLoadDialog(LoadScene);
         }
 
         public void SaveScene(string path)
@@ -178,9 +178,9 @@ namespace C3DE.Editor
             {
                 var serScene = new SerializedScene()
                 {
-                    Materials = m_EditorScene.Materials.ToArray(),
-                    GameObjects = m_EditorScene.GetGameObjects(),
-                    RenderSettings = m_EditorScene.RenderSettings
+                    Materials = _editorScene.Materials.ToArray(),
+                    GameObjects = _editorScene.GetGameObjects(),
+                    RenderSettings = _editorScene.RenderSettings
                 };
 
                 Serializer.Serialize(path, serScene);
@@ -204,10 +204,10 @@ namespace C3DE.Editor
                     foreach (var so in serializedScene.GameObjects)
                     {
                         so.PostDeserialize();
-                        m_EditorScene.Add(so);
+                        _editorScene.Add(so);
                     }
 
-                    m_EditorScene.RenderSettings.Set(serializedScene.RenderSettings);
+                    _editorScene.RenderSettings.Set(serializedScene.RenderSettings);
                 }
             }
             catch (Exception ex)
@@ -224,7 +224,7 @@ namespace C3DE.Editor
         {
             Vector3 delta = (Vector3)e.Value;
 
-            if (m_Gizmo.ActiveMode == GizmoMode.UniformScale)
+            if (_gizmo.ActiveMode == GizmoMode.UniformScale)
                 target.LocalScale *= 1 + ((delta.X + delta.Y + delta.Z) / 3);
             else
                 target.LocalScale += delta;
@@ -234,7 +234,7 @@ namespace C3DE.Editor
 
         private void OnGizmoRotated(Transform target, TransformationEventArgs e)
         {
-            m_Gizmo.RotationHelper(target, e);
+            _gizmo.RotationHelper(target, e);
         }
 
         private void OnGizmoTranslated(Transform target, TransformationEventArgs e)
@@ -270,40 +270,40 @@ namespace C3DE.Editor
             if (gameObject == null)
                 return;
 
-            if (m_ObjectSelector.GameObject == gameObject)
+            if (_objectSelector.GameObject == gameObject)
                 return;
 
             UnselectGameObject();
 
-            m_ObjectSelector.Set(gameObject);
-            m_ObjectSelector.Select(true);
-            m_CopyPast.Selected = gameObject;
-            m_Gizmo.Selection.Add(gameObject.Transform);
+            _objectSelector.Set(gameObject);
+            _objectSelector.Select(true);
+            _copyPast.Selected = gameObject;
+            _gizmo.Selection.Add(gameObject.Transform);
 
             if (notify)
-                m_UIManager.SelectGameObject(gameObject, true);
+                _UIManager.SelectGameObject(gameObject, true);
         }
 
         private void UnselectGameObject(bool notify = true)
         {
-            var gameObject = m_ObjectSelector.GameObject;
+            var gameObject = _objectSelector.GameObject;
 
             if (gameObject == null)
                 return;
 
-            m_Gizmo.Clear();
-            m_ObjectSelector.Select(false);
-            m_CopyPast.Reset();
+            _gizmo.Clear();
+            _objectSelector.Select(false);
+            _copyPast.Reset();
 
             if (notify)
-                m_UIManager.SelectGameObject(gameObject, false);
+                _UIManager.SelectGameObject(gameObject, false);
         }
 
         #endregion
 
         public void RemoveSelection()
         {
-            var gameObject = m_ObjectSelector.GameObject;
+            var gameObject = _objectSelector.GameObject;
 
             if (gameObject == null)
                 return;
@@ -312,21 +312,21 @@ namespace C3DE.Editor
 
             if (gameObject != null)
             {
-                m_EditorScene.RemoveGameObject(gameObject);
-                m_UIManager.RemoveGameObject(gameObject);
+                _editorScene.RemoveGameObject(gameObject);
+                _UIManager.RemoveGameObject(gameObject);
             }
         }
 
         public void Duplicate(GameObject gameObject)
         {
             var clone = (GameObject)gameObject.Clone();
-            m_EditorScene.AddGameObject(clone);
+            _editorScene.AddGameObject(clone);
             SelectGameObject(clone);
         }
 
         public void DuplicateSelection()
         {
-            var gameObject = m_ObjectSelector.GameObject;
+            var gameObject = _objectSelector.GameObject;
             Duplicate(gameObject);
         }
 

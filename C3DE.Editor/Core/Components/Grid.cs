@@ -8,50 +8,50 @@ namespace C3DE.Editor.GameComponents
 {
     public sealed class Grid : Renderer
     {
-        private BasicEffect m_Effect;
-        private VertexPositionColor[] m_VertexData;
-        private Color m_LineColor = Color.AntiqueWhite;
-        private Color m_HighlightColor = Color.DarkBlue;
-        private int m_GridSpacing = 1;
-        private int m_GridSize = 512;
-        private int m_NumberOfLines;
+        private BasicEffect _effect;
+        private VertexPositionColor[] _vertexData;
+        private Color _lineColor = Color.AntiqueWhite;
+        private Color _highlightColor = Color.DarkBlue;
+        private int _gridSpacing = 1;
+        private int _gridSize = 512;
+        private int _numberOfLines;
 
         public int GridSpacing
         {
-            get { return m_GridSpacing; }
+            get => _gridSpacing;
             set
             {
-                m_GridSpacing = value;
+                _gridSpacing = value;
                 ComputeGrid();
             }
         }
 
         public int GridSize
         {
-            get => m_GridSize;
+            get => _gridSize;
             set
             {
-                m_GridSize = value;
+                _gridSize = value;
                 ComputeGrid();
             }
         }
 
         public Color LineColor
         {
-            get => m_LineColor;
+            get => _lineColor;
             set
             {
-                m_LineColor = value;
+                _lineColor = value;
                 ComputeGrid();
             }
         }
 
         public Color HighlightColor
         {
-            get => m_HighlightColor;
+            get => _highlightColor;
             set
             {
-                m_HighlightColor = value;
+                _highlightColor = value;
                 ComputeGrid();
             }
         }
@@ -60,68 +60,68 @@ namespace C3DE.Editor.GameComponents
         {
             base.Start();
 
-            m_Effect = new BasicEffect(Application.GraphicsDevice);
-            m_Effect.VertexColorEnabled = true;
-            m_Effect.World = Matrix.Identity;
+            _effect = new BasicEffect(Application.GraphicsDevice);
+            _effect.VertexColorEnabled = true;
+            _effect.World = Matrix.Identity;
             ComputeGrid();
         }
 
         public void ComputeGrid()
         {
             // calculate nr of lines, +2 for the highlights, +12 for boundingbox
-            m_NumberOfLines = ((m_GridSize / m_GridSpacing) * 4) + 2 + 12;
+            _numberOfLines = ((_gridSize / _gridSpacing) * 4) + 2 + 12;
 
-            var vertexList = new List<VertexPositionColor>(m_NumberOfLines);
+            var vertexList = new List<VertexPositionColor>(_numberOfLines);
 
-            for (int i = 1; i < (m_GridSize / m_GridSpacing) + 1; i++)
+            for (int i = 1; i < (_gridSize / _gridSpacing) + 1; i++)
             {
-                vertexList.Add(new VertexPositionColor(new Vector3((i * m_GridSpacing), 0, m_GridSize), m_LineColor));
-                vertexList.Add(new VertexPositionColor(new Vector3((i * m_GridSpacing), 0, -m_GridSize), m_LineColor));
-                vertexList.Add(new VertexPositionColor(new Vector3((-i * m_GridSpacing), 0, m_GridSize), m_LineColor));
-                vertexList.Add(new VertexPositionColor(new Vector3((-i * m_GridSpacing), 0, -m_GridSize), m_LineColor));
-                vertexList.Add(new VertexPositionColor(new Vector3(m_GridSize, 0, (i * m_GridSpacing)), m_LineColor));
-                vertexList.Add(new VertexPositionColor(new Vector3(-m_GridSize, 0, (i * m_GridSpacing)), m_LineColor));
-                vertexList.Add(new VertexPositionColor(new Vector3(m_GridSize, 0, (-i * m_GridSpacing)), m_LineColor));
-                vertexList.Add(new VertexPositionColor(new Vector3(-m_GridSize, 0, (-i * m_GridSpacing)), m_LineColor));
+                vertexList.Add(new VertexPositionColor(new Vector3((i * _gridSpacing), 0, _gridSize), _lineColor));
+                vertexList.Add(new VertexPositionColor(new Vector3((i * _gridSpacing), 0, -_gridSize), _lineColor));
+                vertexList.Add(new VertexPositionColor(new Vector3((-i * _gridSpacing), 0, _gridSize), _lineColor));
+                vertexList.Add(new VertexPositionColor(new Vector3((-i * _gridSpacing), 0, -_gridSize), _lineColor));
+                vertexList.Add(new VertexPositionColor(new Vector3(_gridSize, 0, (i * _gridSpacing)), _lineColor));
+                vertexList.Add(new VertexPositionColor(new Vector3(-_gridSize, 0, (i * _gridSpacing)), _lineColor));
+                vertexList.Add(new VertexPositionColor(new Vector3(_gridSize, 0, (-i * _gridSpacing)), _lineColor));
+                vertexList.Add(new VertexPositionColor(new Vector3(-_gridSize, 0, (-i * _gridSpacing)), _lineColor));
             }
 
             // add highlights
-            vertexList.Add(new VertexPositionColor(Vector3.Forward * m_GridSize, m_HighlightColor));
-            vertexList.Add(new VertexPositionColor(Vector3.Backward * m_GridSize, m_HighlightColor));
-            vertexList.Add(new VertexPositionColor(Vector3.Right * m_GridSize, m_HighlightColor));
-            vertexList.Add(new VertexPositionColor(Vector3.Left * m_GridSize, m_HighlightColor));
+            vertexList.Add(new VertexPositionColor(Vector3.Forward * _gridSize, _highlightColor));
+            vertexList.Add(new VertexPositionColor(Vector3.Backward * _gridSize, _highlightColor));
+            vertexList.Add(new VertexPositionColor(Vector3.Right * _gridSize, _highlightColor));
+            vertexList.Add(new VertexPositionColor(Vector3.Left * _gridSize, _highlightColor));
 
             // add boundingbox
-            var box = new BoundingBox(new Vector3(-m_GridSize, -m_GridSize, -m_GridSize), new Vector3(m_GridSize, m_GridSize, m_GridSize));
+            var box = new BoundingBox(new Vector3(-_gridSize, -_gridSize, -_gridSize), new Vector3(_gridSize, _gridSize, _gridSize));
             Vector3[] corners = new Vector3[8];
 
             box.GetCorners(corners);
-            vertexList.Add(new VertexPositionColor(corners[0], m_LineColor));
-            vertexList.Add(new VertexPositionColor(corners[1], m_LineColor));
-            vertexList.Add(new VertexPositionColor(corners[0], m_LineColor));
-            vertexList.Add(new VertexPositionColor(corners[3], m_LineColor));
-            vertexList.Add(new VertexPositionColor(corners[0], m_LineColor));
-            vertexList.Add(new VertexPositionColor(corners[4], m_LineColor));
-            vertexList.Add(new VertexPositionColor(corners[1], m_LineColor));
-            vertexList.Add(new VertexPositionColor(corners[2], m_LineColor));
-            vertexList.Add(new VertexPositionColor(corners[1], m_LineColor));
-            vertexList.Add(new VertexPositionColor(corners[5], m_LineColor));
-            vertexList.Add(new VertexPositionColor(corners[2], m_LineColor));
-            vertexList.Add(new VertexPositionColor(corners[3], m_LineColor));
-            vertexList.Add(new VertexPositionColor(corners[2], m_LineColor));
-            vertexList.Add(new VertexPositionColor(corners[6], m_LineColor));
-            vertexList.Add(new VertexPositionColor(corners[3], m_LineColor));
-            vertexList.Add(new VertexPositionColor(corners[7], m_LineColor));
-            vertexList.Add(new VertexPositionColor(corners[4], m_LineColor));
-            vertexList.Add(new VertexPositionColor(corners[5], m_LineColor));
-            vertexList.Add(new VertexPositionColor(corners[4], m_LineColor));
-            vertexList.Add(new VertexPositionColor(corners[7], m_LineColor));
-            vertexList.Add(new VertexPositionColor(corners[5], m_LineColor));
-            vertexList.Add(new VertexPositionColor(corners[6], m_LineColor));
-            vertexList.Add(new VertexPositionColor(corners[6], m_LineColor));
-            vertexList.Add(new VertexPositionColor(corners[7], m_LineColor));
+            vertexList.Add(new VertexPositionColor(corners[0], _lineColor));
+            vertexList.Add(new VertexPositionColor(corners[1], _lineColor));
+            vertexList.Add(new VertexPositionColor(corners[0], _lineColor));
+            vertexList.Add(new VertexPositionColor(corners[3], _lineColor));
+            vertexList.Add(new VertexPositionColor(corners[0], _lineColor));
+            vertexList.Add(new VertexPositionColor(corners[4], _lineColor));
+            vertexList.Add(new VertexPositionColor(corners[1], _lineColor));
+            vertexList.Add(new VertexPositionColor(corners[2], _lineColor));
+            vertexList.Add(new VertexPositionColor(corners[1], _lineColor));
+            vertexList.Add(new VertexPositionColor(corners[5], _lineColor));
+            vertexList.Add(new VertexPositionColor(corners[2], _lineColor));
+            vertexList.Add(new VertexPositionColor(corners[3], _lineColor));
+            vertexList.Add(new VertexPositionColor(corners[2], _lineColor));
+            vertexList.Add(new VertexPositionColor(corners[6], _lineColor));
+            vertexList.Add(new VertexPositionColor(corners[3], _lineColor));
+            vertexList.Add(new VertexPositionColor(corners[7], _lineColor));
+            vertexList.Add(new VertexPositionColor(corners[4], _lineColor));
+            vertexList.Add(new VertexPositionColor(corners[5], _lineColor));
+            vertexList.Add(new VertexPositionColor(corners[4], _lineColor));
+            vertexList.Add(new VertexPositionColor(corners[7], _lineColor));
+            vertexList.Add(new VertexPositionColor(corners[5], _lineColor));
+            vertexList.Add(new VertexPositionColor(corners[6], _lineColor));
+            vertexList.Add(new VertexPositionColor(corners[6], _lineColor));
+            vertexList.Add(new VertexPositionColor(corners[7], _lineColor));
 
-            m_VertexData = vertexList.ToArray();
+            _vertexData = vertexList.ToArray();
         }
 
         public override void ComputeBoundingInfos()
@@ -131,10 +131,10 @@ namespace C3DE.Editor.GameComponents
         public override void Draw(GraphicsDevice device)
         {
             device.DepthStencilState = DepthStencilState.Default;
-            m_Effect.View = Camera.Main.ViewMatrix;
-            m_Effect.Projection = Camera.Main.ProjectionMatrix;
-            m_Effect.CurrentTechnique.Passes[0].Apply();
-            device.DrawUserPrimitives(PrimitiveType.LineList, m_VertexData, 0, m_NumberOfLines);
+            _effect.View = Camera.Main.ViewMatrix;
+            _effect.Projection = Camera.Main.ProjectionMatrix;
+            _effect.CurrentTechnique.Passes[0].Apply();
+            device.DrawUserPrimitives(PrimitiveType.LineList, _vertexData, 0, _numberOfLines);
         }
     }
 }

@@ -17,33 +17,33 @@ namespace C3DE.Components.Rendering
 
     public class Terrain : Component
     {
-        protected MeshRenderer m_Renderer;
-        protected TerrainMesh m_Geometry;
-        protected TerrainWeightData m_WeightData;
+        protected MeshRenderer _renderer;
+        protected TerrainMesh _geometry;
+        protected TerrainWeightData _weightData;
 
-        public MeshRenderer Renderer => m_Renderer;
-        public TerrainWeightData WeightData => m_WeightData;
-        public TerrainMesh Geometry => m_Geometry;
+        public MeshRenderer Renderer => _renderer;
+        public TerrainWeightData WeightData => _weightData;
+        public TerrainMesh Geometry => _geometry;
 
-        public int Width => (int)(m_Geometry.Width * m_Geometry.Size.X);
-        public int Height => (int)(m_Geometry.Height * m_Geometry.Size.Y);
-        public int Depth => (int)(m_Geometry.Depth * m_Geometry.Size.Z);
+        public int Width => (int)(_geometry.Width * _geometry.Size.X);
+        public int Height => (int)(_geometry.Height * _geometry.Size.Y);
+        public int Depth => (int)(_geometry.Depth * _geometry.Size.Z);
 
         public override void Awake()
         {
             base.Awake();
 
-            m_Geometry = new TerrainMesh(100, 100, 1);
-            m_Renderer = GetComponent<MeshRenderer>();
+            _geometry = new TerrainMesh(100, 100, 1);
+            _renderer = GetComponent<MeshRenderer>();
 
-            if (m_Renderer == null)
-                m_Renderer = AddComponent<MeshRenderer>();
+            if (_renderer == null)
+                _renderer = AddComponent<MeshRenderer>();
 
-            m_Renderer.Mesh = m_Geometry;
-            m_Renderer.CastShadow = false;
-            m_Renderer.ReceiveShadow = true;
+            _renderer.Mesh = _geometry;
+            _renderer.CastShadow = false;
+            _renderer.ReceiveShadow = true;
 
-            m_WeightData = new TerrainWeightData()
+            _weightData = new TerrainWeightData()
             {
                 SandLayer = 9,
                 GroundLayer = 18,
@@ -61,17 +61,17 @@ namespace C3DE.Components.Rendering
         {
             var heightmap = Application.Content.Load<Texture2D>(heightmapName);
 
-            m_Geometry.Width = heightmap.Width;
-            m_Geometry.Depth = heightmap.Height;
+            _geometry.Width = heightmap.Width;
+            _geometry.Depth = heightmap.Height;
 
-            Color[] colors = new Color[m_Geometry.Width * m_Geometry.Depth];
+            Color[] colors = new Color[_geometry.Width * _geometry.Depth];
             heightmap.GetData(colors);
 
-            m_Geometry.Data = new float[m_Geometry.Width, m_Geometry.Depth];
+            _geometry.Data = new float[_geometry.Width, _geometry.Depth];
 
-            for (int x = 0; x < m_Geometry.Width; x++)
-                for (int y = 0; y < m_Geometry.Depth; y++)
-                    m_Geometry.Data[x, y] = colors[x + y * m_Geometry.Width].R / 10.0f; // Max height 25.5f
+            for (int x = 0; x < _geometry.Width; x++)
+                for (int y = 0; y < _geometry.Depth; y++)
+                    _geometry.Data[x, y] = colors[x + y * _geometry.Width].R / 10.0f; // Max height 25.5f
 
             Build();
         }
@@ -85,14 +85,14 @@ namespace C3DE.Components.Rendering
         /// <param name="persistence"></param>
         public void Randomize(int octaves = 2, int amplitude = 22, double frequency = 0.085, double persistence = 0.3, bool limit = false)
         {
-            m_Geometry.Data = new float[m_Geometry.Width, m_Geometry.Depth];
+            _geometry.Data = new float[_geometry.Width, _geometry.Depth];
 
             NoiseGenerator.GenerateNoise(octaves, amplitude, frequency, persistence);
 
-            for (int x = 0; x < m_Geometry.Width; x++)
+            for (int x = 0; x < _geometry.Width; x++)
             {
-                for (int z = 0; z < m_Geometry.Depth; z++)
-                    m_Geometry.Data[x, z] = (float)NoiseGenerator.Noise(x, z, limit);
+                for (int z = 0; z < _geometry.Depth; z++)
+                    _geometry.Data[x, z] = (float)NoiseGenerator.Noise(x, z, limit);
             }
 
             Build();
@@ -105,12 +105,12 @@ namespace C3DE.Components.Rendering
 
         public void Build()
         {
-            m_Renderer.Mesh.Build();
+            _renderer.Mesh.Build();
         }
 
         public void ApplyCollision(Transform tr)
         {
-            var y = (GetTerrainHeight(tr.LocalPosition.X, 0, tr.LocalPosition.Z) + 2 * m_Geometry.Size.Y - tr.LocalPosition.Y) * 0.2f;
+            var y = (GetTerrainHeight(tr.LocalPosition.X, 0, tr.LocalPosition.Z) + 2 * _geometry.Size.Y - tr.LocalPosition.Y) * 0.2f;
             tr.Translate(0.0f, y, 0.0f);
         }
 
@@ -128,26 +128,26 @@ namespace C3DE.Components.Rendering
         public virtual float GetTerrainHeight(float x, float y, float z)
         {
             // Terrain space.
-            x -= m_Transform.LocalPosition.X;
-            y -= m_Transform.LocalPosition.Y;
-            z -= m_Transform.LocalPosition.Z;
+            x -= _transform.LocalPosition.X;
+            y -= _transform.LocalPosition.Y;
+            z -= _transform.LocalPosition.Z;
 
             float terrainHeigth = 0.0f;
 
-            float sizedPosX = (x / m_Geometry.Size.X) / m_Transform.LocalScale.X;
-            float sizedPosZ = (z / m_Geometry.Size.Z) / m_Transform.LocalScale.Z;
+            float sizedPosX = (x / _geometry.Size.X) / _transform.LocalScale.X;
+            float sizedPosZ = (z / _geometry.Size.Z) / _transform.LocalScale.Z;
 
-            int px = (int)((x / m_Geometry.Size.X) / m_Transform.LocalScale.X);
-            int pz = (int)((z / m_Geometry.Size.Z) / m_Transform.LocalScale.Z);
+            int px = (int)((x / _geometry.Size.X) / _transform.LocalScale.X);
+            int pz = (int)((z / _geometry.Size.Z) / _transform.LocalScale.Z);
 
-            if (px < 0 || px >= m_Geometry.Data.GetLength(0) - 1 || pz < 0 || pz >= m_Geometry.Data.GetLength(1) - 1)
+            if (px < 0 || px >= _geometry.Data.GetLength(0) - 1 || pz < 0 || pz >= _geometry.Data.GetLength(1) - 1)
                 terrainHeigth = y;
             else
             {
-                float triangleY0 = m_Geometry.Data[px, pz];
-                float triangleY1 = m_Geometry.Data[px + 1, pz];
-                float triangleY2 = m_Geometry.Data[px, pz + 1];
-                float triangleY3 = m_Geometry.Data[px + 1, pz + 1];
+                float triangleY0 = _geometry.Data[px, pz];
+                float triangleY1 = _geometry.Data[px + 1, pz];
+                float triangleY2 = _geometry.Data[px, pz + 1];
+                float triangleY3 = _geometry.Data[px + 1, pz + 1];
 
                 // Determine where are the point
                 float segX = sizedPosX - px;
@@ -168,39 +168,39 @@ namespace C3DE.Components.Rendering
                 }
             }
 
-            return (terrainHeigth * m_Geometry.Size.Y * m_Transform.LocalScale.Y);
+            return (terrainHeigth * _geometry.Size.Y * _transform.LocalScale.Y);
         }
 
         public void SetWeightData(float sand, float ground, float rock, float snow)
         {
-            m_WeightData.SandLayer = sand;
-            m_WeightData.GroundLayer = ground;
-            m_WeightData.RockLayer = rock;
-            m_WeightData.SnowLayer = snow;
+            _weightData.SandLayer = sand;
+            _weightData.GroundLayer = ground;
+            _weightData.RockLayer = rock;
+            _weightData.SnowLayer = snow;
         }
 
         public Texture2D GenerateWeightMap()
         {
-            var width = m_Geometry.Width;
-            var depth = m_Geometry.Depth;
+            var width = _geometry.Width;
+            var depth = _geometry.Depth;
 
             var wMap = new Texture2D(Application.GraphicsDevice, width, depth, false, SurfaceFormat.Color);
             var colors = new Color[width * depth];
             float data = 0;
 
-            for (int x = 0; x < m_Geometry.Width; x++)
+            for (int x = 0; x < _geometry.Width; x++)
             {
-                for (int z = 0; z < m_Geometry.Depth; z++)
+                for (int z = 0; z < _geometry.Depth; z++)
                 {
-                    data = m_Geometry.Data[x, z];
+                    data = _geometry.Data[x, z];
 
-                    if (data < m_WeightData.SandLayer)
+                    if (data < _weightData.SandLayer)
                         colors[x + z * width] = Color.Red;
 
-                    else if (data >= m_WeightData.SandLayer && data < m_WeightData.GroundLayer)
+                    else if (data >= _weightData.SandLayer && data < _weightData.GroundLayer)
                         colors[x + z * width] = Color.Black;
 
-                    else if (data >= m_WeightData.GroundLayer && data < m_WeightData.RockLayer)
+                    else if (data >= _weightData.GroundLayer && data < _weightData.RockLayer)
                         colors[x + z * width] = Color.Green;
 
                     else

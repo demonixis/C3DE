@@ -1,9 +1,9 @@
 ﻿using C3DE.Components;
 using C3DE.Graphics;
 using C3DE.Graphics.Materials.Shaders;
+using C3DE.Graphics.PostProcessing;
 using C3DE.Graphics.Primitives;
 using C3DE.Graphics.Rendering;
-using C3DE.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -15,23 +15,33 @@ namespace C3DE
     [DataContract]
     public class Skybox
     {
-        private ShaderMaterial m_ShaderMaterial;
-        private Matrix m_World;
+        private ShaderMaterial _shaderMaterial;
+        private Matrix _worldMatrix;
         private Matrix _scaleMatrix;
-        private CubeMesh m_Geometry;
-        private TextureCube m_MainTexture;
-        private RasterizerState m_SkyboxRasterizerState;
-        private RasterizerState m_CurrentRasterizerState;
-        private Vector4 m_CustomFogData;
-        private bool m_OverrideFog;
+        private CubeMesh _cubeMesh;
+        private TextureCube _environmentMap;
+        private TextureCube _irradianceMap;
+        private RasterizerState _skyboxRasterizerState;
+        private RasterizerState _currentRasterizerState;
+        private Vector4 _customFogData;
+        private bool _overrideFog;
 
         public TextureCube Texture
         {
-            get { return m_MainTexture; }
-            set { m_MainTexture = value; }
+            get => _environmentMap;
+            set
+            {
+                if (_environmentMap == value)
+                    return;
+
+                _environmentMap = value;
+                GenerateIrradianceMap();
+            }
         }
 
-        public Matrix WorldMatrix => m_World;
+        public TextureCube IrradianceTexture => _irradianceMap;
+
+        public Matrix WorldMatrix => _worldMatrix;
 
         [DataMember]
         public bool FogSupported { get; set; } = false;
@@ -39,26 +49,26 @@ namespace C3DE
         [DataMember]
         public bool Enabled { get; set; }
 
-        public bool OverrideFog => m_OverrideFog;
-        public Vector4 CustomFogData => m_CustomFogData;
+        public bool OverrideFog => _overrideFog;
+        public Vector4 CustomFogData => _customFogData;
 
         public Skybox()
         {
-            m_Geometry = new CubeMesh();
-            m_World = Matrix.Identity;
+            _cubeMesh = new CubeMesh();
+            _worldMatrix = Matrix.Identity;
             _scaleMatrix = Matrix.CreateScale(1.0f);
-            m_SkyboxRasterizerState = new RasterizerState();
-            m_SkyboxRasterizerState.CullMode = CullMode.None;
+            _skyboxRasterizerState = new RasterizerState();
+            _skyboxRasterizerState.CullMode = CullMode.None;
         }
 
         protected void SetupShaderMaterial(BaseRenderer renderer)
         {
             if (renderer is DeferredRenderer)
-                m_ShaderMaterial = new DeferredSkybox(this);
+                _shaderMaterial = new DeferredSkybox(this);
             else
-                m_ShaderMaterial = new ForwardSkybox(this);
+                _shaderMaterial = new ForwardSkybox(this);
 
-            m_ShaderMaterial.LoadEffect(Application.Content);
+            _shaderMaterial.LoadEffect(Application.Content);
         }
 
         public void LoadContent(ContentManager content)
@@ -70,11 +80,11 @@ namespace C3DE
 
         public void OverrideSkyboxFog(FogMode mode, float density, float start, float end)
         {
-            m_CustomFogData.X = (float)mode;
-            m_CustomFogData.Y = density;
-            m_CustomFogData.Z = start;
-            m_CustomFogData.W = end;
-            m_OverrideFog = mode != FogMode.None;
+            _customFogData.X = (float)mode;
+            _customFogData.Y = density;
+            _customFogData.Z = start;
+            _customFogData.W = end;
+            _overrideFog = mode != FogMode.None;
         }
 
         public void Generate(GraphicsDevice device, Texture2D[] textures, float size = 250.0f)
@@ -82,29 +92,22 @@ namespace C3DE
             if (textures.Length != 6)
                 throw new Exception("The array of texture names must contains 6 elements.");
 
-            m_Geometry.Size = new Vector3(size);
-            m_Geometry.Build();
-            m_Geometry.ComputeNormals();
+            _cubeMesh.Size = new Vector3(size);
+            _cubeMesh.Build();
+            _cubeMesh.ComputeNormals();
+            _environmentMap = TextureFactory.CreateCubeMap(textures);
 
-            m_MainTexture = new TextureCube(device, textures[0].Width, false, SurfaceFormat.Color);
-            Color[] textureData;
-
-            for (int i = 0; i < 6; i++)
-            {
-                textureData = new Color[textures[i].Width * textures[i].Height];
-                textures[i].GetData<Color>(textureData);
-                m_MainTexture.SetData<Color>((CubeMapFace)i, textureData);
-            }
+            GenerateIrradianceMap();
 
             Enabled = true;
         }
 
-        public void Generate(GraphicsDevice device, ContentManager content, string[] textureNames, float size = 250.0f)
+        public void Generate(GraphicsDevice device, string[] textureNames, float size = 250.0f)
         {
             var textures = new Texture2D[6];
 
             for (int i = 0; i < 6; i++)
-                textures[i] = content.Load<Texture2D>(textureNames[i]);
+                textures[i] = Application.Content.Load<Texture2D>(textureNames[i]);
 
             Generate(device, textures, size);
         }
@@ -115,7 +118,8 @@ namespace C3DE
             var skySide = TextureFactory.CreateGradiant(new Color(168, 189, 255), Color.White, 64, 64);
             var skyBottom = TextureFactory.CreateColor(Color.White, 64, 64);
 
-            Generate(Application.GraphicsDevice, new Texture2D[] {
+            Generate(Application.GraphicsDevice, new [] 
+            {
                 skySide,
                 skySide,
                 skyTop,
@@ -125,29 +129,57 @@ namespace C3DE
             }, size);
         }
 
+        public void GenerateIrradianceMap()
+        {
+            if (_environmentMap == null)
+                return;
+
+            var graphics = Application.GraphicsDevice;
+            var renderTargets = graphics.GetRenderTargets();
+            var faces = new RenderTarget2D[6];
+            var quad = new QuadRenderer(graphics);
+            var size = _environmentMap.Size;
+
+            var effect = Application.Content.Load<Effect>("Shaders/IrradianceConvolution");
+            effect.Parameters["EnvironmentMap"].SetValue(_environmentMap);
+            effect.Parameters["WorldPos"].SetValue(Vector3.Zero);
+
+            for (var i = 0; i < 6; i++)
+            {
+                faces[i] = new RenderTarget2D(graphics, size, size, true, SurfaceFormat.Color, DepthFormat.Depth16, 0, RenderTargetUsage.DiscardContents);
+                graphics.SetRenderTarget(faces[i]);
+                graphics.Clear(Color.Black);
+                effect.CurrentTechnique.Passes[0].Apply();
+                quad.RenderFullscreenQuad();
+            }
+
+            graphics.SetRenderTargets(renderTargets);
+
+            _irradianceMap = TextureFactory.CreateCubeMap(faces);
+        }
+
         public void Draw(GraphicsDevice device, Camera camera)
         {
-            m_CurrentRasterizerState = device.RasterizerState;
-            device.RasterizerState = m_SkyboxRasterizerState;
+            _currentRasterizerState = device.RasterizerState;
+            device.RasterizerState = _skyboxRasterizerState;
 
-            m_World = _scaleMatrix * Matrix.CreateTranslation(camera.Transform.LocalPosition);
+            _worldMatrix = _scaleMatrix * Matrix.CreateTranslation(camera.Transform.LocalPosition);
+            _shaderMaterial.PrePass(camera);
 
-            m_ShaderMaterial.PrePass(camera);
-
-            device.SetVertexBuffer(m_Geometry.VertexBuffer);
-            device.Indices = m_Geometry.IndexBuffer;
-            device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, m_Geometry.Indices.Length / 3);
-            device.RasterizerState = m_CurrentRasterizerState;
+            device.SetVertexBuffer(_cubeMesh.VertexBuffer);
+            device.Indices = _cubeMesh.IndexBuffer;
+            device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, _cubeMesh.Indices.Length / 3);
+            device.RasterizerState = _currentRasterizerState;
         }
 
         public void DrawNoEffect(GraphicsDevice device)
         {
-            m_CurrentRasterizerState = device.RasterizerState;
-            device.RasterizerState = m_SkyboxRasterizerState;
-            device.SetVertexBuffer(m_Geometry.VertexBuffer);
-            device.Indices = m_Geometry.IndexBuffer;
-            device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, m_Geometry.Indices.Length / 3);
-            device.RasterizerState = m_CurrentRasterizerState;
+            _currentRasterizerState = device.RasterizerState;
+            device.RasterizerState = _skyboxRasterizerState;
+            device.SetVertexBuffer(_cubeMesh.VertexBuffer);
+            device.Indices = _cubeMesh.IndexBuffer;
+            device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, _cubeMesh.Indices.Length / 3);
+            device.RasterizerState = _currentRasterizerState;
         }
     }
 }

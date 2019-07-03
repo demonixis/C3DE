@@ -10,29 +10,30 @@ namespace C3DE.Demo.Scripts
 {
     public class VRSwitcher : Behaviour
     {
-        private Rectangle m_UIRectangle;
-        private bool m_VREnabled = false;
-        public Action<bool> VRChanged;
-        private GameObject[] m_Hands;
+        private Rectangle _UIRectangle;
+        private bool _VREnabled = false;
+        private GameObject[] _hands;
 
         public bool Automatic { get; set; } = true;
 
         public Point UIPosition
         {
-            get => new Point(m_UIRectangle.X, m_UIRectangle.Y);
+            get => new Point(_UIRectangle.X, _UIRectangle.Y);
             set
             {
-                m_UIRectangle.X = value.X;
-                m_UIRectangle.Y = value.Y;
+                _UIRectangle.X = value.X;
+                _UIRectangle.Y = value.Y;
             }
         }
+
+        public Action<bool> VRChanged;
 
         public override void Start()
         {
             base.Start();
-            m_VREnabled = Application.Engine.Renderer.VREnabled;
-            m_UIRectangle = new Rectangle(10, 10, 100, 30);
-            m_Hands = new GameObject[2];
+            _VREnabled = Application.Engine.Renderer.VREnabled;
+            _UIRectangle = new Rectangle(10, 10, 100, 30);
+            _hands = new GameObject[2];
             CreateHand(0);
             CreateHand(1);
             Enabled = false;
@@ -48,9 +49,9 @@ namespace C3DE.Demo.Scripts
 
         private void CreateHand(int id)
         {
-            m_Hands[id] = new GameObject($"Hand_{id}");
-            m_Hands[id].AddComponent<MotionController>().LeftHand = id == 0;
-            m_Hands[id].Enabled = false;
+            _hands[id] = new GameObject($"Hand_{id}");
+            _hands[id].AddComponent<MotionController>().LeftHand = id == 0;
+            _hands[id].Enabled = false;
 
 #if DESKTOP
             var controller = GameObjectFactory.CreateMesh(GeometryType.Cube);
@@ -69,7 +70,7 @@ namespace C3DE.Demo.Scripts
             }
 #endif
 
-            controller.Transform.Parent = m_Hands[id].Transform;
+            controller.Transform.Parent = _hands[id].Transform;
         }
 
         public override void OnGUI(GUI ui)
@@ -79,28 +80,28 @@ namespace C3DE.Demo.Scripts
             if (Automatic)
                 return;
 
-            if (ui.Button(m_UIRectangle, "Toggle VR"))
+            if (ui.Button(_UIRectangle, "Toggle VR"))
                 Toggle();
         }
 
         private void Toggle()
         {
-            m_VREnabled = Application.Engine.Renderer.VREnabled;
-            m_VREnabled = !m_VREnabled;
+            _VREnabled = Application.Engine.Renderer.VREnabled;
+            _VREnabled = !_VREnabled;
 
-            if (m_VREnabled)
-                m_VREnabled = Application.Engine.Renderer.SetVREnabled(true);
+            if (_VREnabled)
+                _VREnabled = Application.Engine.Renderer.SetVREnabled(true);
 
             var parent = Camera.Main.Transform.Parent;
 
-            foreach (var hand in m_Hands)
+            foreach (var hand in _hands)
             {
-                hand.Enabled = m_VREnabled;
+                hand.Enabled = _VREnabled;
                 if (parent != null)
                     hand.Transform.Parent = parent;
             }
 
-            VRChanged?.Invoke(m_VREnabled);
+            VRChanged?.Invoke(_VREnabled);
         }
 
         private void SetActive(bool mustActivate)
@@ -110,17 +111,17 @@ namespace C3DE.Demo.Scripts
             if (vrEnabled && mustActivate || !vrEnabled && !mustActivate)
                 return;
 
-            m_VREnabled = Application.Engine.Renderer.SetVREnabled(mustActivate);
+            _VREnabled = Application.Engine.Renderer.SetVREnabled(mustActivate);
 
             var parent = Camera.Main.Transform.Parent;
-            foreach (var hand in m_Hands)
+            foreach (var hand in _hands)
             {
-                hand.Enabled = m_VREnabled;
+                hand.Enabled = _VREnabled;
                 if (parent != null)
                     hand.Transform.Parent = parent;
             }
 
-            VRChanged?.Invoke(m_VREnabled);
+            VRChanged?.Invoke(_VREnabled);
         }
     }
 }

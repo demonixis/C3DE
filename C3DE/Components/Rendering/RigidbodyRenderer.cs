@@ -49,7 +49,7 @@ namespace C3DE.Components.Rendering
 
             if (_renderer == null)
             {
-                m_GameObject.RemoveComponent(this);
+                _gameObject.RemoveComponent(this);
                 return;
             }
         }
@@ -68,13 +68,13 @@ namespace C3DE.Components.Rendering
 
             for (int i = 0; i < 8; i++)
             {
-                _vertices[i].Position = _corners[i] * m_Transform.LocalScale;
+                _vertices[i].Position = _corners[i] * _transform.LocalScale;
                 _vertices[i].Color = LineColor;
             }
 
-            _effect.World = Matrix.CreateFromYawPitchRoll(m_Transform.LocalRotation.Y, m_Transform.LocalRotation.X, m_Transform.LocalRotation.Z) * Matrix.CreateTranslation(m_Transform.LocalPosition);
-            _effect.View = Camera.Main.m_ViewMatrix;
-            _effect.Projection = Camera.Main.m_ProjectionMatrix;
+            _effect.World = Matrix.CreateFromYawPitchRoll(_transform.LocalRotation.Y, _transform.LocalRotation.X, _transform.LocalRotation.Z) * Matrix.CreateTranslation(_transform.LocalPosition);
+            _effect.View = Camera.Main._viewMatrix;
+            _effect.Projection = Camera.Main._projectionMatrix;
             _effect.CurrentTechnique.Passes[0].Apply();
 
             device.DrawUserIndexedPrimitives(PrimitiveType.LineList, _vertices, 0, 8, _indices, 0, _indices.Length / 2);

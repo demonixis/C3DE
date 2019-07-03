@@ -5,41 +5,41 @@ namespace C3DE.Components
 {
     public class CoroutineManager
     {
-        private List<IEnumerator> m_Routines;
+        private List<IEnumerator> _routines;
 
-        public int Count => m_Routines.Count;
-        public bool Running => m_Routines.Count > 0;
+        public int Count => _routines.Count;
+        public bool Running => _routines.Count > 0;
 
         public CoroutineManager()
         {
-            m_Routines = new List<IEnumerator>();
+            _routines = new List<IEnumerator>();
         }
 
         public void Start(IEnumerator routine)
         {
-            m_Routines.Add(routine);
+            _routines.Add(routine);
         }
 
         public void Stop(IEnumerator routine)
         {
-            m_Routines.Remove(routine);
+            _routines.Remove(routine);
         }
 
         public void StopAll()
         {
-            m_Routines.Clear();
+            _routines.Clear();
         }
 
         public void Update()
         {
-            for (var i = 0; i < m_Routines.Count; i++)
+            for (var i = 0; i < _routines.Count; i++)
             {
-                if (m_Routines[i].Current is IEnumerator)
-                    if (MoveNext((IEnumerator)m_Routines[i].Current))
+                if (_routines[i].Current is IEnumerator)
+                    if (MoveNext((IEnumerator)_routines[i].Current))
                         continue;
 
-                if (!m_Routines[i].MoveNext())
-                    m_Routines.RemoveAt(i--);
+                if (!_routines[i].MoveNext())
+                    _routines.RemoveAt(i--);
             }
         }
 

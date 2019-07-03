@@ -19,14 +19,14 @@ namespace C3DE
         #region Private/protected declarations
 
         protected Transform _transform;
-        protected Scene m_Scene;
-        protected bool m_Enabled;
+        protected Scene _scene;
+        protected bool _enabled;
 
         [DataMember]
-        protected List<Component> m_Components;
+        protected List<Component> _components;
 
         [DataMember]
-        protected bool m_Initialized;
+        protected bool _initialized;
 
         #endregion
 
@@ -50,12 +50,12 @@ namespace C3DE
         [DataMember]
         public bool Enabled
         {
-            get { return m_Enabled; }
+            get => _enabled;
             set
             {
-                if (value != m_Enabled)
+                if (value != _enabled)
                 {
-                    m_Enabled = value;
+                    _enabled = value;
 
                     NotifyPropertyChanged("Enabled");
 
@@ -76,18 +76,18 @@ namespace C3DE
 
         public Scene Scene
         {
-            get { return m_Scene; }
-            internal set { m_Scene = value; }
+            get { return _scene; }
+            internal set { _scene = value; }
         }
 
         public List<Component> Components
         {
-            get { return m_Components; }
+            get { return _components; }
         }
 
         public bool Initialized
         {
-            get { return m_Initialized; }
+            get { return _initialized; }
         }
 
         #endregion
@@ -135,17 +135,17 @@ namespace C3DE
         {
             if (_transform == null)
             {
-                m_Components = new List<Component>(5);
+                _components = new List<Component>(5);
 
                 _transform = new Transform();
-                _transform.m_Transform = _transform;
+                _transform._transform = _transform;
                 _transform.GameObject = this;
                 _transform.PropertyChanged += OnComponentChanged;
                 _transform.Awake();
-                m_Components.Add(_transform);
+                _components.Add(_transform);
 
-                m_Enabled = true;
-                m_Initialized = false;
+                _enabled = true;
+                _initialized = false;
                 IsStatic = false;
                 IsPrefab = false;
 
@@ -164,17 +164,17 @@ namespace C3DE
         /// <param name="content">The content manager.</param>
         public virtual void Initialize()
         {
-            if (!m_Initialized)
+            if (!_initialized)
             {
-                m_Initialized = true;
+                _initialized = true;
 
                 // Sort component now then initialize it.
-                m_Components.Sort();
+                _components.Sort();
 
-                for (int i = 0; i < m_Components.Count; i++)
+                for (int i = 0; i < _components.Count; i++)
                 {
-                    m_Components[i].m_Started = true;
-                    m_Components[i].Start();
+                    _components[i]._started = true;
+                    _components[i].Start();
                 }
             }
         }
@@ -184,10 +184,10 @@ namespace C3DE
         /// </summary>
         public virtual void Update()
         {
-            for (int i = 0; i < m_Components.Count; i++)
+            for (int i = 0; i < _components.Count; i++)
             {
-                if (m_Components[i].Enabled)
-                    m_Components[i].Update();
+                if (_components[i].Enabled)
+                    _components[i].Update();
             }
         }
 
@@ -203,10 +203,10 @@ namespace C3DE
             if (!_transform.Transforms.Contains(newGameObject._transform) && newGameObject != this)
             {
                 // Add the scene object to the scene if not yet added.
-                if (this != m_Scene)
+                if (this != _scene)
                 {
-                    if (m_Scene != null)
-                        m_Scene.Add(newGameObject);
+                    if (_scene != null)
+                        _scene.Add(newGameObject);
                     else
                         throw new Exception("You need to attach first the main scene object to scene.");
                 }
@@ -219,7 +219,7 @@ namespace C3DE
                 newGameObject._transform.Parent = _transform;
                 newGameObject._transform.Root = _transform.Root;
                 _transform.Transforms.Add(newGameObject._transform);
-                newGameObject.Enabled = m_Enabled;
+                newGameObject.Enabled = _enabled;
 
                 return true;
             }
@@ -267,18 +267,18 @@ namespace C3DE
             else
             {
                 component.GameObject = this;
-                component.m_Transform = _transform;
+                component._transform = _transform;
                 component.Awake();
                 component.PropertyChanged += OnComponentChanged;
-                m_Components.Add(component);
+                _components.Add(component);
             }
 
-            if (m_Initialized && !component.Initialized)
+            if (_initialized && !component.Initialized)
             {
                 component.Start();
-                component.m_Started = true;
+                component._started = true;
                 // Sort components here only if the SceneObject is already initialized.
-                m_Components.Sort();
+                _components.Sort();
             }
 
             NotifyComponentChanged(component, string.Empty, ComponentChangeType.Add);
@@ -305,10 +305,10 @@ namespace C3DE
         /// <returns>Return the first component of this type if founded, otherwise return null.</returns>
         public T GetComponent<T>() where T : Component
         {
-            for (int i = 0; i < m_Components.Count; i++)
+            for (int i = 0; i < _components.Count; i++)
             {
-                if (m_Components[i] is T)
-                    return m_Components[i] as T;
+                if (_components[i] is T)
+                    return _components[i] as T;
             }
 
             return null;
@@ -318,10 +318,10 @@ namespace C3DE
         {
             List<T> comps = new List<T>();
 
-            for (int i = 0; i < m_Components.Count; i++)
+            for (int i = 0; i < _components.Count; i++)
             {
-                if (m_Components[i] is T)
-                    comps.Add(m_Components[i] as T);
+                if (_components[i] is T)
+                    comps.Add(_components[i] as T);
             }
 
             return comps.ToArray();
@@ -333,7 +333,7 @@ namespace C3DE
             var size = transforms.Count;
             var cpns = (Component[])null;
 
-            foreach (var cpn in m_Components)
+            foreach (var cpn in _components)
             {
                 if (cpn is T)
                     return (T)cpn;
@@ -383,7 +383,7 @@ namespace C3DE
             if (component == _transform)
                 return false;
 
-            var result = m_Components.Remove(component);
+            var result = _components.Remove(component);
             if (result)
             {
                 component.PropertyChanged -= OnComponentChanged;
@@ -406,15 +406,15 @@ namespace C3DE
             Component clonedComponent = null;
             Transform clonedTransform = null;
 
-            foreach (Component component in m_Components)
+            foreach (Component component in _components)
             {
                 clonedComponent = clone.AddComponent((Component)component.Clone());
-                clonedComponent.m_GameObject = clone;
+                clonedComponent._gameObject = clone;
 
                 clonedTransform = clonedComponent as Transform;
 
                 if (clonedTransform != null)
-                    clonedComponent.m_Transform = clonedTransform;
+                    clonedComponent._transform = clonedTransform;
             }
 
             clone.Id = "GameObject_" + Guid.NewGuid();
@@ -425,13 +425,13 @@ namespace C3DE
 
         public void Dispose()
         {
-            foreach (Component component in m_Components)
+            foreach (Component component in _components)
                 component.Dispose();
         }
 
         public virtual void PostDeserialize()
         {
-            var size = m_Components.Count;
+            var size = _components.Count;
             var i = 0;
 
             if (size > 0)
@@ -440,21 +440,21 @@ namespace C3DE
 
                 for (i = 0; i < size; i++)
                 {
-                    m_Components[i].m_GameObject = this;
-                    m_Components[i].m_Transform = _transform;
+                    _components[i]._gameObject = this;
+                    _components[i]._transform = _transform;
                 }
 
                 for (i = 0; i < size; i++)
                 {
-                    m_Components[i].PostDeserialize();
-                    m_Components[i].Awake();
+                    _components[i].PostDeserialize();
+                    _components[i].Awake();
 
-                    if (m_Initialized)
-                        m_Components[i].Start();
+                    if (_initialized)
+                        _components[i].Start();
                 }
 
                 // Refresh children
-                Enabled = m_Enabled;
+                Enabled = _enabled;
             }
         }
 

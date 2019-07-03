@@ -88,6 +88,7 @@
     <Compile Include="Scripts\RayPickingTester.cs" />
     <Compile Include="Scripts\ReflectionProbeDebugger.cs" />
     <Compile Include="Scripts\RendererSwitcher.cs" />
+    <Compile Include="Scripts\ShadowMapViewer.cs" />
     <Compile Include="Scripts\SideMenu.cs" />
     <Compile Include="Scripts\SimplePath.cs" />
     <Compile Include="Scripts\SinMovement.cs" />

@@ -63,7 +63,7 @@ namespace C3DE.Demo.Scripts
             if (Input.Mouse.Down(Inputs.MouseButton.Middle))
                 translation.Y += Input.Mouse.Delta.Y * 0.1f;
 
-            m_Transform.Translate(ref translation);
+            _transform.Translate(ref translation);
         }
     }
 }

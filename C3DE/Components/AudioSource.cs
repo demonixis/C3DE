@@ -7,56 +7,56 @@ namespace C3DE.Components
 
     public class AudioSource : Component
     {
-        private XNAAudioListener m_AudioListener;
-        private AudioEmitter m_AudioEmitter;
-        private SoundEffect m_SoundEffect;
-        private SoundEffectInstance m_SoundEffectInstance;
-        private float m_Volume = 1.0f;
-        private float m_Pitch = 1.0f;
-        private float m_Pan = 0.0f;
-        private bool m_Loop = false;
+        private XNAAudioListener _audioListener;
+        private AudioEmitter _audioEmitter;
+        private SoundEffect _soundEffect;
+        private SoundEffectInstance _soundEffectInstance;
+        private float _volume = 1.0f;
+        private float _pitch = 1.0f;
+        private float _pan = 0.0f;
+        private bool _loop = false;
 
         public float Volume
         {
-            get => m_Volume;
+            get => _volume;
             set
             {
-                m_Volume = value;
-                if (m_SoundEffectInstance != null)
-                    m_SoundEffectInstance.Volume = value;
+                _volume = value;
+                if (_soundEffectInstance != null)
+                    _soundEffectInstance.Volume = value;
             }
         }
 
         public float Pitch
         {
-            get => m_Pitch;
+            get => _pitch;
             set
             {
-                m_Pitch = value;
-                if (m_SoundEffectInstance != null)
-                    m_SoundEffectInstance.Pitch = value;
+                _pitch = value;
+                if (_soundEffectInstance != null)
+                    _soundEffectInstance.Pitch = value;
             }
         }
 
         public float Pan
         {
-            get => m_Pan;
+            get => _pan;
             set
             {
-                m_Pan = value;
-                if (m_SoundEffectInstance != null)
-                    m_SoundEffectInstance.Pan = value;
+                _pan = value;
+                if (_soundEffectInstance != null)
+                    _soundEffectInstance.Pan = value;
             }
         }
 
         public bool Loop
         {
-            get => m_Loop;
+            get => _loop;
             set
             {
-                m_Loop = value;
-                if (m_SoundEffectInstance != null)
-                    m_SoundEffectInstance.IsLooped = value;
+                _loop = value;
+                if (_soundEffectInstance != null)
+                    _soundEffectInstance.IsLooped = value;
             }
         }
 
@@ -64,40 +64,40 @@ namespace C3DE.Components
         {
             get
             {
-                if (m_AudioListener == null)
+                if (_audioListener == null)
                 {
                     var camera = Camera.Main;
                     var listener = camera.GetComponent<AudioListener>();
-                    m_AudioListener = listener?.Listener;
+                    _audioListener = listener?.Listener;
 
-                    if (m_AudioListener == null)
+                    if (_audioListener == null)
                     {
                         listener = camera.AddComponent<AudioListener>();
-                        m_AudioListener = listener.Listener;
+                        _audioListener = listener.Listener;
                     }
                 }
 
-                return m_AudioListener;
+                return _audioListener;
             }
-            set { m_AudioListener = value; }
+            set { _audioListener = value; }
         }
 
         public bool PlayOnAwake { get; set; } = false;
 
         public SoundEffect AudioClip
         {
-            get { return m_SoundEffect; }
+            get { return _soundEffect; }
             set
             {
-                if (m_SoundEffect == value)
+                if (_soundEffect == value)
                     return;
 
-                m_SoundEffect = value;
-                m_SoundEffectInstance = m_SoundEffect.CreateInstance();
-                m_SoundEffectInstance.Pan = m_Pan;
-                m_SoundEffectInstance.Pitch = m_Pitch;
-                m_SoundEffectInstance.IsLooped = m_Loop;
-                m_SoundEffectInstance.Volume = m_Volume;
+                _soundEffect = value;
+                _soundEffectInstance = _soundEffect.CreateInstance();
+                _soundEffectInstance.Pan = _pan;
+                _soundEffectInstance.Pitch = _pitch;
+                _soundEffectInstance.IsLooped = _loop;
+                _soundEffectInstance.Volume = _volume;
             }
         }
 
@@ -108,7 +108,7 @@ namespace C3DE.Components
             SoundEffect.DistanceScale = 2000.0f;
             SoundEffect.DopplerScale = 0.1f;
 
-            m_AudioEmitter = new AudioEmitter();
+            _audioEmitter = new AudioEmitter();
 
             if (PlayOnAwake)
                 Play();
@@ -122,40 +122,40 @@ namespace C3DE.Components
 
         private void UpdateSound()
         {
-            if (m_SoundEffectInstance == null)
+            if (_soundEffectInstance == null)
                 return;
 
-            m_AudioEmitter.Position = m_Transform.LocalPosition;
-            m_AudioEmitter.Forward = m_Transform.Forward;
-            m_AudioEmitter.Up = Vector3.Up;
-            m_AudioEmitter.Velocity = Vector3.One;
-            m_SoundEffectInstance.Apply3D(AudioListener, m_AudioEmitter);
+            _audioEmitter.Position = _transform.LocalPosition;
+            _audioEmitter.Forward = _transform.Forward;
+            _audioEmitter.Up = Vector3.Up;
+            _audioEmitter.Velocity = Vector3.One;
+            _soundEffectInstance.Apply3D(AudioListener, _audioEmitter);
         }
 
         public void Play()
         {
-            if (m_SoundEffectInstance == null)
+            if (_soundEffectInstance == null)
                 return;
 
             UpdateSound();
 
-            m_SoundEffectInstance.Play();
+            _soundEffectInstance.Play();
         }
 
         public void Stop()
         {
-            if (m_SoundEffectInstance == null)
+            if (_soundEffectInstance == null)
                 return;
 
-            m_SoundEffectInstance.Stop();
+            _soundEffectInstance.Stop();
         }
 
         public void Pause()
         {
-            if (m_SoundEffectInstance == null)
+            if (_soundEffectInstance == null)
                 return;
 
-            m_SoundEffectInstance.Pause();
+            _soundEffectInstance.Pause();
         }
     }
 }

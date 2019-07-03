@@ -6,22 +6,22 @@ namespace C3DE.Demo.Scripts
 {
     public class MotionController : Behaviour
     {
-        private VRService m_VRService;
-        private Vector3 m_Position;
-        private Quaternion m_Rotation;
+        private VRService _VRService;
+        private Vector3 _position;
+        private Quaternion _rotation;
 
         public bool LeftHand { get; set; }
 
         public override void Start()
         {
             base.Start();
-            m_VRService = VRManager.ActiveService;
+            _VRService = VRManager.ActiveService;
             VRManager.VRServiceChanged += VRManager_VRServiceChanged;
         }
 
         private void VRManager_VRServiceChanged(VRService service)
         {
-            m_VRService = service;
+            _VRService = service;
         }
 
         public override void OnDestroy()
@@ -34,14 +34,14 @@ namespace C3DE.Demo.Scripts
         {
             base.Update();
 
-            if (m_VRService == null)
+            if (_VRService == null)
                 return;
 
-            m_VRService.GetLocalPosition(LeftHand ? 0 : 1, ref m_Position);
-            m_VRService.GetLocalRotation(LeftHand ? 0 : 1, ref m_Rotation);
+            _VRService.GetLocalPosition(LeftHand ? 0 : 1, ref _position);
+            _VRService.GetLocalRotation(LeftHand ? 0 : 1, ref _rotation);
 
-            m_Transform.LocalPosition = m_Position;
-            m_Transform.LocalRotation = m_Rotation.ToEuler();
+            _transform.LocalPosition = _position;
+            _transform.LocalRotation = _rotation.ToEuler();
         }
     }
 }
