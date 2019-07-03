@@ -53,12 +53,12 @@ namespace C3DE.Graphics.Rendering
                 if (disposing)
                 {
                     for (var eye = 0; eye < 2; eye++)
-                        DisposeObject(m_SceneRenderTargets[eye]);
+                        DisposeObject(_sceneRenderTargets[eye]);
 
                     DisposeObject(m_DepthRT);
                     DisposeObject(m_NormalRT);
                     DisposeObject(m_LightRT);
-                    DisposeObject(m_SceneRenderTargets);
+                    DisposeObject(_sceneRenderTargets);
                 }
                 m_IsDisposed = true;
             }
@@ -66,8 +66,8 @@ namespace C3DE.Graphics.Rendering
 
         private void DrawDepthNormalMap(Scene scene, Camera camera, int eye)
         {
-            m_graphicsDevice.SetRenderTargets(m_NormalRT, m_DepthRT);
-            m_graphicsDevice.Clear(Color.White);
+            _graphicsDevice.SetRenderTargets(m_NormalRT, m_DepthRT);
+            _graphicsDevice.Clear(Color.White);
 
             m_DepthNormalEffect.Parameters["View"].SetValue(camera._viewMatrix);
             m_DepthNormalEffect.Parameters["Projection"].SetValue(camera._projectionMatrix);
@@ -76,16 +76,16 @@ namespace C3DE.Graphics.Rendering
             {
                 m_DepthNormalEffect.Parameters["World"].SetValue(scene.renderList[i].Transform._worldMatrix);
                 m_DepthNormalEffect.CurrentTechnique.Passes[0].Apply();
-                scene.renderList[i].Draw(m_graphicsDevice);
+                scene.renderList[i].Draw(_graphicsDevice);
             }
 
-            m_graphicsDevice.SetRenderTarget(null);
+            _graphicsDevice.SetRenderTarget(null);
         }
 
         private void DrawLightMap(Scene scene, Camera camera, int eye)
         {
-            m_graphicsDevice.SetRenderTarget(m_LightRT);
-            m_graphicsDevice.Clear(Color.Transparent);
+            _graphicsDevice.SetRenderTarget(m_LightRT);
+            _graphicsDevice.Clear(Color.Transparent);
 
             m_AmbientLight.Color = Scene.current.RenderSettings.AmbientColor;
             m_AmbientLight.RenderLPP(m_NormalRT, m_DepthRT, camera);
@@ -93,16 +93,16 @@ namespace C3DE.Graphics.Rendering
             for (var i = 0; i < scene.lights.Count; i++)
                 scene.lights[i].RenderLPP(m_NormalRT, m_DepthRT, camera);
 
-            m_graphicsDevice.SetRenderTarget(null);
+            _graphicsDevice.SetRenderTarget(null);
         }
 
         private void DrawObjects(Scene scene, Camera camera, int eye)
         {
-            m_graphicsDevice.SetRenderTarget(m_SceneRenderTargets[eye]);
-            m_graphicsDevice.Clear(camera._clearColor);
+            _graphicsDevice.SetRenderTarget(_sceneRenderTargets[eye]);
+            _graphicsDevice.Clear(camera._clearColor);
 
             if (scene.RenderSettings.Skybox.Enabled)
-                scene.RenderSettings.Skybox.Draw(m_graphicsDevice, camera);
+                scene.RenderSettings.Skybox.Draw(_graphicsDevice, camera);
 
             var renderCount = scene.renderList.Count;
 
@@ -118,33 +118,33 @@ namespace C3DE.Graphics.Rendering
                 // A specific renderer that uses its own draw logic.
                 if (material == null)
                 {
-                    renderer.Draw(m_graphicsDevice);
+                    renderer.Draw(_graphicsDevice);
                     continue;
                 }
 
-                shader = (LPPShader)material.m_ShaderMaterial;
+                shader = (LPPShader)material._shaderMaterial;
 
                 // Ambient pass
                 shader.PrePass(camera);
                 shader.Pass(scene.RenderList[i], m_LightRT);
-                renderer.Draw(m_graphicsDevice);
+                renderer.Draw(_graphicsDevice);
             }
         }
 
         protected virtual void RenderSceneForCamera(Scene scene, Camera camera, int eye)
         {
-            using (m_graphicsDevice.GeometryState())
+            using (_graphicsDevice.GeometryState())
                 DrawDepthNormalMap(scene, camera, eye);
 
-            using (m_graphicsDevice.LightPrePassState())
+            using (_graphicsDevice.LightPrePassState())
                 DrawLightMap(scene, camera, eye);
 
-            using (m_graphicsDevice.GeometryState())
+            using (_graphicsDevice.GeometryState())
                 DrawObjects(scene, camera, eye);
 
-            using (m_graphicsDevice.PostProcessState())
+            using (_graphicsDevice.PostProcessState())
             {
-                RenderPostProcess(scene.postProcessPasses, m_SceneRenderTargets[eye]);
+                RenderPostProcess(scene.postProcessPasses, _sceneRenderTargets[eye]);
 
                 if (!m_VREnabled)
                 {
@@ -178,7 +178,7 @@ namespace C3DE.Graphics.Rendering
                     RenderSceneForCamera(scene, camera, eye);
                 }
 
-                m_VRService.SubmitRenderTargets(m_SceneRenderTargets[0], m_SceneRenderTargets[1]);
+                m_VRService.SubmitRenderTargets(_sceneRenderTargets[0], _sceneRenderTargets[1]);
                 DrawVRPreview(0);
                 RenderUI(scene.Behaviours);
             }

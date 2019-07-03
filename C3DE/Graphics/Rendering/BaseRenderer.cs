@@ -13,9 +13,9 @@ namespace C3DE.Graphics.Rendering
 {
     public abstract class BaseRenderer : IDisposable
     {
-        protected internal GraphicsDevice m_graphicsDevice;
+        protected internal GraphicsDevice _graphicsDevice;
         protected SpriteBatch m_spriteBatch;
-        protected internal RenderTarget2D[] m_SceneRenderTargets = new RenderTarget2D[2];
+        protected internal RenderTarget2D[] _sceneRenderTargets = new RenderTarget2D[2];
         protected VRService m_VRService;
         protected Light m_AmbientLight;
         protected internal GUI m_uiManager;
@@ -49,12 +49,12 @@ namespace C3DE.Graphics.Rendering
 
         public BaseRenderer(GraphicsDevice graphics)
         {
-            m_graphicsDevice = graphics;
+            _graphicsDevice = graphics;
         }
 
         public virtual void Initialize(ContentManager content)
         {
-            m_spriteBatch = new SpriteBatch(m_graphicsDevice);
+            m_spriteBatch = new SpriteBatch(_graphicsDevice);
             m_uiManager = new GUI(m_spriteBatch);
             m_uiManager.LoadContent(content);
 
@@ -65,24 +65,24 @@ namespace C3DE.Graphics.Rendering
 
         protected RenderTarget2D CreateRenderTarget(SurfaceFormat surfaceFormat = SurfaceFormat.Color, DepthFormat depthFormat = DepthFormat.Depth24, bool mipMap = false, int preferredMultiSampleCount = -1, RenderTargetUsage usage = RenderTargetUsage.DiscardContents)
         {
-            var width = m_graphicsDevice.PresentationParameters.BackBufferWidth;
-            var height = m_graphicsDevice.PresentationParameters.BackBufferHeight;
+            var width = _graphicsDevice.PresentationParameters.BackBufferWidth;
+            var height = _graphicsDevice.PresentationParameters.BackBufferHeight;
 
             if (preferredMultiSampleCount == -1)
             {
                 if (m_VREnabled)
                     preferredMultiSampleCount = 0;
                 else
-                    preferredMultiSampleCount = m_graphicsDevice.PresentationParameters.MultiSampleCount;
+                    preferredMultiSampleCount = _graphicsDevice.PresentationParameters.MultiSampleCount;
             }
 
             if (m_VREnabled)
             {
-                width = m_SceneRenderTargets[0].Width;
-                height = m_SceneRenderTargets[0].Height;
+                width = _sceneRenderTargets[0].Width;
+                height = _sceneRenderTargets[0].Height;
             }
 
-            return new RenderTarget2D(m_graphicsDevice, width, height, mipMap, surfaceFormat, depthFormat, preferredMultiSampleCount, usage);
+            return new RenderTarget2D(_graphicsDevice, width, height, mipMap, surfaceFormat, depthFormat, preferredMultiSampleCount, usage);
         }
 
         /// <summary>
@@ -94,18 +94,18 @@ namespace C3DE.Graphics.Rendering
                 return;
 
             for (var eye = 0; eye < 2; eye++)
-                m_SceneRenderTargets[eye]?.Dispose();
+                _sceneRenderTargets[eye]?.Dispose();
 
             if (m_VREnabled)
             {
                 for (var eye = 0; eye < 2; eye++)
-                    m_SceneRenderTargets[eye] = m_VRService.CreateRenderTargetForEye(eye);
+                    _sceneRenderTargets[eye] = m_VRService.CreateRenderTargetForEye(eye);
             }
             else
             {
-                var pp = m_graphicsDevice.PresentationParameters;
+                var pp = _graphicsDevice.PresentationParameters;
                 var surfaceFormat = m_HDRSupport ? SurfaceFormat.HdrBlendable : pp.BackBufferFormat;
-                m_SceneRenderTargets[0] = new RenderTarget2D(m_graphicsDevice, pp.BackBufferWidth, pp.BackBufferHeight, false, surfaceFormat, pp.DepthStencilFormat, pp.MultiSampleCount, RenderTargetUsage.DiscardContents);
+                _sceneRenderTargets[0] = new RenderTarget2D(_graphicsDevice, pp.BackBufferWidth, pp.BackBufferHeight, false, surfaceFormat, pp.DepthStencilFormat, pp.MultiSampleCount, RenderTargetUsage.DiscardContents);
             }
 
             Dirty = false;
@@ -172,7 +172,7 @@ namespace C3DE.Graphics.Rendering
             foreach (var light in scene.lights)
             {
                 if (light.ShadowEnabled)
-                    light._shadowGenerator.RenderShadows(m_graphicsDevice, scene.renderList, light);
+                    light._shadowGenerator.RenderShadows(_graphicsDevice, scene.renderList, light);
             }
         }
 
@@ -181,9 +181,9 @@ namespace C3DE.Graphics.Rendering
         /// </summary>
         protected virtual void RenderToBackBuffer()
         {
-            m_graphicsDevice.SetRenderTarget(null);
+            _graphicsDevice.SetRenderTarget(null);
             m_spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Opaque, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone);
-            m_spriteBatch.Draw(m_SceneRenderTargets[0], Vector2.Zero, Color.White);
+            m_spriteBatch.Draw(_sceneRenderTargets[0], Vector2.Zero, Color.White);
             m_spriteBatch.End();
         }
 
@@ -197,7 +197,7 @@ namespace C3DE.Graphics.Rendering
             if (passes.Count == 0)
                 return;
 
-            m_graphicsDevice.SetRenderTarget(renderTarget);
+            _graphicsDevice.SetRenderTarget(renderTarget);
 
             for (int i = 0, l = passes.Count; i < l; i++)
                 if (passes[i].Enabled)
@@ -241,10 +241,10 @@ namespace C3DE.Graphics.Rendering
         /// <param name="eye"></param>
         protected virtual void DrawVRPreview(int eye)
         {
-            m_graphicsDevice.SetRenderTarget(null);
-            m_graphicsDevice.Clear(Color.Black);
+            _graphicsDevice.SetRenderTarget(null);
+            _graphicsDevice.Clear(Color.Black);
 
-            var pp = m_graphicsDevice.PresentationParameters;
+            var pp = _graphicsDevice.PresentationParameters;
             var height = pp.BackBufferHeight;
             var width = MathHelper.Min(pp.BackBufferWidth, (int)(height * m_VRService.GetRenderTargetAspectRatio(eye)));
             var offset = (pp.BackBufferWidth - width) / 2;
@@ -254,14 +254,14 @@ namespace C3DE.Graphics.Rendering
             if (StereoPreview || m_VRService.DistortionCorrectionRequired)
             {
                 width = pp.BackBufferWidth / 2;
-                m_spriteBatch.Draw(m_SceneRenderTargets[0], new Rectangle(0, 0, width, height), null, Color.White, 0, Vector2.Zero, m_VRService.PreviewRenderEffect, 0);
-                m_VRService.ApplyDistortion(m_SceneRenderTargets[0], 0);
+                m_spriteBatch.Draw(_sceneRenderTargets[0], new Rectangle(0, 0, width, height), null, Color.White, 0, Vector2.Zero, m_VRService.PreviewRenderEffect, 0);
+                m_VRService.ApplyDistortion(_sceneRenderTargets[0], 0);
 
-                m_spriteBatch.Draw(m_SceneRenderTargets[1], new Rectangle(width, 0, width, height), null, Color.White, 0, Vector2.Zero, m_VRService.PreviewRenderEffect, 0);
-                m_VRService.ApplyDistortion(m_SceneRenderTargets[1], 0);
+                m_spriteBatch.Draw(_sceneRenderTargets[1], new Rectangle(width, 0, width, height), null, Color.White, 0, Vector2.Zero, m_VRService.PreviewRenderEffect, 0);
+                m_VRService.ApplyDistortion(_sceneRenderTargets[1], 0);
             }
             else
-                m_spriteBatch.Draw(m_SceneRenderTargets[eye], new Rectangle(offset, 0, width, height), null, Color.White, 0, Vector2.Zero, m_VRService.PreviewRenderEffect, 0);
+                m_spriteBatch.Draw(_sceneRenderTargets[eye], new Rectangle(offset, 0, width, height), null, Color.White, 0, Vector2.Zero, m_VRService.PreviewRenderEffect, 0);
 
             m_spriteBatch.End();
         }

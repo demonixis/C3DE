@@ -12,7 +12,7 @@ namespace C3DE.Graphics.Materials
     {
         protected internal Vector3 _diffuseColor;
         protected internal bool _hasAlpha;
-        protected internal ShaderMaterial m_ShaderMaterial;
+        protected internal ShaderMaterial _shaderMaterial;
 
         [DataMember]
         public string Id { get; private set; }

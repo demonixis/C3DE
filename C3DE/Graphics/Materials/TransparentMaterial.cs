@@ -16,11 +16,11 @@ namespace C3DE.Graphics.Materials
         protected override void SetupShaderMaterial(BaseRenderer renderer)
         {
             if (renderer is ForwardRenderer || renderer is LightPrePassRenderer)
-                m_ShaderMaterial = new ForwardTransparent(this);
+                _shaderMaterial = new ForwardTransparent(this);
             else if (renderer is DeferredRenderer)
-                m_ShaderMaterial = new DeferredTransparent(this);
+                _shaderMaterial = new DeferredTransparent(this);
 
-            m_ShaderMaterial.LoadEffect(Application.Content);
+            _shaderMaterial.LoadEffect(Application.Content);
         }
     }
 }

@@ -12,8 +12,6 @@ namespace C3DE.Graphics.Materials
 
         public Texture2D NormalMap { get; set; }
         public Texture2D RoughnessMetalicSpecularAOMap => _rmsaoMap;
-
-        // TODO;
         public Texture2D EmissiveMap { get; set; }
 
         public PBRMaterial(string name) : base(name) { }
@@ -58,8 +56,8 @@ namespace C3DE.Graphics.Materials
 
         protected override void SetupShaderMaterial(BaseRenderer renderer)
         {
-            m_ShaderMaterial = new ForwardPBR(this);
-            m_ShaderMaterial.LoadEffect(Application.Content);
+            _shaderMaterial = new ForwardPBR(this);
+            _shaderMaterial.LoadEffect(Application.Content);
         }
 
         private static Color GetColor(float value) => new Color(value, value, value, 1);

@@ -16,11 +16,11 @@ namespace C3DE.Graphics.Materials
         protected override void SetupShaderMaterial(BaseRenderer renderer)
         {
             if (renderer is ForwardRenderer)
-                m_ShaderMaterial = new ForwardStandardTerrain(this);
+                _shaderMaterial = new ForwardStandardTerrain(this);
             else if (renderer is DeferredRenderer)
-                m_ShaderMaterial = new DeferredStandardTerrain(this);
+                _shaderMaterial = new DeferredStandardTerrain(this);
 
-            m_ShaderMaterial.LoadEffect(Application.Content);
+            _shaderMaterial.LoadEffect(Application.Content);
         }
     }
 }

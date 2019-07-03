@@ -1,12 +1,10 @@
 ﻿using C3DE.Components;
-using C3DE.Components.Lighting;
 using C3DE.Components.Rendering;
 using C3DE.Graphics.Materials;
 using C3DE.Graphics.Materials.Shaders;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using System.Collections.Generic;
 
 namespace C3DE.Graphics.Rendering
 {
@@ -15,9 +13,9 @@ namespace C3DE.Graphics.Rendering
     /// </summary>
     public class ForwardRenderer : BaseRenderer
     {
-        private DepthRenderer m_DepthRenderer;
+        private DepthRenderer _depthRenderer;
 
-        public DepthRenderer DepthRenderer => m_DepthRenderer;
+        public DepthRenderer DepthRenderer => _depthRenderer;
 
         public ForwardRenderer(GraphicsDevice graphics)
            : base(graphics)
@@ -28,7 +26,7 @@ namespace C3DE.Graphics.Rendering
         {
             base.Initialize(content);
             RebuildRenderTargets();
-            m_DepthRenderer = new DepthRenderer();
+            _depthRenderer = new DepthRenderer();
         }
 
         public override void Dispose(bool disposing)
@@ -36,7 +34,7 @@ namespace C3DE.Graphics.Rendering
             if (!m_IsDisposed)
             {
                 if (disposing)
-                    DisposeObject(m_SceneRenderTargets);
+                    DisposeObject(_sceneRenderTargets);
 
                 m_IsDisposed = true;
             }
@@ -80,29 +78,29 @@ namespace C3DE.Graphics.Rendering
                 {
                     camera._projectionMatrix = m_VRService.GetProjectionMatrix(eye);
                     camera._viewMatrix = m_VRService.GetViewMatrix(eye, cameraParent);
-                    RenderSceneForCamera(scene, camera, m_SceneRenderTargets[eye]);
+                    RenderSceneForCamera(scene, camera, _sceneRenderTargets[eye]);
                 }
 
-                m_VRService.SubmitRenderTargets(m_SceneRenderTargets[0], m_SceneRenderTargets[1]);
+                m_VRService.SubmitRenderTargets(_sceneRenderTargets[0], _sceneRenderTargets[1]);
                 DrawVRPreview(0);
                 RenderUI(scene.Behaviours);
             }
             else
-                RenderSceneForCamera(scene, camera, m_SceneRenderTargets[0]);
+                RenderSceneForCamera(scene, camera, _sceneRenderTargets[0]);
         }
 
         protected virtual void RenderSceneForCamera(Scene scene, Camera camera, RenderTarget2D renderTarget)
         {
-            if (m_DepthRenderer.Enabled)
-                m_DepthRenderer.Draw(m_graphicsDevice);
+            if (_depthRenderer.Enabled)
+                _depthRenderer.Draw(_graphicsDevice);
 
-            m_graphicsDevice.SetRenderTarget(renderTarget);
+            _graphicsDevice.SetRenderTarget(renderTarget);
 
             var renderToRT = camera.RenderTarget != null;
             if (renderToRT)
-                m_graphicsDevice.SetRenderTarget(camera.RenderTarget);
+                _graphicsDevice.SetRenderTarget(camera.RenderTarget);
 
-            m_graphicsDevice.Clear(camera._clearColor);
+            _graphicsDevice.Clear(camera._clearColor);
 
             RenderObjects(scene, camera);
             RenderPostProcess(scene.postProcessPasses, renderTarget);
@@ -123,11 +121,11 @@ namespace C3DE.Graphics.Rendering
         /// <param name="camera">The camera to use.</param>
         protected void RenderObjects(Scene scene, Camera camera)
         {
-            m_graphicsDevice.DepthStencilState = DepthStencilState.Default;
-            m_graphicsDevice.BlendState = BlendState.Opaque;
+            _graphicsDevice.DepthStencilState = DepthStencilState.Default;
+            _graphicsDevice.BlendState = BlendState.Opaque;
 
             if (scene.RenderSettings.Skybox.Enabled)
-                scene.RenderSettings.Skybox.Draw(m_graphicsDevice, camera);
+                scene.RenderSettings.Skybox.Draw(_graphicsDevice, camera);
 
             var renderCount = scene.renderList.Count;
 
@@ -147,51 +145,52 @@ namespace C3DE.Graphics.Rendering
                 // A specific renderer that uses its own draw logic.
                 if (material == null)
                 {
-                    renderer.Draw(m_graphicsDevice);
+                    renderer.Draw(_graphicsDevice);
                     continue;
                 }
 
-                shader = material.m_ShaderMaterial;
+                shader = material._shaderMaterial;
 
                 // Ambient pass
                 shader.PrePass(camera);
                 shader.Pass(scene.RenderList[i]);
-                renderer.Draw(m_graphicsDevice);
+                renderer.Draw(_graphicsDevice);
 
                 // Lightpass
+                // Deprecated.
                 if (shader is IMultipassLightingMaterial)
                 {
                     multiLightShader = (IMultipassLightingMaterial)shader;
 
-                    m_graphicsDevice.BlendState = BlendState.Additive;
+                    _graphicsDevice.BlendState = BlendState.Additive;
 
                     for (var l = 0; l < lightCount; l++)
                     {
                         multiLightShader.LightPass(renderer, lights[l]);
-                        renderer.Draw(m_graphicsDevice);
+                        renderer.Draw(_graphicsDevice);
                     }
 
-                    m_graphicsDevice.BlendState = BlendState.Opaque;
+                    _graphicsDevice.BlendState = BlendState.Opaque;
                 }
             }
         }
 
         public override void RenderReflectionProbe(Camera camera)
         {
-            var renderTargets = m_graphicsDevice.GetRenderTargets();
+            var renderTargets = _graphicsDevice.GetRenderTargets();
 
-            m_graphicsDevice.SetRenderTarget(camera.RenderTarget);
-            m_graphicsDevice.Clear(camera._clearColor);
+            _graphicsDevice.SetRenderTarget(camera.RenderTarget);
+            _graphicsDevice.Clear(camera._clearColor);
 
-            m_graphicsDevice.DepthStencilState = DepthStencilState.Default;
-            m_graphicsDevice.BlendState = BlendState.Opaque;
+            _graphicsDevice.DepthStencilState = DepthStencilState.Default;
+            _graphicsDevice.BlendState = BlendState.Opaque;
 
             var scene = Scene.current;
             var ambientColor = scene.RenderSettings.ambientColor;
             scene.RenderSettings.ambientColor = Color.White.ToVector3();
 
             if (scene.RenderSettings.Skybox.Enabled)
-                scene.RenderSettings.Skybox.Draw(m_graphicsDevice, camera);
+                scene.RenderSettings.Skybox.Draw(_graphicsDevice, camera);
 
             var renderCount = scene.renderList.Count;
 
@@ -217,21 +216,21 @@ namespace C3DE.Graphics.Rendering
                 // A specific renderer that uses its own draw logic.
                 if (material == null)
                 {
-                    renderer.Draw(m_graphicsDevice);
+                    renderer.Draw(_graphicsDevice);
                     continue;
                 }
 
-                shader = material.m_ShaderMaterial;
+                shader = material._shaderMaterial;
 
                 // Ambient pass
                 shader.PrePass(camera);
                 shader.Pass(scene.RenderList[i]);
-                renderer.Draw(m_graphicsDevice);
+                renderer.Draw(_graphicsDevice);
             }
 
             scene.RenderSettings.ambientColor = ambientColor;
 
-            m_graphicsDevice.SetRenderTargets(renderTargets);
+            _graphicsDevice.SetRenderTargets(renderTargets);
         }
     }
 }

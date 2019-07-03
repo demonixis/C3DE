@@ -16,11 +16,11 @@ namespace C3DE.Graphics.Materials
         protected override void SetupShaderMaterial(BaseRenderer renderer)
         {
             if (renderer is ForwardRenderer)
-                m_ShaderMaterial = new ForwardLava(this);
+                _shaderMaterial = new ForwardLava(this);
             else if (renderer is DeferredRenderer)
-                m_ShaderMaterial = new DeferredLava(this);
+                _shaderMaterial = new DeferredLava(this);
 
-            m_ShaderMaterial.LoadEffect(Application.Content);
+            _shaderMaterial.LoadEffect(Application.Content);
         }
     }
 }

@@ -110,7 +110,7 @@ namespace C3DE
             if (_autoDetectResolution)
                 Screen.SetBestResolution(_requestFullscreen);
 
-            renderer.m_graphicsDevice = GraphicsDevice;
+            renderer._graphicsDevice = GraphicsDevice;
             renderer.Initialize(Content);
             RendererChanged?.Invoke(renderer);
 

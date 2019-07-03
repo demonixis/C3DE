@@ -65,7 +65,7 @@ namespace C3DE.Graphics.Rendering
                 if (disposing)
                 {
                     for (var eye = 0; eye < 2; eye++)
-                        DisposeObject(m_SceneRenderTargets[eye]);
+                        DisposeObject(_sceneRenderTargets[eye]);
 
                     DisposeObject(m_ColorTarget);
                     DisposeObject(m_NormalTarget);
@@ -78,9 +78,9 @@ namespace C3DE.Graphics.Rendering
 
         private void RenderObjects(Scene scene, Camera camera)
         {
-            using (m_graphicsDevice.GeometryUnlitState())
+            using (_graphicsDevice.GeometryUnlitState())
                 if (scene.RenderSettings.Skybox.Enabled)
-                    scene.RenderSettings.Skybox.Draw(m_graphicsDevice, camera);
+                    scene.RenderSettings.Skybox.Draw(_graphicsDevice, camera);
 
             var renderCount = scene.renderList.Count;
 
@@ -96,24 +96,24 @@ namespace C3DE.Graphics.Rendering
                 // A specific renderer that uses its own draw logic.
                 if (material == null)
                 {
-                    renderer.Draw(m_graphicsDevice);
+                    renderer.Draw(_graphicsDevice);
                     continue;
                 }
 
-                shader = material.m_ShaderMaterial;
+                shader = material._shaderMaterial;
 
                 // Ambient pass
                 shader.PrePass(camera);
                 shader.Pass(scene.RenderList[i]);
-                renderer.Draw(m_graphicsDevice);
+                renderer.Draw(_graphicsDevice);
             }
         }
 
         private void RenderLights(Scene scene, Camera camera, int eye)
         {
-            m_graphicsDevice.SetRenderTargets(null);
-            m_graphicsDevice.SetRenderTarget(m_LightTarget);
-            m_graphicsDevice.Clear(Color.Transparent);
+            _graphicsDevice.SetRenderTargets(null);
+            _graphicsDevice.SetRenderTarget(m_LightTarget);
+            _graphicsDevice.Clear(Color.Transparent);
 
             m_AmbientLight.Color = Scene.current.RenderSettings.AmbientColor;
             m_AmbientLight.RenderDeferred(m_ColorTarget, m_NormalTarget, m_DepthTarget, camera);
@@ -124,7 +124,7 @@ namespace C3DE.Graphics.Rendering
 
         protected virtual void RenderSceneForCamera(Scene scene, Camera camera, int eye)
         {
-            m_graphicsDevice.SetRenderTargets(m_ColorTarget, m_NormalTarget, m_DepthTarget);
+            _graphicsDevice.SetRenderTargets(m_ColorTarget, m_NormalTarget, m_DepthTarget);
 
             foreach (var pass in m_ClearEffect.Techniques[0].Passes)
             {
@@ -132,16 +132,16 @@ namespace C3DE.Graphics.Rendering
                 m_QuadRenderer.RenderFullscreenQuad();
             }
 
-            using (m_graphicsDevice.GeometryState())
+            using (_graphicsDevice.GeometryState())
                 RenderObjects(scene, camera);
 
-            using (m_graphicsDevice.LightState())
+            using (_graphicsDevice.LightState())
                 RenderLights(scene, camera, eye);
 
-            m_graphicsDevice.SetRenderTarget(m_SceneRenderTargets[eye]);
-            m_graphicsDevice.Clear(Color.Black);
+            _graphicsDevice.SetRenderTarget(_sceneRenderTargets[eye]);
+            _graphicsDevice.Clear(Color.Black);
 
-            using (m_graphicsDevice.PostProcessState())
+            using (_graphicsDevice.PostProcessState())
             {
                 foreach (var pass in m_CombineEffect.Techniques[0].Passes)
                 {
@@ -151,7 +151,7 @@ namespace C3DE.Graphics.Rendering
                     m_QuadRenderer.RenderFullscreenQuad();
                 }
 
-                RenderPostProcess(scene.postProcessPasses, m_SceneRenderTargets[eye]);
+                RenderPostProcess(scene.postProcessPasses, _sceneRenderTargets[eye]);
 
                 if (!m_VREnabled)
                 {
@@ -185,7 +185,7 @@ namespace C3DE.Graphics.Rendering
                     RenderSceneForCamera(scene, camera, eye);
                 }
 
-                m_VRService.SubmitRenderTargets(m_SceneRenderTargets[0], m_SceneRenderTargets[1]);
+                m_VRService.SubmitRenderTargets(_sceneRenderTargets[0], _sceneRenderTargets[1]);
                 DrawVRPreview(0);
                 RenderUI(scene.Behaviours);
             }

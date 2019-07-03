@@ -34,11 +34,11 @@ namespace C3DE.Graphics.Materials
         protected override void SetupShaderMaterial(BaseRenderer renderer)
         {
             if (renderer is ForwardRenderer)
-                m_ShaderMaterial = new ForwardStandardWater(this);
+                _shaderMaterial = new ForwardStandardWater(this);
             else if (renderer is DeferredRenderer)
-                m_ShaderMaterial = new DeferredStandardWater(this);
+                _shaderMaterial = new DeferredStandardWater(this);
 
-            m_ShaderMaterial.LoadEffect(Application.Content);
+            _shaderMaterial.LoadEffect(Application.Content);
         }
     }
 }

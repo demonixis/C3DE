@@ -38,13 +38,13 @@ namespace C3DE.Graphics.Materials
         protected override void SetupShaderMaterial(BaseRenderer renderer)
         {
             if (renderer is ForwardRenderer)
-                m_ShaderMaterial = new ForwardStandard(this);
+                _shaderMaterial = new ForwardStandard(this);
             else if (renderer is DeferredRenderer)
-                m_ShaderMaterial = new DeferredStandard(this);
+                _shaderMaterial = new DeferredStandard(this);
             else if (renderer is LightPrePassRenderer)
-                m_ShaderMaterial = new LPPStandard(this);
+                _shaderMaterial = new LPPStandard(this);
 
-            m_ShaderMaterial.LoadEffect(Application.Content);
+            _shaderMaterial.LoadEffect(Application.Content);
         }
     }
 }
