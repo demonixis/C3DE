@@ -105,7 +105,7 @@ namespace C3DE.Graphics.Materials.Shaders
             m_EPLightFallOff.SetValue(light.FallOf);
             m_EPLightType.SetValue((int)light.TypeLight);
 
-#if !DESKTOP
+#if !DESKTOP && !ANDROID
             m_EPFogColor.SetValue(Scene.current.RenderSettings.fogColor);
             m_EPFogData.SetValue(Scene.current.RenderSettings.fogData);
 #endif

@@ -57,6 +57,13 @@ namespace C3DE.Graphics.Rendering
 
             var camera = scene.cameras[0];
 
+#if ANDROID
+            _graphicsDevice.Clear(camera._clearColor);
+
+            RenderObjects(scene, camera);
+            RenderUI(scene.Behaviours);
+            return;
+#endif
             if (scene._reflectionProbes.Count > 0)
             {
                 for (var i = 0; i < scene._reflectionProbes.Count; i++)

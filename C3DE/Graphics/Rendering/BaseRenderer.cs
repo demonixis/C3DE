@@ -181,7 +181,9 @@ namespace C3DE.Graphics.Rendering
         /// </summary>
         protected virtual void RenderToBackBuffer()
         {
+#if !ANDROID
             _graphicsDevice.SetRenderTarget(null);
+#endif
             m_spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Opaque, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone);
             m_spriteBatch.Draw(_sceneRenderTargets[0], Vector2.Zero, Color.White);
             m_spriteBatch.End();
@@ -266,7 +268,7 @@ namespace C3DE.Graphics.Rendering
             m_spriteBatch.End();
         }
 
-        #region IDisposable
+#region IDisposable
 
         public virtual void Dispose()
         {
@@ -300,6 +302,6 @@ namespace C3DE.Graphics.Rendering
             }
         }
 
-        #endregion
+#endregion
     }
 }

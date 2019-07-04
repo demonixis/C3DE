@@ -8,7 +8,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>C3DE</RootNamespace>
     <AssemblyName>C3DE</AssemblyName>
-    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProductVersion>8.0.30703</ProductVersion>
     <MonoGamePlatform>Windows</MonoGamePlatform>
@@ -176,19 +176,6 @@
     <Compile Include="Components\CoroutineManager.cs" />
     <Compile Include="Components\Coroutine.cs" />
   </ItemGroup>
-  <!--
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\Shaders\FresnelEffect.dx11.mgfxo" />
-    <EmbeddedResource Include="Resources\Shaders\LavaEffect.dx11.mgfxo" />
-    <EmbeddedResource Include="Resources\Shaders\ReflectionEffect.dx11.mgfxo" />
-    <EmbeddedResource Include="Resources\Shaders\SimpleEffect.dx11.mgfxo" />
-    <EmbeddedResource Include="Resources\Shaders\SkyboxEffect.dx11.mgfxo" />
-    <EmbeddedResource Include="Resources\Shaders\StandardEffect.dx11.mgfxo" />
-    <EmbeddedResource Include="Resources\Shaders\TerrainEffect.dx11.mgfxo" />
-    <EmbeddedResource Include="Resources\Shaders\ToonEffect.dx11.mgfxo" />
-    <EmbeddedResource Include="Resources\Shaders\TransparentEffect.dx11.mgfxo" />
-    <EmbeddedResource Include="Resources\Shaders\WaterEffect.dx11.mgfxo" />
-  </ItemGroup>-->
   <ItemGroup>
     <Reference Include="MonoGame.Framework, Version=3.7.1.189, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MonoGame.Framework.WindowsDX.3.7.1.189\lib\net45\MonoGame.Framework.dll</HintPath>

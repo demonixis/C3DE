@@ -78,7 +78,9 @@ namespace C3DE.Demo
         public static void InitializeGame()
         {
             Application.SceneManager.Add(new MenuDemo(), true);
+#if WINDOWS
             Application.SceneManager.Add(new PBRDemo());
+#endif
             Application.SceneManager.Add(new HeightmapDemo());
             Application.SceneManager.Add(new ProceduralTerrainWater());
             Application.SceneManager.Add(new ProceduralTerrainLava());
@@ -86,24 +88,12 @@ namespace C3DE.Demo
             Application.SceneManager.Add(new PhysicsDemo());
             Application.SceneManager.Add(new SponzaDemo());
             Application.SceneManager.Add(new GUIDemo());
+#if !ANDROID
             Application.SceneManager.Add(new DeferredDemo());
             Application.SceneManager.Add(new LightPrePassDemo());
+#endif
             Application.SceneManager.LoadLevel(0);
             Screen.SetVirtualResolution(UIWidth, UIHeight, true);
         }
-
-#if !ANDROID && !NETFX_CORE
-
-        // Entry point.
-        static void Main(string[] args)
-        {
-            using (var game = new Engine("C3DE Game Engine", ScreenWidth, ScreenHeight))
-            {
-                InitializeGame();
-                game.Run();
-            }
-        }
-
-#endif
     }
 }

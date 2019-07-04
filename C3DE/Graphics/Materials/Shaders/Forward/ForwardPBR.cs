@@ -71,7 +71,7 @@ namespace C3DE.Graphics.Materials.Shaders.Forward
             _effect.Parameters["LightColor"].SetValue(col);
             _effect.Parameters["IrradianceMap"].SetValue(Scene.current.RenderSettings.skybox.IrradianceTexture);
 
-#if !DESKTOP
+#if !DESKTOP && !ANDROID
             _effect.Parameters["Debug"].SetValue(1);
 #endif
         }

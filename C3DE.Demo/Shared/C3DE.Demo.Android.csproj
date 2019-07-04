@@ -4,11 +4,11 @@
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <DefineConstants>TRACE;ANDROID</DefineConstants>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DefineConstants>TRACE;ANDROID</DefineConstants>
   </PropertyGroup>
 
@@ -17,12 +17,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Jitter.Standard" Version="1.0.0" />
+    <Folder Include="Properties\" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="MonoGame.Framework.Portable" Version="3.7.1.189" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Properties\" />
+    <ProjectReference Include="..\..\C3DE\C3DE.Android.csproj" />
   </ItemGroup>
 
 </Project>

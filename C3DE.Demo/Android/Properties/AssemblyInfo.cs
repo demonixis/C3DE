@@ -5,8 +5,8 @@ using System.Runtime.InteropServices;
 // Les informations générales relatives à un assembly dépendent de 
 // l'ensemble d'attributs suivant. Changez les valeurs de ces attributs pour modifier les informations
 // associées à un assembly.
-[assembly: AssemblyTitle("C3DE")]
-[assembly: AssemblyDescription("Cool 3D Engine")]
+[assembly: AssemblyTitle("C3DE.DemoGame")]
+[assembly: AssemblyDescription("Cool 3D Engine - DemoGame")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("The C3DE Team")]
 [assembly: AssemblyProduct("C3DE : Cool 3D Engine")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // Le GUID suivant est pour l'ID de la typelib si ce projet est exposé à COM
-[assembly: Guid("2a1cab9a-4ce9-43c0-93f5-829b78c273d7")]
+[assembly: Guid("e47da434-6ee2-4ad5-b3ef-6b109fb4e561")]
 
 // Les informations de version pour un assembly se composent des quatre valeurs suivantes :
 //

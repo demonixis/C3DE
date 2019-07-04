@@ -53,7 +53,7 @@ namespace C3DE.Graphics.Materials.Shaders
             m_EPEyePosition.SetValue(camera.Transform.LocalPosition);
             m_EPMainTexture.SetValue(m_Skybox.Texture);
             m_EPWorld.SetValue(m_Skybox.WorldMatrix);
-#if !DESKTOP
+#if !DESKTOP && !ANDROID
             m_EPFogEnabled.SetValue(m_Skybox.FogSupported);
             m_EPFogColor.SetValue(Scene.current.RenderSettings.fogColor);
             m_EPFogData.SetValue(m_Skybox.OverrideFog ? m_Skybox.CustomFogData : Scene.current.RenderSettings.fogData);

@@ -1,12 +1,11 @@
 ﻿using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 // Les informations générales relatives à un assembly dépendent de 
 // l'ensemble d'attributs suivant. Changez les valeurs de ces attributs pour modifier les informations
 // associées à un assembly.
-[assembly: AssemblyTitle("C3DE")]
-[assembly: AssemblyDescription("Cool 3D Engine")]
+[assembly: AssemblyTitle("C3DE.Demo")]
+[assembly: AssemblyDescription("Cool 3D Engine - Demo")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("The C3DE Team")]
 [assembly: AssemblyProduct("C3DE : Cool 3D Engine")]

@@ -105,6 +105,10 @@ namespace C3DE
             if (Application.GraphicsDevice == null)
                 Application.GraphicsDevice = GraphicsDevice;
 
+#if ANDROID
+            _graphicsDeviceManager.SupportedOrientations = DisplayOrientation.LandscapeLeft;
+#endif
+
             GraphicsDevice.PresentationParameters.MultiSampleCount = 8;
 
             if (_autoDetectResolution)
@@ -152,7 +156,9 @@ namespace C3DE
         {
             _totalFrames++;
             GraphicsDevice.Clear(Color.Black);
+
             renderer.Render(_sceneManager.ActiveScene);
+
             base.Draw(gameTime);
         }
 

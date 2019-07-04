@@ -7,12 +7,12 @@ using Android.App;
 // Information about this assembly is defined by the following attributes. 
 // Change them to the values specific to your project.
 
-[assembly: AssemblyTitle("C3DE.Demo")]
-[assembly: AssemblyDescription("C3DE Demo")]
+[assembly: AssemblyTitle("C3DE.Editor")]
+[assembly: AssemblyDescription("Cool 3D Engine - Editor")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("The C3DE Team")]
-[assembly: AssemblyProduct("C3DE Demos")]
-[assembly: AssemblyCopyright("Copyright © C3DE 2014-2017")]
+[assembly: AssemblyProduct("C3DE : Cool 3D Engine")]
+[assembly: AssemblyCopyright("Copyright © C3DE 2014-2019")]
 [assembly: AssemblyTrademark("C3DE")]
 [assembly: AssemblyCulture("")]
 
