@@ -37,7 +37,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Application.cs" />
-    <Compile Include="Asset.cs" />
     <Compile Include="AudioManager.cs" />
     <Compile Include="Components\AudioListener.cs" />
     <Compile Include="Components\AudioSource.cs" />
@@ -156,7 +155,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Graphics\Rendering\ForwardRenderer.cs" />
     <Compile Include="Graphics\ShadowGenerator.cs" />
-    <Compile Include="Skybox.cs" />
+    <Compile Include="Graphics\Skybox.cs" />
     <Compile Include="Time.cs" />
     <Compile Include="Utils\NoiseGenerator.cs" />
     <Compile Include="Utils\RandomHelper.cs" />
@@ -221,7 +220,7 @@
     <Reference Include="SharpDX.XInput, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
       <HintPath>..\packages\SharpDX.XInput.4.0.1\lib\net45\SharpDX.XInput.dll</HintPath>
     </Reference>
-	<Reference Include="Jitter, Version=0.1.7.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Jitter, Version=0.1.7.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Jitter.0.1.7.0\lib\NET40\Jitter.dll</HintPath>
     </Reference>
     <Reference Include="System" />

@@ -10,7 +10,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Runtime.Serialization;
 
-namespace C3DE
+namespace C3DE.Graphics
 {
     [DataContract]
     public class Skybox

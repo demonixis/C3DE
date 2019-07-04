@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using C3DE.Graphics;
+using Microsoft.Xna.Framework;
 using System.Runtime.Serialization;
 
 namespace C3DE

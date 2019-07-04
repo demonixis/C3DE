@@ -65,7 +65,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Application.cs" />
-    <Compile Include="Asset.cs" />
     <Compile Include="AudioManager.cs" />
     <Compile Include="Components\AudioListener.cs" />
     <Compile Include="Components\AudioSource.cs" />
@@ -184,7 +183,7 @@
     <Compile Include="GameObject.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Graphics\Rendering\ForwardRenderer.cs" />
-    <Compile Include="Skybox.cs" />
+    <Compile Include="Graphics\Skybox.cs" />
     <Compile Include="Time.cs" />
     <Compile Include="Utils\NoiseGenerator.cs" />
     <Compile Include="Utils\RandomHelper.cs" />
