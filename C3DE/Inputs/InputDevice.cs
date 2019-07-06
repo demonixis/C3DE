@@ -1,45 +1,74 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
+using System;
 
-namespace C3DE.Inputs
+namespace C3DE.Inputs.Experimental
 {
     public enum Axis
     {
-        Horizontal, Vertical, LookUp, Turn, Trigger
+        Horizontal, Vertical,
+        MouseX, MouseY,
+        LeftTrigger, RightTriger
     }
 
-    public enum Button
+    public enum Axis2D
     {
-        A, B, X, Y, LeftStick, RightStick,
-        LeftBumper, RightBumper, LeftTrigger, RightTrigger,
-        Back, Start
+        LeftStick, RightStick
     }
 
     public abstract class InputDevice
     {
-        private bool[] m_LastButtonStates;
-        private bool[] m_ButtonStates;
-        private float[] m_AxisStates;
+        private bool[] _lastButtonStates;
+        private bool[] _buttonStates;
+        private float[] _axisStates;
 
-        public InputDevice()
+        public virtual void Initialize()
         {
+            var buttonCount = Enum.GetNames(typeof(Buttons)).Length;
+            var axisCount = Enum.GetNames(typeof(Axis)).Length;
 
+            _buttonStates = new bool[buttonCount];
+            _lastButtonStates = new bool[buttonCount];
+            _axisStates = new float[axisCount];
         }
 
-        public abstract void Update();
-
-        public void UpdateState(Button button, bool value, float deltaTime)
+        public virtual void Update()
         {
-            var index = (int)button;
-            m_ButtonStates[index] = value;
+            for (var i = 0; i < _buttonStates.Length; i++)
+            {
+                _lastButtonStates[i] = _buttonStates[i];
+                _buttonStates[i] = UpdateButtonState((Buttons)i);
+            }
+
+            for (var i = 0; i < _axisStates.Length; i++)
+            {
+                _axisStates[i] = UpdateAxisState((Axis)i);
+            }
         }
 
-        public void UpdateAxis(Axis axis, float deltaTime)
-        {
+        protected abstract bool UpdateButtonState(Buttons button);
+        protected abstract float UpdateAxisState(Axis axis);
 
+        public bool Get(Buttons button) => _buttonStates[(int)button];
+
+        public bool GetDown(Buttons button)
+        {
+            return _buttonStates[(int)button] && !_lastButtonStates[(int)button];
+        }
+
+        public bool GetUp(Buttons button)
+        {
+            return !_buttonStates[(int)button] && _lastButtonStates[(int)button];
+        }
+
+        public float Get(Axis axis) => _axisStates[(int)axis];
+
+        public Vector2 Get(Axis2D axis)
+        {
+            if (axis == Axis2D.LeftStick)
+                return new Vector2(Get(Axis.Horizontal), Get(Axis.Vertical));
+            else
+                return new Vector2(Get(Axis.MouseX), Get(Axis.MouseY));
         }
     }
 }
