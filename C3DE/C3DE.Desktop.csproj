@@ -132,8 +132,6 @@
     <Compile Include="Graphics\Rendering\DeviceState.cs" />
     <Compile Include="Graphics\Rendering\GraphicsDeviceExtensions.cs" />
     <Compile Include="Graphics\Rendering\LightPrePassRenderer.cs" />
-    <Compile Include="Graphics\ShadowGenerator.cs" />
-    <Compile Include="Graphics\TextureFactory.cs" />
     <Compile Include="Input.cs" />
     <Compile Include="Graphics\Materials\BillboardMaterial.cs" />
     <Compile Include="Graphics\Materials\UnlitMaterial.cs" />
@@ -154,11 +152,16 @@
     <Compile Include="Graphics\Primitives\SphereMesh.cs" />
     <Compile Include="Graphics\Primitives\TerrainMesh.cs" />
     <Compile Include="Graphics\Primitives\TorusMesh.cs" />
+    <Compile Include="Inputs\GamepadDevice.cs" />
+    <Compile Include="Inputs\Input.cs" />
     <Compile Include="Inputs\InputDevice.cs" />
-    <Compile Include="Inputs\TouchComponent.cs" />
+    <Compile Include="Inputs\KeyboardDevice.cs" />
+    <Compile Include="Inputs\Legacy\TouchComponent.cs" />
     <Compile Include="Graphics\Materials\TransparentMaterial.cs" />
     <Compile Include="Graphics\PostProcessing\SimpleBlur.cs" />
     <Compile Include="Graphics\Rendering\BaseRenderer.cs" />
+    <Compile Include="Inputs\MouseDevice.cs" />
+    <Compile Include="Inputs\TouchDevice.cs" />
     <Compile Include="QuadTree.cs" />
     <Compile Include="RenderSettings.cs" />
     <Compile Include="Resources\ResourcesHelper.cs" />
@@ -167,6 +170,7 @@
     <Compile Include="Serializer.cs" />
     <Compile Include="UI\GUISkin.cs" />
     <Compile Include="UI\GUI.cs" />
+    <Compile Include="Graphics\TextureFactory.cs" />
     <Compile Include="Graphics\Materials\StandardWaterMaterial.cs" />
     <Compile Include="Components\Component.cs" />
     <Compile Include="Components\Rendering\ModelRenderer.cs" />
@@ -174,9 +178,9 @@
     <Compile Include="Debug.cs" />
     <Compile Include="EgineEventArgs.cs" />
     <Compile Include="Engine.cs" />
-    <Compile Include="Inputs\GamepadComponent.cs" />
-    <Compile Include="Inputs\KeyboardComponent.cs" />
-    <Compile Include="Inputs\MouseComponent.cs" />
+    <Compile Include="Inputs\Legacy\GamepadComponent.cs" />
+    <Compile Include="Inputs\Legacy\KeyboardComponent.cs" />
+    <Compile Include="Inputs\Legacy\MouseComponent.cs" />
     <Compile Include="Components\Rendering\Renderer.cs" />
     <Compile Include="Graphics\Materials\Material.cs" />
     <Compile Include="Graphics\PostProcessing\PostProcessPass.cs" />
@@ -184,6 +188,7 @@
     <Compile Include="GameObject.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Graphics\Rendering\ForwardRenderer.cs" />
+    <Compile Include="Graphics\ShadowGenerator.cs" />
     <Compile Include="Graphics\Skybox.cs" />
     <Compile Include="Time.cs" />
     <Compile Include="Utils\NoiseGenerator.cs" />

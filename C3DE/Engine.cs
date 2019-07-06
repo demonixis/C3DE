@@ -4,9 +4,15 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
+using System.Reflection;
 
 namespace C3DE
 {
+    public enum GamePlatform
+    {
+        Unknown = 0, Windows, Desktop, UWP, Android
+    }
+
     /// <summary>
     /// The starting point of the engine. Managers, registry objects, etc. are initialized here.
     /// </summary>
@@ -22,6 +28,24 @@ namespace C3DE
         private int _totalFrames;
         private float _elapsedTime;
         private int _FPS = 0;
+
+        public static GamePlatform Platform
+        {
+            get
+            {
+#if WINDOWS
+                return GamePlatform.Windows;
+#elif DESKTOP
+                return GamePlatform.Desktop;
+#elif NETFX_CORE
+                return GamePlatform.UWP;
+#elif ANDROID
+                return GamePlatform.Android;
+#else
+                return GamePlatform.Unknown;
+#endif
+            }
+        }
 
         public BaseRenderer Renderer
         {

@@ -1,7 +1,9 @@
-﻿using C3DE.Components.Rendering;
+﻿using C3DE.Components.Lighting;
+using C3DE.Components.Rendering;
 using C3DE.Demo.Scripts;
 using C3DE.Graphics;
 using C3DE.Graphics.Materials;
+using C3DE.Utils;
 using Microsoft.Xna.Framework;
 
 namespace C3DE.Demo.Scenes
@@ -54,6 +56,10 @@ namespace C3DE.Demo.Scenes
             var x = -startPos;
             var z = -startPos;
             var margin = 2.5f;
+            var renderAdditionalLights = true;
+
+            if (Engine.Platform == GamePlatform.Android)
+                renderAdditionalLights = false;
 
             for (var i = 0; i < (int)startPos; i++)
             {
@@ -65,7 +71,6 @@ namespace C3DE.Demo.Scenes
                     pbrMaterial = new PBRMaterial
                     {
                         MainTexture = TextureFactory.CreateColor(Color.White, 1, 1),
-                        //IrradianceMap = irradianceMap
                     };
 
                     var roughness = (float)i / startPos;
@@ -76,11 +81,11 @@ namespace C3DE.Demo.Scenes
                     renderer = cube.GetComponent<Renderer>();
                     renderer.Material = pbrMaterial;
 
-                   /* light = GameObjectFactory.CreateLight(LightType.Point, RandomHelper.GetColor(), 2, 0);
-                    light.Transform.Position = new Vector3(x, 5, z);
-
-                    light = GameObjectFactory.CreateLight(LightType.Point, RandomHelper.GetColor(), 2, 0);
-                    light.Transform.Position = new Vector3(x + 5, -15, z - 5);*/
+                    if (renderAdditionalLights)
+                    {
+                        light = GameObjectFactory.CreateLight(LightType.Point, RandomHelper.GetColor(), 2, 0);
+                        light.Transform.Position = new Vector3(x, 5, z); 
+                    }
 
                     z += margin;
                 }

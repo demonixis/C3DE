@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Input.Touch;
 using System;
 using System.Collections.Generic;
 
@@ -48,7 +49,9 @@ namespace C3DE.Inputs.Experimental
                 _devices.RemoveAt(index);
         }
 
-        public static bool Get(Buttons button)
+        public static bool GetKey(Keys key) => Keyboard.GetState().IsKeyDown(key);
+
+        public static bool GetButton(Buttons button)
         {
             foreach (var device in _devices)
             {
@@ -59,7 +62,7 @@ namespace C3DE.Inputs.Experimental
             return false;
         }
 
-        public static bool GetDown(Buttons button)
+        public static bool GetButtonDown(Buttons button)
         {
             foreach (var device in _devices)
             {
@@ -70,7 +73,7 @@ namespace C3DE.Inputs.Experimental
             return false;
         }
 
-        public static bool GetUp(Buttons button)
+        public static bool GetButtonUp(Buttons button)
         {
             foreach (var device in _devices)
             {
@@ -107,6 +110,19 @@ namespace C3DE.Inputs.Experimental
             }
 
             return value;
+        }
+
+        public static void GetTouchPosition(int index, ref Vector2 position)
+        {
+            var state = TouchPanel.GetState();
+            if (state.Count > index)
+            {
+                position.X = state[index].Position.X;
+                position.Y = state[index].Position.Y;
+            }
+
+            position.X = 0;
+            position.Y = 0;
         }
     }
 }
