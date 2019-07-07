@@ -15,15 +15,21 @@ namespace C3DE.Inputs.Experimental
             AddInputDevice<KeyboardDevice>();
             AddInputDevice<MouseDevice>();
             AddInputDevice<GamepadDevice>();
+            AddInputDevice<TouchDevice>();
         }
 
         public override void Update(GameTime gameTime)
         {
             foreach (var device in _devices)
-                device.Update();
+            {
+                if (device.Enabled)
+                    device.Update();
+            }
 
             base.Update(gameTime);
         }
+
+        #region Device Management
 
         public static void AddInputDevice<T>() where T : InputDevice
         {
@@ -49,13 +55,35 @@ namespace C3DE.Inputs.Experimental
                 _devices.RemoveAt(index);
         }
 
-        public static bool GetKey(Keys key) => Keyboard.GetState().IsKeyDown(key);
+        public static void SetDeviceEnabled<T>(bool enabled) where T : InputDevice
+        {
+            foreach (var device in _devices)
+            {
+                if (device is T)
+                    device.Enabled = enabled;
+            }
+        }
+
+        public static T GetDevice<T>() where T : InputDevice
+        {
+            foreach (var device in _devices)
+            {
+                if (device is T)
+                    return (T)device;
+            }
+
+            return null;
+        }
+
+        #endregion
+
+        #region CrossInput
 
         public static bool GetButton(Buttons button)
         {
             foreach (var device in _devices)
             {
-                if (device.Get(button))
+                if (device.Enabled && device.Get(button))
                     return true;
             }
 
@@ -66,7 +94,7 @@ namespace C3DE.Inputs.Experimental
         {
             foreach (var device in _devices)
             {
-                if (device.GetDown(button))
+                if (device.Enabled && device.GetDown(button))
                     return true;
             }
 
@@ -77,7 +105,7 @@ namespace C3DE.Inputs.Experimental
         {
             foreach (var device in _devices)
             {
-                if (device.GetUp(button))
+                if (device.Enabled && device.GetUp(button))
                     return true;
             }
 
@@ -90,6 +118,9 @@ namespace C3DE.Inputs.Experimental
 
             foreach (var device in _devices)
             {
+                if (!device.Enabled)
+                    continue;
+
                 value = device.Get(axis);
                 if (Math.Abs(value) > 0)
                     return value;
@@ -104,6 +135,9 @@ namespace C3DE.Inputs.Experimental
 
             foreach (var device in _devices)
             {
+                if (!device.Enabled)
+                    continue;
+
                 value = device.Get(axis);
                 if (Math.Abs(value.X) + Math.Abs(value.Y) > 0)
                     return value;
@@ -111,6 +145,16 @@ namespace C3DE.Inputs.Experimental
 
             return value;
         }
+
+        #endregion
+
+        #region Keyboard Specific
+
+        public static bool GetKey(Keys key) => Keyboard.GetState().IsKeyDown(key);
+
+        #endregion
+
+        #region Touch Specific
 
         public static void GetTouchPosition(int index, ref Vector2 position)
         {
@@ -124,5 +168,7 @@ namespace C3DE.Inputs.Experimental
             position.X = 0;
             position.Y = 0;
         }
+
+        #endregion
     }
 }

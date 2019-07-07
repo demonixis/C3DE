@@ -22,6 +22,8 @@ namespace C3DE.Inputs.Experimental
         private bool[] _buttonStates;
         private float[] _axisStates;
 
+        public bool Enabled { get; set; } = true;
+
         public virtual void Initialize()
         {
             var buttonCount = Enum.GetNames(typeof(Buttons)).Length;
