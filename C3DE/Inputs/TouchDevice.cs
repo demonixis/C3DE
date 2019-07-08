@@ -8,7 +8,7 @@ namespace C3DE.Inputs.Experimental
     {
         private TouchCollection _touchState;
         private TouchCollection _lastTouchState;
-        public Vector2[] _delta
+        public Vector2[] _delta;
 
         public int MaxFingerPoints { get; private set; }
 

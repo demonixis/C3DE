@@ -208,8 +208,10 @@ namespace C3DE.Components
         {
             _needProjectionUpdate = true;
             _needUpdate = true;
+
             Update();
-            BoundingFrustum frustrum = new BoundingFrustum(_viewMatrix * _projectionMatrix);
+
+            var frustrum = new BoundingFrustum(_viewMatrix * _projectionMatrix);
             return frustrum.GetCorners();
         }
 
@@ -250,11 +252,11 @@ namespace C3DE.Components
         /// <returns>Position on 3D world</returns>
         public Vector3 ScreenToWorldPoint(float x, float y)
         {
-            var device = Application.GraphicsDevice;
+            var viewport = Application.GraphicsDevice.Viewport;
             var nearScreenPoint = new Vector3(x, y, 0.0f);
             var farScreenPoint = new Vector3(x, y, 1.0f);
-            var nearWorldPoint = device.Viewport.Unproject(nearScreenPoint, _projectionMatrix, _viewMatrix, Matrix.Identity);
-            var farWorldPoint = device.Viewport.Unproject(farScreenPoint, _projectionMatrix, _viewMatrix, Matrix.Identity);
+            var nearWorldPoint = viewport.Unproject(nearScreenPoint, _projectionMatrix, _viewMatrix, Matrix.Identity);
+            var farWorldPoint = viewport.Unproject(farScreenPoint, _projectionMatrix, _viewMatrix, Matrix.Identity);
             var direction = farWorldPoint - nearWorldPoint;
             var zFactor = -nearWorldPoint.Y / direction.Y;
             return nearWorldPoint + direction * zFactor;
@@ -269,14 +271,15 @@ namespace C3DE.Components
 
         public Ray GetRay(Vector2 position)
         {
-            Vector3 nearPoint = new Vector3(position, 0);
-            Vector3 farPoint = new Vector3(position, 1);
+            var viewport = Application.GraphicsDevice.Viewport;
+            var nearPoint = new Vector3(position, 0);
+            var farPoint = new Vector3(position, 1);
 
-            nearPoint = Application.GraphicsDevice.Viewport.Unproject(nearPoint, _projectionMatrix, _viewMatrix, Matrix.Identity);
-            farPoint = Application.GraphicsDevice.Viewport.Unproject(farPoint, _projectionMatrix, _viewMatrix, Matrix.Identity);
+            nearPoint = viewport.Unproject(nearPoint, _projectionMatrix, _viewMatrix, Matrix.Identity);
+            farPoint = viewport.Unproject(farPoint, _projectionMatrix, _viewMatrix, Matrix.Identity);
 
             // Get the direction
-            Vector3 direction = farPoint - nearPoint;
+            var direction = farPoint - nearPoint;
             direction.Normalize();
 
             return new Ray(nearPoint, direction);

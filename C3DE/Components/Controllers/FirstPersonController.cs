@@ -98,6 +98,9 @@ namespace C3DE.Components.Controllers
             if (_camera == null)
                 throw new Exception("No camera attached to this scene object.");
 
+            _camera._transform.LocalPosition = new Vector3(0.0f, 1.7f, 0.0f);
+            _camera._transform.LocalRotation = Vector3.Zero;
+
 #if ANDROID
                 VirtualInputEnabled = true;
 #endif

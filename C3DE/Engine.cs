@@ -133,7 +133,7 @@ namespace C3DE
             _graphicsDeviceManager.SupportedOrientations = DisplayOrientation.LandscapeLeft;
 #endif
 
-            GraphicsDevice.PresentationParameters.MultiSampleCount = 8;
+            GraphicsDevice.PresentationParameters.MultiSampleCount = 4;
 
             if (_autoDetectResolution)
                 Screen.SetBestResolution(_requestFullscreen);

@@ -1003,19 +1003,19 @@
 /processorParam:TextureFormat=Color
 /build:Textures/Skybox/starfield/pz.png
 
-#begin Textures/Terrain/Grass.jpg
+#begin Textures/Terrain/Ground/Ground03_col.jpg
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
 /processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
+/processorParam:GenerateMipmaps=True
 /processorParam:PremultiplyAlpha=True
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Textures/Terrain/Grass.jpg
+/build:Textures/Terrain/Ground/Ground03_col.jpg
 
-#begin Textures/Terrain/Grass_Normal.jpg
+#begin Textures/Terrain/Ground/Ground03_nrm.jpg
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -1025,9 +1025,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Textures/Terrain/Grass_Normal.jpg
+/build:Textures/Terrain/Ground/Ground03_nrm.jpg
 
-#begin Textures/Terrain/Rock.jpg
+#begin Textures/Terrain/Ground/Ground03_rgh.jpg
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -1037,9 +1037,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Textures/Terrain/Rock.jpg
+/build:Textures/Terrain/Ground/Ground03_rgh.jpg
 
-#begin Textures/Terrain/Rock_Normal.jpg
+#begin Textures/Terrain/Rock/Rock12_AO.jpg
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -1049,21 +1049,21 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Textures/Terrain/Rock_Normal.jpg
+/build:Textures/Terrain/Rock/Rock12_AO.jpg
 
-#begin Textures/Terrain/Sand.jpg
+#begin Textures/Terrain/Rock/Rock12_col.jpg
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
 /processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
+/processorParam:GenerateMipmaps=True
 /processorParam:PremultiplyAlpha=True
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Textures/Terrain/Sand.jpg
+/build:Textures/Terrain/Rock/Rock12_col.jpg
 
-#begin Textures/Terrain/Sand_Normal.jpg
+#begin Textures/Terrain/Rock/Rock12_nrm.jpg
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -1073,9 +1073,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Textures/Terrain/Sand_Normal.jpg
+/build:Textures/Terrain/Rock/Rock12_nrm.jpg
 
-#begin Textures/Terrain/Snow.jpg
+#begin Textures/Terrain/Rock/Rock12_rgh.jpg
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -1085,9 +1085,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Textures/Terrain/Snow.jpg
+/build:Textures/Terrain/Rock/Rock12_rgh.jpg
 
-#begin Textures/Terrain/Snow_Normal.jpg
+#begin Textures/Terrain/Sand/Ground27_AO.jpg
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -1097,7 +1097,79 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Textures/Terrain/Snow_Normal.jpg
+/build:Textures/Terrain/Sand/Ground27_AO.jpg
+
+#begin Textures/Terrain/Sand/Ground27_col.jpg
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=True
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/Terrain/Sand/Ground27_col.jpg
+
+#begin Textures/Terrain/Sand/Ground27_nrm.jpg
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/Terrain/Sand/Ground27_nrm.jpg
+
+#begin Textures/Terrain/Sand/Ground27_rgh.jpg
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/Terrain/Sand/Ground27_rgh.jpg
+
+#begin Textures/Terrain/Snow/Snow05_col.jpg
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=True
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/Terrain/Snow/Snow05_col.jpg
+
+#begin Textures/Terrain/Snow/Snow05_nrm.jpg
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/Terrain/Snow/Snow05_nrm.jpg
+
+#begin Textures/Terrain/Snow/Snow05_rgh.jpg
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/Terrain/Snow/Snow05_rgh.jpg
 
 #begin Textures/UI/grey_box.png
 /importer:TextureImporter

@@ -25,6 +25,19 @@ namespace C3DE.Graphics
             return texture;
         }
 
+        public static Texture2D CreateMultiplied(Texture2D target, Color color)
+        {
+            var texture = new Texture2D(Application.GraphicsDevice, target.Width, target.Height);
+            Color[] data = new Color[texture.Width * texture.Height];
+            target.GetData<Color>(data);
+
+            for (var i = 0; i < data.Length; i++)
+                data[i] = new Color(data[i].R * color.R, data[i].G * color.G, data[i].B * color.B, data[i].A * color.A);
+
+            texture.SetData(data);
+            return texture;
+        }
+
         public static Texture2D CreateCheckboard(Color firstTile, Color secondTile, int width = 128, int height = 128)
         {
             Texture2D texture = new Texture2D(Application.GraphicsDevice, width, height);
