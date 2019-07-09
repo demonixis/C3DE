@@ -127,6 +127,12 @@
 /processorParam:DebugMode=Auto
 /build:Shaders/Forward/StandardWater.fx
 
+#begin Shaders/Forward/TerrainPBR.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Shaders/Forward/TerrainPBR.fx
+
 #begin Shaders/Forward/Transparent.fx
 /importer:EffectImporter
 /processor:EffectProcessor

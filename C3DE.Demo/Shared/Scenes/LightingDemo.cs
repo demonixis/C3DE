@@ -35,7 +35,7 @@ namespace C3DE.Demo.Scenes
             // Setup the terrain.
             var terrainMaterial = new PBRMaterial();
             terrainMaterial.MainTexture = TextureFactory.CreateCheckboard(Color.White, Color.Black);
-            terrainMaterial.CreateRMSFromValues();
+            terrainMaterial.CreateRoughnessMetallicAO();
             terrainMaterial.Tiling = new Vector2(16);
 
             var go = GameObjectFactory.CreateTerrain();
@@ -71,7 +71,7 @@ namespace C3DE.Demo.Scenes
                 EmissiveMap = content.Load<Texture2D>("Models/Quandtum/textures/Turret-Emission"),
             };
 
-            modelMaterial.CreateRMSFromValues(1.0f, 0.85f);
+            modelMaterial.CreateRoughnessMetallicAO(1.0f, 0.85f);
 
             renderer.Material = modelMaterial;
 

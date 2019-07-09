@@ -26,7 +26,7 @@ namespace C3DE.Demo.Scenes
             // Setup the terrain.
             var terrainMaterial = new PBRMaterial();
             terrainMaterial.MainTexture = TextureFactory.CreateCheckboard(Color.White, Color.Black);
-            terrainMaterial.CreateRMSFromValues();
+            terrainMaterial.CreateRoughnessMetallicAO();
             terrainMaterial.Tiling = new Vector2(16);
 
             var go = GameObjectFactory.CreateTerrain();
@@ -79,7 +79,7 @@ namespace C3DE.Demo.Scenes
                     var roughness = (float)i / startPos;
                     var metallic = (float)j / startPos;
 
-                    pbrMaterial.CreateRMSFromValues(roughness, metallic);
+                    pbrMaterial.CreateRoughnessMetallicAO(roughness, metallic);
 
                     renderer = cube.GetComponent<Renderer>();
                     renderer.Material = pbrMaterial;

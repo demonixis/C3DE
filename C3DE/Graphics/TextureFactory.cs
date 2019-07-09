@@ -7,6 +7,60 @@ namespace C3DE.Graphics
 {
     public class TextureFactory
     {
+        public static Texture2D PackTextures(Texture2D upperLeft, Texture2D upperRight, Texture2D bottomLeft, Texture2D bottomRight)
+        {
+            var width = upperLeft.Width;
+            var height = upperLeft.Height;
+            var widthPerTwo = (int)((float)width / 2.0f);
+            var heightPerTwo = (int)((float)height / 2.0f);
+            var graphics = Application.GraphicsDevice;
+            var renderTarget = new RenderTarget2D(graphics, width, height);
+            var spriteBatch = new SpriteBatch(graphics);
+            var previousRTs = graphics.GetRenderTargets();
+
+            graphics.SetRenderTarget(renderTarget);
+            graphics.Clear(Color.Black);
+
+            spriteBatch.Begin();
+            spriteBatch.Draw(upperLeft, new Rectangle(0, 0, widthPerTwo, heightPerTwo), Color.White);
+            spriteBatch.Draw(upperRight, new Rectangle(widthPerTwo, 0, widthPerTwo, heightPerTwo), Color.White);
+            spriteBatch.Draw(bottomLeft, new Rectangle(0, heightPerTwo, widthPerTwo, heightPerTwo), Color.White);
+            spriteBatch.Draw(bottomRight, new Rectangle(widthPerTwo, heightPerTwo, widthPerTwo, heightPerTwo), Color.White);
+            spriteBatch.End();
+
+            graphics.SetRenderTargets(previousRTs);
+
+            spriteBatch.Dispose();
+
+            return (Texture2D)renderTarget;
+        }
+
+        public static Texture2D CreateRoughnessMetallicAO(Texture2D roughness, Texture2D metallic, Texture2D ao)
+        {
+            if (roughness == null || metallic == null || ao == null)
+                throw new Exception("TextureFactory::CreateRoughnessMetallicAO: One of the texture is null.");
+
+            var width = roughness.Width;
+            var height = roughness.Height;
+            var rColors = GetColors(roughness);
+            var gColors = GetColors(TryResize(metallic, width, height));
+            var bColors = GetColors(TryResize(ao, width, height));
+            var colors = new Color[rColors.Length];
+
+            for (var i = 0; i < rColors.Length; i++)
+            {
+                colors[i].R = rColors[i].R;
+                colors[i].G = gColors[i].R;
+                colors[i].B = bColors[i].R;
+                colors[i].A = 1;
+            }
+
+            var texture = new Texture2D(Application.GraphicsDevice, width, height, false, SurfaceFormat.Color);
+            texture.SetData<Color>(colors);
+
+            return texture;
+        }
+
         public static Texture2D CreateGradiant(Color start, Color end, int width = 128, int height = 128)
         {
             Texture2D texture = new Texture2D(Application.GraphicsDevice, width, height);

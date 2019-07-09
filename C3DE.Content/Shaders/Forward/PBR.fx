@@ -10,8 +10,6 @@
 
 const float GAMMA_CORRECTION = 0.45454545;
 
-int Debug = 0;
-
 // Matrix
 float4x4 World;
 float4x4 View;
@@ -52,10 +50,10 @@ sampler2D normalSampler = sampler_state
 	AddressV = Wrap;
 };
 
-texture RMSAOMap;
-sampler2D rmsaoSampler = sampler_state
+texture RMAOMap;
+sampler2D rmaoSampler = sampler_state
 {
-	Texture = (RMSAOMap);
+	Texture = (RMAOMap);
 	MinFilter = Point;
 	MagFilter = Point;
 	MipFilter = Point;
@@ -135,11 +133,10 @@ float3 NewFloat3(float value)
 float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 {
 	float3 albedo = pow(tex2D(albedoSampler, input.UV * TextureTiling).xyz, NewFloat3(2.2));
-	float4 rmsao = tex2D(rmsaoSampler, input.UV * TextureTiling);
+	float4 rmsao = tex2D(rmaoSampler, input.UV * TextureTiling);
 	float roughness = rmsao.r;
 	float metallic = rmsao.g;
-	float specular = rmsao.b;
-	float ao = rmsao.a;
+	float ao = rmsao.b;
 
 	float3 normal = input.WorldNormal;
 

@@ -20,12 +20,18 @@ namespace C3DE.Demo.Scripts
                 throw new Exception("You need to attach a mesh renderer first.");
                 
             var mat = renderer.Material as StandardTerrainMaterial;
-            _material = mat ?? throw new Exception("You need to use a TerrainMaterial with a non null weightMap.");
-            _rect = new Rectangle(0, Screen.VirtualHeight - 200, 150, 150);
+            if (mat != null)
+            {
+                _material = mat ?? throw new Exception("You need to use a TerrainMaterial with a non null weightMap.");
+                _rect = new Rectangle(0, Screen.VirtualHeight - 200, 150, 150);
+            }
         }
 
         public override void OnGUI(GUI gui)
         {
+            if (_material == null)
+                return;
+
             gui.DrawTexture(_rect, _material.WeightTexture);
         }
     }

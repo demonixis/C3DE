@@ -7,13 +7,13 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace C3DE.Graphics.Materials.Shaders.Forward
 {
-    public class ForwardPBR : ShaderMaterial
+    public class ForwardTerrainPBR : ShaderMaterial
     {
         private readonly int MaxLightCount;
-        private PBRMaterial _material;
+        private PBRTerrainMaterial _material;
         private Vector2 _features;
 
-        public ForwardPBR(PBRMaterial material)
+        public ForwardTerrainPBR(PBRTerrainMaterial material)
         {
 #if DESKTOP
             MaxLightCount = 8;
@@ -26,7 +26,7 @@ namespace C3DE.Graphics.Materials.Shaders.Forward
 
         public override void LoadEffect(ContentManager content)
         {
-            _effect = content.Load<Effect>("Shaders/Forward/PBR");
+            _effect = content.Load<Effect>("Shaders/Forward/TerrainPBR");
             SetupParamaters();
         }
 
@@ -78,23 +78,29 @@ namespace C3DE.Graphics.Materials.Shaders.Forward
             _effect.Parameters["LightColor"].SetValue(col);
             _effect.Parameters["LightData"].SetValue(lightData);
             _effect.Parameters["IrradianceMap"].SetValue(Scene.current.RenderSettings.skybox.IrradianceTexture);
-
-#if !DESKTOP && !ANDROID
-            _effect.Parameters["Debug"].SetValue(1);
-#endif
         }
 
         public override void Pass(Renderer renderable)
         {
-            _features.X = _material.NormalMap != null ? 1 : 0;
-            _features.Y = _material.EmissiveMap != null ? 1 : 0;
+            var normalEnabled = _material.GrassNormalMap != null &&
+                _material.RockNormalMap != null &&
+                _material.SandNormalMap != null &&
+                _material.SnownNormalMap != null;
+
+            _features.X = normalEnabled ? 1 : 0;
 
             _effect.Parameters["TextureTiling"].SetValue(_material.Tiling);
             _effect.Parameters["World"].SetValue(renderable.Transform._worldMatrix);
-            _effect.Parameters["AlbedoMap"].SetValue(_material.MainTexture);
-            _effect.Parameters["NormalMap"].SetValue(_material.NormalMap);
+            _effect.Parameters["GrassTexture"].SetValue(_material.MainTexture);
+            _effect.Parameters["GrassNormalMap"].SetValue(_material.GrassNormalMap);
+            _effect.Parameters["SandTexture"].SetValue(_material.SandTexture);
+            _effect.Parameters["SandNormalMap"].SetValue(_material.SandNormalMap);
+            _effect.Parameters["RockTexture"].SetValue(_material.RockTexture);
+            _effect.Parameters["RockNormalMap"].SetValue(_material.RockNormalMap);
+            _effect.Parameters["SnowTexture"].SetValue(_material.SnowTexture);
+            _effect.Parameters["SnowNormalMap"].SetValue(_material.SnownNormalMap);
             _effect.Parameters["RMAOMap"].SetValue(_material._rmaoMap);
-            _effect.Parameters["EmissiveMap"].SetValue(_material.EmissiveMap);
+            _effect.Parameters["WeightMap"].SetValue(_material.WeightTexture);
             _effect.Parameters["Features"].SetValue(_features);
             _effect.Parameters["ShadowEnabled"].SetValue(renderable.ReceiveShadow);
 

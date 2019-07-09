@@ -75,10 +75,10 @@ sampler2D WeightMapSampler = sampler_state
 };
 
 #if SM4
-texture2D NormalMap;
-sampler2D NormalSampler = sampler_state
+texture2D GrassNormalMap;
+sampler2D GrassNormalSampler = sampler_state
 {
-	Texture = <NormalMap>;
+	Texture = <GrassNormalMap>;
 	MinFilter = Linear;
 	MagFilter = Linear;
 	MipFilter = Linear;
@@ -87,7 +87,7 @@ sampler2D NormalSampler = sampler_state
 };
 
 texture2D SandNormalMap;
-sampler2D SandSampler = sampler_state
+sampler2D SandNormalSampler = sampler_state
 {
 	Texture = <SandNormalMap>;
 	MinFilter = Linear;
@@ -98,7 +98,7 @@ sampler2D SandSampler = sampler_state
 };
 
 texture2D RockNormalMap;
-sampler2D RockSampler = sampler_state
+sampler2D RockNormalSampler = sampler_state
 {
 	Texture = <RockNormalMap>;
 	MinFilter = Linear;
@@ -109,7 +109,7 @@ sampler2D RockSampler = sampler_state
 };
 
 texture2D SnowNormalMap;
-sampler2D SnowSampler = sampler_state
+sampler2D SnowNormalSampler = sampler_state
 {
 	Texture = <SnowNormalMap>;
 	MinFilter = Linear;
@@ -189,10 +189,10 @@ float3 CalcNormal(VertexShaderOutput input)
 
 	if (NormalMapEnabled == 1)
 	{
-		float3 sandTex = tex2D(SandSampler, input.UV * TextureTiling);
-		float3 rockTex = tex2D(RockSampler, input.UV * TextureTiling);
-		float3 snowTex = tex2D(SnowSampler, input.UV * TextureTiling);
-		float3 mainTex = tex2D(NormalSampler, input.UV * TextureTiling);
+		float3 sandTex = tex2D(SandNormalSampler, input.UV * TextureTiling);
+		float3 rockTex = tex2D(RockNormalSampler, input.UV * TextureTiling);
+		float3 snowTex = tex2D(SnowNormalSampler, input.UV * TextureTiling);
+		float3 mainTex = tex2D(GrassNormalSampler, input.UV * TextureTiling);
 		float3 weightTex = tex2D(WeightMapSampler, input.UV);
 
 		float3 normalBlend = clamp(1.0 - weightTex.r - weightTex.g - weightTex.b, 0, 1);

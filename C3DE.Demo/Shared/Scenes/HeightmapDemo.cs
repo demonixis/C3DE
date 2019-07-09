@@ -1,5 +1,6 @@
 ﻿using C3DE.Components.Rendering;
 using C3DE.Demo.Scripts;
+using C3DE.Graphics;
 using C3DE.Graphics.Materials;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -20,15 +21,43 @@ namespace C3DE.Demo.Scenes
             _directionalLight.AddComponent<LightSwitcher>().SetBoxAlign(true);
 
             // Finally a terrain
-            var terrainMaterial = new StandardTerrainMaterial();
+            var terrainMaterial = new PBRTerrainMaterial();
             terrainMaterial.MainTexture = content.Load<Texture2D>("Textures/Terrain/Ground/Ground03_col");
-            terrainMaterial.NormalMap = content.Load<Texture2D>("Textures/Terrain/Ground/Ground03_nrm");
+            terrainMaterial.GrassNormalMap = content.Load<Texture2D>("Textures/Terrain/Ground/Ground03_nrm");
             terrainMaterial.SandTexture = content.Load<Texture2D>("Textures/Terrain/Sand/Ground27_col");
             terrainMaterial.SandNormalMap = content.Load<Texture2D>("Textures/Terrain/Sand/Ground27_nrm");
             terrainMaterial.SnowTexture = content.Load<Texture2D>("Textures/Terrain/Snow/Snow05_col");
             terrainMaterial.SnownNormalMap = content.Load<Texture2D>("Textures/Terrain/Snow/Snow05_nrm");
             terrainMaterial.RockTexture = content.Load<Texture2D>("Textures/Terrain/Rock/Rock12_col");
             terrainMaterial.RockNormalMap = content.Load<Texture2D>("Textures/Terrain/Rock/Rock12_nrm");
+
+            var metallic = TextureFactory.CreateColor(Color.Black, 1, 1);
+            var ao = TextureFactory.CreateColor(Color.White, 1, 1);
+
+            // Grass, Sand, Rock, Snow (order matter)
+            terrainMaterial.CreateRoughnessMetallicAO(
+                new []
+                {
+                    content.Load<Texture2D>("Textures/Terrain/Ground/Ground03_rgh"),
+                    content.Load<Texture2D>("Textures/Terrain/Sand/Ground27_rgh"),
+                    content.Load<Texture2D>("Textures/Terrain/Rock/Rock12_rgh"),
+                    content.Load<Texture2D>("Textures/Terrain/Snow/Snow05_rgh")
+                }, 
+                new []
+                {
+                    metallic,
+                    metallic,
+                    metallic,
+                    metallic
+                },
+                new []
+                {
+                    ao,
+                    content.Load<Texture2D>("Textures/Terrain/Sand/Ground27_AO"),
+                    content.Load<Texture2D>("Textures/Terrain/Rock/Rock12_AO"),
+                    ao
+                }
+            );
 
             var terrainGo = GameObjectFactory.CreateTerrain();
             
