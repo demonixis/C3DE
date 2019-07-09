@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using C3DE.Utils;
+using C3DE.Graphics;
 
 namespace C3DE.Demo.Scenes
 {
@@ -20,30 +21,33 @@ namespace C3DE.Demo.Scenes
         {
             base.Initialize();
 
+            _camera.AddComponent<VRPlayerEnabler>();
+
             SetControlMode(ControllerSwitcher.ControllerType.FPS, Vector3.Zero, Vector3.Zero);
 
-            Destroy(_directionalLight);
+            Destroy(_directionalLight.GetComponent<LensFlare>());
 
             // Light
             SpawnLights(1, 0.0f, 8);
             SpawnLights(4, 0.0f, 16);
             SpawnLights(7, 0.0f, 16);
 
-            // Terrain
-            var terrainGo = GameObjectFactory.CreateTerrain();
-            var terrain = terrainGo.GetComponent<Terrain>();
-            terrain.Geometry.Size = new Vector3(2);
+            // Setup the terrain.
+            var terrainMaterial = new PBRMaterial();
+            terrainMaterial.MainTexture = TextureFactory.CreateCheckboard(Color.White, Color.Black);
+            terrainMaterial.CreateRMSFromValues();
+            terrainMaterial.Tiling = new Vector2(16);
+
+            var go = GameObjectFactory.CreateTerrain();
+            var terrain = go.GetComponent<Terrain>();
+            terrain.Geometry.Size = new Vector3(1);
             terrain.Geometry.Build();
             terrain.Flatten();
-
-            terrain.Renderer.ReceiveShadow = false;
+            terrain.Renderer.Material = terrainMaterial;
+            terrain.Renderer.ReceiveShadow = true;
             terrain.Renderer.CastShadow = false;
-            terrain.Renderer.Material = new StandardTerrainMaterial()
-            {
-                MainTexture = Application.Content.Load<Texture2D>("Textures/Proto/ProtoGrid"),
-                Shininess = 500,
-                Tiling = new Vector2(64)
-            };
+            terrain.Renderer.Enabled = true;
+            Add(go);
 
             var content = Application.Content;
 
@@ -71,7 +75,8 @@ namespace C3DE.Demo.Scenes
 
             renderer.Material = modelMaterial;
 
-            _camera.AddComponent<VRPlayerEnabler>();
+            RenderSettings.Skybox.Generate(Application.GraphicsDevice, DemoGame.StarsSkybox, 256);
+            RenderSettings.FogMode = FogMode.None;
         }
 
         private void SpawnLights(float radius, float y, int spawnCount)
@@ -93,7 +98,7 @@ namespace C3DE.Demo.Scenes
 
                 color = colors[RandomHelper.Range(0, colors.Length)];
 
-                lightGo = GameObjectFactory.CreateLight(LightType.Point, color, 0.5f);
+                lightGo = GameObjectFactory.CreateLight(LightType.Point, color, 1.0f, 0);
                 lightGo.Transform.LocalRotation = new Vector3(0.0f, 0.5f, 0);
                 lightGo.Transform.LocalPosition = new Vector3((float)Math.Cos(angle) * radius, y, (float)Math.Sin(angle) * radius);
 

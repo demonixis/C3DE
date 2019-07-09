@@ -9,8 +9,11 @@ namespace C3DE.Graphics.Materials
     public class StandardTerrainMaterial : StandardMaterialBase
     {
         public Texture2D SnowTexture { get; set; }
+        public Texture2D SnownNormalMap { get; set; }
         public Texture2D SandTexture { get; set; }
+        public Texture2D SandNormalMap { get; set; }
         public Texture2D RockTexture { get; set; }
+        public Texture2D RockNormalMap { get; set; }
         public Texture2D WeightTexture { get; set; }
 
         protected override void SetupShaderMaterial(BaseRenderer renderer)

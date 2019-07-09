@@ -27,9 +27,9 @@ namespace C3DE.Graphics.Materials.Shaders
 
         public override void Pass(Renderer renderable)
         {
-            m_EPSpecularLightColor.SetValue(m_Material.SpecularColor.ToVector3());
-            m_EPSpecularPower.SetValue(m_Material.Shininess);
-            m_EPSpecularIntensity.SetValue(m_Material.SpecularIntensity);
+            m_EPSpecularLightColor.SetValue(_material.SpecularColor.ToVector3());
+            m_EPSpecularPower.SetValue(_material.Shininess);
+            m_EPSpecularIntensity.SetValue(_material.SpecularIntensity);
             base.Pass(renderable);
         }
     }

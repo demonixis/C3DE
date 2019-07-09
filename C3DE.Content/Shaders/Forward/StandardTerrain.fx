@@ -15,6 +15,10 @@ float3 DiffuseColor;
 float2 TextureTiling;
 float3 EyePosition;
 
+#if SM4
+int NormalMapEnabled = 0;
+#endif
+
 texture2D MainTexture;
 sampler2D MainTextureSampler = sampler_state
 {
@@ -70,6 +74,52 @@ sampler2D WeightMapSampler = sampler_state
     AddressV = Clamp;
 };
 
+#if SM4
+texture2D NormalMap;
+sampler2D NormalSampler = sampler_state
+{
+	Texture = <NormalMap>;
+	MinFilter = Linear;
+	MagFilter = Linear;
+	MipFilter = Linear;
+	AddressU = Wrap;
+	AddressV = Wrap;
+};
+
+texture2D SandNormalMap;
+sampler2D SandSampler = sampler_state
+{
+	Texture = <SandNormalMap>;
+	MinFilter = Linear;
+	MagFilter = Linear;
+	MipFilter = Linear;
+	AddressU = Wrap;
+	AddressV = Wrap;
+};
+
+texture2D RockNormalMap;
+sampler2D RockSampler = sampler_state
+{
+	Texture = <RockNormalMap>;
+	MinFilter = Linear;
+	MagFilter = Linear;
+	MipFilter = Linear;
+	AddressU = Wrap;
+	AddressV = Wrap;
+};
+
+texture2D SnowNormalMap;
+sampler2D SnowSampler = sampler_state
+{
+	Texture = <SnowNormalMap>;
+	MinFilter = Linear;
+	MagFilter = Linear;
+	MipFilter = Linear;
+	AddressU = Wrap;
+	AddressV = Wrap;
+};
+#endif
+
 struct VertexShaderInput
 {
 #if SM4
@@ -87,7 +137,10 @@ struct VertexShaderOutput
     float2 UV : TEXCOORD0;
     float3 WorldNormal : TEXCOORD1;
     float4 WorldPosition : TEXCOORD2;
-    float FogDistance : FOG;
+#if SM4
+	float3x3 WorldToTangentSpace : TEXCOORD3;
+#endif
+	float FogDistance : FOG;
 };
 
 VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
@@ -101,6 +154,16 @@ VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
     output.WorldNormal = mul(input.Normal, World);
     output.WorldPosition = worldPosition;
     output.FogDistance = distance(worldPosition.xyz, EyePosition);
+
+#if SM4
+	float3 c1 = cross(input.Normal, float3(0.0, 0.0, 1.0));
+	float3 c2 = cross(input.Normal, float3(0.0, 1.0, 0.0));
+
+	// [0] Tangent / [1] Binormal / [2] Normal
+	output.WorldToTangentSpace[0] = length(c1) > length(c2) ? c1 : c2;
+	output.WorldToTangentSpace[1] = normalize(output.WorldToTangentSpace[0]);
+	output.WorldToTangentSpace[2] = input.Normal;
+#endif
 
     return output;
 }
@@ -120,6 +183,29 @@ float3 CalcDiffuseColor(VertexShaderOutput input)
     return diffuse * DiffuseColor;
 }
 
+float3 CalcNormal(VertexShaderOutput input)
+{
+	float3 normal = input.WorldNormal;
+
+	if (NormalMapEnabled == 1)
+	{
+		float3 sandTex = tex2D(SandSampler, input.UV * TextureTiling);
+		float3 rockTex = tex2D(RockSampler, input.UV * TextureTiling);
+		float3 snowTex = tex2D(SnowSampler, input.UV * TextureTiling);
+		float3 mainTex = tex2D(NormalSampler, input.UV * TextureTiling);
+		float3 weightTex = tex2D(WeightMapSampler, input.UV);
+
+		float3 normalBlend = clamp(1.0 - weightTex.r - weightTex.g - weightTex.b, 0, 1);
+		normalBlend *= mainTex;
+		normalBlend += weightTex.r * sandTex + weightTex.g * rockTex + weightTex.b * snowTex;
+
+		float3 normalMap = (2.0 * (normalBlend)) - 1.0;
+		normal = normalize(mul(normalMap, input.WorldToTangentSpace));
+	}
+
+	return normal;
+}
+
 float4 PixelShaderAmbient(VertexShaderOutput input) : COLOR0
 {
     return float4(AmbientColor * CalcDiffuseColor(input), 1);
@@ -128,10 +214,11 @@ float4 PixelShaderAmbient(VertexShaderOutput input) : COLOR0
 float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 {
     float3 diffuse = CalcDiffuseColor(input);
-    float3 lightFactor = CalcLightFactor(input.WorldPosition, input.WorldNormal);
+	float3 normal = CalcNormal(input);
+    float3 lightFactor = CalcLightFactor(input.WorldPosition, normal);
     float shadow = CalcShadow(input.WorldPosition);
     float3 diffuse2 = lightFactor * shadow * diffuse;
-    float3 specular = CalcSpecular(input.WorldPosition, input.WorldNormal, EyePosition, input.UV * TextureTiling);
+    float3 specular = CalcSpecular(input.WorldPosition, normal, EyePosition, input.UV * TextureTiling);
     float3 compose = diffuse2 + specular;
     return ApplyFog(compose, input.FogDistance);
 }

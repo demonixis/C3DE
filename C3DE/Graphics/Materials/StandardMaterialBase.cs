@@ -9,7 +9,7 @@ namespace C3DE.Graphics.Materials
     {
         protected Vector3 m_SpecularColor = new Vector3(0.6f, 0.6f, 0.6f);
 
-        public Texture2D NormalTexture { get; set; }
+        public Texture2D NormalMap { get; set; }
         public Texture2D SpecularTexture { get; set; }
 
         [DataMember]

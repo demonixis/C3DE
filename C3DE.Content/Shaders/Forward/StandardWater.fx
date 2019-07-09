@@ -134,16 +134,8 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 
     if (NormalTextureEnabled == true)
     {
-        input.UV.y += (sin(TotalTime * 3.0 + 10.0) / 256) + (TotalTime / 16);
-        float3 normalMap = 2.0 * (tex2D(NormalMapSampler, input.UV * TextureTiling)) - 1.0;
-
-        input.UV.y -= ((sin(TotalTime * 3.0 + 10) / 256.0) + (TotalTime / 16.0)) * 2.0;
-        float3 normalMap2 = (2.0 * (tex2D(NormalMapSampler, input.UV * TextureTiling))) - 1.0;
-
-        normalMap = (normalMap + normalMap2) / 2.0;
-        normalMap = normalize(mul(normalMap, input.WorldToTangentSpace));
-		
-        normal = normalMap;
+		float3 normalMap0 = (2.0 * (tex2D(NormalMapSampler, input.UV * TextureTiling))) - 1.0;
+		normal = normalize(mul(normalMap0, input.WorldToTangentSpace));
     }
 
     float3 diffuse = CalcDiffuseColor(input);

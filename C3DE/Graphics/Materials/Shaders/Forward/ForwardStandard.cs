@@ -57,8 +57,8 @@ namespace C3DE.Graphics.Materials.Shaders
             m_EPEmissiveTexture.SetValue(m_Material.EmissiveTexture);
             m_EPEmissiveColor.SetValue(m_Material.EmissiveColor.ToVector3());
             m_EPEmissiveIntensity.SetValue(m_Material.EmissiveIntensity);
-            m_EPNormalTexture.SetValue(m_Material.NormalTexture);
-            m_EPNormalTextureEnabled.SetValue(m_Material.NormalTexture != null);
+            m_EPNormalTexture.SetValue(m_Material.NormalMap);
+            m_EPNormalTextureEnabled.SetValue(m_Material.NormalMap != null);
             BaseLightPass(m_Material, renderer, light);
         }
     }

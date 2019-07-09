@@ -26,6 +26,7 @@ float2 TextureTiling;
 // Lighting
 float3 LightPosition[MAX_LIGHT_COUNT];
 float3 LightColor[MAX_LIGHT_COUNT];
+float3 LightData[MAX_LIGHT_COUNT];
 int LightCount = 0;
 
 // Textures
@@ -162,12 +163,21 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 	//---------
 	for (int i = 0; i < LightCount; i++)
 	{
-		// Radiance
 		float3 L = normalize(LightPosition[i] - input.WorldPosition.xyz);
 		float3 H = normalize(V + L);
-		float distance = length(LightPosition[i] - input.WorldPosition.xyz);
-		float attenuation = 1.0 / distance * distance;
-		float3 radiance = LightColor[i] * attenuation;
+		float3 radiance = float3(0, 0, 0);
+
+		// Radiance
+		if (LightData[i].x == 0) // Directional
+		{
+			radiance = LightColor[i] * LightData[i].y;
+		}
+		else // Point
+		{
+			float distance = length(LightPosition[i] - input.WorldPosition.xyz);
+			float attenuation = 1.0 / distance * distance;
+			radiance = LightColor[i] * attenuation * LightData[i].y;
+		}
 
 		// Cook-Torrance BRDF
 		float NDF = DistributionGGX(N, H, roughness);

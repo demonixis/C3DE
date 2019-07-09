@@ -21,7 +21,7 @@ namespace C3DE.Demo.Scenes
 
             var terrainMaterial = new StandardMaterial();
             terrainMaterial.MainTexture = Application.Content.Load<Texture2D>("Textures/Terrain/Sand");
-            terrainMaterial.NormalTexture = Application.Content.Load<Texture2D>("Textures/Terrain/Sand_Normal");
+            terrainMaterial.NormalMap = Application.Content.Load<Texture2D>("Textures/Terrain/Sand_Normal");
             terrainMaterial.Shininess = 500;
             terrainMaterial.Tiling = new Vector2(32);
 

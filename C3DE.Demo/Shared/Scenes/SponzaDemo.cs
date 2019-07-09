@@ -81,7 +81,7 @@ namespace C3DE.Demo.Scenes
                     temp = matching[name];
 
                     if (temp[0] != string.Empty)
-                        material.NormalTexture = content.Load<Texture2D>($"Models/Sponza/textures/{temp[0]}");
+                        material.NormalMap = content.Load<Texture2D>($"Models/Sponza/textures/{temp[0]}");
 
                     if (temp[1] != string.Empty)
                         material.SpecularTexture = content.Load<Texture2D>($"Models/Sponza/textures/{temp[1]}");

@@ -27,7 +27,7 @@ namespace C3DE.Demo.Scripts
             _material = new StandardMaterial();
             _material.DiffuseColor = RandomHelper.GetColor();
             _material.MainTexture = Application.Content.Load<Texture2D>("Textures/Terrain/Rock");
-            _material.NormalTexture = Application.Content.Load<Texture2D>("Textures/Terrain/Rock_Normal");
+            _material.NormalMap = Application.Content.Load<Texture2D>("Textures/Terrain/Rock_Normal");
 
             var go = new GameObject("Cube");
             var cube = go.AddComponent<MeshRenderer>();

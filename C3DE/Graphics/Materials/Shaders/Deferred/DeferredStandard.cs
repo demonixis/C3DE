@@ -88,8 +88,8 @@ namespace C3DE.Graphics.Materials.Shaders
             m_EPSpecularIntensity.SetValue(m_Material.SpecularIntensity);
             m_EPSpecularTextureEnabled.SetValue(m_Material.SpecularTexture != null);
             m_EPSpecularTexture.SetValue(m_Material.SpecularTexture);
-            m_EPNormalTexture.SetValue(m_Material.NormalTexture);
-            m_EPNormalTextureEnabled.SetValue(m_Material.NormalTexture != null);
+            m_EPNormalTexture.SetValue(m_Material.NormalMap);
+            m_EPNormalTextureEnabled.SetValue(m_Material.NormalMap != null);
             m_PassLight.Apply();
         }
     }

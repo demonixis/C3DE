@@ -41,8 +41,8 @@ namespace C3DE.Graphics.Materials.Shaders
         public override void Pass(Renderer renderable)
         {
             m_EPTotalTime.SetValue(Time.TotalTime * m_Material.Speed);
-            m_EPNormalMap.SetValue(m_Material.NormalTexture);
-            m_EPNormalMapEnabled.SetValue(m_Material.NormalTexture != null);
+            m_EPNormalMap.SetValue(m_Material.NormalMap);
+            m_EPNormalMapEnabled.SetValue(m_Material.NormalMap != null);
             m_EPReflectionTexture.SetValue(m_Material.ReflectionTexture);
             m_EPReflectionTextureEnabled.SetValue(m_Material.ReflectionTexture != null);
             m_EPReflectionColor.SetValue(m_Material.ReflectionColor.ToVector3());

@@ -15,7 +15,7 @@ namespace C3DE.Demo.Scenes
 
             // Water
             var waterTexture = Application.Content.Load<Texture2D>("Textures/Fluids/water");
-            var lavaNormal = Application.Content.Load<Texture2D>("Textures/Fluids/wavesbump");
+            var lavaNormal = Application.Content.Load<Texture2D>("Textures/Fluids/Water_Normal");
             var waterGo = GameObjectFactory.CreateWater(waterTexture, lavaNormal, new Vector3(_terrain.Width * 0.5f));
             Add(waterGo);
 

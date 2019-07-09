@@ -1,4 +1,5 @@
 ﻿using C3DE.Components;
+using C3DE.Components.Lighting;
 using C3DE.Components.Rendering;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
@@ -48,12 +49,18 @@ namespace C3DE.Graphics.Materials.Shaders.Forward
 
             var pos = new Vector3[nbLight];
             var col = new Vector3[nbLight];
+            var lightData = new Vector3[nbLight];
             var shadow = false;
 
             for (var i = 0; i < nbLight; i++)
             {
                 pos[i] = lights[i].Transform.Position;
                 col[i] = lights[i]._color;
+
+                var directional = lights[i].TypeLight == LightType.Directional;
+                lightData[i].X = directional ? 0 : 1;
+                lightData[i].Y = lights[i].Intensity;
+                lightData[i].Z = lights[i].Radius;
 
                 if (!shadow && lights[i].ShadowEnabled)
                 {
@@ -69,6 +76,7 @@ namespace C3DE.Graphics.Materials.Shaders.Forward
             _effect.Parameters["LightCount"].SetValue(nbLight);
             _effect.Parameters["LightPosition"].SetValue(pos);
             _effect.Parameters["LightColor"].SetValue(col);
+            _effect.Parameters["LightData"].SetValue(lightData);
             _effect.Parameters["IrradianceMap"].SetValue(Scene.current.RenderSettings.skybox.IrradianceTexture);
 
 #if !DESKTOP && !ANDROID
