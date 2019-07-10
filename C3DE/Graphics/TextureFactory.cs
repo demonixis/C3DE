@@ -26,6 +26,7 @@ namespace C3DE.Graphics
             spriteBatch.Draw(upperRight, new Rectangle(widthPerTwo, 0, widthPerTwo, heightPerTwo), Color.White);
             spriteBatch.Draw(bottomLeft, new Rectangle(0, heightPerTwo, widthPerTwo, heightPerTwo), Color.White);
             spriteBatch.Draw(bottomRight, new Rectangle(widthPerTwo, heightPerTwo, widthPerTwo, heightPerTwo), Color.White);
+
             spriteBatch.End();
 
             graphics.SetRenderTargets(previousRTs);
@@ -37,11 +38,19 @@ namespace C3DE.Graphics
 
         public static Texture2D CreateRoughnessMetallicAO(Texture2D roughness, Texture2D metallic, Texture2D ao)
         {
-            if (roughness == null || metallic == null || ao == null)
-                throw new Exception("TextureFactory::CreateRoughnessMetallicAO: One of the texture is null.");
-
             var width = roughness.Width;
             var height = roughness.Height;
+            var graphics = Application.GraphicsDevice;
+
+            if (roughness == null)
+                throw new Exception("TextureFactory::CreateRoughnessMetallicAO: One of the texture is null.");
+
+            if (metallic == null)
+                metallic = CreateColor(Color.Black, width, height);
+
+            if (ao == null)
+                ao = CreateColor(Color.White, width, width);
+
             var rColors = GetColors(roughness);
             var gColors = GetColors(TryResize(metallic, width, height));
             var bColors = GetColors(TryResize(ao, width, height));

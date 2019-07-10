@@ -39,3 +39,9 @@ float3 FresnelSchlick(float cosTheta, float3 F0)
 {
 	return F0 + (1.0 - F0) * pow(1.0 - cosTheta, 5.0);
 }
+
+float3 UnpackNormal(float3 normalTexture, float3x3 worldToTangentSpace)
+{
+	float3 normalMap = (2.0 * (normalTexture)) - 1.0;
+	return normalize(mul(normalMap, worldToTangentSpace));
+}

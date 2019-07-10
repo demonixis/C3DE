@@ -105,10 +105,21 @@ namespace C3DE
 
         public static GameObject CreateXNAModel(ContentManager content, string modelPath) => CreateXNAModel(content.Load<Model>(modelPath));
 
-        public static GameObject CreateTerrain()
+        public static GameObject CreateTerrain(Vector3? size = null, Vector2? repeat = null)
         {
             var gameObject = new GameObject("Terrain");
-            var renderer = gameObject.AddComponent<Terrain>();
+            var terrain = gameObject.AddComponent<Terrain>();
+            var mesh = terrain.Renderer.Mesh;
+
+            if (size.HasValue)
+                mesh.Size = size.Value;
+
+            if (repeat.HasValue)
+                mesh.TextureRepeat = repeat.Value;
+
+            if (size.HasValue || repeat.HasValue)
+                mesh.Build();
+
             return gameObject;
         }
 

@@ -87,6 +87,8 @@ VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
     float4 viewPosition = mul(worldPosition, View);
     output.Position = mul(viewPosition, Projection);
     output.UV = input.UV;
+	output.UV.x = input.UV.x * 20.0 + sin(TotalTime * 3.0 + 10.0) / 256.0;
+	output.UV.y = output.UV.y * 20.0;
     output.WorldNormal = mul(input.Normal, World);
     output.WorldPosition = worldPosition;
     output.FogDistance = distance(worldPosition.xyz, EyePosition);
@@ -112,9 +114,6 @@ VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
 
 float3 CalcDiffuseColor(VertexShaderOutput input)
 {
-    input.UV.x = input.UV.x * 20.0 + sin(TotalTime * 3.0 + 10.0) / 256.0;
-    input.UV.y = input.UV.y * 20.0;
-
     float3 diffuse = tex2D(WaterMapSampler, input.UV * TextureTiling).xyz;
 	
     if (ReflectionTextureEnabled == true)

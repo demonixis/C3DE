@@ -8,28 +8,43 @@ namespace C3DE.Graphics.Materials
 {
     public class PBRTerrainMaterial : Material
     {
-        internal Texture2D _rmaoMap;
+        internal Texture2D _combinedAlbedos;
+        internal Texture2D _combinedNormals;
+        internal Texture2D _combinedRMAO;
 
-        public Texture2D GrassNormalMap { get; set; }
-        public Texture2D SnowTexture { get; set; }
-        public Texture2D SnownNormalMap { get; set; }
-        public Texture2D SandTexture { get; set; }
-        public Texture2D SandNormalMap { get; set; }
-        public Texture2D RockTexture { get; set; }
-        public Texture2D RockNormalMap { get; set; }
-        public Texture2D WeightTexture { get; set; }
-
-        public Texture2D RoughnessMetalicSpecularAOMap => _rmaoMap;
+        public Texture2D CombinedAlbedos => _combinedAlbedos;
+        public Texture2D CombinedNormals => _combinedNormals;
+        public Texture2D CombinedRMAO => _combinedRMAO;
+        public Texture2D WeightMap { get; set; }
 
         public PBRTerrainMaterial() : base() { }
         public PBRTerrainMaterial(string name) : base(name) { }
 
+        public void CreateAlbedos(Texture2D grass, Texture2D sand, Texture2D rock, Texture2D snown)
+        {
+            _combinedAlbedos?.Dispose();
+            _combinedAlbedos = TextureFactory.PackTextures(grass, sand, rock, snown);
+        }
+
+        public void CreateNormals(Texture2D grassNormal, Texture2D sandNormal, Texture2D rockNormal, Texture2D snownNormal)
+        {
+            _combinedNormals?.Dispose();
+            _combinedNormals = TextureFactory.PackTextures(grassNormal, sandNormal, rockNormal, snownNormal);
+        }
+
         public void CreateRoughnessMetallicAO(float roughness = 0.5f, float metallic = 0.5f, float ao = 1.0f)
         {
-            _rmaoMap = TextureFactory.CreateRoughnessMetallicAO(
+            _combinedRMAO?.Dispose();
+            _combinedRMAO = TextureFactory.CreateRoughnessMetallicAO(
                 TextureFactory.CreateColor(GetColor(roughness), 1, 1),
                 TextureFactory.CreateColor(GetColor(metallic), 1, 1),
                 TextureFactory.CreateColor(GetColor(ao), 1, 1));
+        }
+
+        public void CreateRoughnessMetallicAO(Texture2D combinedGrassRMAO, Texture2D combinedSandRMAO, Texture2D combinedRockRMAO, Texture2D combinedSnowRMAO)
+        {
+            _combinedRMAO?.Dispose();
+            _combinedRMAO = TextureFactory.PackTextures(combinedGrassRMAO, combinedSandRMAO, combinedRockRMAO, combinedSnowRMAO);
         }
 
         public void CreateRoughnessMetallicAO(Texture2D[] roughness, Texture2D[] metallic, Texture2D[] ao)
@@ -41,13 +56,8 @@ namespace C3DE.Graphics.Materials
             for (var i = 0; i < 4; i++)
                 textures[i] = TextureFactory.CreateRoughnessMetallicAO(roughness[i], metallic[i], ao[i]);
 
-            _rmaoMap = TextureFactory.PackTextures(textures[0], textures[1], textures[2], textures[3]);
-
-#if DEBUG
-            // FIXME
-            var stream = System.IO.File.Create("rmaoCombined.png");
-            _rmaoMap.SaveAsPng(stream, _rmaoMap.Width, _rmaoMap.Height);
-#endif
+            _combinedRMAO?.Dispose();
+            _combinedRMAO = TextureFactory.PackTextures(textures[0], textures[1], textures[2], textures[3]);
         }
 
         protected override void SetupShaderMaterial(BaseRenderer renderer)

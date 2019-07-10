@@ -17,59 +17,51 @@ namespace C3DE.Demo.Scenes
 
             var content = Application.Content;
 
-            _directionalLight.AddComponent<LightMover>();
-            _directionalLight.AddComponent<LightSwitcher>().SetBoxAlign(true);
-
             // Finally a terrain
-            var terrainMaterial = new PBRTerrainMaterial();
-            terrainMaterial.MainTexture = content.Load<Texture2D>("Textures/Terrain/Ground/Ground03_col");
-            terrainMaterial.GrassNormalMap = content.Load<Texture2D>("Textures/Terrain/Ground/Ground03_nrm");
-            terrainMaterial.SandTexture = content.Load<Texture2D>("Textures/Terrain/Sand/Ground27_col");
-            terrainMaterial.SandNormalMap = content.Load<Texture2D>("Textures/Terrain/Sand/Ground27_nrm");
-            terrainMaterial.SnowTexture = content.Load<Texture2D>("Textures/Terrain/Snow/Snow05_col");
-            terrainMaterial.SnownNormalMap = content.Load<Texture2D>("Textures/Terrain/Snow/Snow05_nrm");
-            terrainMaterial.RockTexture = content.Load<Texture2D>("Textures/Terrain/Rock/Rock12_col");
-            terrainMaterial.RockNormalMap = content.Load<Texture2D>("Textures/Terrain/Rock/Rock12_nrm");
-
-            var metallic = TextureFactory.CreateColor(Color.Black, 1, 1);
-            var ao = TextureFactory.CreateColor(Color.White, 1, 1);
-
-            // Grass, Sand, Rock, Snow (order matter)
-            terrainMaterial.CreateRoughnessMetallicAO(
-                new []
-                {
-                    content.Load<Texture2D>("Textures/Terrain/Ground/Ground03_rgh"),
-                    content.Load<Texture2D>("Textures/Terrain/Sand/Ground27_rgh"),
-                    content.Load<Texture2D>("Textures/Terrain/Rock/Rock12_rgh"),
-                    content.Load<Texture2D>("Textures/Terrain/Snow/Snow05_rgh")
-                }, 
-                new []
-                {
-                    metallic,
-                    metallic,
-                    metallic,
-                    metallic
-                },
-                new []
-                {
-                    ao,
-                    content.Load<Texture2D>("Textures/Terrain/Sand/Ground27_AO"),
-                    content.Load<Texture2D>("Textures/Terrain/Rock/Rock12_AO"),
-                    ao
-                }
+            var tMaterial = new PBRTerrainMaterial();
+            tMaterial.CreateAlbedos(
+                content.Load<Texture2D>("Textures/Terrain/Ground/Ground03_col"),
+                content.Load<Texture2D>("Textures/Terrain/Sand/Ground27_col"),
+                content.Load<Texture2D>("Textures/Terrain/Rock/Rock12_col"),
+                content.Load<Texture2D>("Textures/Terrain/Snow/Snow05_col")
             );
 
-            var terrainGo = GameObjectFactory.CreateTerrain();
-            
-            _scene.Add(terrainGo);
+            tMaterial.CreateNormals(
+                content.Load<Texture2D>("Textures/Terrain/Ground/Ground03_nrm"),
+                content.Load<Texture2D>("Textures/Terrain/Sand/Ground27_nrm"),
+                content.Load<Texture2D>("Textures/Terrain/Rock/Rock12_nrm"),
+                content.Load<Texture2D>("Textures/Terrain/Snow/Snow05_nrm")
+            );
 
+            tMaterial.CreateRoughnessMetallicAO(
+                TextureFactory.CreateRoughnessMetallicAO(
+                    content.Load<Texture2D>("Textures/Terrain/Ground/Ground03_rgh"), 
+                    null, 
+                    null),
+                TextureFactory.CreateRoughnessMetallicAO(
+                    content.Load<Texture2D>("Textures/Terrain/Sand/Ground27_rgh"), 
+                    null, 
+                    content.Load<Texture2D>("Textures/Terrain/Sand/Ground27_AO")),
+                TextureFactory.CreateRoughnessMetallicAO(
+                    content.Load<Texture2D>("Textures/Terrain/Rock/Rock12_rgh"), 
+                    null, 
+                    content.Load<Texture2D>("Textures/Terrain/Rock/Rock12_AO")),
+                TextureFactory.CreateRoughnessMetallicAO(
+                    content.Load<Texture2D>("Textures/Terrain/Snow/Snow05_rgh"),
+                    null,
+                    null)
+            );
+
+            var terrainGo = GameObjectFactory.CreateTerrain(null, new Vector2(1));
+           
             var terrain = terrainGo.GetComponent<Terrain>();
             terrain.LoadHeightmap("Textures/heightmap");
-            terrain.Renderer.Material = terrainMaterial;
+            terrain.Renderer.Material = tMaterial;
+            terrain.AddComponent<PBRViewer>();
 
             var weightMap = terrain.GenerateWeightMap();           
-            terrainMaterial.WeightTexture = weightMap;
-            terrainMaterial.Tiling = new Vector2(4);
+            tMaterial.WeightMap = weightMap;
+            tMaterial.Tiling = new Vector2(1);
             terrainGo.AddComponent<WeightMapViewer>();
 
             // With water !
@@ -77,7 +69,10 @@ namespace C3DE.Demo.Scenes
             var bumpTexture = content.Load<Texture2D>("Textures/Fluids/wavesbump");
             var water = GameObjectFactory.CreateWater(waterTexture, bumpTexture, new Vector3(terrain.Width * 0.5f));
             water.Transform.Translate(0, 10.0f, 0);
-            _scene.Add(water);
+            water.GetComponent<Renderer>().Enabled = false;
+            var waterMaterial = (StandardWaterMaterial)water.GetComponent<Renderer>().Material;
+            waterMaterial.Tiling = new Vector2(0.5f);
+            waterMaterial.Shininess = 5;
 
             // And fog
             RenderSettings.FogDensity = 0.0085f;

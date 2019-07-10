@@ -67,6 +67,7 @@
     <Compile Include="Scripts\LightSpawner.cs" />
     <Compile Include="Scripts\LightSwitcher.cs" />
     <Compile Include="Scripts\MenuBehaviour.cs" />
+    <Compile Include="Scripts\PBRViewer.cs" />
     <Compile Include="Scripts\PhysicsSpawner.cs" />
     <Compile Include="Scripts\PostProcessSwitcher.cs" />
     <Compile Include="Scripts\RayPickingTester.cs" />

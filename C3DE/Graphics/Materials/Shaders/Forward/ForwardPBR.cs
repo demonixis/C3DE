@@ -39,7 +39,6 @@ namespace C3DE.Graphics.Materials.Shaders.Forward
             _effect.Parameters["View"].SetValue(camera._viewMatrix);
             _effect.Parameters["Projection"].SetValue(camera._projectionMatrix);
             _effect.Parameters["EyePosition"].SetValue(camera.Transform.Position);
-            _effect.Parameters["GammaCorrection"].SetValue(2.2f);
 
             var lights = Scene.current.lights;
             var nbLight = lights.Count;
@@ -78,10 +77,6 @@ namespace C3DE.Graphics.Materials.Shaders.Forward
             _effect.Parameters["LightColor"].SetValue(col);
             _effect.Parameters["LightData"].SetValue(lightData);
             _effect.Parameters["IrradianceMap"].SetValue(Scene.current.RenderSettings.skybox.IrradianceTexture);
-
-#if !DESKTOP && !ANDROID
-            _effect.Parameters["Debug"].SetValue(1);
-#endif
         }
 
         public override void Pass(Renderer renderable)

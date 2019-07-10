@@ -39,7 +39,6 @@ namespace C3DE.Graphics.Materials.Shaders.Forward
             _effect.Parameters["View"].SetValue(camera._viewMatrix);
             _effect.Parameters["Projection"].SetValue(camera._projectionMatrix);
             _effect.Parameters["EyePosition"].SetValue(camera.Transform.Position);
-            _effect.Parameters["GammaCorrection"].SetValue(2.2f);
 
             var lights = Scene.current.lights;
             var nbLight = lights.Count;
@@ -82,25 +81,15 @@ namespace C3DE.Graphics.Materials.Shaders.Forward
 
         public override void Pass(Renderer renderable)
         {
-            var normalEnabled = _material.GrassNormalMap != null &&
-                _material.RockNormalMap != null &&
-                _material.SandNormalMap != null &&
-                _material.SnownNormalMap != null;
-
-            _features.X = normalEnabled ? 1 : 0;
+            _features.X = _material._combinedNormals != null ? 1 : 0;
+            _features.Y = 0;
 
             _effect.Parameters["TextureTiling"].SetValue(_material.Tiling);
             _effect.Parameters["World"].SetValue(renderable.Transform._worldMatrix);
-            _effect.Parameters["GrassTexture"].SetValue(_material.MainTexture);
-            _effect.Parameters["GrassNormalMap"].SetValue(_material.GrassNormalMap);
-            _effect.Parameters["SandTexture"].SetValue(_material.SandTexture);
-            _effect.Parameters["SandNormalMap"].SetValue(_material.SandNormalMap);
-            _effect.Parameters["RockTexture"].SetValue(_material.RockTexture);
-            _effect.Parameters["RockNormalMap"].SetValue(_material.RockNormalMap);
-            _effect.Parameters["SnowTexture"].SetValue(_material.SnowTexture);
-            _effect.Parameters["SnowNormalMap"].SetValue(_material.SnownNormalMap);
-            _effect.Parameters["RMAOMap"].SetValue(_material._rmaoMap);
-            _effect.Parameters["WeightMap"].SetValue(_material.WeightTexture);
+            _effect.Parameters["CombinedAlbedos"].SetValue(_material._combinedAlbedos);
+            _effect.Parameters["CombinedNormals"].SetValue(_material._combinedNormals);
+            _effect.Parameters["CombinedRMAOs"].SetValue(_material._combinedRMAO);
+            _effect.Parameters["WeightMap"].SetValue(_material.WeightMap);
             _effect.Parameters["Features"].SetValue(_features);
             _effect.Parameters["ShadowEnabled"].SetValue(renderable.ReceiveShadow);
 

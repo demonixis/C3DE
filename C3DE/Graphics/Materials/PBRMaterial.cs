@@ -11,7 +11,13 @@ namespace C3DE.Graphics.Materials
         internal Texture2D _rmaoMap;
 
         public Texture2D NormalMap { get; set; }
-        public Texture2D RoughnessMetalicAOMap => _rmaoMap;
+
+        public Texture2D RoughnessMetalicAOMap
+        {
+            get => _rmaoMap;
+            set => _rmaoMap = value;
+        }
+
         public Texture2D EmissiveMap { get; set; }
 
         public PBRMaterial() : base() { }

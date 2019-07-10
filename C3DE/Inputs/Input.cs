@@ -14,7 +14,7 @@ namespace C3DE.Inputs.Experimental
         {
             AddInputDevice<KeyboardDevice>();
             AddInputDevice<MouseDevice>();
-            AddInputDevice<GamepadDevice>();
+            AddInputDevice<GamepadDevice>(); 
             AddInputDevice<TouchDevice>();
         }
 
