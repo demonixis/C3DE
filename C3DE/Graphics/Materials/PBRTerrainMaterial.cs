@@ -20,16 +20,16 @@ namespace C3DE.Graphics.Materials
         public PBRTerrainMaterial() : base() { }
         public PBRTerrainMaterial(string name) : base(name) { }
 
-        public void CreateAlbedos(Texture2D grass, Texture2D sand, Texture2D rock, Texture2D snown)
+        public void CreateAlbedos(Texture2D grass, Texture2D sand, Texture2D rock, Texture2D snown, bool superSample)
         {
             _combinedAlbedos?.Dispose();
-            _combinedAlbedos = TextureFactory.PackTextures(grass, sand, rock, snown);
+            _combinedAlbedos = TextureFactory.PackTextures(grass.Width * (superSample ? 4 : 2), grass.Height * (superSample ? 4 : 2), grass, sand, rock, snown);
         }
 
         public void CreateNormals(Texture2D grassNormal, Texture2D sandNormal, Texture2D rockNormal, Texture2D snownNormal)
         {
             _combinedNormals?.Dispose();
-            _combinedNormals = TextureFactory.PackTextures(grassNormal, sandNormal, rockNormal, snownNormal);
+            _combinedNormals = TextureFactory.PackTextures(0, 0, grassNormal, sandNormal, rockNormal, snownNormal);
         }
 
         public void CreateRoughnessMetallicAO(float roughness = 0.5f, float metallic = 0.5f, float ao = 1.0f)
@@ -44,7 +44,7 @@ namespace C3DE.Graphics.Materials
         public void CreateRoughnessMetallicAO(Texture2D combinedGrassRMAO, Texture2D combinedSandRMAO, Texture2D combinedRockRMAO, Texture2D combinedSnowRMAO)
         {
             _combinedRMAO?.Dispose();
-            _combinedRMAO = TextureFactory.PackTextures(combinedGrassRMAO, combinedSandRMAO, combinedRockRMAO, combinedSnowRMAO);
+            _combinedRMAO = TextureFactory.PackTextures(0, 0, combinedGrassRMAO, combinedSandRMAO, combinedRockRMAO, combinedSnowRMAO);
         }
 
         public void CreateRoughnessMetallicAO(Texture2D[] roughness, Texture2D[] metallic, Texture2D[] ao)
@@ -57,12 +57,12 @@ namespace C3DE.Graphics.Materials
                 textures[i] = TextureFactory.CreateRoughnessMetallicAO(roughness[i], metallic[i], ao[i]);
 
             _combinedRMAO?.Dispose();
-            _combinedRMAO = TextureFactory.PackTextures(textures[0], textures[1], textures[2], textures[3]);
+            _combinedRMAO = TextureFactory.PackTextures(0, 0, textures[0], textures[1], textures[2], textures[3]);
         }
 
         protected override void SetupShaderMaterial(BaseRenderer renderer)
         {
-            _shaderMaterial = new ForwardTerrainPBR(this);
+            _shaderMaterial = new ForwardPBRTerrain(this);
             _shaderMaterial.LoadEffect(Application.Content);
         }
 

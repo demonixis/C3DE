@@ -9,24 +9,23 @@ namespace C3DE.Graphics.Materials.Shaders.Forward
 {
     public class ForwardPBR : ShaderMaterial
     {
-        private readonly int MaxLightCount;
+#if WINDOWS
+        public const int MaxLightCount = 64;
+#else
+        public const int MaxLightCount = 8;
+#endif
+
         private PBRMaterial _material;
         private Vector2 _features;
 
         public ForwardPBR(PBRMaterial material)
         {
-#if DESKTOP
-            MaxLightCount = 8;
-#else
-            MaxLightCount = 64;
-#endif
-
             _material = material;
         }
 
         public override void LoadEffect(ContentManager content)
         {
-            _effect = content.Load<Effect>("Shaders/Forward/PBR");
+            _effect = content.Load<Effect>("Shaders/Forward/PBRStandard");
             SetupParamaters();
         }
 
@@ -40,11 +39,37 @@ namespace C3DE.Graphics.Materials.Shaders.Forward
             _effect.Parameters["Projection"].SetValue(camera._projectionMatrix);
             _effect.Parameters["EyePosition"].SetValue(camera.Transform.Position);
 
+            UpdatePBRPrePass(_effect, camera);
+        }
+
+        public override void Pass(Renderer renderable)
+        {
+            _features.X = _material.NormalMap != null ? 1 : 0;
+            _features.Y = _material.EmissiveMap != null ? 1 : 0;
+
+            _effect.Parameters["TextureTiling"].SetValue(_material.Tiling);
+            _effect.Parameters["World"].SetValue(renderable.Transform._worldMatrix);
+            _effect.Parameters["AlbedoMap"].SetValue(_material.MainTexture);
+            _effect.Parameters["NormalMap"].SetValue(_material.NormalMap);
+            _effect.Parameters["RMAOMap"].SetValue(_material._rmaoMap);
+            _effect.Parameters["EmissiveMap"].SetValue(_material.EmissiveMap);
+            _effect.Parameters["Features"].SetValue(_features);
+            _effect.Parameters["ShadowEnabled"].SetValue(renderable.ReceiveShadow);
+
+            _effect.CurrentTechnique.Passes[0].Apply();
+        }
+
+        public static void UpdatePBRPrePass(Effect effect, Camera camera)
+        {
+            effect.Parameters["View"].SetValue(camera._viewMatrix);
+            effect.Parameters["Projection"].SetValue(camera._projectionMatrix);
+            effect.Parameters["EyePosition"].SetValue(camera.Transform.Position);
+
             var lights = Scene.current.lights;
             var nbLight = lights.Count;
 
-            if (nbLight > MaxLightCount)
-                nbLight = MaxLightCount;
+            if (nbLight > ForwardPBR.MaxLightCount)
+                nbLight = ForwardPBR.MaxLightCount;
 
             var pos = new Vector3[nbLight];
             var col = new Vector3[nbLight];
@@ -63,37 +88,20 @@ namespace C3DE.Graphics.Materials.Shaders.Forward
 
                 if (!shadow && lights[i].ShadowEnabled)
                 {
-                    _effect.Parameters["ShadowStrength"].SetValue(lights[i]._shadowGenerator.ShadowStrength);
-                    _effect.Parameters["ShadowBias"].SetValue(lights[i]._shadowGenerator.ShadowBias);
-                    _effect.Parameters["ShadowMap"].SetValue(lights[i]._shadowGenerator.ShadowMap);
-                    _effect.Parameters["LightView"].SetValue(lights[i]._viewMatrix);
-                    _effect.Parameters["LightProjection"].SetValue(lights[i]._projectionMatrix);
+                    effect.Parameters["ShadowStrength"].SetValue(lights[i]._shadowGenerator.ShadowStrength);
+                    effect.Parameters["ShadowBias"].SetValue(lights[i]._shadowGenerator.ShadowBias);
+                    effect.Parameters["ShadowMap"].SetValue(lights[i]._shadowGenerator.ShadowMap);
+                    effect.Parameters["LightView"].SetValue(lights[i]._viewMatrix);
+                    effect.Parameters["LightProjection"].SetValue(lights[i]._projectionMatrix);
                     shadow = true;
                 }
             }
 
-            _effect.Parameters["LightCount"].SetValue(nbLight);
-            _effect.Parameters["LightPosition"].SetValue(pos);
-            _effect.Parameters["LightColor"].SetValue(col);
-            _effect.Parameters["LightData"].SetValue(lightData);
-            _effect.Parameters["IrradianceMap"].SetValue(Scene.current.RenderSettings.skybox.IrradianceTexture);
-        }
-
-        public override void Pass(Renderer renderable)
-        {
-            _features.X = _material.NormalMap != null ? 1 : 0;
-            _features.Y = _material.EmissiveMap != null ? 1 : 0;
-
-            _effect.Parameters["TextureTiling"].SetValue(_material.Tiling);
-            _effect.Parameters["World"].SetValue(renderable.Transform._worldMatrix);
-            _effect.Parameters["AlbedoMap"].SetValue(_material.MainTexture);
-            _effect.Parameters["NormalMap"].SetValue(_material.NormalMap);
-            _effect.Parameters["RMAOMap"].SetValue(_material._rmaoMap);
-            _effect.Parameters["EmissiveMap"].SetValue(_material.EmissiveMap);
-            _effect.Parameters["Features"].SetValue(_features);
-            _effect.Parameters["ShadowEnabled"].SetValue(renderable.ReceiveShadow);
-
-            _effect.CurrentTechnique.Passes[0].Apply();
+            effect.Parameters["LightCount"].SetValue(nbLight);
+            effect.Parameters["LightPosition"].SetValue(pos);
+            effect.Parameters["LightColor"].SetValue(col);
+            effect.Parameters["LightData"].SetValue(lightData);
+            effect.Parameters["IrradianceMap"].SetValue(Scene.current.RenderSettings.skybox.IrradianceTexture);
         }
     }
 }

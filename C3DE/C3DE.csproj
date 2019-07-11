@@ -64,13 +64,15 @@
     <Compile Include="GameObjectFactory.cs" />
     <Compile Include="Graphics\Materials\PBRMaterial.cs" />
     <Compile Include="Graphics\Materials\PBRTerrainMaterial.cs" />
+    <Compile Include="Graphics\Materials\PBRWaterMaterial.cs" />
     <Compile Include="Graphics\Materials\Shaders\Deferred\DeferredLava.cs" />
     <Compile Include="Graphics\Materials\Shaders\Deferred\DeferredStandardTerrain.cs" />
     <Compile Include="Graphics\Materials\Shaders\Deferred\DeferredStandardWater.cs" />
     <Compile Include="Graphics\Materials\Shaders\Deferred\DeferredTransparent.cs" />
     <Compile Include="Graphics\Materials\Shaders\Deferred\DeferredUnlit.cs" />
     <Compile Include="Graphics\Materials\Shaders\Forward\ForwardPBR.cs" />
-    <Compile Include="Graphics\Materials\Shaders\Forward\ForwardTerrainPBR.cs" />
+    <Compile Include="Graphics\Materials\Shaders\Forward\ForwardPBRWater.cs" />
+    <Compile Include="Graphics\Materials\Shaders\Forward\ForwardPBRTerrain.cs" />
     <Compile Include="Graphics\Materials\Shaders\Forward\IMultipassLightingMaterial.cs" />
     <Compile Include="Graphics\Materials\Shaders\Deferred\DeferredSkybox.cs" />
     <Compile Include="Graphics\Materials\Shaders\Deferred\DeferredStandard.cs" />

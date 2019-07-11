@@ -7,10 +7,14 @@ namespace C3DE.Graphics
 {
     public class TextureFactory
     {
-        public static Texture2D PackTextures(Texture2D upperLeft, Texture2D upperRight, Texture2D bottomLeft, Texture2D bottomRight)
+        public static Texture2D PackTextures(int width, int height, Texture2D upperLeft, Texture2D upperRight, Texture2D bottomLeft, Texture2D bottomRight)
         {
-            var width = upperLeft.Width;
-            var height = upperLeft.Height;
+            if (width == 0)
+                width = upperLeft.Width;
+
+            if (height == 0)
+                height = upperLeft.Height;
+
             var widthPerTwo = (int)((float)width / 2.0f);
             var heightPerTwo = (int)((float)height / 2.0f);
             var graphics = Application.GraphicsDevice;

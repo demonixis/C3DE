@@ -97,11 +97,17 @@
 /processorParam:DebugMode=Auto
 /build:Shaders/Forward/Lava.fx
 
-#begin Shaders/Forward/PBR.fx
+#begin Shaders/Forward/PBRStandard.fx
 /importer:EffectImporter
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
-/build:Shaders/Forward/PBR.fx
+/build:Shaders/Forward/PBRStandard.fx
+
+#begin Shaders/Forward/PBRWater.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Shaders/Forward/PBRWater.fx
 
 #begin Shaders/Forward/Skybox.fx
 /importer:EffectImporter
