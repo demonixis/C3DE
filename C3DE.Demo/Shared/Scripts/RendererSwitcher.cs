@@ -12,7 +12,7 @@ namespace C3DE.Demo.Scripts
         {
             base.Start();
 
-            _sideMenu = new SideMenu("Renderers", new[] { "Forward", "Deferred", "Light PrePass" }, 0);
+            _sideMenu = new SideMenu("Renderers", new[] { "Forward", "Deferred" }, 0);
             _sideMenu.SelectionChanged += SetRenderSelected;
         }
         
@@ -24,6 +24,9 @@ namespace C3DE.Demo.Scripts
 
         private void SetRenderSelected(int index)
         {
+#if ANDROID
+            return;
+#endif
             var graphics = Application.GraphicsDevice;
             var engine = Application.Engine;
 
@@ -31,8 +34,6 @@ namespace C3DE.Demo.Scripts
                 engine.Renderer = new ForwardRenderer(graphics);
             else if (index == 1)
                 engine.Renderer = new DeferredRenderer(graphics);
-            else if (index == 2)
-                engine.Renderer = new LightPrePassRenderer(graphics);
         }
     }
 }

@@ -1,4 +1,5 @@
 using C3DE.Demo.Scenes;
+using C3DE.Demo.Scenes.PBR;
 using C3DE.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
@@ -77,21 +78,23 @@ namespace C3DE.Demo
 
         public static void InitializeGame()
         {
-            Application.SceneManager.Add(new MenuDemo(), true);
+            Application.SceneManager.AddRange(new Scene[]
+            {
+                new MenuDemo(),
 #if WINDOWS
-            Application.SceneManager.Add(new PBRDemo());
+                new SimplePBRDemo(),
+                new HeightmapPBRDemo(),
+                new LightingPBRDemo(),
 #endif
-            Application.SceneManager.Add(new HeightmapDemo());
-            Application.SceneManager.Add(new ProceduralTerrainWater());
-            Application.SceneManager.Add(new ProceduralTerrainLava());
-            Application.SceneManager.Add(new LightingDemo());
-            Application.SceneManager.Add(new PhysicsDemo());
-            Application.SceneManager.Add(new SponzaDemo());
-            Application.SceneManager.Add(new GUIDemo());
-#if !ANDROID
-            Application.SceneManager.Add(new DeferredDemo());
-            Application.SceneManager.Add(new LightPrePassDemo());
-#endif
+                new HeightmapDemo(),
+                new ProceduralTerrainWater(),
+                new ProceduralTerrainLava(),
+                new LightingDemo(),
+                new PhysicsDemo(),
+                new SponzaDemo(),
+                new GUIDemo()
+            }, 0);
+
             Application.SceneManager.LoadLevel(0);
             Screen.SetVirtualResolution(UIWidth, UIHeight, true);
         }

@@ -1,11 +1,9 @@
 ﻿using C3DE.Components.Physics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System.Runtime.Serialization;
 
 namespace C3DE.Components.Rendering
 {
-    [DataContract]
     public class BoundingBoxRenderer : Renderer
     {
         private static VertexPositionColor[] _vertices = new VertexPositionColor[8];

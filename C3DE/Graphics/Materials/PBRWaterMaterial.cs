@@ -20,7 +20,6 @@ namespace C3DE.Graphics.Materials
         }
 
         public PBRWaterMaterial() : base() { }
-        public PBRWaterMaterial(string name) : base(name) { }
 
         public void CreateRoughnessMetallicAO(float roughness = 0.5f, float metallic = 0.5f, float ao = 1.0f)
         {

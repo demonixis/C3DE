@@ -94,6 +94,20 @@ namespace C3DE
             }
         }
 
+        public void AddRange(Scene[] scenes, int activeIndex = -1)
+        {
+            for (var i = 0; i < scenes.Length; i++)
+            {
+                if (_scenes.Contains(scenes[i]))
+                    continue;
+
+                _scenes.Add(scenes[i]);
+
+                if (activeIndex == i)
+                    _levelToLoad = _scenes.Count - 1;
+            }
+        }
+
         /// <summary>
         /// Remove a scene from the manager. Notice that you can't remove the default scene.
         /// </summary>

@@ -1,11 +1,9 @@
 ﻿using C3DE.Graphics.Materials.Shaders;
 using C3DE.Graphics.Rendering;
 using Microsoft.Xna.Framework.Graphics;
-using System.Runtime.Serialization;
 
 namespace C3DE.Graphics.Materials
 {
-    [DataContract]
     public class StandardTerrainMaterial : StandardMaterialBase
     {
         public Texture2D SnowTexture { get; set; }

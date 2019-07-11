@@ -1,16 +1,13 @@
 ﻿using C3DE.Components.Rendering;
 using Microsoft.Xna.Framework;
-using System.Runtime.Serialization;
 
 namespace C3DE.Components.Physics
 {
     /// <summary>
     /// A component to add a box collider to an object.
     /// </summary>
-    [DataContract]
     public class BoxCollider : Collider
     {
-        [DataMember]
         private BoundingBox _boundingBox;
 
         /// <summary>

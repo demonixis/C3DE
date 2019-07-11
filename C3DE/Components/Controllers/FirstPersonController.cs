@@ -2,14 +2,12 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using System;
-using System.Runtime.Serialization;
 
 namespace C3DE.Components.Controllers
 {
     /// <summary>
     /// A first person camera controller component.
     /// </summary>
-    [DataContract]
     public class FirstPersonController : Controller
     {
         private bool _azertyKeyboard = false;
@@ -26,12 +24,10 @@ namespace C3DE.Components.Controllers
         /// <summary>
         /// Enable or disable the flying mode. Default is false.
         /// </summar>
-        [DataMember]
         public bool Fly { get; set; }
 
         public bool DontUpdateOnClick { get; set; } = false;
 
-        [DataMember]
         public bool VirtualInputEnabled
         {
             get { return _virtualInputEnabled; }
@@ -41,7 +37,6 @@ namespace C3DE.Components.Controllers
             }
         }
 
-        [DataMember]
         public bool LockCursor
         {
             get { return _lockCursor; }

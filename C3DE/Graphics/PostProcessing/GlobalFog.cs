@@ -66,23 +66,19 @@ namespace C3DE.Graphics.PostProcessing
             m_SceneRenderTarget = GetRenderTarget();
 
             var renderer = Application.Engine.Renderer;
-            if (renderer is ForwardRenderer)
+            
+            if (renderer is DeferredRenderer)
+            {
+                var forward = (DeferredRenderer)renderer;
+                m_DepthBuffer = forward.DepthBuffer;
+            }
+            else
             {
                 var forward = (ForwardRenderer)renderer;
                 forward.DepthRenderer.Enabled = true;
                 m_DepthBuffer = forward.DepthRenderer._depthRT;
             }
-            else if (renderer is DeferredRenderer)
-            {
-                var forward = (DeferredRenderer)renderer;
-                m_DepthBuffer = forward.DepthBuffer;
-            }
-            else if (renderer is LightPrePassRenderer)
-            {
-                var lpp = (LightPrePassRenderer)renderer;
-                m_DepthBuffer = lpp.DepthBuffer;
-            }
-
+            m_DepthBuffer = renderer.GetDepthBuffer(); 
             m_QuadRenderer = new QuadRenderer(m_GraphicsDevice);
         }
 

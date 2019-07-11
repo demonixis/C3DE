@@ -1,14 +1,10 @@
-﻿using Microsoft.Xna.Framework.Content;
-using System;
-using System.Collections.Generic;
-using System.Runtime.Serialization;
+﻿using System;
 
 namespace C3DE.Components
 {
     /// <summary>
     /// A component is a part of a scene object.
     /// </summary>
-    [DataContract]
     public abstract class Component : IComparable, ICloneable, IDisposable
     {
         internal protected bool _started;
@@ -19,7 +15,6 @@ namespace C3DE.Components
 
         #region Fields
 
-        [DataMember]
         public bool Enabled
         {
             get { return _enabled; }
@@ -39,12 +34,8 @@ namespace C3DE.Components
             }
         }
 
-        public bool Initialized
-        {
-            get { return _started; }
-        }
+        public bool Initialized => _started;
 
-        [DataMember]
         public string Id { get; set; }
 
         public GameObject GameObject
@@ -59,7 +50,6 @@ namespace C3DE.Components
             internal set { _transform = value; }
         }
 
-        [DataMember]
         public int Order
         {
             get { return _order; }
@@ -142,7 +132,7 @@ namespace C3DE.Components
                 return -1;
         }
 
-#region Add / Get Component
+        #region Add / Get Component
 
         public T AddComponent<T>() where T : Component, new()
         {

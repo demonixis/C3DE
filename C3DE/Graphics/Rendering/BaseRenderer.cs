@@ -16,10 +16,10 @@ namespace C3DE.Graphics.Rendering
         protected internal GraphicsDevice _graphicsDevice;
         protected SpriteBatch m_spriteBatch;
         protected internal RenderTarget2D[] _sceneRenderTargets = new RenderTarget2D[2];
-        protected VRService m_VRService;
+        protected VRService _VRService;
         protected Light m_AmbientLight;
         protected internal GUI m_uiManager;
-        protected bool m_IsDisposed;
+        protected bool _disposed;
         protected bool m_HDRSupport = false;
         protected bool m_VREnabled;
 
@@ -63,6 +63,8 @@ namespace C3DE.Graphics.Rendering
             m_AmbientLight.Start();
         }
 
+        public abstract RenderTarget2D GetDepthBuffer();
+
         protected RenderTarget2D CreateRenderTarget(SurfaceFormat surfaceFormat = SurfaceFormat.Color, DepthFormat depthFormat = DepthFormat.Depth24, bool mipMap = false, int preferredMultiSampleCount = -1, RenderTargetUsage usage = RenderTargetUsage.DiscardContents)
         {
             var width = _graphicsDevice.PresentationParameters.BackBufferWidth;
@@ -99,7 +101,7 @@ namespace C3DE.Graphics.Rendering
             if (m_VREnabled)
             {
                 for (var eye = 0; eye < 2; eye++)
-                    _sceneRenderTargets[eye] = m_VRService.CreateRenderTargetForEye(eye);
+                    _sceneRenderTargets[eye] = _VRService.CreateRenderTargetForEye(eye);
             }
             else
             {
@@ -113,7 +115,7 @@ namespace C3DE.Graphics.Rendering
 
         public virtual bool SetVREnabled(bool enabled)
         {
-            if (enabled && m_VRService != null || !enabled && m_VRService == null)
+            if (enabled && _VRService != null || !enabled && _VRService == null)
                 return false;
 
             var engine = Application.Engine;
@@ -124,25 +126,25 @@ namespace C3DE.Graphics.Rendering
 
                 if (service != null)
                 {
-                    if (m_VRService != null)
+                    if (_VRService != null)
                     {
-                        engine.Components.Remove(m_VRService);
-                        m_VRService.Dispose();
+                        engine.Components.Remove(_VRService);
+                        _VRService.Dispose();
                     }
 
-                    m_VRService = service;
+                    _VRService = service;
                     m_VREnabled = true;
 
-                    engine.Components.Add(m_VRService);
+                    engine.Components.Add(_VRService);
                 }
             }
             else
             {
-                if (m_VRService != null)
+                if (_VRService != null)
                 {
-                    engine.Components.Remove(m_VRService);
-                    m_VRService.Dispose();
-                    m_VRService = null;
+                    engine.Components.Remove(_VRService);
+                    _VRService.Dispose();
+                    _VRService = null;
                 }
 
                 m_VREnabled = false;
@@ -150,7 +152,7 @@ namespace C3DE.Graphics.Rendering
 
             Dirty = true;
 
-            VRManager.ActiveService = m_VRService;
+            VRManager.ActiveService = _VRService;
 
             if (m_VREnabled)
             {
@@ -235,8 +237,6 @@ namespace C3DE.Graphics.Rendering
         /// <param name="scene">The scene to render.</param>
         public abstract void Render(Scene scene);
 
-        public abstract void RenderReflectionProbe(Camera camera);
-
         /// <summary>
         /// Draws the VR Preview to the Back Buffer
         /// </summary>
@@ -248,27 +248,27 @@ namespace C3DE.Graphics.Rendering
 
             var pp = _graphicsDevice.PresentationParameters;
             var height = pp.BackBufferHeight;
-            var width = MathHelper.Min(pp.BackBufferWidth, (int)(height * m_VRService.GetRenderTargetAspectRatio(eye)));
+            var width = MathHelper.Min(pp.BackBufferWidth, (int)(height * _VRService.GetRenderTargetAspectRatio(eye)));
             var offset = (pp.BackBufferWidth - width) / 2;
 
-            m_spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Opaque, null, null, null, m_VRService.DistortionEffect, null);
+            m_spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Opaque, null, null, null, _VRService.DistortionEffect, null);
 
-            if (StereoPreview || m_VRService.DistortionCorrectionRequired)
+            if (StereoPreview || _VRService.DistortionCorrectionRequired)
             {
                 width = pp.BackBufferWidth / 2;
-                m_spriteBatch.Draw(_sceneRenderTargets[0], new Rectangle(0, 0, width, height), null, Color.White, 0, Vector2.Zero, m_VRService.PreviewRenderEffect, 0);
-                m_VRService.ApplyDistortion(_sceneRenderTargets[0], 0);
+                m_spriteBatch.Draw(_sceneRenderTargets[0], new Rectangle(0, 0, width, height), null, Color.White, 0, Vector2.Zero, _VRService.PreviewRenderEffect, 0);
+                _VRService.ApplyDistortion(_sceneRenderTargets[0], 0);
 
-                m_spriteBatch.Draw(_sceneRenderTargets[1], new Rectangle(width, 0, width, height), null, Color.White, 0, Vector2.Zero, m_VRService.PreviewRenderEffect, 0);
-                m_VRService.ApplyDistortion(_sceneRenderTargets[1], 0);
+                m_spriteBatch.Draw(_sceneRenderTargets[1], new Rectangle(width, 0, width, height), null, Color.White, 0, Vector2.Zero, _VRService.PreviewRenderEffect, 0);
+                _VRService.ApplyDistortion(_sceneRenderTargets[1], 0);
             }
             else
-                m_spriteBatch.Draw(_sceneRenderTargets[eye], new Rectangle(offset, 0, width, height), null, Color.White, 0, Vector2.Zero, m_VRService.PreviewRenderEffect, 0);
+                m_spriteBatch.Draw(_sceneRenderTargets[eye], new Rectangle(offset, 0, width, height), null, Color.White, 0, Vector2.Zero, _VRService.PreviewRenderEffect, 0);
 
             m_spriteBatch.End();
         }
 
-#region IDisposable
+        #region IDisposable
 
         public virtual void Dispose()
         {
@@ -302,6 +302,6 @@ namespace C3DE.Graphics.Rendering
             }
         }
 
-#endregion
+        #endregion
     }
 }

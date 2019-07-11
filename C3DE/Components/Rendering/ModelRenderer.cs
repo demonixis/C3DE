@@ -1,14 +1,12 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
-using System.Runtime.Serialization;
 
 namespace C3DE.Components.Rendering
 {
     /// <summary>
     /// A component used to render an XNA model.
     /// </summary>
-    [DataContract]
     public class ModelRenderer : Renderer
     {
         protected Model model;

@@ -2,11 +2,9 @@
 using C3DE.Graphics.Rendering;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System.Runtime.Serialization;
 
 namespace C3DE.Graphics.Materials
 {
-    [DataContract]
     public class StandardWaterMaterial : StandardMaterialBase
     {
         protected Vector3 _reflectionColor = Vector3.One;
@@ -15,10 +13,8 @@ namespace C3DE.Graphics.Materials
         public TextureCube ReflectionTexture { get; set; }
         public float Speed = 0.5f;
 
-        [DataMember]
         public float ReflectionIntensity { get; set; } = 0.35f;
 
-        [DataMember]
         public Color ReflectionColor
         {
             get => new Color(_reflectionColor);

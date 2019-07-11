@@ -1,55 +1,40 @@
 ﻿using C3DE.Graphics.Materials.Shaders;
+using C3DE.Graphics.Rendering;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
-using System.Runtime.Serialization;
 
 namespace C3DE.Graphics.Materials
 {
-    [DataContract]
     public abstract class Material : IDisposable
     {
         protected internal Vector3 _diffuseColor;
         protected internal bool _hasAlpha;
         protected internal ShaderMaterial _shaderMaterial;
 
-        [DataMember]
-        public string Id { get; private set; }
-
-        [DataMember]
         public string Name { get; set; }
 
-        [DataMember]
         public Color DiffuseColor
         {
-            get { return new Color(_diffuseColor); }
-            set { _diffuseColor = value.ToVector3(); }
+            get => new Color(_diffuseColor);
+            set => _diffuseColor = value.ToVector3();
         }
 
         public Texture2D MainTexture { get; set; }
 
-        [DataMember]
         public Vector2 Tiling { get; set; }
 
-        [DataMember]
         public Vector2 Offset { get; set; }
 
         public Material()
         {
-            _diffuseColor = Color.White.ToVector3();
-            Id = "MAT-" + Guid.NewGuid();
-            Name = "Material_" + Id;
+            Name = $"Material_{Guid.NewGuid()}";
             Tiling = Vector2.One;
             Offset = Vector2.Zero;
+            _diffuseColor = Color.White.ToVector3();
             _hasAlpha = false;
             Scene.current?.AddMaterial(this);
-        }
-
-        public Material(string name) 
-            : this()
-        {
-            Name = name;
         }
 
         public virtual void LoadContent(ContentManager content)
@@ -59,7 +44,7 @@ namespace C3DE.Graphics.Materials
             engine.RendererChanged += SetupShaderMaterial;
         }
 
-        protected abstract void SetupShaderMaterial(Rendering.BaseRenderer renderer);
+        protected abstract void SetupShaderMaterial(BaseRenderer renderer);
 
         public virtual void Dispose() { }
     }

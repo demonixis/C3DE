@@ -187,6 +187,7 @@ float3 CalcNormal(VertexShaderOutput input)
 {
 	float3 normal = input.WorldNormal;
 
+#if SM4
 	if (NormalMapEnabled == 1)
 	{
 		float3 sandTex = tex2D(SandNormalSampler, input.UV * TextureTiling);
@@ -202,6 +203,7 @@ float3 CalcNormal(VertexShaderOutput input)
 		float3 normalMap = (2.0 * (normalBlend)) - 1.0;
 		normal = normalize(mul(normalMap, input.WorldToTangentSpace));
 	}
+#endif
 
 	return normal;
 }

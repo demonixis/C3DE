@@ -1,29 +1,16 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
-using System.Runtime.Serialization;
 
 namespace C3DE.Graphics.Primitives
 {
-    [DataContract]
     public class CylinderMesh : Mesh
     {
-        [DataMember]
         public Vector3 StartPosition { get; set; }
-
-        [DataMember]
         public Vector3 EndPosition { get; set; }
-
-        [DataMember]
         public float StartRadius { get; set; }
-
-        [DataMember]
         public float EndRadius { get; set; }
-
-        [DataMember]
         public int NbSegments { get; set; }
-
-        [DataMember]
         public int NbSlices { get; set; }
 
         private static Random random = new Random();

@@ -2,11 +2,9 @@
 using C3DE.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System.Runtime.Serialization;
 
 namespace C3DE.Components.Rendering
 {
-    [DataContract]
     public struct TerrainWeightData
     {
         public float SandLayer { get; set; }

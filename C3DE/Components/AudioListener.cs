@@ -5,26 +5,21 @@
 
     public class AudioListener : Component
     {
-        private XNAAudioListener _audioListener;
-
-        public XNAAudioListener Listener
-        {
-            get => _audioListener;
-        }
+        public XNAAudioListener Listener { get; private set; }
 
         public AudioListener()
             : base()
         {
-            _audioListener = new XNAAudioListener();
+            Listener = new XNAAudioListener();
         }
 
         public override void Update()
         {
             base.Update();
 
-            _audioListener.Forward = _transform.Forward;
-            _audioListener.Position = _transform.LocalPosition;
-            _audioListener.Up = Vector3.Up;
+            Listener.Forward = _transform.Forward;
+            Listener.Position = _transform.LocalPosition;
+            Listener.Up = Vector3.Up;
         }
     }
 }

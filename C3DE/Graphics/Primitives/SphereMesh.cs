@@ -1,17 +1,12 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
-using System.Runtime.Serialization;
 
 namespace C3DE.Graphics.Primitives
 {
-    [DataContract]
     public class SphereMesh : Mesh
     {
-        [DataMember]
         public float Radius { get; set; }
-
-        [DataMember]
         public int TessellationLevel { get; set; }
 
         public SphereMesh()

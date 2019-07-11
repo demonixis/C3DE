@@ -51,8 +51,6 @@ namespace C3DE.Editor
             GUI.Skin = new GUISkin("Font/Menu");
             GUI.Skin.LoadContent(Content);
 
-            Serializer.AddTypes(typeof(EditorGame));
-
             NewScene();
         }
 
@@ -174,46 +172,10 @@ namespace C3DE.Editor
 
         public void SaveScene(string path)
         {
-            try
-            {
-                var serScene = new SerializedScene()
-                {
-                    Materials = _editorScene.Materials.ToArray(),
-                    GameObjects = _editorScene.GetGameObjects(),
-                    RenderSettings = _editorScene.RenderSettings
-                };
-
-                Serializer.Serialize(path, serScene);
-            }
-            catch (Exception ex)
-            {
-                Debug.Log(ex.Message);
-            }
         }
 
         public void LoadScene(string path)
         {
-            try
-            {
-                var data = Serializer.Deserialize(path, typeof(SerializedScene));
-                var serializedScene = data as SerializedScene;
-                if (serializedScene != null)
-                {
-                    NewScene();
-
-                    foreach (var so in serializedScene.GameObjects)
-                    {
-                        so.PostDeserialize();
-                        _editorScene.Add(so);
-                    }
-
-                    _editorScene.RenderSettings.Set(serializedScene.RenderSettings);
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.Log(ex.Message);
-            }
         }
 
         #endregion

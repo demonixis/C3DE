@@ -46,7 +46,8 @@ namespace C3DE.Editor.Core.Components
 
         private UnlitMaterial CreateMaterial(string icon)
         {
-            var iconMaterial = new UnlitMaterial(icon);
+            var iconMaterial = new UnlitMaterial();
+            iconMaterial.Name = icon;
             iconMaterial.MainTexture = Application.Content.Load<Texture2D>($"Icons/{icon}");
             return iconMaterial;
         }

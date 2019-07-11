@@ -32,18 +32,12 @@ namespace C3DE
         /// <summary>
         /// Gets the height of the screen (this value is cached so you can use it safely).
         /// </summary>
-        public static int Width
-        {
-            get { return ScreenRect.Width; }
-        }
+        public static int Width => ScreenRect.Width;
 
         /// <summary>
         /// Gets the height of the screen (this value is cached so you can use it safely).
         /// </summary>
-        public static int Height
-        {
-            get { return ScreenRect.Height; }
-        }
+        public static int Height => ScreenRect.Height;
 
         /// <summary>
         /// Gets the half-width of the screen (this value is cached so you can use it safely).
@@ -63,18 +57,12 @@ namespace C3DE
         /// <summary>
         /// The virtual width of the screen.
         /// </summary>
-        public static int VirtualWidth
-        {
-            get { return VirtualScreenRect.Width; }
-        }
+        public static int VirtualWidth => VirtualScreenRect.Width;
 
         /// <summary>
         /// The virtual height of the screen.
         /// </summary>
-        public static int VirtualHeight
-        {
-            get { return VirtualScreenRect.Height; }
-        }
+        public static int VirtualHeight => VirtualScreenRect.Height;
 
         /// <summary>
         /// The virtual width divided per two.
@@ -96,8 +84,8 @@ namespace C3DE
         /// </summary>
         public static bool ShowCursor
         {
-            get { return Application.Engine.IsMouseVisible; }
-            set { Application.Engine.IsMouseVisible = value; }
+            get => Application.Engine.IsMouseVisible;
+            set => Application.Engine.IsMouseVisible = value;
         }
 
         /// <summary>
@@ -172,7 +160,9 @@ namespace C3DE
         /// <param name="fullscreen">If set to <c>true</c> fullscreen.</param>
         public static void SetBestResolution(bool fullscreen)
         {
-            var modes = Application.GraphicsDevice.Adapter.SupportedDisplayModes;
+            var graphics = Application.GraphicsDevice;
+            var gdm = Application.GraphicsDeviceManager;
+            var modes = graphics.Adapter.SupportedDisplayModes;
             var width = 800;
             var height = 480;
 
@@ -182,13 +172,14 @@ namespace C3DE
                 height = (mode.Height > height) ? mode.Height : height;
             }
 
-            Application.GraphicsDeviceManager.PreferredBackBufferWidth = width;
-            Application.GraphicsDeviceManager.PreferredBackBufferHeight = height;
-            Application.GraphicsDeviceManager.ApplyChanges();
+            gdm.PreferredBackBufferWidth = width;
+            gdm.PreferredBackBufferHeight = height;
+            gdm.ApplyChanges();
 
             Setup(width, height, null, null);
 
-            Application.GraphicsDeviceManager.IsFullScreen = fullscreen;
+            gdm.IsFullScreen = fullscreen;
+
             GUI.Scale = GetScale();
         }
 

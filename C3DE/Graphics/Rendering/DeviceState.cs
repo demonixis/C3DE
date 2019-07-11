@@ -3,21 +3,21 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace C3DE.Graphics.Rendering
 {
-    internal sealed class DeviceState : IDisposable
+    public sealed class DeviceState : IDisposable
     {
-        private readonly GraphicsDevice m_Device;
-        private readonly BlendState m_BlendState;
-        private readonly DepthStencilState m_DepthStencilState;
-        private readonly RasterizerState m_RasterizerState;
-        private readonly SamplerState m_SamplerState;
+        private readonly GraphicsDevice _device;
+        private readonly BlendState _blendState;
+        private readonly DepthStencilState _depthStencilState;
+        private readonly RasterizerState _rasterizerState;
+        private readonly SamplerState _samplerState;
 
         public DeviceState(GraphicsDevice device, BlendState blendState, DepthStencilState depthStencilState, RasterizerState rasterizerState, SamplerState samplerState)
         {
-            m_Device = device;
-            m_BlendState = device.BlendState;
-            m_DepthStencilState = device.DepthStencilState;
-            m_RasterizerState = device.RasterizerState;
-            m_SamplerState = device.SamplerStates[0];
+            _device = device;
+            _blendState = device.BlendState;
+            _depthStencilState = device.DepthStencilState;
+            _rasterizerState = device.RasterizerState;
+            _samplerState = device.SamplerStates[0];
 
             device.BlendState = blendState;
             device.DepthStencilState = depthStencilState;
@@ -27,10 +27,10 @@ namespace C3DE.Graphics.Rendering
 
         public void Dispose()
         {
-            m_Device.BlendState = this.m_BlendState;
-            m_Device.DepthStencilState = this.m_DepthStencilState;
-            m_Device.RasterizerState = this.m_RasterizerState;
-            m_Device.SamplerStates[0] = this.m_SamplerState;
+            _device.BlendState = _blendState;
+            _device.DepthStencilState = _depthStencilState;
+            _device.RasterizerState = _rasterizerState;
+            _device.SamplerStates[0] = _samplerState;
         }
     }
 }

@@ -29,8 +29,8 @@ namespace Microsoft.Xna.Framework
         //returns Euler angles that point from one point to another
         public static Vector3 AngleTo(Vector3 from, Vector3 location)
         {
-            Vector3 angle = new Vector3();
-            Vector3 v3 = Vector3.Normalize(location - from);
+            var angle = new Vector3();
+            var v3 = Vector3.Normalize(location - from);
             angle.X = (float)Math.Asin(v3.Y);
             angle.Y = ArcTanAngle(-v3.Z, -v3.X);
             return angle;
@@ -67,7 +67,7 @@ namespace Microsoft.Xna.Framework
 
         public static Vector3 ToEuler(this Quaternion quaternion)
         {
-            Vector3 result = Vector3.Zero;
+            var result = Vector3.Zero;
             ToEuler(quaternion, ref result);
             return result;
         }

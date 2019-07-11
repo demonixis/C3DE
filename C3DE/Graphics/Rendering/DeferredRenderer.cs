@@ -6,7 +6,6 @@ using C3DE.Graphics.PostProcessing;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using System.Collections.Generic;
 
 namespace C3DE.Graphics.Rendering
 {
@@ -41,6 +40,8 @@ namespace C3DE.Graphics.Rendering
             m_CombineEffect = content.Load<Effect>("Shaders/Deferred/Combine");
         }
 
+        public override RenderTarget2D GetDepthBuffer() => m_DepthTarget;
+
         /// <summary>
         /// Rebuilds render targets if Dirty is true.
         /// NO VR Support during the initial implementation.
@@ -60,7 +61,7 @@ namespace C3DE.Graphics.Rendering
 
         public override void Dispose(bool disposing)
         {
-            if (!m_IsDisposed)
+            if (!_disposed)
             {
                 if (disposing)
                 {
@@ -72,7 +73,7 @@ namespace C3DE.Graphics.Rendering
                     DisposeObject(m_DepthTarget);
                     DisposeObject(m_LightTarget);
                 }
-                m_IsDisposed = true;
+                _disposed = true;
             }
         }
 
@@ -180,21 +181,17 @@ namespace C3DE.Graphics.Rendering
 
                 for (var eye = 0; eye < 2; eye++)
                 {
-                    camera._projectionMatrix = m_VRService.GetProjectionMatrix(eye);
-                    camera._viewMatrix = m_VRService.GetViewMatrix(eye, cameraParent);
+                    camera._projectionMatrix = _VRService.GetProjectionMatrix(eye);
+                    camera._viewMatrix = _VRService.GetViewMatrix(eye, cameraParent);
                     RenderSceneForCamera(scene, camera, eye);
                 }
 
-                m_VRService.SubmitRenderTargets(_sceneRenderTargets[0], _sceneRenderTargets[1]);
+                _VRService.SubmitRenderTargets(_sceneRenderTargets[0], _sceneRenderTargets[1]);
                 DrawVRPreview(0);
                 RenderUI(scene.Behaviours);
             }
             else
                 RenderSceneForCamera(scene, camera, 0);
-        }
-
-        public override void RenderReflectionProbe(Camera camera)
-        {
         }
     }
 }

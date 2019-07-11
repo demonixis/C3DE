@@ -1,10 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System.Runtime.Serialization;
 
 namespace C3DE.Graphics.Primitives
 {
-    [DataContract]
     public class QuadMesh : Mesh
     {
         public Vector3 Direction { get; set; } = new Vector3(1, 1, 0);

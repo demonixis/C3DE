@@ -1,13 +1,11 @@
 ﻿using Microsoft.Xna.Framework;
 using System.Collections.Generic;
-using System.Runtime.Serialization;
 
 namespace C3DE.Components
 {
     /// <summary>
     /// A component responible to manage transform operations (translation, rotation and scaling).
     /// </summary>
-    [DataContract]
     public class Transform : Component
     {
         internal Matrix _worldMatrix;
@@ -60,7 +58,6 @@ namespace C3DE.Components
             }
         }
 
-        [DataMember]
         public Vector3 LocalPosition
         {
             get { return _localPosition; }
@@ -96,14 +93,12 @@ namespace C3DE.Components
 
         public Quaternion LocalQuaternion => Quaternion.Euler(_localRotation);
 
-        [DataMember]
         public Vector3 LocalRotation
         {
             get { return _localRotation; }
             set { _localRotation = value; }
         }
 
-        [DataMember]
         public Vector3 LocalScale
         {
             get { return _localScale; }

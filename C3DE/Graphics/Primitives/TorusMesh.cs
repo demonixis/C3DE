@@ -1,23 +1,14 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
-using System.Runtime.Serialization;
 
 namespace C3DE.Graphics.Primitives
 {
-    [DataContract]
     public class TorusMesh : Mesh
     {
-        [DataMember]
         public float RadiusExterior { get; set; }
-
-        [DataMember]
         public float RaduisInterior { get; set; }
-
-        [DataMember]
         public int NbSlices { get; set; }
-
-        [DataMember]
         public int NbSegments { get; set; }
 
         public TorusMesh()

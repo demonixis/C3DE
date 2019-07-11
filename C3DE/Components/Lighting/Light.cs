@@ -3,7 +3,6 @@ using C3DE.Graphics.PostProcessing;
 using C3DE.Graphics.Primitives;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System.Runtime.Serialization;
 
 namespace C3DE.Components.Lighting
 {
@@ -12,7 +11,6 @@ namespace C3DE.Components.Lighting
         Ambient = 0, Directional, Point, Spot
     }
 
-    [DataContract]
     public class Light : Component
     {
         internal protected Matrix _viewMatrix;
@@ -45,14 +43,12 @@ namespace C3DE.Components.Lighting
 
         public BoundingSphere BoundingSphere => _boundingSphere;
 
-        [DataMember]
         public bool ShadowEnabled
         {
             get => _shadowGenerator.Enabled;
             set { _shadowGenerator.Enabled = value; }
         }
 
-        [DataMember]
         public ShadowGenerator ShadowGenerator
         {
             get => _shadowGenerator;
@@ -62,7 +58,6 @@ namespace C3DE.Components.Lighting
         /// <summary>
         /// The color of the light.
         /// </summary>
-        [DataMember]
         public Color Color
         {
             get => new Color(_color);
@@ -72,28 +67,23 @@ namespace C3DE.Components.Lighting
         /// <summary>
         /// The intensity of the light.
         /// </summary>
-        [DataMember]
         public float Intensity { get; set; } = 1.0f;
 
         /// <summary>
         /// The maximum distance of emission.
         /// </summary>
-        [DataMember]
         public float Radius { get; set; } = 25;
 
-        [DataMember]
         public float FallOf { get; set; } = 5.0f;
 
         /// <summary>
         /// The type of the light.
         /// </summary>
-        [DataMember]
         public LightType TypeLight { get; set; } = LightType.Directional;
 
         /// <summary>
         /// The angle used by the Spot light.
         /// </summary>
-        [DataMember]
         public float Angle { get; set; } = MathHelper.PiOver4;
 
         public Light()

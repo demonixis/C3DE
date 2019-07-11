@@ -142,8 +142,6 @@ namespace C3DE
             renderer.Initialize(Content);
             RendererChanged?.Invoke(renderer);
 
-            Serializer.AddTypes(typeof(Engine));
-
             Input.Keys = new KeyboardComponent(this);
             Input.Mouse = new MouseComponent(this);
             Input.Gamepad = new GamepadComponent(this);

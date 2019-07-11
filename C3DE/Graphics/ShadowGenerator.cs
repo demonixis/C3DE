@@ -4,21 +4,18 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
-using System.Runtime.Serialization;
 
 namespace C3DE.Graphics
 {
     /// <summary>
     /// A generator of shadow for a specified light.
     /// </summary>
-    [DataContract]
     public class ShadowGenerator : IDisposable
     {
         private RenderTarget2D _shadowMap;
         private Effect _shadowEffect;
         private BoundingSphere _boundingSphere;
 
-        [DataMember]
         protected internal Vector3 _shadowData;
 
         public RenderTarget2D ShadowMap => _shadowMap;

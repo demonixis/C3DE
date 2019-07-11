@@ -79,7 +79,7 @@ namespace C3DE.Components
 
                 return _audioListener;
             }
-            set { _audioListener = value; }
+            set => _audioListener = value;
         }
 
         public bool PlayOnAwake { get; set; } = false;

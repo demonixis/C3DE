@@ -1,36 +1,25 @@
 ﻿using Microsoft.Xna.Framework;
-using System.Runtime.Serialization;
 
 namespace C3DE.Components.Physics
 {
     /// <summary>
     /// An abstract class for represent a collider which have a size in the 3D space.
     /// </summary>
-    [DataContract]
     public abstract class Collider : Component
     {
-        [DataMember]
         protected bool autoCompute;
-
-        [DataMember]
         protected Vector3 minimum;
-
-        [DataMember]
         protected Vector3 maximum;
-
-        [DataMember]
         protected Vector3 center;
 
         /// <summary>
         /// Allow or not the collider to be picked by a ray cast.
         /// </summary>
-        [DataMember]
         public bool IsPickable { get; set; }
 
         /// <summary>
         /// Indicates whether the collider a trigger.
         /// </summary>
-        [DataMember]
         public bool IsTrigger { get; set; }
 
         public Vector3 Center

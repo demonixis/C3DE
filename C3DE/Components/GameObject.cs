@@ -6,14 +6,12 @@ using C3DE.Graphics.Primitives;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
-using System.Runtime.Serialization;
 
 namespace C3DE
 {
     /// <summary>
     /// A scene object is the base object on the scene.
     /// </summary>
-    [DataContract]
     public class GameObject : ICloneable, IDisposable
     {
         #region Private/protected declarations
@@ -22,32 +20,23 @@ namespace C3DE
         protected Scene _scene;
         protected bool _enabled;
 
-        [DataMember]
         protected List<Component> _components;
-
-        [DataMember]
         protected bool _initialized;
 
         #endregion
 
         #region Fields
 
-        [DataMember]
         public string Id { get; set; }
 
-        [DataMember]
         public string Name { get; set; }
 
-        [DataMember]
         public string Tag { get; set; }
 
-        [DataMember]
         public bool IsStatic { get; set; }
 
-        [DataMember]
         public bool IsPrefab { get; set; }
 
-        [DataMember]
         public bool Enabled
         {
             get => _enabled;

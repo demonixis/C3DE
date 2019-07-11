@@ -23,18 +23,19 @@ namespace Microsoft.Xna.Framework
                 return;
             }
 
-            var m = new Matrix(matrix.M11 / sx, matrix.M12 / sx, matrix.M13 / sx, 0.0f,
-                                   matrix.M21 / sy, matrix.M22 / sy, matrix.M23 / sy, 0.0f,
-                                   matrix.M31 / sz, matrix.M32 / sz, matrix.M33 / sz, 0.0f,
-                                   0.0f, 0.0f, 0.0f, 1.0f);
+            var m = new Matrix(
+                matrix.M11 / sx, matrix.M12 / sx, matrix.M13 / sx, 0.0f,
+                matrix.M21 / sy, matrix.M22 / sy, matrix.M23 / sy, 0.0f,
+                matrix.M31 / sz, matrix.M32 / sz, matrix.M33 / sz, 0.0f,
+                0.0f, 0.0f, 0.0f, 1.0f);
 
             rotation = Quaternion.CreateFromRotationMatrix(m);
         }
 
         public static Vector3 ExtractRottaion(this Matrix matrix)
         {
-            Vector3 rotation = Vector3.Zero;
-            Quaternion q = Quaternion.Identity;
+            var rotation = Vector3.Zero;
+            var q = Quaternion.Identity;
             ExtractRotation(matrix, ref q);
             q.ToEuler(ref rotation);
             return rotation;
@@ -42,7 +43,7 @@ namespace Microsoft.Xna.Framework
 
         public static void ExtractRotation(this Matrix matrix, ref Vector3 rotation)
         {
-            Quaternion q = Quaternion.Identity;
+            var q = Quaternion.Identity;
             ExtractRotation(matrix, ref q);
             q.ToEuler(ref rotation);
         }

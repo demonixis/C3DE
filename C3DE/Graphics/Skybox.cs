@@ -1,5 +1,4 @@
 ﻿using C3DE.Components;
-using C3DE.Graphics;
 using C3DE.Graphics.Materials.Shaders;
 using C3DE.Graphics.PostProcessing;
 using C3DE.Graphics.Primitives;
@@ -8,11 +7,9 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
-using System.Runtime.Serialization;
 
 namespace C3DE.Graphics
 {
-    [DataContract]
     public class Skybox
     {
         private ShaderMaterial _shaderMaterial;
@@ -43,10 +40,8 @@ namespace C3DE.Graphics
 
         public Matrix WorldMatrix => _worldMatrix;
 
-        [DataMember]
         public bool FogSupported { get; set; } = false;
 
-        [DataMember]
         public bool Enabled { get; set; }
 
         public bool OverrideFog => _overrideFog;

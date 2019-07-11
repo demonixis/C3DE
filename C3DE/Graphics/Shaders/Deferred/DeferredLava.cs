@@ -5,9 +5,7 @@ namespace C3DE.Graphics.Materials.Shaders
 {
     public class DeferredLava : ForwardLava
     {
-        public DeferredLava(LavaMaterial material) : base(material)
-        {
-        }
+        public DeferredLava(LavaMaterial material) : base(material) { }
 
         public override void LoadEffect(ContentManager content)
         {

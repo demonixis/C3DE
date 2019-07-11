@@ -4,28 +4,19 @@ using C3DE.Components.Lighting;
 using C3DE.Components.Rendering;
 using C3DE.Graphics.Materials;
 using C3DE.Graphics.PostProcessing;
-using C3DE.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
-using System.Runtime.Serialization;
 using Jitter.Collision;
 using Jitter;
-using C3DE.Graphics;
 
 namespace C3DE
 {
-    [DataContract]
     public class SerializedScene
     {
-        [DataMember]
         public RenderSettings RenderSettings { get; set; }
-
-        [DataMember]
         public GameObject[] GameObjects { get; set; }
-
-        [DataMember]
         public Material[] Materials { get; set; }
     }
 
@@ -40,7 +31,6 @@ namespace C3DE
     /// <summary>
     /// The scene is responsible to store scene objects, components.
     /// </summary>
-    [DataContract]
     public class Scene : GameObject
     {
         public static Scene current { get; internal set; }
@@ -49,13 +39,8 @@ namespace C3DE
         private bool _needRemoveCheck;
 
         internal protected Material defaultMaterial;
-
-        [DataMember]
         internal protected List<GameObject> gameObjects;
-
         internal protected List<Renderer> renderList;
-
-        [DataMember]
         internal protected List<Material> materials;
         internal protected List<Effect> effects;
         internal protected Dictionary<int, int> materialsEffectIndex;
@@ -63,9 +48,6 @@ namespace C3DE
         internal protected List<Camera> cameras;
         internal protected List<Light> lights;
         internal protected List<Behaviour> scripts;
-        internal protected List<ReflectionProbe> _reflectionProbes;
-
-        [DataMember]
         internal protected List<GameObject> prefabs;
         internal protected List<PostProcessPass> postProcessPasses;
 
@@ -137,8 +119,7 @@ namespace C3DE
             RenderSettings = new RenderSettings();
             _physicsCollisionSystem = new CollisionSystemSAP();
             _physicsWorld = new World(_physicsCollisionSystem);
-            _reflectionProbes = new List<ReflectionProbe>();
-        }
+         }
 
         public Scene(string name)
             : this()
@@ -358,16 +339,6 @@ namespace C3DE
                     AddLight(light);
                 else if (type == ComponentChangeType.Remove)
                     RemoveLight(light);
-            }
-
-            else if (component is ReflectionProbe)
-            {
-                var probe = component as ReflectionProbe;
-
-                if (type == ComponentChangeType.Add && !_reflectionProbes.Contains(probe))
-                    _reflectionProbes.Add(probe);
-                else if (type == ComponentChangeType.Remove && _reflectionProbes.Contains(probe))
-                    _reflectionProbes.Remove(probe);
             }
         }
 
@@ -649,14 +620,6 @@ namespace C3DE
             }
 
             return scripts.ToArray();
-        }
-
-        public Material GetMaterialById(string id)
-        {
-            foreach (var mat in materials)
-                if (mat.Id == id)
-                    return mat;
-            return null;
         }
 
         public Material GetMaterialByName(string name)

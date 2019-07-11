@@ -1,13 +1,12 @@
 ﻿using C3DE.UI;
+using C3DE.Utils;
 using System.Collections;
-using System.Runtime.Serialization;
 
 namespace C3DE.Components
 {
-    [DataContract]
     public class Behaviour : Component
     {
-        private CoroutineManager _coroutineManager = new CoroutineManager();
+        private Coroutine _coroutineManager = new Coroutine();
 
         public Behaviour() : base() { }
 

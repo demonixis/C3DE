@@ -1,7 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using System.Runtime.Serialization;
 
 namespace C3DE.Components
 {
@@ -10,7 +8,6 @@ namespace C3DE.Components
         Perspective = 0, Orthographic
     }
 
-    [DataContract]
     public class Camera : Component
     {
         public static Camera Main { get; internal set; }
@@ -29,7 +26,6 @@ namespace C3DE.Components
         private bool _needUpdate;
         private bool _needProjectionUpdate;
 
-        [DataMember]
         public float AspectRatio
         {
             get => _aspectRatio;
@@ -43,21 +39,18 @@ namespace C3DE.Components
             }
         }
 
-        [DataMember]
         public Color ClearColor
         {
             get => _clearColor;
             set => _clearColor = value;
         }
 
-        [DataMember]
         public short Depth
         {
             get => _depth;
             set => _depth = value;
         }
 
-        [DataMember]
         public float FieldOfView
         {
             get => _fieldOfView;
@@ -71,7 +64,6 @@ namespace C3DE.Components
             }
         }
 
-        [DataMember]
         public float Near
         {
             get => _nearPlane;
@@ -85,7 +77,6 @@ namespace C3DE.Components
             }
         }
 
-        [DataMember]
         public float Far
         {
             get => _farPlane;
@@ -99,14 +90,12 @@ namespace C3DE.Components
             }
         }
 
-        [DataMember]
         public Vector3 Target
         {
             get => _target;
             set => _target = value;
         }
 
-        [DataMember]
         public CameraProjectionType ProjectionType
         {
             get => _projectionType;

@@ -1,12 +1,8 @@
-﻿using System.Runtime.Serialization;
-
-namespace C3DE.Graphics.Materials
+﻿namespace C3DE.Graphics.Materials
 {
-    [DataContract]
     public class BillboardMaterial : TransparentMaterial
     {
         public BillboardMaterial() : base() { }
-        public BillboardMaterial(string name) : base(name) { }
 
         /*public override void Pass(Renderer renderable)
          {

@@ -18,7 +18,6 @@ namespace C3DE.Graphics.Materials
         public Texture2D WeightMap { get; set; }
 
         public PBRTerrainMaterial() : base() { }
-        public PBRTerrainMaterial(string name) : base(name) { }
 
         public void CreateAlbedos(Texture2D grass, Texture2D sand, Texture2D rock, Texture2D snown, bool superSample)
         {

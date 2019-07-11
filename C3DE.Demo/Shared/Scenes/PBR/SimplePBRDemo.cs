@@ -8,11 +8,11 @@ using C3DE.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace C3DE.Demo.Scenes
+namespace C3DE.Demo.Scenes.PBR
 {
-    public class PBRDemo : SimpleDemo
+    public class SimplePBRDemo : SimpleDemo
     {
-        public PBRDemo() : base("PBR") { }
+        public SimplePBRDemo() : base("Simple PBR") { }
 
         public static Texture2D CreateRMAOFromBlackBoard(Texture2D albedo)
         {
