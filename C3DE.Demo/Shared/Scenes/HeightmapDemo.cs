@@ -61,7 +61,7 @@ namespace C3DE.Demo.Scenes
 
             var weightMap = terrain.GenerateWeightMap();           
             tMaterial.WeightMap = weightMap;
-            tMaterial.Tiling = new Vector2(1);
+            tMaterial.Tiling = new Vector2(128f);
             terrainGo.AddComponent<WeightMapViewer>();
 
             // With water !

@@ -28,11 +28,15 @@ DECLARE_TEXTURE(WeightMap, 4);
 float3 BlendTextures(sampler2D target, float2 uv)
 {
 	float2 uv2 = uv * 0.5;
-	float2 offset = float2(0.5, 0.5);
-	float3 mainTex = tex2D(target, float2(uv2.x, uv2.y));
-	float3 sandTex = tex2D(target, float2(offset.x + uv2.x, uv2.y));
-	float3 rockTex = tex2D(target, float2(uv2.x, offset.y + uv2.y));
-	float3 snowTex = tex2D(target, float2(offset.x + uv2.x, offset.y + uv.y));
+	float2 upperLeft = float2(0.0 + uv2.x, 0.0 + uv2.y);
+	float2 upperRight = float2(0.5 + uv2.x, 0.0 + uv2.y);
+	float2 bottomLeft = float2(0.0 + uv2.x, 0.5 + uv2.y);
+	float2 bottomRight = float2(0.5 + uv2.x, 0.5 + uv2.y);
+
+	float3 mainTex = tex2D(target, upperLeft);
+	float3 sandTex = tex2D(target, upperRight);
+	float3 rockTex = tex2D(target, bottomLeft);
+	float3 snowTex = tex2D(target, bottomRight);
 	float3 weightTex = SAMPLE_TEXTURE(WeightMap, uv);
 
 	float3 blend = clamp(1.0 - weightTex.r - weightTex.g - weightTex.b, 0, 1);
