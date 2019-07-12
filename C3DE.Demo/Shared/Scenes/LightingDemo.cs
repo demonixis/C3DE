@@ -48,7 +48,7 @@ namespace C3DE.Demo.Scenes
 
             for (var i = 0; i < 8; i++)
             {
-                var lightGo = GameObjectFactory.CreateLight(LightType.Point, colors[i], 0.5f, 1024);
+                var lightGo = GameObjectFactory.CreateLight(LightType.Point, colors[i], 0.5f, 0);
                 lightGo.Transform.LocalRotation = new Vector3(0.0f, 0.5f, 0);
                 lightGo.Transform.LocalPosition = pos[i];
 
@@ -56,11 +56,7 @@ namespace C3DE.Demo.Scenes
                 light.Radius = 25;
                 light.ShadowGenerator.ShadowStrength = 1;
                 light.ShadowGenerator.ShadowBias = 0.01f;
-
-                if (i == 0)
-                    light.AddComponent<ShadowMapViewer>();
-                else
-                    light.ShadowEnabled = false;
+                light.ShadowEnabled = false;
 
                 var ligthSphere = lightGo.AddComponent<MeshRenderer>();
                 ligthSphere.Mesh = new SphereMesh(0.5f, 16);
@@ -107,16 +103,13 @@ namespace C3DE.Demo.Scenes
             renderer.Transform.Rotate(0, -MathHelper.PiOver2, 0);
             renderer.Transform.Translate(-0.1f, 0, 0);
 
-            var pbrMaterial = new PBRMaterial()
-            {
-                MainTexture = Application.Content.Load<Texture2D>("Models/Quandtum/textures/Turret-Diffuse"),
-                NormalMap = Application.Content.Load<Texture2D>("Models/Quandtum/textures/Turret-Normal"),
-                EmissiveMap = Application.Content.Load<Texture2D>("Models/Quandtum/textures/Turret-Emission")
-            };
-
-            pbrMaterial.CreateRoughnessMetallicAO(0.1f, 0.7f);
-
-            renderer.Material = pbrMaterial;
+            var modelMaterial = renderer.Material as StandardMaterial;
+            modelMaterial.MainTexture = Application.Content.Load<Texture2D>("Models/Quandtum/textures/Turret-Diffuse");
+            modelMaterial.NormalMap = Application.Content.Load<Texture2D>("Models/Quandtum/textures/Turret-Normal");
+            modelMaterial.EmissiveTexture = Application.Content.Load<Texture2D>("Models/Quandtum/textures/Turret-Emission");
+            modelMaterial.SpecularTexture = Application.Content.Load<Texture2D>("Models/Quandtum/textures/Turret-Specular");
+            modelMaterial.ReflectionTexture = RenderSettings.Skybox.Texture;
+            modelMaterial.Shininess = 25;
 
             _camera.AddComponent<VRPlayerEnabler>();
         }

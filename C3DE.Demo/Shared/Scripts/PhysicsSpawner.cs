@@ -1,6 +1,7 @@
 ﻿using C3DE.Components;
 using C3DE.Components.Physics;
 using C3DE.Components.Rendering;
+using C3DE.Graphics;
 using C3DE.Graphics.Materials;
 using C3DE.Graphics.Primitives;
 using C3DE.Utils;
@@ -26,8 +27,10 @@ namespace C3DE.Demo.Scripts
 
             _material = new StandardMaterial();
             _material.DiffuseColor = RandomHelper.GetColor();
-            _material.MainTexture = Application.Content.Load<Texture2D>("Textures/Terrain/Rock");
-            _material.NormalMap = Application.Content.Load<Texture2D>("Textures/Terrain/Rock_Normal");
+            _material.MainTexture = Application.Content.Load<Texture2D>("Textures/Proto/Protogrid");
+            _material.EmissiveTexture = TextureFactory.AddColor(_material.MainTexture, RandomHelper.GetColor());
+            _material.EmissiveColor = RandomHelper.GetColor();
+            _material.Tiling = new Vector2(0.5f);
 
             var go = new GameObject("Cube");
             var cube = go.AddComponent<MeshRenderer>();

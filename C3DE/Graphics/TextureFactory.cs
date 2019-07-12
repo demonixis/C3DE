@@ -7,6 +7,30 @@ namespace C3DE.Graphics
 {
     public class TextureFactory
     {
+        public static Texture2D AddColor(Texture2D target, Color color)
+        {
+            var width = target.Width;
+            var height = target.Height;
+            var graphics = Application.GraphicsDevice;
+            var colors = new Color[width * height];
+            var current = Color.Black;
+
+            target.GetData<Color>(colors);
+
+            for (var i = 0; i < width * height; i++)
+            {
+                current = colors[i];
+                current.R = (byte)Math.Min(255,  current.R + color.R);
+                current.G = (byte)Math.Min(255,  current.G + color.G);
+                current.B = (byte)Math.Min(255,  current.B + color.B);
+            }
+
+            var texture = new Texture2D(graphics, width, height);
+            texture.SetData<Color>(colors);
+
+            return texture;
+        }
+
         public static Texture2D PackTextures(int width, int height, Texture2D upperLeft, Texture2D upperRight, Texture2D bottomLeft, Texture2D bottomRight)
         {
             if (width == 0)

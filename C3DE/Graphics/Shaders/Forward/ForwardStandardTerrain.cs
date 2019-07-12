@@ -38,7 +38,7 @@ namespace C3DE.Graphics.Materials.Shaders
             m_EPSnowTexture = _effect.Parameters["SnowTexture"];
             m_EPSandTexture = _effect.Parameters["SandTexture"];
             // Normals
-            m_EPGrassNormalTexture = _effect.Parameters["NormalMap"];
+            m_EPGrassNormalTexture = _effect.Parameters["GrassNormalMap"];
             m_EPRockNormalTexture = _effect.Parameters["RockNormalMap"];
             m_EPSnowNormalTexture = _effect.Parameters["SnowNormalMap"];
             m_EPSandNormalTexture = _effect.Parameters["SandNormalMap"];

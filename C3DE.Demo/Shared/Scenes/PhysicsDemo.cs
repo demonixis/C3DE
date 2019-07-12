@@ -1,6 +1,7 @@
 ﻿using C3DE.Components.Physics;
 using C3DE.Components.Rendering;
 using C3DE.Demo.Scripts;
+using C3DE.Graphics;
 using C3DE.Graphics.Materials;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -20,9 +21,8 @@ namespace C3DE.Demo.Scenes
             SetControlMode(ControllerSwitcher.ControllerType.FPS, new Vector3(0, 2, 0), Vector3.Zero, true);
 
             var terrainMaterial = new StandardMaterial();
-            terrainMaterial.MainTexture = Application.Content.Load<Texture2D>("Textures/Terrain/Sand");
-            terrainMaterial.NormalMap = Application.Content.Load<Texture2D>("Textures/Terrain/Sand_Normal");
-            terrainMaterial.Shininess = 500;
+            terrainMaterial.MainTexture = TextureFactory.CreateCheckboard(Color.White, Color.Black);
+            terrainMaterial.Shininess = 5;
             terrainMaterial.Tiling = new Vector2(32);
 
             var terrainGo = GameObjectFactory.CreateTerrain();
