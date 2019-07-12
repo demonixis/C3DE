@@ -62,8 +62,10 @@
     <Compile Include="Extensions\MatrixExtensions.cs" />
     <Compile Include="Extensions\ModelExtensions.cs" />
     <Compile Include="Components\GameObjectFactory.cs" />
-    <Compile Include="Graphics\Materials\PBRMaterial.cs" />
     <Compile Include="Graphics\Materials\PBRTerrainMaterial.cs" />
+    <Compile Include="Graphics\Materials\PBRLavaMaterial.cs" />
+    <Compile Include="Graphics\Materials\PBRMaterial.cs" />
+    <Compile Include="Graphics\Materials\PBRTerrainAtlasedMaterial.cs" />
     <Compile Include="Graphics\Materials\PBRWaterMaterial.cs" />
     <Compile Include="Graphics\Shaders\Deferred\DeferredLava.cs" />
     <Compile Include="Graphics\Shaders\Deferred\DeferredStandardTerrain.cs" />
@@ -71,8 +73,12 @@
     <Compile Include="Graphics\Shaders\Deferred\DeferredTransparent.cs" />
     <Compile Include="Graphics\Shaders\Deferred\DeferredUnlit.cs" />
     <Compile Include="Graphics\Shaders\Forward\ForwardPBR.cs" />
-    <Compile Include="Graphics\Shaders\Forward\ForwardPBRWater.cs" />
+    <Compile Include="Graphics\Shaders\Forward\ForwardPBRBase.cs" />
+    <Compile Include="Graphics\Shaders\Forward\ForwardPBRLava.cs" />
     <Compile Include="Graphics\Shaders\Forward\ForwardPBRTerrain.cs" />
+    <Compile Include="Graphics\Shaders\Forward\ForwardPBRWater.cs" />
+    <Compile Include="Graphics\Shaders\Forward\ForwardPBRAtlasedTerrain.cs" />
+    <Compile Include="Graphics\Shaders\Forward\ForwardShader.cs" />
     <Compile Include="Graphics\Shaders\Forward\IMultipassLightingMaterial.cs" />
     <Compile Include="Graphics\Shaders\Deferred\DeferredSkybox.cs" />
     <Compile Include="Graphics\Shaders\Deferred\DeferredStandard.cs" />

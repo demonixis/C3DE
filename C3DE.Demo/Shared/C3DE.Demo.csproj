@@ -45,6 +45,8 @@
     <Compile Include="DemoGame.cs" />
     <Compile Include="Scenes\HeightmapDemo.cs" />
     <Compile Include="Scenes\LightingDemo.cs" />
+    <Compile Include="Scenes\PBR\HeightmapPBRDemo.cs" />
+    <Compile Include="Scenes\PBR\TerrainLavaPBRDemo.cs" />
     <Compile Include="Scenes\PBR\SimplePBRDemo.cs" />
     <Compile Include="Scenes\SimpleDemo.cs" />
     <Compile Include="Scenes\GUIDemo.cs" />
@@ -81,7 +83,7 @@
     <Compile Include="Scripts\VRSwitcher.cs" />
     <Compile Include="Scripts\WeightMapViewer.cs" />
     <Compile Include="Scenes\ProceduralTerrainWater.cs" />
-    <Compile Include="Scenes\PBR\HeightmapPBRDemo.cs" />
+    <Compile Include="Scenes\PBR\HeightmapPBRAtlasedDemo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -1,10 +1,13 @@
 ﻿using C3DE.Components;
+using C3DE.Components.Lighting;
 using C3DE.Components.Rendering;
 using C3DE.Graphics.Materials;
 using C3DE.Graphics.Materials.Shaders;
+using C3DE.Graphics.Shaders.Forward;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 
 namespace C3DE.Graphics.Rendering
 {
@@ -13,7 +16,15 @@ namespace C3DE.Graphics.Rendering
     /// </summary>
     public class ForwardRenderer : BaseRenderer
     {
+#if WINDOWS
+        public const int MaxLightCount = 64;
+#else
+        public const int MaxLightCount = 8;
+#endif
+
         private DepthRenderer _depthRenderer;
+        private LightData _lightData;
+        private ShadowData _shadowData;
 
         public DepthRenderer DepthRenderer => _depthRenderer;
 
@@ -139,9 +150,51 @@ namespace C3DE.Graphics.Rendering
             Renderer renderer;
             Material material;
             ShaderMaterial shader;
+            ForwardShader forwardShader;
             IMultipassLightingMaterial multiLightShader;
+
+            // Camera
+            var cameraPosition = camera._transform.Position;
+            var cameraViewMatrix = camera._viewMatrix;
+            var cameraProjectionMatrix = camera._projectionMatrix;
+
+            // Compute Lighting & Shadows.
+            // TODO: Put it in a cache.
             var lights = scene.lights;
             var lightCount = lights.Count;
+
+            lightCount = Math.Min(MaxLightCount, lightCount);
+
+            if (_lightData.Count != lightCount)
+            {
+                _lightData.Count = lightCount;
+                _lightData.Colors = new Vector3[lightCount];
+                _lightData.Positions = new Vector3[lightCount];
+                _lightData.Data = new Vector3[lightCount];
+            }
+
+            var shadow = false;
+
+            for (var i = 0; i < lightCount; i++)
+            {
+                _lightData.Positions[i] = lights[i].Transform.Position;
+                _lightData.Colors[i] = lights[i]._color;
+                _lightData.Data[i].X = 1; // Default Point
+                _lightData.Data[i].Y = lights[i].Intensity;
+                _lightData.Data[i].Z = lights[i].Radius;
+
+                if (lights[i].TypeLight == LightType.Directional)
+                    _lightData.Data[i].X = 0;
+
+                if (!shadow && lights[i].ShadowEnabled)
+                {
+                    _shadowData.ProjectionMatrix = lights[i]._projectionMatrix;
+                    _shadowData.ViewMatrix = lights[i]._viewMatrix;
+                    _shadowData.Data = lights[i]._shadowGenerator._shadowData;
+                    _shadowData.ShadowMap = lights[i]._shadowGenerator.ShadowMap;
+                    shadow = true;
+                }
+            }
 
             // Pass, Update matrix, material attributes, etc.
             for (var i = 0; i < renderCount; i++)
@@ -158,9 +211,19 @@ namespace C3DE.Graphics.Rendering
 
                 shader = material._shaderMaterial;
 
-                // Ambient pass
-                shader.PrePass(camera);
-                shader.Pass(scene.RenderList[i]);
+                if (shader is ForwardShader)
+                {
+                    forwardShader = (ForwardShader)shader;
+                    forwardShader.PrePass(ref cameraPosition, ref cameraViewMatrix, ref cameraProjectionMatrix, ref _lightData, ref _shadowData);
+                    forwardShader.Pass(ref renderer._transform._worldMatrix, renderer.ReceiveShadow);
+                }
+                else
+                {
+                    // Deprecated
+                    shader.PrePass(camera);
+                    shader.Pass(renderer);
+                }
+
                 renderer.Draw(_graphicsDevice);
 
                 // Lightpass

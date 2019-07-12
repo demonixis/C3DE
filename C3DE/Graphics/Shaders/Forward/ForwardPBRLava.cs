@@ -5,41 +5,36 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace C3DE.Graphics.Shaders.Forward
 {
-    public class ForwardPBRWater : ForwardPBRBase
+    public class ForwardPBRLava : ForwardPBRBase
     {
-        private PBRWaterMaterial _material;
+        private PBRLavaMaterial _material;
         private Vector2 _features;
 
-        public ForwardPBRWater(PBRWaterMaterial material)
+        public ForwardPBRLava(PBRLavaMaterial material)
         {
             _material = material;
         }
 
         public override void LoadEffect(ContentManager content)
         {
-            _effect = content.Load<Effect>("Shaders/Forward/PBRWater");
-        }
-
-        public override void PrePass(ref Vector3 cameraPosition, ref Matrix viewMatrix, ref Matrix projectionMatrix, ref LightData lightData, ref ShadowData shadowData)
-        {
-            _effect.Parameters["TotalTime"].SetValue(Time.TotalTime);
-
-            base.PrePass(ref cameraPosition, ref viewMatrix, ref projectionMatrix, ref lightData, ref shadowData);
+            _effect = content.Load<Effect>("Shaders/Forward/PBRLava");
         }
 
         public override void Pass(ref Matrix worldMatrix, bool receiveShadow)
         {
             _features.X = _material.NormalMap != null ? 1 : 0;
-            _features.Y = 0;
+            _features.Y = _material.EmissiveIntensity > 1 ? 1 : 0;
 
             _effect.Parameters["TextureTiling"].SetValue(_material.Tiling);
             _effect.Parameters["World"].SetValue(worldMatrix);
             _effect.Parameters["AlbedoMap"].SetValue(_material.MainTexture);
             _effect.Parameters["NormalMap"].SetValue(_material.NormalMap);
-            _effect.Parameters["RMAOMap"].SetValue(_material._rmaoMap);
+            _effect.Parameters["Roughness"].SetValue(_material.Roughness);
+            _effect.Parameters["Metallic"].SetValue(_material.Metallic);
             _effect.Parameters["Features"].SetValue(_features);
             _effect.Parameters["ShadowEnabled"].SetValue(receiveShadow);
-            _effect.Parameters["Alpha"].SetValue(_material.Alpha);
+            _effect.Parameters["TotalTime"].SetValue(Time.TotalTime * _material.Speed);
+            _effect.Parameters["EmissiveIntensity"].SetValue(_material.EmissiveIntensity);
 
             _effect.CurrentTechnique.Passes[0].Apply();
         }

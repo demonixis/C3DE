@@ -137,7 +137,7 @@ namespace C3DE
 
             var material = new LavaMaterial();
             material.MainTexture = lavalTexture;
-            material.NormalTexture = normalTexture;
+            material.NormalMap = normalTexture;
 
             renderer.Material = material;
             renderer.Mesh.Size = size;

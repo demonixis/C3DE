@@ -1,11 +1,10 @@
 ﻿using C3DE.Components.Rendering;
 using C3DE.Demo.Scripts;
-using C3DE.Graphics;
 using C3DE.Graphics.Materials;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace C3DE.Demo.Scenes.PBR
+namespace C3DE.Demo.Scenes
 {
     public class HeightmapPBRDemo : SimpleDemo
     {
@@ -15,61 +14,27 @@ namespace C3DE.Demo.Scenes.PBR
         {
             base.Initialize();
 
-            _directionalLight.AddComponent<LightMover>();
-
             var content = Application.Content;
 
-            //
-            // Create the PBR Terrain
-            //
+            // Finally a terrain
+            var terrainMaterial = new PBRTerrainMaterial();
+            terrainMaterial.GrassMap = content.Load<Texture2D>("Textures/Terrain/Ground/Ground03_col");
+            terrainMaterial.GrassNormalMap = content.Load<Texture2D>("Textures/Terrain/Ground/Ground03_nrm");
+            terrainMaterial.SnowMap = content.Load<Texture2D>("Textures/Terrain/Sand/Ground27_col");
+            terrainMaterial.SandNormalMap = content.Load<Texture2D>("Textures/Terrain/Sand/Ground27_nrm");
+            terrainMaterial.SnowMap = content.Load<Texture2D>("Textures/Terrain/Snow/Snow05_col");
+            terrainMaterial.SnowNormalMap = content.Load<Texture2D>("Textures/Terrain/Snow/Snow05_nrm");
+            terrainMaterial.RockMap = content.Load<Texture2D>("Textures/Terrain/Rock/Rock12_col");
+            terrainMaterial.RockNormalMap = content.Load<Texture2D>("Textures/Terrain/Rock/Rock12_nrm");
 
-            // 1. PBR Material.
-            var tMaterial = new PBRTerrainMaterial();
-            tMaterial.CreateAlbedos(
-                content.Load<Texture2D>("Textures/Terrain/Ground/Ground03_col"),
-                content.Load<Texture2D>("Textures/Terrain/Sand/Ground27_col"),
-                content.Load<Texture2D>("Textures/Terrain/Rock/Rock12_col"),
-                content.Load<Texture2D>("Textures/Terrain/Snow/Snow05_col"),
-                false
-            );
-
-            tMaterial.CreateNormals(
-                content.Load<Texture2D>("Textures/Terrain/Ground/Ground03_nrm"),
-                content.Load<Texture2D>("Textures/Terrain/Sand/Ground27_nrm"),
-                content.Load<Texture2D>("Textures/Terrain/Rock/Rock12_nrm"),
-                content.Load<Texture2D>("Textures/Terrain/Snow/Snow05_nrm")
-            );
-
-            tMaterial.CreateRoughnessMetallicAO(
-                TextureFactory.CreateRoughnessMetallicAO(
-                    content.Load<Texture2D>("Textures/Terrain/Ground/Ground03_rgh"), 
-                    null, 
-                    null),
-                TextureFactory.CreateRoughnessMetallicAO(
-                    content.Load<Texture2D>("Textures/Terrain/Sand/Ground27_rgh"), 
-                    null, 
-                    content.Load<Texture2D>("Textures/Terrain/Sand/Ground27_AO")),
-                TextureFactory.CreateRoughnessMetallicAO(
-                    content.Load<Texture2D>("Textures/Terrain/Rock/Rock12_rgh"), 
-                    null, 
-                    content.Load<Texture2D>("Textures/Terrain/Rock/Rock12_AO")),
-                TextureFactory.CreateRoughnessMetallicAO(
-                    content.Load<Texture2D>("Textures/Terrain/Snow/Snow05_rgh"),
-                    null,
-                    null)
-            );
-
-            // Terrain
-            var terrainGo = GameObjectFactory.CreateTerrain(null, new Vector2(1));
-           
+            var terrainGo = GameObjectFactory.CreateTerrain();
             var terrain = terrainGo.GetComponent<Terrain>();
             terrain.LoadHeightmap("Textures/heightmap");
-            terrain.Renderer.Material = tMaterial;
-            terrain.AddComponent<PBRViewer>();
+            terrain.Renderer.Material = terrainMaterial;
 
-            var weightMap = terrain.GenerateWeightMap();           
-            tMaterial.WeightMap = weightMap;
-            tMaterial.Tiling = new Vector2(128f);
+            var weightMap = terrain.GenerateWeightMap();
+            terrainMaterial.WeightMap = weightMap;
+            terrainMaterial.Tiling = new Vector2(4);
             terrainGo.AddComponent<WeightMapViewer>();
 
             //

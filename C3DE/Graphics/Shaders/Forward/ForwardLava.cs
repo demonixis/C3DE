@@ -57,7 +57,7 @@ namespace C3DE.Graphics.Materials.Shaders
         {
             m_EPTime.SetValue(Time.TotalTime * m_Material.Speed);
             m_EPMainTexture.SetValue(m_Material.MainTexture);
-            m_EPNormalTexture.SetValue(m_Material.NormalTexture);
+            m_EPNormalTexture.SetValue(m_Material.NormalMap);
             m_EPTextureTilling.SetValue(m_Material.Tiling);
             m_EPDiffuseColor.SetValue(m_Material._diffuseColor);
             m_EPWorld.SetValue(renderable.Transform._worldMatrix);

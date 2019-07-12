@@ -10,7 +10,7 @@ namespace C3DE.Demo.Scripts
     public class PBRViewer : Behaviour
     {
         private PBRMaterial _material;
-        private PBRTerrainMaterial _terrainMaterial;
+        private PBRTerrainAtlasedMaterial _terrainMaterial;
         private Rectangle _rect;
 
         public override void Start()
@@ -21,7 +21,7 @@ namespace C3DE.Demo.Scripts
                 throw new Exception("You need to attach a mesh renderer first.");
 
             _material = renderer.Material as PBRMaterial;
-            _terrainMaterial = renderer.Material as PBRTerrainMaterial;
+            _terrainMaterial = renderer.Material as PBRTerrainAtlasedMaterial;
             _rect = new Rectangle(0, Screen.VirtualHeight - 200, 150, 150);
         }
 

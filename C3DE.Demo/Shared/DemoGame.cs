@@ -84,6 +84,8 @@ namespace C3DE.Demo
 #if WINDOWS
                 new SimplePBRDemo(),
                 new HeightmapPBRDemo(),
+                new HeightmapPBRAtlasedDemo(),
+                new TerrainLavaPBRDemo(),
                 new LightingPBRDemo(),
 #endif
                 new HeightmapDemo(),

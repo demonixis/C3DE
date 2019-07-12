@@ -4,6 +4,7 @@
 // Variables
 float2 Features;
 float2 TextureTiling;
+float3 DiffuseColor;
 
 // Textures
 DECLARE_TEXTURE(AlbedoMap, 1);
@@ -32,7 +33,7 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 		emissive = SAMPLE_TEXTURE(EmissiveMap, input.UV * TextureTiling).rgba;
 
 	// PBR Lighting
-	return float4(PBRPixelShader(input.WorldPosition, normal, albedo, rmsao, emissive, shadowTerm), 1);
+	return float4(PBRPixelShader(input.WorldPosition, normal, albedo * DiffuseColor, rmsao, emissive, shadowTerm), 1);
 }
 
 TECHNIQUE_SM4(PBR, VertexShaderFunction, PixelShaderFunction);

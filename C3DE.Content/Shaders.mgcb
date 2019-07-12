@@ -97,11 +97,29 @@
 /processorParam:DebugMode=Auto
 /build:Shaders/Forward/Lava.fx
 
+#begin Shaders/Forward/PBRLava.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Shaders/Forward/PBRLava.fx
+
 #begin Shaders/Forward/PBRStandard.fx
 /importer:EffectImporter
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
 /build:Shaders/Forward/PBRStandard.fx
+
+#begin Shaders/Forward/PBRTerrain.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Shaders/Forward/PBRTerrain.fx
+
+#begin Shaders/Forward/PBRTerrainAtlased.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Shaders/Forward/PBRTerrainAtlased.fx
 
 #begin Shaders/Forward/PBRWater.fx
 /importer:EffectImporter
@@ -132,12 +150,6 @@
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
 /build:Shaders/Forward/StandardWater.fx
-
-#begin Shaders/Forward/TerrainPBR.fx
-/importer:EffectImporter
-/processor:EffectProcessor
-/processorParam:DebugMode=Auto
-/build:Shaders/Forward/TerrainPBR.fx
 
 #begin Shaders/Forward/Transparent.fx
 /importer:EffectImporter
