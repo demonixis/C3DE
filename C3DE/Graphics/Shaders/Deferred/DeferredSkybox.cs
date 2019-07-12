@@ -25,7 +25,6 @@ namespace C3DE.Graphics.Materials.Shaders
         public override void LoadEffect(ContentManager content)
         {
             _effect = content.Load<Effect>("Shaders/Deferred/Skybox");
-            //m_DefaultPass = m_Effect.CurrentTechnique.Passes["AmbientPass"];
             m_EPView = _effect.Parameters["View"];
             m_EPProjection = _effect.Parameters["Projection"];
             m_EPMainTexture = _effect.Parameters["Texture"];

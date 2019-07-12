@@ -1,20 +1,14 @@
+#include "../Common/Macros.fxh"
+
 // Matrix
 float4x4 World;
 float4x4 View;
 float4x4 Projection;
+
 float3 DiffuseColor;
 float2 TextureTilling;
 
-texture MainTexture;
-sampler2D textureSampler = sampler_state 
-{
-	Texture = (MainTexture);
-	MinFilter = Point;
-	MagFilter = Point;
-	MipFilter = Point;
-	AddressU = Wrap;
-	AddressV = Wrap;
-};
+DECLARE_TEXTURE(MainTexture, 1);
 
 struct VertexShaderInput
 {
@@ -49,7 +43,7 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 
 float4 PixelShaderFunctionTexture(VertexShaderOutput input) : COLOR0
 {
-    return float4(DiffuseColor * tex2D(textureSampler, input.UV * TextureTilling).xyz, 1.0);
+    return float4(DiffuseColor * SAMPLE_TEXTURE(MainTexture, input.UV * TextureTilling).xyz, 1.0);
 }
 
 technique TexturedSimple

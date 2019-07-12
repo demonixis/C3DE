@@ -1,19 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using C3DE.Components;
-using C3DE.Components.Rendering;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace C3DE.Graphics.Materials.Shaders
+namespace C3DE.Graphics.Shaders.Forward
 {
-   public class ForwardSkybox : ShaderMaterial
+   public class ForwardSkybox : ForwardShader
     {
         private Skybox m_Skybox;
-        private EffectPass m_DefaultPass;
         protected EffectParameter m_EPWorld;
         protected EffectParameter m_EPView;
         protected EffectParameter m_EPProjection;
@@ -31,7 +24,6 @@ namespace C3DE.Graphics.Materials.Shaders
         public override void LoadEffect(ContentManager content)
         {
             _effect = content.Load<Effect>("Shaders/Forward/Skybox");
-            m_DefaultPass = _effect.CurrentTechnique.Passes["AmbientPass"];
             m_EPView = _effect.Parameters["View"];
             m_EPProjection = _effect.Parameters["Projection"];
             m_EPMainTexture = _effect.Parameters["MainTexture"];
@@ -42,23 +34,23 @@ namespace C3DE.Graphics.Materials.Shaders
             m_EPFogData = _effect.Parameters["FogData"];
         }
 
-        public override void Pass(Renderer renderable)
+        public override void PrePass(ref Vector3 cameraPosition, ref Matrix viewMatrix, ref Matrix projectionMatrix, ref LightData lightData, ref ShadowData shadowData)
         {
-        }
-
-        public override void PrePass(Camera camera)
-        {
-            m_EPView.SetValue(camera._viewMatrix);
-            m_EPProjection.SetValue(camera._projectionMatrix);
-            m_EPEyePosition.SetValue(camera.Transform.LocalPosition);
+            m_EPView.SetValue(viewMatrix);
+            m_EPProjection.SetValue(projectionMatrix);
+            m_EPEyePosition.SetValue(cameraPosition);
             m_EPMainTexture.SetValue(m_Skybox.Texture);
             m_EPWorld.SetValue(m_Skybox.WorldMatrix);
-#if !DESKTOP && !ANDROID
+#if WINDOWS
             m_EPFogEnabled.SetValue(m_Skybox.FogSupported);
             m_EPFogColor.SetValue(Scene.current.RenderSettings.fogColor);
             m_EPFogData.SetValue(m_Skybox.OverrideFog ? m_Skybox.CustomFogData : Scene.current.RenderSettings.fogData);
 #endif
-            m_DefaultPass.Apply();
+            _effect.CurrentTechnique.Passes[0].Apply();
+        }
+
+        public override void Pass(ref Matrix worldMatrix, bool receiveShadow)
+        {
         }
     }
 }

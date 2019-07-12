@@ -79,7 +79,6 @@
     <Compile Include="Graphics\Shaders\Forward\ForwardPBRWater.cs" />
     <Compile Include="Graphics\Shaders\Forward\ForwardPBRAtlasedTerrain.cs" />
     <Compile Include="Graphics\Shaders\Forward\ForwardShader.cs" />
-    <Compile Include="Graphics\Shaders\Forward\IMultipassLightingMaterial.cs" />
     <Compile Include="Graphics\Shaders\Deferred\DeferredSkybox.cs" />
     <Compile Include="Graphics\Shaders\Deferred\DeferredStandard.cs" />
     <Compile Include="Graphics\Shaders\Forward\ForwardLava.cs" />

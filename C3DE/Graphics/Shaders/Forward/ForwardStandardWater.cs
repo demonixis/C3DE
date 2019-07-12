@@ -1,23 +1,25 @@
 ﻿using C3DE.Components.Lighting;
 using C3DE.Components.Rendering;
+using C3DE.Graphics.Materials;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace C3DE.Graphics.Materials.Shaders
+namespace C3DE.Graphics.Shaders.Forward
 {
     public class ForwardStandardWater : ForwardStandardBase
     {
-        protected StandardWaterMaterial m_Material;
-        protected EffectParameter m_EPReflectionTexture;
-        protected EffectParameter m_EPReflectionTextureEnabled;
-        protected EffectParameter m_EPReflectionColor;
-        protected EffectParameter m_EPNormalMap;
-        protected EffectParameter m_EPNormalMapEnabled;
-        protected EffectParameter m_EPTotalTime;
+        protected StandardWaterMaterial _material;
+        protected EffectParameter _EPReflectionTexture;
+        protected EffectParameter _EPReflectionTextureEnabled;
+        protected EffectParameter _EPReflectionColor;
+        protected EffectParameter _EPNormalMap;
+        protected EffectParameter _EPNormalMapEnabled;
+        protected EffectParameter _EPTotalTime;
 
         public ForwardStandardWater(StandardWaterMaterial material)
         {
-            m_Material = material;
+            _material = material;
         }
 
         public override void LoadEffect(ContentManager content)
@@ -30,28 +32,24 @@ namespace C3DE.Graphics.Materials.Shaders
         {
             base.SetupParamaters();
 
-            m_EPReflectionTexture = _effect.Parameters["ReflectionTexture"];
-            m_EPReflectionTextureEnabled = _effect.Parameters["ReflectionTextureEnabled"];
-            m_EPReflectionColor = _effect.Parameters["ReflectionColor"];
-            m_EPNormalMap = _effect.Parameters["NormalTexture"];
-            m_EPNormalMapEnabled = _effect.Parameters["NormalTextureEnabled"];
-            m_EPTotalTime = _effect.Parameters["TotalTime"];
+            _EPReflectionTexture = _effect.Parameters["ReflectionTexture"];
+            _EPReflectionTextureEnabled = _effect.Parameters["ReflectionTextureEnabled"];
+            _EPReflectionColor = _effect.Parameters["ReflectionColor"];
+            _EPNormalMap = _effect.Parameters["NormalTexture"];
+            _EPNormalMapEnabled = _effect.Parameters["NormalTextureEnabled"];
+            _EPTotalTime = _effect.Parameters["TotalTime"];
         }
 
-        public override void Pass(Renderer renderable)
+        public override void Pass(ref Matrix worldMatrix, bool receiveShadow)
         {
-            m_EPTotalTime.SetValue(Time.TotalTime * m_Material.Speed);
-            m_EPNormalMap.SetValue(m_Material.NormalMap);
-            m_EPNormalMapEnabled.SetValue(m_Material.NormalMap != null);
-            m_EPReflectionTexture.SetValue(m_Material.ReflectionTexture);
-            m_EPReflectionTextureEnabled.SetValue(m_Material.ReflectionTexture != null);
-            m_EPReflectionColor.SetValue(m_Material.ReflectionColor.ToVector3());
-            BasePass(m_Material, renderable);
-        }
+            _EPTotalTime.SetValue(Time.TotalTime * _material.Speed);
+            _EPNormalMap.SetValue(_material.NormalMap);
+            _EPNormalMapEnabled.SetValue(_material.NormalMap != null);
+            _EPReflectionTexture.SetValue(_material.ReflectionTexture);
+            _EPReflectionTextureEnabled.SetValue(_material.ReflectionTexture != null);
+            _EPReflectionColor.SetValue(_material.ReflectionColor.ToVector3());
 
-        public override void LightPass(Renderer renderer, Light light)
-        {
-            BaseLightPass(m_Material, renderer, light);
+            BasePass(_material, ref worldMatrix, receiveShadow);
         }
     }
 }

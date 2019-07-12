@@ -1,27 +1,27 @@
-﻿using C3DE.Components.Lighting;
-using C3DE.Components.Rendering;
+﻿using C3DE.Graphics.Materials;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace C3DE.Graphics.Materials.Shaders
+namespace C3DE.Graphics.Shaders.Forward
 {
     public class ForwardStandard : ForwardStandardBase
     {
-        private StandardMaterial m_Material;
-        protected EffectParameter m_EPNormalTexture;
-        protected EffectParameter m_EPNormalTextureEnabled;
-        protected EffectParameter m_EPReflectionTexture;
-        protected EffectParameter m_EPReflectionTextureEnabled;
-        protected EffectParameter m_EPEmissiveTextureEnabled;
-        protected EffectParameter m_EPEmissiveTexture;
-        protected EffectParameter m_EPEmissiveColor;
-        protected EffectParameter m_EPEmissiveIntensity;
+        private StandardMaterial _Material;
+        protected EffectParameter _EPNormalTexture;
+        protected EffectParameter _EPNormalTextureEnabled;
+        protected EffectParameter _EPReflectionTexture;
+        protected EffectParameter _EPReflectionTextureEnabled;
+        protected EffectParameter _EPEmissiveTextureEnabled;
+        protected EffectParameter _EPEmissiveTexture;
+        protected EffectParameter _EPEmissiveColor;
+        protected EffectParameter _EPEmissiveIntensity;
 
-        public bool EmissiveEnabled => m_Material.EmissiveEnabled;
+        public bool EmissiveEnabled => _Material.EmissiveEnabled;
 
         public ForwardStandard(StandardMaterial material)
         {
-            m_Material = material;
+            _Material = material;
         }
 
         public override void LoadEffect(ContentManager content)
@@ -34,32 +34,29 @@ namespace C3DE.Graphics.Materials.Shaders
         {
             base.SetupParamaters();
 
-            m_EPNormalTexture = _effect.Parameters["NormalTexture"];
-            m_EPNormalTextureEnabled = _effect.Parameters["NormalTextureEnabled"];
-            m_EPReflectionTexture = _effect.Parameters["ReflectionTexture"];
-            m_EPReflectionTextureEnabled = _effect.Parameters["ReflectionTextureEnabled"];
-            m_EPEmissiveTextureEnabled = _effect.Parameters["EmissiveTextureEnabled"];
-            m_EPEmissiveTexture = _effect.Parameters["EmissiveTexture"];
-            m_EPEmissiveColor = _effect.Parameters["EmissiveColor"];
-            m_EPEmissiveIntensity = _effect.Parameters["EmissiveIntensity"];
+            _EPNormalTexture = _effect.Parameters["NormalTexture"];
+            _EPNormalTextureEnabled = _effect.Parameters["NormalTextureEnabled"];
+            _EPReflectionTexture = _effect.Parameters["ReflectionTexture"];
+            _EPReflectionTextureEnabled = _effect.Parameters["ReflectionTextureEnabled"];
+            _EPEmissiveTextureEnabled = _effect.Parameters["EmissiveTextureEnabled"];
+            _EPEmissiveTexture = _effect.Parameters["EmissiveTexture"];
+            _EPEmissiveColor = _effect.Parameters["EmissiveColor"];
+            _EPEmissiveIntensity = _effect.Parameters["EmissiveIntensity"];
         }
 
-        public override void Pass(Renderer renderable)
+        public override void Pass(ref Matrix worldMatrix, bool receiveShadow)
         {
-            m_EPReflectionTexture.SetValue(m_Material.ReflectionTexture);
-            m_EPReflectionTextureEnabled.SetValue(m_Material.ReflectionTexture != null);
-            BasePass(m_Material, renderable);
-        }
+            _EPReflectionTexture.SetValue(_Material.ReflectionTexture);
+            _EPReflectionTextureEnabled.SetValue(_Material.ReflectionTexture != null);
 
-        public override void LightPass(Renderer renderer, Light light)
-        {
-            m_EPEmissiveTextureEnabled.SetValue(m_Material.EmissiveTexture != null);
-            m_EPEmissiveTexture.SetValue(m_Material.EmissiveTexture);
-            m_EPEmissiveColor.SetValue(m_Material.EmissiveColor.ToVector3());
-            m_EPEmissiveIntensity.SetValue(m_Material.EmissiveIntensity);
-            m_EPNormalTexture.SetValue(m_Material.NormalMap);
-            m_EPNormalTextureEnabled.SetValue(m_Material.NormalMap != null);
-            BaseLightPass(m_Material, renderer, light);
+            _EPEmissiveTextureEnabled.SetValue(_Material.EmissiveTexture != null);
+            _EPEmissiveTexture.SetValue(_Material.EmissiveTexture);
+            _EPEmissiveColor.SetValue(_Material.EmissiveColor.ToVector3());
+            _EPEmissiveIntensity.SetValue(_Material.EmissiveIntensity);
+            _EPNormalTexture.SetValue(_Material.NormalMap);
+            _EPNormalTextureEnabled.SetValue(_Material.NormalMap != null);
+
+            BasePass(_Material, ref worldMatrix, receiveShadow);
         }
     }
 }

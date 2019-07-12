@@ -1,125 +1,126 @@
-﻿using C3DE.Components;
-using C3DE.Components.Lighting;
-using C3DE.Components.Rendering;
+﻿using C3DE.Components.Lighting;
+using C3DE.Graphics.Materials;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace C3DE.Graphics.Materials.Shaders
+namespace C3DE.Graphics.Shaders.Forward
 {
-    public abstract class ForwardStandardBase : ShaderMaterial, IMultipassLightingMaterial
+    public abstract class ForwardStandardBase : ForwardShader
     {
-        protected EffectPass m_PassAmbient;
-        protected EffectPass m_PassLight;
-        protected EffectParameter m_EPView;
-        protected EffectParameter m_EPProjection;
-        protected EffectParameter m_EPEyePosition;
-        protected EffectParameter m_EPAmbientColor;
-        protected EffectParameter m_EPWorld;
-        protected EffectParameter m_EPTextureTilling;
-        protected EffectParameter m_EPDiffuseColor;
-        protected EffectParameter m_EPMainTexture;
-        protected EffectParameter m_EPSpecularLightColor;
-        protected EffectParameter m_EPSpecularPower;
-        protected EffectParameter m_EPSpecularIntensity;
-        protected EffectParameter m_EPLightColor;
-        protected EffectParameter m_EPLightDirection;
-        protected EffectParameter m_EPLightPosition;
-        protected EffectParameter m_EPLightSpotAngle;
-        protected EffectParameter m_EPLightIntensity;
-        protected EffectParameter m_EPLightRange;
-        protected EffectParameter m_EPLightFallOff;
-        protected EffectParameter m_EPLightType;
-        protected EffectParameter m_EPShadowStrength;
-        protected EffectParameter m_EPShadowBias;
-        protected EffectParameter m_EPShadowMap;
-        protected EffectParameter m_EPShadowEnabled;
-        protected EffectParameter m_EPFogColor;
-        protected EffectParameter m_EPFogData;
-        protected EffectParameter m_EPLightView;
-        protected EffectParameter m_EPLightProjection;
-        protected EffectParameter m_EPSpecularTextureEnabled;
-        protected EffectParameter m_EPSpecularTexture;
+        protected EffectParameter _EPView;
+        protected EffectParameter _EPProjection;
+        protected EffectParameter _EPEyePosition;
+        protected EffectParameter _EPAmbientColor;
+        protected EffectParameter _EPWorld;
+        protected EffectParameter _EPTextureTilling;
+        protected EffectParameter _EPDiffuseColor;
+        protected EffectParameter _EPMainTexture;
+        protected EffectParameter _EPSpecularLightColor;
+        protected EffectParameter _EPSpecularPower;
+        protected EffectParameter _EPSpecularIntensity;
+        protected EffectParameter _EPLightColor;
+        protected EffectParameter _EPLightDirection;
+        protected EffectParameter _EPLightPosition;
+        protected EffectParameter _EPLightSpotAngle;
+        protected EffectParameter _EPLightIntensity;
+        protected EffectParameter _EPLightRange;
+        protected EffectParameter _EPLightFallOff;
+        protected EffectParameter _EPLightType;
+        protected EffectParameter _EPShadowStrength;
+        protected EffectParameter _EPShadowBias;
+        protected EffectParameter _EPShadowMap;
+        protected EffectParameter _EPShadowEnabled;
+        protected EffectParameter _EPFogColor;
+        protected EffectParameter _EPFogData;
+        protected EffectParameter _EPLightView;
+        protected EffectParameter _EPLightProjection;
+        protected EffectParameter _EPSpecularTextureEnabled;
+        protected EffectParameter _EPSpecularTexture;
 
         protected virtual void SetupParamaters()
         {
-            m_PassAmbient = _effect.CurrentTechnique.Passes["AmbientPass"];
-            m_PassLight = _effect.CurrentTechnique.Passes["LightPass"];
-            m_EPView = _effect.Parameters["View"];
-            m_EPProjection = _effect.Parameters["Projection"];
-            m_EPEyePosition = _effect.Parameters["EyePosition"];
-            m_EPAmbientColor = _effect.Parameters["AmbientColor"];
-            m_EPWorld = _effect.Parameters["World"];
-            m_EPTextureTilling = _effect.Parameters["TextureTiling"];
-            m_EPDiffuseColor = _effect.Parameters["DiffuseColor"];
-            m_EPMainTexture = _effect.Parameters["MainTexture"];
-            m_EPSpecularLightColor = _effect.Parameters["SpecularLightColor"];
-            m_EPSpecularPower = _effect.Parameters["SpecularPower"];
-            m_EPSpecularIntensity = _effect.Parameters["SpecularIntensity"];
-            m_EPLightColor = _effect.Parameters["LightColor"];
-            m_EPLightDirection = _effect.Parameters["LightDirection"];
-            m_EPLightPosition = _effect.Parameters["LightPosition"];
-            m_EPLightSpotAngle = _effect.Parameters["LightSpotAngle"];
-            m_EPLightIntensity = _effect.Parameters["LightIntensity"];
-            m_EPLightRange = _effect.Parameters["LightRange"];
-            m_EPLightFallOff = _effect.Parameters["LightFallOff"];
-            m_EPLightType = _effect.Parameters["LightType"];
-            m_EPShadowStrength = _effect.Parameters["ShadowStrength"];
-            m_EPShadowBias = _effect.Parameters["ShadowBias"];
-            m_EPShadowMap = _effect.Parameters["ShadowMap"];
-            m_EPShadowEnabled = _effect.Parameters["ShadowEnabled"];
-            m_EPFogColor = _effect.Parameters["FogColor"];
-            m_EPFogData = _effect.Parameters["FogData"];
-            m_EPLightView = _effect.Parameters["LightView"];
-            m_EPLightProjection = _effect.Parameters["LightProjection"];
-            m_EPSpecularTextureEnabled = _effect.Parameters["SpecularTextureEnabled"];
-            m_EPSpecularTexture = _effect.Parameters["SpecularTexture"];
+            _EPView = _effect.Parameters["View"];
+            _EPProjection = _effect.Parameters["Projection"];
+            _EPEyePosition = _effect.Parameters["EyePosition"];
+            _EPAmbientColor = _effect.Parameters["AmbientColor"];
+            _EPWorld = _effect.Parameters["World"];
+            _EPTextureTilling = _effect.Parameters["TextureTiling"];
+            _EPDiffuseColor = _effect.Parameters["DiffuseColor"];
+            _EPMainTexture = _effect.Parameters["MainTexture"];
+            _EPSpecularLightColor = _effect.Parameters["SpecularLightColor"];
+            _EPSpecularPower = _effect.Parameters["SpecularPower"];
+            _EPSpecularIntensity = _effect.Parameters["SpecularIntensity"];
+            _EPLightColor = _effect.Parameters["LightColor"];
+            _EPLightDirection = _effect.Parameters["LightDirection"];
+            _EPLightPosition = _effect.Parameters["LightPosition"];
+            _EPLightSpotAngle = _effect.Parameters["LightSpotAngle"];
+            _EPLightIntensity = _effect.Parameters["LightIntensity"];
+            _EPLightRange = _effect.Parameters["LightRange"];
+            _EPLightFallOff = _effect.Parameters["LightFallOff"];
+            _EPLightType = _effect.Parameters["LightType"];
+            _EPShadowStrength = _effect.Parameters["ShadowStrength"];
+            _EPShadowBias = _effect.Parameters["ShadowBias"];
+            _EPShadowMap = _effect.Parameters["ShadowMap"];
+            _EPShadowEnabled = _effect.Parameters["ShadowEnabled"];
+            _EPFogColor = _effect.Parameters["FogColor"];
+            _EPFogData = _effect.Parameters["FogData"];
+            _EPLightView = _effect.Parameters["LightView"];
+            _EPLightProjection = _effect.Parameters["LightProjection"];
+            _EPSpecularTextureEnabled = _effect.Parameters["SpecularTextureEnabled"];
+            _EPSpecularTexture = _effect.Parameters["SpecularTexture"];
         }
 
-        public override void PrePass(Camera camera)
+        public override void PrePass(ref Vector3 cameraPosition, ref Matrix viewMatrix, ref Matrix projectionMatrix, ref LightData lightData, ref ShadowData shadowData)
         {
-            m_EPView.SetValue(camera._viewMatrix);
-            m_EPProjection.SetValue(camera._projectionMatrix);
-            m_EPEyePosition.SetValue(camera.Transform.LocalPosition);
-            m_EPAmbientColor.SetValue(Scene.current.RenderSettings.ambientColor);
+            _EPView.SetValue(viewMatrix);
+            _EPProjection.SetValue(projectionMatrix);
+            _EPEyePosition.SetValue(cameraPosition);
+            _EPAmbientColor.SetValue(Scene.current.RenderSettings.ambientColor);
         }
 
-        protected void BasePass(StandardMaterialBase material, Renderer renderable)
+        protected void BasePass(StandardMaterialBase material, ref Matrix worldMatrix, bool receiveShadow)
         {
-            m_EPWorld.SetValue(renderable.Transform._worldMatrix);
-            m_EPTextureTilling.SetValue(material.Tiling);
-            m_EPDiffuseColor.SetValue(material._diffuseColor);
-            m_EPMainTexture.SetValue(material.MainTexture);
-            m_PassAmbient.Apply();
+            _EPWorld.SetValue(worldMatrix);
+            _EPTextureTilling.SetValue(material.Tiling);
+            _EPDiffuseColor.SetValue(material._diffuseColor);
+            _EPMainTexture.SetValue(material.MainTexture);
+
+            // FIXME: Will be removed when singlepass lighting will be done.
+            var lights = Scene.current.lights;
+            LegacyLightPass(material, receiveShadow, lights.Count > 0 ? lights[0] : null);
+
+            _effect.CurrentTechnique.Passes[0].Apply();
         }
 
-        protected void BaseLightPass(StandardMaterialBase material, Renderer renderer, Light light)
+        protected void LegacyLightPass(StandardMaterialBase material, bool receiveShadow, Light light)
         {
-            m_EPSpecularLightColor.SetValue(material.SpecularColor.ToVector3());
-            m_EPSpecularPower.SetValue(material.Shininess);
-            m_EPSpecularIntensity.SetValue(material.SpecularIntensity);
-            m_EPLightColor.SetValue(light._color);
-            m_EPLightDirection.SetValue(light.Direction);
-            m_EPLightPosition.SetValue(light._transform.LocalPosition);
-            m_EPLightSpotAngle.SetValue(light.Angle);
-            m_EPLightIntensity.SetValue(light.Intensity);
-            m_EPLightRange.SetValue(light.Radius);
-            m_EPLightFallOff.SetValue(light.FallOf);
-            m_EPLightType.SetValue((int)light.TypeLight);
+            if (light == null)
+                return;
+
+            _EPSpecularLightColor.SetValue(material.SpecularColor.ToVector3());
+            _EPSpecularPower.SetValue(material.Shininess);
+            _EPSpecularIntensity.SetValue(material.SpecularIntensity);
+            _EPLightColor.SetValue(light._color);
+            _EPLightDirection.SetValue(light.Direction);
+            _EPLightPosition.SetValue(light._transform.LocalPosition);
+            _EPLightSpotAngle.SetValue(light.Angle);
+            _EPLightIntensity.SetValue(light.Intensity);
+            _EPLightRange.SetValue(light.Radius);
+            _EPLightFallOff.SetValue(light.FallOf);
+            _EPLightType.SetValue((int)light.TypeLight);
 
 #if !DESKTOP && !ANDROID
-            m_EPFogColor.SetValue(Scene.current.RenderSettings.fogColor);
-            m_EPFogData.SetValue(Scene.current.RenderSettings.fogData);
+            _EPFogColor.SetValue(Scene.current.RenderSettings.fogColor);
+            _EPFogData.SetValue(Scene.current.RenderSettings.fogData);
 #endif
-            m_EPShadowStrength.SetValue(light._shadowGenerator.ShadowStrength);
-            m_EPShadowBias.SetValue(light._shadowGenerator.ShadowBias);
-            m_EPShadowMap.SetValue(light._shadowGenerator.ShadowMap);
-            m_EPShadowEnabled.SetValue(renderer.ReceiveShadow);
-            m_EPLightView.SetValue(light._viewMatrix);
-            m_EPLightProjection.SetValue(light._projectionMatrix);
-            m_EPSpecularTextureEnabled.SetValue(material.SpecularTexture != null);
-            m_EPSpecularTexture.SetValue(material.SpecularTexture);
-            m_PassLight.Apply();
+            _EPShadowStrength.SetValue(light._shadowGenerator.ShadowStrength);
+            _EPShadowBias.SetValue(light._shadowGenerator.ShadowBias);
+            _EPShadowMap.SetValue(light._shadowGenerator.ShadowMap);
+            _EPShadowEnabled.SetValue(receiveShadow);
+            _EPLightView.SetValue(light._viewMatrix);
+            _EPLightProjection.SetValue(light._projectionMatrix);
+            _EPSpecularTextureEnabled.SetValue(material.SpecularTexture != null);
+            _EPSpecularTexture.SetValue(material.SpecularTexture);
         }
-
-        public abstract void LightPass(Renderer renderer, Light light);
     }
 }

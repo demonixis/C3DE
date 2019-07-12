@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using C3DE.Graphics.Rendering;
 using C3DE.Graphics.Materials.Shaders;
+using C3DE.Graphics.Shaders.Forward;
 
 namespace C3DE.Graphics.Materials
 {

@@ -1,5 +1,6 @@
 ﻿using C3DE.Components;
 using C3DE.Components.Rendering;
+using C3DE.Graphics.Shaders.Forward;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -15,23 +16,22 @@ namespace C3DE.Graphics.Materials.Shaders
         {
             _effect = content.Load<Effect>("Shaders/Deferred/StandardWater");
             SetupParamaters();
-            m_PassAmbient = _effect.CurrentTechnique.Passes[0];
         }
 
         public override void PrePass(Camera camera)
         {
-            m_EPView.SetValue(camera._viewMatrix);
-            m_EPProjection.SetValue(camera._projectionMatrix);
-            m_EPEyePosition.SetValue(camera.Transform.LocalPosition);
+            _EPView.SetValue(camera._viewMatrix);
+            _EPProjection.SetValue(camera._projectionMatrix);
+            _EPEyePosition.SetValue(camera.Transform.LocalPosition);
         }
 
         public override void Pass(Renderer renderable)
         {
-            m_EPSpecularLightColor.SetValue(m_Material.SpecularColor.ToVector3());
-            m_EPSpecularPower.SetValue(m_Material.Shininess);
-            m_EPSpecularIntensity.SetValue(m_Material.SpecularIntensity);
-            m_EPSpecularTextureEnabled.SetValue(m_Material.SpecularTexture != null);
-            m_EPSpecularTexture.SetValue(m_Material.SpecularTexture);
+            _EPSpecularLightColor.SetValue(_material.SpecularColor.ToVector3());
+            _EPSpecularPower.SetValue(_material.Shininess);
+            _EPSpecularIntensity.SetValue(_material.SpecularIntensity);
+            _EPSpecularTextureEnabled.SetValue(_material.SpecularTexture != null);
+            _EPSpecularTexture.SetValue(_material.SpecularTexture);
             base.Pass(renderable);
         }
     }

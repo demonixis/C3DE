@@ -149,9 +149,7 @@ namespace C3DE.Graphics.Rendering
 
             Renderer renderer;
             Material material;
-            ShaderMaterial shader;
             ForwardShader forwardShader;
-            IMultipassLightingMaterial multiLightShader;
 
             // Camera
             var cameraPosition = camera._transform.Position;
@@ -209,39 +207,11 @@ namespace C3DE.Graphics.Rendering
                     continue;
                 }
 
-                shader = material._shaderMaterial;
-
-                if (shader is ForwardShader)
-                {
-                    forwardShader = (ForwardShader)shader;
-                    forwardShader.PrePass(ref cameraPosition, ref cameraViewMatrix, ref cameraProjectionMatrix, ref _lightData, ref _shadowData);
-                    forwardShader.Pass(ref renderer._transform._worldMatrix, renderer.ReceiveShadow);
-                }
-                else
-                {
-                    // Deprecated
-                    shader.PrePass(camera);
-                    shader.Pass(renderer);
-                }
+                forwardShader = material._shaderMaterial as ForwardShader;
+                forwardShader.PrePass(ref cameraPosition, ref cameraViewMatrix, ref cameraProjectionMatrix, ref _lightData, ref _shadowData);
+                forwardShader.Pass(ref renderer._transform._worldMatrix, renderer.ReceiveShadow);
 
                 renderer.Draw(_graphicsDevice);
-
-                // Lightpass
-                // Deprecated.
-                if (shader is IMultipassLightingMaterial)
-                {
-                    multiLightShader = (IMultipassLightingMaterial)shader;
-
-                    _graphicsDevice.BlendState = BlendState.Additive;
-
-                    for (var l = 0; l < lightCount; l++)
-                    {
-                        multiLightShader.LightPass(renderer, lights[l]);
-                        renderer.Draw(_graphicsDevice);
-                    }
-
-                    _graphicsDevice.BlendState = BlendState.Opaque;
-                }
             }
         }
     }

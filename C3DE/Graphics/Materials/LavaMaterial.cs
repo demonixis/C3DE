@@ -1,5 +1,6 @@
 ﻿using C3DE.Graphics.Materials.Shaders;
 using C3DE.Graphics.Rendering;
+using C3DE.Graphics.Shaders.Forward;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace C3DE.Graphics.Materials
