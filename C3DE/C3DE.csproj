@@ -107,10 +107,9 @@
     <Compile Include="Graphics\Rendering\DeviceState.cs" />
     <Compile Include="Graphics\Rendering\GraphicsDeviceExtensions.cs" />
     <Compile Include="Input.cs" />
-    <Compile Include="Graphics\Materials\BillboardMaterial.cs" />
     <Compile Include="Graphics\Materials\UnlitMaterial.cs" />
     <Compile Include="Graphics\PostProcessing\PostProcessManager.cs" />
-    <Compile Include="Graphics\Materials\LavaMaterial.cs" />
+    <Compile Include="Graphics\Materials\StandardLavaMaterial.cs" />
     <Compile Include="Graphics\Materials\StandardTerrainMaterial.cs" />
     <Compile Include="Graphics\PostProcessing\C64Filter.cs" />
     <Compile Include="Graphics\PostProcessing\CGAFilter.cs" />
@@ -131,7 +130,6 @@
     <Compile Include="Inputs\InputDevice.cs" />
     <Compile Include="Inputs\KeyboardDevice.cs" />
     <Compile Include="Inputs\Legacy\TouchComponent.cs" />
-    <Compile Include="Graphics\Materials\TransparentMaterial.cs" />
     <Compile Include="Graphics\PostProcessing\SimpleBlur.cs" />
     <Compile Include="Graphics\Rendering\BaseRenderer.cs" />
     <Compile Include="Inputs\MouseDevice.cs" />

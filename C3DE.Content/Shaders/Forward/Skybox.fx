@@ -1,26 +1,14 @@
-#if SM4
+#include "../Common/Macros.fxh"
 #include "../Common/Fog.fxh"
-#endif
+
 // Matrix
 float4x4 World;
 float4x4 View;
 float4x4 Projection;
 float3 EyePosition;
-
-#if SM4
 bool FogEnabled;
-#endif
 
-texture MainTexture;
-samplerCUBE SkyboxSampler = sampler_state
-{
-    Texture = <MainTexture>;
-    MagFilter = Linear;
-    MinFilter = Linear;
-    MipFilter = Linear;
-    AddressU = Mirror;
-    AddressV = Mirror;
-};
+DECLARE_CUBEMAP(SkyboxCubeMap, 1);
 
 struct VertexShaderInput
 {
@@ -56,14 +44,8 @@ VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
 
 float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 {
-    float4 diffuse = texCUBE(SkyboxSampler, normalize(input.UV));
-
-#if SM4
-    if (FogEnabled == true)
-        return ApplyFog(diffuse.xyz, input.FogDistance);
-#endif
-
-    return diffuse;
+    float3 diffuse = SAMPLE_CUBEMAP(SkyboxCubeMap, normalize(input.UV)).xyz;
+    return float4(ApplyFog(diffuse, input.FogDistance), 1.0);
 }
 
 technique Skybox

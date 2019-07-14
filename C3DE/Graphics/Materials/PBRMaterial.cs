@@ -11,6 +11,8 @@ namespace C3DE.Graphics.Materials
         internal Texture2D _rmaoMap;
 
         public Texture2D NormalMap { get; set; }
+        public bool CutoutEnabled { get; set; }
+        public float Cutout { get; set; }
 
         public Texture2D RoughnessMetalicAOMap
         {

@@ -7,7 +7,7 @@ namespace C3DE.Graphics.Shaders.Forward
 {
     public class ForwardLava : ForwardShader
     {
-        private LavaMaterial m_Material;
+        private StandardLavaMaterial m_Material;
         private EffectParameter _EPView;
         private EffectParameter _EPProjection;
         private EffectParameter _EPTime;
@@ -20,7 +20,7 @@ namespace C3DE.Graphics.Shaders.Forward
 
         public bool EmissiveEnabled => false;
 
-        public ForwardLava(LavaMaterial material)
+        public ForwardLava(StandardLavaMaterial material)
         {
             m_Material = material;
         }

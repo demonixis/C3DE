@@ -98,7 +98,7 @@ namespace C3DE.Graphics.Shaders.Forward
                 return;
 
             _EPSpecularLightColor.SetValue(material.SpecularColor.ToVector3());
-            _EPSpecularPower.SetValue(material.Shininess);
+            _EPSpecularPower.SetValue(material.SpecularPower);
             _EPSpecularIntensity.SetValue(material.SpecularIntensity);
             _EPLightColor.SetValue(light._color);
             _EPLightDirection.SetValue(light.Direction);

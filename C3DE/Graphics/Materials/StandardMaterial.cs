@@ -10,26 +10,18 @@ namespace C3DE.Graphics.Materials
     {
         protected Vector3 m_EmissiveColor = Vector3.Zero;
 
-        public TextureCube ReflectionTexture { get; set; }
+        public bool CutoutEnabled { get; set; }
+        public float Cutout { get; set; }
+        public float EmissiveIntensity { get; set; } = 1.0f;
+        public Texture2D EmissiveTexture { get; set; }
 
         public Color EmissiveColor
         {
-            get { return new Color(m_EmissiveColor); }
-            set { m_EmissiveColor = value.ToVector3(); }
+            get => new Color(m_EmissiveColor);
+            set => m_EmissiveColor = value.ToVector3();
         }
-
-        public bool EmissiveEnabled { get; set; } = false;
-
-        public float EmissiveIntensity { get; set; } = 1.0f;
-
-        public Texture2D EmissiveTexture { get; set; }
 
         public StandardMaterial() : base() { }
-
-        public StandardMaterial(string name) : base()
-        {
-            Name = name;
-        }
 
         protected override void SetupShaderMaterial(BaseRenderer renderer)
         {

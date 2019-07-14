@@ -5,11 +5,10 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace C3DE.Graphics.Materials
 {
-    public class LavaMaterial : Material
+    public class StandardLavaMaterial : Material
     {
         public Texture2D NormalMap { get; set; }
         public float EmissiveIntensity { get; set; } = 2.0f;
-        public bool EmissiveEnabled => false;
         public float Speed { get; set; } = 0.25f;
 
         protected override void SetupShaderMaterial(BaseRenderer renderer)

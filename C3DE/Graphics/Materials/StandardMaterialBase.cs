@@ -9,15 +9,6 @@ namespace C3DE.Graphics.Materials
 
         public Texture2D NormalMap { get; set; }
         public Texture2D SpecularTexture { get; set; }
-
-        public Color SpecularColor
-        {
-            get => new Color(m_SpecularColor);
-            set => m_SpecularColor = value.ToVector3(); 
-        }
-
-        public float SpecularIntensity { get; set; } = 1.0f;
-
-        public float Shininess { get; set; } = 250.0f;
+        public float SpecularPower { get; set; } = 250.0f;
     }
 }

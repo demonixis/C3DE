@@ -1,249 +1,59 @@
+#include "StandardBase.fx"
 #include "../Common/ShadowMap.fxh"
-#include "../Common/Fog.fxh"
-#include "Lights.fxh"
-
-// Matrix
-float4x4 World;
-float4x4 View;
-float4x4 Projection;
-
-// Material
-float3 AmbientColor;
-float3 DiffuseColor;
 
 // Misc
 float2 TextureTiling;
-float3 EyePosition;
+float2 Features;
+float SpecularColor;
+
+DECLARE_TEXTURE(WeightMap, 1);
+DECLARE_TEXTURE(GrassMap, 2);
+DECLARE_TEXTURE(SandMap, 3);
+DECLARE_TEXTURE(RockMap, 4);
+DECLARE_TEXTURE(SnowMap, 5);
 
 #if SM4
-int NormalMapEnabled = 0;
+DECLARE_TEXTURE(GrassNormalMap, 6);
+DECLARE_TEXTURE(SandNormalMap, 7);
+DECLARE_TEXTURE(RockNormalMap, 8);
+DECLARE_TEXTURE(SnowNormalMap, 9);
 #endif
 
-texture2D MainTexture;
-sampler2D MainTextureSampler = sampler_state
+float3 BlendTextures(sampler2D grass, sampler2D sand, sampler2D rock, sampler2D snow, float2 uv)
 {
-    Texture = <MainTexture>;
-    MinFilter = Linear;
-    MagFilter = Linear;
-    MipFilter = Linear;
-    AddressU = Wrap;
-    AddressV = Wrap;
-};
+	float2 scaledUV = uv * TextureTiling;
+	float3 mainTex = SAMPLE_TEXTURE(grass, scaledUV);
+	float3 sandTex = SAMPLE_TEXTURE(sand, scaledUV);
+	float3 rockTex = SAMPLE_TEXTURE(rock, scaledUV);
+	float3 snowTex = SAMPLE_TEXTURE(snow, scaledUV);
+	float3 weightTex = SAMPLE_TEXTURE(WeightMap, uv);
 
-texture2D SandTexture;
-sampler2D SandTextureSampler = sampler_state
-{
-    Texture = <SandTexture>;
-    MinFilter = Linear;
-    MagFilter = Linear;
-    MipFilter = Linear;
-    AddressU = Wrap;
-    AddressV = Wrap;
-};
+	float3 blend = clamp(1.0 - weightTex.r - weightTex.g - weightTex.b, 0, 1);
+	blend *= mainTex;
+	blend += weightTex.r * sandTex + weightTex.g * rockTex + weightTex.b * snowTex;
 
-texture2D RockTexture;
-sampler2D RockTextureSampler = sampler_state
-{
-    Texture = <RockTexture>;
-    MinFilter = Linear;
-    MagFilter = Linear;
-    MipFilter = Linear;
-    AddressU = Wrap;
-    AddressV = Wrap;
-};
-
-texture2D SnowTexture;
-sampler2D SnowTextureSampler = sampler_state
-{
-    Texture = <SnowTexture>;
-    MinFilter = Linear;
-    MagFilter = Linear;
-    MipFilter = Linear;
-    AddressU = Wrap;
-    AddressV = Wrap;
-};
-
-texture2D WeightMap;
-sampler2D WeightMapSampler = sampler_state
-{
-    Texture = <WeightMap>;
-    MinFilter = Linear;
-    MagFilter = Linear;
-    MipFilter = Linear;
-    AddressU = Clamp;
-    AddressV = Clamp;
-};
-
-#if SM4
-texture2D GrassNormalMap;
-sampler2D GrassNormalSampler = sampler_state
-{
-	Texture = <GrassNormalMap>;
-	MinFilter = Linear;
-	MagFilter = Linear;
-	MipFilter = Linear;
-	AddressU = Wrap;
-	AddressV = Wrap;
-};
-
-texture2D SandNormalMap;
-sampler2D SandNormalSampler = sampler_state
-{
-	Texture = <SandNormalMap>;
-	MinFilter = Linear;
-	MagFilter = Linear;
-	MipFilter = Linear;
-	AddressU = Wrap;
-	AddressV = Wrap;
-};
-
-texture2D RockNormalMap;
-sampler2D RockNormalSampler = sampler_state
-{
-	Texture = <RockNormalMap>;
-	MinFilter = Linear;
-	MagFilter = Linear;
-	MipFilter = Linear;
-	AddressU = Wrap;
-	AddressV = Wrap;
-};
-
-texture2D SnowNormalMap;
-sampler2D SnowNormalSampler = sampler_state
-{
-	Texture = <SnowNormalMap>;
-	MinFilter = Linear;
-	MagFilter = Linear;
-	MipFilter = Linear;
-	AddressU = Wrap;
-	AddressV = Wrap;
-};
-#endif
-
-struct VertexShaderInput
-{
-#if SM4
-	float4 Position : SV_Position;
-#else
-    float4 Position : POSITION0;
-#endif
-    float2 UV : TEXCOORD0;
-    float3 Normal : NORMAL0;
-};
-
-struct VertexShaderOutput
-{
-    float4 Position : POSITION0;
-    float2 UV : TEXCOORD0;
-    float3 WorldNormal : TEXCOORD1;
-    float4 WorldPosition : TEXCOORD2;
-#if SM4
-	float3x3 WorldToTangentSpace : TEXCOORD3;
-#endif
-	float FogDistance : FOG;
-};
-
-VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
-{
-    VertexShaderOutput output;
-
-    float4 worldPosition = mul(input.Position, World);
-    float4 viewPosition = mul(worldPosition, View);
-    output.Position = mul(viewPosition, Projection);
-    output.UV = input.UV;
-    output.WorldNormal = mul(input.Normal, World);
-    output.WorldPosition = worldPosition;
-    output.FogDistance = distance(worldPosition.xyz, EyePosition);
-
-#if SM4
-	float3 c1 = cross(input.Normal, float3(0.0, 0.0, 1.0));
-	float3 c2 = cross(input.Normal, float3(0.0, 1.0, 0.0));
-
-	// [0] Tangent / [1] Binormal / [2] Normal
-	output.WorldToTangentSpace[0] = length(c1) > length(c2) ? c1 : c2;
-	output.WorldToTangentSpace[1] = normalize(output.WorldToTangentSpace[0]);
-	output.WorldToTangentSpace[2] = input.Normal;
-#endif
-
-    return output;
+	return blend;
 }
 
-float3 CalcDiffuseColor(VertexShaderOutput input)
+float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 {
-    float3 sandTex = tex2D(SandTextureSampler, input.UV * TextureTiling);
-    float3 rockTex = tex2D(RockTextureSampler, input.UV * TextureTiling);
-    float3 snowTex = tex2D(SnowTextureSampler, input.UV * TextureTiling);
-    float3 mainTex = tex2D(MainTextureSampler, input.UV * TextureTiling);
-    float3 weightTex = tex2D(WeightMapSampler, input.UV);
-	
-    float3 diffuse = clamp(1.0 - weightTex.r - weightTex.g - weightTex.b, 0, 1);
-    diffuse *= mainTex;
-    diffuse += weightTex.r * sandTex + weightTex.g * rockTex + weightTex.b * snowTex;
-	
-    return diffuse * DiffuseColor;
-}
-
-float3 CalcNormal(VertexShaderOutput input)
-{
+	float3 albedo = pow(BlendTextures(GrassMap, SandMap, RockMap, SnowMap, input.UV), TO_LINEAR);
 	float3 normal = input.WorldNormal;
 
 #if SM4
-	if (NormalMapEnabled == 1)
+	if (Features.x > 0)
 	{
-		float3 sandTex = tex2D(SandNormalSampler, input.UV * TextureTiling);
-		float3 rockTex = tex2D(RockNormalSampler, input.UV * TextureTiling);
-		float3 snowTex = tex2D(SnowNormalSampler, input.UV * TextureTiling);
-		float3 mainTex = tex2D(GrassNormalSampler, input.UV * TextureTiling);
-		float3 weightTex = tex2D(WeightMapSampler, input.UV);
-
-		float3 normalBlend = clamp(1.0 - weightTex.r - weightTex.g - weightTex.b, 0, 1);
-		normalBlend *= mainTex;
-		normalBlend += weightTex.r * sandTex + weightTex.g * rockTex + weightTex.b * snowTex;
-
+		float3 normalBlend = BlendTextures(GrassNormalMap, SandNormalMap, RockNormalMap, SnowNormalMap, input.UV);
 		float3 normalMap = (2.0 * (normalBlend)) - 1.0;
 		normal = normalize(mul(normalMap, input.WorldToTangentSpace));
 	}
 #endif
 
-	return normal;
+	// Shadows
+	float shadowTerm = CalcShadow(input.WorldPosition);
+
+	// Base Pixel Shader
+	return float4(StandardPixelShader(input.WorldPosition, normal, SpecularColor, input.FogDistance, albedo, FLOAT3(0), shadowTerm), 1.0);
 }
 
-float4 PixelShaderAmbient(VertexShaderOutput input) : COLOR0
-{
-    return float4(AmbientColor * CalcDiffuseColor(input), 1);
-}
-
-float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
-{
-    float3 diffuse = CalcDiffuseColor(input);
-	float3 normal = CalcNormal(input);
-    float3 lightFactor = CalcLightFactor(input.WorldPosition, normal);
-    float shadow = CalcShadow(input.WorldPosition);
-    float3 diffuse2 = lightFactor * shadow * diffuse;
-    float3 specular = CalcSpecular(input.WorldPosition, normal, EyePosition, input.UV * TextureTiling);
-    float3 compose = diffuse2 + specular;
-    return ApplyFog(compose, input.FogDistance);
-}
-
-technique Terrain
-{
-    pass AmbientPass
-    {
-#if SM4
-		VertexShader = compile vs_4_0_level_9_1 VertexShaderFunction();
-		PixelShader = compile ps_4_0_level_9_1 PixelShaderAmbient();
-#else
-        VertexShader = compile vs_3_0 VertexShaderFunction();
-        PixelShader = compile ps_3_0 PixelShaderAmbient();
-#endif
-    }
-	
-    pass LightPass
-    {
-#if SM4
-		PixelShader = compile ps_4_0_level_9_3 PixelShaderFunction();
-#else
-        PixelShader = compile ps_3_0 PixelShaderFunction();
-#endif
-    }
-}
+TECHNIQUE_SM4(Terrain, VertexShaderFunction, PixelShaderFunction);

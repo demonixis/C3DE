@@ -1,6 +1,29 @@
-#include "../Common/ShadowMap.fxh"
+#include "../Common/Macros.fxh"
 #include "../Common/Fog.fxh"
-#include "Lights.fxh"
+
+// Constants
+#if SM4
+#define MAX_LIGHT_COUNT 64
+#else
+#define MAX_LIGHT_COUNT 8
+#endif
+
+const float3 TO_GAMMA = float3(0.45454545, 0.45454545, 0.45454545);
+const float3 TO_LINEAR = float3(2.2, 2.2, 2.2);
+
+// Lighting
+// LightData.x: Type: Directional, Point, Spot
+// LightData.y: Intensity
+// LightData.z: Range
+// LightData.w: FallOff
+// SpotData.xyz: Direction
+// SpotData.w: Angle
+
+float3 LightPosition[MAX_LIGHT_COUNT];
+float3 LightColor[MAX_LIGHT_COUNT];
+float4 LightData[MAX_LIGHT_COUNT];
+float4 SpotData[MAX_LIGHT_COUNT];
+int LightCount = 0;
 
 // Matrix
 float4x4 World;
@@ -9,64 +32,10 @@ float4x4 Projection;
 
 // Material
 float3 AmbientColor;
-float3 DiffuseColor;
-bool NormalTextureEnabled;
-
-// Reflection
-bool ReflectionTextureEnabled;
-
-// Emission
-float3 EmissiveColor;
-float EmissiveIntensity;
-bool EmissiveTextureEnabled;
+float SpecularPower;
 
 // Misc
-float3 EyePosition = float3(1, 1, 0);
-float2 TextureTiling = float2(1, 1);
-
-texture MainTexture;
-sampler2D textureSampler = sampler_state
-{
-    Texture = (MainTexture);
-    MinFilter = Linear;
-    MagFilter = Linear;
-    MipFilter = Linear;
-    AddressU = Wrap;
-    AddressV = Wrap;
-};
-
-texture NormalTexture;
-sampler2D normalSampler = sampler_state
-{
-    Texture = (NormalTexture);
-    MinFilter = Linear;
-    MagFilter = Linear;
-    MipFilter = Linear;
-    AddressU = Wrap;
-    AddressV = Wrap;
-};
-
-texture ReflectionTexture;
-samplerCUBE reflectionSampler = sampler_state
-{
-    Texture = <ReflectionTexture>;
-    MinFilter = Linear;
-    MagFilter = Linear;
-    MipFilter = Linear;
-    AddressU = Mirror;
-    AddressV = Mirror;
-};
-
-texture EmissiveTexture;
-sampler2D emissiveSampler = sampler_state
-{
-    Texture = (EmissiveTexture);
-    MinFilter = Linear;
-    MagFilter = Linear;
-    MipFilter = Linear;
-    AddressU = Wrap;
-    AddressV = Wrap;
-};
+float3 EyePosition;
 
 struct VertexShaderInput
 {
@@ -85,8 +54,10 @@ struct VertexShaderOutput
     float2 UV : TEXCOORD0;
     float3 WorldNormal : TEXCOORD1;
     float4 WorldPosition : TEXCOORD2;
-    float3 Reflection : TEXCOORD3;
-    float3x3 WorldToTangentSpace : TEXCOORD4;
+    float3x3 WorldToTangentSpace : TEXCOORD3;
+#if REFLECTION_MAP
+	float3 Reflection : TEXCOORD4;
+#endif
     float FogDistance : FOG;
 };
 
@@ -102,13 +73,6 @@ VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
     output.WorldPosition = worldPosition;
     output.FogDistance = distance(worldPosition.xyz, EyePosition);
 
-    if (ReflectionTextureEnabled == true)
-    {
-        float3 viewDirection = EyePosition - worldPosition.xyz;
-        float3 normal = input.Normal;
-        output.Reflection = reflect(-normalize(viewDirection), normalize(normal));
-    }
-
     float3 c1 = cross(input.Normal, float3(0.0, 0.0, 1.0));
     float3 c2 = cross(input.Normal, float3(0.0, 1.0, 0.0));
 
@@ -117,69 +81,57 @@ VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
     output.WorldToTangentSpace[1] = normalize(output.WorldToTangentSpace[0]);
     output.WorldToTangentSpace[2] = input.Normal;
 
+#if REFLECTION_MAP
+	float3 viewDirection = EyePosition - worldPosition.xyz;
+	output.Reflection = reflect(-normalize(viewDirection), normalize(normal));
+#endif
+
     return output;
 }
 
-float3 CalcDiffuseColor(VertexShaderOutput input)
-{
-    float3 diffuse = tex2D(textureSampler, input.UV * TextureTiling).xyz;
-	
-    if (ReflectionTextureEnabled == true)
-        diffuse *= texCUBE(reflectionSampler, normalize(input.Reflection)).xyz;
+float3 StandardPixelShader(float4 worldPosition, float3 normal, float specularTerm, float fogDistance, float3 albedo, float3 emissive, float shadowTerm)
+{    
+	float3 Lo = FLOAT3(0);
+	float So = FLOAT3(0);
+	float directionToLight = FLOAT3(0);
+	float diffuseIntensity = 0;
+	float attenuation = 0;
 
-    return diffuse * DiffuseColor;
-}
+	for (int i = 0; i < LightCount; i++)
+	{
+		directionToLight = normalize(LightPosition[i] - worldPosition.xyz);
+		diffuseIntensity = saturate(dot(directionToLight, normal));
 
-float4 PixelShaderAmbient(VertexShaderOutput input) : COLOR0
-{
-    return float4(AmbientColor * CalcDiffuseColor(input), 1);
-}
+		if (LightData[i].x == 0) // Directional
+		{
+			attenuation = 1.0;
+		}
+		else if (LightData[i].x == 1) // Point
+		{
+			float d = distance(LightPosition[i], worldPosition.xyz);
+			attenuation = 1.0 - pow(clamp(d / LightData[i].z, 0.0, 1.0), LightData[i].w);
+		}
+		else if (LightData[i].x == 2) // Spot
+		{
+			float3 diffuse = saturate(dot(normal, directionToLight));
+			float d = dot(directionToLight, normalize(SpotData[i].xyz));
+			float a = cos(SpotData[i].w);
+			attenuation = (a < d) ? attenuation = 1.0 - pow(clamp(a / d, 0.0, 1.0), LightData[i].w) : 0.0;
+		}
 
-float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
-{
-    if (NormalTextureEnabled == true)
-    {
-        float3 normalMap = (2.0 * (tex2D(normalSampler, input.UV * TextureTiling))) - 1.0;
-        normalMap = normalize(mul(normalMap, input.WorldToTangentSpace));
-        input.WorldNormal = normalMap;
-    }
-    
-    float3 diffuse = CalcDiffuseColor(input);
-    float3 lightFactor = CalcLightFactor(input.WorldPosition, input.WorldNormal);
-    float shadow = CalcShadow(input.WorldPosition);
-    float3 diffuse2 = lightFactor * shadow * diffuse;
-    float3 specular = CalcSpecular(input.WorldPosition, input.WorldNormal, EyePosition, input.UV * TextureTiling);
-    float3 compose = diffuse2 + specular;
-	
-	float3 emissiveColor = EmissiveColor;
+		Lo += diffuseIntensity * attenuation * LightColor[i] * LightData[i].y;
 
-    if (EmissiveTextureEnabled == true)
-        emissiveColor = tex2D(emissiveSampler, input.UV * TextureTiling).xyz;
+		float3 reflectionVector = normalize(reflect(-directionToLight, normal));
+		float3 directionToCamera = normalize(EyePosition - worldPosition.xyz);
+		So += specularTerm * pow(saturate(dot(reflectionVector, directionToCamera)), SpecularPower);
+	}
 
-    emissiveColor *= EmissiveIntensity;
-	
-    return ApplyFog(compose + emissiveColor, input.FogDistance);
-}
+    float3 color = AmbientColor + (albedo * Lo * shadowTerm) + So + emissive;
+	color = ApplyFog(color, fogDistance);
 
-technique Standard
-{
-    pass AmbientPass
-    {
-#if SM4
-		VertexShader = compile vs_4_0_level_9_1 VertexShaderFunction();
-		PixelShader = compile ps_4_0_level_9_1 PixelShaderAmbient();
-#else
-        VertexShader = compile vs_3_0 VertexShaderFunction();
-        PixelShader = compile ps_3_0 PixelShaderAmbient();
-#endif
-    }
-	
-    pass LightPass
-    {
-#if SM4
-		PixelShader = compile ps_4_0_level_9_3 PixelShaderFunction();
-#else
-        PixelShader = compile ps_3_0 PixelShaderFunction();
-#endif
-    }
+	// HDR + Gamma correction
+	color = color / (color + FLOAT3(1.0));
+	color = pow(color, TO_GAMMA);
+
+	return color;
 }

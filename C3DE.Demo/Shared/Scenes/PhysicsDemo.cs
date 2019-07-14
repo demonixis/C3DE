@@ -22,7 +22,7 @@ namespace C3DE.Demo.Scenes
 
             var terrainMaterial = new StandardMaterial();
             terrainMaterial.MainTexture = TextureFactory.CreateCheckboard(Color.White, Color.Black);
-            terrainMaterial.Shininess = 5;
+            terrainMaterial.SpecularPower = 5;
             terrainMaterial.Tiling = new Vector2(32);
 
             var terrainGo = GameObjectFactory.CreateTerrain();

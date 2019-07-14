@@ -23,7 +23,7 @@ namespace C3DE.Graphics.Shaders.Forward
         public override void Pass(ref Matrix worldMatrix, bool receiveShadow)
         {
             _features.X = _material.NormalMap != null ? 1 : 0;
-            _features.Y = _material.EmissiveIntensity > 1 ? 1 : 0;
+            _features.Y = _material.EmissiveIntensity;
 
             _effect.Parameters["TextureTiling"].SetValue(_material.Tiling);
             _effect.Parameters["World"].SetValue(worldMatrix);
@@ -34,7 +34,6 @@ namespace C3DE.Graphics.Shaders.Forward
             _effect.Parameters["Features"].SetValue(_features);
             _effect.Parameters["ShadowEnabled"].SetValue(receiveShadow);
             _effect.Parameters["TotalTime"].SetValue(Time.TotalTime * _material.Speed);
-            _effect.Parameters["EmissiveIntensity"].SetValue(_material.EmissiveIntensity);
 
             _effect.CurrentTechnique.Passes[0].Apply();
         }

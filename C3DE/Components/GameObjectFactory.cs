@@ -135,7 +135,7 @@ namespace C3DE
             var collider = gameObject.AddComponent<BoxCollider>();
             collider.IsPickable = false;
 
-            var material = new LavaMaterial();
+            var material = new StandardLavaMaterial();
             material.MainTexture = lavalTexture;
             material.NormalMap = normalTexture;
 

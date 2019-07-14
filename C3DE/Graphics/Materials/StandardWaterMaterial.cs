@@ -16,12 +16,6 @@ namespace C3DE.Graphics.Materials
 
         public float ReflectionIntensity { get; set; } = 0.35f;
 
-        public Color ReflectionColor
-        {
-            get => new Color(_reflectionColor);
-            set { _reflectionColor = value.ToVector3(); }
-        }
-
         public StandardWaterMaterial()
             : base()
         {

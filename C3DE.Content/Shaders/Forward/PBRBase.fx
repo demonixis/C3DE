@@ -22,7 +22,7 @@ float3 EyePosition;
 // Lighting
 float3 LightPosition[MAX_LIGHT_COUNT];
 float3 LightColor[MAX_LIGHT_COUNT];
-float3 LightData[MAX_LIGHT_COUNT];
+float4 LightData[MAX_LIGHT_COUNT];
 int LightCount = 0;
 
 DECLARE_CUBEMAP(IrradianceMap, 13);
@@ -94,17 +94,16 @@ float3 PBRPixelShader(float4 worldPosition, float3 normal, float3 albedo, float3
 		float3 radiance = float3(0, 0, 0);
 
 		// Radiance
-		//if (LightData[i].x == 0) // Directional
-		//{
-		//	float contribution = (1.0 / PI) * dot(V, N);
-		//	radiance = contribution * LightColor[i] * LightData[i].y;
-		//}
-		//else // Point
-		//{
-		float distance = length(LightPosition[i] - worldPosition.xyz);
-		float attenuation = 1.0 / distance * distance;
-		radiance = LightColor[i] * attenuation * LightData[i].y;
-		//}
+		if (LightData[i].x == 0) // Directional
+		{
+			radiance = LightColor[i] * LightData[i].y;
+		}
+		else // Point
+		{
+			float distance = length(LightPosition[i] - worldPosition.xyz);
+			float attenuation = 1.0 / distance * distance;
+			radiance = LightColor[i] * attenuation * LightData[i].y;
+		}
 
 		// Cook-Torrance BRDF
 		float NDF = DistributionGGX(N, H, roughness);

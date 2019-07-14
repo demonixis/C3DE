@@ -1,4 +1,4 @@
-#include "PBRForward.fx"
+#include "PBRBase.fx"
 #include "../Common/ShadowMap.fxh"
 
 // Variables

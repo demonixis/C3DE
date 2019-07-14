@@ -47,7 +47,6 @@ namespace C3DE.Graphics.Shaders.Forward
             _EPNormalMapEnabled.SetValue(_material.NormalMap != null);
             _EPReflectionTexture.SetValue(_material.ReflectionTexture);
             _EPReflectionTextureEnabled.SetValue(_material.ReflectionTexture != null);
-            _EPReflectionColor.SetValue(_material.ReflectionColor.ToVector3());
 
             BasePass(_material, ref worldMatrix, receiveShadow);
         }

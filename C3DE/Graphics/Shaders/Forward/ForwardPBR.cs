@@ -8,7 +8,7 @@ namespace C3DE.Graphics.Shaders.Forward
     public class ForwardPBR : ForwardPBRBase
     {
         private PBRMaterial _material;
-        private Vector2 _features;
+        private Vector3 _features;
 
         public ForwardPBR(PBRMaterial material)
         {
@@ -24,6 +24,7 @@ namespace C3DE.Graphics.Shaders.Forward
         {
             _features.X = _material.NormalMap != null ? 1 : 0;
             _features.Y = _material.EmissiveMap != null ? 1 : 0;
+            _features.Z = _material.CutoutEnabled ? 1 : 0;
 
             _effect.Parameters["TextureTiling"].SetValue(_material.Tiling);
             _effect.Parameters["World"].SetValue(worldMatrix);
@@ -34,6 +35,7 @@ namespace C3DE.Graphics.Shaders.Forward
             _effect.Parameters["Features"].SetValue(_features);
             _effect.Parameters["ShadowEnabled"].SetValue(receiveShadow);
             _effect.Parameters["DiffuseColor"].SetValue(_material._diffuseColor);
+            _effect.Parameters["Cutout"].SetValue(_material.Cutout);
 
             _effect.CurrentTechnique.Passes[0].Apply();
         }

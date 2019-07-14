@@ -78,7 +78,7 @@ namespace C3DE.Demo.Scenes
             // Terrain
             var terrainMaterial = new StandardMaterial();
             terrainMaterial.MainTexture = TextureFactory.CreateCheckboard(Color.White, Color.Black);
-            terrainMaterial.Shininess = 25;
+            terrainMaterial.SpecularPower = 25;
             terrainMaterial.Tiling = new Vector2(32);
 
             var terrainGo = GameObjectFactory.CreateTerrain();
@@ -109,7 +109,7 @@ namespace C3DE.Demo.Scenes
             modelMaterial.EmissiveTexture = Application.Content.Load<Texture2D>("Models/Quandtum/textures/Turret-Emission");
             modelMaterial.SpecularTexture = Application.Content.Load<Texture2D>("Models/Quandtum/textures/Turret-Specular");
             modelMaterial.ReflectionTexture = RenderSettings.Skybox.Texture;
-            modelMaterial.Shininess = 25;
+            modelMaterial.SpecularPower = 25;
 
             _camera.AddComponent<VRPlayerEnabler>();
         }

@@ -84,7 +84,7 @@ namespace C3DE.Graphics.Materials.Shaders
             m_EPDiffuseColor.SetValue(m_Material._diffuseColor);
             m_EPMainTexture.SetValue(m_Material.MainTexture);
             m_EPSpecularLightColor.SetValue(m_Material.SpecularColor.ToVector3());
-            m_EPSpecularPower.SetValue(m_Material.Shininess);
+            m_EPSpecularPower.SetValue(m_Material.SpecularPower);
             m_EPSpecularIntensity.SetValue(m_Material.SpecularIntensity);
             m_EPSpecularTextureEnabled.SetValue(m_Material.SpecularTexture != null);
             m_EPSpecularTexture.SetValue(m_Material.SpecularTexture);

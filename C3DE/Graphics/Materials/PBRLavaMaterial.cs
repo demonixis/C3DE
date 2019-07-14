@@ -1,8 +1,6 @@
 ﻿using C3DE.Graphics.Rendering;
 using C3DE.Graphics.Shaders.Forward;
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using static C3DE.Graphics.TextureFactory;
 
 namespace C3DE.Graphics.Materials
 {

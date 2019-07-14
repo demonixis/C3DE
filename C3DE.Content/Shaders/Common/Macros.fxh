@@ -5,6 +5,12 @@
 
 #define TECHNIQUE_SM4(name, vsname, psname ) \
 	technique name { pass { VertexShader = compile vs_4_0 vsname (); PixelShader = compile ps_4_0 psname(); } }
+	
+#define PASS(name, vsname, psname ) \
+	pass { VertexShader = compile vs_4_0_level_9_3 vsname (); PixelShader = compile ps_4_0_level_9_3 psname(); }
+	
+#define PASS_SM4(name, vsname, psname ) \
+	pass { VertexShader = compile vs_4_0 vsname (); PixelShader = compile ps_4_0 psname(); }
 
 #define BEGIN_CONSTANTS     cbuffer Parameters : register(b0) {
 #define MATRIX_CONSTANTS
@@ -21,6 +27,12 @@
 
 #define TECHNIQUE_SM4(name, vsname, psname ) \
 	technique name { pass { VertexShader = compile vs_3_0 vsname (); PixelShader = compile ps_3_0 psname(); } }
+	
+#define PASS(name, vsname, psname ) \
+	pass { VertexShader = compile vs_3_0 vsname (); PixelShader = compile ps_3_0 psname(); }
+	
+#define PASS_SM4(name, vsname, psname ) \
+	pass { VertexShader = compile vs_3_0 vsname (); PixelShader = compile ps_3_0 psname(); }
 
 #define BEGIN_CONSTANTS
 #define MATRIX_CONSTANTS

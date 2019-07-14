@@ -5,6 +5,7 @@ float4x4 World;
 float4x4 View;
 float4x4 Projection;
 
+float Cutout;
 float3 DiffuseColor;
 float2 TextureTilling;
 
@@ -36,37 +37,23 @@ VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
 	return output;
 }
 
-float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
+float4 PSUnlitColored(VertexShaderOutput input) : COLOR0
 {
     return float4(DiffuseColor, 1.0);
 }
 
-float4 PixelShaderFunctionTexture(VertexShaderOutput input) : COLOR0
+float4 PSUnlitTextured(VertexShaderOutput input) : COLOR0
 {
-    return float4(DiffuseColor * SAMPLE_TEXTURE(MainTexture, input.UV * TextureTilling).xyz, 1.0);
+    float4 albedo = float4(DiffuseColor * SAMPLE_TEXTURE(MainTexture, input.UV * TextureTilling).xyz, 1.0);
+	
+	if (Cutout < 1)
+		clip(albedo.a <= Cutout ? -1 : 1);
+	
+	return albedo;
 }
 
 technique TexturedSimple
 {
-	pass UnlitColor
-	{
-#if SM4
-		VertexShader = compile vs_4_0_level_9_1 VertexShaderFunction();
-		PixelShader = compile ps_4_0_level_9_1 PixelShaderFunction();
-#else
-		VertexShader = compile vs_3_0 VertexShaderFunction();
-		PixelShader = compile ps_3_0 PixelShaderFunction();
-#endif
-	}
-
-    pass UnlitTexture
-    {
-#if SM4
-		VertexShader = compile vs_4_0_level_9_1 VertexShaderFunction();
-		PixelShader = compile ps_4_0_level_9_1 PixelShaderFunctionTexture();
-#else
-        VertexShader = compile vs_3_0 VertexShaderFunction();
-        PixelShader = compile ps_3_0 PixelShaderFunctionTexture();
-#endif
-    }
+	PASS(UnlitColor, VertexShaderFunction, PSUnlitColored)
+	PASS(UnlitTexture, VertexShaderFunction, PSUnlitTextured)
 }

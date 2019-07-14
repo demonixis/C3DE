@@ -44,7 +44,7 @@ namespace Microsoft.Xna.Framework.Graphics
                     material.MainTexture = effect.Texture;
                     material.DiffuseColor = new Color(effect.DiffuseColor.X, effect.DiffuseColor.Y, effect.DiffuseColor.Z);
                     material.SpecularColor = new Color(effect.SpecularColor.X, effect.SpecularColor.Y, effect.SpecularColor.Z);
-                    material.Shininess = effect.SpecularPower;
+                    material.SpecularPower = effect.SpecularPower;
                     material.EmissiveColor = new Color(effect.EmissiveColor.X, effect.EmissiveColor.Y, effect.EmissiveColor.Z);
 
                     var child = new GameObject($"{mesh.Name}_{meshPartIndex}");
