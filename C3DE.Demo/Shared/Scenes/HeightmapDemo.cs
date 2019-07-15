@@ -19,7 +19,7 @@ namespace C3DE.Demo.Scenes
             // Finally a terrain
             var terrainMaterial = new StandardTerrainMaterial();
             terrainMaterial.MainTexture = content.Load<Texture2D>("Textures/Terrain/Ground/Ground03_col");
-            terrainMaterial.NormalMap = content.Load<Texture2D>("Textures/Terrain/Ground/Ground03_nrm");
+            terrainMaterial.GrassNormalMap = content.Load<Texture2D>("Textures/Terrain/Ground/Ground03_nrm");
             terrainMaterial.SandTexture = content.Load<Texture2D>("Textures/Terrain/Sand/Ground27_col");
             terrainMaterial.SandNormalMap = content.Load<Texture2D>("Textures/Terrain/Sand/Ground27_nrm");
             terrainMaterial.SnowTexture = content.Load<Texture2D>("Textures/Terrain/Snow/Snow05_col");
@@ -50,8 +50,8 @@ namespace C3DE.Demo.Scenes
             // And fog
             RenderSettings.FogDensity = 0.0085f;
             RenderSettings.FogMode = FogMode.None;
-            RenderSettings.Skybox.FogSupported = true;
-            RenderSettings.Skybox.OverrideSkyboxFog(FogMode.Exp2, 0.05f, 0, 0);
+            //RenderSettings.Skybox.FogSupported = true;
+            //RenderSettings.Skybox.OverrideSkyboxFog(FogMode.Exp2, 0.05f, 0, 0);
 
             var vrPlayerEnabler = _camera.AddComponent<VRPlayerEnabler>();
             vrPlayerEnabler.Position = new Vector3(0, water.Transform.Position.Y + 0.5f, 0);

@@ -1,8 +1,8 @@
-#define REFLECTION_MAP
 #include "StandardBase.fx"
 #include "../Common/ShadowMap.fxh"
 
 // Variables
+float3 DiffuseColor;
 float3 Features;
 float2 TextureTiling;
 float TotalTime;
@@ -12,7 +12,6 @@ float Alpha;
 DECLARE_TEXTURE(AlbedoMap, 1);
 DECLARE_TEXTURE(NormalMap, 2);
 DECLARE_TEXTURE(SpecularMap, 3);
-DECLARE_CUBEMAP(ReflectionMap, 4);
 
 VertexShaderOutput VertexShaderWaterFunction(VertexShaderInput input)
 {
@@ -29,18 +28,16 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 	uv.x = uv.x * 20.0 + sin(TotalTime * 3.0 + 10.0) / 256.0;
 	uv.y = uv.y * 20.0;
 
-	// Albedo
-	float3 albedo = pow(SAMPLE_TEXTURE(AlbedoMap, uv * TextureTiling).xyz, TO_LINEAR);
+	float2 scaledUV = uv * TextureTiling;
 
-	// Reflection
-	if (Features.y > 0)
-		albedo *= SAMPLE_CUBEMAP(ReflectionMap, normalize(input.Reflection)).xyz * Features.y;
+	// Albedo
+	float3 albedo = pow(SAMPLE_TEXTURE(AlbedoMap, scaledUV).xyz, TO_LINEAR);
 
 	// Normal
 	float3 normal = input.WorldNormal;
 	if (Features.x > 0)
 	{
-		normal = (2.0 * (SAMPLE_TEXTURE(NormalMap, uv * TextureTiling).xyz)) - 1.0;
+		normal = (2.0 * (SAMPLE_TEXTURE(NormalMap, scaledUV).xyz)) - 1.0;
 		normal = normalize(mul(normal, input.WorldToTangentSpace));
 	}
 
@@ -53,7 +50,7 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 	float shadowTerm = CalcShadow(input.WorldPosition);
 
 	// Base Pixel Shader
-	return float4(StandardPixelShader(input.WorldPosition, normal, specularTerm, input.FogDistance, albedo.rgb, FLOAT3(0), shadowTerm), Alpha);
+	return float4(StandardPixelShader(input.WorldPosition, normal, specularTerm, input.FogDistance, albedo.rgb * DiffuseColor, FLOAT3(0), shadowTerm), Alpha);
 }
 
 technique Water

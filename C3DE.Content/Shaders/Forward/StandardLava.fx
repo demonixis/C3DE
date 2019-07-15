@@ -48,7 +48,9 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 	}
 
 	// Specular
-	float specular = SAMPLE_TEXTURE(SpecularMap, (T2 * 4.0)).r;
+	float specular = 0.5f;
+	if (Features.y > 0)
+		specular = SAMPLE_TEXTURE(SpecularMap, (T2 * 4.0)).r;
 
 	// Base Pixel Shader
 	return float4(StandardPixelShader(input.WorldPosition, normal, specular, input.FogDistance, albedo * DiffuseColor * EmissiveIntensity, FLOAT3(0), 1.0), 1.0);

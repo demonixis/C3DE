@@ -8,6 +8,9 @@ namespace C3DE.Graphics.Materials
     public class StandardLavaMaterial : Material
     {
         public Texture2D NormalMap { get; set; }
+        public Texture2D SpecularMap { get; set; }
+
+        public float SpecularPower { get; set; } = 250.0f;
         public float EmissiveIntensity { get; set; } = 2.0f;
         public float Speed { get; set; } = 0.25f;
 
@@ -16,7 +19,7 @@ namespace C3DE.Graphics.Materials
             if (renderer is DeferredRenderer)
                 _shaderMaterial = new DeferredLava(this);
             else
-                _shaderMaterial = new ForwardLava(this);
+                _shaderMaterial = new ForwardStandardLava(this);
 
             _shaderMaterial.LoadEffect(Application.Content);
         }

@@ -3,6 +3,7 @@ using C3DE.Graphics.Materials.Shaders;
 using C3DE.Graphics.PostProcessing;
 using C3DE.Graphics.Primitives;
 using C3DE.Graphics.Rendering;
+using C3DE.Graphics.Shaders;
 using C3DE.Graphics.Shaders.Forward;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
@@ -13,7 +14,7 @@ namespace C3DE.Graphics
 {
     public class Skybox
     {
-        private ShaderMaterial _shaderMaterial;
+        private SkyboxShaderMaterial _shaderMaterial;
         private Matrix _worldMatrix;
         private Matrix _scaleMatrix;
         private CubeMesh _cubeMesh;
@@ -154,13 +155,14 @@ namespace C3DE.Graphics
             _irradianceMap = TextureFactory.CreateCubeMap(faces);
         }
 
-        public void Draw(GraphicsDevice device, Camera camera)
+        public void Draw(GraphicsDevice device, ref Vector3 cameraPosition, ref Matrix viewMatrix, ref Matrix projectionMatrix)
         {
             _currentRasterizerState = device.RasterizerState;
             device.RasterizerState = _skyboxRasterizerState;
 
-            _worldMatrix = _scaleMatrix * Matrix.CreateTranslation(camera.Transform.LocalPosition);
-            _shaderMaterial.PrePass(camera);
+            _worldMatrix = _scaleMatrix * Matrix.CreateTranslation(cameraPosition);
+
+            _shaderMaterial.PrePass(ref cameraPosition, ref viewMatrix, ref projectionMatrix);
 
             device.SetVertexBuffer(_cubeMesh.VertexBuffer);
             device.Indices = _cubeMesh.IndexBuffer;

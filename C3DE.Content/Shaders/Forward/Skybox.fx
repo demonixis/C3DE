@@ -6,9 +6,20 @@ float4x4 World;
 float4x4 View;
 float4x4 Projection;
 float3 EyePosition;
+#if SM4
 bool FogEnabled;
+#endif
 
-DECLARE_CUBEMAP(SkyboxCubeMap, 1);
+texture SkyboxCubeMap;
+samplerCUBE SkyboxSampler = sampler_state
+{
+    Texture = <SkyboxCubeMap>;
+    MagFilter = Linear;
+    MinFilter = Linear;
+    MipFilter = Linear;
+    AddressU = Mirror;
+    AddressV = Mirror;
+};
 
 struct VertexShaderInput
 {
@@ -44,7 +55,7 @@ VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
 
 float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 {
-    float3 diffuse = SAMPLE_CUBEMAP(SkyboxCubeMap, normalize(input.UV)).xyz;
+    float3 diffuse = texCUBE(SkyboxSampler, normalize(input.UV)).xyz;
     return float4(ApplyFog(diffuse, input.FogDistance), 1.0);
 }
 

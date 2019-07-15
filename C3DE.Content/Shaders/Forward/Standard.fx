@@ -38,7 +38,7 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 	// Specular
 	float specularTerm = 0.5;
 	
-	if (Feature.w > 0)
+	if (Features.w > 0)
 		specularTerm = SAMPLE_TEXTURE(SpecularMap, scaledUV).r;
 	
 	// Emissive

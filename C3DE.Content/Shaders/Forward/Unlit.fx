@@ -5,9 +5,10 @@ float4x4 World;
 float4x4 View;
 float4x4 Projection;
 
+bool CutoutEnabled;
 float Cutout;
 float3 DiffuseColor;
-float2 TextureTilling;
+float2 TextureTiling;
 
 DECLARE_TEXTURE(MainTexture, 1);
 
@@ -44,9 +45,9 @@ float4 PSUnlitColored(VertexShaderOutput input) : COLOR0
 
 float4 PSUnlitTextured(VertexShaderOutput input) : COLOR0
 {
-    float4 albedo = float4(DiffuseColor * SAMPLE_TEXTURE(MainTexture, input.UV * TextureTilling).xyz, 1.0);
+    float4 albedo = float4(DiffuseColor * SAMPLE_TEXTURE(MainTexture, input.UV * TextureTiling).xyz, 1.0);
 	
-	if (Cutout < 1)
+	if (CutoutEnabled == true)
 		clip(albedo.a <= Cutout ? -1 : 1);
 	
 	return albedo;

@@ -6,19 +6,23 @@ using C3DE.Graphics.Shaders.Forward;
 
 namespace C3DE.Graphics.Materials
 {
-    public class StandardMaterial : StandardMaterialBase
+    public class StandardMaterial : Material
     {
-        protected Vector3 m_EmissiveColor = Vector3.Zero;
+        internal Vector3 _emissiveColor = Vector3.Zero;
 
+        public Texture2D NormalMap { get; set; }
+        public Texture2D SpecularTexture { get; set; }
+        public float SpecularPower { get; set; } = 250.0f;
         public bool CutoutEnabled { get; set; }
         public float Cutout { get; set; }
         public float EmissiveIntensity { get; set; } = 1.0f;
+
         public Texture2D EmissiveMap { get; set; }
 
         public Color EmissiveColor
         {
-            get => new Color(m_EmissiveColor);
-            set => m_EmissiveColor = value.ToVector3();
+            get => new Color(_emissiveColor);
+            set => _emissiveColor = value.ToVector3();
         }
 
         public StandardMaterial() : base() { }

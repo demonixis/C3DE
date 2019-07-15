@@ -1,19 +1,18 @@
 ﻿using C3DE.Graphics.Materials.Shaders;
 using C3DE.Graphics.Rendering;
 using C3DE.Graphics.Shaders.Forward;
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace C3DE.Graphics.Materials
 {
-    public class StandardWaterMaterial : StandardMaterialBase
+    public class StandardWaterMaterial : Material
     {
-        protected Vector3 _reflectionColor = Vector3.One;
-
         public Texture2D NormalMap { get; set; }
+        public Texture2D SpecularTexture { get; set; }
         public TextureCube ReflectionTexture { get; set; }
-        public float Speed = 0.5f;
 
+        public float SpecularPower { get; set; } = 250.0f;
+        public float Speed = 0.5f;
         public float ReflectionIntensity { get; set; } = 0.35f;
 
         public StandardWaterMaterial()

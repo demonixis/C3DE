@@ -2,6 +2,7 @@
 using C3DE.Graphics.Primitives;
 using C3DE.Graphics.Materials;
 using C3DE;
+using C3DE.Graphics;
 
 namespace Microsoft.Xna.Framework.Graphics
 {
@@ -43,7 +44,7 @@ namespace Microsoft.Xna.Framework.Graphics
                     var material = new StandardMaterial();
                     material.MainTexture = effect.Texture;
                     material.DiffuseColor = new Color(effect.DiffuseColor.X, effect.DiffuseColor.Y, effect.DiffuseColor.Z);
-                    material.SpecularColor = new Color(effect.SpecularColor.X, effect.SpecularColor.Y, effect.SpecularColor.Z);
+                    material.SpecularTexture = TextureFactory.CreateColor(new Color(effect.SpecularColor.X, effect.SpecularColor.Y, effect.SpecularColor.Z), 1, 1);
                     material.SpecularPower = effect.SpecularPower;
                     material.EmissiveColor = new Color(effect.EmissiveColor.X, effect.EmissiveColor.Y, effect.EmissiveColor.Z);
 

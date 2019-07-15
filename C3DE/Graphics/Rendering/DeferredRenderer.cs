@@ -3,6 +3,7 @@ using C3DE.Components.Rendering;
 using C3DE.Graphics.Materials;
 using C3DE.Graphics.Materials.Shaders;
 using C3DE.Graphics.PostProcessing;
+using C3DE.Graphics.Shaders;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -80,8 +81,13 @@ namespace C3DE.Graphics.Rendering
         private void RenderObjects(Scene scene, Camera camera)
         {
             using (_graphicsDevice.GeometryUnlitState())
+            {
                 if (scene.RenderSettings.Skybox.Enabled)
-                    scene.RenderSettings.Skybox.Draw(_graphicsDevice, camera);
+                {
+                    var pos = camera.Transform.Position;
+                    scene.RenderSettings.Skybox.Draw(_graphicsDevice, ref pos, ref camera._viewMatrix, ref camera._projectionMatrix);
+                }
+            }
 
             var renderCount = scene.renderList.Count;
 
@@ -103,9 +109,10 @@ namespace C3DE.Graphics.Rendering
 
                 shader = material._shaderMaterial;
 
+                // TODO: FIXME
                 // Ambient pass
-                shader.PrePass(camera);
-                shader.Pass(scene.RenderList[i]);
+                //shader.PrePass(camera);
+                //shader.Pass(scene.RenderList[i]);
                 renderer.Draw(_graphicsDevice);
             }
         }
@@ -116,6 +123,7 @@ namespace C3DE.Graphics.Rendering
             _graphicsDevice.SetRenderTarget(m_LightTarget);
             _graphicsDevice.Clear(Color.Transparent);
 
+            // TODO: Make a LightRenderer that renders lights with data only
             m_AmbientLight.Color = Scene.current.RenderSettings.AmbientColor;
             m_AmbientLight.RenderDeferred(m_ColorTarget, m_NormalTarget, m_DepthTarget, camera);
 

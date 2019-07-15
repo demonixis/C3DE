@@ -12,12 +12,10 @@ DECLARE_TEXTURE(SandMap, 3);
 DECLARE_TEXTURE(RockMap, 4);
 DECLARE_TEXTURE(SnowMap, 5);
 
-#if SM4
 DECLARE_TEXTURE(GrassNormalMap, 6);
 DECLARE_TEXTURE(SandNormalMap, 7);
 DECLARE_TEXTURE(RockNormalMap, 8);
 DECLARE_TEXTURE(SnowNormalMap, 9);
-#endif
 
 float3 BlendTextures(sampler2D grass, sampler2D sand, sampler2D rock, sampler2D snow, float2 uv)
 {

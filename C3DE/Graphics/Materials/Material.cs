@@ -1,5 +1,5 @@
-﻿using C3DE.Graphics.Materials.Shaders;
-using C3DE.Graphics.Rendering;
+﻿using C3DE.Graphics.Rendering;
+using C3DE.Graphics.Shaders;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;

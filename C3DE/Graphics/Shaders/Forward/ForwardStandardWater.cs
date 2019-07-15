@@ -35,7 +35,7 @@ namespace C3DE.Graphics.Shaders.Forward
             _effect.Parameters["Features"].SetValue(_features);
             _effect.Parameters["ShadowEnabled"].SetValue(receiveShadow);
             _effect.Parameters["DiffuseColor"].SetValue(_material._diffuseColor);
-            _effect.Parameters["ReflectionMap"].SetValue(_material.ReflectionTexture);
+            //_effect.Parameters["ReflectionMap"].SetValue(_material.ReflectionTexture);
 
             _effect.CurrentTechnique.Passes[0].Apply();
         }

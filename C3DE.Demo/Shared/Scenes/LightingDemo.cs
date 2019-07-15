@@ -67,7 +67,6 @@ namespace C3DE.Demo.Scenes
                 var sphereMaterial = new StandardMaterial();
                 sphereMaterial.DiffuseColor = colors[i];
                 sphereMaterial.EmissiveColor = colors[i];
-                sphereMaterial.EmissiveEnabled = true;
                 ligthSphere.Material = sphereMaterial;
 
                 ligthSphere.AddComponent<LightMover>();
@@ -108,7 +107,6 @@ namespace C3DE.Demo.Scenes
             modelMaterial.NormalMap = Application.Content.Load<Texture2D>("Models/Quandtum/textures/Turret-Normal");
             modelMaterial.EmissiveMap = Application.Content.Load<Texture2D>("Models/Quandtum/textures/Turret-Emission");
             modelMaterial.SpecularTexture = Application.Content.Load<Texture2D>("Models/Quandtum/textures/Turret-Specular");
-            modelMaterial.ReflectionTexture = RenderSettings.Skybox.Texture;
             modelMaterial.SpecularPower = 25;
 
             _camera.AddComponent<VRPlayerEnabler>();

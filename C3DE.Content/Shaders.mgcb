@@ -97,12 +97,6 @@
 /processorParam:DebugMode=Auto
 /build:Shaders/Forward/PBRLava.fx
 
-#begin Shaders/Forward/PBRLava.fx
-/importer:EffectImporter
-/processor:EffectProcessor
-/processorParam:DebugMode=Auto
-/build:Shaders/Forward/PBRLava.fx
-
 #begin Shaders/Forward/PBRStandard.fx
 /importer:EffectImporter
 /processor:EffectProcessor
@@ -155,6 +149,7 @@
 /importer:EffectImporter
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
+/processorParam:Defines=
 /build:Shaders/Forward/StandardWater.fx
 
 #begin Shaders/Forward/Unlit.fx

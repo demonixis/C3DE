@@ -3,6 +3,7 @@ using C3DE.Components.Lighting;
 using C3DE.Components.Rendering;
 using C3DE.Graphics.Materials;
 using C3DE.Graphics.Materials.Shaders;
+using C3DE.Graphics.Shaders;
 using C3DE.Graphics.Shaders.Forward;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
@@ -143,21 +144,22 @@ namespace C3DE.Graphics.Rendering
             _graphicsDevice.DepthStencilState = DepthStencilState.Default;
             _graphicsDevice.BlendState = BlendState.Opaque;
 
+            // Camera
+            var cameraPosition = camera._transform.Position;
+            var cameraViewMatrix = camera._viewMatrix;
+            var cameraProjectionMatrix = camera._projectionMatrix;
+            var fogData = scene.RenderSettings.fogData;
+
+            ComputeLightData(scene);
+
             if (scene.RenderSettings.Skybox.Enabled)
-                scene.RenderSettings.Skybox.Draw(_graphicsDevice, camera);
+                scene.RenderSettings.Skybox.Draw(_graphicsDevice, ref cameraPosition, ref cameraViewMatrix, ref cameraProjectionMatrix);
 
             var renderCount = scene.renderList.Count;
 
             Renderer renderer;
             Material material;
-            ForwardShader forwardShader;
-
-            // Camera
-            var cameraPosition = camera._transform.Position;
-            var cameraViewMatrix = camera._viewMatrix;
-            var cameraProjectionMatrix = camera._projectionMatrix;
-
-            ComputeLightData(scene);
+            ShaderMaterial shader;
 
             // Pass, Update matrix, material attributes, etc.
             for (var i = 0; i < renderCount; i++)
@@ -172,9 +174,9 @@ namespace C3DE.Graphics.Rendering
                     continue;
                 }
 
-                forwardShader = material._shaderMaterial as ForwardShader;
-                forwardShader.PrePass(ref cameraPosition, ref cameraViewMatrix, ref cameraProjectionMatrix, ref _lightData, ref _shadowData, ref scene.RenderSettings.fogData);
-                forwardShader.Pass(ref renderer._transform._worldMatrix, renderer.ReceiveShadow);
+                shader = material._shaderMaterial;
+                shader.PrePass(ref cameraPosition, ref cameraViewMatrix, ref cameraProjectionMatrix, ref _lightData, ref _shadowData, ref fogData);
+                shader.Pass(ref renderer._transform._worldMatrix, renderer.ReceiveShadow);
 
                 renderer.Draw(_graphicsDevice);
             }
