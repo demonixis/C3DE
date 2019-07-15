@@ -1,4 +1,5 @@
 ﻿using C3DE.Graphics.Materials;
+using C3DE.Graphics.Rendering;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -26,6 +27,7 @@ namespace C3DE.Graphics.Shaders.Forward
             _features.Y = _material.ReflectionIntensity;
             _features.Z = _material.SpecularTexture != null ? 1 : 0;
 
+            _effect.Parameters["TotalTime"].SetValue(Time.TotalTime * _material.Speed);
             _effect.Parameters["TextureTiling"].SetValue(_material.Tiling);
             _effect.Parameters["World"].SetValue(worldMatrix);
             _effect.Parameters["AlbedoMap"].SetValue(_material.MainTexture);
@@ -33,9 +35,9 @@ namespace C3DE.Graphics.Shaders.Forward
             _effect.Parameters["SpecularMap"].SetValue(_material.SpecularTexture);
             _effect.Parameters["SpecularPower"].SetValue(_material.SpecularPower);
             _effect.Parameters["Features"].SetValue(_features);
+            _effect.Parameters["Alpha"].SetValue(_material.Alpha);
             _effect.Parameters["ShadowEnabled"].SetValue(receiveShadow);
             _effect.Parameters["DiffuseColor"].SetValue(_material._diffuseColor);
-            //_effect.Parameters["ReflectionMap"].SetValue(_material.ReflectionTexture);
 
             _effect.CurrentTechnique.Passes[0].Apply();
         }

@@ -1,4 +1,5 @@
 ﻿using C3DE.Components.Rendering;
+using C3DE.Graphics;
 using C3DE.Graphics.Materials;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -22,6 +23,7 @@ namespace C3DE.Demo.Scenes
             var water = waterGo.GetComponent<MeshRenderer>();
             var waterMat = (StandardWaterMaterial)water.Material;
             waterMat.ReflectionTexture = _scene.RenderSettings.Skybox.Texture;
+            waterMat.SpecularTexture = TextureFactory.CreateColor(Color.Gray, 1, 1);
         }
     }
 }

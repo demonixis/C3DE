@@ -50,7 +50,7 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 	float shadowTerm = CalcShadow(input.WorldPosition);
 
 	// Base Pixel Shader
-	return float4(StandardPixelShader(input.WorldPosition, normal, specularTerm, input.FogDistance, pow(albedo.rgb, TO_LINEAR) * DiffuseColor, emissive, shadowTerm), albedo.a);
+	return float4(StandardPixelShader(input.WorldPosition, normal, specularTerm, input.FogDistance, albedo.rgb * DiffuseColor, emissive, shadowTerm), albedo.a);
 }
 
 TECHNIQUE_SM4(Standard, VertexShaderFunction, PixelShaderFunction);

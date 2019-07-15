@@ -1,5 +1,4 @@
 #include "StandardBase.fx"
-#include "../Common/ShadowMap.fxh"
 
 // Material
 float3 DiffuseColor;
@@ -27,7 +26,7 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 
 	float p = SAMPLE_TEXTURE(NormalMap, (T1 * 3.0)).a;
 
-	float3 color = pow(SAMPLE_TEXTURE(AlbedoMap, (T2 * 4.0)), TO_LINEAR).xyz;
+	float3 color = SAMPLE_TEXTURE(AlbedoMap, (T2 * 4.0)).xyz;
 	float3 albedo = color * (float3(p, p, p) * 2.0) + (color * color - 0.1);
 
 	if (albedo.r > 1.0)
@@ -43,8 +42,8 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 
 	if (Features.x > 0)
 	{
-		normal = 2.0 * (SAMPLE_TEXTURE(NormalMap, (T2 * 4.0))) - 1.0;
-		normal = normalize(mul(normal, input.WorldToTangentSpace));
+		//normal = 2.0 * (SAMPLE_TEXTURE(NormalMap, (T2 * 4.0))) - 1.0;
+		//normal = normalize(mul(normal, input.WorldToTangentSpace));
 	}
 
 	// Specular
@@ -53,7 +52,7 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 		specular = SAMPLE_TEXTURE(SpecularMap, (T2 * 4.0)).r;
 
 	// Base Pixel Shader
-	return float4(StandardPixelShader(input.WorldPosition, normal, specular, input.FogDistance, albedo * DiffuseColor * EmissiveIntensity, FLOAT3(0), 1.0), 1.0);
+	return float4(StandardPixelShader(input.WorldPosition, normal, specular, input.FogDistance, saturate(albedo * DiffuseColor * EmissiveIntensity), FLOAT3(0), 1.0), 1.0);
 }
 
 TECHNIQUE_SM4(Lava, VertexShaderFunction, PixelShaderFunction);

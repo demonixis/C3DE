@@ -130,8 +130,8 @@ float3 StandardPixelShader(float4 worldPosition, float3 normal, float specularTe
 	color = ApplyFog(color, fogDistance);
 
 	// HDR + Gamma correction
-	color = color / (color + FLOAT3(1.0));
-	color = pow(color, TO_GAMMA);
+	//color = color / (color + FLOAT3(1.0));
+	//color = pow(color, TO_GAMMA);
 
 	return color;
 }

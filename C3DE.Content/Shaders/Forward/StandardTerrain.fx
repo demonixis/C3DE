@@ -35,7 +35,7 @@ float3 BlendTextures(sampler2D grass, sampler2D sand, sampler2D rock, sampler2D 
 
 float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 {
-	float3 albedo = pow(BlendTextures(GrassMap, SandMap, RockMap, SnowMap, input.UV), TO_LINEAR);
+	float3 albedo = BlendTextures(GrassMap, SandMap, RockMap, SnowMap, input.UV);
 	float3 normal = input.WorldNormal;
 
 #if SM4

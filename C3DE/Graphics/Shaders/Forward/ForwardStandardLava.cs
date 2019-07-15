@@ -56,6 +56,7 @@ namespace C3DE.Graphics.Shaders.Forward
             _effect.Parameters["TextureTiling"].SetValue(_material.Tiling);
             _effect.Parameters["DiffuseColor"].SetValue(_material._diffuseColor);
             _effect.Parameters["EmissiveIntensity"].SetValue(_material.EmissiveIntensity);
+            _effect.Parameters["TotalTime"].SetValue(Time.TotalTime * _material.Speed);
 
             _effect.CurrentTechnique.Passes[0].Apply();
         }

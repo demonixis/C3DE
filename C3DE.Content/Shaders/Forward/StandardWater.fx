@@ -31,7 +31,7 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 	float2 scaledUV = uv * TextureTiling;
 
 	// Albedo
-	float3 albedo = pow(SAMPLE_TEXTURE(AlbedoMap, scaledUV).xyz, TO_LINEAR);
+	float3 albedo = SAMPLE_TEXTURE(AlbedoMap, scaledUV).xyz;
 
 	// Normal
 	float3 normal = input.WorldNormal;

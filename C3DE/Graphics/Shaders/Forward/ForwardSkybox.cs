@@ -25,9 +25,7 @@ namespace C3DE.Graphics.Shaders.Forward
             _effect.Parameters["Projection"].SetValue(projectionMatrix);
             _effect.Parameters["EyePosition"].SetValue(cameraPosition);
             _effect.Parameters["SkyboxCubeMap"].SetValue(_skybox.Texture);
-            _effect.Parameters["World"].SetValue(_skybox.WorldMatrix);
-            _effect.Parameters["FogEnabled"].SetValue(_skybox.FogSupported);
-            _effect.Parameters["FogData"].SetValue(_skybox.OverrideFog ? _skybox.CustomFogData : Scene.current.RenderSettings.fogData);
+            _effect.Parameters["World"].SetValue(_skybox._worldMatrix);
             _effect.CurrentTechnique.Passes[0].Apply();
         }
 
