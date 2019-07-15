@@ -8,9 +8,11 @@ namespace C3DE.Graphics.Shaders.Forward
 {
     public struct LightData
     {
+        public Vector3 Ambient;
         public Vector3[] Positions;
         public Vector3[] Colors;
         public Vector3[] Data;
+        public Vector4[] SpotData;
         public int Count;
     }
 
@@ -32,7 +34,7 @@ namespace C3DE.Graphics.Shaders.Forward
         {
         }
 
-        public abstract void PrePass(ref Vector3 cameraPosition, ref Matrix viewMatrix, ref Matrix projectionMatrix, ref LightData lightData, ref ShadowData shadowData);
+        public abstract void PrePass(ref Vector3 cameraPosition, ref Matrix viewMatrix, ref Matrix projectionMatrix, ref LightData lightData, ref ShadowData shadowData, ref Vector4 fogData);
         public abstract void Pass(ref Matrix worldMatrix, bool receiveShadow);
     }
 }

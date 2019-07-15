@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using System.Collections.Generic;
 
 namespace C3DE.Graphics.Rendering
 {
@@ -156,43 +157,7 @@ namespace C3DE.Graphics.Rendering
             var cameraViewMatrix = camera._viewMatrix;
             var cameraProjectionMatrix = camera._projectionMatrix;
 
-            // Compute Lighting & Shadows.
-            // TODO: Put it in a cache.
-            var lights = scene.lights;
-            var lightCount = lights.Count;
-
-            lightCount = Math.Min(MaxLightCount, lightCount);
-
-            if (_lightData.Count != lightCount)
-            {
-                _lightData.Count = lightCount;
-                _lightData.Colors = new Vector3[lightCount];
-                _lightData.Positions = new Vector3[lightCount];
-                _lightData.Data = new Vector3[lightCount];
-            }
-
-            var shadow = false;
-
-            for (var i = 0; i < lightCount; i++)
-            {
-                _lightData.Positions[i] = lights[i].Transform.Position;
-                _lightData.Colors[i] = lights[i]._color;
-                _lightData.Data[i].X = 1; // Default Point
-                _lightData.Data[i].Y = lights[i].Intensity;
-                _lightData.Data[i].Z = lights[i].Radius;
-
-                if (lights[i].TypeLight == LightType.Directional)
-                    _lightData.Data[i].X = 0;
-
-                if (!shadow && lights[i].ShadowEnabled)
-                {
-                    _shadowData.ProjectionMatrix = lights[i]._projectionMatrix;
-                    _shadowData.ViewMatrix = lights[i]._viewMatrix;
-                    _shadowData.Data = lights[i]._shadowGenerator._shadowData;
-                    _shadowData.ShadowMap = lights[i]._shadowGenerator.ShadowMap;
-                    shadow = true;
-                }
-            }
+            ComputeLightData(scene);
 
             // Pass, Update matrix, material attributes, etc.
             for (var i = 0; i < renderCount; i++)
@@ -208,11 +173,58 @@ namespace C3DE.Graphics.Rendering
                 }
 
                 forwardShader = material._shaderMaterial as ForwardShader;
-                forwardShader.PrePass(ref cameraPosition, ref cameraViewMatrix, ref cameraProjectionMatrix, ref _lightData, ref _shadowData);
+                forwardShader.PrePass(ref cameraPosition, ref cameraViewMatrix, ref cameraProjectionMatrix, ref _lightData, ref _shadowData, ref scene.RenderSettings.fogData);
                 forwardShader.Pass(ref renderer._transform._worldMatrix, renderer.ReceiveShadow);
 
                 renderer.Draw(_graphicsDevice);
             }
+        }
+
+        private void ComputeLightData(Scene scene)
+        {
+            // TODO: Put it in a cache.
+            var lights = scene.lights;
+            var lightCount = lights.Count;
+
+            lightCount = Math.Min(MaxLightCount, lightCount);
+
+            if (_lightData.Count != lightCount)
+            {
+                _lightData.Count = lightCount;
+                _lightData.Colors = new Vector3[lightCount];
+                _lightData.Positions = new Vector3[lightCount];
+                _lightData.Data = new Vector3[lightCount];
+                _lightData.SpotData = new Vector4[lightCount];
+            }
+
+            var shadow = false;
+
+            for (var i = 0; i < lightCount; i++)
+            {
+                _lightData.Positions[i] = lights[i].Transform.Position;
+                _lightData.Colors[i] = lights[i]._color;
+                _lightData.Data[i].Y = lights[i].Intensity;
+                _lightData.Data[i].Z = lights[i].Radius;
+                _lightData.SpotData[i] = new Vector4(lights[i].Direction, lights[i].Angle);
+
+                if (lights[i].Type == LightType.Directional)
+                    _lightData.Data[i].X = 0;
+                else if (lights[i].Type == LightType.Point)
+                    _lightData.Data[i].X = 1;
+                else if (lights[i].Type == LightType.Spot)
+                    _lightData.Data[i].X = 2;
+
+                if (!shadow && lights[i].ShadowEnabled)
+                {
+                    _shadowData.ProjectionMatrix = lights[i]._projectionMatrix;
+                    _shadowData.ViewMatrix = lights[i]._viewMatrix;
+                    _shadowData.Data = lights[i]._shadowGenerator._shadowData;
+                    _shadowData.ShadowMap = lights[i]._shadowGenerator.ShadowMap;
+                    shadow = true;
+                }
+            }
+
+            _lightData.Ambient = scene.RenderSettings.ambientColor;
         }
     }
 }

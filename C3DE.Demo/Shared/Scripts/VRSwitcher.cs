@@ -65,7 +65,7 @@ namespace C3DE.Demo.Scripts
             {
                 var std = (StandardMaterial)renderer.Material;
                 std.MainTexture = Application.Content.Load<Texture2D>("Models/VRController/vr_controller_01_mrhat_diff_0");
-                std.EmissiveTexture = Application.Content.Load<Texture2D>("Models/VRController/vr_controller_01_mrhat_Illum");
+                std.EmissiveMap = Application.Content.Load<Texture2D>("Models/VRController/vr_controller_01_mrhat_Illum");
                 std.EmissiveEnabled = true;
             }
 #endif

@@ -7,8 +7,6 @@ namespace C3DE.Graphics.Shaders.Forward
 {
     public abstract class ForwardPBRBase : ForwardShader
     {
-        protected Effect _effect;
-
         public override void PrePass(Camera camera)
         {
         }

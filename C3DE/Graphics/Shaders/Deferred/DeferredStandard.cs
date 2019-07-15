@@ -73,8 +73,8 @@ namespace C3DE.Graphics.Materials.Shaders
 
         public override void Pass(Renderer renderable)
         {
-            m_EPEmissiveTextureEnabled.SetValue(m_Material.EmissiveTexture != null);
-            m_EPEmissiveTexture.SetValue(m_Material.EmissiveTexture);
+            m_EPEmissiveTextureEnabled.SetValue(m_Material.EmissiveMap != null);
+            m_EPEmissiveTexture.SetValue(m_Material.EmissiveMap);
             m_EPEmissiveColor.SetValue(m_Material.EmissiveColor.ToVector3());
             m_EPEmissiveIntensity.SetValue(m_Material.EmissiveIntensity);
             m_EPReflectionTexture.SetValue(m_Material.ReflectionTexture);

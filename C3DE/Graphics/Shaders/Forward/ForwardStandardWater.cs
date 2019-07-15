@@ -1,6 +1,4 @@
-﻿using C3DE.Components.Lighting;
-using C3DE.Components.Rendering;
-using C3DE.Graphics.Materials;
+﻿using C3DE.Graphics.Materials;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -10,12 +8,7 @@ namespace C3DE.Graphics.Shaders.Forward
     public class ForwardStandardWater : ForwardStandardBase
     {
         protected StandardWaterMaterial _material;
-        protected EffectParameter _EPReflectionTexture;
-        protected EffectParameter _EPReflectionTextureEnabled;
-        protected EffectParameter _EPReflectionColor;
-        protected EffectParameter _EPNormalMap;
-        protected EffectParameter _EPNormalMapEnabled;
-        protected EffectParameter _EPTotalTime;
+        private Vector3 _features;
 
         public ForwardStandardWater(StandardWaterMaterial material)
         {
@@ -25,30 +18,26 @@ namespace C3DE.Graphics.Shaders.Forward
         public override void LoadEffect(ContentManager content)
         {
             _effect = content.Load<Effect>("Shaders/Forward/StandardWater");
-            SetupParamaters();
-        }
-
-        protected override void SetupParamaters()
-        {
-            base.SetupParamaters();
-
-            _EPReflectionTexture = _effect.Parameters["ReflectionTexture"];
-            _EPReflectionTextureEnabled = _effect.Parameters["ReflectionTextureEnabled"];
-            _EPReflectionColor = _effect.Parameters["ReflectionColor"];
-            _EPNormalMap = _effect.Parameters["NormalTexture"];
-            _EPNormalMapEnabled = _effect.Parameters["NormalTextureEnabled"];
-            _EPTotalTime = _effect.Parameters["TotalTime"];
         }
 
         public override void Pass(ref Matrix worldMatrix, bool receiveShadow)
         {
-            _EPTotalTime.SetValue(Time.TotalTime * _material.Speed);
-            _EPNormalMap.SetValue(_material.NormalMap);
-            _EPNormalMapEnabled.SetValue(_material.NormalMap != null);
-            _EPReflectionTexture.SetValue(_material.ReflectionTexture);
-            _EPReflectionTextureEnabled.SetValue(_material.ReflectionTexture != null);
+            _features.X = _material.NormalMap != null ? 1 : 0;
+            _features.Y = _material.ReflectionIntensity;
+            _features.Z = _material.SpecularTexture != null ? 1 : 0;
 
-            BasePass(_material, ref worldMatrix, receiveShadow);
+            _effect.Parameters["TextureTiling"].SetValue(_material.Tiling);
+            _effect.Parameters["World"].SetValue(worldMatrix);
+            _effect.Parameters["AlbedoMap"].SetValue(_material.MainTexture);
+            _effect.Parameters["NormalMap"].SetValue(_material.NormalMap);
+            _effect.Parameters["SpecularMap"].SetValue(_material.SpecularTexture);
+            _effect.Parameters["SpecularPower"].SetValue(_material.SpecularPower);
+            _effect.Parameters["Features"].SetValue(_features);
+            _effect.Parameters["ShadowEnabled"].SetValue(receiveShadow);
+            _effect.Parameters["DiffuseColor"].SetValue(_material._diffuseColor);
+            _effect.Parameters["ReflectionMap"].SetValue(_material.ReflectionTexture);
+
+            _effect.CurrentTechnique.Passes[0].Apply();
         }
     }
 }

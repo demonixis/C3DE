@@ -28,7 +28,7 @@ namespace C3DE.Demo.Scripts
             _material = new StandardMaterial();
             _material.DiffuseColor = RandomHelper.GetColor();
             _material.MainTexture = Application.Content.Load<Texture2D>("Textures/Proto/Protogrid");
-            _material.EmissiveTexture = TextureFactory.AddColor(_material.MainTexture, RandomHelper.GetColor());
+            _material.EmissiveMap = TextureFactory.AddColor(_material.MainTexture, RandomHelper.GetColor());
             _material.EmissiveColor = RandomHelper.GetColor();
             _material.Tiling = new Vector2(0.5f);
 

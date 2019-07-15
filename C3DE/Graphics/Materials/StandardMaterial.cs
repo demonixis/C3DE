@@ -13,7 +13,7 @@ namespace C3DE.Graphics.Materials
         public bool CutoutEnabled { get; set; }
         public float Cutout { get; set; }
         public float EmissiveIntensity { get; set; } = 1.0f;
-        public Texture2D EmissiveTexture { get; set; }
+        public Texture2D EmissiveMap { get; set; }
 
         public Color EmissiveColor
         {

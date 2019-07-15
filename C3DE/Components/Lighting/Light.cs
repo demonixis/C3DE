@@ -20,8 +20,6 @@ namespace C3DE.Components.Lighting
         private Effect _deferredAmbientEffect;
         private Effect _deferredDirLightEffect;
         private Effect _deferredPointLightEffect;
-        private Effect _lPPPointLightEffect;
-        private Effect _lPPDirLightEffect;
         private QuadRenderer _quadRenderer;
         private SphereMesh _sphereMesh;
         private BoundingSphere _boundingSphere;
@@ -79,7 +77,7 @@ namespace C3DE.Components.Lighting
         /// <summary>
         /// The type of the light.
         /// </summary>
-        public LightType TypeLight { get; set; } = LightType.Directional;
+        public LightType Type { get; set; } = LightType.Directional;
 
         /// <summary>
         /// The angle used by the Spot light.
@@ -110,8 +108,6 @@ namespace C3DE.Components.Lighting
             _deferredAmbientEffect = content.Load<Effect>("Shaders/Deferred/AmbientLight");
             _deferredDirLightEffect = content.Load<Effect>("Shaders/Deferred/DirectionalLight");
             _deferredPointLightEffect = content.Load<Effect>("Shaders/Deferred/PointLight");
-            _lPPDirLightEffect = content.Load<Effect>("Shaders/LPP/DirectionalLight");
-            _lPPPointLightEffect = content.Load<Effect>("Shaders/LPP/PointLight");
             _sphereMesh = new SphereMesh(1, 8);
             _sphereMesh.Build();
         }
@@ -140,72 +136,18 @@ namespace C3DE.Components.Lighting
             _projectionMatrix = Matrix.CreateOrthographicOffCenter(-size, size, size, -size, dist - sphere.Radius, dist + sphere.Radius * 2);
         }
 
-        public void RenderLPP(RenderTarget2D normal, RenderTarget2D depth, Camera camera)
-        {
-            var graphics = Application.GraphicsDevice;
-            var previousRS = graphics.RasterizerState;
-            var viewProjection = camera._viewMatrix * camera._projectionMatrix;
-            var invViewProjection = Matrix.Invert(viewProjection);
-            var viewport = new Vector2(Screen.Width, Screen.Height);
-
-            if (TypeLight == LightType.Ambient)
-            {
-                _deferredAmbientEffect.Parameters["Color"].SetValue(_color);
-                _deferredAmbientEffect.CurrentTechnique.Passes[0].Apply();
-                _quadRenderer.RenderFullscreenQuad();
-            }
-            else if (TypeLight == LightType.Directional)
-            {
-                _lPPDirLightEffect.Parameters["NormalTexture"].SetValue(normal);
-                _lPPDirLightEffect.Parameters["DepthTexture"].SetValue(depth);
-                _lPPDirLightEffect.Parameters["InvViewProjection"].SetValue(invViewProjection);
-                _lPPDirLightEffect.Parameters["WorldViewProjection"].SetValue(_transform._worldMatrix * viewProjection);
-                _lPPDirLightEffect.Parameters["LightColor"].SetValue(_color);
-                _lPPDirLightEffect.Parameters["LightPosition"].SetValue(Transform.Position);
-                _lPPDirLightEffect.Parameters["LightIntensity"].SetValue(Intensity);
-                _lPPDirLightEffect.CurrentTechnique.Passes[0].Apply();
-                _quadRenderer.RenderFullscreenQuad();
-            }
-            else
-            {
-                _lPPPointLightEffect.Parameters["CameraPosition"].SetValue(camera._transform.Position);
-                _lPPPointLightEffect.Parameters["NormalTexture"].SetValue(normal);
-                _lPPPointLightEffect.Parameters["DepthTexture"].SetValue(depth);
-                _lPPPointLightEffect.Parameters["InvViewProjection"].SetValue(invViewProjection);
-
-                var worldViewProjection = (Matrix.CreateScale(Radius) * _transform._worldMatrix) * viewProjection;
-                _lPPPointLightEffect.Parameters["WorldViewProjection"].SetValue(worldViewProjection);
-                _lPPPointLightEffect.Parameters["LightColor"].SetValue(_color);
-                _lPPPointLightEffect.Parameters["LightAttenuation"].SetValue(FallOf);
-                _lPPPointLightEffect.Parameters["LightPosition"].SetValue(Transform.Position);
-                _lPPPointLightEffect.Parameters["LightRange"].SetValue(Radius);
-                _lPPPointLightEffect.Parameters["LightIntensity"].SetValue(Intensity);
-
-                var inside = Vector3.Distance(camera._transform.Position, _transform.Position) < (Radius * 1.25f);
-                graphics.RasterizerState = inside ? RasterizerState.CullClockwise : RasterizerState.CullCounterClockwise;
-
-                _lPPPointLightEffect.CurrentTechnique.Passes[0].Apply();
-
-                graphics.SetVertexBuffer(_sphereMesh.VertexBuffer);
-                graphics.Indices = _sphereMesh.IndexBuffer;
-                graphics.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, _sphereMesh.IndexBuffer.IndexCount / 3);
-
-                graphics.RasterizerState = previousRS;
-            }
-        }
-
         public void RenderDeferred(RenderTarget2D colorMap, RenderTarget2D normalMap, RenderTarget2D depthMap, Camera camera)
         {
             var graphics = Application.GraphicsDevice;
             var invertViewProjection = Matrix.Invert(camera._viewMatrix * camera._projectionMatrix);
 
-            if (TypeLight == LightType.Ambient)
+            if (Type == LightType.Ambient)
             {
                 _deferredAmbientEffect.Parameters["Color"].SetValue(_color);
                 _deferredAmbientEffect.CurrentTechnique.Passes[0].Apply();
                 _quadRenderer.RenderFullscreenQuad();
             }
-            else if (TypeLight == LightType.Directional)
+            else if (Type == LightType.Directional)
             {
                 _deferredDirLightEffect.Parameters["ColorMap"].SetValue(colorMap);
                 _deferredDirLightEffect.Parameters["NormalMap"].SetValue(normalMap);
@@ -262,7 +204,7 @@ namespace C3DE.Components.Lighting
             if (light == null)
                 return -1;
 
-            if (TypeLight == light.TypeLight)
+            if (Type == light.Type)
                 return 1;
             else
                 return 0;

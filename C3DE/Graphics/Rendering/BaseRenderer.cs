@@ -59,7 +59,7 @@ namespace C3DE.Graphics.Rendering
             m_uiManager.LoadContent(content);
 
             m_AmbientLight = new Light();
-            m_AmbientLight.TypeLight = LightType.Ambient;
+            m_AmbientLight.Type = LightType.Ambient;
             m_AmbientLight.Start();
         }
 

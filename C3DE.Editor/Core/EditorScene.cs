@@ -180,7 +180,7 @@ namespace C3DE.Editor
             gameObject.AddComponent<SphereCollider>();
 
             var light = gameObject.AddComponent<Light>();
-            light.TypeLight = type;
+            light.Type = type;
 
             var lightRenderer = light.AddComponent<EditorIconRenderer>();
             lightRenderer.Setup("Light_Icon");

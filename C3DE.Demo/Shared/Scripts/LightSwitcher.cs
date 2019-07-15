@@ -39,16 +39,16 @@ namespace C3DE.Demo.Scripts
             gui.Box(_box, "Lights");
 
             if (gui.Button(_btn1, "Ambiant"))
-                _light.TypeLight = LightType.Ambient;
+                _light.Type = LightType.Ambient;
 
             if (gui.Button(_btn2, "Directional"))
-                _light.TypeLight = LightType.Directional;
+                _light.Type = LightType.Directional;
 
             if (gui.Button(_btn3, "Point"))
-                _light.TypeLight = LightType.Point;
+                _light.Type = LightType.Point;
 
             if (gui.Button(_btn4, "Spot"))
-                _light.TypeLight = LightType.Spot;
+                _light.Type = LightType.Spot;
 
             if (LogPositionRotation)
                 Debug.Log($"p: {_transform.Position} r: {_transform.Rotation}");

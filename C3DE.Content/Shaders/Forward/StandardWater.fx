@@ -3,7 +3,7 @@
 #include "../Common/ShadowMap.fxh"
 
 // Variables
-float2 Features;
+float3 Features;
 float2 TextureTiling;
 float TotalTime;
 float Alpha;
@@ -45,7 +45,9 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 	}
 
 	// Specular
-	float specularTerm = SAMPLE_TEXTURE(SpecularMap, scaledUV).r;
+	float specularTerm = 0.5;
+	if (Features.z > 0)
+		specularTerm = SAMPLE_TEXTURE(SpecularMap, scaledUV).r;
 
 	// Shadows
 	float shadowTerm = CalcShadow(input.WorldPosition);

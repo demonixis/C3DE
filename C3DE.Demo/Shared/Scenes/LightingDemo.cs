@@ -106,7 +106,7 @@ namespace C3DE.Demo.Scenes
             var modelMaterial = renderer.Material as StandardMaterial;
             modelMaterial.MainTexture = Application.Content.Load<Texture2D>("Models/Quandtum/textures/Turret-Diffuse");
             modelMaterial.NormalMap = Application.Content.Load<Texture2D>("Models/Quandtum/textures/Turret-Normal");
-            modelMaterial.EmissiveTexture = Application.Content.Load<Texture2D>("Models/Quandtum/textures/Turret-Emission");
+            modelMaterial.EmissiveMap = Application.Content.Load<Texture2D>("Models/Quandtum/textures/Turret-Emission");
             modelMaterial.SpecularTexture = Application.Content.Load<Texture2D>("Models/Quandtum/textures/Turret-Specular");
             modelMaterial.ReflectionTexture = RenderSettings.Skybox.Texture;
             modelMaterial.SpecularPower = 25;

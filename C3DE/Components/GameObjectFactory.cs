@@ -34,7 +34,7 @@ namespace C3DE
         {
             var gameObject = new GameObject($"Light_{type}");
             var light = gameObject.AddComponent<Light>();
-            light.TypeLight = type;
+            light.Type = type;
             light.Intensity = intensity;
             light._color = color.ToVector3();
 
