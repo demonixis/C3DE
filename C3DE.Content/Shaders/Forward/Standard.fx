@@ -8,13 +8,16 @@ float4 Features;
 float3 DiffuseColor;
 float2 TextureTiling = float2(1, 1);
 float3 EmissiveColor;
+float SpecularColor;
 float EmissiveIntensity;
+float ReflectionIntensity;
 float Cutout;
 
 DECLARE_TEXTURE(AlbedoMap, 1);
 DECLARE_TEXTURE(NormalMap, 2);
 DECLARE_TEXTURE(SpecularMap, 3);
 DECLARE_TEXTURE(EmissiveMap, 4);
+DECLARE_TEXTURE(ReflectionMap, 5);
 
 float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 { 
@@ -36,7 +39,7 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
     }
 
 	// Specular
-	float specularTerm = 0.5;
+	float specularTerm = SpecularColor;
 	
 	if (Features.w > 0)
 		specularTerm = SAMPLE_TEXTURE(SpecularMap, scaledUV).r;
@@ -49,8 +52,18 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 	// Shadows
 	float shadowTerm = CalcShadow(input.WorldPosition);
 
+	// Reflection
+	float4 reflection = float4(0, 0, 0, 0);
+
+	if (ReflectionIntensity > 0)
+	{
+		float2 projectedUV = float2(input.Reflection.x / input.Reflection.w / 2.0 + 0.5, -input.Reflection.y / input.Reflection.w / 2.0 + 0.5);
+		float3 reflectionColor = SAMPLE_TEXTURE(ReflectionMap, projectedUV).xyz;
+		reflection = float4(reflectionColor, ReflectionIntensity);
+	}
+
 	// Base Pixel Shader
-	return float4(StandardPixelShader(input.WorldPosition, normal, specularTerm, input.FogDistance, albedo.rgb * DiffuseColor, emissive, shadowTerm), albedo.a);
+	return float4(StandardPixelShader(input.WorldPosition, normal, specularTerm, input.FogDistance, albedo.rgb * DiffuseColor, emissive, shadowTerm, reflection), albedo.a);
 }
 
 TECHNIQUE_SM4(Standard, VertexShaderFunction, PixelShaderFunction);

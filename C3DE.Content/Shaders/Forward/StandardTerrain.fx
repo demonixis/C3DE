@@ -51,7 +51,7 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 	float shadowTerm = CalcShadow(input.WorldPosition);
 
 	// Base Pixel Shader
-	return float4(StandardPixelShader(input.WorldPosition, normal, SpecularColor, input.FogDistance, albedo, FLOAT3(0), shadowTerm), 1.0);
+	return float4(StandardPixelShader(input.WorldPosition, normal, SpecularColor, input.FogDistance, albedo, FLOAT3(0), shadowTerm, FLOAT4(0)), 1.0);
 }
 
 TECHNIQUE_SM4(Terrain, VertexShaderFunction, PixelShaderFunction);

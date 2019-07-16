@@ -11,7 +11,7 @@ namespace C3DE.Demo.Scenes
         {
             var content = Application.Content;
             var lavaTexture = content.Load<Texture2D>("Textures/Fluids/lava_texture");
-            var lavaNormal = content.Load<Texture2D>("Textures/Fluids/lava_bump");
+            var lavaNormal = content.Load<Texture2D>("Textures/Fluids/wavesbump");
             var lava = GameObjectFactory.CreateLava(lavaTexture, lavaNormal, new Vector3(_terrain.Width * 0.5f));
             Add(lava);
         }

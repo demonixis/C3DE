@@ -149,7 +149,7 @@
 /importer:EffectImporter
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
-/processorParam:Defines=
+/processorParam:Defines=REFLECTION_MAP
 /build:Shaders/Forward/StandardWater.fx
 
 #begin Shaders/Forward/Unlit.fx

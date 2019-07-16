@@ -7,7 +7,6 @@ namespace C3DE.Graphics.Materials
     public class PBRLavaMaterial : Material
     {
         public Texture2D NormalMap { get; set; }
-        public float EmissiveIntensity { get; set; } = 1.0f;
         public float Speed { get; set; } = 0.25f;
         public float Metallic { get; set; } = 0.0f;
         public float Roughness { get; set; } = 1.0f;

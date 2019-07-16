@@ -72,6 +72,7 @@
     <Compile Include="Scripts\PhysicsSpawner.cs" />
     <Compile Include="Scripts\PostProcessSwitcher.cs" />
     <Compile Include="Scripts\RayPickingTester.cs" />
+    <Compile Include="Scripts\ReflectionPlanarViewer.cs" />
     <Compile Include="Scripts\RendererSwitcher.cs" />
     <Compile Include="Scripts\ShadowMapViewer.cs" />
     <Compile Include="Scripts\SideMenu.cs" />

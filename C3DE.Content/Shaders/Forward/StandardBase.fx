@@ -8,9 +8,6 @@
 #define MAX_LIGHT_COUNT 8
 #endif
 
-const float3 TO_GAMMA = float3(0.45454545, 0.45454545, 0.45454545);
-const float3 TO_LINEAR = float3(2.2, 2.2, 2.2);
-
 // Lighting
 // LightData.x: Type: Directional, Point, Spot
 // LightData.y: Intensity
@@ -24,6 +21,10 @@ float3 LightColor[MAX_LIGHT_COUNT];
 float4 LightData[MAX_LIGHT_COUNT];
 float4 SpotData[MAX_LIGHT_COUNT];
 int LightCount = 0;
+
+#if REFLECTION_MAP
+float4x4 ReflectionView;
+#endif
 
 // Matrix
 float4x4 World;
@@ -54,10 +55,8 @@ struct VertexShaderOutput
     float2 UV : TEXCOORD0;
     float3 WorldNormal : TEXCOORD1;
     float4 WorldPosition : TEXCOORD2;
-    float3x3 WorldToTangentSpace : TEXCOORD3;
-#if REFLECTION_MAP
-	float3 Reflection : TEXCOORD4;
-#endif
+	float4 Reflection : TEXCOORD3;
+    float3x3 WorldToTangentSpace : TEXCOORD4;
     float FogDistance : FOG;
 };
 
@@ -82,25 +81,28 @@ VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
     output.WorldToTangentSpace[2] = input.Normal;
 
 #if REFLECTION_MAP
-	float3 viewDirection = EyePosition - worldPosition.xyz;
-	output.Reflection = reflect(-normalize(viewDirection), normalize(normal));
+	float4x4 preReflectionViewProjection = mul(ReflectionView, Projection);
+	float4x4 preWorldReflectionViewProjection = mul(World, preReflectionViewProjection);
+	output.Reflection = mul(input.Position, preWorldReflectionViewProjection);
 #endif
 
     return output;
 }
 
-float3 StandardPixelShader(float4 worldPosition, float3 normal, float specularTerm, float fogDistance, float3 albedo, float3 emissive, float shadowTerm)
+float3 StandardPixelShader(float4 worldPosition, float3 normal, float specularTerm, float fogDistance, float3 albedo, float3 emissive, float shadowTerm, float4 reflection)
 {    
 	float3 Lo = FLOAT3(0);
-	float So = FLOAT3(0);
-	float directionToLight = FLOAT3(0);
+	float3 directionToLight = FLOAT3(0);
 	float diffuseIntensity = 0;
 	float attenuation = 0;
 
 	for (int i = 0; i < LightCount; i++)
 	{
 		directionToLight = normalize(LightPosition[i] - worldPosition.xyz);
-		diffuseIntensity = saturate(dot(directionToLight, normal));
+		diffuseIntensity = saturate(dot(normal, directionToLight));
+
+		if (diffuseIntensity <= 0)
+			continue;
 
 		if (LightData[i].x == 0) // Directional
 		{
@@ -119,19 +121,22 @@ float3 StandardPixelShader(float4 worldPosition, float3 normal, float specularTe
 			attenuation = (a < d) ? attenuation = 1.0 - pow(clamp(a / d, 0.0, 1.0), LightData[i].w) : 0.0;
 		}
 
-		Lo += diffuseIntensity * attenuation * LightColor[i] * LightData[i].y;
+		// Self Shadow
+		float shadow = saturate(4 * diffuseIntensity);
 
+		// Specular
 		float3 reflectionVector = normalize(reflect(-directionToLight, normal));
 		float3 directionToCamera = normalize(EyePosition - worldPosition.xyz);
-		So += specularTerm * pow(saturate(dot(reflectionVector, directionToCamera)), SpecularPower);
+		float specular = specularTerm * pow(saturate(dot(reflectionVector, directionToCamera)), SpecularPower);
+
+		Lo += shadow * diffuseIntensity * attenuation * LightColor[i] * LightData[i].y + specular;
 	}
 
-    float3 color = AmbientColor + (albedo * Lo * shadowTerm) + So + emissive;
-	color = ApplyFog(color, fogDistance);
+	if (reflection.a > 0)
+		albedo = lerp(albedo, reflection.xyz, reflection.a);
 
-	// HDR + Gamma correction
-	//color = color / (color + FLOAT3(1.0));
-	//color = pow(color, TO_GAMMA);
+    float3 color = AmbientColor + (albedo * Lo * shadowTerm) + emissive;
+	color = ApplyFog(color, fogDistance);
 
 	return color;
 }

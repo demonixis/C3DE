@@ -12,10 +12,12 @@ namespace C3DE.Graphics.Materials
 
         public Texture2D NormalMap { get; set; }
         public Texture2D SpecularTexture { get; set; }
-        public float SpecularPower { get; set; } = 250.0f;
+        public Color SpecularColor { get; set; } = new Color(0.25f, 0.25f, 0.25f);
+        public float SpecularPower { get; set; } = 150.0f;
         public bool CutoutEnabled { get; set; }
         public float Cutout { get; set; }
         public float EmissiveIntensity { get; set; } = 1.0f;
+        public float ReflectionIntensity { get; set; } = 0.0f;
 
         public Texture2D EmissiveMap { get; set; }
 

@@ -32,6 +32,7 @@ namespace C3DE.Graphics.Shaders.Forward
             _effect.Parameters["AlbedoMap"].SetValue(_material.MainTexture);
             _effect.Parameters["NormalMap"].SetValue(_material.NormalMap);
             _effect.Parameters["SpecularMap"].SetValue(_material.SpecularTexture);
+            _effect.Parameters["SpecularColor"].SetValue((float)_material.SpecularColor.R / 255.0f);
             _effect.Parameters["SpecularPower"].SetValue(_material.SpecularPower);
             _effect.Parameters["EmissiveMap"].SetValue(_material.EmissiveMap);
             _effect.Parameters["EmissiveColor"].SetValue(_material.EmissiveColor.ToVector3());
@@ -40,6 +41,7 @@ namespace C3DE.Graphics.Shaders.Forward
             _effect.Parameters["ShadowEnabled"].SetValue(receiveShadow);
             _effect.Parameters["DiffuseColor"].SetValue(_material._diffuseColor);
             _effect.Parameters["Cutout"].SetValue(_material.Cutout);
+            _effect.Parameters["ReflectionIntensity"].SetValue(_material.ReflectionIntensity);
 
             _effect.CurrentTechnique.Passes[0].Apply();
         }

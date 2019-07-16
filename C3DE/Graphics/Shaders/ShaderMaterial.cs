@@ -7,7 +7,7 @@ namespace C3DE.Graphics.Shaders
 {
     public abstract class ShaderMaterial 
     {
-        protected Effect _effect;
+        internal protected Effect _effect;
 
         public abstract void LoadEffect(ContentManager content);
         public abstract void PrePass(ref Vector3 cameraPosition, ref Matrix viewMatrix, ref Matrix projectionMatrix, ref LightData lightData, ref ShadowData shadowData, ref Vector4 fogData);

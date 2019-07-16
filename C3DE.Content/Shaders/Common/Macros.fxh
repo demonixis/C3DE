@@ -55,3 +55,6 @@
 
 #define FLOAT3(f) \
 	(float3(f, f, f))
+	
+#define FLOAT4(f) \
+	(float4(f, f, f, f))

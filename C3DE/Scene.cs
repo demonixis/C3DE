@@ -41,6 +41,7 @@ namespace C3DE
         internal protected Material defaultMaterial;
         internal protected List<GameObject> gameObjects;
         internal protected List<Renderer> renderList;
+        internal protected List<PlanarReflection> planarReflections;
         internal protected List<Material> materials;
         internal protected List<Effect> effects;
         internal protected Dictionary<int, int> materialsEffectIndex;
@@ -117,6 +118,7 @@ namespace C3DE
             _needRemoveCheck = false;
             defaultMaterial = new UnlitMaterial();
             RenderSettings = new RenderSettings();
+            planarReflections = new List<PlanarReflection>();
             _physicsCollisionSystem = new CollisionSystemSAP();
             _physicsWorld = new World(_physicsCollisionSystem);
          }
@@ -214,6 +216,7 @@ namespace C3DE
             gameObjects.Clear();
             prefabs.Clear();
             postProcessPasses.Clear();
+            planarReflections.Clear();
             _componentsToDestroy.Clear();
             _needRemoveCheck = false;
         }
@@ -299,6 +302,16 @@ namespace C3DE
 
                 else if (type == ComponentChangeType.Remove)
                     RemoveRenderer(renderable);
+            }
+
+            else if (component is PlanarReflection)
+            {
+                var planar = component as PlanarReflection;
+
+                if (type == ComponentChangeType.Add)
+                    AddPlanarReflection(planar);
+                else if (type == ComponentChangeType.Remove)
+                    RemovePlanarReflection(planar);
             }
 
             else if (component is Behaviour)
@@ -430,6 +443,15 @@ namespace C3DE
             return index;
         }
 
+        protected void AddPlanarReflection(PlanarReflection planar)
+        {
+            if (planarReflections.Contains(planar))
+                return;
+
+            planarReflections.Add(planar);
+            planarReflections.Sort();
+        }
+
         protected void AddRenderer(Renderer renderer)
         {
             if (renderList.Contains(renderer))
@@ -464,6 +486,12 @@ namespace C3DE
         {
             if (renderList.Contains(renderable))
                 renderList.Remove(renderable);
+        }
+
+        protected void RemovePlanarReflection(PlanarReflection planar)
+        {
+            if (planarReflections.Contains(planar))
+                planarReflections.Remove(planar);
         }
 
         protected void RemoveScript(Behaviour script)

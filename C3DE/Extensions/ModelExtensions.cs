@@ -3,6 +3,7 @@ using C3DE.Graphics.Primitives;
 using C3DE.Graphics.Materials;
 using C3DE;
 using C3DE.Graphics;
+using System.Collections.Generic;
 
 namespace Microsoft.Xna.Framework.Graphics
 {
@@ -18,6 +19,8 @@ namespace Microsoft.Xna.Framework.Graphics
 
             var gameObject = new GameObject("Model");
             scene.Add(gameObject);
+
+            var materials = new Dictionary<string, StandardMaterial>();
 
             foreach (ModelMesh mesh in model.Meshes)
             {
@@ -41,12 +44,20 @@ namespace Microsoft.Xna.Framework.Graphics
                 foreach (var part in mesh.MeshParts)
                 {
                     var effect = (BasicEffect)part.Effect;
-                    var material = new StandardMaterial();
-                    material.MainTexture = effect.Texture;
-                    material.DiffuseColor = new Color(effect.DiffuseColor.X, effect.DiffuseColor.Y, effect.DiffuseColor.Z);
-                    material.SpecularTexture = TextureFactory.CreateColor(new Color(effect.SpecularColor.X, effect.SpecularColor.Y, effect.SpecularColor.Z), 1, 1);
-                    material.SpecularPower = effect.SpecularPower;
-                    material.EmissiveColor = new Color(effect.EmissiveColor.X, effect.EmissiveColor.Y, effect.EmissiveColor.Z);
+                    var material = TryGetMaterial(effect, materials);
+
+                    if (material == null)
+                    {
+                        material = new StandardMaterial();
+                        material.MainTexture = effect.Texture;
+                        material.DiffuseColor = new Color(effect.DiffuseColor.X, effect.DiffuseColor.Y, effect.DiffuseColor.Z);
+                        material.SpecularTexture = TextureFactory.CreateColor(new Color(effect.SpecularColor.X, effect.SpecularColor.Y, effect.SpecularColor.Z), 1, 1);
+                        material.SpecularPower = effect.SpecularPower;
+                        material.EmissiveColor = new Color(effect.EmissiveColor.X, effect.EmissiveColor.Y, effect.EmissiveColor.Z);
+
+                        if (!string.IsNullOrEmpty(effect?.Texture?.Name))
+                            materials.Add(effect.Texture.Name, material);
+                    }
 
                     var child = new GameObject($"{mesh.Name}_{meshPartIndex}");
                     scene.Add(child);
@@ -65,7 +76,20 @@ namespace Microsoft.Xna.Framework.Graphics
                 }
             }
 
+            Debug.Log(materials.Count);
+
             return gameObject;
+        }
+
+        private static StandardMaterial TryGetMaterial(BasicEffect effect, Dictionary<string, StandardMaterial> materials)
+        {
+            var name = effect?.Texture?.Name;
+            var hasValidName = !string.IsNullOrEmpty(name);
+
+            if (hasValidName && materials.ContainsKey(name))
+                return materials[name];
+
+            return null;
         }
     }
 }

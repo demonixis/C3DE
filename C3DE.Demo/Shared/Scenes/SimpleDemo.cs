@@ -2,9 +2,13 @@
 using C3DE.Components.Lighting;
 using C3DE.Components.Rendering;
 using C3DE.Demo.Scripts;
+using C3DE.Graphics.Materials;
+using C3DE.Graphics.Primitives;
 using C3DE.UI;
+using C3DE.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 
 namespace C3DE.Demo.Scenes
 {
@@ -72,6 +76,60 @@ namespace C3DE.Demo.Scenes
             _controllerSwitcher.DefaultRotation = rotation;
             _controllerSwitcher.FlyMode = fly;
             _controllerSwitcher.SetControllerActive(type);
+        }
+
+        public void AddLightGroundTest()
+        {
+            SpawnRadialLights(1, 0, 8);
+            SpawnRadialLights(5, 0, 8);
+            SpawnRadialLights(10, 0, 8);
+            SpawnRadialLights(15, 0, 8);
+            SpawnRadialLights(20, 0, 8);
+        }
+
+        public void SpawnRadialLights(float radius, float y, int spawnCount, float lightRadius = 5, float intensity = 1)
+        {
+            var colors = new[]
+            {
+                Color.Red, Color.Green, Color.Blue,
+                Color.Purple, Color.Cyan, Color.Yellow
+            };
+
+            Color color;
+            GameObject lightGo;
+            Light light;
+            MeshRenderer ligthSphere;
+
+            for (var i = 0; i < spawnCount; i++)
+            {
+                var angle = i * MathHelper.TwoPi / 8.0f;
+
+                color = colors[RandomHelper.Range(0, colors.Length)];
+
+                lightGo = GameObjectFactory.CreateLight(LightType.Point, color, 1.0f, 0);
+                lightGo.Transform.LocalRotation = new Vector3(0.0f, 0.5f, 0);
+                lightGo.Transform.LocalPosition = new Vector3((float)Math.Cos(angle) * radius, y, (float)Math.Sin(angle) * radius);
+
+                light = lightGo.GetComponent<Light>();
+                light.Radius = lightRadius;
+                light.Intensity = intensity;
+                light.ShadowEnabled = false;
+
+                ligthSphere = lightGo.AddComponent<MeshRenderer>();
+                ligthSphere.Mesh = new SphereMesh(0.15f, 16);
+                ligthSphere.Mesh.Build();
+                ligthSphere.CastShadow = true;
+                ligthSphere.ReceiveShadow = false;
+
+                ligthSphere.Material = new UnlitMaterial()
+                {
+                    DiffuseColor = color
+                };
+
+                ligthSphere.AddComponent<LightMover>();
+                ligthSphere.AddComponent<LightSwitcher>();
+                ligthSphere.AddComponent<SinMovement>();
+            }
         }
     }
 }

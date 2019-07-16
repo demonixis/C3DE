@@ -24,8 +24,8 @@ namespace C3DE.Graphics.Shaders.Forward
         public override void Pass(ref Matrix worldMatrix, bool receiveShadow)
         {
             _features.X = _material.NormalMap != null ? 1 : 0;
-            _features.Y = _material.ReflectionIntensity;
-            _features.Z = _material.SpecularTexture != null ? 1 : 0;
+            _features.Y = _material.SpecularTexture != null ? 1 : 0; 
+            _features.Z = _material.ReflectionIntensity;
 
             _effect.Parameters["TotalTime"].SetValue(Time.TotalTime * _material.Speed);
             _effect.Parameters["TextureTiling"].SetValue(_material.Tiling);

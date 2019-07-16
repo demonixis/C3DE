@@ -12,6 +12,7 @@ float Alpha;
 DECLARE_TEXTURE(AlbedoMap, 1);
 DECLARE_TEXTURE(NormalMap, 2);
 DECLARE_TEXTURE(SpecularMap, 3);
+DECLARE_TEXTURE(ReflectionMap, 4);
 
 VertexShaderOutput VertexShaderWaterFunction(VertexShaderInput input)
 {
@@ -43,14 +44,24 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 
 	// Specular
 	float specularTerm = 0.5;
-	if (Features.z > 0)
+	if (Features.y > 0)
 		specularTerm = SAMPLE_TEXTURE(SpecularMap, scaledUV).r;
 
 	// Shadows
 	float shadowTerm = CalcShadow(input.WorldPosition);
 
+	// Reflection
+	float4 reflection = float4(0, 0, 0, 0);
+
+	if (Features.z > 0)
+	{
+		float2 projectedUV = float2(input.Reflection.x / input.Reflection.w / 2.0 + 0.5, -input.Reflection.y / input.Reflection.w / 2.0 + 0.5);
+		float3 reflectionColor = SAMPLE_TEXTURE(ReflectionMap, projectedUV).xyz;
+		reflection = float4(reflectionColor, Features.z);
+	}
+
 	// Base Pixel Shader
-	return float4(StandardPixelShader(input.WorldPosition, normal, specularTerm, input.FogDistance, albedo.rgb * DiffuseColor, FLOAT3(0), shadowTerm), Alpha);
+	return float4(StandardPixelShader(input.WorldPosition, normal, specularTerm, input.FogDistance, albedo.rgb * DiffuseColor, FLOAT3(0), shadowTerm, reflection), Alpha);
 }
 
 technique Water

@@ -14,6 +14,10 @@ namespace C3DE.Demo.Scenes
         {
             base.Initialize();
 
+            //SpawnRadialLights(5, 0.0f, 16, 0.5f, 0.5f);
+            //SpawnRadialLights(25, 0.0f, 16, 0.5f, 0.5f);
+            //SpawnRadialLights(50, 0.0f, 16, 0.5f, 0.5f);
+
             var content = Application.Content;
 
             // Finally a terrain

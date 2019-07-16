@@ -1,13 +1,10 @@
 #include "StandardBase.fx"
 
-// Material
-float3 DiffuseColor;
-float EmissiveIntensity;
-
 // Misc
 float2 Features;
 float2 TextureTiling;
 float TotalTime;
+float SpecularColor;
 
 DECLARE_TEXTURE(AlbedoMap, 1);
 DECLARE_TEXTURE(NormalMap, 2);
@@ -42,17 +39,17 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 
 	if (Features.x > 0)
 	{
-		//normal = 2.0 * (SAMPLE_TEXTURE(NormalMap, (T2 * 4.0))) - 1.0;
-		//normal = normalize(mul(normal, input.WorldToTangentSpace));
+		normal = 2.0 * (SAMPLE_TEXTURE(NormalMap, (T2 * 4.0))) - 1.0;
+		normal = normalize(mul(normal, input.WorldToTangentSpace));
 	}
 
 	// Specular
-	float specular = 0.5f;
+	float specular = SpecularColor;
 	if (Features.y > 0)
 		specular = SAMPLE_TEXTURE(SpecularMap, (T2 * 4.0)).r;
 
 	// Base Pixel Shader
-	return float4(StandardPixelShader(input.WorldPosition, normal, specular, input.FogDistance, saturate(albedo * DiffuseColor * EmissiveIntensity), FLOAT3(0), 1.0), 1.0);
+	return float4(StandardPixelShader(input.WorldPosition, normal, specular, input.FogDistance, albedo, FLOAT3(0), 1.0, FLOAT4(0)), 1.0);
 }
 
 TECHNIQUE_SM4(Lava, VertexShaderFunction, PixelShaderFunction);

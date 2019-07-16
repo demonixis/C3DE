@@ -1,9 +1,7 @@
 #include "PBRBase.fx"
 
 // Variables
-float3 DiffuseColor;
 // x: NormalMap Enabled
-// y: Emissive Intensity (default 0)
 float2 Features;
 float2 TextureTiling;
 float TotalTime;
@@ -54,7 +52,7 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 	}
 
 	// PBR Lighting
-	return float4(PBRPixelShader(input.WorldPosition, normal, albedo * DiffuseColor * Features.y, float3(Roughness, Metallic, 1), FLOAT3(0), 1.0), 1.0);
+	return float4(PBRPixelShader(input.WorldPosition, normal, albedo, float3(Roughness, Metallic, 1), FLOAT3(0), 1.0), 1.0);
 }
  
 TECHNIQUE_SM4(PBR, VertexShaderLavaFunction, PixelShaderFunction);

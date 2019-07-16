@@ -28,9 +28,10 @@ namespace C3DE.Demo.Scenes.PBR
             Destroy(_directionalLight.GetComponent<LensFlare>());
 
             // Light
-            SpawnLights(1, 0.0f, 8);
-            SpawnLights(4, 0.0f, 16);
-            SpawnLights(7, 0.0f, 16);
+            SpawnRadialLights(1f, 0.0f, 16);
+            SpawnRadialLights(5, 0.0f, 16);
+            SpawnRadialLights(10, 0.0f, 16);
+            SpawnRadialLights(15, 0.0f, 16);
 
             // Setup the terrain.
             var terrainMaterial = new PBRMaterial();
@@ -77,50 +78,6 @@ namespace C3DE.Demo.Scenes.PBR
 
             RenderSettings.Skybox.Generate(Application.GraphicsDevice, DemoGame.StarsSkybox, 256);
             RenderSettings.FogMode = FogMode.None;
-        }
-
-        private void SpawnLights(float radius, float y, int spawnCount)
-        {
-            var colors = new []
-            {
-                Color.Red, Color.Green, Color.Blue,
-                Color.Purple, Color.Cyan, Color.Yellow
-            };
-
-            Color color;
-            GameObject lightGo;
-            Light light;
-            MeshRenderer ligthSphere;
-
-            for (var i = 0; i < spawnCount; i++)
-            {
-                var angle = i * MathHelper.TwoPi / 8.0f;
-
-                color = colors[RandomHelper.Range(0, colors.Length)];
-
-                lightGo = GameObjectFactory.CreateLight(LightType.Point, color, 1.0f, 0);
-                lightGo.Transform.LocalRotation = new Vector3(0.0f, 0.5f, 0);
-                lightGo.Transform.LocalPosition = new Vector3((float)Math.Cos(angle) * radius, y, (float)Math.Sin(angle) * radius);
-
-                light = lightGo.GetComponent<Light>();
-                light.Radius = 5;
-                light.ShadowEnabled = false;
-
-                ligthSphere = lightGo.AddComponent<MeshRenderer>();
-                ligthSphere.Mesh = new SphereMesh(0.15f, 16);
-                ligthSphere.Mesh.Build();
-                ligthSphere.CastShadow = true;
-                ligthSphere.ReceiveShadow = false;
-
-                ligthSphere.Material = new UnlitMaterial()
-                {
-                    DiffuseColor = color
-                };
-
-                ligthSphere.AddComponent<LightMover>();
-                ligthSphere.AddComponent<LightSwitcher>();
-                ligthSphere.AddComponent<SinMovement>();
-            }
         }
     }
 }

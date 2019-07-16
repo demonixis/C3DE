@@ -52,9 +52,12 @@ namespace C3DE.Demo.Scripts
             Scene.current.Add(lightGo);
 
             var light = lightGo.GetComponent<Light>();
-            light.Radius = 5;
+            light.Radius = 10;
             light.ShadowGenerator.ShadowStrength = 1;
             light.ShadowGenerator.Enabled = ShadowMapEnabled;
+
+            if (Input.Keys.Pressed(Keys.LeftShift))
+                light.AddComponent<SinMovement>();
 
             if (ShowDebugMesh)
             {

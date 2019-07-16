@@ -114,6 +114,27 @@ namespace C3DE.Graphics.Rendering
             if (_depthRenderer.Enabled)
                 _depthRenderer.Draw(_graphicsDevice);
 
+            var cameraPosition = camera._transform.Position;
+            var cameraViewMatrix = camera._viewMatrix;
+            var cameraProjectionMatrix = camera._projectionMatrix;
+
+            // Render Planar Reflections.
+            var planarReflections = scene.planarReflections;
+
+            foreach (var planar in planarReflections)
+            {
+                if (!planar.IsReady)
+                    continue;
+
+                planar.BeginDraw(_graphicsDevice, camera);
+
+                // Limit the number of lights.
+                RenderObjects(scene, ref planar._reflectionCameraPosition, ref planar._reflectionViewMatrix, ref cameraProjectionMatrix, planar);
+
+                planar.EndDraw(_graphicsDevice);
+            }
+
+            // Render the scene
             _graphicsDevice.SetRenderTarget(renderTarget);
 
             var renderToRT = camera.RenderTarget != null;
@@ -122,7 +143,7 @@ namespace C3DE.Graphics.Rendering
 
             _graphicsDevice.Clear(camera._clearColor);
 
-            RenderObjects(scene, camera);
+            RenderObjects(scene, ref cameraPosition, ref cameraViewMatrix, ref cameraProjectionMatrix);
             RenderPostProcess(scene.postProcessPasses, renderTarget);
 
             if (renderToRT)
@@ -139,18 +160,15 @@ namespace C3DE.Graphics.Rendering
         /// Renders renderable objects
         /// </summary>
         /// <param name="camera">The camera to use.</param>
-        protected void RenderObjects(Scene scene, Camera camera)
+        protected void RenderObjects(Scene scene, ref Vector3 cameraPosition, ref Matrix cameraViewMatrix, ref Matrix cameraProjectionMatrix, PlanarReflection planarReflection = null)
         {
             _graphicsDevice.DepthStencilState = DepthStencilState.Default;
             _graphicsDevice.BlendState = BlendState.Opaque;
 
             // Camera
-            var cameraPosition = camera._transform.Position;
-            var cameraViewMatrix = camera._viewMatrix;
-            var cameraProjectionMatrix = camera._projectionMatrix;
             var fogData = scene.RenderSettings.fogData;
 
-            ComputeLightData(scene);
+            ComputeLightData(scene, -1);
 
             if (scene.RenderSettings.Skybox.Enabled)
                 scene.RenderSettings.Skybox.Draw(_graphicsDevice, ref cameraPosition, ref cameraViewMatrix, ref cameraProjectionMatrix);
@@ -167,6 +185,16 @@ namespace C3DE.Graphics.Rendering
                 renderer = scene.renderList[i];
                 material = scene.renderList[i].Material;
 
+                if (planarReflection != null)
+                {
+                    // Don't render this object if we're rendering the planar reflection attached to this object.
+                    var valid = !renderer.IsUsingPlanarReflection(planarReflection);
+                    valid &= !(renderer is LensFlare);
+
+                    if (!valid)
+                        continue;
+                }
+
                 // A specific renderer that uses its own draw logic.
                 if (material == null)
                 {
@@ -176,13 +204,28 @@ namespace C3DE.Graphics.Rendering
 
                 shader = material._shaderMaterial;
                 shader.PrePass(ref cameraPosition, ref cameraViewMatrix, ref cameraProjectionMatrix, ref _lightData, ref _shadowData, ref fogData);
+
+                // FIXME: More cache..
+                if (renderer.PlanarReflection != null)
+                {
+                    var effect = shader._effect;
+                    var reflectionView = shader._effect.Parameters["ReflectionView"];
+                    var reflectionMap = shader._effect.Parameters["ReflectionMap"];
+
+                    if (effect.Parameters["ReflectionView"] != null)
+                    {
+                        effect.Parameters["ReflectionView"].SetValue(renderer.PlanarReflection._reflectionViewMatrix);
+                        effect.Parameters["ReflectionMap"].SetValue(renderer.PlanarReflection._reflectionRT);
+                    }
+                }
+
                 shader.Pass(ref renderer._transform._worldMatrix, renderer.ReceiveShadow);
 
                 renderer.Draw(_graphicsDevice);
             }
         }
 
-        private void ComputeLightData(Scene scene)
+        private void ComputeLightData(Scene scene, int limit)
         {
             // TODO: Put it in a cache.
             var lights = scene.lights;
@@ -195,9 +238,12 @@ namespace C3DE.Graphics.Rendering
                 _lightData.Count = lightCount;
                 _lightData.Colors = new Vector3[lightCount];
                 _lightData.Positions = new Vector3[lightCount];
-                _lightData.Data = new Vector3[lightCount];
+                _lightData.Data = new Vector4[lightCount];
                 _lightData.SpotData = new Vector4[lightCount];
             }
+
+            if (limit > -1)
+                _lightData.Count = limit;
 
             var shadow = false;
 
@@ -205,13 +251,10 @@ namespace C3DE.Graphics.Rendering
             {
                 _lightData.Positions[i] = lights[i].Transform.Position;
                 _lightData.Colors[i] = lights[i]._color;
-                _lightData.Data[i].Y = lights[i].Intensity;
-                _lightData.Data[i].Z = lights[i].Radius;
+                _lightData.Data[i] = new Vector4(0, lights[i].Intensity, lights[i].Radius, lights[i].FallOf);
                 _lightData.SpotData[i] = new Vector4(lights[i].Direction, lights[i].Angle);
 
-                if (lights[i].Type == LightType.Directional)
-                    _lightData.Data[i].X = 0;
-                else if (lights[i].Type == LightType.Point)
+                if (lights[i].Type == LightType.Point)
                     _lightData.Data[i].X = 1;
                 else if (lights[i].Type == LightType.Spot)
                     _lightData.Data[i].X = 2;

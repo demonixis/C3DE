@@ -8,7 +8,7 @@ namespace C3DE.Graphics.Rendering
         public Vector3 Ambient;
         public Vector3[] Positions;
         public Vector3[] Colors;
-        public Vector3[] Data;
+        public Vector4[] Data;
         public Vector4[] SpotData;
         public int Count;
     }

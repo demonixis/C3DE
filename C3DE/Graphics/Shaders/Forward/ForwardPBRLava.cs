@@ -41,7 +41,7 @@ namespace C3DE.Graphics.Shaders.Forward
         public override void Pass(ref Matrix worldMatrix, bool receiveShadow)
         {
             _features.X = _material.NormalMap != null ? 1 : 0;
-            _features.Y = _material.EmissiveIntensity;
+            _features.Y = 0;
 
             _effect.Parameters["TextureTiling"].SetValue(_material.Tiling);
             _effect.Parameters["World"].SetValue(worldMatrix);

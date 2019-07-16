@@ -19,65 +19,13 @@ namespace C3DE.Demo.Scenes
         {
             base.Initialize();
 
-            Destroy(_directionalLight);
-
-            // Light
-            var padding = 5;
-            var colors = new Color[] {
-                Color.Red,
-                Color.Green,
-                Color.Blue,
-                Color.Yellow,
-                Color.Pink,
-                Color.Cyan,
-                Color.Purple,
-                Color.Olive
-            };
-
-            var pos = new Vector3[]
-            {
-                new Vector3(padding, 16, padding),
-                new Vector3(padding, 16, -padding),
-                new Vector3(-padding, 16, padding),
-                new Vector3(-padding, 16, -padding),
-                new Vector3(0, 16, -padding * 2),
-                new Vector3(0, 16, padding * 2),
-                new Vector3(-padding * 2, 16, 0),
-                new Vector3(padding * 2, 16, 0)
-            };
-
-            for (var i = 0; i < 8; i++)
-            {
-                var lightGo = GameObjectFactory.CreateLight(LightType.Point, colors[i], 0.5f, 0);
-                lightGo.Transform.LocalRotation = new Vector3(0.0f, 0.5f, 0);
-                lightGo.Transform.LocalPosition = pos[i];
-
-                var light = lightGo.GetComponent<Light>();
-                light.Radius = 25;
-                light.ShadowGenerator.ShadowStrength = 1;
-                light.ShadowGenerator.ShadowBias = 0.01f;
-                light.ShadowEnabled = false;
-
-                var ligthSphere = lightGo.AddComponent<MeshRenderer>();
-                ligthSphere.Mesh = new SphereMesh(0.5f, 16);
-                ligthSphere.Mesh.Build();
-                ligthSphere.CastShadow = true;
-                ligthSphere.ReceiveShadow = false;
-
-                var sphereMaterial = new StandardMaterial();
-                sphereMaterial.DiffuseColor = colors[i];
-                sphereMaterial.EmissiveColor = colors[i];
-                ligthSphere.Material = sphereMaterial;
-
-                ligthSphere.AddComponent<LightMover>();
-                ligthSphere.AddComponent<LightSwitcher>();
-                ligthSphere.AddComponent<SinMovement>();
-            }
+            //Destroy(_directionalLight);
+            _directionalLight.Intensity = 0.05f;
 
             // Terrain
             var terrainMaterial = new StandardMaterial();
             terrainMaterial.MainTexture = TextureFactory.CreateCheckboard(Color.White, Color.Black);
-            terrainMaterial.SpecularPower = 25;
+            terrainMaterial.SpecularPower = 2;
             terrainMaterial.Tiling = new Vector2(32);
 
             var terrainGo = GameObjectFactory.CreateTerrain();
@@ -110,6 +58,12 @@ namespace C3DE.Demo.Scenes
             modelMaterial.SpecularPower = 25;
 
             _camera.AddComponent<VRPlayerEnabler>();
+
+            // Light
+            SpawnRadialLights(1f, 0.0f, 16);
+            SpawnRadialLights(5, 0.0f, 16);
+            SpawnRadialLights(10, 0.0f, 16);
+            SpawnRadialLights(15, 0.0f, 16);
         }
     }
 }

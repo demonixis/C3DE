@@ -83,10 +83,6 @@ namespace C3DE.Demo.Scenes.PBR
             var x = -startPos;
             var z = -startPos;
             var margin = 2.5f;
-            var renderAdditionalLights = true;
-
-            if (Engine.Platform == GamePlatform.Android)
-                renderAdditionalLights = false;
 
             for (var i = 0; i < (int)startPos; i++)
             {
@@ -110,32 +106,17 @@ namespace C3DE.Demo.Scenes.PBR
                     renderer.CastShadow = true;
                     renderer.ReceiveShadow = true;
 
-                    if (renderAdditionalLights)
-                    {
-                        lightGo = GameObjectFactory.CreateLight(LightType.Point, RandomHelper.GetColor(), 2, 0);
-                        lightGo.Transform.Position = new Vector3(x, 5, z);
-                        lightGo.AddComponent<SinMovement>();
-                        lightGo.AddComponent<LightMoverKeys>();
-
-                        light = lightGo.GetComponent<Light>();
-                        light.ShadowGenerator.ShadowStrength = 1;
-                        light.Radius = 1;
-                        light.Intensity = 0.5f;
-
-                        ligthSphere = lightGo.AddComponent<MeshRenderer>();
-                        ligthSphere.Mesh = new SphereMesh(0.15f, 16);
-                        ligthSphere.Mesh.Build();
-                        ligthSphere.CastShadow = true;
-                        ligthSphere.ReceiveShadow = false;
-                        ligthSphere.Material = new UnlitMaterial() { DiffuseColor = lightGo.GetComponent<Light>().Color };
-                    }
-
                     z += margin;
                 }
 
                 x += margin;
                 z = -startPos;
             }
+
+            // Light
+            SpawnRadialLights(1f, 0.0f, 8);
+            SpawnRadialLights(5, 0.0f, 8);
+            SpawnRadialLights(10, 0.0f, 8);
         }
     }
 }

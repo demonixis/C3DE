@@ -8,24 +8,24 @@ namespace C3DE.Components.Rendering
     public class MeshRenderer : Renderer
     {
         private bool _haveListener;
-        protected Mesh _geometry;
+        protected internal Mesh _mesh;
 
         public Mesh Mesh
         {
-            get => _geometry;
+            get => _mesh;
             set
             {
-                if (value != _geometry && value != null)
+                if (value != _mesh && value != null)
                 {
-                    if (_geometry != null && _haveListener)
+                    if (_mesh != null && _haveListener)
                     {
-                        _geometry.ConstructionDone -= ComputeBoundingInfos;
+                        _mesh.ConstructionDone -= ComputeBoundingInfos;
                         _haveListener = false;
                     }
 
-                    _geometry = value;
+                    _mesh = value;
 
-                    _geometry.ConstructionDone += ComputeBoundingInfos;
+                    _mesh.ConstructionDone += ComputeBoundingInfos;
                     _haveListener = true;
                 }
             }
@@ -38,12 +38,12 @@ namespace C3DE.Components.Rendering
 
         public override void ComputeBoundingInfos()
         {
-            if (_geometry == null)
+            if (_mesh == null)
                 return;
 
             var min = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
             var max = new Vector3(float.MinValue, float.MinValue, float.MinValue);
-            var vertices = _geometry.GetVertices(VertexType.Position);
+            var vertices = _mesh.GetVertices(VertexType.Position);
 
             for (int i = 0, l = vertices.Length; i < l; i++)
             {
@@ -70,38 +70,38 @@ namespace C3DE.Components.Rendering
 
         public override void Draw(GraphicsDevice device)
         {
-            device.SetVertexBuffer(_geometry.VertexBuffer);
-            device.Indices = _geometry.IndexBuffer;
-            device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, _geometry.IndexBuffer.IndexCount / 3);
+            device.SetVertexBuffer(_mesh.VertexBuffer);
+            device.Indices = _mesh.IndexBuffer;
+            device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, _mesh.IndexBuffer.IndexCount / 3);
         }
 
         public override void Dispose()
         {
-            if (_geometry != null)
+            if (_mesh != null)
             {
-                _geometry.Dispose();
-                _geometry = null;
+                _mesh.Dispose();
+                _mesh = null;
             }
         }
 
         public override void PostDeserialize()
         {
-            if (_geometry != null && _geometry.Built)
-                _geometry.Build();
+            if (_mesh != null && _mesh.Built)
+                _mesh.Build();
         }
 
         public override object Clone()
         {
             var clone = (MeshRenderer)base.Clone();
 
-            if (_geometry != null)
+            if (_mesh != null)
             {
-                clone._geometry = (Mesh)Activator.CreateInstance(_geometry.GetType());
-                clone._geometry.Size = _geometry.Size;
-                clone._geometry.TextureRepeat = _geometry.TextureRepeat;
+                clone._mesh = (Mesh)Activator.CreateInstance(_mesh.GetType());
+                clone._mesh.Size = _mesh.Size;
+                clone._mesh.TextureRepeat = _mesh.TextureRepeat;
 
-                if (_geometry.Built)
-                    clone._geometry.Build();
+                if (_mesh.Built)
+                    clone._mesh.Build();
             }
               
             return clone;

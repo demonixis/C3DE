@@ -55,6 +55,7 @@
     <Compile Include="Components\Controllers\Mobile\VirtualGamepad.cs" />
     <Compile Include="Components\Lighting\Light.cs" />
     <Compile Include="Components\Rendering\MeshRenderer.cs" />
+    <Compile Include="Components\Rendering\PlanarReflection.cs" />
     <Compile Include="Components\Rendering\RigidbodyRenderer.cs" />
     <Compile Include="Components\Rendering\Terrain.cs" />
     <Compile Include="Components\Physics\Rigidbody.cs" />
@@ -67,6 +68,7 @@
     <Compile Include="Graphics\Materials\PBRMaterial.cs" />
     <Compile Include="Graphics\Materials\PBRTerrainAtlasedMaterial.cs" />
     <Compile Include="Graphics\Materials\PBRWaterMaterial.cs" />
+    <Compile Include="Graphics\MeshUtils.cs" />
     <Compile Include="Graphics\Rendering\LightData.cs" />
     <Compile Include="Graphics\Shaders\Deferred\DeferredLava.cs" />
     <Compile Include="Graphics\Shaders\Deferred\DeferredStandardTerrain.cs" />
