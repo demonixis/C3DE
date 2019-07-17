@@ -30,6 +30,8 @@ namespace C3DE.Demo.Scenes
             var sponzaGo = sponzaModel.ToMeshRenderers(this);
             sponzaGo.Transform.Translate(0.0f, 1.0f, 0.0f);
             PatchMaterials(sponzaGo, content);
+
+            AddLightGroundTest();
         }
 
         private void PatchMaterials(GameObject sponzaGo, ContentManager content)

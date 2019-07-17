@@ -129,7 +129,7 @@ float3 StandardPixelShader(float4 worldPosition, float3 normal, float specularTe
 		// Specular
 		float3 reflectionVector = normalize(reflect(-directionToLight, normal));
 		float3 directionToCamera = normalize(EyePosition - worldPosition.xyz);
-		float specular = specularTerm * pow(saturate(dot(reflectionVector, directionToCamera)), SpecularPower);
+		float specular = specularTerm * pow(saturate(dot(reflectionVector, directionToCamera)), SpecularPower) * attenuation;
 
 		Lo += selfShadow * (diffuseIntensity * attenuation * LightColor[i] * LightData[i].y + specular);
 	}
