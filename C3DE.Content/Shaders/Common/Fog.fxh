@@ -7,7 +7,6 @@ float3 FogColor;
 
 float3 ApplyFog(float3 color, float fogDistance)
 {
-#if SM4
 	if (FogData.x > 0)
 	{
 		float fogCoeff = 1.0;

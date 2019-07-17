@@ -27,21 +27,18 @@ namespace C3DE.Components.Rendering
             _reflectionRT = new RenderTarget2D(graphics, size, size, false, SurfaceFormat.Color, DepthFormat.Depth16);
         }
 
-        public void BeginDraw(GraphicsDevice device, Camera camera)
+        public void BeginDraw(GraphicsDevice device, ref Vector3 cameraPosition, ref Vector3 cameraRotation)
         {
             _previousRT = device.GetRenderTargets();
 
-            var position = camera._transform.Position;
-            var rotation = camera._transform.Rotation;
-
             _reflectionViewMatrix = Matrix.Identity;
-            _reflectionViewMatrix *= Matrix.CreateTranslation(new Vector3(-position.X, position.Y - 10f, -position.Z));
-            _reflectionViewMatrix *= Matrix.CreateRotationZ(rotation.Z);
-            _reflectionViewMatrix *= Matrix.CreateRotationY(rotation.Y);
-            _reflectionViewMatrix *= Matrix.CreateRotationX(-rotation.X);
+            _reflectionViewMatrix *= Matrix.CreateTranslation(new Vector3(-cameraPosition.X, cameraPosition.Y - 10f, -cameraPosition.Z));
+            _reflectionViewMatrix *= Matrix.CreateRotationZ(cameraRotation.Z);
+            _reflectionViewMatrix *= Matrix.CreateRotationY(cameraRotation.Y);
+            _reflectionViewMatrix *= Matrix.CreateRotationX(-cameraRotation.X);
 
-            var reflectionCamYCoord = -position.Y + (Transform.Position.Y * 2.0f);
-            _reflectionCameraPosition = new Vector3(position.X, reflectionCamYCoord, position.Z);
+            var reflectionCamYCoord = -cameraPosition.Y + (Transform.Position.Y * 2.0f);
+            _reflectionCameraPosition = new Vector3(cameraPosition.X, reflectionCamYCoord, cameraPosition.Z);
 
             device.SetRenderTarget(_reflectionRT);
             device.Clear(ClearOptions.Target | ClearOptions.DepthBuffer, Color.Black, 1.0f, 0);

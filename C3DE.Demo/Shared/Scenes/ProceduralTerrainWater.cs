@@ -28,6 +28,7 @@ namespace C3DE.Demo.Scenes
 
             // Create the planar reflection.
             var planarGo = new GameObject("PlanarReflection");
+            planarGo.Transform.Translate(0, 20, 0);
             var planar = planarGo.AddComponent<PlanarReflection>();
             planar.Initialize(Application.GraphicsDevice, 512);
             planar.AddComponent<ReflectionPlanarViewer>();
@@ -36,7 +37,7 @@ namespace C3DE.Demo.Scenes
             var waterRenderer = waterGo.GetComponent<Renderer>();
             waterRenderer.PlanarReflection = planar;
 
-            AddLightGroundTest();
+           //AddLightGroundTest();
         }
     }
 }

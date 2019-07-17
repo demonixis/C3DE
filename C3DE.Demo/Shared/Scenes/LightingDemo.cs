@@ -26,6 +26,7 @@ namespace C3DE.Demo.Scenes
             var terrainMaterial = new StandardMaterial();
             terrainMaterial.MainTexture = TextureFactory.CreateCheckboard(Color.White, Color.Black);
             terrainMaterial.SpecularPower = 2;
+            terrainMaterial.ReflectionIntensity = 0.85f;
             terrainMaterial.Tiling = new Vector2(32);
 
             var terrainGo = GameObjectFactory.CreateTerrain();
@@ -36,6 +37,15 @@ namespace C3DE.Demo.Scenes
             terrain.Renderer.Material = terrainMaterial;
             terrain.Renderer.ReceiveShadow = false;
             terrain.Renderer.CastShadow = false;
+
+            // Create the planar reflection.
+            var planarGo = new GameObject("PlanarReflection");
+            planarGo.Transform.Translate(0, 20, 0);
+            var planar = planarGo.AddComponent<PlanarReflection>();
+            planar.Initialize(Application.GraphicsDevice, 512);
+            planar.AddComponent<ReflectionPlanarViewer>();
+
+            terrain.Renderer.PlanarReflection = planar;
 
             // Model
             var model = Application.Content.Load<Model>("Models/Quandtum/Quandtum");
@@ -60,10 +70,7 @@ namespace C3DE.Demo.Scenes
             _camera.AddComponent<VRPlayerEnabler>();
 
             // Light
-            SpawnRadialLights(1f, 0.0f, 16);
-            SpawnRadialLights(5, 0.0f, 16);
-            SpawnRadialLights(10, 0.0f, 16);
-            SpawnRadialLights(15, 0.0f, 16);
+            AddLightGroundTest();
         }
     }
 }

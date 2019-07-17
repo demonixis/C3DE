@@ -12,7 +12,17 @@ float Alpha;
 DECLARE_TEXTURE(AlbedoMap, 1);
 DECLARE_TEXTURE(NormalMap, 2);
 DECLARE_TEXTURE(SpecularMap, 3);
-DECLARE_TEXTURE(ReflectionMap, 4);
+
+Texture ReflectionMap;
+sampler ReflectionSampler = sampler_state
+{
+	texture = <ReflectionMap>;
+	magfilter = LINEAR;
+	minfilter = LINEAR;
+	mipfilter = LINEAR;
+	AddressU = mirror;
+	AddressV = mirror;
+};
 
 VertexShaderOutput VertexShaderWaterFunction(VertexShaderInput input)
 {
@@ -55,9 +65,9 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 
 	if (Features.z > 0)
 	{
-		float2 projectedUV = float2(input.Reflection.x / input.Reflection.w / 2.0 + 0.5, -input.Reflection.y / input.Reflection.w / 2.0 + 0.5);
-		float3 reflectionColor = SAMPLE_TEXTURE(ReflectionMap, projectedUV).xyz;
-		reflection = float4(reflectionColor, Features.z);
+		float4 refl = input.Reflection;
+		float2 projectedUV = float2(refl.x / refl.w / 2.0 + 0.5, -refl.y / refl.w / 2.0 + 0.5);
+		reflection = float4(tex2D(ReflectionSampler, projectedUV + input.WorldNormal).xyz, Features.z);
 	}
 
 	// Base Pixel Shader

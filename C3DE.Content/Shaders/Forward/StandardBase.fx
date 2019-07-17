@@ -55,7 +55,9 @@ struct VertexShaderOutput
     float2 UV : TEXCOORD0;
     float3 WorldNormal : TEXCOORD1;
     float4 WorldPosition : TEXCOORD2;
+#if REFLECTION_MAP
 	float4 Reflection : TEXCOORD3;
+#endif
     float3x3 WorldToTangentSpace : TEXCOORD4;
     float FogDistance : FOG;
 };
@@ -122,22 +124,21 @@ float3 StandardPixelShader(float4 worldPosition, float3 normal, float specularTe
 		}
 
 		// Self Shadow
-		float shadow = saturate(4 * diffuseIntensity);
+		float selfShadow = saturate(4 * diffuseIntensity);
 
 		// Specular
 		float3 reflectionVector = normalize(reflect(-directionToLight, normal));
 		float3 directionToCamera = normalize(EyePosition - worldPosition.xyz);
 		float specular = specularTerm * pow(saturate(dot(reflectionVector, directionToCamera)), SpecularPower);
 
-		Lo += shadow * (diffuseIntensity * attenuation * LightColor[i] * LightData[i].y + specular);
+		Lo += selfShadow * (diffuseIntensity * attenuation * LightColor[i] * LightData[i].y + specular);
 	}
+
+	if (reflection.a > 0)
+		albedo = lerp(albedo, reflection.xyz, reflection.a);
 
     float3 color = AmbientColor + (albedo * Lo * shadowTerm) + emissive;
 	color = ApplyFog(color, fogDistance);
-
-
-	if (reflection.a > 0)
-		albedo = lerp(color, reflection.xyz, reflection.a);
 
 	return color;
 }

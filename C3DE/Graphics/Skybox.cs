@@ -53,9 +53,13 @@ namespace C3DE.Graphics
         {
             _cubeMesh = new CubeMesh();
             _worldMatrix = Matrix.Identity;
-            _scaleMatrix = Matrix.CreateScale(1.0f);
-            _skyboxRasterizerState = new RasterizerState();
-            _skyboxRasterizerState.CullMode = CullMode.None;
+            _scaleMatrix = Matrix.CreateScale(2.0f);
+            _skyboxRasterizerState = new RasterizerState()
+            {
+                CullMode = CullMode.CullClockwiseFace,
+                ScissorTestEnable = false,
+                DepthClipEnable = false
+            };
         }
 
         protected void SetupShaderMaterial(BaseRenderer renderer)

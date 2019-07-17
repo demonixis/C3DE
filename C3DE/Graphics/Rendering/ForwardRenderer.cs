@@ -121,17 +121,23 @@ namespace C3DE.Graphics.Rendering
             // Render Planar Reflections.
             var planarReflections = scene.planarReflections;
 
-            foreach (var planar in planarReflections)
+            if (planarReflections.Count > 0)
             {
-                if (!planar.IsReady)
-                    continue;
+                cameraViewMatrix.Decompose(out Vector3 scale, out Quaternion rotation, out Vector3 translation);
+                var cameraRotation = rotation.ToEuler();
 
-                planar.BeginDraw(_graphicsDevice, camera);
+                foreach (var planar in planarReflections)
+                {
+                    if (!planar.IsReady)
+                        continue;
 
-                // Limit the number of lights.
-                RenderObjects(scene, ref planar._reflectionCameraPosition, ref planar._reflectionViewMatrix, ref cameraProjectionMatrix, planar);
+                    planar.BeginDraw(_graphicsDevice, ref cameraPosition, ref cameraRotation);
 
-                planar.EndDraw(_graphicsDevice);
+                    // Limit the number of lights.
+                    RenderObjects(scene, ref planar._reflectionCameraPosition, ref planar._reflectionViewMatrix, ref cameraProjectionMatrix, planar);
+
+                    planar.EndDraw(_graphicsDevice);
+                }
             }
 
             // Render the scene
@@ -212,10 +218,10 @@ namespace C3DE.Graphics.Rendering
                     var reflectionView = shader._effect.Parameters["ReflectionView"];
                     var reflectionMap = shader._effect.Parameters["ReflectionMap"];
 
-                    if (effect.Parameters["ReflectionView"] != null)
+                    if (reflectionView != null && reflectionMap != null)
                     {
-                        effect.Parameters["ReflectionView"].SetValue(renderer.PlanarReflection._reflectionViewMatrix);
-                        effect.Parameters["ReflectionMap"].SetValue(renderer.PlanarReflection._reflectionRT);
+                        reflectionView.SetValue(renderer.PlanarReflection._reflectionViewMatrix);
+                        reflectionMap.SetValue(renderer.PlanarReflection._reflectionRT);
                     }
                 }
 
