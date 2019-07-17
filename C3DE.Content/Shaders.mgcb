@@ -131,6 +131,7 @@
 /importer:EffectImporter
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
+/processorParam:Defines=REFLECTION_MAP
 /build:Shaders/Forward/Standard.fx
 
 #begin Shaders/Forward/StandardLava.fx

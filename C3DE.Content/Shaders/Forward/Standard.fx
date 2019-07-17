@@ -17,7 +17,9 @@ DECLARE_TEXTURE(AlbedoMap, 1);
 DECLARE_TEXTURE(NormalMap, 2);
 DECLARE_TEXTURE(SpecularMap, 3);
 DECLARE_TEXTURE(EmissiveMap, 4);
+#if REFLECTION_MAP
 DECLARE_TEXTURE(ReflectionMap, 5);
+#endif
 
 float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 { 
@@ -55,12 +57,14 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 	// Reflection
 	float4 reflection = float4(0, 0, 0, 0);
 
+#if REFLECTION_MAP
 	if (ReflectionIntensity > 0)
 	{
 		float2 projectedUV = float2(input.Reflection.x / input.Reflection.w / 2.0 + 0.5, -input.Reflection.y / input.Reflection.w / 2.0 + 0.5);
 		float3 reflectionColor = SAMPLE_TEXTURE(ReflectionMap, projectedUV).xyz;
 		reflection = float4(reflectionColor, ReflectionIntensity);
 	}
+#endif
 
 	// Base Pixel Shader
 	return float4(StandardPixelShader(input.WorldPosition, normal, specularTerm, input.FogDistance, albedo.rgb * DiffuseColor, emissive, shadowTerm, reflection), albedo.a);

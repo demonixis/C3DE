@@ -129,14 +129,15 @@ float3 StandardPixelShader(float4 worldPosition, float3 normal, float specularTe
 		float3 directionToCamera = normalize(EyePosition - worldPosition.xyz);
 		float specular = specularTerm * pow(saturate(dot(reflectionVector, directionToCamera)), SpecularPower);
 
-		Lo += shadow * diffuseIntensity * attenuation * LightColor[i] * LightData[i].y + specular;
+		Lo += shadow * (diffuseIntensity * attenuation * LightColor[i] * LightData[i].y + specular);
 	}
-
-	if (reflection.a > 0)
-		albedo = lerp(albedo, reflection.xyz, reflection.a);
 
     float3 color = AmbientColor + (albedo * Lo * shadowTerm) + emissive;
 	color = ApplyFog(color, fogDistance);
+
+
+	if (reflection.a > 0)
+		albedo = lerp(color, reflection.xyz, reflection.a);
 
 	return color;
 }
