@@ -62,6 +62,8 @@
     <Compile Include="DemoGame.cs" />
     <Compile Include="Scenes\HeightmapDemo.cs" />
     <Compile Include="Scenes\LightingDemo.cs" />
+    <Compile Include="Scenes\PBR\HeightmapPBRDemo.cs" />
+    <Compile Include="Scenes\PBR\TerrainLavaPBRDemo.cs" />
     <Compile Include="Scenes\PBR\SimplePBRDemo.cs" />
     <Compile Include="Scenes\SimpleDemo.cs" />
     <Compile Include="Scenes\GUIDemo.cs" />
@@ -85,8 +87,10 @@
     <Compile Include="Scripts\MenuBehaviour.cs" />
     <Compile Include="Scripts\PBRViewer.cs" />
     <Compile Include="Scripts\PhysicsSpawner.cs" />
+    <Compile Include="Scripts\PlayerShooter.cs" />
     <Compile Include="Scripts\PostProcessSwitcher.cs" />
     <Compile Include="Scripts\RayPickingTester.cs" />
+    <Compile Include="Scripts\ReflectionPlanarViewer.cs" />
     <Compile Include="Scripts\RendererSwitcher.cs" />
     <Compile Include="Scripts\ShadowMapViewer.cs" />
     <Compile Include="Scripts\SideMenu.cs" />
@@ -98,7 +102,7 @@
     <Compile Include="Scripts\VRSwitcher.cs" />
     <Compile Include="Scripts\WeightMapViewer.cs" />
     <Compile Include="Scenes\ProceduralTerrainWater.cs" />
-    <Compile Include="Scenes\PBR\HeightmapPBRDemo.cs" />
+    <Compile Include="Scenes\PBR\HeightmapPBRAtlasedDemo.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\C3DE\C3DE.Desktop.csproj">

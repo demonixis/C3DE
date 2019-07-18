@@ -8,6 +8,7 @@ using C3DE.Graphics.Primitives;
 using C3DE.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Collections;
 
 namespace C3DE.Demo.Scripts
 {
@@ -15,6 +16,7 @@ namespace C3DE.Demo.Scripts
     {
         private Transform _shootPoint;
         private UnlitMaterial _material;
+        private FirstPersonController _fpsController;
 
         public override void Initialize()
         {
@@ -54,9 +56,9 @@ namespace C3DE.Demo.Scripts
                 std.EmissiveMap = content.Load<Texture2D>("Models/Pistol/pistol_emissive");
             }
 
-            var fpsController = AddComponent<FirstPersonController>();
-            fpsController.Fly = false;
-            fpsController.LockCursor = true;
+            _fpsController = AddComponent<FirstPersonController>();
+            _fpsController.Fly = false;
+            _fpsController.LockCursor = true;
 
             _material = new UnlitMaterial();
             _material.DiffuseColor = Color.Red;
@@ -87,6 +89,14 @@ namespace C3DE.Demo.Scripts
             var rb = cube.AddComponent<Rigidbody>();
             rb.AddComponent<RigidbodyRenderer>();
             rb.AddForce(forward * 10);
+
+            _fpsController.StartCoroutine(DestroyAfter(go));
+        }
+
+        private IEnumerator DestroyAfter(GameObject go)
+        {
+            yield return Coroutine.WaitForSeconds(2.5f);
+            Destroy(go);
         }
     }
 }

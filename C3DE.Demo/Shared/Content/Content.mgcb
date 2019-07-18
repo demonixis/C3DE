@@ -65,18 +65,6 @@
 /processorParam:TextureFormat=Color
 /build:Models/Pistol/pistol_emissive.png
 
-#begin Models/Pistol/pistol_emissive.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Models/Pistol/pistol_emissive.png
-
 #begin Models/Pistol/pistol_norm.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -746,7 +734,7 @@
 /processorParam:TextureFormat=Color
 /build:Textures/heightmap.jpg
 
-#begin Textures/HexaGrid/Scifi_Hex_Wall_Albedo.jpg
+#begin Textures/pbr/Metal Plate/Metal_Plate_015_ambientOcclusion.jpg
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -756,9 +744,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Textures/HexaGrid/Scifi_Hex_Wall_Albedo.jpg
+/build:Textures/pbr/Metal Plate/Metal_Plate_015_ambientOcclusion.jpg
 
-#begin Textures/HexaGrid/Scifi_Hex_Wall_Ambient_Occlusion.jpg
+#begin Textures/pbr/Metal Plate/Metal_Plate_015_basecolor.jpg
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -768,9 +756,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Textures/HexaGrid/Scifi_Hex_Wall_Ambient_Occlusion.jpg
+/build:Textures/pbr/Metal Plate/Metal_Plate_015_basecolor.jpg
 
-#begin Textures/HexaGrid/Scifi_Hex_Wall_glossiness.jpg
+#begin Textures/pbr/Metal Plate/Metal_Plate_015_metallic.jpg
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -780,9 +768,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Textures/HexaGrid/Scifi_Hex_Wall_glossiness.jpg
+/build:Textures/pbr/Metal Plate/Metal_Plate_015_metallic.jpg
 
-#begin Textures/HexaGrid/Scifi_Hex_Wall_normal.jpg
+#begin Textures/pbr/Metal Plate/Metal_Plate_015_normal.jpg
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -792,9 +780,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Textures/HexaGrid/Scifi_Hex_Wall_normal.jpg
+/build:Textures/pbr/Metal Plate/Metal_Plate_015_normal.jpg
 
-#begin Textures/HexaGrid/Scifi_Hex_Wall_specular.jpg
+#begin Textures/pbr/Metal Plate/Metal_Plate_015_roughness.jpg
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -804,9 +792,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Textures/HexaGrid/Scifi_Hex_Wall_specular.jpg
+/build:Textures/pbr/Metal Plate/Metal_Plate_015_roughness.jpg
 
-#begin Textures/pbr/Metal01_col.jpg
+#begin Textures/pbr/Metal/Metal01_col.jpg
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -816,9 +804,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Textures/pbr/Metal01_col.jpg
+/build:Textures/pbr/Metal/Metal01_col.jpg
 
-#begin Textures/pbr/Metal01_met.jpg
+#begin Textures/pbr/Metal/Metal01_met.jpg
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -828,9 +816,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Textures/pbr/Metal01_met.jpg
+/build:Textures/pbr/Metal/Metal01_met.jpg
 
-#begin Textures/pbr/Metal01_nrm.jpg
+#begin Textures/pbr/Metal/Metal01_nrm.jpg
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -840,9 +828,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Textures/pbr/Metal01_nrm.jpg
+/build:Textures/pbr/Metal/Metal01_nrm.jpg
 
-#begin Textures/pbr/Metal01_rgh.jpg
+#begin Textures/pbr/Metal/Metal01_rgh.jpg
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -852,7 +840,67 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Textures/pbr/Metal01_rgh.jpg
+/build:Textures/pbr/Metal/Metal01_rgh.jpg
+
+#begin Textures/pbr/Wall/Sci-fi_Walll_001_ambientOcclusion.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/pbr/Wall/Sci-fi_Walll_001_ambientOcclusion.png
+
+#begin Textures/pbr/Wall/Sci-fi_Walll_001_basecolor.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/pbr/Wall/Sci-fi_Walll_001_basecolor.png
+
+#begin Textures/pbr/Wall/Sci-fi_Walll_001_metallic.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/pbr/Wall/Sci-fi_Walll_001_metallic.png
+
+#begin Textures/pbr/Wall/Sci-fi_Walll_001_normal.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/pbr/Wall/Sci-fi_Walll_001_normal.png
+
+#begin Textures/pbr/Wall/Sci-fi_Walll_001_roughness.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/pbr/Wall/Sci-fi_Walll_001_roughness.png
 
 #begin Textures/Proto/ProtoGrid.jpg
 /importer:TextureImporter

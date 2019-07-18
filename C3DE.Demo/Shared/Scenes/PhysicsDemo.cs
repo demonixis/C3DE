@@ -29,10 +29,16 @@ namespace C3DE.Demo.Scenes
             var player = new PlayerShooter();
             Add(player);
 
-            var groundMat = new StandardMaterial();
-            groundMat.MainTexture = TextureFactory.CreateCheckboard(Color.White, Color.Black);
-            groundMat.SpecularPower = 5;
-            groundMat.Tiling = new Vector2(16);
+            var content = Application.Content;
+
+            var groundMat = new StandardMaterial()
+            {
+                MainTexture = content.Load<Texture2D>("Textures/pbr/Metal Plate/Metal_Plate_015_basecolor"),
+                NormalMap = content.Load<Texture2D>("Textures/pbr/Metal Plate/Metal_Plate_015_normal"),
+                SpecularColor = new Color(0.4f, 0.4f, 0.4f),
+                SpecularPower = 25,
+                Tiling = new Vector2(16)
+            };
 
             var ground = GameObjectFactory.CreateTerrain();
             var terrain = ground.GetComponent<Terrain>();
@@ -42,7 +48,6 @@ namespace C3DE.Demo.Scenes
             terrain.Renderer.Material = groundMat;
             terrain.Renderer.ReceiveShadow = true;
             terrain.Renderer.CastShadow = false;
-            Add(ground);
 
             terrain.AddComponent<BoxCollider>();
             var rb = terrain.AddComponent<Rigidbody>();
@@ -50,6 +55,14 @@ namespace C3DE.Demo.Scenes
             rb.AddComponent<RigidbodyRenderer>();
             rb.AddComponent<BoundingBoxRenderer>().LineColor = Color.Red;
             rb.IsKinematic = true;
+
+            var wallMat = new StandardMaterial()
+            {
+                MainTexture = content.Load<Texture2D>("Textures/pbr/Wall/Sci-fi_Walll_001_basecolor"),
+                NormalMap = content.Load<Texture2D>("Textures/pbr/Wall/Sci-fi_Walll_001_normal"),
+                SpecularColor = new Color(0.4f, 0.4f, 0.4f),
+                SpecularPower = 25
+            };
 
             for (var i = -50; i < 50; i += 10)
             {
@@ -61,7 +74,7 @@ namespace C3DE.Demo.Scenes
                     var renderer = cube.GetComponent<MeshRenderer>();
                     renderer.Mesh.Size = new Vector3(2);
                     renderer.Mesh.Build();
-                    renderer.Material = groundMat;
+                    renderer.Material = wallMat;
 
                     rb = cube.AddComponent<Rigidbody>();
                     rb.IsStatic = true;
@@ -69,6 +82,8 @@ namespace C3DE.Demo.Scenes
                     rb.AddComponent<BoundingBoxRenderer>();
                 }
             }
+
+            AddLightGroundTest();
         }
 
         protected override void SceneSetup()
