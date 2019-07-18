@@ -47,16 +47,16 @@ struct VertexShaderOutput
 	float3x3 WorldToTangentSpace : TEXCOORD3;
 };
 
-VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
+VertexShaderOutput CommonVS(VertexShaderInput input, float4x4 instanceTransform)
 {
 	VertexShaderOutput output;
 
-	float4 worldPosition = mul(input.Position, World);
+	float4 worldPosition = mul(input.Position, instanceTransform);
 	float4 viewPosition = mul(worldPosition, View);
 	output.Position = mul(viewPosition, Projection);
 	output.UV = input.UV;
 	output.WorldPosition = worldPosition;
-	output.WorldNormal = mul(input.Normal, World);
+	output.WorldNormal = mul(input.Normal, instanceTransform);
 
 	float3 c1 = cross(input.Normal, float3(0.0, 0.0, 1.0));
 	float3 c2 = cross(input.Normal, float3(0.0, 1.0, 0.0));
@@ -67,6 +67,16 @@ VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
 	output.WorldToTangentSpace[2] = input.Normal;
 
 	return output;
+}
+
+VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
+{
+	return CommonVS(input, World);
+}
+
+VertexShaderOutput MainVS_Instancing(VertexShaderInput input, float4x4 instanceTransform : BLENDWEIGHT)
+{
+	return CommonVS(input, mul(World, transpose(instanceTransform)));
 }
 
 float3 PBRPixelShader(float4 worldPosition, float3 normal, float3 albedo, float3 rmao, float3 emissive, float shadowTerm)

@@ -43,3 +43,4 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 }
 
 TECHNIQUE_SM4(PBR, VertexShaderFunction, PixelShaderFunction);
+TECHNIQUE_SM4(PBR_Instancing, MainVS_Instancing, PixelShaderFunction);

@@ -62,15 +62,15 @@ struct VertexShaderOutput
     float FogDistance : FOG;
 };
 
-VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
+VertexShaderOutput CommonVS(VertexShaderInput input, float4x4 instanceTransform)
 {
-    VertexShaderOutput output;
+	VertexShaderOutput output;
 
-    float4 worldPosition = mul(input.Position, World);
+    float4 worldPosition = mul(input.Position, instanceTransform);
     float4 viewPosition = mul(worldPosition, View);
     output.Position = mul(viewPosition, Projection);
     output.UV = input.UV;
-    output.WorldNormal = mul(input.Normal, World);
+    output.WorldNormal = mul(input.Normal, instanceTransform);
     output.WorldPosition = worldPosition;
     output.FogDistance = distance(worldPosition.xyz, EyePosition);
 
@@ -84,11 +84,21 @@ VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
 
 #if REFLECTION_MAP
 	float4x4 preReflectionViewProjection = mul(ReflectionView, Projection);
-	float4x4 preWorldReflectionViewProjection = mul(World, preReflectionViewProjection);
+	float4x4 preWorldReflectionViewProjection = mul(instanceTransform, preReflectionViewProjection);
 	output.Reflection = mul(input.Position, preWorldReflectionViewProjection);
 #endif
 
     return output;
+}
+
+VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
+{
+	return CommonVS(input, World);
+}
+
+VertexShaderOutput MainVS_Instancing(VertexShaderInput input, float4x4 instanceTransform : BLENDWEIGHT)
+{
+	return CommonVS(input, mul(World, transpose(instanceTransform)));
 }
 
 float3 StandardPixelShader(float4 worldPosition, float3 normal, float specularTerm, float fogDistance, float3 albedo, float3 emissive, float shadowTerm, float4 reflection)

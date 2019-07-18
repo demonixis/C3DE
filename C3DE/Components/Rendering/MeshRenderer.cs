@@ -75,6 +75,33 @@ namespace C3DE.Components.Rendering
             device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, _mesh.IndexBuffer.IndexCount / 3);
         }
 
+        DynamicVertexBuffer _instanceVertexBuffer;
+
+        static VertexDeclaration instanceVertexDeclaration = new VertexDeclaration
+        (
+            new VertexElement(0, VertexElementFormat.Vector4, VertexElementUsage.BlendWeight, 0),
+            new VertexElement(16, VertexElementFormat.Vector4, VertexElementUsage.BlendWeight, 1),
+            new VertexElement(32, VertexElementFormat.Vector4, VertexElementUsage.BlendWeight, 2),
+            new VertexElement(48, VertexElementFormat.Vector4, VertexElementUsage.BlendWeight, 3)
+        );
+
+        public void DrawInstance(GraphicsDevice graphics, Matrix[] instances, ref Matrix view, ref Matrix projection)
+        {
+            if (instances.Length == 0)
+                return;
+
+            if ((_instanceVertexBuffer == null) || (instances.Length != _instanceVertexBuffer.VertexCount))
+            {
+                _instanceVertexBuffer?.Dispose();
+                _instanceVertexBuffer = new DynamicVertexBuffer(graphics, instanceVertexDeclaration, instances.Length, BufferUsage.WriteOnly);
+            }
+
+            _instanceVertexBuffer.SetData(instances, 0, instances.Length, SetDataOptions.Discard);
+
+            graphics.SetVertexBuffers(new VertexBufferBinding(_mesh.VertexBuffer, 0, 0), new VertexBufferBinding(_instanceVertexBuffer, 0, 1));
+            graphics.Indices = _mesh.IndexBuffer;
+        }
+
         public override void Dispose()
         {
             if (_mesh != null)
@@ -103,7 +130,7 @@ namespace C3DE.Components.Rendering
                 if (_mesh.Built)
                     clone._mesh.Build();
             }
-              
+
             return clone;
         }
     }

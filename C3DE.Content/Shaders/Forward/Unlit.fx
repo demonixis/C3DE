@@ -28,7 +28,7 @@ struct VertexShaderOutput
 	float2 UV : TEXCOORD0;
 };
 
-VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
+VertexShaderOutput CommonVS(VertexShaderInput input, float4x4 instanceTransform)
 {
 	VertexShaderOutput output;
 	float4 worldPosition = mul(input.Position, World);
@@ -36,6 +36,16 @@ VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
     output.Position = mul(viewPosition, Projection);
 	output.UV = input.UV;
 	return output;
+}
+
+VertexShaderOutput MainVS(VertexShaderInput input)
+{
+	return CommonVS(input, World);
+}
+
+VertexShaderOutput MainVS_Instancing(VertexShaderInput input, float4x4 instanceTransform : BLENDWEIGHT)
+{
+	return CommonVS(input, mul(World, transpose(instanceTransform)));
 }
 
 float4 PSUnlitColored(VertexShaderOutput input) : COLOR0
@@ -55,6 +65,12 @@ float4 PSUnlitTextured(VertexShaderOutput input) : COLOR0
 
 technique TexturedSimple
 {
-	PASS(UnlitColor, VertexShaderFunction, PSUnlitColored)
-	PASS(UnlitTexture, VertexShaderFunction, PSUnlitTextured)
+	PASS(UnlitColor, MainVS, PSUnlitColored)
+	PASS(UnlitTexture, MainVS, PSUnlitTextured)
+}
+
+technique TexturedSimple_Instancing
+{
+	PASS(UnlitColor, MainVS_Instancing, PSUnlitColored)
+	PASS(UnlitTexture, MainVS_Instancing, PSUnlitTextured)
 }
