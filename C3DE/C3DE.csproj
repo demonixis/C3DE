@@ -70,6 +70,7 @@
     <Compile Include="Graphics\Materials\PBRWaterMaterial.cs" />
     <Compile Include="Graphics\MeshUtils.cs" />
     <Compile Include="Graphics\Rendering\LightData.cs" />
+    <Compile Include="Graphics\Rendering\VertexPositionNormalTextureTB.cs" />
     <Compile Include="Graphics\Shaders\Deferred\DeferredLava.cs" />
     <Compile Include="Graphics\Shaders\Deferred\DeferredStandardTerrain.cs" />
     <Compile Include="Graphics\Shaders\Deferred\DeferredStandardWater.cs" />

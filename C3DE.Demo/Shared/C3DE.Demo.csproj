@@ -70,6 +70,7 @@
     <Compile Include="Scripts\MenuBehaviour.cs" />
     <Compile Include="Scripts\PBRViewer.cs" />
     <Compile Include="Scripts\PhysicsSpawner.cs" />
+    <Compile Include="Scripts\PlayerShooter.cs" />
     <Compile Include="Scripts\PostProcessSwitcher.cs" />
     <Compile Include="Scripts\RayPickingTester.cs" />
     <Compile Include="Scripts\ReflectionPlanarViewer.cs" />

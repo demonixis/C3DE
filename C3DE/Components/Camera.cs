@@ -137,7 +137,7 @@ namespace C3DE.Components
         {
             _fieldOfView = MathHelper.ToRadians(45);
             _aspectRatio = (float)Application.GraphicsDevice.Viewport.Width / (float)Application.GraphicsDevice.Viewport.Height;
-            _nearPlane = 1.0f;
+            _nearPlane = 0.5f;
             _farPlane = 500.0f;
             _projectionType = CameraProjectionType.Perspective;
             _clearColor = Color.Black;

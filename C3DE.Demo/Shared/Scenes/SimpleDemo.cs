@@ -27,6 +27,11 @@ namespace C3DE.Demo.Scenes
 
             GUI.Skin = DemoGame.CreateSkin(Application.Content, false);
 
+            SceneSetup();
+        }
+
+        protected virtual void SceneSetup()
+        {
             // Add a camera with a FPS controller
             var camera = GameObjectFactory.CreateCamera(new Vector3(0, 2, -10), new Vector3(0, 0, 0), Vector3.Up);
 

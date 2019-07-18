@@ -1,7 +1,6 @@
 ﻿using C3DE.Components.Controllers.Mobile;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using System;
 
 namespace C3DE.Components.Controllers
 {
@@ -11,7 +10,6 @@ namespace C3DE.Components.Controllers
     public class FirstPersonController : Controller
     {
         private bool _azertyKeyboard = false;
-        private Camera _camera;
         private Matrix _rotationMatrix;
         private Vector3 _transformedReference;
         private bool _lockCursor;
@@ -30,16 +28,13 @@ namespace C3DE.Components.Controllers
 
         public bool VirtualInputEnabled
         {
-            get { return _virtualInputEnabled; }
-            set
-            {
-                SetVirtualInputSupport(value);
-            }
+            get => _virtualInputEnabled;
+            set => SetVirtualInputSupport(value);
         }
 
         public bool LockCursor
         {
-            get { return _lockCursor; }
+            get => _lockCursor;
             set
             {
                 _lockCursor = value;
@@ -88,16 +83,8 @@ namespace C3DE.Components.Controllers
 
         public override void Start()
         {
-            _camera = GetComponent<Camera>();
-
-            if (_camera == null)
-                throw new Exception("No camera attached to this scene object.");
-
-            _camera._transform.LocalPosition = new Vector3(0.0f, 1.7f, 0.0f);
-            _camera._transform.LocalRotation = Vector3.Zero;
-
 #if ANDROID
-                VirtualInputEnabled = true;
+            VirtualInputEnabled = true;
 #endif
         }
 

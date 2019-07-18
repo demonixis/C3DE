@@ -13,16 +13,36 @@ namespace C3DE.Graphics
             var height = target.Height;
             var graphics = Application.GraphicsDevice;
             var colors = new Color[width * height];
-            var current = Color.Black;
 
             target.GetData<Color>(colors);
 
             for (var i = 0; i < width * height; i++)
             {
-                current = colors[i];
-                current.R = (byte)Math.Min(255,  current.R + color.R);
-                current.G = (byte)Math.Min(255,  current.G + color.G);
-                current.B = (byte)Math.Min(255,  current.B + color.B);
+                colors[i].R = (byte)Math.Min(255, colors[i].R + color.R);
+                colors[i].G = (byte)Math.Min(255, colors[i].G + color.G);
+                colors[i].B = (byte)Math.Min(255, colors[i].B + color.B);
+            }
+
+            var texture = new Texture2D(graphics, width, height);
+            texture.SetData<Color>(colors);
+
+            return texture;
+        }
+
+        public static Texture2D PreMultiply(Texture2D target, Color color)
+        {
+            var width = target.Width;
+            var height = target.Height;
+            var graphics = Application.GraphicsDevice;
+            var colors = new Color[width * height];
+
+            target.GetData<Color>(colors);
+
+            for (var i = 0; i < width * height; i++)
+            {
+                colors[i].R = (byte)Math.Min(255, colors[i].R * color.R);
+                colors[i].G = (byte)Math.Min(255, colors[i].G * color.G);
+                colors[i].B = (byte)Math.Min(255, colors[i].B * color.B);
             }
 
             var texture = new Texture2D(graphics, width, height);
