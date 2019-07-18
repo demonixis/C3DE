@@ -7,48 +7,31 @@ namespace C3DE.Graphics
 {
     public class TextureFactory
     {
-        public static Texture2D AddColor(Texture2D target, Color color)
+        public static Texture2D MergeTextures(BlendState state, Texture2D target, Texture2D target2)
         {
-            var width = target.Width;
-            var height = target.Height;
             var graphics = Application.GraphicsDevice;
-            var colors = new Color[width * height];
+            var renderTarget = new RenderTarget2D(graphics, target.Width, target.Height);
+            var spriteBatch = new SpriteBatch(graphics);
+            var previousRTs = Application.GraphicsDevice.GetRenderTargets();
 
-            target.GetData<Color>(colors);
+            graphics.SetRenderTarget(renderTarget);
+            graphics.Clear(Color.Transparent);
 
-            for (var i = 0; i < width * height; i++)
-            {
-                colors[i].R = (byte)Math.Min(255, colors[i].R + color.R);
-                colors[i].G = (byte)Math.Min(255, colors[i].G + color.G);
-                colors[i].B = (byte)Math.Min(255, colors[i].B + color.B);
-            }
+            spriteBatch.Begin(SpriteSortMode.Deferred, state);
+            spriteBatch.Draw(target, Vector2.Zero, Color.White);
+            spriteBatch.Draw(target2, Vector2.Zero, Color.White);
+            spriteBatch.End();
 
-            var texture = new Texture2D(graphics, width, height);
-            texture.SetData<Color>(colors);
+            graphics.SetRenderTargets(previousRTs);
 
-            return texture;
+            spriteBatch.Dispose();
+
+            return (Texture2D)renderTarget;
         }
 
-        public static Texture2D PreMultiply(Texture2D target, Color color)
+        public static Texture2D MergeTextures(BlendState state, Texture2D target, Color target2)
         {
-            var width = target.Width;
-            var height = target.Height;
-            var graphics = Application.GraphicsDevice;
-            var colors = new Color[width * height];
-
-            target.GetData<Color>(colors);
-
-            for (var i = 0; i < width * height; i++)
-            {
-                colors[i].R = (byte)Math.Min(255, colors[i].R * color.R);
-                colors[i].G = (byte)Math.Min(255, colors[i].G * color.G);
-                colors[i].B = (byte)Math.Min(255, colors[i].B * color.B);
-            }
-
-            var texture = new Texture2D(graphics, width, height);
-            texture.SetData<Color>(colors);
-
-            return texture;
+            return MergeTextures(state, target, CreateColor(target2, 1, 1));
         }
 
         public static Texture2D PackTextures(int width, int height, Texture2D upperLeft, Texture2D upperRight, Texture2D bottomLeft, Texture2D bottomRight)
