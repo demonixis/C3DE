@@ -18,9 +18,13 @@ namespace C3DE.Demo.Scenes
             base.Initialize();
 
             // And a light
-            var lightGo = GameObjectFactory.CreateLight(LightType.Directional, Color.White, 1f, 2048);
+            var lightGo = GameObjectFactory.CreateLight(LightType.Directional, Color.White, 1.5f, 2048);
             lightGo.Transform.LocalPosition = new Vector3(500, 500, 0);
             lightGo.Transform.LocalRotation = new Vector3(MathHelper.PiOver2, -MathHelper.PiOver4, 0);
+
+            var autoRotation = lightGo.AddComponent<AutoRotation>();
+            autoRotation.Rotation = new Vector3(0, 1, 0);
+
             _directionalLight = lightGo.GetComponent<Light>();
 
             // Skybox
@@ -35,8 +39,8 @@ namespace C3DE.Demo.Scenes
             {
                 MainTexture = content.Load<Texture2D>("Textures/pbr/Metal Plate/Metal_Plate_015_basecolor"),
                 NormalMap = content.Load<Texture2D>("Textures/pbr/Metal Plate/Metal_Plate_015_normal"),
-                SpecularColor = new Color(0.4f, 0.4f, 0.4f),
-                SpecularPower = 25,
+                SpecularColor = new Color(0.7f, 0.7f, 0.7f),
+                SpecularPower = 10,
                 Tiling = new Vector2(16)
             };
 
@@ -60,8 +64,8 @@ namespace C3DE.Demo.Scenes
             {
                 MainTexture = content.Load<Texture2D>("Textures/pbr/Wall/Sci-fi_Walll_001_basecolor"),
                 NormalMap = content.Load<Texture2D>("Textures/pbr/Wall/Sci-fi_Walll_001_normal"),
-                SpecularColor = new Color(0.4f, 0.4f, 0.4f),
-                SpecularPower = 25
+                SpecularColor = new Color(0.7f, 0.7f, 0.7f),
+                SpecularPower = 5
             };
 
             for (var i = -50; i < 50; i += 10)

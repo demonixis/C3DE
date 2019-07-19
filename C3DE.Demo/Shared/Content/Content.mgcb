@@ -199,6 +199,18 @@
 /processorParam:TextureFormat=Compressed
 /build:Models/ScifiGun/source/ScifiGun.fbx
 
+#begin Models/ScifiGun/textures/ChumboScyFi_AO.jpg
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Models/ScifiGun/textures/ChumboScyFi_AO.jpg
+
 #begin Models/ScifiGun/textures/ChumboScyFi_DIFF.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -211,7 +223,7 @@
 /processorParam:TextureFormat=Color
 /build:Models/ScifiGun/textures/ChumboScyFi_DIFF.png
 
-#begin Models/ScifiGun/textures/ChumboScyFi_NRM.png
+#begin Models/ScifiGun/textures/ChumboScyFi_DIFF.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -221,7 +233,55 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Models/ScifiGun/textures/ChumboScyFi_NRM.png
+/build:Models/ScifiGun/textures/ChumboScyFi_DIFF.png
+
+#begin Models/ScifiGun/textures/ChumboScyFi_Illum.jpg
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Models/ScifiGun/textures/ChumboScyFi_Illum.jpg
+
+#begin Models/ScifiGun/textures/ChumboScyFi_NRM.jpg
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Models/ScifiGun/textures/ChumboScyFi_NRM.jpg
+
+#begin Models/ScifiGun/textures/ChumboScyFi_NRM_Org.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Models/ScifiGun/textures/ChumboScyFi_NRM_Org.png
+
+#begin Models/ScifiGun/textures/ChumboScyFi_SPEC.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Models/ScifiGun/textures/ChumboScyFi_SPEC.png
 
 #begin Models/ScifiGun/textures/ChumboScyFi_SPEC.png
 /importer:TextureImporter

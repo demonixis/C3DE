@@ -37,28 +37,30 @@ namespace C3DE.Demo.Scripts
             var hand = new GameObject("RightHand");
             _handTransform = hand.Transform;
             _handTransform.Parent = cameraRig.Transform;
-            _handTransform.LocalPosition = new Vector3(0.25f, -0.45f, -1.0f);
+            _handTransform.LocalPosition = new Vector3(0.25f, -0.4f, -1.25f);
             _handLocalPosition = _handTransform.LocalPosition;
 
             var model = content.Load<Model>("Models/ScifiGun/source/ScifiGun");
             var gun = model.ToMeshRenderers();
-            gun.Transform.LocalScale = new Vector3(0.01f);
+            gun.Transform.LocalScale = new Vector3(0.001f);
             gun.Transform.Parent = hand.Transform;
             gun.Transform.Rotate(0, MathHelper.PiOver2, 0);
-
-            var shootPoint = new GameObject("ShootPoint");
-            shootPoint.Transform.Parent = hand.Transform;
-            shootPoint.Transform.LocalPosition = Vector3.Forward;
-            _shootPoint = shootPoint.Transform;
 
             var renderers = gun.GetComponentsInChildren<MeshRenderer>();
             foreach (var renderer in renderers)
             {
                 var std = (StandardMaterial)renderer.Material;
                 std.MainTexture = content.Load<Texture2D>("Models/ScifiGun/textures/ChumboScyFi_DIFF");
-                std.SpecularTexture = content.Load<Texture2D>("Models/ScifiGun/textures/ChumboScyFi_NRM");
-                std.EmissiveMap = content.Load<Texture2D>("Models/ScifiGun/textures/ChumboScyFi_SPEC");
+                std.SpecularTexture = content.Load<Texture2D>("Models/ScifiGun/textures/ChumboScyFi_SPEC");
+                std.NormalMap = content.Load<Texture2D>("Models/ScifiGun/textures/ChumboScyFi_NRM");
+                std.EmissiveMap = content.Load<Texture2D>("Models/ScifiGun/textures/ChumboScyFi_Illum");
+                std.SpecularPower = 25;
             }
+
+            var shootPoint = new GameObject("ShootPoint");
+            shootPoint.Transform.Parent = hand.Transform;
+            shootPoint.Transform.LocalPosition = Vector3.Forward;
+            _shootPoint = shootPoint.Transform;
 
             _fpsController = AddComponent<FirstPersonController>();
             _fpsController.Fly = false;
