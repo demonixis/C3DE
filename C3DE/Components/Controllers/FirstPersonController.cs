@@ -90,6 +90,8 @@ namespace C3DE.Components.Controllers
 
         public override void Update()
         {
+            base.Update();
+
             UpdateInputs();
 
             // Limits on X axis

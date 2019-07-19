@@ -14,9 +14,11 @@ namespace C3DE.Demo.Scripts
 {
     public class PlayerShooter : GameObject
     {
+        private Transform _handTransform;
         private Transform _shootPoint;
         private UnlitMaterial _material;
         private FirstPersonController _fpsController;
+        private Vector3 _handLocalPosition;
 
         public override void Initialize()
         {
@@ -33,8 +35,10 @@ namespace C3DE.Demo.Scripts
             camera.Transform.LocalPosition = Vector3.Zero;
 
             var hand = new GameObject("RightHand");
-            hand.Transform.Parent = cameraRig.Transform;
-            hand.Transform.LocalPosition = new Vector3(0.25f, -0.4f, -1.0f);
+            _handTransform = hand.Transform;
+            _handTransform.Parent = cameraRig.Transform;
+            _handTransform.LocalPosition = new Vector3(0.25f, -0.45f, -1.0f);
+            _handLocalPosition = _handTransform.LocalPosition;
 
             var model = content.Load<Model>("Models/Pistol/Model/Pistol");
             var gun = model.ToMeshRenderers();
@@ -69,7 +73,10 @@ namespace C3DE.Demo.Scripts
             base.Update();
 
             if (Input.Mouse.JustClicked(Inputs.MouseButton.Left))
+            {
                 SpawnCubeAtPosition(_shootPoint.Position, _shootPoint.Forward);
+                _fpsController.StartCoroutine(StepShoot());
+            }
         }
 
         private void SpawnCubeAtPosition(Vector3 position, Vector3 forward)
@@ -97,6 +104,21 @@ namespace C3DE.Demo.Scripts
         {
             yield return Coroutine.WaitForSeconds(2.5f);
             Destroy(go);
+        }
+
+        private IEnumerator StepShoot()
+        {
+            _handTransform.LocalPosition = _handLocalPosition;
+
+            var target = _handLocalPosition + new Vector3(0, 0, 0.25f);
+
+            while (Vector3.Distance(_handTransform.LocalPosition, target) > 0.1f)
+            {
+                _handTransform.LocalPosition = Vector3.Lerp(_handTransform.LocalPosition, target, Time.DeltaTime * 5f);
+                yield return null;
+            }
+
+            _handTransform.LocalPosition = _handLocalPosition;
         }
     }
 }

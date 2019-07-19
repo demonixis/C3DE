@@ -72,11 +72,8 @@ namespace C3DE.Demo.Scenes.PBR
 
             // Caches
             GameObject cube = null;
-            GameObject lightGo = null;
-            Light light;
             PBRMaterial pbrMaterial = null;
             Renderer renderer = null;
-            MeshRenderer ligthSphere = null;
 
             // Generates the grid of spheres
             var startPos = 7.0f;
