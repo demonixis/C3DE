@@ -20,7 +20,7 @@ namespace C3DE.Graphics.Shaders.Forward
             _effect = content.Load<Effect>("Shaders/Forward/PBRTerrainAtlased");
         }
 
-        public override void Pass(ref Matrix worldMatrix, bool receiveShadow)
+        public override void Pass(ref Matrix worldMatrix, bool receiveShadow, bool drawInstanced)
         {
             _features.X = _material._combinedNormals != null ? 1 : 0;
             _features.Y = 0;

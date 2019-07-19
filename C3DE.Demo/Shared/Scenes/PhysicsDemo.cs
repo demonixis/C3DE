@@ -4,6 +4,7 @@ using C3DE.Components.Rendering;
 using C3DE.Demo.Scripts;
 using C3DE.Graphics;
 using C3DE.Graphics.Materials;
+using C3DE.Graphics.Primitives;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -68,6 +69,11 @@ namespace C3DE.Demo.Scenes
                 SpecularPower = 5
             };
 
+            MeshRenderer instancedRenderer = null;
+            CubeMesh cubeMesh = new CubeMesh();
+            cubeMesh.Size = new Vector3(2);
+            cubeMesh.Build();
+
             for (var i = -50; i < 50; i += 10)
             {
                 for (var j = -50; j < 50; j += 10)
@@ -76,14 +82,23 @@ namespace C3DE.Demo.Scenes
                     cube.Transform.Position = new Vector3(i, 1, j);
 
                     var renderer = cube.GetComponent<MeshRenderer>();
-                    renderer.Mesh.Size = new Vector3(2);
-                    renderer.Mesh.Build();
+                    renderer.Mesh = cubeMesh;
                     renderer.Material = wallMat;
 
                     rb = cube.AddComponent<Rigidbody>();
                     rb.IsStatic = true;
                     rb.AddComponent<BoxCollider>();
                     rb.AddComponent<BoundingBoxRenderer>();
+
+                    if (i == -50 && j == -50)
+                    {
+                        instancedRenderer = renderer;
+                    }
+                    else
+                    {
+                        instancedRenderer.AddInstance(renderer);
+                        renderer.Enabled = false;
+                    }
                 }
             }
 

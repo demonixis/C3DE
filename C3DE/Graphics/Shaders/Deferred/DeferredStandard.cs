@@ -47,7 +47,7 @@ namespace C3DE.Graphics.Materials.Shaders
             throw new System.NotImplementedException();
         }
 
-        public override void Pass(ref Matrix worldMatrix, bool receiveShadow)
+        public override void Pass(ref Matrix worldMatrix, bool receiveShadow, bool drawInstanced)
         {
             throw new System.NotImplementedException();
         }

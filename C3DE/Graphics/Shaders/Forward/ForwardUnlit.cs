@@ -26,7 +26,7 @@ namespace C3DE.Graphics.Shaders.Forward
             _effect.Parameters["Projection"].SetValue(projectionMatrix);
         }
 
-        public override void Pass(ref Matrix worldMatrix, bool receiveShadow)
+        public override void Pass(ref Matrix worldMatrix, bool receiveShadow, bool drawInstanced)
         {
             _effect.Parameters["World"].SetValue(worldMatrix);
             _effect.Parameters["TextureTiling"].SetValue(_material.Tiling);

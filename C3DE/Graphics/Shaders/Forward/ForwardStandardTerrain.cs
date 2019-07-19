@@ -20,7 +20,7 @@ namespace C3DE.Graphics.Shaders.Forward
             _effect = content.Load<Effect>("Shaders/Forward/StandardTerrain");
         }
 
-        public override void Pass(ref Matrix worldMatrix, bool receiveShadow)
+        public override void Pass(ref Matrix worldMatrix, bool receiveShadow, bool drawInstanced)
         {
             var hasNormalMap = 
                 _material.GrassNormalMap != null &&

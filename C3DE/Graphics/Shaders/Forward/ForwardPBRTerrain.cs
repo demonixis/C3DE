@@ -20,7 +20,7 @@ namespace C3DE.Graphics.Shaders.Forward
             _effect = content.Load<Effect>("Shaders/Forward/PBRTerrain");
         }
 
-        public override void Pass(ref Matrix worldMatrix, bool receiveShadow)
+        public override void Pass(ref Matrix worldMatrix, bool receiveShadow, bool drawInstanced)
         {
             _features.X = 
                 _material.GrassNormalMap != null &&

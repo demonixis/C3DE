@@ -38,7 +38,7 @@ namespace C3DE.Graphics.Shaders.Forward
             _effect.Parameters["IrradianceMap"].SetValue(Scene.current.RenderSettings.skybox.IrradianceTexture);
         }
 
-        public override void Pass(ref Matrix worldMatrix, bool receiveShadow)
+        public override void Pass(ref Matrix worldMatrix, bool receiveShadow, bool drawInstanced)
         {
             _features.X = _material.NormalMap != null ? 1 : 0;
             _features.Y = 0;

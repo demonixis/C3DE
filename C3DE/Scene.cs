@@ -41,14 +41,15 @@ namespace C3DE
         internal protected List<Material> _materials;
         internal protected List<GameObject> _gameObjects;
 
+        internal protected Dictionary<Renderer, List<Transform>> _instances;
         internal protected List<Renderer> _renderList;
+        internal protected List<PostProcessPass> _postProcessPasses;
         internal protected List<PlanarReflection> _planarReflections;
         internal protected List<ReflectionProbe> _reflectionProbes;
         internal protected List<Collider> _colliders;
         internal protected List<Camera> _cameras;
         internal protected List<Light> _lights;
         internal protected List<Behaviour> _scripts;
-        internal protected List<PostProcessPass> _postProcessPasses;
 
         internal protected CollisionSystem _physicsCollisionSystem;
         internal protected World _physicsWorld;
@@ -79,7 +80,6 @@ namespace C3DE
             _lights = new List<Light>();
             _postProcessPasses = new List<PostProcessPass>();
             _componentsToDestroy = new List<Component>();
-
             _planarReflections = new List<PlanarReflection>();
             _reflectionProbes = new List<ReflectionProbe>();
 

@@ -22,6 +22,8 @@ namespace C3DE.Components.Rendering
         /// </summary>
         public bool CastShadow { get; set; } = true;
 
+        public virtual bool InstancedEnabled { get; }
+
         /// <summary>
         /// Indicates whether the object can receive shadow.
         /// </summary>

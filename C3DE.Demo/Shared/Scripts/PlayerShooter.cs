@@ -64,7 +64,7 @@ namespace C3DE.Demo.Scripts
 
             _fpsController = AddComponent<FirstPersonController>();
             _fpsController.Fly = false;
-            _fpsController.LockCursor = true;
+           // _fpsController.LockCursor = true;
 
             _material = new UnlitMaterial();
             _material.DiffuseColor = Color.Red;

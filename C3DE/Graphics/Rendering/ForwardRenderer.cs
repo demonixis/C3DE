@@ -226,7 +226,6 @@ namespace C3DE.Graphics.Rendering
                 // FIXME: More cache..
                 if (renderer.PlanarReflection != null)
                 {
-                    var effect = shader._effect;
                     var reflectionView = shader._effect.Parameters["ReflectionView"];
                     var reflectionMap = shader._effect.Parameters["ReflectionMap"];
 
@@ -237,7 +236,7 @@ namespace C3DE.Graphics.Rendering
                     }
                 }
 
-                shader.Pass(ref renderer._transform._worldMatrix, renderer.ReceiveShadow);
+                shader.Pass(ref renderer._transform._worldMatrix, renderer.ReceiveShadow, renderer.InstancedEnabled);
 
                 renderer.Draw(_graphicsDevice);
             }

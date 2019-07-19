@@ -20,7 +20,7 @@ namespace C3DE.Graphics.Shaders.Forward
             _effect = content.Load<Effect>("Shaders/Forward/PBRStandard");
         }
 
-        public override void Pass(ref Matrix worldMatrix, bool receiveShadow)
+        public override void Pass(ref Matrix worldMatrix, bool receiveShadow, bool drawInstanced)
         {
             _features.X = _material.NormalMap != null ? 1 : 0;
             _features.Y = _material.EmissiveMap != null ? 1 : 0;
@@ -37,7 +37,7 @@ namespace C3DE.Graphics.Shaders.Forward
             _effect.Parameters["DiffuseColor"].SetValue(_material._diffuseColor);
             _effect.Parameters["Cutout"].SetValue(_material.Cutout);
 
-            _effect.CurrentTechnique.Passes[0].Apply();
+            _effect.Techniques[drawInstanced ? 1 : 0].Passes[0].Apply();
         }
     }
 }

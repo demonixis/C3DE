@@ -28,7 +28,7 @@ namespace C3DE.Graphics.Materials.Shaders
         {
         }
 
-        public override void Pass(ref Matrix worldMatrix, bool receiveShadow)
+        public override void Pass(ref Matrix worldMatrix, bool receiveShadow, bool drawInstanced)
         {
         }
     }
