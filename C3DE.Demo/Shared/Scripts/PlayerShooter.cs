@@ -36,7 +36,7 @@ namespace C3DE.Demo.Scripts
             hand.Transform.Parent = cameraRig.Transform;
             hand.Transform.LocalPosition = new Vector3(0.25f, -0.4f, -1.0f);
 
-            var model = content.Load<Model>("Models/Pistol/Model/Pistol");
+            var model = content.Load<Model>("Models/ScifiGun/source/ScifiGun");
             var gun = model.ToMeshRenderers();
             gun.Transform.LocalScale = new Vector3(0.01f);
             gun.Transform.Parent = hand.Transform;
@@ -51,9 +51,9 @@ namespace C3DE.Demo.Scripts
             foreach (var renderer in renderers)
             {
                 var std = (StandardMaterial)renderer.Material;
-                std.MainTexture = content.Load<Texture2D>("Models/Pistol/pistol_skin");
-                std.SpecularTexture = content.Load<Texture2D>("Models/Pistol/pistol_spec");
-                std.EmissiveMap = content.Load<Texture2D>("Models/Pistol/pistol_emissive");
+                std.MainTexture = content.Load<Texture2D>("Models/ScifiGun/textures/ChumboScyFi_DIFF");
+                std.SpecularTexture = content.Load<Texture2D>("Models/ScifiGun/textures/ChumboScyFi_NRM");
+                std.EmissiveMap = content.Load<Texture2D>("Models/ScifiGun/textures/ChumboScyFi_SPEC");
             }
 
             _fpsController = AddComponent<FirstPersonController>();
