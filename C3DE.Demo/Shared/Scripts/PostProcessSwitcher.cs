@@ -104,7 +104,7 @@ namespace C3DE.Demo.Scripts
         private void AddPostProcess(PostProcessPass pass)
         {
             pass.Enabled = false;
-            _gameObject.Scene.Add(pass);
+            _gameObject.Scene.SetPostProcess(pass, true);
             _passes.Add(pass);
         }
 

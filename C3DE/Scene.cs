@@ -5,7 +5,6 @@ using C3DE.Components.Rendering;
 using C3DE.Graphics.Materials;
 using C3DE.Graphics.PostProcessing;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using Jitter.Collision;
@@ -38,61 +37,23 @@ namespace C3DE
         private List<Component> _componentsToDestroy;
         private bool _needRemoveCheck;
 
-        internal protected Material defaultMaterial;
-        internal protected List<GameObject> gameObjects;
-        internal protected List<Renderer> renderList;
-        internal protected List<PlanarReflection> planarReflections;
-        internal protected List<Material> materials;
-        internal protected List<Effect> effects;
-        internal protected Dictionary<int, int> materialsEffectIndex;
-        internal protected List<Collider> colliders;
-        internal protected List<Camera> cameras;
-        internal protected List<Light> lights;
-        internal protected List<Behaviour> scripts;
-        internal protected List<GameObject> prefabs;
-        internal protected List<PostProcessPass> postProcessPasses;
+        internal protected Material _defaultMaterial;
+        internal protected List<Material> _materials;
+        internal protected List<GameObject> _gameObjects;
+
+        internal protected List<Renderer> _renderList;
+        internal protected List<PlanarReflection> _planarReflections;
+        internal protected List<ReflectionProbe> _reflectionProbes;
+        internal protected List<Collider> _colliders;
+        internal protected List<Camera> _cameras;
+        internal protected List<Light> _lights;
+        internal protected List<Behaviour> _scripts;
+        internal protected List<PostProcessPass> _postProcessPasses;
 
         internal protected CollisionSystem _physicsCollisionSystem;
         internal protected World _physicsWorld;
 
         public RenderSettings RenderSettings { get; private set; }
-
-        /// <summary>
-        /// Gets the collection of renderable scene objects.
-        /// </summary>
-        public List<Renderer> RenderList => renderList;
-
-        /// <summary>
-        /// Gets materials.
-        /// </summary>
-        public List<Material> Materials => materials;
-
-        /// <summary>
-        /// Gets colliders.
-        /// </summary>
-        public List<Collider> Colliders => colliders;
-
-        /// <summary>
-        /// Gets lights.
-        /// </summary>
-        public List<Light> Lights => lights;
-
-        /// <summary>
-        /// Gets cameras.
-        /// </summary>
-        public List<Camera> Cameras => cameras;
-
-        /// <summary>
-        /// Gets scripts.
-        /// </summary>
-        public List<Behaviour> Behaviours => scripts;
-
-        /// <summary>
-        /// Gets prefabs.
-        /// </summary>
-        public List<GameObject> Prefabs => prefabs;
-
-        public List<PostProcessPass> PostProcessPasses => postProcessPasses;
 
         /// <summary>
         /// The root scene object which contains all scene objects.
@@ -101,27 +62,31 @@ namespace C3DE
             : base()
         {
             Name = "Scene-" + Guid.NewGuid();
-            _transform.Root = _transform;
-            gameObjects = new List<GameObject>();
-            _scene = this;
-            renderList = new List<Renderer>(10);
-            materials = new List<Material>(5);
-            effects = new List<Effect>(5);
-            materialsEffectIndex = new Dictionary<int, int>(5);
-            colliders = new List<Collider>(5);
-            cameras = new List<Camera>(1);
-            scripts = new List<Behaviour>(5);
-            lights = new List<Light>(2);
-            prefabs = new List<GameObject>();
-            postProcessPasses = new List<PostProcessPass>();
-            _componentsToDestroy = new List<Component>();
-            _needRemoveCheck = false;
-            defaultMaterial = new UnlitMaterial();
             RenderSettings = new RenderSettings();
-            planarReflections = new List<PlanarReflection>();
+
+            _transform.Root = _transform;
+            _gameObjects = new List<GameObject>();
+            _needRemoveCheck = false;
+            _scene = this;
+            _renderList = new List<Renderer>();
+            _materials = new List<Material>();
+            _defaultMaterial = new UnlitMaterial();
+
+            // Components
+            _colliders = new List<Collider>();
+            _cameras = new List<Camera>();
+            _scripts = new List<Behaviour>();
+            _lights = new List<Light>();
+            _postProcessPasses = new List<PostProcessPass>();
+            _componentsToDestroy = new List<Component>();
+
+            _planarReflections = new List<PlanarReflection>();
+            _reflectionProbes = new List<ReflectionProbe>();
+
+            // Physics
             _physicsCollisionSystem = new CollisionSystemSAP();
             _physicsWorld = new World(_physicsCollisionSystem);
-         }
+        }
 
         public Scene(string name)
             : this()
@@ -143,11 +108,11 @@ namespace C3DE
 
             RenderSettings.Skybox.LoadContent(Application.Content);
 
-            for (var i = 0; i < materials.Count; i++)
-                materials[i].LoadContent(Application.Content);
+            for (var i = 0; i < _materials.Count; i++)
+                _materials[i].LoadContent(Application.Content);
 
-            for (int i = 0; i < gameObjects.Count; i++)
-                gameObjects[i].Initialize();
+            for (int i = 0; i < _gameObjects.Count; i++)
+                _gameObjects[i].Initialize();
         }
 
         /// <summary>
@@ -175,9 +140,11 @@ namespace C3DE
             }
 
             // Third - Safe update
-            for (int i = 0; i < gameObjects.Count; i++)
-                if (gameObjects[i].Enabled)
-                    gameObjects[i].Update();
+            for (int i = 0; i < _gameObjects.Count; i++)
+            {
+                if (_gameObjects[i].Enabled)
+                    _gameObjects[i].Update();
+            }
         }
 
         /// <summary>
@@ -185,16 +152,16 @@ namespace C3DE
         /// </summary>
         public virtual void Unload()
         {
-            foreach (Behaviour script in Behaviours)
+            foreach (Behaviour script in _scripts)
                 script.OnDestroy();
 
-            foreach (GameObject gameObject in gameObjects)
+            foreach (GameObject gameObject in _gameObjects)
                 gameObject.Dispose();
 
-            foreach (Material material in materials)
+            foreach (Material material in _materials)
                 material.Dispose();
 
-            foreach (PostProcessPass pass in postProcessPasses)
+            foreach (PostProcessPass pass in _postProcessPasses)
                 pass.Dispose();
 
             Clear();
@@ -205,19 +172,17 @@ namespace C3DE
         /// </summary>
         protected void Clear()
         {
-            renderList.Clear();
-            materials.Clear();
-            effects.Clear();
-            materialsEffectIndex.Clear();
-            colliders.Clear();
-            cameras.Clear();
-            lights.Clear();
-            scripts.Clear();
-            gameObjects.Clear();
-            prefabs.Clear();
-            postProcessPasses.Clear();
-            planarReflections.Clear();
+            _renderList.Clear();
+            _materials.Clear();
+            _colliders.Clear();
+            _cameras.Clear();
+            _lights.Clear();
+            _scripts.Clear();
+            _gameObjects.Clear();
+            _postProcessPasses.Clear();
+            _planarReflections.Clear();
             _componentsToDestroy.Clear();
+            _reflectionProbes.Clear();
             _needRemoveCheck = false;
         }
 
@@ -236,43 +201,22 @@ namespace C3DE
 
             if (canAdd)
             {
-                if (!gameObject.IsPrefab)
+                _gameObjects.Add(gameObject);
+                gameObject.Scene = this;
+                gameObject.Transform.Root = _transform;
+
+                if (gameObject.Enabled)
                 {
-                    gameObjects.Add(gameObject);
-                    gameObject.Scene = this;
-                    gameObject.Transform.Root = _transform;
-
-                    if (gameObject.Enabled)
-                    {
-                        CheckComponents(gameObject, ComponentChangeType.Add);
-                        gameObject.PropertyChanged += OnGameObjectPropertyChanged;
-                        gameObject.ComponentChanged += OnGameObjectComponentChanged;
-                    }
-
-                    if (_initialized && !gameObject.Initialized)
-                        gameObject.Initialize();
+                    CheckComponents(gameObject, ComponentChangeType.Add);
+                    gameObject.PropertyChanged += OnGameObjectPropertyChanged;
+                    gameObject.ComponentChanged += OnGameObjectComponentChanged;
                 }
-                else
-                    AddPrefab(gameObject);
+
+                if (_initialized && !gameObject.Initialized)
+                    gameObject.Initialize();
             }
 
             return canAdd;
-        }
-
-        /// <summary>
-        /// Add a prefab only before the scene is started.
-        /// </summary>
-        /// <param name="prefab"></param>
-        protected void AddPrefab(GameObject prefab)
-        {
-            if (!prefabs.Contains(prefab))
-                prefabs.Add(prefab);
-        }
-
-        protected void RemovePrefab(GameObject prefab)
-        {
-            if (prefabs.Contains(prefab))
-                prefabs.Remove(prefab);
         }
 
         /// <summary>
@@ -293,66 +237,25 @@ namespace C3DE
         /// <param name="type"></param>
         protected void CheckComponent(Component component, ComponentChangeType type)
         {
+            if (type == ComponentChangeType.Update)
+                return;
+
+            var added = type == ComponentChangeType.Add;
+
             if (component is Renderer)
-            {
-                var renderable = component as Renderer;
-
-                if (type == ComponentChangeType.Add)
-                    AddRenderer(renderable);
-
-                else if (type == ComponentChangeType.Remove)
-                    RemoveRenderer(renderable);
-            }
-
-            else if (component is PlanarReflection)
-            {
-                var planar = component as PlanarReflection;
-
-                if (type == ComponentChangeType.Add)
-                    AddPlanarReflection(planar);
-                else if (type == ComponentChangeType.Remove)
-                    RemovePlanarReflection(planar);
-            }
-
-            else if (component is Behaviour)
-            {
-                var script = component as Behaviour;
-
-                if (type == ComponentChangeType.Add)
-                    AddScript(script);
-                else if (type == ComponentChangeType.Remove)
-                    RemoveScript(script);
-            }
-
+                SetComponent((Renderer)component, _renderList, added);
             else if (component is Collider)
-            {
-                var collider = component as Collider;
-
-                if (type == ComponentChangeType.Add)
-                    AddCollider(collider);
-                else if (type == ComponentChangeType.Remove)
-                    RemoveCollider(collider);
-            }
-
-            else if (component is Camera)
-            {
-                var camera = component as Camera;
-
-                if (type == ComponentChangeType.Add && !cameras.Contains(camera))
-                    AddCamera(camera);
-                else if (type == ComponentChangeType.Remove)
-                    RemoveCamera(camera);
-            }
-
+                SetComponent((Collider)component, _colliders, added);
             else if (component is Light)
-            {
-                var light = component as Light;
-
-                if (type == ComponentChangeType.Add)
-                    AddLight(light);
-                else if (type == ComponentChangeType.Remove)
-                    RemoveLight(light);
-            }
+                SetComponent((Light)component, _lights, added);
+            else if (component is Behaviour)
+                SetComponent((Behaviour)component, _scripts, added);
+            else if (component is Camera)
+                SetComponent((Camera)component, _cameras, added);
+            else if (component is PlanarReflection)
+                SetComponent((PlanarReflection)component, _planarReflections, added);
+            else if (component is ReflectionProbe)
+                SetComponent((ReflectionProbe)component, _reflectionProbes, added);
         }
 
         private void OnGameObjectPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -392,130 +295,52 @@ namespace C3DE
 
         #endregion
 
-        #region Add / Get / Remove materials
+        #region Add / Get / Remove
 
         /// <summary>
         /// Add a new material.
         /// </summary>
         /// <param name="material"></param>
-        internal protected void AddMaterial(Material material)
+        internal protected void SetMaterial(Material material, bool added)
         {
-            if (!materials.Contains(material))
+            if (added)
             {
-                materials.Add(material);
+                if (!_materials.Contains(material))
+                {
+                    _materials.Add(material);
 
-                if (Initialized)
-                    material.LoadContent(Application.Content);
+                    if (Initialized)
+                        material.LoadContent(Application.Content);
+                }
             }
-        }
-
-        /// <summary>
-        /// Remove a material.
-        /// </summary>
-        /// <param name="material"></param>
-        internal protected void RemoveMaterial(Material material)
-        {
-            if (materials.Contains(material))
+            else
             {
-                materials.Remove(material);
+                _materials.Remove(material);
                 material.Dispose();
             }
         }
 
-        #endregion
 
-        #region Add/Remove components
-
-        internal protected int AddCamera(Camera camera)
+        private void SetComponent<T>(T component, List<T> list, bool added) where T : Component
         {
-            var index = cameras.IndexOf(camera);
-
-            if (index == -1)
+            if (added)
             {
-                cameras.Add(camera);
-                cameras.Sort();
-                index = cameras.Count - 1;
+                if (!list.Contains(component))
+                {
+                    list.Add(component);
 
-                if (Camera.Main == null)
-                    Camera.Main = camera;
+                    if (component is Camera)
+                    {
+                        var camera = component as Camera;
+                        if (Camera.Main == null)
+                            Camera.Main = camera;
+                    }
+                }
             }
+            else
+                list.Remove(component);
 
-            return index;
-        }
-
-        protected void AddPlanarReflection(PlanarReflection planar)
-        {
-            if (planarReflections.Contains(planar))
-                return;
-
-            planarReflections.Add(planar);
-            planarReflections.Sort();
-        }
-
-        protected void AddRenderer(Renderer renderer)
-        {
-            if (renderList.Contains(renderer))
-                return;
-
-            renderList.Add(renderer);
-            renderList.Sort();
-        }
-
-        protected void AddLight(Light light)
-        {
-            if (lights.Contains(light))
-                return;
-
-            lights.Add(light);
-            lights.Sort();
-        }
-
-        protected void AddCollider(Collider collider)
-        {
-            if (!colliders.Contains(collider))
-                colliders.Add(collider);
-        }
-
-        protected void AddScript(Behaviour script)
-        {
-            if (!scripts.Contains(script))
-                scripts.Add(script);
-        }
-
-        protected void RemoveRenderer(Renderer renderable)
-        {
-            if (renderList.Contains(renderable))
-                renderList.Remove(renderable);
-        }
-
-        protected void RemovePlanarReflection(PlanarReflection planar)
-        {
-            if (planarReflections.Contains(planar))
-                planarReflections.Remove(planar);
-        }
-
-        protected void RemoveScript(Behaviour script)
-        {
-            if (scripts.Contains(script))
-                scripts.Remove(script);
-        }
-
-        protected void RemoveLight(Light light)
-        {
-            if (lights.Contains(light))
-                lights.Remove(light);
-        }
-
-        protected void RemoveCollider(Collider collider)
-        {
-            if (colliders.Contains(collider))
-                colliders.Remove(collider);
-        }
-
-        protected void RemoveCamera(Camera camera)
-        {
-            if (cameras.Contains(camera))
-                cameras.Remove(camera);
+            list.Sort();
         }
 
         #endregion
@@ -553,7 +378,7 @@ namespace C3DE
             for (int i = 0, l = gameObject.Components.Count; i < l; i++)
                 this.DestroyComponent(gameObject.Components[i]);
 
-            gameObjects.Remove(gameObject);
+            _gameObjects.Remove(gameObject);
         }
 
         public void DestroyComponent(Component component)
@@ -572,19 +397,18 @@ namespace C3DE
 
         #region Add/Remove PostProcess
 
-        public void Add(PostProcessPass pass)
+        public void SetPostProcess(PostProcessPass pass, bool added)
         {
-            if (!postProcessPasses.Contains(pass))
+            if (added)
             {
-                postProcessPasses.Add(pass);
-                pass.Initialize(Application.Content);
+                if (!_postProcessPasses.Contains(pass))
+                {
+                    _postProcessPasses.Add(pass);
+                    pass.Initialize(Application.Content);
+                }
             }
-        }
-
-        public void Remove(PostProcessPass pass)
-        {
-            if (postProcessPasses.Contains(pass))
-                postProcessPasses.Remove(pass);
+            else
+                _postProcessPasses.Remove(pass);
         }
 
         #endregion
@@ -595,9 +419,9 @@ namespace C3DE
         {
             if (current != null)
             {
-                for (int i = 0; i < current.gameObjects.Count; i++)
-                    if (current.gameObjects[i].Id == id)
-                        return current.gameObjects[i];
+                for (int i = 0; i < current._gameObjects.Count; i++)
+                    if (current._gameObjects[i].Id == id)
+                        return current._gameObjects[i];
             }
             return null;
         }
@@ -608,9 +432,9 @@ namespace C3DE
 
             if (current != null)
             {
-                for (int i = 0; i < current.gameObjects.Count; i++)
-                    if (current.gameObjects[i].Id == id)
-                        gameObjects.Add(current.gameObjects[i]);
+                for (int i = 0; i < current._gameObjects.Count; i++)
+                    if (current._gameObjects[i].Id == id)
+                        gameObjects.Add(current._gameObjects[i]);
             }
 
             return gameObjects.ToArray();
@@ -622,7 +446,7 @@ namespace C3DE
 
             if (current != null)
             {
-                foreach (GameObject so in current.gameObjects)
+                foreach (GameObject so in current._gameObjects)
                 {
                     var components = so.GetComponents<T>();
                     if (components.Length > 0)
@@ -639,7 +463,7 @@ namespace C3DE
 
             if (current != null)
             {
-                foreach (GameObject so in current.gameObjects)
+                foreach (GameObject so in current._gameObjects)
                 {
                     var components = so.GetComponents<T>();
                     if (components.Length > 0)
@@ -652,7 +476,7 @@ namespace C3DE
 
         public Material GetMaterialByName(string name)
         {
-            foreach (var mat in materials)
+            foreach (var mat in _materials)
                 if (mat.Name == name)
                     return mat;
             return null;
@@ -664,10 +488,10 @@ namespace C3DE
 
         public Collider Collides(Collider collider)
         {
-            for (int i = 0, l = colliders.Count; i < l; i++)
+            for (int i = 0, l = _colliders.Count; i < l; i++)
             {
-                if (collider.Collides(colliders[i]))
-                    return colliders[i];
+                if (collider.Collides(_colliders[i]))
+                    return _colliders[i];
             }
 
             return null;
@@ -681,9 +505,9 @@ namespace C3DE
         {
             float? val;
 
-            for (int i = 0, l = colliders.Count; i < l; i++)
+            for (int i = 0, l = _colliders.Count; i < l; i++)
             {
-                val = colliders[i].IntersectedBy(ref ray);
+                val = _colliders[i].IntersectedBy(ref ray);
 
                 if (val.HasValue && val.Value <= distance)
                     return true;
@@ -734,8 +558,8 @@ namespace C3DE
         {
             var infos = new List<RaycastInfo>();
 
-            for (int i = 0, l = colliders.Count; i < l; i++)
-                TestCollision(ref ray, colliders[i], distance, infos);
+            for (int i = 0, l = _colliders.Count; i < l; i++)
+                TestCollision(ref ray, _colliders[i], distance, infos);
 
             raycastInfos = infos.ToArray();
 

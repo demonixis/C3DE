@@ -199,7 +199,7 @@ namespace C3DE.Editor
         {
             var list = new List<GameObject>();
 
-            foreach (var go in gameObjects)
+            foreach (var go in _gameObjects)
                 if (go.Tag != EditorGame.EditorTag)
                     list.Add(go);
 

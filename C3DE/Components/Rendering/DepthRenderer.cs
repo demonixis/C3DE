@@ -52,7 +52,7 @@ namespace C3DE.Components.Rendering
                     skybox.DrawNoEffect(device);
                 }
 
-                var renderList = scene.renderList;
+                var renderList = scene._renderList;
 
                 for (int i = 0, l = renderList.Count; i < l; i++)
                 {

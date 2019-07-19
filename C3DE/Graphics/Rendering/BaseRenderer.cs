@@ -171,10 +171,10 @@ namespace C3DE.Graphics.Rendering
         /// <param name="scene"></param>
         protected virtual void RenderShadowMaps(Scene scene)
         {
-            foreach (var light in scene.lights)
+            foreach (var light in scene._lights)
             {
                 if (light.ShadowEnabled)
-                    light._shadowGenerator.RenderShadows(_graphicsDevice, scene.renderList, light);
+                    light._shadowGenerator.RenderShadows(_graphicsDevice, scene._renderList, light);
             }
         }
 

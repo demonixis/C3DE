@@ -70,10 +70,10 @@ namespace C3DE.Graphics.Rendering
         /// <param name="camera">The camera to use for render.</param>
         public override void Render(Scene scene)
         {
-            if (scene == null || scene?.cameras.Count == 0)
+            if (scene == null || scene?._cameras.Count == 0)
                 return;
 
-            var camera = scene.cameras[0];
+            var camera = scene._cameras[0];
 
 #if ANDROID
             _graphicsDevice.Clear(camera._clearColor);
@@ -103,7 +103,7 @@ namespace C3DE.Graphics.Rendering
 
                 _VRService.SubmitRenderTargets(_sceneRenderTargets[0], _sceneRenderTargets[1]);
                 DrawVRPreview(0);
-                RenderUI(scene.Behaviours);
+                RenderUI(scene._scripts);
             }
             else
                 RenderSceneForCamera(scene, camera, _sceneRenderTargets[0]);
@@ -119,7 +119,7 @@ namespace C3DE.Graphics.Rendering
             var cameraProjectionMatrix = camera._projectionMatrix;
 
             // Render Planar Reflections.
-            var planarReflections = scene.planarReflections;
+            var planarReflections = scene._planarReflections;
 
             if (planarReflections.Count > 0)
             {
@@ -140,6 +140,18 @@ namespace C3DE.Graphics.Rendering
                 }
             }
 
+            // Render Reflection Probes.
+            var reflectionProbes = scene._reflectionProbes;
+
+            if (reflectionProbes.Count > 0)
+            {
+                // TODO: Render
+                foreach (var probe in reflectionProbes)
+                {
+
+                }
+            }
+
             // Render the scene
             _graphicsDevice.SetRenderTarget(renderTarget);
 
@@ -150,7 +162,7 @@ namespace C3DE.Graphics.Rendering
             _graphicsDevice.Clear(camera._clearColor);
 
             RenderObjects(scene, ref cameraPosition, ref cameraViewMatrix, ref cameraProjectionMatrix);
-            RenderPostProcess(scene.postProcessPasses, renderTarget);
+            RenderPostProcess(scene._postProcessPasses, renderTarget);
 
             if (renderToRT)
                 return;
@@ -158,7 +170,7 @@ namespace C3DE.Graphics.Rendering
             if (!m_VREnabled)
             {
                 RenderToBackBuffer();
-                RenderUI(scene.Behaviours);
+                RenderUI(scene._scripts);
             }
         }
 
@@ -179,7 +191,7 @@ namespace C3DE.Graphics.Rendering
             if (scene.RenderSettings.Skybox.Enabled)
                 scene.RenderSettings.Skybox.Draw(_graphicsDevice, ref cameraPosition, ref cameraViewMatrix, ref cameraProjectionMatrix);
 
-            var renderCount = scene.renderList.Count;
+            var renderCount = scene._renderList.Count;
 
             Renderer renderer;
             Material material;
@@ -188,8 +200,8 @@ namespace C3DE.Graphics.Rendering
             // Pass, Update matrix, material attributes, etc.
             for (var i = 0; i < renderCount; i++)
             {
-                renderer = scene.renderList[i];
-                material = scene.renderList[i].Material;
+                renderer = scene._renderList[i];
+                material = scene._renderList[i].Material;
 
                 if (planarReflection != null)
                 {
@@ -234,7 +246,7 @@ namespace C3DE.Graphics.Rendering
         private void ComputeLightData(Scene scene, int limit)
         {
             // TODO: Put it in a cache.
-            var lights = scene.lights;
+            var lights = scene._lights;
             var lightCount = lights.Count;
 
             lightCount = Math.Min(MaxLightCount, lightCount);

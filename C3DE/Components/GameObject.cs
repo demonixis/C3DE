@@ -466,7 +466,7 @@ namespace C3DE
             }
 
             meshRenderer.Mesh.Build();
-            meshRenderer.Material = material ?? Scene.current?.defaultMaterial;
+            meshRenderer.Material = material ?? Scene.current?._defaultMaterial;
 
             gameObject.AddComponent<SphereCollider>();
             gameObject.Transform.Translate(0, meshRenderer.BoundingSphere.Radius, 0);
@@ -506,7 +506,7 @@ namespace C3DE
 
         public static GameObject Find(string name)
         {
-            var gameObjects = Scene.current.gameObjects;
+            var gameObjects = Scene.current._gameObjects;
             foreach (var gameObject in gameObjects)
                 if (gameObject.Name == name)
                     return gameObject;

@@ -89,7 +89,7 @@ namespace C3DE.Graphics.Rendering
                 }
             }
 
-            var renderCount = scene.renderList.Count;
+            var renderCount = scene._renderList.Count;
 
             Renderer renderer;
             Material material;
@@ -97,8 +97,8 @@ namespace C3DE.Graphics.Rendering
 
             for (var i = 0; i < renderCount; i++)
             {
-                renderer = scene.renderList[i];
-                material = scene.renderList[i].Material;
+                renderer = scene._renderList[i];
+                material = scene._renderList[i].Material;
 
                 // A specific renderer that uses its own draw logic.
                 if (material == null)
@@ -127,7 +127,7 @@ namespace C3DE.Graphics.Rendering
             m_AmbientLight.Color = Scene.current.RenderSettings.AmbientColor;
             m_AmbientLight.RenderDeferred(m_ColorTarget, m_NormalTarget, m_DepthTarget, camera);
 
-            foreach (var light in scene.lights)
+            foreach (var light in scene._lights)
                 light.RenderDeferred(m_ColorTarget, m_NormalTarget, m_DepthTarget, camera);
         }
 
@@ -160,22 +160,22 @@ namespace C3DE.Graphics.Rendering
                     m_QuadRenderer.RenderFullscreenQuad();
                 }
 
-                RenderPostProcess(scene.postProcessPasses, _sceneRenderTargets[eye]);
+                RenderPostProcess(scene._postProcessPasses, _sceneRenderTargets[eye]);
 
                 if (!m_VREnabled)
                 {
                     RenderToBackBuffer();
-                    RenderUI(scene.Behaviours);
+                    RenderUI(scene._scripts);
                 }
             }
         }
 
         public override void Render(Scene scene)
         {
-            if (scene == null || scene?.cameras.Count == 0)
+            if (scene == null || scene?._cameras.Count == 0)
                 return;
 
-            var camera = scene.cameras[0];
+            var camera = scene._cameras[0];
 
             RebuildRenderTargets();
             RenderShadowMaps(scene);
@@ -196,7 +196,7 @@ namespace C3DE.Graphics.Rendering
 
                 _VRService.SubmitRenderTargets(_sceneRenderTargets[0], _sceneRenderTargets[1]);
                 DrawVRPreview(0);
-                RenderUI(scene.Behaviours);
+                RenderUI(scene._scripts);
             }
             else
                 RenderSceneForCamera(scene, camera, 0);

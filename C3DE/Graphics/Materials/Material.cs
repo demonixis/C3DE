@@ -34,7 +34,7 @@ namespace C3DE.Graphics.Materials
             Offset = Vector2.Zero;
             _diffuseColor = Color.White.ToVector3();
             _hasAlpha = false;
-            Scene.current?.AddMaterial(this);
+            Scene.current?.SetMaterial(this, true);
         }
 
         public virtual void LoadContent(ContentManager content)
