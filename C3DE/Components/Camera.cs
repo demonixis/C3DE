@@ -53,12 +53,13 @@ namespace C3DE.Components
 
         public float FieldOfView
         {
-            get => _fieldOfView;
+            get => MathHelper.ToDegrees(_fieldOfView);
             set
             {
-                if (_fieldOfView != value)
+                var rad = MathHelper.ToRadians(value);
+                if (_fieldOfView != rad)
                 {
-                    _fieldOfView = value;
+                    _fieldOfView = rad;
                     _needProjectionUpdate = true;
                 }
             }

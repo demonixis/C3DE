@@ -14,6 +14,12 @@ namespace C3DE.Demo.Scenes
 {
     public class SimpleDemo : Scene
     {
+        protected static Color[] ValidColors = new[]
+        {
+            Color.Red, Color.Green, Color.Blue,
+            Color.Purple, Color.Cyan, Color.Yellow
+        };
+
         protected Camera _camera;
         protected Light _directionalLight;
         protected ControllerSwitcher _controllerSwitcher;
@@ -83,58 +89,56 @@ namespace C3DE.Demo.Scenes
             _controllerSwitcher.SetControllerActive(type);
         }
 
-        public void AddLightGroundTest()
+        public void AddLightGroundTest(float range = 50, int lightsCircle = 6)
         {
-            SpawnRadialLights(1, 0, 8);
-            SpawnRadialLights(5, 0, 8);
-            SpawnRadialLights(10, 0, 8);
-            SpawnRadialLights(15, 0, 8);
-            SpawnRadialLights(20, 0, 8);
+            var count = (int)(range / 10);
+
+            for (var i = 0; i < count; i++)
+                SpawnRadialLights((count + 1) * i, 0, lightsCircle);
         }
 
         public void SpawnRadialLights(float radius, float y, int spawnCount, float lightRadius = 5, float intensity = 1)
         {
-            var colors = new[]
-            {
-                Color.Red, Color.Green, Color.Blue,
-                Color.Purple, Color.Cyan, Color.Yellow
-            };
-
             Color color;
-            GameObject lightGo;
-            Light light;
-            MeshRenderer ligthSphere;
+            Vector3 position;
 
             for (var i = 0; i < spawnCount; i++)
             {
                 var angle = i * MathHelper.TwoPi / 8.0f;
 
-                color = colors[RandomHelper.Range(0, colors.Length)];
+                color = ValidColors[RandomHelper.Range(0, ValidColors.Length)];
+                position = new Vector3((float)Math.Cos(angle) * radius, y, (float)Math.Sin(angle) * radius);
 
-                lightGo = GameObjectFactory.CreateLight(LightType.Point, color, 1.0f, 0);
-                lightGo.Transform.LocalRotation = new Vector3(0.0f, 0.5f, 0);
-                lightGo.Transform.LocalPosition = new Vector3((float)Math.Cos(angle) * radius, y, (float)Math.Sin(angle) * radius);
-
-                light = lightGo.GetComponent<Light>();
-                light.Radius = lightRadius;
-                light.Intensity = intensity;
-                light.ShadowEnabled = false;
-
-                ligthSphere = lightGo.AddComponent<MeshRenderer>();
-                ligthSphere.Mesh = new SphereMesh(0.15f, 16);
-                ligthSphere.Mesh.Build();
-                ligthSphere.CastShadow = true;
-                ligthSphere.ReceiveShadow = false;
-
-                ligthSphere.Material = new UnlitMaterial()
-                {
-                    DiffuseColor = color
-                };
-
-                ligthSphere.AddComponent<LightMover>();
-                ligthSphere.AddComponent<LightSwitcher>();
-                ligthSphere.AddComponent<SinMovement>();
+                SpawnLight(position, color, lightRadius, intensity, true);
             }
+        }
+
+        protected Light SpawnLight(Vector3 position, Color color, float radius, float intensity, bool sinMovement)
+        {
+            var lightGo = GameObjectFactory.CreateLight(LightType.Point, color, 1.0f, 0);
+            lightGo.Transform.LocalRotation = new Vector3(0.0f, 0.5f, 0);
+            lightGo.Transform.LocalPosition = position;
+
+            var light = lightGo.GetComponent<Light>();
+            light.Radius = radius;
+            light.Intensity = intensity;
+            light.ShadowEnabled = false;
+
+            var ligthSphere = lightGo.AddComponent<MeshRenderer>();
+            ligthSphere.Mesh = new SphereMesh(0.15f, 16);
+            ligthSphere.Mesh.Build();
+            ligthSphere.CastShadow = true;
+            ligthSphere.ReceiveShadow = false;
+
+            ligthSphere.Material = new UnlitMaterial()
+            {
+                DiffuseColor = color
+            };
+
+            if (sinMovement)
+                ligthSphere.AddComponent<SinMovement>();
+
+            return light;
         }
     }
 }

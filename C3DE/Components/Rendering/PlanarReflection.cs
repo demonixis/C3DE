@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace C3DE.Components.Rendering
 {
-    public class PlanarReflection : Behaviour
+    public class PlanarReflection : Component
     {
         internal RenderTarget2D _reflectionRT;
         internal Matrix _reflectionViewMatrix;

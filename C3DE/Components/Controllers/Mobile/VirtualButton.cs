@@ -8,7 +8,6 @@ namespace C3DE.Components.Controllers.Mobile
     {
         private Texture2D _buttonTexture;
         private Rectangle _buttonRect;
-        private bool _enabled;
         private int _i;
         private bool _exitLoop;
         private bool _lastState;

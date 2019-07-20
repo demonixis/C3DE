@@ -126,10 +126,10 @@ namespace C3DE.Components.Lighting
         // Need to be changed quickly !
         public void Update(ref BoundingSphere sphere)
         {
-            Vector3 dir = sphere.Center - _gameObject.Transform.LocalPosition;
+            Vector3 dir = sphere.Center - _gameObject.Transform.Position;
             dir.Normalize();
 
-            _viewMatrix = Matrix.CreateLookAt(_transform.LocalPosition, sphere.Center, Vector3.Up);
+            _viewMatrix = Matrix.CreateLookAt(_transform.Position, sphere.Center, Vector3.Up);
             float size = sphere.Radius;
 
             float dist = Vector3.Distance(_transform.LocalPosition, sphere.Center);

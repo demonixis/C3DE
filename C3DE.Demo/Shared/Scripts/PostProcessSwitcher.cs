@@ -75,10 +75,10 @@ namespace C3DE.Demo.Scripts
 
             _backgroundTexture = TextureFactory.CreateColor(Color.CornflowerBlue, 1, 1);
 
-            var renderSettings = Scene.current.RenderSettings;
+           /* var renderSettings = Scene.current.RenderSettings;
             renderSettings.FogDensity = 0.0085f;
             renderSettings.FogMode = FogMode.Linear;
-            renderSettings.Skybox.OverrideSkyboxFog(FogMode.Exp2, 0.05f, 0, 0);
+            renderSettings.Skybox.OverrideSkyboxFog(FogMode.Exp2, 0.05f, 0, 0);*/
         }
 
         public override void Update()

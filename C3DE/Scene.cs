@@ -248,14 +248,14 @@ namespace C3DE
                 SetComponent((Collider)component, _colliders, added);
             else if (component is Light)
                 SetComponent((Light)component, _lights, added);
-            else if (component is Behaviour)
-                SetComponent((Behaviour)component, _scripts, added);
             else if (component is Camera)
                 SetComponent((Camera)component, _cameras, added);
             else if (component is PlanarReflection)
                 SetComponent((PlanarReflection)component, _planarReflections, added);
             else if (component is ReflectionProbe)
                 SetComponent((ReflectionProbe)component, _reflectionProbes, added);
+            else if (component is Behaviour)
+                SetComponent((Behaviour)component, _scripts, added);
         }
 
         private void OnGameObjectPropertyChanged(object sender, PropertyChangedEventArgs e)

@@ -39,7 +39,6 @@ namespace C3DE.Components.Rendering
         private BlendState ColorWriteDisable;
         private GraphicsDevice _graphicsDevice;
         private SpriteBatch _spriteBatch;
-        private Camera _camera;
         private Vector2 _lightPosition;
         private bool _lightBehindCamera;
         private BasicEffect _effect;

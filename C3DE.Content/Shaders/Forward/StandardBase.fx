@@ -3,7 +3,7 @@
 
 // Constants
 #if SM4
-#define MAX_LIGHT_COUNT 64
+#define MAX_LIGHT_COUNT 128
 #else
 #define MAX_LIGHT_COUNT 8
 #endif
@@ -141,7 +141,7 @@ float3 StandardPixelShader(float4 worldPosition, float3 normal, float specularTe
 		float3 directionToCamera = normalize(EyePosition - worldPosition.xyz);
 		float specular = specularTerm * pow(saturate(dot(reflectionVector, directionToCamera)), SpecularPower) * attenuation;
 
-		Lo += selfShadow * (diffuseIntensity * attenuation * LightColor[i] * LightData[i].y + specular);
+		Lo += selfShadow * (diffuseIntensity * attenuation * LightColor[i] * LightData[i].y) + specular;
 	}
 
 	if (reflection.a > 0)

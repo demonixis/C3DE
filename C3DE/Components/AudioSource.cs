@@ -84,9 +84,9 @@ namespace C3DE.Components
 
         public bool PlayOnAwake { get; set; } = false;
 
-        public SoundEffect AudioClip
+        public SoundEffect Clip
         {
-            get { return _soundEffect; }
+            get => _soundEffect;
             set
             {
                 if (_soundEffect == value)

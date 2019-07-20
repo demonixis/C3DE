@@ -9,8 +9,8 @@ namespace C3DE.Demo
 {
     public static class DemoGame
     {
-        public const int ScreenWidth = 640;
-        public const int ScreenHeight = 480;
+        public const int ScreenWidth = 1280;
+        public const int ScreenHeight = 800;
         public const int UIWidth = 1280;
         public const int UIHeight = 800;
 
@@ -92,7 +92,7 @@ namespace C3DE.Demo
                 new ProceduralTerrainWater(),
                 new ProceduralTerrainLava(),
                 new LightingDemo(),
-                new PhysicsDemo(),
+                new FPSDemo(),
                 new SponzaDemo(),
                 new GUIDemo()
             }, 0);

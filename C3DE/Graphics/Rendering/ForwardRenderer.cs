@@ -19,7 +19,7 @@ namespace C3DE.Graphics.Rendering
     public class ForwardRenderer : BaseRenderer
     {
 #if WINDOWS
-        public const int MaxLightCount = 64;
+        public const int MaxLightCount = 128;
 #else
         public const int MaxLightCount = 8;
 #endif

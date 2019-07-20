@@ -2,7 +2,6 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
-using System.Collections.Generic;
 
 namespace C3DE.Components.Rendering
 {
@@ -82,40 +81,33 @@ namespace C3DE.Components.Rendering
             UpdateColliders();
         }
 
-        public override void Draw(GraphicsDevice device)
+        public override void Draw(GraphicsDevice graphics)
         {
-            var size = _transforms?.Length ?? 0;
+            var size = _instances?.Length ?? 0;
 
             if (size > 1)
             {
                 for (var i = 0; i < size; i++)
                     _instances[i] = _transforms[i]._worldMatrix;
 
-                DrawInstanced(device, _instances);
+                if ((_instanceVertexBuffer == null) || (_instances.Length != _instanceVertexBuffer.VertexCount))
+                {
+                    _instanceVertexBuffer?.Dispose();
+                    _instanceVertexBuffer = new DynamicVertexBuffer(graphics, instanceVertexDeclaration, _instances.Length, BufferUsage.WriteOnly);
+                }
+
+                _instanceVertexBuffer.SetData(_instances, 0, _instances.Length, SetDataOptions.Discard);
+
+                graphics.SetVertexBuffers(new VertexBufferBinding(_mesh.VertexBuffer, 0, 0), new VertexBufferBinding(_instanceVertexBuffer, 0, 1));
+                graphics.Indices = _mesh.IndexBuffer;
+                graphics.DrawInstancedPrimitives(PrimitiveType.TriangleList, 0, 0, _mesh.Indices.Length / 3, _instances.Length);
             }
             else
             {
-                device.SetVertexBuffer(_mesh.VertexBuffer);
-                device.Indices = _mesh.IndexBuffer;
-                device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, _mesh.IndexBuffer.IndexCount / 3);
+                graphics.SetVertexBuffer(_mesh.VertexBuffer);
+                graphics.Indices = _mesh.IndexBuffer;
+                graphics.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, _mesh.IndexBuffer.IndexCount / 3);
             }
-        }
-
-        public void DrawInstanced(GraphicsDevice graphics, Matrix[] instances)
-        {
-            if (instances.Length == 0)
-                return;
-
-            if ((_instanceVertexBuffer == null) || (instances.Length != _instanceVertexBuffer.VertexCount))
-            {
-                _instanceVertexBuffer?.Dispose();
-                _instanceVertexBuffer = new DynamicVertexBuffer(graphics, instanceVertexDeclaration, instances.Length, BufferUsage.WriteOnly);
-            }
-
-            _instanceVertexBuffer.SetData(instances, 0, instances.Length, SetDataOptions.Discard);
-
-            graphics.SetVertexBuffers(new VertexBufferBinding(_mesh.VertexBuffer, 0, 0), new VertexBufferBinding(_instanceVertexBuffer, 0, 1));
-            graphics.Indices = _mesh.IndexBuffer;
         }
 
         public void AddInstance(MeshRenderer renderer)

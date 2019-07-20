@@ -50,7 +50,7 @@
     <Compile Include="Scenes\PBR\SimplePBRDemo.cs" />
     <Compile Include="Scenes\SimpleDemo.cs" />
     <Compile Include="Scenes\GUIDemo.cs" />
-    <Compile Include="Scenes\PhysicsDemo.cs" />
+    <Compile Include="Scenes\FPSDemo.cs" />
     <Compile Include="Scenes\PBR\LightingPBRDemo.cs" />
     <Compile Include="Scenes\ProceduralTerrainBase.cs" />
     <Compile Include="Scenes\ProceduralTerrainLava.cs" />
@@ -62,6 +62,7 @@
     <Compile Include="Scripts\DeferredDebuger.cs" />
     <Compile Include="Scripts\DemoBehaviour.cs" />
     <Compile Include="Scripts\DemoSceneMenu.cs" />
+    <Compile Include="Scripts\Headbob.cs" />
     <Compile Include="Scripts\HexaGridBuilder.cs" />
     <Compile Include="Scripts\LightMover.cs" />
     <Compile Include="Scripts\LightMoverKeys.cs" />
@@ -78,6 +79,7 @@
     <Compile Include="Scripts\ShadowMapViewer.cs" />
     <Compile Include="Scripts\SideMenu.cs" />
     <Compile Include="Scripts\SimplePath.cs" />
+    <Compile Include="Scripts\SinIntensity.cs" />
     <Compile Include="Scripts\SinMovement.cs" />
     <Compile Include="Scripts\UIWidgetDemo.cs" />
     <Compile Include="Scripts\VRMovement.cs" />

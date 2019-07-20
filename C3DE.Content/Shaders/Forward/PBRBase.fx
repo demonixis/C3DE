@@ -112,6 +112,7 @@ float3 PBRPixelShader(float4 worldPosition, float3 normal, float3 albedo, float3
 		{
 			float distance = length(LightPosition[i] - worldPosition.xyz);
 			float attenuation = 1.0 / distance * distance;
+			//attenuation = 1.0 / LightData[i].z;
 			radiance = LightColor[i] * attenuation * LightData[i].y;
 		}
 
