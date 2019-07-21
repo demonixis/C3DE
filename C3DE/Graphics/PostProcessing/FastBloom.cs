@@ -7,9 +7,9 @@ namespace C3DE.Graphics.PostProcessing
 {
     public class FastBloom : PostProcessPass
     {
-        private Effect m_Effect;
-        private RenderTarget2D m_SceneRenderTarget;
-        private QuadRenderer m_QuadRenderer;
+        private Effect _effect;
+        private RenderTarget2D _sceneRenderTarget;
+        private QuadRenderer _quadRenderer;
 
         public enum Resolution
         {
@@ -36,27 +36,27 @@ namespace C3DE.Graphics.PostProcessing
 
         public override void Initialize(ContentManager content)
         {
-            m_Effect = content.Load<Effect>("Shaders/PostProcessing/FastBloom");
-            m_SceneRenderTarget = GetRenderTarget();
-            m_QuadRenderer = new QuadRenderer(m_GraphicsDevice);
+            _effect = content.Load<Effect>("Shaders/PostProcessing/FastBloom");
+            _sceneRenderTarget = GetRenderTarget();
+            _quadRenderer = new QuadRenderer(_graphics);
         }
 
         protected override void OnVRChanged(VRService service)
         {
             base.OnVRChanged(service);
-            m_SceneRenderTarget.Dispose();
-            m_SceneRenderTarget = GetRenderTarget();
+            _sceneRenderTarget.Dispose();
+            _sceneRenderTarget = GetRenderTarget();
         }
 
         public override void Draw(SpriteBatch spriteBatch, RenderTarget2D source)
         {
-            m_GraphicsDevice.SetRenderTarget(m_SceneRenderTarget);
-            m_GraphicsDevice.SamplerStates[1] = SamplerState.LinearClamp;
+            _graphics.SetRenderTarget(_sceneRenderTarget);
+            _graphics.SamplerStates[1] = SamplerState.LinearClamp;
 
             int divider = resolution == Resolution.Low ? 4 : 2;
             float widthMod = resolution == Resolution.Low ? 0.5f : 1.0f;
 
-            m_Effect.Parameters["Parameter"].SetValue(new Vector4(blurSize * widthMod, 0.0f, threshold, intensity));
+            _effect.Parameters["Parameter"].SetValue(new Vector4(blurSize * widthMod, 0.0f, threshold, intensity));
             //source.filterMode = FilterMode.Bilinear;
 
             var rtW = source.Width / divider;
@@ -71,7 +71,7 @@ namespace C3DE.Graphics.PostProcessing
 
             for (int i = 0; i < blurIterations; i++)
             {
-                m_Effect.Parameters["Parameter"].SetValue(new Vector4(blurSize * widthMod + (i * 1.0f), 0.0f, threshold, intensity));
+                _effect.Parameters["Parameter"].SetValue(new Vector4(blurSize * widthMod + (i * 1.0f), 0.0f, threshold, intensity));
 
                 // vertical blur
                 var rt2 = RenderTexture.GetTemporary(rtW, rtH);
@@ -88,31 +88,31 @@ namespace C3DE.Graphics.PostProcessing
                 rt = rt2;
             }
 
-            m_Effect.Parameters["BloomTexture"].SetValue(rt);
+            _effect.Parameters["BloomTexture"].SetValue(rt);
 
-            Blit(source, m_SceneRenderTarget, 0);
+            Blit(source, _sceneRenderTarget, 0);
 
             RenderTexture.ReleaseTemporary(rt);
             RenderTexture.ReleaseAll();
 
-            DrawFullscreenQuad(spriteBatch, source, m_SceneRenderTarget, m_Effect);
+            DrawFullscreenQuad(spriteBatch, source, _sceneRenderTarget, _effect);
 
-            m_GraphicsDevice.SetRenderTarget(null);
-            m_GraphicsDevice.Textures[1] = m_SceneRenderTarget;
+            _graphics.SetRenderTarget(null);
+            _graphics.Textures[1] = _sceneRenderTarget;
 
-            m_GraphicsDevice.SetRenderTarget(source);
-            DrawFullscreenQuad(spriteBatch, m_SceneRenderTarget, m_SceneRenderTarget.Width, m_SceneRenderTarget.Height, null);
+            _graphics.SetRenderTarget(source);
+            DrawFullscreenQuad(spriteBatch, _sceneRenderTarget, _sceneRenderTarget.Width, _sceneRenderTarget.Height, null);
         }
 
         private void Blit(RenderTarget2D source, RenderTarget2D dest, int pass)
         {
             var textureSamplerTexelSize = new Vector4(1.0f / (float)source.Width, 1.0f / (float)source.Height, source.Width, source.Height);
 
-            m_GraphicsDevice.SetRenderTarget(dest);
-            m_Effect.Parameters["MainTexture"].SetValue(source);
-            m_Effect.Parameters["MainTextureTexelSize"].SetValue(textureSamplerTexelSize);
-            m_Effect.CurrentTechnique.Passes[pass].Apply();
-            m_QuadRenderer.RenderFullscreenQuad();
+            _graphics.SetRenderTarget(dest);
+            _effect.Parameters["MainTexture"].SetValue(source);
+            _effect.Parameters["MainTextureTexelSize"].SetValue(textureSamplerTexelSize);
+            _effect.CurrentTechnique.Passes[pass].Apply();
+            _quadRenderer.RenderFullscreenQuad();
         }
     }
 }

@@ -15,7 +15,7 @@ namespace C3DE.Demo.Scenes
             base.Initialize();
 
             var content = Application.Content;
-
+            
             // Finally a terrain
             var terrainMaterial = new StandardTerrainMaterial();
             terrainMaterial.MainTexture = content.Load<Texture2D>("Textures/Terrain/Ground/Ground03_col");
@@ -28,9 +28,6 @@ namespace C3DE.Demo.Scenes
             terrainMaterial.RockNormalMap = content.Load<Texture2D>("Textures/Terrain/Rock/Rock12_nrm");
 
             var terrainGo = GameObjectFactory.CreateTerrain();
-
-            _scene.Add(terrainGo);
-
             var terrain = terrainGo.GetComponent<Terrain>();
             terrain.LoadHeightmap("Textures/heightmap");
             terrain.Renderer.Material = terrainMaterial;

@@ -40,17 +40,17 @@ namespace C3DE.Graphics.PostProcessing
 
         public override void Draw(SpriteBatch spriteBatch, RenderTarget2D sceneRT)
         {
-            m_GraphicsDevice.SetRenderTarget(m_SceneRenderTarget);
-            m_GraphicsDevice.SamplerStates[1] = SamplerState.LinearClamp;
+            _graphics.SetRenderTarget(m_SceneRenderTarget);
+            _graphics.SamplerStates[1] = SamplerState.LinearClamp;
 
             m_Effect.Parameters["ScreenSize"].SetValue(m_ScreenSize);
             m_Effect.Parameters["Kernel"].SetValue(Kernel);
 
             DrawFullscreenQuad(spriteBatch, sceneRT, m_SceneRenderTarget, m_Effect);
 
-            m_GraphicsDevice.SetRenderTarget(null);
-            m_GraphicsDevice.Textures[1] = m_SceneRenderTarget;
-            m_GraphicsDevice.SetRenderTarget(sceneRT);
+            _graphics.SetRenderTarget(null);
+            _graphics.Textures[1] = m_SceneRenderTarget;
+            _graphics.SetRenderTarget(sceneRT);
 
             DrawFullscreenQuad(spriteBatch, m_SceneRenderTarget, m_SceneRenderTarget.Width, m_SceneRenderTarget.Height, null);
         }

@@ -24,11 +24,12 @@ namespace C3DE.Graphics.Rendering
         public const int MaxLightCount = 8;
 #endif
 
-        private DepthRenderer _depthRenderer;
+        private RenderTarget2D _depthRT;
+        private Effect _depthEffect;
         private LightData _lightData;
         private ShadowData _shadowData;
 
-        public DepthRenderer DepthRenderer => _depthRenderer;
+        public bool DepthPass { get; set; } = true;
 
         public ForwardRenderer(GraphicsDevice graphics)
            : base(graphics)
@@ -39,7 +40,10 @@ namespace C3DE.Graphics.Rendering
         {
             base.Initialize(content);
             RebuildRenderTargets();
-            _depthRenderer = new DepthRenderer();
+
+            var pp = _graphicsDevice.PresentationParameters;
+            _depthRT = new RenderTarget2D(_graphicsDevice, pp.BackBufferWidth, pp.BackBufferHeight, false, SurfaceFormat.Color, DepthFormat.Depth24);
+            _depthEffect = content.Load<Effect>("Shaders/Depth");
         }
 
         public override void Dispose(bool disposing)
@@ -53,10 +57,7 @@ namespace C3DE.Graphics.Rendering
             }
         }
 
-        public override RenderTarget2D GetDepthBuffer()
-        {
-            return _depthRenderer._depthRT;
-        }
+        public override RenderTarget2D GetDepthBuffer() => _depthRT;
 
         /// <summary>
         /// Renders the scene with the specified camera.
@@ -111,12 +112,34 @@ namespace C3DE.Graphics.Rendering
 
         protected virtual void RenderSceneForCamera(Scene scene, Camera camera, RenderTarget2D renderTarget)
         {
-            if (_depthRenderer.Enabled)
-                _depthRenderer.Draw(_graphicsDevice);
-
             var cameraPosition = camera._transform.Position;
             var cameraViewMatrix = camera._viewMatrix;
             var cameraProjectionMatrix = camera._projectionMatrix;
+
+            if (DepthPass)
+            {
+                var previousRTs = _graphicsDevice.GetRenderTargets();
+
+                _graphicsDevice.SetRenderTarget(_depthRT);
+                _graphicsDevice.Clear(Color.Transparent);
+
+                _depthEffect.Parameters["View"].SetValue(cameraViewMatrix);
+                _depthEffect.Parameters["Projection"].SetValue(cameraProjectionMatrix);
+
+                var renderList = scene._renderList;
+
+                for (int i = 0, l = renderList.Count; i < l; i++)
+                {
+                    if (renderList[i] is LensFlare)
+                        continue;
+
+                    _depthEffect.Parameters["World"].SetValue(renderList[i].Transform._worldMatrix);
+                    _depthEffect.CurrentTechnique.Passes[0].Apply();
+                    renderList[i].Draw(_graphicsDevice);
+                }
+
+                _graphicsDevice.SetRenderTargets(previousRTs);
+            }
 
             // Render Planar Reflections.
             var planarReflections = scene._planarReflections;

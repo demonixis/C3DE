@@ -38,15 +38,6 @@ namespace C3DE.Demo.Scenes
             terrain.Renderer.ReceiveShadow = false;
             terrain.Renderer.CastShadow = false;
 
-            // Create the planar reflection.
-            var planarGo = new GameObject("PlanarReflection");
-            planarGo.Transform.Translate(0, 20, 0);
-            var planar = planarGo.AddComponent<PlanarReflection>();
-            planar.Initialize(Application.GraphicsDevice, 512);
-            planar.AddComponent<ReflectionPlanarViewer>();
-
-            terrain.Renderer.PlanarReflection = planar;
-
             // Model
             var model = Application.Content.Load<Model>("Models/Quandtum/Quandtum");
             var mesh = model.ToMeshRenderers(this);

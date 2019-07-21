@@ -33,8 +33,8 @@ namespace C3DE.Graphics.PostProcessing
             {
                 var renderer = Application.Engine.Renderer;
                 var forward = renderer as ForwardRenderer;
-                if (forward != null)
-                    return forward.DepthRenderer.ExcludeSkybox;
+                //if (forward != null)
+                    //return forward.DepthRenderer.ExcludeSkybox;
 
                 return true;
             }
@@ -42,8 +42,8 @@ namespace C3DE.Graphics.PostProcessing
             {
                 var renderer = Application.Engine.Renderer;
                 var forward = renderer as ForwardRenderer;
-                if (forward != null)
-                    forward.DepthRenderer.ExcludeSkybox = value;
+                //if (forward != null)
+                    //forward.DepthRenderer.ExcludeSkybox = value;
             }
         }
 
@@ -66,20 +66,8 @@ namespace C3DE.Graphics.PostProcessing
             m_SceneRenderTarget = GetRenderTarget();
 
             var renderer = Application.Engine.Renderer;
-            
-            if (renderer is DeferredRenderer)
-            {
-                var forward = (DeferredRenderer)renderer;
-                m_DepthBuffer = forward.DepthBuffer;
-            }
-            else
-            {
-                var forward = (ForwardRenderer)renderer;
-                forward.DepthRenderer.Enabled = true;
-                m_DepthBuffer = forward.DepthRenderer._depthRT;
-            }
             m_DepthBuffer = renderer.GetDepthBuffer(); 
-            m_QuadRenderer = new QuadRenderer(m_GraphicsDevice);
+            m_QuadRenderer = new QuadRenderer(_graphics);
         }
 
         public override void Draw(SpriteBatch spriteBatch, RenderTarget2D renderTarget)
@@ -87,8 +75,8 @@ namespace C3DE.Graphics.PostProcessing
             if (Mode == FogMode.None)
                 return;
 
-            m_GraphicsDevice.SetRenderTarget(m_SceneRenderTarget);
-            m_GraphicsDevice.SamplerStates[1] = SamplerState.LinearClamp;
+            _graphics.SetRenderTarget(m_SceneRenderTarget);
+            _graphics.SamplerStates[1] = SamplerState.LinearClamp;
 
             var camera = Camera.Main;
             var cameraTransform = camera._transform;
@@ -137,11 +125,11 @@ namespace C3DE.Graphics.PostProcessing
             m_Effect.CurrentTechnique.Passes[passIndex].Apply();
             m_QuadRenderer.RenderFullscreenQuad();
 
-            m_GraphicsDevice.SetRenderTarget(null);
-            m_GraphicsDevice.Textures[1] = m_SceneRenderTarget;
+            _graphics.SetRenderTarget(null);
+            _graphics.Textures[1] = m_SceneRenderTarget;
 
-            var viewport = m_GraphicsDevice.Viewport;
-            m_GraphicsDevice.SetRenderTarget(renderTarget);
+            var viewport = _graphics.Viewport;
+            _graphics.SetRenderTarget(renderTarget);
 
             DrawFullscreenQuad(spriteBatch, m_SceneRenderTarget, m_SceneRenderTarget.Width, m_SceneRenderTarget.Height, null);
         }

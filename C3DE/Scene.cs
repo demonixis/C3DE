@@ -411,6 +411,17 @@ namespace C3DE
                 _postProcessPasses.Remove(pass);
         }
 
+        public T GetEffect<T>() where T : PostProcessPass
+        {
+            foreach (var effect in _postProcessPasses)
+            {
+                if (effect.GetType() == typeof(T))
+                    return (T)effect;
+            }
+
+            return null;
+        }
+
         #endregion
 
         #region Search methods

@@ -8,7 +8,7 @@ namespace C3DE.Graphics.PostProcessing
 {
     public abstract class PostProcessPass : IComparable, IDisposable
     {
-        protected GraphicsDevice m_GraphicsDevice;
+        protected GraphicsDevice _graphics;
         protected int m_Order;
         protected bool m_VREnabled;
 
@@ -16,7 +16,7 @@ namespace C3DE.Graphics.PostProcessing
 
         public PostProcessPass(GraphicsDevice graphics)
         {
-            m_GraphicsDevice = graphics;
+            _graphics = graphics;
             VRManager.VRServiceChanged += OnVRChanged;
         }
 
@@ -34,7 +34,7 @@ namespace C3DE.Graphics.PostProcessing
 
         protected RenderTarget2D GetRenderTarget(RenderTargetUsage targetUsage = RenderTargetUsage.DiscardContents)
         {
-            var pp = m_GraphicsDevice.PresentationParameters;
+            var pp = _graphics.PresentationParameters;
             var width = pp.BackBufferWidth;
             var height = pp.BackBufferHeight;
             var format = pp.BackBufferFormat;
@@ -51,7 +51,7 @@ namespace C3DE.Graphics.PostProcessing
 
         protected void DrawFullscreenQuad(SpriteBatch spriteBatch, Texture2D texture, RenderTarget2D renderTarget, Effect effect)
         {
-            m_GraphicsDevice.SetRenderTarget(renderTarget);
+            _graphics.SetRenderTarget(renderTarget);
             DrawFullscreenQuad(spriteBatch, texture, renderTarget.Width, renderTarget.Height, effect);
         }
 

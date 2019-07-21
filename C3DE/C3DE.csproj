@@ -70,6 +70,7 @@
     <Compile Include="Graphics\Materials\PBRTerrainAtlasedMaterial.cs" />
     <Compile Include="Graphics\Materials\PBRWaterMaterial.cs" />
     <Compile Include="Graphics\MeshUtils.cs" />
+    <Compile Include="Graphics\PostProcessing\SSAO.cs" />
     <Compile Include="Graphics\Rendering\LightData.cs" />
     <Compile Include="Graphics\Rendering\VertexPositionNormalTextureTB.cs" />
     <Compile Include="Graphics\Shaders\Deferred\DeferredLava.cs" />
@@ -217,6 +218,10 @@
       <HintPath>..\packages\Jitter.0.1.7.0\lib\NET40\Jitter.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\Deps\OculusRift.dll">

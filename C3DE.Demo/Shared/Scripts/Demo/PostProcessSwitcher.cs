@@ -34,6 +34,7 @@ namespace C3DE.Demo.Scripts
             var graphics = Application.GraphicsDevice;
 
             // Setup PostProcess.
+            AddPostProcess(new SSAO(graphics));
             AddPostProcess(new FastPostProcessing(graphics));
             AddPostProcess(new FastBloom(graphics));
             AddPostProcess(new Tonemapping(graphics));
@@ -50,6 +51,7 @@ namespace C3DE.Demo.Scripts
             // Setup UI
             var titles = new List<string>(new []
             {
+                "SSAO",
                 "Fast PP", "Bloom", "Tonemapping", "C64 Filter",
                 "CGA Filter", "Convolution", "Film",
                 "GrayScale", "Average Color", "Motion Blur",

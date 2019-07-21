@@ -255,6 +255,12 @@
 /processorParam:DebugMode=Auto
 /build:Shaders/PostProcessing/SimpleBlur.fx
 
+#begin Shaders/PostProcessing/SSAO.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Shaders/PostProcessing/SSAO.fx
+
 #begin Shaders/PostProcessing/Tonemapping.fx
 /importer:EffectImporter
 /processor:EffectProcessor
