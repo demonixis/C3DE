@@ -91,6 +91,30 @@
 /processorParam:DebugMode=Auto
 /build:Shaders/Depth.fx
 
+#begin Shaders/Forward/OpenGL/Standard.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Shaders/Forward/OpenGL/Standard.fx
+
+#begin Shaders/Forward/OpenGL/StandardLava.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Shaders/Forward/OpenGL/StandardLava.fx
+
+#begin Shaders/Forward/OpenGL/StandardTerrain.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Shaders/Forward/OpenGL/StandardTerrain.fx
+
+#begin Shaders/Forward/OpenGL/StandardWater.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Shaders/Forward/OpenGL/StandardWater.fx
+
 #begin Shaders/Forward/PBRLava.fx
 /importer:EffectImporter
 /processor:EffectProcessor
