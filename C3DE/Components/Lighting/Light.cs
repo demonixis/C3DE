@@ -204,10 +204,10 @@ namespace C3DE.Components.Lighting
             if (light == null)
                 return -1;
 
-            if (Type == light.Type)
-                return 1;
-            else
+            if (Type == LightType.Directional)
                 return 0;
+            else
+                return 1;
         }
     }
 }

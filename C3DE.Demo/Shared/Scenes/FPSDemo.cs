@@ -1,4 +1,5 @@
-﻿using C3DE.Components.Lighting;
+﻿using C3DE.Components;
+using C3DE.Components.Lighting;
 using C3DE.Components.Physics;
 using C3DE.Components.Rendering;
 using C3DE.Demo.Scripts;
@@ -14,7 +15,7 @@ namespace C3DE.Demo.Scenes
 {
     public class FPSDemo : SimpleDemo
     {
-        public static bool Instancing = false;
+        public static bool Instancing = true;
         public static bool PreferePBR = false;
 
         public FPSDemo() : base("First Person Shooter") { }
@@ -60,53 +61,7 @@ namespace C3DE.Demo.Scenes
             rb.AddComponent<BoundingBoxRenderer>().LineColor = Color.Red;
             rb.IsKinematic = true;
 
-            // Walls
-            int cubeSize = 4;
-            MeshRenderer instancedRenderer = null;
-            CubeMesh cubeMesh = new CubeMesh();
-            cubeMesh.Size = new Vector3(cubeSize);
-            cubeMesh.Build();
-            var wallMaterial = CreateWallMaterial(content);
-
-            var counter = 0;
-
-            for (var i = -50; i < 50; i += 10)
-            {
-                for (var j = -50; j < 50; j += 10)
-                {
-                    var cube = GameObjectFactory.CreateMesh(GeometryType.Cube);
-                    cube.Transform.Position = new Vector3(i, (float)cubeSize / 2.0f, j);
-
-                    var renderer = cube.GetComponent<MeshRenderer>();
-                    renderer.Mesh = cubeMesh;
-                    renderer.ComputeBoundingInfos();
-                    renderer.Material = wallMaterial;
-
-                    rb = cube.AddComponent<Rigidbody>();
-                    rb.IsStatic = true;
-                    rb.AddComponent<BoxCollider>();
-                    rb.AddComponent<BoundingBoxRenderer>();
-
-                    if (counter++ % 2 == 0)
-                    {
-                        var light = SpawnLight(new Vector3(i - 5, 3, j - 5), ValidColors[RandomHelper.Range(0, ValidColors.Length)], 10, 1, false);
-                        light.AddComponent<SinIntensity>();
-                    }
-
-                    if (Instancing)
-                    {
-                        if (i == -50 && j == -50)
-                        {
-                            instancedRenderer = renderer;
-                        }
-                        else
-                        {
-                            instancedRenderer.AddInstance(renderer);
-                            renderer.Enabled = false;
-                        }
-                    }
-                }
-            }
+            BuildMap(content, player.Transform, 3);
 
             // Planets
             var planetContainer = new GameObject("PlanetContainer");
@@ -132,6 +87,102 @@ namespace C3DE.Demo.Scenes
             bloom.blurType = FastBloom.BlurType.Sgx;
             bloom.resolution = FastBloom.Resolution.High;
             SetPostProcess(bloom, true);
+        }
+
+        private void BuildMap(ContentManager content, Transform player, int lightModulo)
+        {
+            int cubeSize = 4;
+            Rigidbody rb;
+            GameObject wall;
+            MeshRenderer renderer;
+            MeshRenderer instancedRenderer = null;
+            CubeMesh cubeMesh = new CubeMesh();
+            cubeMesh.Size = new Vector3(cubeSize);
+            cubeMesh.Build();
+            var wallMaterial = CreateWallMaterial(content);
+
+            var counter = 0;
+
+            var level = new int[,]
+            {
+                { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+                { 1, 0, 0, 0, 1, 1, 1, 1, 0, 1, 0, 1, 1, 0, 1, 1, 1, 0, 1, 1 },
+                { 1, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1 },
+                { 1, 0, 0, 0, 1, 1, 1, 1, 0, 1, 0, 1, 1, 0, 1, 1, 1, 0, 1, 1 },
+                { 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1 },
+                { 1, 1, 0, 1, 1, 1, 0, 0, 0, 1, 0, 0, 3, 1, 0, 0, 1, 1, 0, 1 },
+                { 1, 0, 0, 0, 0, 0, 0, 3, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1 },
+                { 1, 0, 3, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 3, 0, 1 },
+                { 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 0, 0, 0, 1 },
+                { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 }
+            };
+
+            var start = -50;
+            var inc = cubeSize;
+            var sizeX = level.GetLength(0);
+            var sizeY = level.GetLength(1);
+
+            for (var x = 0; x < sizeX; x++)
+            {
+                for (var y = 0; y < sizeY; y++)
+                {
+                    var posX = (x * inc) + start;
+                    var posY = (y * inc) + start;
+
+                    // Ground.
+                    if (level[x, y] == 0)
+                    {
+                        if (counter++ % lightModulo == 0)
+                        {
+                            var light = SpawnLight(new Vector3(posX , 3, posY ), ValidColors[RandomHelper.Range(0, ValidColors.Length)], 5, 1, false);
+                            light.AddComponent<SinIntensity>();
+                        }
+
+                        continue;
+                    }
+                    // Player.
+                    if (level[x, y] == 2)
+                    {
+                        player.Position = new Vector3(posX, 0, posY);
+                        continue;
+                    }
+
+                    // Mob.
+                    if (level[x, y] == 3)
+                    {
+
+                    }
+
+                    // Wall.
+                    wall = GameObjectFactory.CreateMesh(GeometryType.Cube);
+                    wall.Transform.Position = new Vector3(posX, (float)cubeSize / 2.0f, posY);
+                    wall.Transform.UpdateWorldMatrix();
+                    wall.IsStatic = true;
+
+                    renderer = wall.GetComponent<MeshRenderer>();
+                    renderer.Mesh = cubeMesh;
+                    renderer.ComputeBoundingInfos();
+                    renderer.Material = wallMaterial;
+
+                    rb = wall.AddComponent<Rigidbody>();
+                    rb.IsStatic = true;
+                    rb.AddComponent<BoxCollider>();
+                    rb.AddComponent<BoundingBoxRenderer>();
+
+                    if (Instancing)
+                    {
+                        if (x + y == 0)
+                        {
+                            instancedRenderer = renderer;
+                        }
+                        else
+                        {
+                            instancedRenderer.AddInstance(renderer);
+                            renderer.Enabled = false;
+                        }
+                    }
+                }
+            }
         }
 
         protected override void SceneSetup()

@@ -87,8 +87,6 @@ namespace C3DE.Demo
                 new HeightmapPBRAtlasedDemo(),
                 new TerrainLavaPBRDemo(),
                 new LightingPBRDemo(),
-#else
-                new TestDemo(),
 #endif
                 new HeightmapDemo(),
                 new ProceduralTerrainWater(),

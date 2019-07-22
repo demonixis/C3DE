@@ -1,5 +1,5 @@
 // Constants
-#define MAX_LIGHT_COUNT 8
+#define MAX_LIGHT_COUNT 16
 
 // Lighting
 // LightData.x: Type: Directional, Point, Spot

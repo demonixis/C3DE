@@ -85,6 +85,10 @@ namespace C3DE.Components.Rendering
         {
             var size = _instances?.Length ?? 0;
 
+#if !WINDOWS
+            size = 0;
+#endif
+
             if (size > 1)
             {
                 for (var i = 0; i < size; i++)
@@ -127,8 +131,10 @@ namespace C3DE.Components.Rendering
             }
             else
             {
-                _instances = new Matrix[1];
-                _transforms = new Transform[1];
+                _instances = new Matrix[2];
+                _transforms = new Transform[2];
+                _transforms[0] = _transform;
+                index = 1;
             }
 
             _transforms[index] = renderer._transform;

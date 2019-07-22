@@ -53,8 +53,12 @@ namespace C3DE.Graphics.Shaders.Forward
             }
             else
             {
+                drawInstanced = false;
                 _effect.Parameters["EmissiveEnabled"].SetValue(_material.EmissiveMap != null ? 1 : 0);
             }
+
+            if (drawInstanced)
+                _effect.Parameters["World"].SetValue(Matrix.Identity);
 
             _effect.Techniques[drawInstanced ? 1 : 0].Passes[0].Apply();
         }

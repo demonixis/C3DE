@@ -52,6 +52,7 @@ namespace C3DE.Demo.Scenes
             lightGo.Transform.LocalRotation = new Vector3(MathHelper.PiOver2, -MathHelper.PiOver4, 0);
             _directionalLight = lightGo.GetComponent<Light>();
 
+#if WINDOWS
             // Sun Flares
             var content = Application.Content;
             var glowTexture = content.Load<Texture2D>("Textures/Flares/SunGlow");
@@ -64,14 +65,15 @@ namespace C3DE.Demo.Scenes
 
             var sunflares = _directionalLight.AddComponent<LensFlare>();
             sunflares.Setup(glowTexture, flareTextures);
+#endif
 
             // Skybox
             RenderSettings.Skybox.Generate(Application.GraphicsDevice, DemoGame.BlueSkybox);
 
             // Fog: Setup fog mode with some value. It's still disabled, but those values are used by the post processing fog effect.
-            RenderSettings.FogDensity = 0.0085f;
-            RenderSettings.FogMode = FogMode.None;
-            RenderSettings.FogColor = Color.FloralWhite;
+            //RenderSettings.FogDensity = 0.0085f;
+            //RenderSettings.FogMode = FogMode.None;
+            //RenderSettings.FogColor = Color.FloralWhite;
         }
 
         public void OptimizeFor2D()
@@ -89,7 +91,7 @@ namespace C3DE.Demo.Scenes
             _controllerSwitcher.SetControllerActive(type);
         }
 
-        public void AddLightGroundTest(float range = 50, int lightsCircle = 6)
+        public static void AddLightGroundTest(float range = 50, int lightsCircle = 6)
         {
             var count = (int)(range / 10);
 
@@ -97,7 +99,7 @@ namespace C3DE.Demo.Scenes
                 SpawnRadialLights((count + 1) * i, 0, lightsCircle);
         }
 
-        public void SpawnRadialLights(float radius, float y, int spawnCount, float lightRadius = 5, float intensity = 1)
+        public static void SpawnRadialLights(float radius, float y, int spawnCount, float lightRadius = 5, float intensity = 1)
         {
             Color color;
             Vector3 position;
@@ -113,7 +115,7 @@ namespace C3DE.Demo.Scenes
             }
         }
 
-        protected Light SpawnLight(Vector3 position, Color color, float radius, float intensity, bool sinMovement)
+        public static Light SpawnLight(Vector3 position, Color color, float radius, float intensity, bool sinMovement)
         {
             var lightGo = GameObjectFactory.CreateLight(LightType.Point, color, 1.0f, 0);
             lightGo.Transform.LocalRotation = new Vector3(0.0f, 0.5f, 0);

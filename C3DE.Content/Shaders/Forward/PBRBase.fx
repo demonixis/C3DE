@@ -3,9 +3,9 @@
 
 // Constants
 #if SM4
-#define MAX_LIGHT_COUNT 64
+#define MAX_LIGHT_COUNT 128
 #else
-#define MAX_LIGHT_COUNT 8
+#define MAX_LIGHT_COUNT 16
 #endif
 
 const float3 TO_GAMMA = float3(0.45454545, 0.45454545, 0.45454545);

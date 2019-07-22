@@ -2,14 +2,11 @@
 using C3DE.Components.Lighting;
 using C3DE.Components.Rendering;
 using C3DE.Graphics.Materials;
-using C3DE.Graphics.Materials.Shaders;
 using C3DE.Graphics.Shaders;
-using C3DE.Graphics.Shaders.Forward;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
-using System.Collections.Generic;
 
 namespace C3DE.Graphics.Rendering
 {
@@ -21,7 +18,7 @@ namespace C3DE.Graphics.Rendering
 #if WINDOWS
         public const int MaxLightCount = 128;
 #else
-        public const int MaxLightCount = 8;
+        public const int MaxLightCount = 16;
 #endif
 
         private RenderTarget2D _depthRT;
@@ -29,7 +26,8 @@ namespace C3DE.Graphics.Rendering
         private LightData _lightData;
         private ShadowData _shadowData;
 
-        public bool DepthPass { get; set; } = true;
+        public bool DirectRendering { get; set; } = false;
+        public bool DepthPass { get; set; } = false;
 
         public ForwardRenderer(GraphicsDevice graphics)
            : base(graphics)
@@ -76,38 +74,44 @@ namespace C3DE.Graphics.Rendering
 
             var camera = scene._cameras[0];
 
-#if ANDROID
-            _graphicsDevice.Clear(camera._clearColor);
-
-            RenderObjects(scene, camera);
-            RenderUI(scene.Behaviours);
-            return;
-#endif
-
-            RebuildRenderTargets();
-            RenderShadowMaps(scene);
-
-            if (m_VREnabled)
+            if (DirectRendering)
             {
-                // Apply camera parenting
-                var cameraParent = Matrix.Identity;
-                var parent = camera._transform.Parent;
-                if (parent != null)
-                    cameraParent = parent._worldMatrix;
+                _graphicsDevice.Clear(camera._clearColor);
 
-                for (var eye = 0; eye < 2; eye++)
-                {
-                    camera._projectionMatrix = _VRService.GetProjectionMatrix(eye);
-                    camera._viewMatrix = _VRService.GetViewMatrix(eye, cameraParent);
-                    RenderSceneForCamera(scene, camera, _sceneRenderTargets[eye]);
-                }
+                var cameraPosition = camera._transform.Position;
+                var cameraViewMatrix = camera._viewMatrix;
+                var cameraProjectionMatrix = camera._projectionMatrix;
 
-                _VRService.SubmitRenderTargets(_sceneRenderTargets[0], _sceneRenderTargets[1]);
-                DrawVRPreview(0);
+                RenderObjects(scene, ref cameraPosition, ref cameraViewMatrix, ref cameraProjectionMatrix);
                 RenderUI(scene._scripts);
             }
             else
-                RenderSceneForCamera(scene, camera, _sceneRenderTargets[0]);
+            {
+                RebuildRenderTargets();
+                RenderShadowMaps(scene);
+
+                if (m_VREnabled)
+                {
+                    // Apply camera parenting
+                    var cameraParent = Matrix.Identity;
+                    var parent = camera._transform.Parent;
+                    if (parent != null)
+                        cameraParent = parent._worldMatrix;
+
+                    for (var eye = 0; eye < 2; eye++)
+                    {
+                        camera._projectionMatrix = _VRService.GetProjectionMatrix(eye);
+                        camera._viewMatrix = _VRService.GetViewMatrix(eye, cameraParent);
+                        RenderSceneForCamera(scene, camera, _sceneRenderTargets[eye]);
+                    }
+
+                    _VRService.SubmitRenderTargets(_sceneRenderTargets[0], _sceneRenderTargets[1]);
+                    DrawVRPreview(0);
+                    RenderUI(scene._scripts);
+                }
+                else
+                    RenderSceneForCamera(scene, camera, _sceneRenderTargets[0]);
+            }
         }
 
         protected virtual void RenderSceneForCamera(Scene scene, Camera camera, RenderTarget2D renderTarget)
@@ -212,7 +216,10 @@ namespace C3DE.Graphics.Rendering
             ComputeLightData(scene, -1);
 
             if (scene.RenderSettings.Skybox.Enabled)
-                scene.RenderSettings.Skybox.Draw(_graphicsDevice, ref cameraPosition, ref cameraViewMatrix, ref cameraProjectionMatrix);
+            {
+                using (_graphicsDevice.GeometryState())
+                    scene.RenderSettings.Skybox.Draw(_graphicsDevice, ref cameraPosition, ref cameraViewMatrix, ref cameraProjectionMatrix);
+            }
 
             var renderCount = scene._renderList.Count;
 
@@ -273,13 +280,18 @@ namespace C3DE.Graphics.Rendering
 
             lightCount = Math.Min(MaxLightCount, lightCount);
 
+            if (lightCount > 1 && _lightData.Count == 0)
+            {
+                lights.Sort();
+            }
+
             if (_lightData.Count != lightCount)
             {
                 _lightData.Count = lightCount;
                 _lightData.Colors = new Vector3[lightCount];
                 _lightData.Positions = new Vector3[lightCount];
                 _lightData.Data = new Vector4[lightCount];
-                _lightData.SpotData = new Vector4[lightCount];
+                _lightData.SpotData = new Vector4[lightCount]; 
             }
 
             if (limit > -1)

@@ -498,7 +498,7 @@ namespace C3DE
 
         public static void Destroy(Component component)
         {
-            if (component is Transform)
+            if (component == null || component is Transform)
                 return;
 
             component.GameObject.RemoveComponent(component);

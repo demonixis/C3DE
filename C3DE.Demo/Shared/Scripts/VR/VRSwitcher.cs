@@ -30,6 +30,7 @@ namespace C3DE.Demo.Scripts
 
         public override void Start()
         {
+#if WINDOWS
             base.Start();
             _VREnabled = Application.Engine.Renderer.VREnabled;
             _UIRectangle = new Rectangle(10, 10, 100, 30);
@@ -37,6 +38,7 @@ namespace C3DE.Demo.Scripts
             CreateHand(0);
             CreateHand(1);
             Enabled = false;
+#endif
         }
 
         public override void OnDestroy()

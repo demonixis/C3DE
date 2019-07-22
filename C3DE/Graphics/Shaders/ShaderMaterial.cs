@@ -15,7 +15,7 @@ namespace C3DE.Graphics.Shaders
         internal GraphicsAPI GraphicsAPI
         {
 #if WINDOWS
-            get => ShaderQuality.High;
+            get => GraphicsAPI.Direct3D;
 #else
             get => GraphicsAPI.OpenGL;
 #endif
