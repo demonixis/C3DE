@@ -5,8 +5,22 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace C3DE.Graphics.Shaders
 {
-    public abstract class ShaderMaterial 
+    public enum GraphicsAPI
     {
+        OpenGL = 0, Direct3D
+    }
+
+    public abstract class ShaderMaterial
+    {
+        internal GraphicsAPI GraphicsAPI
+        {
+#if WINDOWS
+            get => ShaderQuality.High;
+#else
+            get => GraphicsAPI.OpenGL;
+#endif
+        }
+
         internal protected Effect _effect;
 
         public abstract void LoadEffect(ContentManager content);

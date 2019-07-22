@@ -4,6 +4,7 @@ using C3DE.Demo.Scripts;
 using C3DE.Graphics;
 using C3DE.Graphics.Materials;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace C3DE.Demo.Scenes
 {
@@ -30,12 +31,11 @@ namespace C3DE.Demo.Scenes
 
             // Terrain
             var terrainMaterial = new StandardWaterMaterial();
-            terrainMaterial.MainTexture = TextureFactory.CreateCheckboard(Color.White, Color.Black);
+            terrainMaterial.MainTexture = Application.Content.Load<Texture2D>("Models/Quandtum/textures/Turret-Diffuse");
             terrainMaterial.Tiling = new Vector2(16);
 
             var terrainGo = GameObjectFactory.CreateTerrain();
             var terrain = terrainGo.GetComponent<Terrain>();
-            terrain.Geometry.Size = new Vector3(4);
             terrain.Geometry.Build();
             terrain.Flatten();
             terrain.Renderer.Material = terrainMaterial;

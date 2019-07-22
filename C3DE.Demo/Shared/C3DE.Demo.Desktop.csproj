@@ -74,6 +74,7 @@
     <Compile Include="Scenes\MenuDemo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Scenes\SponzaDemo.cs" />
+    <Compile Include="Scenes\TestDemo.cs" />
     <Compile Include="Scripts\Utils\AutoRotation.cs" />
     <Compile Include="Scripts\Demo\ControllerSwitcher.cs" />
     <Compile Include="Scripts\Debug\DeferredDebuger.cs" />

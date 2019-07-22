@@ -18,7 +18,12 @@ namespace C3DE.Graphics.Shaders.Forward
 
         public override void LoadEffect(ContentManager content)
         {
-            _effect = content.Load<Effect>("Shaders/Forward/StandardWater");
+            var shaderPath = "Shaders/Forward/StandardWater";
+
+            if (GraphicsAPI == GraphicsAPI.OpenGL)
+                shaderPath = "Shaders/Forward/OpenGL/StandardWater";
+
+            _effect = content.Load<Effect>(shaderPath);
         }
 
         public override void Pass(ref Matrix worldMatrix, bool receiveShadow, bool drawInstanced)
@@ -31,13 +36,21 @@ namespace C3DE.Graphics.Shaders.Forward
             _effect.Parameters["TextureTiling"].SetValue(_material.Tiling);
             _effect.Parameters["World"].SetValue(worldMatrix);
             _effect.Parameters["AlbedoMap"].SetValue(_material.MainTexture);
-            _effect.Parameters["NormalMap"].SetValue(_material.NormalMap);
-            _effect.Parameters["SpecularMap"].SetValue(_material.SpecularTexture);
             _effect.Parameters["SpecularPower"].SetValue(_material.SpecularPower);
-            _effect.Parameters["Features"].SetValue(_features);
             _effect.Parameters["Alpha"].SetValue(_material.Alpha);
-            _effect.Parameters["ShadowEnabled"].SetValue(receiveShadow);
             _effect.Parameters["DiffuseColor"].SetValue(_material._diffuseColor);
+
+            if (GraphicsAPI == GraphicsAPI.Direct3D)
+            {
+                _effect.Parameters["ShadowEnabled"].SetValue(receiveShadow);
+                _effect.Parameters["SpecularMap"].SetValue(_material.SpecularTexture);
+                _effect.Parameters["NormalMap"].SetValue(_material.NormalMap);
+                _effect.Parameters["Features"].SetValue(_features);
+            }
+            else
+            {
+                _effect.Parameters["SpecularColor"].SetValue((float)_material.SpecularColor.R / 255.0f);
+            }
 
             _effect.CurrentTechnique.Passes[0].Apply();
         }

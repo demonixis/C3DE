@@ -22,7 +22,7 @@ struct VertexShaderOutput
 
 VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
 {
-	VertexShaderOutput output;
+	VertexShaderOutput output = (VertexShaderOutput)0;
 	float4x4 viewProjection = mul(View, Projection);
 	float4x4 worldViewProjection = mul(World, viewProjection);
 	float4 worldPosition = mul(input.Position, worldViewProjection);

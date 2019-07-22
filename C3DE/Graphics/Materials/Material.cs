@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 
 namespace C3DE.Graphics.Materials
-{
+{ 
     public abstract class Material : IDisposable
     {
         protected internal Vector3 _diffuseColor;

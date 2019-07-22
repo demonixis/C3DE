@@ -1,6 +1,7 @@
 ﻿using C3DE.Graphics.Materials.Shaders;
 using C3DE.Graphics.Rendering;
 using C3DE.Graphics.Shaders.Forward;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace C3DE.Graphics.Materials
@@ -11,6 +12,7 @@ namespace C3DE.Graphics.Materials
         public Texture2D SpecularTexture { get; set; }
         public TextureCube ReflectionTexture { get; set; }
 
+        public Color SpecularColor { get; set; } = new Color(0.7f, 0.7f, 0.7f);
         public float SpecularPower { get; set; } = 250.0f;
         public float Speed = 0.5f;
         public float ReflectionIntensity { get; set; } = 0.35f;
