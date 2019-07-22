@@ -85,10 +85,6 @@ namespace C3DE.Components.Rendering
         {
             var size = _instances?.Length ?? 0;
 
-#if !WINDOWS
-            size = 0;
-#endif
-
             if (size > 1)
             {
                 for (var i = 0; i < size; i++)

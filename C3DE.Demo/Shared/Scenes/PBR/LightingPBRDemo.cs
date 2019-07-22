@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using C3DE.Utils;
 using C3DE.Graphics;
+using C3DE.Demo.Scripts.VR;
 
 namespace C3DE.Demo.Scenes.PBR
 {

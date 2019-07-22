@@ -3,7 +3,7 @@ using C3DE.Components.Rendering;
 using C3DE.UI;
 using Microsoft.Xna.Framework;
 
-namespace C3DE.Demo.Scripts
+namespace C3DE.Demo.Scripts.Viewers
 {
     public class ReflectionPlanarViewer : Behaviour
     {

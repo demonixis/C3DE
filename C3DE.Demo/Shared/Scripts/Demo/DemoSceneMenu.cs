@@ -1,4 +1,5 @@
 ﻿using C3DE.Components;
+using C3DE.Demo.Scripts.VR;
 using C3DE.UI;
 using Microsoft.Xna.Framework;
 

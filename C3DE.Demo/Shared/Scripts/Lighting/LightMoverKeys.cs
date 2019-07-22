@@ -1,7 +1,7 @@
 ﻿using C3DE.Components;
 using Microsoft.Xna.Framework.Input;
 
-namespace C3DE.Demo.Scripts
+namespace C3DE.Demo.Scripts.Lighting
 {
     public class LightMoverKeys : Behaviour
     {

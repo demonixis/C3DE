@@ -42,17 +42,27 @@ struct VertexShaderOutput
     float4 WorldPosition : TEXCOORD2;
 };
 
-VertexShaderOutput MainVS(VertexShaderInput input)
+VertexShaderOutput CommonVS(VertexShaderInput input, float4x4 instanceTransform)
 {
 	VertexShaderOutput output;
 
-    float4 worldPosition = mul(input.Position, World);
+    float4 worldPosition = mul(input.Position, instanceTransform);
     float4 viewPosition = mul(worldPosition, View);
     output.Position = mul(viewPosition, Projection);
     output.UV = input.UV;
-    output.WorldNormal = mul(input.Normal, World);
+    output.WorldNormal = mul(input.Normal, instanceTransform);
     output.WorldPosition = worldPosition;
     return output;
+}
+
+VertexShaderOutput MainVS(VertexShaderInput input)
+{
+	return CommonVS(input, World);
+}
+
+VertexShaderOutput MainVS_Instanced(VertexShaderInput input, float4x4 instanceTransform : BLENDWEIGHT)
+{
+	return CommonVS(input, mul(World, transpose(instanceTransform)));
 }
 
 float3 StandardPixelShader(float4 worldPosition, float3 normal, float specularTerm, float3 albedo, float3 emissive)

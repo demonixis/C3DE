@@ -4,7 +4,7 @@ using C3DE.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace C3DE.Demo.Scripts
+namespace C3DE.Demo.Scripts.Viewers
 {
     public class SSAOViewer : Behaviour
     {

@@ -5,7 +5,7 @@ using C3DE.UI;
 using Microsoft.Xna.Framework;
 using System;
 
-namespace C3DE.Demo.Scripts
+namespace C3DE.Demo.Scripts.Viewers
 {
     public class PBRViewer : Behaviour
     {

@@ -1,5 +1,7 @@
 ﻿using C3DE.Components.Rendering;
 using C3DE.Demo.Scripts;
+using C3DE.Demo.Scripts.Lighting;
+using C3DE.Demo.Scripts.VR;
 using C3DE.Graphics.Materials;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;

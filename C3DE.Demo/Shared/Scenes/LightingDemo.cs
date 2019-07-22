@@ -6,6 +6,7 @@ using C3DE.Graphics.Materials;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using C3DE.Graphics;
+using C3DE.Demo.Scripts.VR;
 
 namespace C3DE.Demo.Scenes
 {

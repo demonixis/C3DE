@@ -12,7 +12,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections;
 
-namespace C3DE.Demo.Scripts
+namespace C3DE.Demo.Scripts.FPS
 {
     using XNAAudioListener = Microsoft.Xna.Framework.Audio.AudioListener;
     using AudioClip = Microsoft.Xna.Framework.Audio.SoundEffect;

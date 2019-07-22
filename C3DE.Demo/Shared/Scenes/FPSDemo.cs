@@ -3,6 +3,8 @@ using C3DE.Components.Lighting;
 using C3DE.Components.Physics;
 using C3DE.Components.Rendering;
 using C3DE.Demo.Scripts;
+using C3DE.Demo.Scripts.FPS;
+using C3DE.Demo.Scripts.Utils;
 using C3DE.Graphics.Materials;
 using C3DE.Graphics.PostProcessing;
 using C3DE.Graphics.Primitives;

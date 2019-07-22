@@ -61,3 +61,17 @@ technique Standard
 #endif
     }
 }
+
+technique Standard_Instanced
+{
+	pass P0
+	{
+#if SM4
+		VertexShader = compile vs_4_0 MainVS_Instanced();
+		PixelShader = compile ps_4_0 MainPS();
+#else
+		VertexShader = compile vs_3_0 MainVS_Instanced();
+		PixelShader = compile ps_3_0 MainPS();
+#endif
+	}
+}

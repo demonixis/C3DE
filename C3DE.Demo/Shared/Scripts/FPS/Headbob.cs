@@ -3,7 +3,7 @@ using C3DE.Components.Physics;
 using Microsoft.Xna.Framework;
 using System;
 
-namespace C3DE.Demo.Scripts
+namespace C3DE.Demo.Scripts.FPS
 {
     public class Headbob : Behaviour
     {

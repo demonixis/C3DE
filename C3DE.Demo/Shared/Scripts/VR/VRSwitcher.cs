@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 
-namespace C3DE.Demo.Scripts
+namespace C3DE.Demo.Scripts.VR
 {
     public class VRSwitcher : Behaviour
     {
@@ -28,9 +28,10 @@ namespace C3DE.Demo.Scripts
 
         public Action<bool> VRChanged;
 
+#if WINDOWS
+
         public override void Start()
         {
-#if WINDOWS
             base.Start();
             _VREnabled = Application.Engine.Renderer.VREnabled;
             _UIRectangle = new Rectangle(10, 10, 100, 30);
@@ -38,7 +39,6 @@ namespace C3DE.Demo.Scripts
             CreateHand(0);
             CreateHand(1);
             Enabled = false;
-#endif
         }
 
         public override void OnDestroy()
@@ -124,5 +124,6 @@ namespace C3DE.Demo.Scripts
 
             VRChanged?.Invoke(_VREnabled);
         }
+#endif
     }
 }

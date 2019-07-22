@@ -2,7 +2,7 @@
 using C3DE.VR;
 using Microsoft.Xna.Framework;
 
-namespace C3DE.Demo.Scripts
+namespace C3DE.Demo.Scripts.VR
 {
     public sealed class VRMovement : Behaviour
     {

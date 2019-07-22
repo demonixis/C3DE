@@ -3,7 +3,7 @@ using C3DE.Components.Lighting;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
-namespace C3DE.Demo.Scripts
+namespace C3DE.Demo.Scripts.Lighting
 {
     public class LightMover : Behaviour
     {

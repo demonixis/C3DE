@@ -1,7 +1,7 @@
 ﻿using C3DE.Components;
 using Microsoft.Xna.Framework;
 
-namespace C3DE.Demo.Scripts
+namespace C3DE.Demo.Scripts.Utils
 {
     public class AutoRotation : Component
     {

@@ -1,4 +1,5 @@
 ﻿using C3DE.Components.Rendering;
+using C3DE.Demo.Scripts.VR;
 using C3DE.Graphics.Materials;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -42,7 +43,7 @@ namespace C3DE.Demo.Scenes
 
             SetupScene();
 
-            _camera.AddComponent<Scripts.VRPlayerEnabler>();
+            _camera.AddComponent<VRPlayerEnabler>();
         }
 
         protected abstract void SetupScene();
