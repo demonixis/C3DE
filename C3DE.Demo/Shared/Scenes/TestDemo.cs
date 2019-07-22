@@ -29,6 +29,12 @@ namespace C3DE.Demo.Scenes
 
             RenderSettings.Skybox.Generate(Application.GraphicsDevice, DemoGame.BlueSkybox, 2048);
 
+            var mesh = GameObjectFactory.CreateMesh(GeometryType.Cube);
+            mesh.GetComponent<MeshRenderer>().Material = new StandardMaterial
+            {
+                MainTexture = Application.Content.Load<Texture2D>("Models/Quandtum/textures/Turret-Diffuse")
+            };
+
             // Terrain
             var terrainMaterial = new StandardWaterMaterial();
             terrainMaterial.MainTexture = Application.Content.Load<Texture2D>("Models/Quandtum/textures/Turret-Diffuse");
@@ -41,6 +47,16 @@ namespace C3DE.Demo.Scenes
             terrain.Renderer.Material = terrainMaterial;
             terrain.Renderer.ReceiveShadow = false;
             terrain.Renderer.CastShadow = false;
+
+            // Create the planar reflection.
+            var planarGo = new GameObject("PlanarReflection");
+            planarGo.Transform.Translate(0, 20, 0);
+            var planar = planarGo.AddComponent<PlanarReflection>();
+            planar.Initialize(Application.GraphicsDevice, 512);
+            planar.AddComponent<ReflectionPlanarViewer>();
+
+            // Assign to the water mesh.
+            terrain.Renderer.PlanarReflection = planar;
         }
     }
 }

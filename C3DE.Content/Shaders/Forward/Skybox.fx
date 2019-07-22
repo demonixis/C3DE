@@ -1,12 +1,19 @@
-#include "../Common/Macros.fxh"
-
 // Matrix
 float4x4 World;
 float4x4 View;
 float4x4 Projection;
 float3 EyePosition;
 
-DECLARE_CUBEMAP(SkyboxCubeMap, 1);
+texture SkyboxCubeMap;
+samplerCUBE SkyboxSampler = sampler_state
+{
+    Texture = <SkyboxCubeMap>;
+    MagFilter = Linear;
+    MinFilter = Linear;
+    MipFilter = Linear;
+    AddressU = Mirror;
+    AddressV = Mirror;
+};
 
 struct VertexShaderInput
 {
@@ -24,7 +31,7 @@ struct VertexShaderOutput
     float3 UV : TEXCOORD0;
 };
 
-VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
+VertexShaderOutput MainVS(VertexShaderInput input)
 {
     VertexShaderOutput output;
     float4 worldPosition = mul(input.Position, World);
@@ -34,9 +41,21 @@ VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
     return output;
 }
 
-float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
+float4 MainPS(VertexShaderOutput input) : COLOR0
 {
-	return float4(SAMPLE_CUBEMAP(SkyboxCubeMap, normalize(input.UV)).xyz, 1);
+	return float4(texCUBE(SkyboxSampler, normalize(input.UV)).xyz, 1);
 }
 
-TECHNIQUE(Skybox, VertexShaderFunction, PixelShaderFunction);
+technique Skybox
+{
+    pass AmbientPass
+    {
+#if SM4
+		VertexShader = compile vs_4_0_level_9_1 MainVS();
+		PixelShader = compile ps_4_0_level_9_1 MainPS();
+#else
+        VertexShader = compile vs_3_0 MainVS();
+        PixelShader = compile ps_3_0 MainPS();
+#endif
+    }
+}
