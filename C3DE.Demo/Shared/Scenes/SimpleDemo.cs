@@ -2,6 +2,7 @@
 using C3DE.Components.Lighting;
 using C3DE.Components.Rendering;
 using C3DE.Demo.Scripts;
+using C3DE.Demo.Scripts.Diagnostic;
 using C3DE.Demo.Scripts.Utils;
 using C3DE.Graphics.Materials;
 using C3DE.Graphics.Primitives;
@@ -46,6 +47,7 @@ namespace C3DE.Demo.Scenes
             _camera.AddComponent<DemoBehaviour>();
             _controllerSwitcher = _camera.AddComponent<ControllerSwitcher>();
             _demoSceneMenu = _camera.AddComponent<DemoSceneMenu>();
+            _camera.AddComponent<StatsDisplay>();
 
             // And a light
             var lightGo = GameObjectFactory.CreateLight(LightType.Directional, Color.White, 1f, 2048);
@@ -92,31 +94,50 @@ namespace C3DE.Demo.Scenes
             _controllerSwitcher.SetControllerActive(type);
         }
 
-        public static void AddLightGroundTest(float range = 50, int lightsCircle = 6)
+        public void AddLightGroundTest(float range = 50, int lightsCircle = 6, bool showLights = true)
         {
             var count = (int)(range / 10);
+            var go = new GameObject("LightGroupTest");
+            GameObject target;
 
             for (var i = 0; i < count; i++)
-                SpawnRadialLights((count + 1) * i, 0, lightsCircle);
-        }
-
-        public static void SpawnRadialLights(float radius, float y, int spawnCount, float lightRadius = 5, float intensity = 1)
-        {
-            Color color;
-            Vector3 position;
-
-            for (var i = 0; i < spawnCount; i++)
             {
-                var angle = i * MathHelper.TwoPi / 8.0f;
-
-                color = ValidColors[RandomHelper.Range(0, ValidColors.Length)];
-                position = new Vector3((float)Math.Cos(angle) * radius, y, (float)Math.Sin(angle) * radius);
-
-                SpawnLight(position, color, lightRadius, intensity, true);
+                target = SpawnRadialLights((count + 1) * i, 0, lightsCircle, 5, 1);
+                target.Transform.Parent = go.Transform;
             }
         }
 
-        public static Light SpawnLight(Vector3 position, Color color, float radius, float intensity, bool sinMovement)
+        public GameObject SpawnRadialLights(float radius, float y, int spawnCount, float lightRadius = 5, float intensity = 1)
+        {
+            Vector3 position;
+            Light light;
+            Material material;
+
+            var go = new GameObject($"RadialLight_{radius}");
+
+            var mesh = new SphereMesh(0.1f, 16);
+            mesh.Build();
+
+            var matCount = ValidColors.Length;
+            var materials = new UnlitMaterial[matCount];
+            for (var i = 0; i < matCount; i++)
+                materials[i] = new UnlitMaterial { DiffuseColor = ValidColors[i] };
+
+            for (var i = 0; i < spawnCount; i++)
+            {
+                material = materials[RandomHelper.Range(0, materials.Length)];
+
+                var angle = i * MathHelper.TwoPi / 8.0f;
+                position = new Vector3((float)Math.Cos(angle) * radius, y, (float)Math.Sin(angle) * radius);
+
+                light = SpawnLight(position, material.DiffuseColor, lightRadius, intensity, true, mesh, material);
+                light.Transform.Parent = go.Transform;
+            }
+
+            return go;
+        }
+
+        public static Light SpawnLight(Vector3 position, Color color, float radius = 5.0f, float intensity = 1.0f, bool sinMovement = false, Mesh mesh = null, Material material = null)
         {
             var lightGo = GameObjectFactory.CreateLight(LightType.Point, color, 1.0f, 0);
             lightGo.Transform.LocalRotation = new Vector3(0.0f, 0.5f, 0);
@@ -127,19 +148,17 @@ namespace C3DE.Demo.Scenes
             light.Intensity = intensity;
             light.ShadowEnabled = false;
 
-            var ligthSphere = lightGo.AddComponent<MeshRenderer>();
-            ligthSphere.Mesh = new SphereMesh(0.15f, 16);
-            ligthSphere.Mesh.Build();
-            ligthSphere.CastShadow = true;
-            ligthSphere.ReceiveShadow = false;
-
-            ligthSphere.Material = new UnlitMaterial()
+            if (mesh != null && material != null)
             {
-                DiffuseColor = color
-            };
+                var ligthSphere = lightGo.AddComponent<MeshRenderer>();
+                ligthSphere.Mesh = mesh;
+                ligthSphere.CastShadow = true;
+                ligthSphere.ReceiveShadow = false;
+                ligthSphere.Material = material;
+            }
 
             if (sinMovement)
-                ligthSphere.AddComponent<SinMovement>();
+                lightGo.AddComponent<SinMovement>();
 
             return light;
         }

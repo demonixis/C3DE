@@ -3,6 +3,7 @@ using C3DE.Components.Lighting;
 using C3DE.Components.Physics;
 using C3DE.Components.Rendering;
 using C3DE.Demo.Scripts;
+using C3DE.Demo.Scripts.Diagnostic;
 using C3DE.Demo.Scripts.FPS;
 using C3DE.Demo.Scripts.Utils;
 using C3DE.Graphics.Materials;
@@ -12,6 +13,7 @@ using C3DE.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using System.Collections.Generic;
 
 namespace C3DE.Demo.Scenes
 {
@@ -19,6 +21,21 @@ namespace C3DE.Demo.Scenes
     {
         public static bool Instancing = true;
         public static bool PreferePBR = false;
+        public static bool DebugPhysics = false;
+
+        public static readonly int[,] LevelGrid = new int[,]
+        {
+            { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+            { 1, 0, 0, 0, 1, 1, 1, 1, 0, 1, 0, 1, 1, 0, 1, 1, 1, 0, 1, 1 },
+            { 1, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1 },
+            { 1, 0, 0, 0, 1, 1, 1, 1, 0, 1, 0, 1, 1, 0, 1, 1, 1, 0, 1, 1 },
+            { 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1 },
+            { 1, 1, 0, 1, 1, 1, 0, 0, 0, 1, 0, 0, 3, 1, 0, 0, 1, 1, 0, 1 },
+            { 1, 0, 0, 0, 0, 0, 0, 3, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1 },
+            { 1, 0, 3, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 3, 0, 1 },
+            { 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 0, 0, 0, 1 },
+            { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 }
+        };
 
         public FPSDemo() : base("First Person Shooter") { }
 
@@ -55,15 +72,26 @@ namespace C3DE.Demo.Scenes
             terrain.Renderer.Material = CreateGroundMaterial(content);
             terrain.Renderer.ReceiveShadow = true;
             terrain.Renderer.CastShadow = false;
+            terrain.Transform.LocalPosition = new Vector3(50, 0, 50);
+            terrain.AddComponent<StatsDisplay>();
 
             terrain.AddComponent<BoxCollider>();
             var rb = terrain.AddComponent<Rigidbody>();
             rb.IsStatic = true;
             rb.AddComponent<RigidbodyRenderer>();
-            rb.AddComponent<BoundingBoxRenderer>().LineColor = Color.Red;
+
+            if (DebugPhysics)
+                rb.AddComponent<BoundingBoxRenderer>().LineColor = Color.Red;
+
             rb.IsKinematic = true;
 
-            BuildMap(content, player.Transform, 3);
+            var cubeSize = 4;
+            var startPosition = new Vector2(0, 0);
+            BuildMap(content, player.Transform, cubeSize, startPosition, 3);
+
+            var go = new GameObject("MobManager");
+            var mobSpawner = go.AddComponent<MobSpawner>();
+            mobSpawner.SetGrid(LevelGrid, cubeSize, startPosition);
 
             // Planets
             var planetContainer = new GameObject("PlanetContainer");
@@ -91,68 +119,65 @@ namespace C3DE.Demo.Scenes
             SetPostProcess(bloom, true);
         }
 
-        private void BuildMap(ContentManager content, Transform player, int lightModulo)
+        private void BuildMap(ContentManager content, Transform player, int cubeSize, Vector2 startPosition, int lightModulo)
         {
-            int cubeSize = 4;
             Rigidbody rb;
             GameObject wall;
             MeshRenderer renderer;
-            MeshRenderer instancedRenderer = null;
+            MeshRenderer instancedWall = null;
+            MeshRenderer instancedLight = null;
+            Material material;
             CubeMesh cubeMesh = new CubeMesh();
             cubeMesh.Size = new Vector3(cubeSize);
             cubeMesh.Build();
+
             var wallMaterial = CreateWallMaterial(content);
-
             var counter = 0;
-
-            var level = new int[,]
-            {
-                { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
-                { 1, 0, 0, 0, 1, 1, 1, 1, 0, 1, 0, 1, 1, 0, 1, 1, 1, 0, 1, 1 },
-                { 1, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1 },
-                { 1, 0, 0, 0, 1, 1, 1, 1, 0, 1, 0, 1, 1, 0, 1, 1, 1, 0, 1, 1 },
-                { 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1 },
-                { 1, 1, 0, 1, 1, 1, 0, 0, 0, 1, 0, 0, 3, 1, 0, 0, 1, 1, 0, 1 },
-                { 1, 0, 0, 0, 0, 0, 0, 3, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1 },
-                { 1, 0, 3, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 3, 0, 1 },
-                { 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 0, 0, 0, 1 },
-                { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 }
-            };
-
-            var start = -50;
             var inc = cubeSize;
-            var sizeX = level.GetLength(0);
-            var sizeY = level.GetLength(1);
+            var sizeX = LevelGrid.GetLength(0);
+            var sizeY = LevelGrid.GetLength(1);
+
+            var mesh = new SphereMesh(0.1f, 16);
+            mesh.Build();
+
+            var matCount = ValidColors.Length;
+            var materials = new UnlitMaterial[matCount];
+            for (var i = 0; i < matCount; i++)
+                materials[i] = new UnlitMaterial { DiffuseColor = ValidColors[i] };
+
+            var lightMats = new Dictionary<Material, List<MeshRenderer>>();
 
             for (var x = 0; x < sizeX; x++)
             {
                 for (var y = 0; y < sizeY; y++)
                 {
-                    var posX = (x * inc) + start;
-                    var posY = (y * inc) + start;
+                    var posX = (x * inc) + startPosition.X;
+                    var posY = (y * inc) + startPosition.Y;
 
                     // Ground.
-                    if (level[x, y] == 0)
+                    if (LevelGrid[x, y] == 0)
                     {
                         if (counter++ % lightModulo == 0)
                         {
-                            var light = SpawnLight(new Vector3(posX , 3, posY ), ValidColors[RandomHelper.Range(0, ValidColors.Length)], 5, 1, false);
+                            material = materials[RandomHelper.Range(0, materials.Length)];
+                            var light = SpawnLight(new Vector3(posX, 3, posY), material.DiffuseColor, 5, 1, false, mesh, material);
                             light.AddComponent<SinIntensity>();
+
+                            renderer = light.GetComponent<MeshRenderer>();
+
+                            if (!lightMats.ContainsKey(material))
+                                lightMats.Add(material, new List<MeshRenderer>());
+
+                            lightMats[material].Add(renderer);
                         }
 
                         continue;
                     }
                     // Player.
-                    if (level[x, y] == 2)
+                    if (LevelGrid[x, y] == 2)
                     {
                         player.Position = new Vector3(posX, 0, posY);
                         continue;
-                    }
-
-                    // Mob.
-                    if (level[x, y] == 3)
-                    {
-
                     }
 
                     // Wall.
@@ -169,19 +194,35 @@ namespace C3DE.Demo.Scenes
                     rb = wall.AddComponent<Rigidbody>();
                     rb.IsStatic = true;
                     rb.AddComponent<BoxCollider>();
-                    rb.AddComponent<BoundingBoxRenderer>();
+
+                    if (DebugPhysics)
+                        rb.AddComponent<BoundingBoxRenderer>();
 
                     if (Instancing)
                     {
-                        if (x + y == 0)
+                        if (instancedWall == null)
                         {
-                            instancedRenderer = renderer;
+                            instancedWall = renderer;
                         }
                         else
                         {
-                            instancedRenderer.AddInstance(renderer);
+                            instancedWall.AddInstance(renderer);
                             renderer.Enabled = false;
                         }
+                    }
+                }
+            }
+   
+            if (Instancing)
+            {
+                foreach (var keyValue in lightMats)
+                {
+                    var renderers = keyValue.Value;
+
+                    if (renderers.Count > 1)
+                    {
+                        for (var i = 1; i < renderers.Count; i++)
+                            renderers[0].AddInstance(renderers[i]);
                     }
                 }
             }
@@ -199,8 +240,6 @@ namespace C3DE.Demo.Scenes
                 {
                     MainTexture = content.Load<Texture2D>("Textures/pbr/Wall/Sci-fi_Walll_001_basecolor"),
                     NormalMap = content.Load<Texture2D>("Textures/pbr/Wall/Sci-fi_Walll_001_normal"),
-                    //SpecularColor = new Color(0.7f, 0.7f, 0.7f),
-                    //SpecularPower = 5
                 };
 
                 wallMatPBR.CreateRoughnessMetallicAO(

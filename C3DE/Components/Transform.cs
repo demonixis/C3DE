@@ -70,8 +70,8 @@ namespace C3DE.Components
             {
                 UpdateWorldMatrix();
                 var rotation = Quaternion.Identity;
-                _worldMatrix.ExtractRotation(ref rotation);
-                return rotation.ToEuler();
+                _worldMatrix.Decompose(out Vector3 scale, out Quaternion r, out Vector3 translation);
+                return r.ToEuler();
             }
             set
             {

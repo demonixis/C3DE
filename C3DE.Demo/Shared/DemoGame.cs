@@ -56,7 +56,7 @@ namespace C3DE.Demo
 
         public static GUISkin CreateSkin(ContentManager content, bool customSkin = true)
         {
-            GUISkin skin = new GUISkin("Font/Default");
+            GUISkin skin = new GUISkin("Font/SegoeUILight");
             skin.LoadContent(Application.Content);
 
             if (customSkin)

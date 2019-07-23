@@ -39,12 +39,21 @@ namespace C3DE.Demo.Scenes
             terrainMaterial.Tiling = new Vector2(4);
             terrainGo.AddComponent<WeightMapViewer>();
 
-            // With water !
-            var waterTexture = content.Load<Texture2D>("Textures/Fluids/water");
-            var bumpTexture = content.Load<Texture2D>("Textures/Fluids/wavesbump");
-            var water = GameObjectFactory.CreateWater(waterTexture, bumpTexture, new Vector3(terrain.Width * 0.5f));
-            water.Transform.Translate(0, 10.0f, 0);
-            _scene.Add(water);
+            // Water
+            var waterGo = new GameObject("Water");
+            waterGo.Transform.Translate(0, 10, 0);
+            var terrainW = waterGo.AddComponent<Terrain>();
+            terrainW.Randomize(5, 2);
+            terrainW.Geometry.Build();
+
+            var renderer = waterGo.GetComponent<MeshRenderer>();
+            renderer.Material = new StandardWaterMaterial()
+            {
+                MainTexture = content.Load<Texture2D>("Textures/Fluids/water"),
+                NormalMap = content.Load<Texture2D>("Textures/Fluids/Water_Normal"),
+                SpecularColor = new Color(0.7f, 0.7f, 0.7f),
+                SpecularPower = 50
+            }; ;
 
             // And fog
             RenderSettings.FogDensity = 0.0085f;
@@ -53,7 +62,7 @@ namespace C3DE.Demo.Scenes
             //RenderSettings.Skybox.OverrideSkyboxFog(FogMode.Exp2, 0.05f, 0, 0);
 
             var vrPlayerEnabler = _camera.AddComponent<VRPlayerEnabler>();
-            vrPlayerEnabler.Position = new Vector3(0, water.Transform.Position.Y + 0.5f, 0);
+            vrPlayerEnabler.Position = new Vector3(0, waterGo.Transform.Position.Y + 0.5f, 0);
         }
     }
 }

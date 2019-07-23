@@ -50,6 +50,7 @@ namespace C3DE.Demo.Scripts.FPS
             _camera = camera.GetComponent<Camera>();
             _camera.FieldOfView = _fov;
             _camera.Far = 5000;
+            _camera.Target = Vector3.Forward;
 
             var hand = new GameObject("RightHand");
             _handTransform = hand.Transform;
@@ -120,7 +121,10 @@ namespace C3DE.Demo.Scripts.FPS
             cube.AddComponent<SphereCollider>();
 
             var rb = cube.AddComponent<Rigidbody>();
-            rb.AddComponent<RigidbodyRenderer>();
+
+            if (FPSDemo.DebugPhysics)
+                rb.AddComponent<RigidbodyRenderer>();
+
             rb.AddForce(forward * 10);
 
             var audioSource = go.AddComponent<AudioSource>();

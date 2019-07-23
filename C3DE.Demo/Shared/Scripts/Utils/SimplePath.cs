@@ -12,15 +12,12 @@ namespace C3DE.Demo.Scripts.Utils
         private List<Vector3> _memPaths;
         private bool _beginStarted;
 
-        public bool Loop { get; set; }
-        public float MoveSpeed { get; set; }
-        public float RotationSpeed { get; set; }
-        public bool UpdateRotation { get; set; }
+        public bool Loop { get; set; } = true;
+        public float MoveSpeed { get; set; } = 2.5f;
+        public float RotationSpeed { get; set; } = 2.5f;
+        public bool UpdateRotation { get; set; } = true;
 
-        public bool IsDone
-        {
-            get { return _paths.Count == 0; }
-        }
+        public bool IsDone => _paths.Count == 0;
 
         public event EventHandler<EventArgs> PathDone = null;
 
@@ -29,10 +26,6 @@ namespace C3DE.Demo.Scripts.Utils
         {
             _beginStarted = false;
             _memPaths = new List<Vector3>();
-            Loop = true;
-            MoveSpeed = 10;
-            RotationSpeed = 0.1f;
-            UpdateRotation = false;
         }
 
         // Update is called once per frame
@@ -44,11 +37,13 @@ namespace C3DE.Demo.Scripts.Utils
 
                 if (_paths.Count == 0)
                 {
-                    if (PathDone != null)
-                        PathDone(this, EventArgs.Empty);
+                    PathDone?.Invoke(this, EventArgs.Empty);
 
                     if (Loop)
-                        _paths = new List<Vector3>(_memPaths);
+                    {
+                        _memPaths.Reverse();
+                        _paths = _memPaths;
+                    }
                 }
             }
         }
@@ -61,14 +56,12 @@ namespace C3DE.Demo.Scripts.Utils
 
         public void AddPath(Vector3 path)
         {
-            if (_beginStarted)
-                _paths.Add(path);
+            _paths.Add(path);
         }
 
         public void AddPath(Vector3 path, Transform transform)
         {
-            if (_beginStarted)
-                _paths.Add(transform.LocalPosition + path);
+            _paths.Add(transform.LocalPosition + path);
         }
 
         public void End()
@@ -91,13 +84,19 @@ namespace C3DE.Demo.Scripts.Utils
             if (_transform.LocalPosition == target)
                 return true;
 
-            Vector3 direction = Vector3.Normalize(target - _transform.LocalPosition);
+            var direction = Vector3.Normalize(target - _transform.Position);
             _transform.LocalPosition += direction * MoveSpeed * elapsedTime;
 
-            //Vector3 lookDirection = target - transform.Position;
-
-            //        if (updateRotation)
-            //          transform.Rotation = Quaternion.Slerp(transform.Rotation, Quaternion.LookRotation(lookDirection), rotationSpeed * Time.DeltaTime);
+            if (UpdateRotation)
+            {
+                var mat = Matrix.CreateLookAt(_transform.Position, direction, Vector3.Up);
+                mat.Decompose(out Vector3 scale, out Quaternion rotation, out Vector3 translation);
+                var euler = rotation.ToEuler();
+                euler.X = MathHelper.ToRadians(euler.X);
+                euler.Y = MathHelper.ToRadians(euler.Y);
+                euler.Z = MathHelper.ToRadians(euler.Z);
+                _transform.LocalRotation = Vector3.Lerp(_transform.LocalRotation, euler, RotationSpeed * Time.DeltaTime);
+            }
 
             if (Math.Abs(Vector3.Dot(direction, Vector3.Normalize(target - _transform.LocalPosition)) + 1) < 0.1f)
                 _transform.LocalPosition = target;

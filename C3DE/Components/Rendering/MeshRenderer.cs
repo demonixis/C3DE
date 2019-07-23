@@ -134,6 +134,7 @@ namespace C3DE.Components.Rendering
             }
 
             _transforms[index] = renderer._transform;
+            renderer.Enabled = false;
         }
 
         public override void Dispose()
@@ -153,16 +154,17 @@ namespace C3DE.Components.Rendering
 
         public override object Clone()
         {
-            var clone = (MeshRenderer)base.Clone();
+            var clone = new MeshRenderer();
 
             if (_mesh != null)
             {
-                clone._mesh = (Mesh)Activator.CreateInstance(_mesh.GetType());
-                clone._mesh.Size = _mesh.Size;
-                clone._mesh.TextureRepeat = _mesh.TextureRepeat;
+                clone._mesh = _mesh;
+                clone.material = material;
 
                 if (_mesh.Built)
                     clone._mesh.Build();
+
+                clone.ComputeBoundingInfos();
             }
 
             return clone;

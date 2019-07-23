@@ -36,10 +36,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="System" />
     <Reference Include="MonoGame.Framework, Version=3.7.1.189, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\MonoGame.Framework.WindowsDX.3.7.1.189\lib\net45\MonoGame.Framework.dll</HintPath>
     </Reference>
-    <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DemoGame.cs" />
@@ -57,9 +57,12 @@
     <Compile Include="Scenes\MenuDemo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Scenes\SponzaDemo.cs" />
+    <Compile Include="Scripts\Diagnostic\StatsDisplay.cs" />
+    <Compile Include="Scripts\FPS\AStar.cs" />
+    <Compile Include="Scripts\FPS\MobSpawner.cs" />
     <Compile Include="Scripts\Utils\AutoRotation.cs" />
     <Compile Include="Scripts\Demo\ControllerSwitcher.cs" />
-    <Compile Include="Scripts\Debug\DeferredDebuger.cs" />
+    <Compile Include="Scripts\Diagnostic\DeferredDebuger.cs" />
     <Compile Include="Scripts\Demo\DemoBehaviour.cs" />
     <Compile Include="Scripts\Demo\DemoSceneMenu.cs" />
     <Compile Include="Scripts\FPS\Headbob.cs" />
@@ -73,7 +76,7 @@
     <Compile Include="Scripts\Demo\PhysicsSpawner.cs" />
     <Compile Include="Scripts\FPS\PlayerShooter.cs" />
     <Compile Include="Scripts\Demo\PostProcessSwitcher.cs" />
-    <Compile Include="Scripts\Debug\RayPickingTester.cs" />
+    <Compile Include="Scripts\Diagnostic\RayPickingTester.cs" />
     <Compile Include="Scripts\Viewers\ReflectionPlanarViewer.cs" />
     <Compile Include="Scripts\Demo\RendererSwitcher.cs" />
     <Compile Include="Scripts\Viewers\ShadowMapViewer.cs" />

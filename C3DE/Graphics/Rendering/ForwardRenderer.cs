@@ -16,10 +16,12 @@ namespace C3DE.Graphics.Rendering
     public class ForwardRenderer : BaseRenderer
     {
 #if WINDOWS
-        public const int MaxLightCount = 128;
+        internal const int MaxLightLimit = 128;
 #else
-        public const int MaxLightCount = 16;
+        internal const int MaxLightLimit = 16;
 #endif
+
+        private static int _maxLightCount = MaxLightLimit;
 
         private RenderTarget2D _depthRT;
         private Effect _depthEffect;
@@ -28,6 +30,18 @@ namespace C3DE.Graphics.Rendering
 
         public bool DirectRendering { get; set; } = false;
         public bool DepthPass { get; set; } = false;
+
+        public static int MaxLightCount
+        {
+            get => _maxLightCount;
+            set
+            {
+                _maxLightCount = value;
+
+                if (_maxLightCount > MaxLightLimit)
+                    _maxLightCount = MaxLightLimit;
+            }
+        }
 
         public ForwardRenderer(GraphicsDevice graphics)
            : base(graphics)

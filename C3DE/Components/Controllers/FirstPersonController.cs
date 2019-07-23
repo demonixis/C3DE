@@ -175,7 +175,7 @@ namespace C3DE.Components.Controllers
             else if (_lockCursor)
             {
                 rotation.Y -= Input.Mouse.Delta.X * RotationSpeed * MouseSensibility.Y * Time.DeltaTime;
-                rotation.X -= Input.Mouse.Delta.Y * LookSpeed * MouseSensibility.X * Time.DeltaTime;
+                rotation.X -= Input.Mouse.Delta.Y * RotationSpeed * MouseSensibility.X * Time.DeltaTime;
             }
 
             if (Input.Mouse.Drag(Inputs.MouseButton.Middle))

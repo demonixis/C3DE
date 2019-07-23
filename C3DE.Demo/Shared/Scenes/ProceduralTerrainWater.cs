@@ -17,18 +17,23 @@ namespace C3DE.Demo.Scenes
             _directionalLight.Transform.LocalPosition = new Vector3(250, 500, 100);
 
             // Water
-            var waterTexture = Application.Content.Load<Texture2D>("Textures/Fluids/water");
-            var lavaNormal = Application.Content.Load<Texture2D>("Textures/Fluids/Water_Normal");
-            var waterGo = GameObjectFactory.CreateWater(waterTexture, lavaNormal, new Vector3(_terrain.Width * 0.5f));
+            var waterGo = new GameObject("Water");
+            var terrain = waterGo.AddComponent<Terrain>();
+            terrain.Randomize(5, 1);
+            terrain.Geometry.Build();
 
-            var water = waterGo.GetComponent<MeshRenderer>();
-            var waterMat = (StandardWaterMaterial)water.Material;
-            waterMat.ReflectionTexture = _scene.RenderSettings.Skybox.Texture;
-            waterMat.SpecularTexture = TextureFactory.CreateColor(Color.Gray, 1, 1);
-            waterMat.ReflectionIntensity = 0.95f;
+            var content = Application.Content;
+            var renderer = waterGo.GetComponent<MeshRenderer>();
+            renderer.Material = new StandardWaterMaterial()
+            {
+                MainTexture = content.Load<Texture2D>("Textures/Fluids/water"),
+                NormalMap = content.Load<Texture2D>("Textures/Fluids/Water_Normal"),
+                SpecularColor = new Color(0.7f, 0.7f, 0.7f),
+                SpecularPower = 50
+            }; ;
 
             // Create the planar reflection.
-            var planarGo = new GameObject("PlanarReflection");
+            /*var planarGo = new GameObject("PlanarReflection");
             planarGo.Transform.Translate(0, 20, 0);
             var planar = planarGo.AddComponent<PlanarReflection>();
             planar.Initialize(Application.GraphicsDevice, 512);
@@ -36,7 +41,7 @@ namespace C3DE.Demo.Scenes
 
             // Assign to the water mesh.
             var waterRenderer = waterGo.GetComponent<Renderer>();
-            waterRenderer.PlanarReflection = planar;
+            waterRenderer.PlanarReflection = planar;*/
 
            //AddLightGroundTest();
         }

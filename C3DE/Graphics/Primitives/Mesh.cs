@@ -71,13 +71,9 @@ namespace C3DE.Graphics.Primitives
             }
         }
 
-        public Action ConstructionDone = null;
+        public event Action ConstructionDone = null;
 
-        public void NotifyConstructionDone()
-        {
-            if (ConstructionDone != null)
-                ConstructionDone();
-        }
+        public void NotifyConstructionDone() => ConstructionDone?.Invoke();
 
         protected virtual void CreateGeometry() { }
 
@@ -153,9 +149,11 @@ namespace C3DE.Graphics.Primitives
 
         public Vector3[] GetVertices(VertexType type)
         {
-            int size = Vertices.Length;
+            if (Vertices == null)
+                PopulateVerticesFromVertexBuffer();
 
-            Vector3[] vertices = new Vector3[size];
+            var size = Vertices.Length;
+            var vertices = new Vector3[size];
 
             for (int i = 0; i < size; i++)
             {
@@ -176,6 +174,9 @@ namespace C3DE.Graphics.Primitives
 
         public Vector2[] GetUVs()
         {
+            if (Vertices == null)
+                PopulateVerticesFromVertexBuffer();
+
             int size = Vertices.Length;
 
             Vector2[] uvs = new Vector2[Vertices.Length];
@@ -207,6 +208,12 @@ namespace C3DE.Graphics.Primitives
                 repeatTexture.Y = y.Value;
         }
 
+        protected void PopulateVerticesFromVertexBuffer()
+        {
+            Vertices = new VertexPositionNormalTexture[VertexBuffer.VertexCount];
+            VertexBuffer.GetData<VertexPositionNormalTexture>(Vertices);
+        }
+
         public void Dispose()
         {
             if (Built)
@@ -227,6 +234,25 @@ namespace C3DE.Graphics.Primitives
                 Build();
 
             return clone;
+        }
+
+        public override bool Equals(object obj)
+        {
+            var mesh = obj as Mesh;
+
+            if (mesh != null)
+            {
+                if (mesh == this)
+                    return true;
+
+                if (_vertices.Length == mesh._vertices.Length && _indices.Length == mesh._indices.Length)
+                {
+                    return _vertices[0].Equals(mesh._vertices) &&
+                        _vertices[_vertices.Length - 1].Equals(mesh._vertices[_vertices.Length - 1]);
+                }
+            }
+
+            return base.Equals(obj);
         }
     }
 }

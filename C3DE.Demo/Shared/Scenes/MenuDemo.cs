@@ -13,6 +13,10 @@ namespace C3DE.Demo.Scenes
             OptimizeFor2D();
             GUI.Skin = DemoGame.CreateSkin(Application.Content, false);
             _camera.AddComponent<MenuBehaviour>();
+
+            var adapter = Application.GraphicsDevice.Adapter.Description;
+            if (adapter.ToLower().Contains("intel"))
+                Graphics.Rendering.ForwardRenderer.MaxLightCount = 16;
         }
     }
 }

@@ -41,6 +41,7 @@
     <Compile Include="Components\AudioListener.cs" />
     <Compile Include="Components\AudioSource.cs" />
     <Compile Include="Components\Behaviour.cs" />
+    <Compile Include="Components\Rendering\InstancedMeshRenderer.cs" />
     <Compile Include="Components\Rendering\LensFlare.cs" />
     <Compile Include="Components\Rendering\BoundingBoxRenderer.cs" />
     <Compile Include="Components\Controllers\Controller.cs" />
