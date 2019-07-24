@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace C3DE.Components.Rendering
 {
-    class InstancedMeshRenderer : Renderer
+    public class InstancedMeshRenderer : Renderer
     {
         private static VertexDeclaration instanceVertexDeclaration = new VertexDeclaration
         (
@@ -19,6 +19,18 @@ namespace C3DE.Components.Rendering
         private DynamicVertexBuffer _instanceVertexBuffer;
         private Transform[] _transforms;
         private Matrix[] _instances;
+
+        public Mesh Mesh
+        {
+            get => _mesh;
+            set
+            {
+                _mesh = value;
+
+                if (!_mesh.Built)
+                    _mesh.Build();
+            }
+        }
 
         public void AddInstance(MeshRenderer renderer)
         {
@@ -37,8 +49,8 @@ namespace C3DE.Components.Rendering
             }
             else
             {
-                _instances = new Matrix[2];
-                _transforms = new Transform[2];
+                _instances = new Matrix[1];
+                _transforms = new Transform[1];
             }
 
             _transforms[index] = renderer._transform;
@@ -58,7 +70,7 @@ namespace C3DE.Components.Rendering
                 _transforms = new Transform[size];
             }
 
-            for(var i = 0; i < size; i++)
+            for (var i = 0; i < size; i++)
             {
                 if (!_mesh.Equals(renderers[i]._mesh))
                     throw new Exception("This is not the same mesh");
@@ -86,7 +98,7 @@ namespace C3DE.Components.Rendering
                     _instanceVertexBuffer?.Dispose();
                     _instanceVertexBuffer = new DynamicVertexBuffer(graphics, instanceVertexDeclaration, _instances.Length, BufferUsage.WriteOnly);
                 }
-                
+
                 _instanceVertexBuffer.SetData(_instances, 0, _instances.Length, SetDataOptions.Discard);
 
                 graphics.SetVertexBuffers(new VertexBufferBinding(_mesh.VertexBuffer, 0, 0), new VertexBufferBinding(_instanceVertexBuffer, 0, 1));
