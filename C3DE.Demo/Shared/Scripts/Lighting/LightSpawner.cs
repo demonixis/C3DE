@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework.Input;
 using C3DE.VR;
 using System.Collections;
 using C3DE.Demo.Scripts.Utils;
+using C3DE.Components.VR;
 
 namespace C3DE.Demo.Scripts.Lighting
 {

@@ -1,11 +1,15 @@
 ﻿using C3DE.Components;
 using C3DE.Components.Controllers;
+using C3DE.Components.Lighting;
 using C3DE.Components.Physics;
 using C3DE.Components.Rendering;
+using C3DE.Components.VR;
 using C3DE.Demo.Scenes;
+using C3DE.Demo.Scripts.VR;
 using C3DE.Graphics.Materials;
 using C3DE.Graphics.Primitives;
 using C3DE.Utils;
+using C3DE.VR;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -29,6 +33,9 @@ namespace C3DE.Demo.Scripts.FPS
         private float _minFov;
         private float _maxFov;
 
+        private Headbob _headbob;
+        private Transform _cameraRig;
+
         public override void Initialize()
         {
             base.Initialize();
@@ -40,8 +47,9 @@ namespace C3DE.Demo.Scripts.FPS
             _fov = _maxFov;
 
             var cameraRig = new GameObject("Head");
-            cameraRig.Transform.Parent = Transform;
-            cameraRig.Transform.LocalPosition = new Vector3(0, 1.7f, 0);
+            _cameraRig = cameraRig.Transform;
+            _cameraRig.Parent = Transform;
+            _cameraRig.LocalPosition = new Vector3(0, 1.7f, 0);
 
             var camera = GameObjectFactory.CreateCamera();
             camera.Transform.Parent = cameraRig.Transform;
@@ -57,6 +65,7 @@ namespace C3DE.Demo.Scripts.FPS
             _handTransform.Parent = cameraRig.Transform;
             _handTransform.LocalPosition = new Vector3(0.25f, -0.4f, -1.75f);
             _handLocalPosition = _handTransform.LocalPosition;
+            _handTransform.AddComponent<MotionController>();
 
             var model = content.Load<Model>("Models/K9/source/K9_Ravager");
             var gun = model.ToMeshRenderers();
@@ -78,16 +87,37 @@ namespace C3DE.Demo.Scripts.FPS
             _fpsController.LockCursor = true;
 
             _material = new UnlitMaterial();
-            _material.DiffuseColor = Color.AliceBlue;
+            _material.DiffuseColor = Color.CornflowerBlue;
 
-            AddComponent<Headbob>();
+            AddComponent<VRMovement>();
+
+            _headbob = AddComponent<Headbob>();
+
+            VRManager.VRServiceChanged += VRManager_VRServiceChanged;
+        }
+
+        private void VRManager_VRServiceChanged(VRService service)
+        {
+            _headbob.Enabled = service == null;
+            _fpsController.Enabled = service == null;
+            _cameraRig.LocalPosition = new Vector3(0, service == null ? 1.7f : 0, 0);
+
+            var model = _handTransform.GetChild(0);
+            model.LocalRotation = new Vector3(0, service == null ? 0 : MathHelper.Pi, 0);
+            model.LocalScale = new Vector3(service == null ? 0.01f : 0.005f);
         }
 
         public override void Update()
         {
             base.Update();
 
-            if (Input.Mouse.JustClicked(Inputs.MouseButton.Left))
+            var shoot = Input.Mouse.JustClicked(Inputs.MouseButton.Left);
+
+            var service = VRManager.ActiveService;
+            if (service != null)
+                shoot = service.GetButtonDown(1, XRButton.Trigger);
+
+            if (shoot)
             {
                 SpawnProjectile(_shootPoint.Position, _shootPoint.Forward);
                 _fpsController.StartCoroutine(StepShoot());
@@ -116,7 +146,7 @@ namespace C3DE.Demo.Scripts.FPS
             cube.Mesh.Size = new Vector3(0.1f);
             cube.Mesh.Build();
             cube.CastShadow = true;
-            cube.ReceiveShadow = true;
+            cube.ReceiveShadow = false;
             cube.Material = _material;
             cube.AddComponent<SphereCollider>();
 
@@ -130,6 +160,13 @@ namespace C3DE.Demo.Scripts.FPS
             var audioSource = go.AddComponent<AudioSource>();
             audioSource.Clip = Application.Content.Load<AudioClip>("Audio/Blaster");
             audioSource.Play();
+
+            var light = cube.AddComponent<Light>();
+            light.Priority = LightPrority.High;
+            light.Color = _material.DiffuseColor;
+            light.Type = LightType.Point;
+            light.Radius = 1.5f;
+            light.Intensity = 1.0f;
 
             _fpsController.StartCoroutine(DestroyAfter(go));
         }

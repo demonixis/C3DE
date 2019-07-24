@@ -126,6 +126,14 @@ namespace C3DE.Components
             _worldMatrix = Matrix.Identity;
         }
 
+        public Transform GetChild(int index)
+        {
+            if (index < _transforms.Count)
+                return _transforms[index];
+
+            return null;
+        }
+
         public void Translate(float x, float y, float z)
         {
             _localPosition.X += x;

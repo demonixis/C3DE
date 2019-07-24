@@ -17,7 +17,7 @@ namespace C3DE.VR
         private Matrix m_HMDPose;
         private OpenVRController[] m_Controllers;
 
-        public override SpriteEffects PreviewRenderEffect => SpriteEffects.FlipHorizontally;
+        public override SpriteEffects PreviewRenderEffect => SpriteEffects.None;
 
         public OpenVRService(Game game)
             : base(game)

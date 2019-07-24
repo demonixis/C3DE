@@ -5,14 +5,17 @@ using C3DE.Components.Rendering;
 using C3DE.Demo.Scripts;
 using C3DE.Demo.Scripts.Diagnostic;
 using C3DE.Demo.Scripts.FPS;
+using C3DE.Demo.Scripts.Lighting;
 using C3DE.Demo.Scripts.Utils;
 using C3DE.Graphics.Materials;
 using C3DE.Graphics.PostProcessing;
 using C3DE.Graphics.Primitives;
 using C3DE.Utils;
+using C3DE.VR;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 
 namespace C3DE.Demo.Scenes
@@ -87,7 +90,7 @@ namespace C3DE.Demo.Scenes
 
             var cubeSize = 4;
             var startPosition = new Vector2(0, 0);
-            BuildMap(content, player.Transform, cubeSize, startPosition, 3);
+            BuildMap(content, player.Transform, cubeSize, startPosition, 2);
 
             var go = new GameObject("MobManager");
             var mobSpawner = go.AddComponent<MobSpawner>();
@@ -119,13 +122,22 @@ namespace C3DE.Demo.Scenes
             SetPostProcess(bloom, true);
         }
 
+        public override void Update()
+        {
+            base.Update();
+
+            if (Input.Keys.JustPressed(Keys.F1))
+                Application.Engine.Renderer.SetVREnabled(true);
+            else if (Input.Keys.JustPressed(Keys.F2))
+                Application.Engine.Renderer.SetVREnabled(false);
+        }
+
         private void BuildMap(ContentManager content, Transform player, int cubeSize, Vector2 startPosition, int lightModulo)
         {
             Rigidbody rb;
             GameObject wall;
             MeshRenderer renderer;
             MeshRenderer instancedWall = null;
-            MeshRenderer instancedLight = null;
             Material material;
             CubeMesh cubeMesh = new CubeMesh();
             cubeMesh.Size = new Vector3(cubeSize);
@@ -160,8 +172,10 @@ namespace C3DE.Demo.Scenes
                         if (counter++ % lightModulo == 0)
                         {
                             material = materials[RandomHelper.Range(0, materials.Length)];
-                            var light = SpawnLight(new Vector3(posX, 3, posY), material.DiffuseColor, 5, 1, false, mesh, material);
-                            light.AddComponent<SinIntensity>();
+                            var light = SpawnLight(new Vector3(posX, 3, posY), material.DiffuseColor, 5, 0.5f, false, mesh, material);
+                            //light.AddComponent<SinIntensity>();
+                            var mover = light.AddComponent<LightMover>();
+                            mover.DisableMovement = true;
 
                             renderer = light.GetComponent<MeshRenderer>();
 

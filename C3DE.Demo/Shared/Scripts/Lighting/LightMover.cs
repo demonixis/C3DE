@@ -11,6 +11,8 @@ namespace C3DE.Demo.Scripts.Lighting
         private Vector3 rotation;
         private Light _light;
 
+        public bool DisableMovement { get; set; }
+
         public override void Start()
         {
             _light = GetComponent<Light>();
@@ -45,25 +47,26 @@ namespace C3DE.Demo.Scripts.Lighting
             else if (Input.Keys.Pressed(Keys.L))
                 rotation.X -= 0.01f;
 
-            if (Input.Keys.Pressed(Keys.Add))
+            if (Input.Keys.Pressed(Keys.Insert))
                 _light.Radius += 0.1f;
-            else if (Input.Keys.Pressed(Keys.Subtract))
+            else if (Input.Keys.Pressed(Keys.Delete))
                 _light.Radius -= 0.1f;
 
-            if (Input.Keys.Pressed(Keys.Divide))
+            if (Input.Keys.Pressed(Keys.Home))
                 _light.Intensity += 0.1f;
-            else if (Input.Keys.Pressed(Keys.Multiply))
+            else if (Input.Keys.Pressed(Keys.End))
                 _light.Intensity -= 0.1f;
 
-            if (Input.Keys.Pressed(Keys.P))
+            if (Input.Keys.Pressed(Keys.PageUp))
                 _light.FallOf += 0.1f;
-            else if (Input.Keys.Pressed(Keys.M))
+            else if (Input.Keys.Pressed(Keys.PageDown))
                 _light.FallOf -= 0.1f;
 
             if (Input.Mouse.Down(Inputs.MouseButton.Middle))
                 translation.Y += Input.Mouse.Delta.Y * 0.1f;
 
-            _transform.Translate(ref translation);
+            if (!DisableMovement)
+                _transform.Translate(ref translation);
         }
     }
 }

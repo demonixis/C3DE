@@ -14,11 +14,8 @@ namespace C3DE.Graphics.PostProcessing
     {
         private Effect _effect;
         private RenderTarget2D _sceneRenderTarget;
-        private RenderTarget2D _ssaoTarget;
-        private RenderTarget2D _depthBuffer;
-        private QuadRenderer _quadRenderer;
 
-        public RenderTarget2D SSAOTexture => _ssaoTarget;
+        public int Amount { get; set; } = 40;
 
         public SSAO(GraphicsDevice graphics) : base(graphics)
         {
@@ -35,42 +32,28 @@ namespace C3DE.Graphics.PostProcessing
         {
             _effect = content.Load<Effect>("Shaders/PostProcessing/SSAO");
             _sceneRenderTarget = GetRenderTarget();
-            _ssaoTarget = GetRenderTarget();
-            _quadRenderer = new QuadRenderer(_graphics);
-
-            var renderer = Application.Engine.Renderer;
-            _depthBuffer = renderer.GetDepthBuffer();
         }
 
-        public override void Draw(SpriteBatch spriteBatch, RenderTarget2D sceneRT)
+        public override void Draw(SpriteBatch spriteBatch, RenderTarget2D renderTarget)
         {
-            _graphics.SetRenderTarget(_ssaoTarget);
-            _graphics.SamplerStates[1] = SamplerState.LinearClamp;
-
-            var viewport = Application.GraphicsDevice.Viewport;
-            var halfPixel = -new Vector2(0.5f / (float)viewport.Width, 0.5f / (float)viewport.Height);
-            var viewportSize = new Vector4(viewport.Width, viewport.Height, 1.0f / viewport.Width, 1.0f / viewport.Height);
-
-            _effect.Parameters["HalfPixel"].SetValue(halfPixel);
-            _effect.Parameters["ViewportSize"].SetValue(viewportSize);
-            _effect.Parameters["MainTexture"].SetValue(sceneRT);
-            _effect.Parameters["SecondaryMap"].SetValue(_depthBuffer);
-
-            _effect.CurrentTechnique.Passes[0].Apply();
-            _quadRenderer.RenderFullscreenQuad();
-
             _graphics.SetRenderTarget(_sceneRenderTarget);
+            _graphics.SamplerStates[1] = SamplerState.LinearClamp;
+            _graphics.Textures[1] = _sceneRenderTarget;
 
-            _effect.Parameters["MainTexture"].SetValue(sceneRT);
-            _effect.Parameters["SecondaryMap"].SetValue(_ssaoTarget);
-            _effect.CurrentTechnique.Passes[1].Apply();
-            _quadRenderer.RenderFullscreenQuad();
+            var textureSamplerTexelSize = new Vector4(1.0f / (float)renderTarget.Width, 1.0f / (float)renderTarget.Height, renderTarget.Width, renderTarget.Height);
+
+            _effect.Parameters["Amount"].SetValue(Amount);
+            _effect.Parameters["MainTextureTexelSize"].SetValue(textureSamplerTexelSize);
+
+            DrawFullscreenQuad(spriteBatch, renderTarget, _sceneRenderTarget, _effect);
 
             _graphics.SetRenderTarget(null);
             _graphics.Textures[1] = _sceneRenderTarget;
 
-            _graphics.SetRenderTarget(sceneRT);
-            DrawFullscreenQuad(spriteBatch, _sceneRenderTarget, _sceneRenderTarget.Width, _sceneRenderTarget.Height, null);
+            var viewport = _graphics.Viewport;
+            _graphics.SetRenderTarget(renderTarget);
+
+            DrawFullscreenQuad(spriteBatch, _sceneRenderTarget, viewport.Width, viewport.Height, null);
         }
     }
 }

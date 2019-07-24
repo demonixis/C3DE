@@ -146,12 +146,6 @@ namespace C3DE.Components.Controllers
             else if (Input.Keys.Pressed(Keys.E))
                 translation.Y -= StrafeSpeed * Time.DeltaTime;
 
-            if (Input.Keys.Pressed(Keys.PageUp))
-                rotation.X -= LookSpeed * Time.DeltaTime;
-
-            else if (Input.Keys.Pressed(Keys.PageDown))
-                rotation.X += LookSpeed * Time.DeltaTime;
-
             if (Input.Keys.Pressed(Keys.Left))
                 rotation.Y += RotationSpeed * Time.DeltaTime;
 

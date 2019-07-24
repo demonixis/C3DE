@@ -1,6 +1,7 @@
 ﻿using C3DE.Components;
 using C3DE.Components.Physics;
 using C3DE.Components.Rendering;
+using C3DE.Components.VR;
 using C3DE.Graphics;
 using C3DE.Graphics.Materials;
 using C3DE.Graphics.Primitives;

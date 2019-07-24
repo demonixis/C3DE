@@ -11,6 +11,11 @@ namespace C3DE.Components.Lighting
         Ambient = 0, Directional, Point, Spot
     }
 
+    public enum LightPrority
+    {
+        Auto = 0, High
+    }
+
     public class Light : Component
     {
         internal protected Matrix _viewMatrix;
@@ -27,6 +32,8 @@ namespace C3DE.Components.Lighting
         public Matrix View => _viewMatrix;
 
         public Matrix Projection => _projectionMatrix;
+
+        public LightPrority Priority { get; set; } = LightPrority.Auto;
 
         public Vector3 Direction
         {
@@ -204,7 +211,7 @@ namespace C3DE.Components.Lighting
             if (light == null)
                 return -1;
 
-            if (Type == LightType.Directional)
+            if (Type == LightType.Directional || Priority == LightPrority.High)
                 return 0;
             else
                 return 1;

@@ -1,12 +1,11 @@
-﻿using C3DE.Components;
-using C3DE.VR;
+﻿using C3DE.VR;
 using Microsoft.Xna.Framework;
 
-namespace C3DE.Demo.Scripts
+namespace C3DE.Components.VR
 {
     public class MotionController : Behaviour
     {
-        private VRService _VRService;
+        private VRService _service;
         private Vector3 _position;
         private Quaternion _rotation;
 
@@ -14,31 +13,28 @@ namespace C3DE.Demo.Scripts
 
         public override void Start()
         {
-            base.Start();
-            _VRService = VRManager.ActiveService;
-            VRManager.VRServiceChanged += VRManager_VRServiceChanged;
+            _service = VRManager.ActiveService;
+            VRManager.VRServiceChanged += OnVRServiceChanged;
         }
 
-        private void VRManager_VRServiceChanged(VRService service)
+        private void OnVRServiceChanged(VRService service)
         {
-            _VRService = service;
+            _service = service;
         }
 
         public override void OnDestroy()
         {
             base.OnDestroy();
-            VRManager.VRServiceChanged -= VRManager_VRServiceChanged;
+            VRManager.VRServiceChanged -= OnVRServiceChanged;
         }
 
         public override void Update()
         {
-            base.Update();
-
-            if (_VRService == null)
+            if (_service == null)
                 return;
 
-            _VRService.GetLocalPosition(LeftHand ? 0 : 1, ref _position);
-            _VRService.GetLocalRotation(LeftHand ? 0 : 1, ref _rotation);
+            _service.GetLocalPosition(LeftHand ? 0 : 1, ref _position);
+            _service.GetLocalRotation(LeftHand ? 0 : 1, ref _rotation);
 
             _transform.LocalPosition = _position;
             _transform.LocalRotation = _rotation.ToEuler();
