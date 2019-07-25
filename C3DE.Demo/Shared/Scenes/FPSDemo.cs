@@ -268,8 +268,9 @@ namespace C3DE.Demo.Scenes
             {
                 MainTexture = content.Load<Texture2D>("Textures/pbr/Wall/Sci-fi_Walll_001_basecolor"),
                 NormalMap = content.Load<Texture2D>("Textures/pbr/Wall/Sci-fi_Walll_001_normal"),
-                SpecularColor = new Color(0.7f, 0.7f, 0.7f),
-                SpecularPower = 5
+                SpecularColor = new Color(0.8f, 0.8f, 0.8f),
+                SpecularPower = 5,
+                SpecularIntensity = 1
             };
         }
 

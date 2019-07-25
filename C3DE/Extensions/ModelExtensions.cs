@@ -52,7 +52,7 @@ namespace Microsoft.Xna.Framework.Graphics
                         material.MainTexture = effect.Texture;
                         material.DiffuseColor = new Color(effect.DiffuseColor.X, effect.DiffuseColor.Y, effect.DiffuseColor.Z);
                         material.SpecularTexture = TextureFactory.CreateColor(new Color(effect.SpecularColor.X, effect.SpecularColor.Y, effect.SpecularColor.Z), 1, 1);
-                        material.SpecularPower = effect.SpecularPower;
+                        material.SpecularPower = (int)effect.SpecularPower;
                         material.EmissiveColor = new Color(effect.EmissiveColor.X, effect.EmissiveColor.Y, effect.EmissiveColor.Z);
 
                         if (!string.IsNullOrEmpty(effect?.Texture?.Name))

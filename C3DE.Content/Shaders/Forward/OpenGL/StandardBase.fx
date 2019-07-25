@@ -18,7 +18,7 @@ float4x4 Projection;
 
 // Material
 float3 AmbientColor;
-float SpecularPower;
+int SpecularPower;
 
 // Misc
 float3 EyePosition;

@@ -55,7 +55,7 @@ namespace C3DE.Graphics.Shaders.Forward
         {
             _effect.Parameters["World"].SetValue(worldMatrix);
             _effect.Parameters["AlbedoMap"].SetValue(_material.MainTexture);
-            _effect.Parameters["SpecularColor"].SetValue((float)_material.SpecularColor.R / 255.0f);
+            _effect.Parameters["SpecularColor"].SetValue(_material.SpecularColor.ToVector3());
             _effect.Parameters["SpecularPower"].SetValue(_material.SpecularPower);
             _effect.Parameters["TextureTiling"].SetValue(_material.Tiling);
             _effect.Parameters["TotalTime"].SetValue(Time.TotalTime * _material.Speed);
@@ -67,6 +67,7 @@ namespace C3DE.Graphics.Shaders.Forward
                 _effect.Parameters["Features"].SetValue(_features);
                 _effect.Parameters["NormalMap"].SetValue(_material.NormalMap);
                 _effect.Parameters["SpecularMap"].SetValue(_material.SpecularMap);
+                _effect.Parameters["SpecularIntensity"].SetValue(_material.SpecularIntensity);
             }
 
             _effect.CurrentTechnique.Passes[0].Apply();

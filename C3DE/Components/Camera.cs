@@ -136,10 +136,10 @@ namespace C3DE.Components
         public Camera()
             : base()
         {
-            _fieldOfView = MathHelper.ToRadians(45);
+            _fieldOfView = MathHelper.ToRadians(60);
             _aspectRatio = (float)Application.GraphicsDevice.Viewport.Width / (float)Application.GraphicsDevice.Viewport.Height;
             _nearPlane = 0.5f;
-            _farPlane = 500.0f;
+            _farPlane = 1500.0f;
             _projectionType = CameraProjectionType.Perspective;
             _clearColor = Color.Black;
             _depth = 0;

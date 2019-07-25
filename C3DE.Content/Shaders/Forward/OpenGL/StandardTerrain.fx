@@ -2,7 +2,7 @@
 
 // Misc
 float2 TextureTiling;
-float SpecularColor;
+float3 SpecularColor;
 
 texture WeightMap;
 sampler weightSampler = sampler_state

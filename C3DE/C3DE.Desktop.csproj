@@ -64,7 +64,7 @@
     <Compile Include="Components\AudioListener.cs" />
     <Compile Include="Components\AudioSource.cs" />
     <Compile Include="Components\Behaviour.cs" />
-	<Compile Include="Components\Rendering\InstancedMeshRenderer.cs" />
+    <Compile Include="Components\Rendering\InstancedMeshRenderer.cs" />
     <Compile Include="Components\Rendering\LensFlare.cs" />
     <Compile Include="Components\Rendering\BoundingBoxRenderer.cs" />
     <Compile Include="Components\Controllers\Controller.cs" />
@@ -203,8 +203,6 @@
     <Compile Include="VR\NullVRService.cs" />
     <Compile Include="VR\OpenVR\OpenVRService.cs" />
     <Compile Include="VR\OpenVR\openvr_api.cs" />
-    <Compile Include="VR\OpenHMD\OpenHMD.cs" />
-    <Compile Include="VR\OpenHMD\OpenHMDService.cs" />
     <Compile Include="Utils\Coroutine.cs" />
   </ItemGroup>
   <ItemGroup>

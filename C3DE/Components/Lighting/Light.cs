@@ -79,7 +79,7 @@ namespace C3DE.Components.Lighting
         /// </summary>
         public float Radius { get; set; } = 25;
 
-        public float FallOf { get; set; } = 5.0f;
+        public float FallOf { get; set; } = 2.0f;
 
         /// <summary>
         /// The type of the light.

@@ -13,7 +13,8 @@ namespace C3DE.Graphics.Materials
         public TextureCube ReflectionTexture { get; set; }
 
         public Color SpecularColor { get; set; } = new Color(0.7f, 0.7f, 0.7f);
-        public float SpecularPower { get; set; } = 250.0f;
+        public int SpecularPower { get; set; } = 16;
+        public float SpecularIntensity { get; set; } = 1.0f;
         public float Speed = 0.5f;
         public float ReflectionIntensity { get; set; } = 0.35f;
         public float Alpha { get; set; } = 0.65f;

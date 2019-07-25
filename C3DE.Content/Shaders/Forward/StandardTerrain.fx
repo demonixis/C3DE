@@ -4,7 +4,8 @@
 // Misc
 float2 TextureTiling;
 float2 Features;
-float SpecularColor;
+float3 SpecularColor;
+float SpecularIntensity;
 
 DECLARE_TEXTURE(WeightMap, 1);
 DECLARE_TEXTURE(GrassMap, 2);
@@ -38,20 +39,21 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 	float3 albedo = BlendTextures(GrassMap, SandMap, RockMap, SnowMap, input.UV);
 	float3 normal = input.WorldNormal;
 
-#if SM4
 	if (Features.x > 0)
 	{
 		float3 normalBlend = BlendTextures(GrassNormalMap, SandNormalMap, RockNormalMap, SnowNormalMap, input.UV);
 		float3 normalMap = (2.0 * (normalBlend)) - 1.0;
 		normal = normalize(mul(normalMap, input.WorldToTangentSpace));
 	}
-#endif
 
 	// Shadows
 	float shadowTerm = CalcShadow(input.WorldPosition);
 
+	float3 emission = float3(0, 0, 0);
+	float4 reflection = float4(0, 0, 0, 0);
+
 	// Base Pixel Shader
-	return float4(StandardPixelShader(input.WorldPosition, normal, SpecularColor, input.FogDistance, albedo, FLOAT3(0), shadowTerm, FLOAT4(0)), 1.0);
+	return float4(StandardPixelShader(input.WorldPosition, normal, SpecularColor * SpecularIntensity, input.FogDistance, albedo, emission, shadowTerm, reflection), 1.0);
 }
 
 TECHNIQUE_SM4(Terrain, VertexShaderFunction, PixelShaderFunction);

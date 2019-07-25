@@ -3,7 +3,7 @@
 // Variables
 float3 DiffuseColor;
 float2 TextureTiling;
-float SpecularColor;
+float3 SpecularColor;
 float TotalTime;
 float Alpha;
 

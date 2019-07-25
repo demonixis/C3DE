@@ -3,7 +3,7 @@
 // Misc
 float2 TextureTiling;
 float TotalTime;
-float SpecularColor;
+float3 SpecularColor;
 
 texture AlbedoMap;
 sampler albedoSampler = sampler_state

@@ -11,8 +11,8 @@ namespace C3DE.Graphics.Materials
         public Texture2D NormalMap { get; set; }
         public Texture2D SpecularMap { get; set; }
         public Color SpecularColor { get; set; } = new Color(0.5f, 0.5f, 0.5f);
-
-        public float SpecularPower { get; set; } = 250.0f;
+        public float SpecularIntensity { get; set; } = 1.0f;
+        public int SpecularPower { get; set; } = 16;
         public float Speed { get; set; } = 0.25f;
 
         protected override void SetupShaderMaterial(BaseRenderer renderer)

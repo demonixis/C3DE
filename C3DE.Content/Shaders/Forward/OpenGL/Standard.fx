@@ -4,7 +4,7 @@
 float3 DiffuseColor;
 float2 TextureTiling = float2(1, 1);
 float3 EmissiveColor;
-float SpecularColor;
+float3 SpecularColor;
 int EmissiveEnabled;
 
 texture AlbedoMap;
@@ -40,9 +40,9 @@ float4 MainPS(VertexShaderOutput input) : COLOR0
 	float3 normal = input.WorldNormal;
 	
 	// Emissive
-	float3 emissive = EmissiveColor;
+	float3 emissive = float3(0, 0, 0);
     if (EmissiveEnabled > 0)
-		emissive *= tex2D(emissiveSampler, scaledUV).xyz;
+		emissive = tex2D(emissiveSampler, scaledUV).xyz * EmissiveColor;
 
 	// Base Pixel Shader
 	return float4(StandardPixelShader(input.WorldPosition, normal, SpecularColor, albedo.rgb * DiffuseColor, emissive), albedo.a);

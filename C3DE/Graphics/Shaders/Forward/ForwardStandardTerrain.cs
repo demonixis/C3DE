@@ -34,7 +34,7 @@ namespace C3DE.Graphics.Shaders.Forward
             _effect.Parameters["SandMap"].SetValue(_material.SandTexture);
             _effect.Parameters["RockMap"].SetValue(_material.RockTexture);
             _effect.Parameters["SnowMap"].SetValue(_material.SnowTexture);
-            _effect.Parameters["SpecularColor"].SetValue(_material._specularColor.X);
+            _effect.Parameters["SpecularColor"].SetValue(_material.SpecularColor.ToVector3());
             _effect.Parameters["SpecularPower"].SetValue(_material.SpecularPower);
 
             if (GraphicsAPI == GraphicsAPI.Direct3D)
@@ -50,6 +50,7 @@ namespace C3DE.Graphics.Shaders.Forward
 
                 _effect.Parameters["Features"].SetValue(_features);
                 _effect.Parameters["ShadowEnabled"].SetValue(receiveShadow);
+                _effect.Parameters["SpecularIntensity"].SetValue(_material.SpecularIntensity);
 
                 if (hasNormalMap)
                 {

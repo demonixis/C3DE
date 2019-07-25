@@ -4,7 +4,8 @@
 float2 Features;
 float2 TextureTiling;
 float TotalTime;
-float SpecularColor;
+float3 SpecularColor;
+float SpecularIntensity;
 
 DECLARE_TEXTURE(AlbedoMap, 1);
 DECLARE_TEXTURE(NormalMap, 2);
@@ -44,9 +45,9 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 	}
 
 	// Specular
-	float specular = SpecularColor;
+	float specular = SpecularColor * SpecularIntensity;
 	if (Features.y > 0)
-		specular = SAMPLE_TEXTURE(SpecularMap, (T2 * 4.0)).r;
+		specular *= SAMPLE_TEXTURE(SpecularMap, (T2 * 4.0));
 
 	// Base Pixel Shader
 	return float4(StandardPixelShader(input.WorldPosition, normal, specular, input.FogDistance, albedo, FLOAT3(0), 1.0, FLOAT4(0)), 1.0);

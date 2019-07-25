@@ -165,7 +165,7 @@ namespace C3DE.Demo.Scripts.FPS
             light.Priority = LightPrority.High;
             light.Color = _material.DiffuseColor;
             light.Type = LightType.Point;
-            light.Radius = 1.5f;
+            light.Radius = 2.5f;
             light.Intensity = 1.0f;
 
             _fpsController.StartCoroutine(DestroyAfter(go));
@@ -217,7 +217,9 @@ namespace C3DE.Demo.Scripts.FPS
                 NormalMap = content.Load<Texture2D>("Models/K9/textures/MAT_Scifi_Shotty_Normal_DirectX"),
                 EmissiveMap = content.Load<Texture2D>("Models/K9/textures/MAT_Scifi_Shotty_Emissive"),
                 SpecularColor = new Color(new Vector3(0.75f)),
-                SpecularPower = 5
+                SpecularPower = 5,
+                EmissiveColor = Color.White,
+                EmissiveIntensity = 1
             };
         }
     }

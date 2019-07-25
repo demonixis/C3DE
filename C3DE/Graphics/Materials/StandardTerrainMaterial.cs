@@ -8,8 +8,6 @@ namespace C3DE.Graphics.Materials
 {
     public class StandardTerrainMaterial : Material
     {
-        internal Vector3 _specularColor = new Vector3(0.6f, 0.6f, 0.6f);
-
         public Texture2D GrassNormalMap { get; set; }
         public Texture2D SnowTexture { get; set; }
         public Texture2D SnownNormalMap { get; set; }
@@ -19,13 +17,9 @@ namespace C3DE.Graphics.Materials
         public Texture2D RockNormalMap { get; set; }
         public Texture2D WeightTexture { get; set; }
 
-        public float SpecularPower { get; set; } = 250.0f;
-
-        public Color SpecularColor
-        {
-            get => new Color(_specularColor);
-            set => _specularColor = value.ToVector3();
-        }
+        public int SpecularPower { get; set; } = 16;
+        public float SpecularIntensity { get; set; } = 1;
+        public Color SpecularColor { get; set; } = new Color(0.6f, 0.6f, 0.6f);
 
         protected override void SetupShaderMaterial(BaseRenderer renderer)
         {

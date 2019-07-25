@@ -180,8 +180,6 @@
     <Compile Include="VR\NullVRService.cs" />
     <Compile Include="VR\OpenVR\OpenVRService.cs" />
     <Compile Include="VR\OpenVR\openvr_api.cs" />
-    <Compile Include="VR\OpenHMD\OpenHMD.cs" />
-    <Compile Include="VR\OpenHMD\OpenHMDService.cs" />
     <Compile Include="Utils\Coroutine.cs" />
   </ItemGroup>
   <ItemGroup>

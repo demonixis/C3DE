@@ -8,8 +8,9 @@ float4 Features;
 float3 DiffuseColor;
 float2 TextureTiling = float2(1, 1);
 float3 EmissiveColor;
-float SpecularColor;
+float3 SpecularColor;
 float EmissiveIntensity;
+float SpecularIntensity;
 float ReflectionIntensity;
 float Cutout;
 
@@ -39,16 +40,21 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
     }
 
 	// Specular
-	float specularTerm = SpecularColor;
+	float3 specular = SpecularColor * SpecularIntensity;
 	
 	if (Features.w > 0)
-		specularTerm = SAMPLE_TEXTURE(SpecularMap, scaledUV).r;
+		specular *= SAMPLE_TEXTURE(SpecularMap, scaledUV).rgb;
 	
 	// Emissive
-	float3 emissive = EmissiveColor * EmissiveIntensity;
-    if (Features.y > 0)
-		emissive = SAMPLE_TEXTURE(EmissiveMap, scaledUV).xyz * EmissiveIntensity;
+	float3 emissive = float3(0, 0, 0);
+	if (EmissiveIntensity > 0)
+	{
+		emissive = EmissiveColor * EmissiveIntensity;
 
+		if (Features.y > 0)
+			emissive *= SAMPLE_TEXTURE(EmissiveMap, scaledUV).xyz;
+	}
+	
 	// Shadows
 	float shadowTerm = CalcShadow(input.WorldPosition);
 
@@ -62,8 +68,9 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 	}
 
 	// Base Pixel Shader
-	return float4(StandardPixelShader(input.WorldPosition, normal, specularTerm, input.FogDistance, albedo.rgb * DiffuseColor, emissive, shadowTerm, reflection), albedo.a);
+	return float4(StandardPixelShader(input.WorldPosition, normal, specular, input.FogDistance, albedo.rgb * DiffuseColor, emissive, shadowTerm, reflection), albedo.a);
 }
 
+// Per Pixel Lighting
 TECHNIQUE_SM4(Standard, VertexShaderFunction, PixelShaderFunction);
 TECHNIQUE_SM4(Standard_Instancing, MainVS_Instancing, PixelShaderFunction);

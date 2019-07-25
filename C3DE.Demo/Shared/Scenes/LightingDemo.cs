@@ -21,7 +21,7 @@ namespace C3DE.Demo.Scenes
             base.Initialize();
 
             //Destroy(_directionalLight);
-            _directionalLight.Intensity = 0.05f;
+            //_directionalLight.Intensity = 0.05f;
 
             // Terrain
             var terrainMaterial = new StandardMaterial();
@@ -57,7 +57,10 @@ namespace C3DE.Demo.Scenes
             modelMaterial.NormalMap = Application.Content.Load<Texture2D>("Models/Quandtum/textures/Turret-Normal");
             modelMaterial.EmissiveMap = Application.Content.Load<Texture2D>("Models/Quandtum/textures/Turret-Emission");
             modelMaterial.SpecularTexture = Application.Content.Load<Texture2D>("Models/Quandtum/textures/Turret-Specular");
-            modelMaterial.SpecularPower = 25;
+            modelMaterial.SpecularPower = 8;
+            modelMaterial.SpecularColor = Color.White;
+            modelMaterial.EmissiveColor = Color.White;
+            modelMaterial.EmissiveIntensity = 1;
 
             _camera.AddComponent<VRPlayerEnabler>();
 

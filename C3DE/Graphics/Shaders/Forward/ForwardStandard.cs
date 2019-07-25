@@ -30,11 +30,11 @@ namespace C3DE.Graphics.Shaders.Forward
             _effect.Parameters["TextureTiling"].SetValue(_material.Tiling);
             _effect.Parameters["World"].SetValue(worldMatrix);
             _effect.Parameters["AlbedoMap"].SetValue(_material.MainTexture);
-            _effect.Parameters["SpecularColor"].SetValue((float)_material.SpecularColor.R / 255.0f);
+            _effect.Parameters["DiffuseColor"].SetValue(_material._diffuseColor);
+            _effect.Parameters["SpecularColor"].SetValue(_material.SpecularColor.ToVector3());
             _effect.Parameters["SpecularPower"].SetValue(_material.SpecularPower);
             _effect.Parameters["EmissiveMap"].SetValue(_material.EmissiveMap);
             _effect.Parameters["EmissiveColor"].SetValue(_material.EmissiveColor.ToVector3());
-            _effect.Parameters["DiffuseColor"].SetValue(_material._diffuseColor);
 
             if (GraphicsAPI == GraphicsAPI.Direct3D)
             {
@@ -50,6 +50,7 @@ namespace C3DE.Graphics.Shaders.Forward
                 _effect.Parameters["Cutout"].SetValue(_material.Cutout);
                 _effect.Parameters["ReflectionIntensity"].SetValue(_material.ReflectionIntensity);
                 _effect.Parameters["EmissiveIntensity"].SetValue(_material.EmissiveIntensity);
+                _effect.Parameters["SpecularIntensity"].SetValue(_material.SpecularIntensity);
             }
             else
             {

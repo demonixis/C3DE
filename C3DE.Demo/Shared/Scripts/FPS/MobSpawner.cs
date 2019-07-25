@@ -23,8 +23,6 @@ namespace C3DE.Demo.Scripts.FPS
         private Material _mobMaterial;
         private (int, int)[] _walkableIndex;
         private AStar _astar;
-        private int[,] _grid;
-        private bool _initialized;
 
         public override void Start()
         {
@@ -33,7 +31,6 @@ namespace C3DE.Demo.Scripts.FPS
 
         public void SetGrid(int[,] grid, int padding, Vector2 startPosition)
         {
-            _grid = grid;
             _mapOrigin = startPosition;
             _mapPadding = padding;
 
@@ -86,7 +83,7 @@ namespace C3DE.Demo.Scripts.FPS
                 //rb.AddComponent<BoxCollider>();
 
                 //if (FPSDemo.DebugPhysics)
-                    //rb.AddComponent<BoundingBoxRenderer>();
+                //rb.AddComponent<BoundingBoxRenderer>();
 
                 var paths = GetPaths(tileX, tileY);
                 var nav = go.AddComponent<SimplePath>();
@@ -96,8 +93,6 @@ namespace C3DE.Demo.Scripts.FPS
                     nav.AddPath(new Vector3((path.Position.X * padding) + startPosition.X, go.Transform.Position.Y, (path.Position.Y * padding) + startPosition.Y));
                 nav.End();
             }
-
-            _initialized = true;
         }
 
         private Stack<Node> GetPaths(float tileX, float tileY)
@@ -110,7 +105,7 @@ namespace C3DE.Demo.Scripts.FPS
                 destination = _walkableIndex[RandomHelper.Range(0, _walkableIndex.Length)];
                 paths = _astar.FindPath(tileX, tileY, destination.Item1, destination.Item2);
 
-            } while (paths == null);
+            } while (paths == null || paths.Count < 2);
 
             return paths;
         }
@@ -150,7 +145,10 @@ namespace C3DE.Demo.Scripts.FPS
                 NormalMap = content.Load<Texture2D>("Models/Drone/drone_Normal"),
                 EmissiveMap = content.Load<Texture2D>("Models/Drone/drone_Emission"),
                 SpecularColor = new Color(0.7f, 0.7f, 0.7f),
-                SpecularPower = 25
+                SpecularPower = 2,
+                SpecularIntensity = 2,
+                EmissiveColor = Color.White,
+                EmissiveIntensity = 2.5f
             };
         }
     }
