@@ -162,17 +162,11 @@ float3 CalculateOneLight(int i, float3 worldPosition, float3 worldNormal, float3
 // Standard Pixel Shader for Per Pixel Lighting
 float3 StandardPixelShader(float4 worldPosition, float3 normal, float3 specularTerm, float fogDistance, float3 albedo, float3 emissive, float shadowTerm, float4 reflection)
 {   
-	float3 light;
-	int limit = LightCount;
-
-#if !SM4
-	limit = min(MAX_LIGHT_COUNT, LightCount);
-#endif
+	float3 light = float3(0, 0, 0);
+	int limit = min(MAX_LIGHT_COUNT, LightCount);
 
 	for (int i = 0; i < limit; i++)
-	{
 		light += CalculateOneLight(i, worldPosition.xyz, normal, albedo, specularTerm);
-	}
 
 	if (reflection.a > 0)
 		albedo = lerp(albedo, reflection.xyz, reflection.a);

@@ -4,6 +4,7 @@
 float2 TextureTiling;
 float TotalTime;
 float3 SpecularColor;
+float SpecularIntensity;
 
 texture AlbedoMap;
 sampler albedoSampler = sampler_state
@@ -55,7 +56,7 @@ float4 MainPS(VertexShaderOutput input) : COLOR0
 	float3 normal = input.WorldNormal;
 
 	// Base Pixel Shader
-	return float4(StandardPixelShader(input.WorldPosition, normal, SpecularColor.r, albedo, float3(0, 0, 0)), 1.0);
+	return float4(StandardPixelShader(input.WorldPosition, normal, SpecularColor * SpecularIntensity, albedo, float3(0, 0, 0)), 1.0);
 }
 
 technique StandardLava

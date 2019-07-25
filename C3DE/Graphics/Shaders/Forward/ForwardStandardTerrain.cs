@@ -36,6 +36,7 @@ namespace C3DE.Graphics.Shaders.Forward
             _effect.Parameters["SnowMap"].SetValue(_material.SnowTexture);
             _effect.Parameters["SpecularColor"].SetValue(_material.SpecularColor.ToVector3());
             _effect.Parameters["SpecularPower"].SetValue(_material.SpecularPower);
+            _effect.Parameters["SpecularIntensity"].SetValue(_material.SpecularIntensity);
 
             if (GraphicsAPI == GraphicsAPI.Direct3D)
             {
@@ -50,7 +51,6 @@ namespace C3DE.Graphics.Shaders.Forward
 
                 _effect.Parameters["Features"].SetValue(_features);
                 _effect.Parameters["ShadowEnabled"].SetValue(receiveShadow);
-                _effect.Parameters["SpecularIntensity"].SetValue(_material.SpecularIntensity);
 
                 if (hasNormalMap)
                 {

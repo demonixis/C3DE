@@ -33,9 +33,11 @@ namespace C3DE.Graphics.Shaders.Forward
             _effect.Parameters["DiffuseColor"].SetValue(_material._diffuseColor);
             _effect.Parameters["SpecularColor"].SetValue(_material.SpecularColor.ToVector3());
             _effect.Parameters["SpecularPower"].SetValue(_material.SpecularPower);
+            _effect.Parameters["SpecularIntensity"].SetValue(_material.SpecularIntensity);
             _effect.Parameters["EmissiveMap"].SetValue(_material.EmissiveMap);
             _effect.Parameters["EmissiveColor"].SetValue(_material.EmissiveColor.ToVector3());
-
+            _effect.Parameters["EmissiveIntensity"].SetValue(_material.EmissiveIntensity);
+            
             if (GraphicsAPI == GraphicsAPI.Direct3D)
             {
                 _features.X = _material.NormalMap != null ? 1 : 0;
@@ -49,8 +51,6 @@ namespace C3DE.Graphics.Shaders.Forward
                 _effect.Parameters["ShadowEnabled"].SetValue(receiveShadow);
                 _effect.Parameters["Cutout"].SetValue(_material.Cutout);
                 _effect.Parameters["ReflectionIntensity"].SetValue(_material.ReflectionIntensity);
-                _effect.Parameters["EmissiveIntensity"].SetValue(_material.EmissiveIntensity);
-                _effect.Parameters["SpecularIntensity"].SetValue(_material.SpecularIntensity);
             }
             else
             {

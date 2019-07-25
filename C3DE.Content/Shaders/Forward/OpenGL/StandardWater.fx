@@ -4,6 +4,7 @@
 float3 DiffuseColor;
 float2 TextureTiling;
 float3 SpecularColor;
+float SpecularIntensity;
 float TotalTime;
 float Alpha;
 
@@ -43,7 +44,7 @@ float4 MainPS(VertexShaderOutput input) : COLOR0
 	float3 normal = input.WorldNormal;
 
 	// Base Pixel Shader
-	return float4(StandardPixelShader(input.WorldPosition, normal, SpecularColor, albedo.rgb * DiffuseColor, float3(0, 0, 0)), Alpha);
+	return float4(StandardPixelShader(input.WorldPosition, normal, SpecularColor * SpecularIntensity, albedo.rgb * DiffuseColor, float3(0, 0, 0)), Alpha);
 }
 
 technique Water
