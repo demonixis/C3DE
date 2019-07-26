@@ -2,10 +2,6 @@
 #include "StandardLighting.fxh"
 #include "../Common/Fog.fxh"
 
-#if REFLECTION_MAP
-float4x4 ReflectionView;
-#endif
-
 // Matrix
 float4x4 World;
 float4x4 View;
@@ -36,7 +32,7 @@ struct VertexShaderOutput
     float3 WorldNormal : TEXCOORD1;
     float4 WorldPosition : TEXCOORD2;
 #if REFLECTION_MAP
-	float4 Reflection : TEXCOORD3;
+	float3 Reflection : TEXCOORD3;
 #endif
     float3x3 WorldToTangentSpace : TEXCOORD4;
     float FogDistance : FOG;
@@ -49,8 +45,8 @@ struct VSOutput_VL
 	float3 WorldNormal : TEXCOORD1;
     float4 WorldPosition : TEXCOORD2;
     float3 Color : TEXCOORD3;
-	#if REFLECTION_MAP
-	float4 Reflection : TEXCOORD4;
+#if REFLECTION_MAP
+	float3 Reflection : TEXCOORD4;
 #endif
 	float FogDistance : FOG;
 };
@@ -79,9 +75,8 @@ VertexShaderOutput CommonVS(VertexShaderInput input, float4x4 instanceTransform)
     output.WorldToTangentSpace[2] = input.Normal;
 
 #if REFLECTION_MAP
-	float4x4 preReflectionViewProjection = mul(ReflectionView, Projection);
-	float4x4 preWorldReflectionViewProjection = mul(instanceTransform, preReflectionViewProjection);
-	output.Reflection = mul(input.Position, preWorldReflectionViewProjection);
+	float3 viewDirection = EyePosition - worldPosition.xyz;
+	output.Reflection = reflect(-normalize(viewDirection), normalize(input.Normal));
 #endif
 
     return output;

@@ -27,7 +27,6 @@ namespace C3DE.Demo.Scenes
             var terrainMaterial = new StandardMaterial();
             terrainMaterial.MainTexture = TextureFactory.CreateCheckboard(Color.White, Color.Black);
             terrainMaterial.SpecularPower = 2;
-            terrainMaterial.ReflectionIntensity = 0.85f;
             terrainMaterial.Tiling = new Vector2(32);
 
             var terrainGo = GameObjectFactory.CreateTerrain();
@@ -52,6 +51,13 @@ namespace C3DE.Demo.Scenes
             renderer.Transform.Rotate(0, -MathHelper.PiOver2, 0);
             renderer.Transform.Translate(-0.1f, 0, 0);
 
+            var reflectionProbe = new GameObject("ReflectionProbe");
+            reflectionProbe.Transform.Position = new Vector3(0, 25, -25);
+            var probe = reflectionProbe.AddComponent<ReflectionProbe>();
+            probe.Size = 256;
+            probe.Mode = ReflectionProbe.RenderingMode.Realtime;
+            reflectionProbe.AddComponent<ReflectionProbeViewer>();
+
             var modelMaterial = renderer.Material as StandardMaterial;
             modelMaterial.MainTexture = Application.Content.Load<Texture2D>("Models/Quandtum/textures/Turret-Diffuse");
             modelMaterial.NormalMap = Application.Content.Load<Texture2D>("Models/Quandtum/textures/Turret-Normal");
@@ -61,6 +67,8 @@ namespace C3DE.Demo.Scenes
             modelMaterial.SpecularColor = Color.White;
             modelMaterial.EmissiveColor = Color.White;
             modelMaterial.EmissiveIntensity = 1;
+            modelMaterial.ReflectionMap = probe.ReflectionMap;
+            modelMaterial.ReflectionIntensity = 2f;
 
             _camera.AddComponent<VRPlayerEnabler>();
 

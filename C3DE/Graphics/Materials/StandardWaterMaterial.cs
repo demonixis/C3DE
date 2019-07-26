@@ -9,8 +9,8 @@ namespace C3DE.Graphics.Materials
     public class StandardWaterMaterial : Material
     {
         public Texture2D NormalMap { get; set; }
-        public Texture2D SpecularTexture { get; set; }
-        public TextureCube ReflectionTexture { get; set; }
+        public Texture2D SpecularMap { get; set; }
+        public TextureCube ReflectionMap { get; set; }
 
         public Color SpecularColor { get; set; } = new Color(0.7f, 0.7f, 0.7f);
         public int SpecularPower { get; set; } = 16;

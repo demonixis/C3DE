@@ -52,8 +52,10 @@ namespace C3DE.Demo.Scenes
                 MainTexture = content.Load<Texture2D>("Textures/Fluids/water"),
                 NormalMap = content.Load<Texture2D>("Textures/Fluids/Water_Normal"),
                 SpecularColor = new Color(0.7f, 0.7f, 0.7f),
-                SpecularPower = 50
-            }; ;
+                SpecularPower = 50,
+                ReflectionMap = RenderSettings.Skybox.Texture,
+                ReflectionIntensity = 0.75f
+            };
 
             // And fog
             RenderSettings.FogDensity = 0.0085f;

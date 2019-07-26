@@ -15,13 +15,13 @@ namespace C3DE.Graphics.Rendering
     /// </summary>
     public class DeferredRenderer : BaseRenderer
     {
-        private QuadRenderer m_QuadRenderer;
+        private QuadRenderer _quadRenderer;
         private RenderTarget2D m_ColorTarget;
         private RenderTarget2D m_DepthTarget;
         private RenderTarget2D m_NormalTarget;
         private RenderTarget2D m_LightTarget;
-        private Effect m_ClearEffect;
-        private Effect m_CombineEffect;
+        private Effect _clearEffect;
+        private Effect _combineEffect;
 
         public RenderTarget2D ColorBuffer => m_ColorTarget;
         public RenderTarget2D NormalMap => m_NormalTarget;
@@ -31,14 +31,14 @@ namespace C3DE.Graphics.Rendering
         public DeferredRenderer(GraphicsDevice graphics)
             : base(graphics)
         {
-            m_QuadRenderer = new QuadRenderer(graphics);
+            _quadRenderer = new QuadRenderer(graphics);
         }
 
         public override void Initialize(ContentManager content)
         {
             base.Initialize(content);
-            m_ClearEffect = content.Load<Effect>("Shaders/Deferred/Clear");
-            m_CombineEffect = content.Load<Effect>("Shaders/Deferred/Combine");
+            _clearEffect = content.Load<Effect>("Shaders/Deferred/Clear");
+            _combineEffect = content.Load<Effect>("Shaders/Deferred/Combine");
         }
 
         public override RenderTarget2D GetDepthBuffer() => m_DepthTarget;
@@ -78,7 +78,7 @@ namespace C3DE.Graphics.Rendering
             }
         }
 
-        private void RenderObjects(Scene scene, ref Vector3 cameraPosition, ref Matrix cameraViewMatrix, ref Matrix cameraProjectionMatrix, PlanarReflection planarReflection = null)
+        private void RenderObjects(Scene scene, ref Vector3 cameraPosition, ref Matrix cameraViewMatrix, ref Matrix cameraProjectionMatrix)
         {
             using (_graphicsDevice.GeometryUnlitState())
             {
@@ -133,11 +133,8 @@ namespace C3DE.Graphics.Rendering
 
             _graphicsDevice.SetRenderTargets(m_ColorTarget, m_NormalTarget, m_DepthTarget);
 
-            foreach (var pass in m_ClearEffect.Techniques[0].Passes)
-            {
-                pass.Apply();
-                m_QuadRenderer.RenderFullscreenQuad();
-            }
+            _clearEffect.CurrentTechnique.Passes[0].Apply();
+            _quadRenderer.RenderFullscreenQuad();
 
             using (_graphicsDevice.GeometryState())
                 RenderObjects(scene, ref cameraPosition, ref cameraViewMatrix, ref cameraProjectionMatrix);
@@ -150,13 +147,10 @@ namespace C3DE.Graphics.Rendering
 
             using (_graphicsDevice.PostProcessState())
             {
-                foreach (var pass in m_CombineEffect.Techniques[0].Passes)
-                {
-                    m_CombineEffect.Parameters["ColorMap"].SetValue(m_ColorTarget);
-                    m_CombineEffect.Parameters["LightMap"].SetValue(m_LightTarget);
-                    pass.Apply();
-                    m_QuadRenderer.RenderFullscreenQuad();
-                }
+                _combineEffect.Parameters["ColorMap"].SetValue(m_ColorTarget);
+                _combineEffect.Parameters["LightMap"].SetValue(m_LightTarget);
+                _combineEffect.CurrentTechnique.Passes[0].Apply();
+                _quadRenderer.RenderFullscreenQuad();
 
                 RenderPostProcess(scene._postProcessPasses, _sceneRenderTargets[eye]);
 

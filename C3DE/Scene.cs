@@ -44,7 +44,6 @@ namespace C3DE
         internal protected Dictionary<Renderer, List<Transform>> _instances;
         internal protected List<Renderer> _renderList;
         internal protected List<PostProcessPass> _postProcessPasses;
-        internal protected List<PlanarReflection> _planarReflections;
         internal protected List<ReflectionProbe> _reflectionProbes;
         internal protected List<Collider> _colliders;
         internal protected List<Camera> _cameras;
@@ -80,7 +79,6 @@ namespace C3DE
             _lights = new List<Light>();
             _postProcessPasses = new List<PostProcessPass>();
             _componentsToDestroy = new List<Component>();
-            _planarReflections = new List<PlanarReflection>();
             _reflectionProbes = new List<ReflectionProbe>();
 
             // Physics
@@ -180,7 +178,6 @@ namespace C3DE
             _scripts.Clear();
             _gameObjects.Clear();
             _postProcessPasses.Clear();
-            _planarReflections.Clear();
             _componentsToDestroy.Clear();
             _reflectionProbes.Clear();
             _needRemoveCheck = false;
@@ -250,8 +247,6 @@ namespace C3DE
                 SetComponent((Light)component, _lights, added);
             else if (component is Camera)
                 SetComponent((Camera)component, _cameras, added);
-            else if (component is PlanarReflection)
-                SetComponent((PlanarReflection)component, _planarReflections, added);
             else if (component is ReflectionProbe)
                 SetComponent((ReflectionProbe)component, _reflectionProbes, added);
             else if (component is Behaviour)

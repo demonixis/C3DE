@@ -9,22 +9,13 @@ float TotalTime;
 float Alpha;
 float3 SpecularColor;
 float SpecularIntensity;
+float ReflectionIntensity;
 
 // Textures
 DECLARE_TEXTURE(AlbedoMap, 1);
 DECLARE_TEXTURE(NormalMap, 2);
 DECLARE_TEXTURE(SpecularMap, 3);
-
-Texture ReflectionMap;
-sampler ReflectionSampler = sampler_state
-{
-	texture = <ReflectionMap>;
-	magfilter = LINEAR;
-	minfilter = LINEAR;
-	mipfilter = LINEAR;
-	AddressU = mirror;
-	AddressV = mirror;
-};
+DECLARE_CUBEMAP(ReflectionMap, 4);
 
 VertexShaderOutput VertexShaderWaterFunction(VertexShaderInput input)
 {
@@ -63,14 +54,10 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 	float shadowTerm = CalcShadow(input.WorldPosition);
 
 	// Reflection
+	// Reflection
 	float4 reflection = float4(0, 0, 0, 0);
-
-	if (Features.z > 0)
-	{
-		float4 refl = input.Reflection;
-		float2 projectedUV = float2(refl.x / refl.w / 2.0 + 0.5, -refl.y / refl.w / 2.0 + 0.5);
-		reflection = float4(tex2D(ReflectionSampler, projectedUV + input.WorldNormal).xyz, Features.z);
-	}
+	if (ReflectionIntensity > 0)
+		reflection = float4(SAMPLE_CUBEMAP(ReflectionMap, normalize(input.Reflection)).rgb, ReflectionIntensity);
 	
 	float3 emission = float3(0, 0, 0);
 

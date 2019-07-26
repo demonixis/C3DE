@@ -18,7 +18,7 @@ DECLARE_TEXTURE(AlbedoMap, 1);
 DECLARE_TEXTURE(NormalMap, 2);
 DECLARE_TEXTURE(SpecularMap, 3);
 DECLARE_TEXTURE(EmissiveMap, 4);
-DECLARE_TEXTURE(ReflectionMap, 5);
+DECLARE_CUBEMAP(ReflectionMap, 5);
 
 float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 { 
@@ -62,11 +62,12 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 	float4 reflection = float4(0, 0, 0, 0);
 	if (ReflectionIntensity > 0)
 	{
-		float4 refl = input.Reflection;
-		float2 projectedUV = float2(refl.x / refl.w / 2.0 + 0.5, -refl.y / refl.w / 2.0 + 0.5);
-		reflection = float4(SAMPLE_TEXTURE(ReflectionMap, projectedUV + input.WorldNormal).xyz, ReflectionIntensity);
-	}
+		reflection = float4(SAMPLE_CUBEMAP(ReflectionMap, normalize(input.Reflection)).rgb, ReflectionIntensity);
 
+		// FIXME: Temporary hack
+		if (ReflectionIntensity > 1)
+			return float4(reflection.xyz, 1);
+	}
 	// Base Pixel Shader
 	return float4(StandardPixelShader(input.WorldPosition, normal, specular, input.FogDistance, albedo.rgb * DiffuseColor, emissive, shadowTerm, reflection), albedo.a);
 }

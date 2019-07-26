@@ -15,8 +15,6 @@ namespace C3DE.Components.Rendering
         internal protected int materialIndex = 0;
         internal protected Material material;
 
-        public PlanarReflection PlanarReflection { get; set; }
-
         /// <summary>
         /// Indicates whether the object can cast shadow. 
         /// </summary>
@@ -85,14 +83,6 @@ namespace C3DE.Components.Rendering
         /// </summary>
         /// <param name="device"></param>
         public abstract void Draw(GraphicsDevice device);
-
-        public bool IsUsingPlanarReflection(PlanarReflection target)
-        {
-            if (PlanarReflection == null || target == null)
-                return false;
-
-            return PlanarReflection == target;
-        }
 
         public override int CompareTo(object obj)
         {

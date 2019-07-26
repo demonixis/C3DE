@@ -78,8 +78,8 @@
     <Compile Include="Scripts\FPS\PlayerShooter.cs" />
     <Compile Include="Scripts\Demo\PostProcessSwitcher.cs" />
     <Compile Include="Scripts\Diagnostic\RayPickingTester.cs" />
-    <Compile Include="Scripts\Viewers\ReflectionPlanarViewer.cs" />
     <Compile Include="Scripts\Demo\RendererSwitcher.cs" />
+    <Compile Include="Scripts\Viewers\ReflectionProbeDebugger.cs" />
     <Compile Include="Scripts\Viewers\ShadowMapViewer.cs" />
     <Compile Include="Scripts\Demo\SideMenu.cs" />
     <Compile Include="Scripts\Utils\SimplePath.cs" />

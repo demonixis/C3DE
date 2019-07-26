@@ -29,7 +29,7 @@ namespace C3DE.Graphics.Shaders.Forward
         public override void Pass(ref Matrix worldMatrix, bool receiveShadow, bool drawInstanced)
         {
             _features.X = _material.NormalMap != null ? 1 : 0;
-            _features.Y = _material.SpecularTexture != null ? 1 : 0; 
+            _features.Y = _material.SpecularMap != null ? 1 : 0; 
             _features.Z = _material.ReflectionIntensity;
 
             _effect.Parameters["TotalTime"].SetValue(Time.TotalTime * _material.Speed);
@@ -40,12 +40,14 @@ namespace C3DE.Graphics.Shaders.Forward
             _effect.Parameters["SpecularPower"].SetValue(_material.SpecularPower);
             _effect.Parameters["SpecularColor"].SetValue(_material.SpecularColor.ToVector3());
             _effect.Parameters["SpecularIntensity"].SetValue(_material.SpecularIntensity);
+            _effect.Parameters["ReflectionIntensity"].SetValue(_material.ReflectionIntensity);
+            _effect.Parameters["ReflectionMap"].SetValue(_material.ReflectionMap);
             _effect.Parameters["Alpha"].SetValue(_material.Alpha);
 
             if (GraphicsAPI == GraphicsAPI.Direct3D)
             {
                 _effect.Parameters["ShadowEnabled"].SetValue(receiveShadow);
-                _effect.Parameters["SpecularMap"].SetValue(_material.SpecularTexture);
+                _effect.Parameters["SpecularMap"].SetValue(_material.SpecularMap);
                 _effect.Parameters["NormalMap"].SetValue(_material.NormalMap);
                 _effect.Parameters["Features"].SetValue(_features);
             }

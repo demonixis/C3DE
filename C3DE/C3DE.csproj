@@ -56,7 +56,6 @@
     <Compile Include="Components\Controllers\Mobile\VirtualGamepad.cs" />
     <Compile Include="Components\Lighting\Light.cs" />
     <Compile Include="Components\Rendering\MeshRenderer.cs" />
-    <Compile Include="Components\Rendering\PlanarReflection.cs" />
     <Compile Include="Components\Rendering\ReflectionProbe.cs" />
     <Compile Include="Components\Rendering\RigidbodyRenderer.cs" />
     <Compile Include="Components\Rendering\Terrain.cs" />

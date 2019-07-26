@@ -50,6 +50,7 @@ namespace C3DE.Graphics.Shaders.Forward
                 _effect.Parameters["Features"].SetValue(_features);
                 _effect.Parameters["ShadowEnabled"].SetValue(receiveShadow);
                 _effect.Parameters["Cutout"].SetValue(_material.Cutout);
+                _effect.Parameters["ReflectionMap"].SetValue(_material.ReflectionMap);
                 _effect.Parameters["ReflectionIntensity"].SetValue(_material.ReflectionIntensity);
             }
             else

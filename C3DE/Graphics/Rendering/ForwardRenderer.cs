@@ -162,38 +162,48 @@ namespace C3DE.Graphics.Rendering
                 _graphicsDevice.SetRenderTargets(previousRTs);
             }
 
-            // Render Planar Reflections.
-            var planarReflections = scene._planarReflections;
-
-            if (planarReflections.Count > 0)
-            {
-                cameraViewMatrix.Decompose(out Vector3 scale, out Quaternion rotation, out Vector3 translation);
-                var cameraRotation = rotation.ToEuler();
-
-                foreach (var planar in planarReflections)
-                {
-                    if (!planar.IsReady)
-                        continue;
-
-                    planar.BeginDraw(_graphicsDevice, ref cameraPosition, ref cameraRotation);
-
-                    // Limit the number of lights.
-                    RenderObjects(scene, ref planar._reflectionCameraPosition, ref planar._reflectionViewMatrix, ref cameraProjectionMatrix, planar);
-
-                    planar.EndDraw(_graphicsDevice);
-                }
-            }
-
             // Render Reflection Probes.
             var reflectionProbes = scene._reflectionProbes;
 
             if (reflectionProbes.Count > 0)
             {
+                Color[] colorBuffer = null;
+                var oldRT = _graphicsDevice.GetRenderTargets();
+
                 // TODO: Render
                 foreach (var probe in reflectionProbes)
                 {
+                    var probeCamPos = Vector3.Zero;
+                    var probeCamView = Matrix.Identity;
+                    var probeCamProj = Matrix.Identity;
+                    Camera probeCam = null;
 
+                    if (colorBuffer == null || colorBuffer.Length != probe.Size)
+                        colorBuffer = new Color[probe.Size * probe.Size];
+
+                    if (probe.Mode == ReflectionProbe.RenderingMode.Realtime || probe.Dirty)
+                    {
+                        for (var i = 0; i < 6; i++)
+                        {
+                            probeCam = probe._cameras[i];
+                            probeCamPos = probeCam._transform.Position;
+                            probeCamView = probeCam._viewMatrix;
+                            probeCamProj = probeCam._projectionMatrix;
+
+                            _graphicsDevice.SetRenderTarget(probeCam.RenderTarget);
+                            _graphicsDevice.Clear(Color.Black);
+
+                            RenderObjects(scene, ref probeCamPos, ref probeCamView, ref probeCamProj);
+                            probeCam.RenderTarget.GetData(colorBuffer);
+
+                            probe._reflectionTexture.SetData((CubeMapFace)i, colorBuffer);
+                        }
+
+                        probe.Dirty = false;
+                    }
                 }
+
+                _graphicsDevice.SetRenderTargets(oldRT);
             }
 
             // Render the scene
@@ -222,7 +232,7 @@ namespace C3DE.Graphics.Rendering
         /// Renders renderable objects
         /// </summary>
         /// <param name="camera">The camera to use.</param>
-        protected void RenderObjects(Scene scene, ref Vector3 cameraPosition, ref Matrix cameraViewMatrix, ref Matrix cameraProjectionMatrix, PlanarReflection planarReflection = null)
+        protected void RenderObjects(Scene scene, ref Vector3 cameraPosition, ref Matrix cameraViewMatrix, ref Matrix cameraProjectionMatrix)
         {
             _graphicsDevice.DepthStencilState = DepthStencilState.Default;
             _graphicsDevice.BlendState = BlendState.Opaque;
@@ -250,16 +260,6 @@ namespace C3DE.Graphics.Rendering
                 renderer = scene._renderList[i];
                 material = scene._renderList[i].Material;
 
-                if (planarReflection != null)
-                {
-                    // Don't render this object if we're rendering the planar reflection attached to this object.
-                    var valid = !renderer.IsUsingPlanarReflection(planarReflection);
-                    valid &= !(renderer is LensFlare);
-
-                    if (!valid)
-                        continue;
-                }
-
                 // A specific renderer that uses its own draw logic.
                 if (material == null)
                 {
@@ -269,20 +269,6 @@ namespace C3DE.Graphics.Rendering
 
                 shader = material._shaderMaterial;
                 shader.PrePassForward(ref cameraPosition, ref cameraViewMatrix, ref cameraProjectionMatrix, ref _lightData, ref _shadowData, ref fogData);
-
-                // FIXME: More cache..
-                if (renderer.PlanarReflection != null)
-                {
-                    var reflectionView = shader._effect.Parameters["ReflectionView"];
-                    var reflectionMap = shader._effect.Parameters["ReflectionMap"];
-
-                    if (reflectionView != null && reflectionMap != null)
-                    {
-                        reflectionView.SetValue(renderer.PlanarReflection._reflectionViewMatrix);
-                        reflectionMap.SetValue(renderer.PlanarReflection._reflectionRT);
-                    }
-                }
-
                 shader.Pass(ref renderer._transform._worldMatrix, renderer.ReceiveShadow, renderer.InstancedEnabled);
 
                 renderer.Draw(_graphicsDevice);

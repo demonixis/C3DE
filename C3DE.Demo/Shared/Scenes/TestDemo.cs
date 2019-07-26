@@ -19,8 +19,8 @@ namespace C3DE.Demo.Scenes
         {
             base.Initialize();
 
-            var lightGo = GameObjectFactory.CreateLight(LightType.Directional, Color.White, 1f, 2048);
-            lightGo.Transform.LocalPosition = new Vector3(500, 500, 0);
+            var lightGo = GameObjectFactory.CreateLight(LightType.Point, Color.Red, 10f, 2048);
+            lightGo.Transform.LocalPosition = new Vector3(0, 10, 0);
             lightGo.Transform.LocalRotation = new Vector3(MathHelper.PiOver2, -MathHelper.PiOver4, 0);
 
             Application.Engine.Renderer = new DeferredRenderer(Application.GraphicsDevice);
@@ -33,21 +33,10 @@ namespace C3DE.Demo.Scenes
             _camera.AddComponent<DemoBehaviour>();
             var _controllerSwitcher = _camera.AddComponent<ControllerSwitcher>();
 
-            RenderSettings.Skybox.Generate(Application.GraphicsDevice, DemoGame.BlueSkybox, 2048);
-
-            var mesh = GameObjectFactory.CreateMesh(GeometryType.Cube);
-            mesh.GetComponent<MeshRenderer>().Material = new StandardMaterial
-            {
-                MainTexture = Application.Content.Load<Texture2D>("Models/Quandtum/textures/Turret-Diffuse")
-            };
-
-            // Terrain
-            /*var terrainMaterial = new StandardMaterial();
-            terrainMaterial.MainTexture = Application.Content.Load<Texture2D>("Models/Quandtum/textures/Turret-Diffuse");
-            terrainMaterial.Tiling = new Vector2(16);*/
+            RenderSettings.Skybox.Generate(Application.GraphicsDevice, DemoGame.BlueSkybox, 256);
 
             var content = Application.Content;
-            var terrainMaterial = new UnlitMaterial();
+            var terrainMaterial = new StandardMaterial();
             terrainMaterial.DiffuseColor = Color.Red;
             var terrainGo = GameObjectFactory.CreateTerrain();
             var terrain = terrainGo.GetComponent<Terrain>();
