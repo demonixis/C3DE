@@ -44,6 +44,21 @@ namespace C3DE
             return gameObject;
         }
 
+        public static ReflectionProbe CreateReflectionProbe(Vector3 position, int size = 64, float fov = 60.0f, float nearClip = 1.0f, float farClip = 1000.0f)
+        {
+            var gameObject = new GameObject("ReflectionProbe");
+            gameObject.Transform.Position = position;
+
+            var probe = gameObject.AddComponent<ReflectionProbe>();
+            probe.NearClip = nearClip;
+            probe.FarClip = farClip;
+            probe.FieldOfView = fov;
+            probe.Size = size;
+            probe.Mode = ReflectionProbe.RenderingMode.Backed;
+
+            return probe;
+        }
+
         public static GameObject CreateMesh(Mesh geometry, bool receiveShadow = true, bool castShadow = true, bool collider = true)
         {
             var gameObject = new GameObject($"Mesh_{nameof(geometry)}");
@@ -123,7 +138,7 @@ namespace C3DE
             return gameObject;
         }
 
-        public static GameObject CreateLava(Texture2D lavalTexture, Texture2D normalTexture, Vector3 size)
+        public static GameObject CreateLava(Texture2D lavalTexture, Texture2D normalTexture, Vector3 size, bool collider = false)
         {
             var gameObject = new GameObject("Lava");
 
@@ -131,9 +146,6 @@ namespace C3DE
             renderer.CastShadow = false;
             renderer.ReceiveShadow = false;
             renderer.Mesh = new PlaneMesh();
-
-            var collider = gameObject.AddComponent<BoxCollider>();
-            collider.IsPickable = false;
 
             var material = new StandardLavaMaterial();
             material.MainTexture = lavalTexture;
@@ -143,12 +155,16 @@ namespace C3DE
             renderer.Mesh.Size = size;
             renderer.Mesh.Build();
 
-            //collider.BoundingBox = new BoundingBox(transform.Position, size);
+            if (collider)
+            {
+                var boxCollider = gameObject.AddComponent<BoxCollider>();
+                boxCollider.IsPickable = false;
+            }
 
             return gameObject;
         }
 
-        public static GameObject CreateWater(Texture2D waterTexture, Texture2D normalTexture, Vector3 size)
+        public static GameObject CreateWater(Texture2D waterTexture, Texture2D normalTexture, Vector3 size, bool collider = false)
         {
             var gameObject = new GameObject("Water");
 
@@ -156,9 +172,6 @@ namespace C3DE
             renderer.CastShadow = false;
             renderer.ReceiveShadow = false;
             renderer.Mesh = new PlaneMesh();
-
-            var collider = gameObject.AddComponent<BoxCollider>();
-            collider.IsPickable = false;
 
             var material = new StandardWaterMaterial();
             material.MainTexture = waterTexture;
@@ -168,7 +181,11 @@ namespace C3DE
             renderer.Mesh.Size = size;
             renderer.Mesh.Build();
 
-            //collider.BoundingBox = new BoundingBox(transform.Position, size);
+            if (collider)
+            {
+                var boxCollider = gameObject.AddComponent<BoxCollider>();
+                boxCollider.IsPickable = false;
+            }
 
             return gameObject;
         }

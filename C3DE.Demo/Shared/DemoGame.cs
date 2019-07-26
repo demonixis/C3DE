@@ -9,8 +9,8 @@ namespace C3DE.Demo
 {
     public static class DemoGame
     {
-        public const int ScreenWidth = 1280;
-        public const int ScreenHeight = 800;
+        public const int ScreenWidth = 800;
+        public const int ScreenHeight = 600;
         public const int UIWidth = 1280;
         public const int UIHeight = 800;
 
@@ -80,8 +80,10 @@ namespace C3DE.Demo
         {
             Application.SceneManager.AddRange(new Scene[]
             {
+#if _DEBUG
+                new TestDemo(),
+#else
                 new MenuDemo(),
-               // new TestDemo(),
 #if WINDOWS
                 new SimplePBRDemo(),
                 new HeightmapPBRDemo(),
@@ -96,6 +98,7 @@ namespace C3DE.Demo
                 new FPSDemo(),
                 new SponzaDemo(),
                 new GUIDemo()
+#endif
             }, 0);
 
             Application.SceneManager.LoadLevel(0);

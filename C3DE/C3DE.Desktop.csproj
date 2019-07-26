@@ -79,9 +79,9 @@
     <Compile Include="Components\Controllers\Mobile\VirtualGamepad.cs" />
     <Compile Include="Components\Lighting\Light.cs" />
     <Compile Include="Components\Rendering\MeshRenderer.cs" />
-    <Compile Include="Components\Rendering\PlanarReflection.cs" />
     <Compile Include="Components\Rendering\ReflectionProbe.cs" />
     <Compile Include="Components\Rendering\RigidbodyRenderer.cs" />
+    <Compile Include="Components\Rendering\StockEffectRenderer.cs" />
     <Compile Include="Components\Rendering\Terrain.cs" />
     <Compile Include="Components\Physics\Rigidbody.cs" />
     <Compile Include="Components\VR\MotionController.cs" />
@@ -97,7 +97,7 @@
     <Compile Include="Graphics\PostProcessing\SSAO.cs" />
     <Compile Include="Graphics\Rendering\LightData.cs" />
     <Compile Include="Graphics\Rendering\VertexPositionNormalTextureTB.cs" />
-    <Compile Include="Graphics\Shaders\Deferred\DeferredLava.cs" />
+    <Compile Include="Graphics\Shaders\Deferred\DeferredStandardLava.cs" />
     <Compile Include="Graphics\Shaders\Deferred\DeferredStandardTerrain.cs" />
     <Compile Include="Graphics\Shaders\Deferred\DeferredStandardWater.cs" />
     <Compile Include="Graphics\Shaders\Deferred\DeferredUnlit.cs" />
@@ -132,7 +132,6 @@
     <Compile Include="Graphics\Rendering\DeferredRenderer.cs" />
     <Compile Include="Graphics\Rendering\DeviceState.cs" />
     <Compile Include="Graphics\Rendering\GraphicsDeviceExtensions.cs" />
-    <Compile Include="Graphics\Shaders\SkyboxShaderMaterial.cs" />
     <Compile Include="Input.cs" />
     <Compile Include="Graphics\Materials\UnlitMaterial.cs" />
     <Compile Include="Graphics\PostProcessing\PostProcessManager.cs" />

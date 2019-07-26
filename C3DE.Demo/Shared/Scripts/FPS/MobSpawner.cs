@@ -29,7 +29,7 @@ namespace C3DE.Demo.Scripts.FPS
             _mobs = new List<Transform>(5);
         }
 
-        public void SetGrid(int[,] grid, int padding, Vector2 startPosition)
+        public void SetGrid(int[,] grid, int padding, Vector2 startPosition, ReflectionProbe probe)
         {
             _mapOrigin = startPosition;
             _mapPadding = padding;
@@ -58,7 +58,7 @@ namespace C3DE.Demo.Scripts.FPS
 
             var content = Application.Content;
 
-            _mobMaterial = GetMobMaterial(content);
+            _mobMaterial = GetMobMaterial(content, probe);
 
             for (var i = 0; i < MaxSpawn; i++)
             {
@@ -120,7 +120,7 @@ namespace C3DE.Demo.Scripts.FPS
             worldZ = (randomPoint.Item2 * _mapPadding) + _mapOrigin.Y;
         }
 
-        private Material GetMobMaterial(ContentManager content)
+        private Material GetMobMaterial(ContentManager content, ReflectionProbe probe)
         {
             if (FPSDemo.PreferePBR)
             {
@@ -148,7 +148,9 @@ namespace C3DE.Demo.Scripts.FPS
                 SpecularPower = 2,
                 SpecularIntensity = 2,
                 EmissiveColor = Color.White,
-                EmissiveIntensity = 2.5f
+                EmissiveIntensity = 2.5f,
+                ReflectionIntensity = 0.75f,
+                ReflectionMap = probe.ReflectionMap
             };
         }
     }

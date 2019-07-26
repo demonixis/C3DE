@@ -73,25 +73,25 @@ namespace C3DE.Components
                 _worldMatrix.Decompose(out Vector3 scale, out Quaternion r, out Vector3 translation);
                 return r.ToEuler();
             }
-            set
+           /* set
             {
                 var result = Quaternion.Euler(value) * Quaternion.Inverse(_parent.Quaternion);
                 _localRotation = result.ToEuler();
-            }
+            }*/
         }
 
         public Matrix RotationMatrix => Matrix.CreateFromYawPitchRoll(_localRotation.Y, _localRotation.X, _localRotation.Z);
 
-        public Quaternion Quaternion
+        /*public Quaternion Quaternion
         {
             get
             {
                 var rotation = Rotation;
                 return Quaternion.Euler(rotation);
             }
-        }
+        }*/
 
-        public Quaternion LocalQuaternion => Quaternion.Euler(_localRotation);
+        //public Quaternion LocalQuaternion => Quaternion.Euler(_localRotation);
 
         public Vector3 LocalRotation
         {

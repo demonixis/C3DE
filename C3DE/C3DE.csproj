@@ -58,6 +58,7 @@
     <Compile Include="Components\Rendering\MeshRenderer.cs" />
     <Compile Include="Components\Rendering\ReflectionProbe.cs" />
     <Compile Include="Components\Rendering\RigidbodyRenderer.cs" />
+    <Compile Include="Components\Rendering\StockEffectRenderer.cs" />
     <Compile Include="Components\Rendering\Terrain.cs" />
     <Compile Include="Components\Physics\Rigidbody.cs" />
     <Compile Include="Components\VR\MotionController.cs" />

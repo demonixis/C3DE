@@ -40,6 +40,8 @@ namespace C3DE.Demo.Scenes
             { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 }
         };
 
+        private ReflectionProbe _reflectionProbe;
+
         public FPSDemo() : base("First Person Shooter") { }
 
         public override void Initialize()
@@ -65,6 +67,9 @@ namespace C3DE.Demo.Scenes
             Add(player);
 
             var content = Application.Content;
+
+            // Reflection Probe
+            _reflectionProbe = GameObjectFactory.CreateReflectionProbe(new Vector3(0, 35, 0));
 
             // Ground
             var ground = GameObjectFactory.CreateTerrain();
@@ -94,7 +99,7 @@ namespace C3DE.Demo.Scenes
 
             var go = new GameObject("MobManager");
             var mobSpawner = go.AddComponent<MobSpawner>();
-            mobSpawner.SetGrid(LevelGrid, cubeSize, startPosition);
+            mobSpawner.SetGrid(LevelGrid, cubeSize, startPosition, _reflectionProbe);
 
             // Planets
             var planetContainer = new GameObject("PlanetContainer");
@@ -270,7 +275,9 @@ namespace C3DE.Demo.Scenes
                 NormalMap = content.Load<Texture2D>("Textures/pbr/Wall/Sci-fi_Walll_001_normal"),
                 SpecularColor = new Color(0.8f, 0.8f, 0.8f),
                 SpecularPower = 5,
-                SpecularIntensity = 1
+                SpecularIntensity = 1,
+                ReflectionIntensity = 0.45f,
+                ReflectionMap = _reflectionProbe.ReflectionMap
             };
         }
 
@@ -300,6 +307,7 @@ namespace C3DE.Demo.Scenes
                 SpecularColor = new Color(0.7f, 0.7f, 0.7f),
                 SpecularPower = 10,
                 ReflectionIntensity = 0.75f,
+                ReflectionMap = _reflectionProbe.ReflectionMap,
                 Tiling = new Vector2(16)
             };
         }

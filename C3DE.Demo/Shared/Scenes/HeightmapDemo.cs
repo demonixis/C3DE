@@ -46,6 +46,9 @@ namespace C3DE.Demo.Scenes
             terrainW.Randomize(5, 2);
             terrainW.Geometry.Build();
 
+            // Reflection Probe
+            var probe = GameObjectFactory.CreateReflectionProbe(new Vector3(0, 35, 0));
+
             var renderer = waterGo.GetComponent<MeshRenderer>();
             renderer.Material = new StandardWaterMaterial()
             {
@@ -53,7 +56,7 @@ namespace C3DE.Demo.Scenes
                 NormalMap = content.Load<Texture2D>("Textures/Fluids/Water_Normal"),
                 SpecularColor = new Color(0.7f, 0.7f, 0.7f),
                 SpecularPower = 50,
-                ReflectionMap = RenderSettings.Skybox.Texture,
+                ReflectionMap = probe.ReflectionMap,
                 ReflectionIntensity = 0.75f
             };
 

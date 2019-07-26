@@ -183,9 +183,14 @@ namespace C3DE.Graphics.Rendering
 
                     if (probe.Mode == ReflectionProbe.RenderingMode.Realtime || probe.Dirty)
                     {
+                        probeCam = probe._camera;
+
                         for (var i = 0; i < 6; i++)
                         {
-                            probeCam = probe._cameras[i];
+                            probeCam._transform.LocalRotation = probe.GetCameraRotation((CubeMapFace)i);
+                            probeCam._transform.UpdateWorldMatrix();
+                            probeCam.Update();
+
                             probeCamPos = probeCam._transform.Position;
                             probeCamView = probeCam._viewMatrix;
                             probeCamProj = probeCam._projectionMatrix;

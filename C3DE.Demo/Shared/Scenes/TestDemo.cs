@@ -6,10 +6,11 @@ using C3DE.Graphics.Materials;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using C3DE.Graphics.Rendering;
+using C3DE.Graphics;
 
 namespace C3DE.Demo.Scenes
 {
-    public class TestDemo : Scene
+    public class TestDemo : SimpleDemo
     {
         public TestDemo() : base("Test")
         {
@@ -23,9 +24,6 @@ namespace C3DE.Demo.Scenes
             lightGo.Transform.LocalPosition = new Vector3(0, 10, 0);
             lightGo.Transform.LocalRotation = new Vector3(MathHelper.PiOver2, -MathHelper.PiOver4, 0);
 
-            Application.Engine.Renderer = new DeferredRenderer(Application.GraphicsDevice);
-            lightGo.AddComponent<DeferredDebuger>();
-
             // Add a camera with a FPS controller
             var camera = GameObjectFactory.CreateCamera(new Vector3(0, 2, -10), new Vector3(0, 0, 0), Vector3.Up);
 
@@ -33,18 +31,51 @@ namespace C3DE.Demo.Scenes
             _camera.AddComponent<DemoBehaviour>();
             var _controllerSwitcher = _camera.AddComponent<ControllerSwitcher>();
 
-            RenderSettings.Skybox.Generate(Application.GraphicsDevice, DemoGame.BlueSkybox, 256);
+            RenderSettings.Skybox.Generate(Application.GraphicsDevice, DemoGame.NatureSkybox, 256);
+
+            var reflectionProbe = new GameObject("ReflectionProbe");
+            reflectionProbe.Transform.Position = new Vector3(0, 25, 0);
+            var probe = reflectionProbe.AddComponent<ReflectionProbe>();
+            probe.Size = 64;
+            probe.Mode = ReflectionProbe.RenderingMode.Realtime;
+            reflectionProbe.AddComponent<ReflectionProbeViewer>();
 
             var content = Application.Content;
             var terrainMaterial = new StandardMaterial();
-            terrainMaterial.DiffuseColor = Color.Red;
+            terrainMaterial.MainTexture = TextureFactory.CreateCheckboard(Color.Black, Color.White);
+            terrainMaterial.ReflectionIntensity = 0.65f;
+            terrainMaterial.ReflectionMap = probe.ReflectionMap;
+            terrainMaterial.Tiling = new Vector2(16);
             var terrainGo = GameObjectFactory.CreateTerrain();
             var terrain = terrainGo.GetComponent<Terrain>();
             terrain.Geometry.Build();
-            terrain.Randomize();
+            terrain.Flatten();
             terrain.Renderer.Material = terrainMaterial;
             terrain.Renderer.ReceiveShadow = false;
             terrain.Renderer.CastShadow = false;
+
+
+            for (var i = 2; i < 12; i += 2)
+            {
+                AddMesh(new Vector3(i, 2, i), probe);
+                AddMesh(new Vector3(i, 2, -i), probe);
+                AddMesh(new Vector3(-i, 2, i), probe);
+                AddMesh(new Vector3(-i, 2, -i), probe);
+            }
+
+            AddLightGroundTest();
+        }
+
+        private void AddMesh(Vector3 pos, ReflectionProbe probe)
+        {
+            var mesh = GameObjectFactory.CreateMesh(GeometryType.Cube);
+            mesh.GetComponent<Renderer>().Material = new StandardMaterial
+            {
+                MainTexture = TextureFactory.CreateCheckboard(Color.Red, Color.AntiqueWhite),
+                ReflectionIntensity = 0.75f,
+                ReflectionMap = probe.ReflectionMap
+            };
+            mesh.Transform.LocalPosition = pos;
         }
     }
 }

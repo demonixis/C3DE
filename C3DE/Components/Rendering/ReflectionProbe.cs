@@ -11,8 +11,8 @@ namespace C3DE.Components.Rendering
         }
 
         internal TextureCube _reflectionTexture;
-        internal Camera[] _cameras;
-        private float _fov = MathHelper.ToRadians(75);
+        internal Camera _camera;
+        private float _fov = 75;
         private float _nearClip = 1.0f;
         private float _farClip = 500.0f;
         private int _size = 64;
@@ -65,6 +65,7 @@ namespace C3DE.Components.Rendering
             {
                 _size = value;
                 UpdateRenderTargets();
+                UpdateMatrix();
             }
         }
 
@@ -76,44 +77,31 @@ namespace C3DE.Components.Rendering
         {
             base.Start();
 
-            _cameras = new Camera[6];
+            _camera = AddComponent<Camera>();
 
-            GameObject go = null;
-            for (var i = 0; i < 6; i++)
-            {
-                go = new GameObject($"ReflectionProbe_{i}_{GameObject.Id}");
-                go.IsStatic = GameObject.IsStatic;
-                go.Transform.Parent = Transform;
-                go.Transform.LocalPosition = _transform.LocalPosition;
-                go.Transform.LocalRotation = GetFacingVector(ref i) * 90.0f;
-                _cameras[i] = go.AddComponent<Camera>();
-            }
-
-            UpdateMatrix();
             UpdateRenderTargets();
+            UpdateMatrix();
         }
 
         private void UpdateMatrix()
         {
-            for (var i = 0; i < 6; i++)
-            {
-                _cameras[i]._clearColor = Color.Transparent;
-                _cameras[i].Near = NearClip;
-                _cameras[i].Far = FarClip;
-                _cameras[i].AspectRatio = 1.0f;
-                _cameras[i].FieldOfView = FieldOfView;
-                _cameras[i].Setup(_transform.Position, Vector3.Forward, Vector3.Up);
-                _cameras[i].Update();
-            }
+            _camera._clearColor = Color.Transparent;
+            _camera.Near = NearClip;
+            _camera.Far = FarClip;
+            _camera.AspectRatio = 1.0f;
+            _camera.FieldOfView = FieldOfView;
+            _camera.Setup(_transform.Position, Vector3.Forward, Vector3.Up);
+            _camera.Update();
 
             Dirty = true;
         }
 
         private void UpdateRenderTargets()
         {
-            for (var i = 0; i < 6; i++)
-                _cameras[i].RenderTarget = new RenderTarget2D(Application.GraphicsDevice, _size, _size);                    
+            _camera.RenderTarget?.Dispose();
+            _camera.RenderTarget = new RenderTarget2D(Application.GraphicsDevice, _size, _size);
 
+            _reflectionTexture?.Dispose();
             _reflectionTexture = new TextureCube(Application.GraphicsDevice, _size, false, SurfaceFormat.Color);
 
             Dirty = true;
@@ -136,6 +124,24 @@ namespace C3DE.Components.Rendering
                 return Vector3.Backward;
         }
 
-        public RenderTarget2D GetRenderTarget(CubeMapFace face) => _cameras[(int)face].RenderTarget;
+        public Vector3 GetCameraRotation(CubeMapFace face)
+        {
+            if (face == CubeMapFace.PositiveX)
+                return new Vector3(0.0f, MathHelper.ToRadians(-90), 0.0f);
+            else if (face == CubeMapFace.NegativeX)
+                return new Vector3(0.0f, MathHelper.ToRadians(90), 0.0f);
+
+            else if (face == CubeMapFace.PositiveY)
+                return new Vector3(MathHelper.ToRadians(90), 0.0f, 0.0f);
+            else if (face == CubeMapFace.NegativeY)
+                return new Vector3(MathHelper.ToRadians(-90), 0.0f, 0.0f);
+            
+            else if (face == CubeMapFace.PositiveZ)
+                return new Vector3(0.0f, MathHelper.ToRadians(180.0f), 0.0f);
+            else if (face == CubeMapFace.NegativeZ)
+                return new Vector3(0.0f, MathHelper.ToRadians(0.0f), 0.0f);
+
+            return Vector3.Zero;
+        }
     }
 }
