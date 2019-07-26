@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace C3DE.Graphics.Shaders.Forward
 {
-   public class ForwardSkybox : SkyboxShaderMaterial
+   public class ForwardSkybox : ShaderMaterial
     {
         private Skybox _skybox;
 
@@ -29,7 +29,7 @@ namespace C3DE.Graphics.Shaders.Forward
             _effect.CurrentTechnique.Passes[0].Apply();
         }
 
-        public override void PrePass(ref Vector3 cameraPosition, ref Matrix viewMatrix, ref Matrix projectionMatrix, ref LightData lightData, ref ShadowData shadowData, ref Vector4 fogData)
+        public override void PrePassForward(ref Vector3 cameraPosition, ref Matrix viewMatrix, ref Matrix projectionMatrix, ref LightData lightData, ref ShadowData shadowData, ref Vector4 fogData)
         {
             PrePass(ref cameraPosition, ref viewMatrix, ref projectionMatrix);
         }

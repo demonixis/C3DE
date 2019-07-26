@@ -24,7 +24,8 @@ namespace C3DE.Graphics.Shaders
         internal protected Effect _effect;
 
         public abstract void LoadEffect(ContentManager content);
-        public abstract void PrePass(ref Vector3 cameraPosition, ref Matrix viewMatrix, ref Matrix projectionMatrix, ref LightData lightData, ref ShadowData shadowData, ref Vector4 fogData);
+        public abstract void PrePass(ref Vector3 cameraPosition, ref Matrix viewMatrix, ref Matrix projectionMatrix);
+        public abstract void PrePassForward(ref Vector3 cameraPosition, ref Matrix viewMatrix, ref Matrix projectionMatrix, ref LightData lightData, ref ShadowData shadowData, ref Vector4 fogData);
         public abstract void Pass(ref Matrix worldMatrix, bool receiveShadow, bool drawInstanced);
     }
 }

@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace C3DE.Graphics.Materials.Shaders
 {
-    public class DeferredSkybox : SkyboxShaderMaterial
+    public class DeferredSkybox : ShaderMaterial
     {
         private Skybox _skybox;
 
@@ -24,7 +24,7 @@ namespace C3DE.Graphics.Materials.Shaders
         {
         }
 
-        public override void PrePass(ref Vector3 cameraPosition, ref Matrix viewMatrix, ref Matrix projectionMatrix, ref LightData lightData, ref ShadowData shadowData, ref Vector4 fogData)
+        public override void PrePassForward(ref Vector3 cameraPosition, ref Matrix viewMatrix, ref Matrix projectionMatrix, ref LightData lightData, ref ShadowData shadowData, ref Vector4 fogData)
         {
         }
 

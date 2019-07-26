@@ -5,7 +5,11 @@ namespace C3DE.Graphics.Shaders.Forward
 {
     public abstract class ForwardStandardBase : ShaderMaterial
     {
-        public override void PrePass(ref Vector3 cameraPosition, ref Matrix viewMatrix, ref Matrix projectionMatrix, ref LightData lightData, ref ShadowData shadowData, ref Vector4 fogData)
+        public override void PrePass(ref Vector3 cameraPosition, ref Matrix viewMatrix, ref Matrix projectionMatrix)
+        {
+        }
+
+        public override void PrePassForward(ref Vector3 cameraPosition, ref Matrix viewMatrix, ref Matrix projectionMatrix, ref LightData lightData, ref ShadowData shadowData, ref Vector4 fogData)
         {
             _effect.Parameters["View"].SetValue(viewMatrix);
             _effect.Parameters["Projection"].SetValue(projectionMatrix);

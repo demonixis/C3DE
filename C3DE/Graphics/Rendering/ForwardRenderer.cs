@@ -268,7 +268,7 @@ namespace C3DE.Graphics.Rendering
                 }
 
                 shader = material._shaderMaterial;
-                shader.PrePass(ref cameraPosition, ref cameraViewMatrix, ref cameraProjectionMatrix, ref _lightData, ref _shadowData, ref fogData);
+                shader.PrePassForward(ref cameraPosition, ref cameraViewMatrix, ref cameraProjectionMatrix, ref _lightData, ref _shadowData, ref fogData);
 
                 // FIXME: More cache..
                 if (renderer.PlanarReflection != null)

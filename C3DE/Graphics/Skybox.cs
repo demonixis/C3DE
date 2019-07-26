@@ -14,7 +14,7 @@ namespace C3DE.Graphics
 {
     public class Skybox
     {
-        private SkyboxShaderMaterial _shaderMaterial;
+        private ShaderMaterial _shaderMaterial;
         internal Matrix _worldMatrix;
         private Matrix _scaleMatrix;
         private CubeMesh _cubeMesh;

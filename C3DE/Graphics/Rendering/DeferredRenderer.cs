@@ -78,15 +78,12 @@ namespace C3DE.Graphics.Rendering
             }
         }
 
-        private void RenderObjects(Scene scene, Camera camera)
+        private void RenderObjects(Scene scene, ref Vector3 cameraPosition, ref Matrix cameraViewMatrix, ref Matrix cameraProjectionMatrix, PlanarReflection planarReflection = null)
         {
             using (_graphicsDevice.GeometryUnlitState())
             {
                 if (scene.RenderSettings.Skybox.Enabled)
-                {
-                    var pos = camera.Transform.Position;
-                    scene.RenderSettings.Skybox.Draw(_graphicsDevice, ref pos, ref camera._viewMatrix, ref camera._projectionMatrix);
-                }
+                    scene.RenderSettings.Skybox.Draw(_graphicsDevice, ref cameraPosition, ref cameraViewMatrix, ref cameraProjectionMatrix);
             }
 
             var renderCount = scene._renderList.Count;
@@ -110,9 +107,8 @@ namespace C3DE.Graphics.Rendering
                 shader = material._shaderMaterial;
 
                 // TODO: FIXME
-                // Ambient pass
-                //shader.PrePass(camera);
-                //shader.Pass(scene.RenderList[i]);
+                shader.PrePass(ref cameraPosition, ref cameraViewMatrix, ref cameraProjectionMatrix);
+                shader.Pass(ref renderer._transform._worldMatrix, renderer.ReceiveShadow, false);
                 renderer.Draw(_graphicsDevice);
             }
         }
@@ -133,6 +129,10 @@ namespace C3DE.Graphics.Rendering
 
         protected virtual void RenderSceneForCamera(Scene scene, Camera camera, int eye)
         {
+            var cameraPosition = camera._transform.Position;
+            var cameraViewMatrix = camera._viewMatrix;
+            var cameraProjectionMatrix = camera._projectionMatrix;
+
             _graphicsDevice.SetRenderTargets(m_ColorTarget, m_NormalTarget, m_DepthTarget);
 
             foreach (var pass in m_ClearEffect.Techniques[0].Passes)
@@ -142,7 +142,7 @@ namespace C3DE.Graphics.Rendering
             }
 
             using (_graphicsDevice.GeometryState())
-                RenderObjects(scene, camera);
+                RenderObjects(scene, ref cameraPosition, ref cameraViewMatrix, ref cameraProjectionMatrix);
 
             using (_graphicsDevice.LightState())
                 RenderLights(scene, camera, eye);

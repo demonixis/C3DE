@@ -21,7 +21,7 @@ namespace C3DE.Graphics.Shaders.Forward
             _effect = content.Load<Effect>("Shaders/Forward/PBRLava");
         }
 
-        public override void PrePass(ref Vector3 cameraPosition, ref Matrix viewMatrix, ref Matrix projectionMatrix, ref LightData lightData, ref ShadowData shadowData, ref Vector4 fogData)
+        public override void PrePassForward(ref Vector3 cameraPosition, ref Matrix viewMatrix, ref Matrix projectionMatrix, ref LightData lightData, ref ShadowData shadowData, ref Vector4 fogData)
         {
             _effect.Parameters["View"].SetValue(viewMatrix);
             _effect.Parameters["Projection"].SetValue(projectionMatrix);

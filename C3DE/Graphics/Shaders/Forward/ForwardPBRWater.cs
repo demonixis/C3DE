@@ -21,11 +21,11 @@ namespace C3DE.Graphics.Shaders.Forward
             _effect = content.Load<Effect>("Shaders/Forward/PBRWater");
         }
 
-        public override void PrePass(ref Vector3 cameraPosition, ref Matrix viewMatrix, ref Matrix projectionMatrix, ref LightData lightData, ref ShadowData shadowData, ref Vector4 fogData)
+        public override void PrePassForward(ref Vector3 cameraPosition, ref Matrix viewMatrix, ref Matrix projectionMatrix, ref LightData lightData, ref ShadowData shadowData, ref Vector4 fogData)
         {
             _effect.Parameters["TotalTime"].SetValue(Time.TotalTime);
 
-            base.PrePass(ref cameraPosition, ref viewMatrix, ref projectionMatrix, ref lightData, ref shadowData, ref fogData);
+            base.PrePassForward(ref cameraPosition, ref viewMatrix, ref projectionMatrix, ref lightData, ref shadowData, ref fogData);
         }
 
         public override void Pass(ref Matrix worldMatrix, bool receiveShadow, bool drawInstanced)
