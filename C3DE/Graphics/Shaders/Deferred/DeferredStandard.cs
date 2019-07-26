@@ -25,6 +25,13 @@ namespace C3DE.Graphics.Materials.Shaders
         {
         }
 
+        public override void PrePass(ref Vector3 cameraPosition, ref Matrix viewMatrix, ref Matrix projectionMatrix)
+        {
+            _effect.Parameters["Projection"].SetValue(projectionMatrix);
+            _effect.Parameters["View"].SetValue(viewMatrix);
+            _effect.Parameters["EyePosition"].SetValue(cameraPosition);
+        }
+
         public override void Pass(ref Matrix worldMatrix, bool receiveShadow, bool drawInstanced)
         {
             // Features
@@ -35,6 +42,7 @@ namespace C3DE.Graphics.Materials.Shaders
             // Material
             _effect.Parameters["TextureTiling"].SetValue(_material.Tiling);
             _effect.Parameters["World"].SetValue(worldMatrix);
+            _effect.Parameters["MainTexture"].SetValue(_material.MainTexture);
             _effect.Parameters["DiffuseColor"].SetValue(_material.DiffuseColor.ToVector3());
             _effect.Parameters["Features"].SetValue(_features);
             // Normal
@@ -53,13 +61,6 @@ namespace C3DE.Graphics.Materials.Shaders
             _effect.Parameters["ReflectionMap"].SetValue(_material.ReflectionMap);
 
             _effect.CurrentTechnique.Passes[0].Apply();
-        }
-
-        public override void PrePass(ref Vector3 cameraPosition, ref Matrix viewMatrix, ref Matrix projectionMatrix)
-        {
-            _effect.Parameters["Projection"].SetValue(projectionMatrix);
-            _effect.Parameters["View"].SetValue(viewMatrix);
-            _effect.Parameters["EyePosition"].SetValue(cameraPosition);
         }
     }
 }

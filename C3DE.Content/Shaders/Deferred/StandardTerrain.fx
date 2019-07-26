@@ -4,9 +4,8 @@ float4x4 View;
 float4x4 Projection;
 
 // Material
-float3 DiffuseColor;
-float3 SpecularLightColor;
-float SpecularPower;
+float3 SpecularColor;
+int SpecularPower;
 float SpecularIntensity;
 
 // Misc
@@ -123,7 +122,7 @@ PixelShaderOutput PixelShaderFunction(VertexShaderOutput input) : COLOR0
     float3 weightTex = tex2D(WeightMapSampler, input.UV);
 	
     output.Color.rgb = clamp(1.0 - weightTex.r - weightTex.g - weightTex.b, 0, 1);
-    output.Color.rgb *= mainTex * DiffuseColor;
+    output.Color.rgb *= mainTex;
     output.Color.rgb += weightTex.r * sandTex + weightTex.g * rockTex + weightTex.b * snowTex;
 
     // Normal
@@ -131,12 +130,9 @@ PixelShaderOutput PixelShaderFunction(VertexShaderOutput input) : COLOR0
     output.Normal.a = 1;
 
     // Specular
-    float4 specularAttributes = float4(SpecularLightColor, SpecularPower);
-    specularAttributes.rgb *= SpecularIntensity;
-
+    float4 specularAttributes = float4(SpecularColor * SpecularIntensity, SpecularPower);
     output.Color.a = specularAttributes.r;
     output.Normal.a = specularAttributes.a;
-
     output.Depth = input.Depth.x / input.Depth.y;
 
     return output;

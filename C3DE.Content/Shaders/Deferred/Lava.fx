@@ -4,13 +4,12 @@ float4x4 View;
 float4x4 Projection;
 
 // Material
-float3 DiffuseColor;
 float3 EmissiveColor;
 float EmissiveIntensity;
 
 // Misc
 float2 TextureTiling;
-float Time;
+float TotalTime;
 
 texture MainTexture;
 sampler2D textureSampler = sampler_state
@@ -23,10 +22,10 @@ sampler2D textureSampler = sampler_state
     AddressV = Wrap;
 };
 
-texture NormalTexture;
+texture NormalMap;
 sampler2D normalSampler = sampler_state
 {
-    Texture = (NormalTexture);
+    Texture = (NormalMap);
     MinFilter = Linear;
     MagFilter = Linear;
     MipFilter = Linear;
@@ -60,7 +59,6 @@ struct PixelShaderOutput
     float4 Depth : COLOR2;
 };
 
-
 VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
 {
     VertexShaderOutput output;
@@ -79,8 +77,8 @@ PixelShaderOutput PixelShaderFunction(VertexShaderOutput input) : COLOR0
     PixelShaderOutput output = (PixelShaderOutput) 0;
 
     float3 noise = tex2D(normalSampler, input.UV * TextureTiling);
-    float2 T1 = (input.UV + float2(1.5, -1.5) * Time * 0.02) * TextureTiling;
-    float2 T2 = (input.UV + float2(-0.5, 2.0) * Time * 0.01) * TextureTiling;
+    float2 T1 = (input.UV + float2(1.5, -1.5) * TotalTime * 0.02) * TextureTiling;
+    float2 T2 = (input.UV + float2(-0.5, 2.0) * TotalTime * 0.01) * TextureTiling;
 	
     T1.x += noise.x * 2.0;
     T1.y += noise.y * 2.0;
@@ -121,8 +119,8 @@ technique Basic
     pass AmbientPass
     {
 #if SM4
-		VertexShader = compile vs_4_0_level_9_1 VertexShaderFunction();
-		PixelShader = compile ps_4_0_level_9_1 PixelShaderFunction();
+		VertexShader = compile vs_4_0 VertexShaderFunction();
+		PixelShader = compile ps_4_0 PixelShaderFunction();
 #else
         VertexShader = compile vs_3_0 VertexShaderFunction();
         PixelShader = compile ps_3_0 PixelShaderFunction();

@@ -73,7 +73,7 @@
     <Compile Include="Graphics\PostProcessing\SSAO.cs" />
     <Compile Include="Graphics\Rendering\LightData.cs" />
     <Compile Include="Graphics\Rendering\VertexPositionNormalTextureTB.cs" />
-    <Compile Include="Graphics\Shaders\Deferred\DeferredLava.cs" />
+    <Compile Include="Graphics\Shaders\Deferred\DeferredStandardLava.cs" />
     <Compile Include="Graphics\Shaders\Deferred\DeferredStandardTerrain.cs" />
     <Compile Include="Graphics\Shaders\Deferred\DeferredStandardWater.cs" />
     <Compile Include="Graphics\Shaders\Deferred\DeferredUnlit.cs" />

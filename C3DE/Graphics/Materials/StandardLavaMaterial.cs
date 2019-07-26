@@ -18,7 +18,7 @@ namespace C3DE.Graphics.Materials
         protected override void SetupShaderMaterial(BaseRenderer renderer)
         {
             if (renderer is DeferredRenderer)
-                _shaderMaterial = new DeferredLava(this);
+                _shaderMaterial = new DeferredStandardLava(this);
             else
                 _shaderMaterial = new ForwardStandardLava(this);
 

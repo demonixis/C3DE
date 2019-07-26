@@ -1,21 +1,17 @@
 float4x4 World;
 float4x4 View;
 float4x4 Projection;
-float3 DiffuseColor;
-
-bool ReflectionTextureEnabled = false;
-float3 ReflectionColor;
-bool NormalTextureEnabled = false;
+float ReflectionIntensity;
 
 // Misc
 float3 EyePosition = float3(1, 1, 0);
 float2 TextureTiling = float2(1, 1);
 float TotalTime;
-
-float SpecularPower;
+float3 Features;
+// Specular
+int SpecularPower;
 float SpecularIntensity;
-bool SpecularTextureEnabled;
-float3 SpecularLightColor;
+float3 SpecularColor;
 
 texture MainTexture;
 sampler2D WaterMapSampler = sampler_state
@@ -28,10 +24,10 @@ sampler2D WaterMapSampler = sampler_state
     AddressV = Wrap;
 };
 
-texture NormalTexture;
+texture NormalMap;
 sampler2D NormalMapSampler = sampler_state
 {
-    Texture = <NormalTexture>;
+    Texture = <NormalMap>;
     MinFilter = Linear;
     MagFilter = Linear;
     MipFilter = Linear;
@@ -39,10 +35,10 @@ sampler2D NormalMapSampler = sampler_state
     AddressV = Wrap;
 };
 
-texture ReflectionTexture;
+texture ReflectionMap;
 samplerCUBE reflectiveSampler = sampler_state
 {
-    Texture = <ReflectionTexture>;
+    Texture = <ReflectionMap>;
     MinFilter = Linear;
     MagFilter = Linear;
     MipFilter = Linear;
@@ -50,10 +46,10 @@ samplerCUBE reflectiveSampler = sampler_state
     AddressV = Mirror;
 };
 
-texture SpecularTexture;
+texture SpecularMap;
 sampler2D specularSampler = sampler_state
 {
-    Texture = (SpecularTexture);
+    Texture = (SpecularMap);
     MinFilter = Linear;
     MagFilter = Linear;
     MipFilter = Linear;
@@ -108,12 +104,8 @@ VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
     output.Depth.y = output.Position.w;
 	
     float3 normal = input.Normal;
-
-    if (ReflectionTextureEnabled == true)
-    {
-        float3 viewDirection = EyePosition - worldPosition.xyz;
-        output.Reflection = reflect(-normalize(viewDirection), normalize(normal));
-    }
+    float3 viewDirection = EyePosition - worldPosition.xyz;
+    output.Reflection = reflect(-normalize(viewDirection), normalize(normal));
 
     float3 c1 = cross(input.Normal, float3(0.0, 0.0, 1.0));
     float3 c2 = cross(input.Normal, float3(0.0, 1.0, 0.0));
@@ -136,13 +128,13 @@ PixelShaderOutput PixelShaderFunction(VertexShaderOutput input) : COLOR0
 
     output.Color = tex2D(WaterMapSampler, input.UV * TextureTiling);
 	
-    if (ReflectionTextureEnabled == true)
-        output.Color.rgb *= ReflectionColor * texCUBE(reflectiveSampler, normalize(input.Reflection)).xyz;
+    if (Features.z > 0)
+        output.Color.rgb *= texCUBE(reflectiveSampler, normalize(input.Reflection)).xyz * ReflectionIntensity;
 
     // Normal
     output.Normal = float4(input.WorldNormal, 1);
 
-    if (NormalTextureEnabled == true)
+    if (Features.x > 0)
     {
         input.UV.y += (sin(TotalTime * 3.0 + 10.0) / 256) + (TotalTime / 16);
         float3 normalMap = 2.0 * (tex2D(NormalMapSampler, input.UV * TextureTiling)) - 1.0;
@@ -157,9 +149,9 @@ PixelShaderOutput PixelShaderFunction(VertexShaderOutput input) : COLOR0
     }
 
     // Specular
-    float4 specularAttributes = float4(SpecularLightColor, SpecularPower);
+    float4 specularAttributes = float4(SpecularColor, SpecularPower);
 
-    if (SpecularTextureEnabled == true)
+    if (Features.y > 0)
         specularAttributes = tex2D(specularSampler, input.UV * TextureTiling);
 
     output.Color.a = specularAttributes.r * SpecularIntensity;
