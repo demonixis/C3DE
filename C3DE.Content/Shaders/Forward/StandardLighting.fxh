@@ -2,7 +2,7 @@
 #if SM4
 #define MAX_LIGHT_COUNT 128
 #else
-#define MAX_LIGHT_COUNT 8
+#define MAX_LIGHT_COUNT 16
 #endif
 
 // Lighting
@@ -22,7 +22,7 @@ int LightCount = 0;
 // ---
 // --- Lighting Calculation for directional, point and spot.
 // ---
-float3 CalculateOneLight(int i, float3 worldPosition, float3 worldNormal, float3 eyePosition, float3 diffuseColor, float3 specularColor, specularPower)
+float3 CalculateOneLight(int i, float3 worldPosition, float3 worldNormal, float3 eyePosition, float3 diffuseColor, float3 specularColor, int specularPower)
 {
 	float3 lightVector = LightPosition[i] - worldPosition;
 	float3 directionToLight = normalize(lightVector);

@@ -1,15 +1,4 @@
-// Constants
-#define MAX_LIGHT_COUNT 16
-
-// Lighting
-// LightData.x: Type: Directional, Point, Spot
-// LightData.y: Intensity
-// LightData.z: Range
-// LightData.w: FallOff
-float3 LightPosition[MAX_LIGHT_COUNT];
-float3 LightColor[MAX_LIGHT_COUNT];
-float4 LightData[MAX_LIGHT_COUNT];
-int LightCount = 0;
+#include "../StandardLighting.fxh"
 
 // Matrix
 float4x4 World;
@@ -65,43 +54,14 @@ VertexShaderOutput MainVS_Instanced(VertexShaderInput input, float4x4 instanceTr
 	return CommonVS(input, mul(World, transpose(instanceTransform)));
 }
 
-float3 StandardPixelShader(float4 worldPosition, float3 normal, float specularTerm, float3 albedo, float3 emissive)
+float3 StandardPixelShader(float4 worldPosition, float3 normal, float3 specular, float3 albedo, float3 emissive)
 {    
-	float3 Lo = float3(0, 0, 0);
-	float3 directionToLight = float3(0, 0, 0);
-	float diffuseIntensity = 0;
-	float attenuation = 0;
+	float3 light = float3(0, 0, 0);
 	
-	int lightCount = min(MAX_LIGHT_COUNT, LightCount);
+	int limit = min(MAX_LIGHT_COUNT, LightCount);
 	
-	for (int i = 0; i < lightCount; i++)
-	{
-		directionToLight = normalize(LightPosition[i] - worldPosition.xyz);
-		diffuseIntensity = saturate(dot(normal, directionToLight));
+	for(int i = 0; i < limit; i++)
+		light += CalculateOneLight(i, worldPosition, normal, EyePosition, albedo, specular, SpecularPower);
 
-		if (diffuseIntensity <= 0)
-			continue;
-
-		if (LightData[i].x == 0) // Directional
-		{
-			attenuation = 1.0;
-		}
-		else if (LightData[i].x == 1) // Point
-		{
-			float d = distance(LightPosition[i], worldPosition.xyz);
-			attenuation = 1.0 - pow(clamp(d / LightData[i].z, 0.0, 1.0), LightData[i].w);
-		}
-
-		// Self Shadow
-		float selfShadow = saturate(4 * diffuseIntensity);
-
-		// Specular
-		float3 reflectionVector = normalize(reflect(-directionToLight, normal));
-		float3 directionToCamera = normalize(EyePosition - worldPosition.xyz);
-		float specular = specularTerm * pow(saturate(dot(reflectionVector, directionToCamera)), SpecularPower) * attenuation;
-
-		Lo += selfShadow * (diffuseIntensity * attenuation * LightColor[i] * LightData[i].y) + specular;
-	}
-
-    return float4(AmbientColor + (albedo * Lo) + emissive, 1);
+    return AmbientColor + (albedo * light) + emissive;
 }
