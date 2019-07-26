@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using C3DE.Graphics.Rendering;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 
@@ -16,7 +17,8 @@ namespace C3DE.Graphics.Primitives
 
     public class Mesh : IDisposable, ICloneable
     {
-        private VertexPositionNormalTexture[] _vertices;
+        protected VertexPositionNormalTexture[] _vertices;
+        protected VertexPositionNormalTextureTB[] _verticesN;
         private ushort[] _indices;
         private VertexBuffer _vertexBuffer;
         private IndexBuffer _indexBuffer;
@@ -134,6 +136,35 @@ namespace C3DE.Graphics.Primitives
                 else
                     _vertices[i].Normal = Vector3.Zero;
             }
+        }
+
+        public void ComputeNormalTangentBiNormal(GraphicsDevice graphics)
+        {
+            var size = _verticesN.Length;
+            var positions = new Vector3[size];
+            var uv = new Vector2[size];
+
+            for (var i = 0; i < size; i++)
+            {
+                positions[i] = _verticesN[i].Position;
+                uv[i] = _verticesN[i].UV;
+            }
+
+            MeshUtils.ComputeNormals(positions, _indices, out Vector3[] normals);
+            MeshUtils.CalculateTangentFrames(positions, _indices, normals, uv, out Vector3[] tangents, out Vector3[] biNormals);
+
+            for (var i = 0; i < size; i++)
+            {
+                _verticesN[i].Normal = normals[i];
+                _verticesN[i].Tangent = tangents[i];
+                _verticesN[i].BiNormal = biNormals[i];
+            }
+
+            _vertexBuffer?.Dispose();
+            _vertexBuffer = new VertexBuffer(graphics, typeof(VertexPositionNormalTextureTB), _verticesN.Length, BufferUsage.None);
+
+            _indexBuffer?.Dispose();
+            _indexBuffer = new IndexBuffer(graphics, IndexElementSize.SixteenBits, _indices.Length, BufferUsage.None);
         }
 
         public void SetVertices(VertexType type, Vector3[] vertices)
