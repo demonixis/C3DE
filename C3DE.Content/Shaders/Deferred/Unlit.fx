@@ -3,7 +3,7 @@ float4x4 World;
 float4x4 View;
 float4x4 Projection;
 float3 DiffuseColor;
-float2 TextureTilling;
+float2 TextureTiling;
 
 texture MainTexture;
 sampler2D textureSampler = sampler_state
@@ -61,7 +61,7 @@ PixelShaderOutput PixelShaderFunction(VertexShaderOutput input)
 PixelShaderOutput PixelShaderFunctionTexture(VertexShaderOutput input)
 {
     PixelShaderOutput output = (PixelShaderOutput) 0;
-    output.Color = float4(DiffuseColor * tex2D(textureSampler, input.UV * TextureTilling).xyz, 1.0);
+    output.Color = float4(DiffuseColor * tex2D(textureSampler, input.UV * TextureTiling).xyz, 1.0);
     output.Normal = 0;
     output.Depth = 0;
     return output;

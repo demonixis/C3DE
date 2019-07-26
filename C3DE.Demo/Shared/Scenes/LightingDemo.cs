@@ -56,7 +56,7 @@ namespace C3DE.Demo.Scenes
             modelMaterial.MainTexture = Application.Content.Load<Texture2D>("Models/Quandtum/textures/Turret-Diffuse");
             modelMaterial.NormalMap = Application.Content.Load<Texture2D>("Models/Quandtum/textures/Turret-Normal");
             modelMaterial.EmissiveMap = Application.Content.Load<Texture2D>("Models/Quandtum/textures/Turret-Emission");
-            modelMaterial.SpecularTexture = Application.Content.Load<Texture2D>("Models/Quandtum/textures/Turret-Specular");
+            modelMaterial.SpecularMap = Application.Content.Load<Texture2D>("Models/Quandtum/textures/Turret-Specular");
             modelMaterial.SpecularPower = 8;
             modelMaterial.SpecularColor = Color.White;
             modelMaterial.EmissiveColor = Color.White;

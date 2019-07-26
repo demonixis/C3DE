@@ -9,18 +9,22 @@ namespace C3DE.Graphics.Materials
     public class StandardMaterial : Material
     {
         public Texture2D NormalMap { get; set; }
-        public Texture2D SpecularTexture { get; set; }
-        public Color SpecularColor { get; set; } = Color.Black;
-        public int SpecularPower { get; set; } = 16;
-        public float SpecularIntensity { get; set; } = 1.0f;
+
+        // Cutout
         public bool CutoutEnabled { get; set; }
         public float Cutout { get; set; }
+        // Specular
+        public Texture2D SpecularMap { get; set; }
+        public Color SpecularColor { get; set; } = Color.Black;
+        public int SpecularPower { get; set; } = 16;
+        public float SpecularIntensity { get; set; } = 1.0f; 
+        // Emissive
+        public Texture2D EmissiveMap { get; set; }
         public float EmissiveIntensity { get; set; } = 0.0f;
         public Color EmissiveColor { get; set; } = Color.White;
+        // Reflection
+        public TextureCube ReflectionMap { get; set; }
         public float ReflectionIntensity { get; set; } = 0.0f;
-
-        public Texture2D EmissiveMap { get; set; }
-
 
         public StandardMaterial() : base() { }
 

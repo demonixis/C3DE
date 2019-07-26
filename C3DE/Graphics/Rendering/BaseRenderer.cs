@@ -17,7 +17,7 @@ namespace C3DE.Graphics.Rendering
         protected SpriteBatch m_spriteBatch;
         protected internal RenderTarget2D[] _sceneRenderTargets = new RenderTarget2D[2];
         protected VRService _VRService;
-        protected Light m_AmbientLight;
+        protected Light _ambientLight;
         protected internal GUI m_uiManager;
         protected bool _disposed;
         protected bool m_HDRSupport = false;
@@ -58,9 +58,9 @@ namespace C3DE.Graphics.Rendering
             m_uiManager = new GUI(m_spriteBatch);
             m_uiManager.LoadContent(content);
 
-            m_AmbientLight = new Light();
-            m_AmbientLight.Type = LightType.Ambient;
-            m_AmbientLight.Start();
+            _ambientLight = new Light();
+            _ambientLight.Type = LightType.Ambient;
+            _ambientLight.Start();
         }
 
         public abstract RenderTarget2D GetDepthBuffer();

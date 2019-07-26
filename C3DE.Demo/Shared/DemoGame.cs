@@ -81,6 +81,7 @@ namespace C3DE.Demo
             Application.SceneManager.AddRange(new Scene[]
             {
                 new MenuDemo(),
+                new TestDemo(),
 #if WINDOWS
                 new SimplePBRDemo(),
                 new HeightmapPBRDemo(),

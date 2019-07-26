@@ -43,10 +43,10 @@ namespace C3DE.Graphics.Shaders.Forward
                 _features.X = _material.NormalMap != null ? 1 : 0;
                 _features.Y = _material.EmissiveMap != null ? 1 : 0;
                 _features.Z = _material.CutoutEnabled ? 1 : 0;
-                _features.W = _material.SpecularTexture != null ? 1 : 0;
+                _features.W = _material.SpecularMap != null ? 1 : 0;
 
                 _effect.Parameters["NormalMap"].SetValue(_material.NormalMap);
-                _effect.Parameters["SpecularMap"].SetValue(_material.SpecularTexture);
+                _effect.Parameters["SpecularMap"].SetValue(_material.SpecularMap);
                 _effect.Parameters["Features"].SetValue(_features);
                 _effect.Parameters["ShadowEnabled"].SetValue(receiveShadow);
                 _effect.Parameters["Cutout"].SetValue(_material.Cutout);

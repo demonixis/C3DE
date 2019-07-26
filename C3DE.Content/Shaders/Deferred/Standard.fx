@@ -1,23 +1,24 @@
+// Constant
 float4x4 World;
 float4x4 View;
 float4x4 Projection;
-float3 DiffuseColor;
-bool NormalTextureEnabled;
-bool SpecularTextureEnabled;
-float3 SpecularLightColor;
-float SpecularPower;
-float SpecularIntensity;
-bool ReflectionTextureEnabled;
-
-// Misc
 float3 EyePosition = float3(1, 1, 0);
+// Material Parameter
+float3 DiffuseColor;
 float2 TextureTiling = float2(1, 1);
-
+// Specular
+float3 SpecularColor;
+int SpecularPower;
+float SpecularIntensity;
+// Reflection
+float ReflectionIntensity;
 // Emission
 float3 EmissiveColor;
 float EmissiveIntensity;
-bool EmissiveTextureEnabled;
 
+float4 Features;
+
+// Textures
 texture MainTexture;
 sampler diffuseSampler = sampler_state
 {
@@ -51,10 +52,10 @@ sampler normalSampler = sampler_state
     AddressV = Wrap;
 };
 
-texture ReflectionTexture;
+texture ReflectionMap;
 samplerCUBE reflectionSampler = sampler_state
 {
-    Texture = <ReflectionTexture>;
+    Texture = <ReflectionMap>;
     MinFilter = Linear;
     MagFilter = Linear;
     MipFilter = Linear;
@@ -62,10 +63,10 @@ samplerCUBE reflectionSampler = sampler_state
     AddressV = Mirror;
 };
 
-texture EmissiveTexture;
+texture EmissiveMap;
 sampler2D emissiveSampler = sampler_state
 {
-    Texture = (EmissiveTexture);
+    Texture = (EmissiveMap);
     MinFilter = Linear;
     MagFilter = Linear;
     MipFilter = Linear;
@@ -121,7 +122,7 @@ VertexShaderOutput VertexShaderFunction(in VertexShaderInput input)
     output.WorldToTangentSpace[1] = normalize(output.WorldToTangentSpace[0]);
     output.WorldToTangentSpace[2] = input.Normal;
 
-    if (ReflectionTextureEnabled == true)
+    if (Features.z > 0)
     {
         float3 viewDirection = EyePosition - worldPosition.xyz;
         float3 normal = input.Normal;
@@ -137,26 +138,33 @@ PixelShaderOutput PixelShaderAmbient(VertexShaderOutput input)
 
     output.Color = float4((tex2D(diffuseSampler, input.UV * TextureTiling).rgb * DiffuseColor), 1.0f);
 
-    if (ReflectionTextureEnabled == true)
-        output.Color *= texCUBE(reflectionSampler, normalize(input.Reflection));
+	if (Features.x != 45)
+	{
+		output.Depth = input.Depth.x / input.Depth.y;
+		output.Normal = float4(input.WorldNormal, 1);
+		return output;
+	}
+
+    if (Features.z > 0)
+        output.Color *= texCUBE(reflectionSampler, normalize(input.Reflection)) * ReflectionIntensity;
 		
 	float3 emissiveColor = EmissiveColor;
 
-    if (EmissiveTextureEnabled == true)
+    if (Features.w > 0)
         emissiveColor = tex2D(emissiveSampler, input.UV * TextureTiling).xyz;
 
     output.Color += float4(emissiveColor * EmissiveIntensity, 0.0);
     
-    float4 specularAttributes = float4(SpecularLightColor, SpecularPower);
+    float4 specularAttributes = float4(SpecularColor, SpecularPower);
 
-    if (SpecularTextureEnabled == true)
-        specularAttributes = tex2D(specularSampler, input.UV * TextureTiling);
+    if (Features.y > 0)
+        specularAttributes.rgb = tex2D(specularSampler, input.UV * TextureTiling).rgb;
 
     specularAttributes.rgb *= SpecularIntensity;
 
     output.Color.a = specularAttributes.r;
 
-    if (NormalTextureEnabled == true)
+    if (Features.x > 0)
     {
         float3 normalFromMap = tex2D(normalSampler, input.UV * TextureTiling).rgb;
         normalFromMap = (2.0f * normalFromMap) - 1.0f;
@@ -181,8 +189,8 @@ technique RenderTechnique
     pass P0
     {
 #if SM4
-		VertexShader = compile vs_4_0_level_9_1 VertexShaderFunction();
-		PixelShader = compile ps_4_0_level_9_1 PixelShaderAmbient();
+		VertexShader = compile vs_4_0 VertexShaderFunction();
+		PixelShader = compile ps_4_0 PixelShaderAmbient();
 #else
         VertexShader = compile vs_3_0 VertexShaderFunction();
         PixelShader = compile ps_3_0 PixelShaderAmbient();

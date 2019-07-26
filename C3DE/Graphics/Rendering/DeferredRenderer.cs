@@ -105,8 +105,6 @@ namespace C3DE.Graphics.Rendering
                 }
 
                 shader = material._shaderMaterial;
-
-                // TODO: FIXME
                 shader.PrePass(ref cameraPosition, ref cameraViewMatrix, ref cameraProjectionMatrix);
                 shader.Pass(ref renderer._transform._worldMatrix, renderer.ReceiveShadow, false);
                 renderer.Draw(_graphicsDevice);
@@ -120,8 +118,8 @@ namespace C3DE.Graphics.Rendering
             _graphicsDevice.Clear(Color.Transparent);
 
             // TODO: Make a LightRenderer that renders lights with data only
-            m_AmbientLight.Color = Scene.current.RenderSettings.AmbientColor;
-            m_AmbientLight.RenderDeferred(m_ColorTarget, m_NormalTarget, m_DepthTarget, camera);
+            _ambientLight.Color = Scene.current.RenderSettings.AmbientColor;
+            _ambientLight.RenderDeferred(m_ColorTarget, m_NormalTarget, m_DepthTarget, camera);
 
             foreach (var light in scene._lights)
                 light.RenderDeferred(m_ColorTarget, m_NormalTarget, m_DepthTarget, camera);

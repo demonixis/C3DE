@@ -88,7 +88,7 @@ namespace C3DE.Demo.Scenes
                         material.NormalMap = content.Load<Texture2D>($"Models/Sponza/textures/{temp[0]}");
 
                     if (temp[1] != string.Empty)
-                        material.SpecularTexture = content.Load<Texture2D>($"Models/Sponza/textures/{temp[1]}");
+                        material.SpecularMap = content.Load<Texture2D>($"Models/Sponza/textures/{temp[1]}");
                 }
             }
         }
