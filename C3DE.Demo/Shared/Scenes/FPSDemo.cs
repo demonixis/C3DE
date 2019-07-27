@@ -48,6 +48,8 @@ namespace C3DE.Demo.Scenes
         {
             base.Initialize();
 
+            var content = Application.Content;
+
             // And a light
             var lightContainer = new GameObject("LightContainer");
             var lightGo = GameObjectFactory.CreateLight(LightType.Directional, Color.White, 0.75f, 2048);
@@ -63,13 +65,11 @@ namespace C3DE.Demo.Scenes
             // Skybox
             RenderSettings.Skybox.Generate(Application.GraphicsDevice, DemoGame.StarsSkybox, 2000);
 
-            var player = new PlayerShooter();
-            Add(player);
-
-            var content = Application.Content;
-
             // Reflection Probe
-            _reflectionProbe = GameObjectFactory.CreateReflectionProbe(new Vector3(0, 35, 0));
+            _reflectionProbe = GameObjectFactory.CreateReflectionProbe(new Vector3(0, 25, 0));
+
+            var player = new PlayerShooter();
+            player.Start();
 
             // Ground
             var ground = GameObjectFactory.CreateTerrain();
@@ -121,7 +121,7 @@ namespace C3DE.Demo.Scenes
 
             // Bloom
             var bloom = new FastBloom(Application.GraphicsDevice);
-            bloom.blurIterations = 4;
+            bloom.blurIterations = 8;
             bloom.blurType = FastBloom.BlurType.Sgx;
             bloom.resolution = FastBloom.Resolution.High;
             SetPostProcess(bloom, true);
@@ -179,6 +179,7 @@ namespace C3DE.Demo.Scenes
                             material = materials[RandomHelper.Range(0, materials.Length)];
                             var light = SpawnLight(new Vector3(posX, 3, posY), material.DiffuseColor, 5, 0.5f, false, mesh, material);
                             //light.AddComponent<SinIntensity>();
+                            light.AddComponent<SinMovement>();
                             var mover = light.AddComponent<LightMover>();
                             mover.DisableMovement = true;
 
@@ -273,7 +274,7 @@ namespace C3DE.Demo.Scenes
             {
                 MainTexture = content.Load<Texture2D>("Textures/pbr/Wall/Sci-fi_Walll_001_basecolor"),
                 NormalMap = content.Load<Texture2D>("Textures/pbr/Wall/Sci-fi_Walll_001_normal"),
-                SpecularColor = new Color(0.8f, 0.8f, 0.8f),
+                SpecularColor = Color.LightGray,
                 SpecularPower = 5,
                 SpecularIntensity = 1,
                 ReflectionIntensity = 0.45f,
@@ -304,9 +305,9 @@ namespace C3DE.Demo.Scenes
             {
                 MainTexture = content.Load<Texture2D>("Textures/pbr/Metal Plate/Metal_Plate_015_basecolor"),
                 NormalMap = content.Load<Texture2D>("Textures/pbr/Metal Plate/Metal_Plate_015_normal"),
-                SpecularColor = new Color(0.7f, 0.7f, 0.7f),
-                SpecularPower = 10,
-                ReflectionIntensity = 0.75f,
+                SpecularColor = Color.LightGray,
+                SpecularPower = 2,
+                ReflectionIntensity = 0.45f,
                 ReflectionMap = _reflectionProbe.ReflectionMap,
                 Tiling = new Vector2(16)
             };

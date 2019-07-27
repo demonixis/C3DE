@@ -36,10 +36,8 @@ namespace C3DE.Demo.Scripts.FPS
         private Headbob _headbob;
         private Transform _cameraRig;
 
-        public override void Initialize()
+        public void Start()
         {
-            base.Initialize();
-
             var content = Application.Content;
 
             _minFov = 15;
@@ -211,6 +209,9 @@ namespace C3DE.Demo.Scripts.FPS
                 return mat;
             }
 
+            var reflectionProbe = GameObject.Find("ReflectionProbe");
+            var probe = reflectionProbe?.GetComponent<ReflectionProbe>() ?? null;
+
             return new StandardMaterial()
             {
                 MainTexture = content.Load<Texture2D>("Models/K9/textures/MAT_Scifi_Shotty_Base_Color"),
@@ -219,7 +220,9 @@ namespace C3DE.Demo.Scripts.FPS
                 SpecularColor = new Color(new Vector3(0.75f)),
                 SpecularPower = 5,
                 EmissiveColor = Color.White,
-                EmissiveIntensity = 1
+                EmissiveIntensity = 1,
+                ReflectionIntensity = 0.85f,
+                ReflectionMap = probe?.ReflectionMap ?? null
             };
         }
     }

@@ -89,7 +89,19 @@ namespace C3DE.Graphics.Rendering
             if (scene == null || scene?._cameras.Count == 0)
                 return;
 
-            var camera = scene._cameras[0];
+            Camera camera = null;
+
+            foreach (var cam in scene._cameras)
+            {
+                if (cam.RenderTarget == null)
+                    camera = cam;
+            }
+
+            if (camera == null)
+            {
+                RenderUI(scene._scripts);
+                return;
+            }
 
             if (DirectRendering)
             {

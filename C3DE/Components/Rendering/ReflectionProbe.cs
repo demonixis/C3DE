@@ -79,6 +79,9 @@ namespace C3DE.Components.Rendering
 
             _camera = AddComponent<Camera>();
 
+            if (Camera.Main == _camera)
+                Camera.Main = null;
+
             UpdateRenderTargets();
             UpdateMatrix();
         }
@@ -135,7 +138,7 @@ namespace C3DE.Components.Rendering
                 return new Vector3(MathHelper.ToRadians(90), 0.0f, 0.0f);
             else if (face == CubeMapFace.NegativeY)
                 return new Vector3(MathHelper.ToRadians(-90), 0.0f, 0.0f);
-            
+
             else if (face == CubeMapFace.PositiveZ)
                 return new Vector3(0.0f, MathHelper.ToRadians(180.0f), 0.0f);
             else if (face == CubeMapFace.NegativeZ)

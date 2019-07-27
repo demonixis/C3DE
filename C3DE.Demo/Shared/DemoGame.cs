@@ -9,8 +9,9 @@ namespace C3DE.Demo
 {
     public static class DemoGame
     {
-        public const int ScreenWidth = 800;
-        public const int ScreenHeight = 600;
+        public const bool Fullscreen = false;
+        public const int ScreenWidth = 1280;
+        public const int ScreenHeight = 800;
         public const int UIWidth = 1280;
         public const int UIHeight = 800;
 
@@ -102,6 +103,7 @@ namespace C3DE.Demo
             }, 0);
 
             Application.SceneManager.LoadLevel(0);
+            Screen.Fullscreen = Fullscreen;
             Screen.SetVirtualResolution(UIWidth, UIHeight, true);
         }
     }
