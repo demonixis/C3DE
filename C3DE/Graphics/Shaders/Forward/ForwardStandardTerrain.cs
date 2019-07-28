@@ -29,11 +29,11 @@ namespace C3DE.Graphics.Shaders.Forward
         {
             _effect.Parameters["TextureTiling"].SetValue(_material.Tiling);
             _effect.Parameters["World"].SetValue(worldMatrix);
-            _effect.Parameters["WeightMap"].SetValue(_material.WeightTexture);
+            _effect.Parameters["WeightMap"].SetValue(_material.WeightMap);
             _effect.Parameters["GrassMap"].SetValue(_material.MainTexture);
-            _effect.Parameters["SandMap"].SetValue(_material.SandTexture);
-            _effect.Parameters["RockMap"].SetValue(_material.RockTexture);
-            _effect.Parameters["SnowMap"].SetValue(_material.SnowTexture);
+            _effect.Parameters["SandMap"].SetValue(_material.SandMap);
+            _effect.Parameters["RockMap"].SetValue(_material.RockMap);
+            _effect.Parameters["SnowMap"].SetValue(_material.SnowMap);
             _effect.Parameters["SpecularColor"].SetValue(_material.SpecularColor.ToVector3());
             _effect.Parameters["SpecularPower"].SetValue(_material.SpecularPower);
             _effect.Parameters["SpecularIntensity"].SetValue(_material.SpecularIntensity);
@@ -44,7 +44,7 @@ namespace C3DE.Graphics.Shaders.Forward
                     _material.GrassNormalMap != null &&
                     _material.RockNormalMap != null &&
                     _material.SandNormalMap != null &&
-                    _material.SnownNormalMap != null;
+                    _material.SnowNormalMap != null;
 
                 _features.X = hasNormalMap ? 1 : 0;
                 _features.Y = 0;
@@ -57,7 +57,7 @@ namespace C3DE.Graphics.Shaders.Forward
                     _effect.Parameters["GrassNormalMap"].SetValue(_material.GrassNormalMap);
                     _effect.Parameters["SandNormalMap"].SetValue(_material.SandNormalMap);
                     _effect.Parameters["RockNormalMap"].SetValue(_material.RockNormalMap);
-                    _effect.Parameters["SnowNormalMap"].SetValue(_material.SnownNormalMap);
+                    _effect.Parameters["SnowNormalMap"].SetValue(_material.SnowNormalMap);
                 }
             }
 

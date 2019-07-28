@@ -36,14 +36,14 @@ namespace C3DE.Demo.Scenes
             var reflectionProbe = new GameObject("ReflectionProbe");
             reflectionProbe.Transform.Position = new Vector3(0, 25, 0);
             var probe = reflectionProbe.AddComponent<ReflectionProbe>();
-            probe.Size = 64;
+            probe.Size = 1024;
             probe.Mode = ReflectionProbe.RenderingMode.Realtime;
-            reflectionProbe.AddComponent<ReflectionProbeViewer>();
+            //reflectionProbe.AddComponent<ReflectionProbeViewer>();
 
             var content = Application.Content;
             var terrainMaterial = new StandardMaterial();
             terrainMaterial.MainTexture = TextureFactory.CreateCheckboard(Color.Black, Color.White);
-            terrainMaterial.ReflectionIntensity = 0.65f;
+            terrainMaterial.ReflectionIntensity = 2.95f;
             terrainMaterial.ReflectionMap = probe.ReflectionMap;
             terrainMaterial.Tiling = new Vector2(16);
             var terrainGo = GameObjectFactory.CreateTerrain();
@@ -72,7 +72,7 @@ namespace C3DE.Demo.Scenes
             mesh.GetComponent<Renderer>().Material = new StandardMaterial
             {
                 MainTexture = TextureFactory.CreateCheckboard(Color.Red, Color.AntiqueWhite),
-                ReflectionIntensity = 0.75f,
+                ReflectionIntensity = 2.95f,
                 ReflectionMap = probe.ReflectionMap
             };
             mesh.Transform.LocalPosition = pos;

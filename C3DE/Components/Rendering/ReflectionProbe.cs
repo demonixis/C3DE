@@ -44,6 +44,11 @@ namespace C3DE.Components.Rendering
             set
             {
                 _nearClip = value;
+
+                // The near clip have to be lower than the far clip.
+                if (_farClip < _nearClip)
+                    _farClip = _nearClip + 1;
+
                 UpdateMatrix();
             }
         }
@@ -108,23 +113,6 @@ namespace C3DE.Components.Rendering
             _reflectionTexture = new TextureCube(Application.GraphicsDevice, _size, false, SurfaceFormat.Color);
 
             Dirty = true;
-        }
-
-        public Vector3 GetFacingVector(ref int index)
-        {
-            // PosX/NegX/PosY/NegY/PosZ/NegZ to fit the CubeMapFace enum
-            if (index == 0)
-                return Vector3.Left;
-            else if (index == 1)
-                return Vector3.Right;
-            else if (index == 2)
-                return Vector3.Up;
-            else if (index == 3)
-                return Vector3.Down;
-            else if (index == 4)
-                return Vector3.Forward;
-            else
-                return Vector3.Backward;
         }
 
         public Vector3 GetCameraRotation(CubeMapFace face)

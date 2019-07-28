@@ -132,7 +132,7 @@ namespace C3DE.Editor
                 case "Torus": gameObject = GameObject.CreatePrimitive(PrimitiveTypes.Torus, _defaultMaterial); break;
 
                 case "Terrain":
-                    gameObject = GameObjectFactory.CreateTerrain();
+                    gameObject = GameObjectFactory.CreateTerrain().GameObject;
                     var terrain = gameObject.GetComponent<Terrain>();
                     terrain.Flatten();
                     terrain.Renderer.Material = _defaultMaterial;

@@ -7,7 +7,10 @@ namespace C3DE.Demo.Scenes
 {
     public class TerrainLavaPBRDemo : ProceduralTerrainBase
     {
-        public TerrainLavaPBRDemo() : base("Procedural PBR Terrain (Lava)") { }
+        public TerrainLavaPBRDemo() : base("Procedural PBR Terrain (Lava)")
+        {
+            _pbr = true;
+        }
 
         protected override void SetupScene()
         {

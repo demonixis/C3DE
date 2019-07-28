@@ -9,6 +9,7 @@ using C3DE.Graphics.Primitives;
 using C3DE.UI;
 using C3DE.Utils;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 
@@ -92,6 +93,45 @@ namespace C3DE.Demo.Scenes
             _controllerSwitcher.DefaultRotation = rotation;
             _controllerSwitcher.FlyMode = fly;
             _controllerSwitcher.SetControllerActive(type);
+        }
+
+        public Material GetTerrainMaterial(ContentManager content, Texture2D weightMap, bool pbr, float tiling = 8)
+        {
+            if (pbr)
+            {
+                var terrainMaterial = new PBRTerrainMaterial
+                {
+                    GrassMap = content.Load<Texture2D>("Textures/Terrain/Ground/Ground03_col"),
+                    GrassNormalMap = content.Load<Texture2D>("Textures/Terrain/Ground/Ground03_nrm"),
+                    SandMap = content.Load<Texture2D>("Textures/Terrain/Sand/Ground27_col"),
+                    SandNormalMap = content.Load<Texture2D>("Textures/Terrain/Sand/Ground27_nrm"),
+                    SnowMap = content.Load<Texture2D>("Textures/Terrain/Snow/Snow05_col"),
+                    SnowNormalMap = content.Load<Texture2D>("Textures/Terrain/Snow/Snow05_nrm"),
+                    RockMap = content.Load<Texture2D>("Textures/Terrain/Rock/Rock12_col"),
+                    RockNormalMap = content.Load<Texture2D>("Textures/Terrain/Rock/Rock12_nrm"),
+                    WeightMap = weightMap,
+                    Metallic = 0.2f,
+                    Roughness = 0.5f,
+                    Tiling = new Vector2(tiling)
+                };
+            }
+
+            return new StandardTerrainMaterial
+            {
+                MainTexture = content.Load<Texture2D>("Textures/Terrain/Ground/Ground03_col"),
+                GrassNormalMap = content.Load<Texture2D>("Textures/Terrain/Ground/Ground03_nrm"),
+                SandMap = content.Load<Texture2D>("Textures/Terrain/Sand/Ground27_col"),
+                SandNormalMap = content.Load<Texture2D>("Textures/Terrain/Sand/Ground27_nrm"),
+                SnowMap = content.Load<Texture2D>("Textures/Terrain/Snow/Snow05_col"),
+                SnowNormalMap = content.Load<Texture2D>("Textures/Terrain/Snow/Snow05_nrm"),
+                RockMap = content.Load<Texture2D>("Textures/Terrain/Rock/Rock12_col"),
+                RockNormalMap = content.Load<Texture2D>("Textures/Terrain/Rock/Rock12_nrm"),
+                WeightMap=  weightMap,
+                SpecularColor = Color.Gray,
+                SpecularIntensity = 1,
+                SpecularPower = 32,
+                Tiling = new Vector2(tiling)
+            };
         }
 
         public void AddLightGroundTest(float range = 50, int lightsCircle = 6, bool showLights = true)

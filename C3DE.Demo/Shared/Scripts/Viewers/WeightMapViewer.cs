@@ -32,7 +32,7 @@ namespace C3DE.Demo.Scripts.Viewers
             if (_material == null)
                 return;
 
-            gui.DrawTexture(_rect, _material.WeightTexture);
+            gui.DrawTexture(_rect, _material.WeightMap);
         }
     }
 }

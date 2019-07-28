@@ -92,6 +92,7 @@ namespace C3DE.Demo
                 new TerrainLavaPBRDemo(),
                 new LightingPBRDemo(),
 #endif
+                new LandscapeDemo(),
                 new HeightmapDemo(),
                 new ProceduralTerrainWater(),
                 new ProceduralTerrainLava(),

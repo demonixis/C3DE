@@ -14,7 +14,7 @@ namespace C3DE.Demo.Scenes
             _directionalLight.Transform.LocalPosition = new Vector3(250, 500, 100);
 
             // Reflection Probe
-            var probe = GameObjectFactory.CreateReflectionProbe(new Vector3(0, 35, 0));
+            var probe = GameObjectFactory.CreateReflectionProbe(new Vector3(0, 50, 0));
 
             // Water
             var waterGo = new GameObject("Water");
@@ -29,9 +29,9 @@ namespace C3DE.Demo.Scenes
                 MainTexture = content.Load<Texture2D>("Textures/Fluids/water"),
                 NormalMap = content.Load<Texture2D>("Textures/Fluids/Water_Normal"),
                 SpecularColor = new Color(0.7f, 0.7f, 0.7f),
-                SpecularPower = 50,
+                SpecularPower = 4,
                 ReflectionMap = probe.ReflectionMap,
-                ReflectionIntensity = 0.75f
+                ReflectionIntensity = 0.85f
             };
         }
     }

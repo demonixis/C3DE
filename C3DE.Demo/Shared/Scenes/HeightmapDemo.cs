@@ -17,26 +17,13 @@ namespace C3DE.Demo.Scenes
             base.Initialize();
 
             var content = Application.Content;
-            
-            // Finally a terrain
-            var terrainMaterial = new StandardTerrainMaterial();
-            terrainMaterial.MainTexture = content.Load<Texture2D>("Textures/Terrain/Ground/Ground03_col");
-            terrainMaterial.GrassNormalMap = content.Load<Texture2D>("Textures/Terrain/Ground/Ground03_nrm");
-            terrainMaterial.SandTexture = content.Load<Texture2D>("Textures/Terrain/Sand/Ground27_col");
-            terrainMaterial.SandNormalMap = content.Load<Texture2D>("Textures/Terrain/Sand/Ground27_nrm");
-            terrainMaterial.SnowTexture = content.Load<Texture2D>("Textures/Terrain/Snow/Snow05_col");
-            terrainMaterial.SnownNormalMap = content.Load<Texture2D>("Textures/Terrain/Snow/Snow05_nrm");
-            terrainMaterial.RockTexture = content.Load<Texture2D>("Textures/Terrain/Rock/Rock12_col");
-            terrainMaterial.RockNormalMap = content.Load<Texture2D>("Textures/Terrain/Rock/Rock12_nrm");
 
             var terrainGo = GameObjectFactory.CreateTerrain();
             var terrain = terrainGo.GetComponent<Terrain>();
             terrain.LoadHeightmap("Textures/heightmap");
-            terrain.Renderer.Material = terrainMaterial;
 
             var weightMap = terrain.GenerateWeightMap();
-            terrainMaterial.WeightTexture = weightMap;
-            terrainMaterial.Tiling = new Vector2(4);
+            terrain.Renderer.Material = GetTerrainMaterial(content, weightMap, false);
             terrainGo.AddComponent<WeightMapViewer>();
 
             // Water

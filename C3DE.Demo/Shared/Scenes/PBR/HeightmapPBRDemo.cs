@@ -16,31 +16,11 @@ namespace C3DE.Demo.Scenes
         {
             base.Initialize();
 
-            //SpawnRadialLights(5, 0.0f, 16, 0.5f, 0.5f);
-            //SpawnRadialLights(25, 0.0f, 16, 0.5f, 0.5f);
-            //SpawnRadialLights(50, 0.0f, 16, 0.5f, 0.5f);
-
             var content = Application.Content;
-
-            // Finally a terrain
-            var terrainMaterial = new PBRTerrainMaterial();
-            terrainMaterial.GrassMap = content.Load<Texture2D>("Textures/Terrain/Ground/Ground03_col");
-            terrainMaterial.GrassNormalMap = content.Load<Texture2D>("Textures/Terrain/Ground/Ground03_nrm");
-            terrainMaterial.SnowMap = content.Load<Texture2D>("Textures/Terrain/Sand/Ground27_col");
-            terrainMaterial.SandNormalMap = content.Load<Texture2D>("Textures/Terrain/Sand/Ground27_nrm");
-            terrainMaterial.SnowMap = content.Load<Texture2D>("Textures/Terrain/Snow/Snow05_col");
-            terrainMaterial.SnowNormalMap = content.Load<Texture2D>("Textures/Terrain/Snow/Snow05_nrm");
-            terrainMaterial.RockMap = content.Load<Texture2D>("Textures/Terrain/Rock/Rock12_col");
-            terrainMaterial.RockNormalMap = content.Load<Texture2D>("Textures/Terrain/Rock/Rock12_nrm");
-
             var terrainGo = GameObjectFactory.CreateTerrain();
             var terrain = terrainGo.GetComponent<Terrain>();
             terrain.LoadHeightmap("Textures/heightmap");
-            terrain.Renderer.Material = terrainMaterial;
-
-            var weightMap = terrain.GenerateWeightMap();
-            terrainMaterial.WeightMap = weightMap;
-            terrainMaterial.Tiling = new Vector2(4);
+            terrain.Renderer.Material = GetTerrainMaterial(content, terrain.GenerateWeightMap(), true);
             terrainGo.AddComponent<WeightMapViewer>();
 
             //

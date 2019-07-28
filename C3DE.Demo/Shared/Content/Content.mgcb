@@ -632,7 +632,7 @@
 /processorParam:TextureFormat=Color
 /build:Models/Sponza/textures/vase_round_spec.jpg
 
-#begin Models/Tree/gum_leaf.png
+#begin Models/Tree/snow_gum_mod.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -642,9 +642,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Models/Tree/gum_leaf.png
+/build:Models/Tree/snow_gum_mod.png
 
-#begin Models/Tree/gum_tree1.fbx
+#begin Models/Tree/Tree.fbx
 /importer:FbxImporter
 /processor:ModelProcessor
 /processorParam:ColorKeyColor=0,0,0,0
@@ -661,19 +661,7 @@
 /processorParam:Scale=1
 /processorParam:SwapWindingOrder=False
 /processorParam:TextureFormat=Compressed
-/build:Models/Tree/gum_tree1.fbx
-
-#begin Models/Tree/snow_gum_mod.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Models/Tree/snow_gum_mod.png
+/build:Models/Tree/Tree.fbx
 
 #begin Models/Tree/tree_branch.png
 /importer:TextureImporter

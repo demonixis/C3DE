@@ -94,7 +94,10 @@ namespace C3DE.Graphics.Rendering
             foreach (var cam in scene._cameras)
             {
                 if (cam.RenderTarget == null)
+                {
                     camera = cam;
+                    break;
+                }
             }
 
             if (camera == null)

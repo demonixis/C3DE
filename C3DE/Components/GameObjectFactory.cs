@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using C3DE.Components.VR;
+using C3DE.VR;
 
 namespace C3DE
 {
@@ -44,7 +45,7 @@ namespace C3DE
             return gameObject;
         }
 
-        public static ReflectionProbe CreateReflectionProbe(Vector3 position, int size = 64, float fov = 60.0f, float nearClip = 1.0f, float farClip = 1000.0f)
+        public static ReflectionProbe CreateReflectionProbe(Vector3 position, int size = 64, float fov = 60.0f, float nearClip = 400.0f, float farClip = 500.0f)
         {
             var gameObject = new GameObject("ReflectionProbe");
             gameObject.Transform.Position = position;
@@ -120,7 +121,7 @@ namespace C3DE
 
         public static GameObject CreateXNAModel(ContentManager content, string modelPath) => CreateXNAModel(content.Load<Model>(modelPath));
 
-        public static GameObject CreateTerrain(Vector3? size = null, Vector2? repeat = null)
+        public static Terrain CreateTerrain(Vector3? size = null, Vector2? repeat = null)
         {
             var gameObject = new GameObject("Terrain");
             var terrain = gameObject.AddComponent<Terrain>();
@@ -135,7 +136,7 @@ namespace C3DE
             if (size.HasValue || repeat.HasValue)
                 mesh.Build();
 
-            return gameObject;
+            return terrain;
         }
 
         public static GameObject CreateLava(Texture2D lavalTexture, Texture2D normalTexture, Vector3 size, bool collider = false)
@@ -190,39 +191,36 @@ namespace C3DE
             return gameObject;
         }
 
-        public static GameObject CreatePlayer(bool vrEnabled)
+        public static GameObject CreatePlayer(float headHeight = 1.7f, bool vrEnabled = true)
         {
             var scene = Scene.current;
 
             var player = new GameObject("Player");
-            scene.Add(player);
 
             var head = new GameObject();
             head.Transform.Parent = player.Transform;
-            head.Transform.LocalPosition = new Vector3(0, 1.8f, 0);
-            scene.Add(head);
+            head.Transform.LocalPosition = new Vector3(0, headHeight, 0);
+
+            if (VRManager.Enabled)
+                head.Transform.LocalPosition = Vector3.Zero;
 
             var trackingSpace = new GameObject();
             trackingSpace.Transform.Parent = head.Transform;
-            scene.Add(trackingSpace);
 
             var cameraGo = CreateCamera();
             cameraGo.Name = "CenterEyeAnchor";
             cameraGo.Transform.Parent = trackingSpace.Transform;
-            scene.Add(cameraGo);
 
             if (vrEnabled)
             {
                 var leftHand = new GameObject("LeftHandAnchor");
                 leftHand.Transform.Parent = trackingSpace.Transform;
-                scene.Add(leftHand);
 
                 var mc = leftHand.AddComponent<MotionController>();
                 mc.LeftHand = true;
 
                 var rightHand = new GameObject("RightHandAnchor");
                 rightHand.Transform.Parent = trackingSpace.Transform;
-                scene.Add(rightHand);
 
                 mc = rightHand.AddComponent<MotionController>();
                 mc.LeftHand = false;

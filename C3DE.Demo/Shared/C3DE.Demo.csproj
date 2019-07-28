@@ -44,6 +44,7 @@
   <ItemGroup>
     <Compile Include="DemoGame.cs" />
     <Compile Include="Scenes\HeightmapDemo.cs" />
+    <Compile Include="Scenes\LandscapeDemo.cs" />
     <Compile Include="Scenes\LightingDemo.cs" />
     <Compile Include="Scenes\PBR\HeightmapPBRDemo.cs" />
     <Compile Include="Scenes\PBR\TerrainLavaPBRDemo.cs" />

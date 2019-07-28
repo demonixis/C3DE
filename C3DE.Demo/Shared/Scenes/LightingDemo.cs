@@ -24,7 +24,7 @@ namespace C3DE.Demo.Scenes
             //_directionalLight.Intensity = 0.05f;
 
             // Reflection Probe
-            var probe = GameObjectFactory.CreateReflectionProbe(new Vector3(0, 35, 0));
+            var probe = GameObjectFactory.CreateReflectionProbe(new Vector3(0, 35, 0), 32, 60, 900, 1000);
 
             // Terrain
             var terrainMaterial = new StandardMaterial();

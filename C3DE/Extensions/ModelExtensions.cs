@@ -9,6 +9,8 @@ namespace Microsoft.Xna.Framework.Graphics
 {
     public static class ModelExtensions
     {
+        private static Dictionary<string, StandardMaterial> MaterialsCache = new Dictionary<string, StandardMaterial>();
+
         public static GameObject ToMeshRenderers(this Model model, Scene scene = null)
         {
             if (scene == null)
@@ -19,8 +21,6 @@ namespace Microsoft.Xna.Framework.Graphics
 
             var gameObject = new GameObject("Model");
             scene.Add(gameObject);
-
-            var materials = new Dictionary<string, StandardMaterial>();
 
             foreach (ModelMesh mesh in model.Meshes)
             {
@@ -44,7 +44,7 @@ namespace Microsoft.Xna.Framework.Graphics
                 foreach (var part in mesh.MeshParts)
                 {
                     var effect = (BasicEffect)part.Effect;
-                    var material = TryGetMaterial(effect, materials);
+                    var material = TryGetMaterial(effect);
 
                     if (material == null)
                     {
@@ -56,7 +56,7 @@ namespace Microsoft.Xna.Framework.Graphics
                         material.EmissiveColor = new Color(effect.EmissiveColor.X, effect.EmissiveColor.Y, effect.EmissiveColor.Z);
 
                         if (!string.IsNullOrEmpty(effect?.Texture?.Name))
-                            materials.Add(effect.Texture.Name, material);
+                            MaterialsCache.Add(effect.Texture.Name, material);
                     }
 
                     var child = new GameObject($"{mesh.Name}_{meshPartIndex}");
@@ -76,18 +76,21 @@ namespace Microsoft.Xna.Framework.Graphics
                 }
             }
 
-            Debug.Log(materials.Count);
-
             return gameObject;
         }
 
-        private static StandardMaterial TryGetMaterial(BasicEffect effect, Dictionary<string, StandardMaterial> materials)
+        private static StandardMaterial TryGetMaterial(BasicEffect effect)
         {
             var name = effect?.Texture?.Name;
             var hasValidName = !string.IsNullOrEmpty(name);
 
-            if (hasValidName && materials.ContainsKey(name))
-                return materials[name];
+            if (hasValidName && MaterialsCache.ContainsKey(name))
+            {
+#if DEBUG
+                Debug.Log($"Reusing an existing material: {name}");
+#endif
+                return MaterialsCache[name];
+            }
 
             return null;
         }

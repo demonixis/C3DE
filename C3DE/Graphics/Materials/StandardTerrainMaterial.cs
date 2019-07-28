@@ -9,13 +9,13 @@ namespace C3DE.Graphics.Materials
     public class StandardTerrainMaterial : Material
     {
         public Texture2D GrassNormalMap { get; set; }
-        public Texture2D SnowTexture { get; set; }
-        public Texture2D SnownNormalMap { get; set; }
-        public Texture2D SandTexture { get; set; }
+        public Texture2D SnowMap { get; set; }
+        public Texture2D SnowNormalMap { get; set; }
+        public Texture2D SandMap { get; set; }
         public Texture2D SandNormalMap { get; set; }
-        public Texture2D RockTexture { get; set; }
+        public Texture2D RockMap { get; set; }
         public Texture2D RockNormalMap { get; set; }
-        public Texture2D WeightTexture { get; set; }
+        public Texture2D WeightMap { get; set; }
 
         public int SpecularPower { get; set; } = 16;
         public float SpecularIntensity { get; set; } = 1;

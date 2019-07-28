@@ -40,8 +40,7 @@ namespace C3DE.Demo.Scenes.PBR
             terrainMaterial.CreateRoughnessMetallicAO();
             terrainMaterial.Tiling = new Vector2(16);
 
-            var go = GameObjectFactory.CreateTerrain();
-            var terrain = go.GetComponent<Terrain>();
+            var terrain = GameObjectFactory.CreateTerrain();
             terrain.Geometry.Size = new Vector3(1);
             terrain.Geometry.Build();
             terrain.Flatten();
@@ -49,7 +48,6 @@ namespace C3DE.Demo.Scenes.PBR
             terrain.Renderer.ReceiveShadow = true;
             terrain.Renderer.CastShadow = false;
             terrain.Renderer.Enabled = true;
-            Add(go);
 
             var content = Application.Content;
 

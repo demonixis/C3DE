@@ -108,6 +108,15 @@ namespace C3DE.Graphics.Primitives
 
         public void ComputeNormals()
         {
+            if (_vertices == null)
+            {
+                _vertices = new VertexPositionNormalTexture[_vertexBuffer.VertexCount];
+                _vertexBuffer.GetData<VertexPositionNormalTexture>(_vertices);
+
+                _indices = new ushort[_indexBuffer.IndexCount];
+                _indexBuffer.GetData<ushort>(_indices);
+            }
+
             for (int i = 0; i < _vertices.Length; i++)
                 _vertices[i].Normal = Vector3.Zero;
 
@@ -247,14 +256,8 @@ namespace C3DE.Graphics.Primitives
 
         public void Dispose()
         {
-            if (Built)
-            {
-                if (_vertexBuffer != null)
-                    _vertexBuffer.Dispose();
-
-                if (_indexBuffer != null)
-                    _indexBuffer.Dispose();
-            }
+            _vertexBuffer?.Dispose();
+            _indexBuffer?.Dispose();
         }
 
         public object Clone()

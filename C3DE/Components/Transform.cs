@@ -35,14 +35,12 @@ namespace C3DE.Components
 
                 if (_parent != null)
                     _parent.Transforms.Add(this);
+
+                _dirty = true;
             }
         }
 
-        public List<Transform> Transforms
-        {
-            get { return _transforms; }
-            protected set { _transforms = value; }
-        }
+        public List<Transform> Transforms => _transforms;
 
         public Vector3 Position
         {
@@ -55,13 +53,18 @@ namespace C3DE.Components
             {
                 UpdateWorldMatrix();
                 _localPosition = Vector3.Transform(value, Matrix.Invert(_worldMatrix));
+                _dirty = true;
             }
         }
 
         public Vector3 LocalPosition
         {
             get { return _localPosition; }
-            set { _localPosition = value; }
+            set
+            {
+                _localPosition = value;
+                _dirty = true;
+            }
         }
 
         public Vector3 Rotation
@@ -73,40 +76,34 @@ namespace C3DE.Components
                 _worldMatrix.Decompose(out Vector3 scale, out Quaternion r, out Vector3 translation);
                 return r.ToEuler();
             }
-           /* set
-            {
-                var result = Quaternion.Euler(value) * Quaternion.Inverse(_parent.Quaternion);
-                _localRotation = result.ToEuler();
-            }*/
         }
 
-        public Matrix RotationMatrix => Matrix.CreateFromYawPitchRoll(_localRotation.Y, _localRotation.X, _localRotation.Z);
-
-        /*public Quaternion Quaternion
+        public Matrix RotationMatrix
         {
-            get
-            {
-                var rotation = Rotation;
-                return Quaternion.Euler(rotation);
-            }
-        }*/
-
-        //public Quaternion LocalQuaternion => Quaternion.Euler(_localRotation);
+            get => Matrix.CreateFromYawPitchRoll(_localRotation.Y, _localRotation.X, _localRotation.Z);
+        }
 
         public Vector3 LocalRotation
         {
             get { return _localRotation; }
-            set { _localRotation = value; }
+            set
+            {
+                _localRotation = value;
+                _dirty = true;
+            }
         }
 
         public Vector3 LocalScale
         {
             get { return _localScale; }
-            set { _localScale = value; }
+            set
+            {
+                _localScale = value;
+                _dirty = true;
+            }
         }
 
         public Matrix WorldMatrix => _worldMatrix;
-
         public Vector3 Forward => _worldMatrix.Forward;
         public Vector3 Backward => _worldMatrix.Backward;
         public Vector3 Right => _worldMatrix.Right;
@@ -139,6 +136,7 @@ namespace C3DE.Components
             _localPosition.X += x;
             _localPosition.Y += y;
             _localPosition.Z += z;
+            _dirty = true;
         }
 
         public void Translate(ref Vector3 translation)
@@ -156,6 +154,7 @@ namespace C3DE.Components
             _localRotation.X += rx;
             _localRotation.Y += ry;
             _localRotation.Z += rz;
+            _dirty = true;
         }
 
         public void Rotate(ref Vector3 rotation)
@@ -173,6 +172,7 @@ namespace C3DE.Components
             _localPosition.X = x.HasValue ? x.Value : _localPosition.X;
             _localPosition.Y = y.HasValue ? y.Value : _localPosition.Y;
             _localPosition.Z = z.HasValue ? z.Value : _localPosition.Z;
+            _dirty = true;
         }
 
         public void SetLocalPosition(Vector3 position)
@@ -180,6 +180,7 @@ namespace C3DE.Components
             _localPosition.X = position.X;
             _localPosition.Y = position.Y;
             _localPosition.Z = position.Z;
+            _dirty = true;
         }
 
         public void SetLocalRotation(float? x, float? y, float? z)
@@ -187,6 +188,7 @@ namespace C3DE.Components
             _localRotation.X = x.HasValue ? x.Value : _localRotation.X;
             _localRotation.Y = y.HasValue ? y.Value : _localRotation.Y;
             _localRotation.Z = z.HasValue ? z.Value : _localRotation.Z;
+            _dirty = true;
         }
 
         public void SetLocalRotation(Matrix matrix)
@@ -201,16 +203,16 @@ namespace C3DE.Components
             _localScale.X = x.HasValue ? x.Value : _localScale.X;
             _localScale.Y = y.HasValue ? y.Value : _localScale.Y;
             _localScale.Z = z.HasValue ? z.Value : _localScale.Z;
+            _dirty = true;
         }
 
         public override void Update()
         {
-            if (_gameObject.IsStatic && !_dirty)
-                return;
-
-            UpdateWorldMatrix();
-
-            _dirty = false;
+            if (_dirty || !_gameObject.IsStatic)
+            {
+                UpdateWorldMatrix();
+                _dirty = false;
+            }
         }
 
         public void UpdateWorldMatrix()
@@ -227,6 +229,7 @@ namespace C3DE.Components
         public Vector3 TransformVector(Vector3 direction)
         {
             UpdateWorldMatrix();
+
             return Vector3.Transform(direction, _worldMatrix);
         }
 

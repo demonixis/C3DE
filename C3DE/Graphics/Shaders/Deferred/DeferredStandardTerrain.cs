@@ -38,10 +38,10 @@ namespace C3DE.Graphics.Materials.Shaders
             _effect.Parameters["TextureTiling"].SetValue(_material.Tiling);
             _effect.Parameters["World"].SetValue(worldMatrix);
             _effect.Parameters["MainTexture"].SetValue(_material.MainTexture);
-            _effect.Parameters["SandTexture"].SetValue(_material.SandTexture);
+            _effect.Parameters["SandTexture"].SetValue(_material.SandMap);
             _effect.Parameters["RockTexture"].SetValue(_material.RockNormalMap);
-            _effect.Parameters["SnowTexture"].SetValue(_material.SnowTexture);
-            _effect.Parameters["WeightMap"].SetValue(_material.WeightTexture);
+            _effect.Parameters["SnowTexture"].SetValue(_material.SnowMap);
+            _effect.Parameters["WeightMap"].SetValue(_material.WeightMap);
             
             // Specular
             _effect.Parameters["SpecularColor"].SetValue(_material.SpecularColor.ToVector3());
