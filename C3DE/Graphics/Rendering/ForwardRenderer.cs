@@ -293,6 +293,16 @@ namespace C3DE.Graphics.Rendering
 
                 renderer.Draw(_graphicsDevice);
             }
+
+            // Draw particles at the end
+            foreach (var particle in scene._particleSystems)
+            {
+                material = particle.Material;
+                shader = material._shaderMaterial;
+                shader.PrePass(ref cameraPosition, ref cameraViewMatrix, ref cameraProjectionMatrix);
+                shader.Pass(ref particle._transform._worldMatrix, false, false); // FIXME
+                particle.Draw(_graphicsDevice);
+            }
         }
 
         private void ComputeLightData(Scene scene)

@@ -104,6 +104,23 @@ namespace C3DE.Components.Rendering
             }
             else
             {
+                var draw = true;
+
+                if (_mesh.VertexBuffer.IsDisposed)
+                {
+                    Debug.Log($"{_gameObject.Name}'s VertexBuffer is disposed");
+                    draw = false;
+                }
+
+                if (_mesh.IndexBuffer.IsDisposed)
+                {
+                    Debug.Log($"{_gameObject.Name}'s IndexBuffer is disposed");
+                    draw = false;
+                }
+
+                if (!draw)
+                    return;
+
                 graphics.SetVertexBuffer(_mesh.VertexBuffer);
                 graphics.Indices = _mesh.IndexBuffer;
                 graphics.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, _mesh.IndexBuffer.IndexCount / 3);
@@ -139,11 +156,7 @@ namespace C3DE.Components.Rendering
 
         public override void Dispose()
         {
-            if (_mesh != null)
-            {
-                _mesh.Dispose();
-                _mesh = null;
-            }
+            _mesh?.Dispose();
         }
 
         public override void PostDeserialize()

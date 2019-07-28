@@ -1,11 +1,12 @@
-﻿using C3DE.Utils;
+﻿using C3DE.Graphics.Materials;
+using C3DE.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 
 namespace C3DE.Components.Rendering.Particles
 {
-    public class ParticleSystem : Renderer
+    public class ParticleSystem : Component
     {
         private ParticleSettings _settings;
         private ParticleVertex[] _particles;
@@ -17,6 +18,9 @@ namespace C3DE.Components.Rendering.Particles
         private int _firstFreeParticle;
         private int _firstRetiredParticle;
         private int _drawCounter;
+        private bool _ready;
+
+        public ParticleMaterial Material { get; set; }
 
         public void Setup(GraphicsDevice graphics, ParticleSettings settings)
         {
@@ -48,14 +52,14 @@ namespace C3DE.Components.Rendering.Particles
 
             _indexBuffer = new IndexBuffer(graphics, typeof(ushort), indices.Length, BufferUsage.WriteOnly);
             _indexBuffer.SetData(indices);
+            _ready = true;
         }
 
-        public override void ComputeBoundingInfos()
+        public void Draw(GraphicsDevice device)
         {
-        }
+            if (!_ready || Material == null)
+                return;
 
-        public override void Draw(GraphicsDevice device)
-        {
             if (_vertexBuffer.IsContentLost)
                 _vertexBuffer.SetData(_particles);
 
@@ -103,6 +107,8 @@ namespace C3DE.Components.Rendering.Particles
 
             if (_firstRetiredParticle == _firstActiveParticle)
                 _drawCounter = 0;
+
+            Material?._shaderMaterial._effect.Parameters["CurrentTime"].SetValue(_currentTime);
         }
 
         private void RetireActiveFreeRetiredParticles()

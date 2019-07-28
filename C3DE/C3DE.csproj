@@ -82,6 +82,7 @@
     <Compile Include="Graphics\Shaders\Deferred\DeferredStandardTerrain.cs" />
     <Compile Include="Graphics\Shaders\Deferred\DeferredStandardWater.cs" />
     <Compile Include="Graphics\Shaders\Deferred\DeferredUnlit.cs" />
+    <Compile Include="Graphics\Shaders\Forward\ForwardParticles.cs" />
     <Compile Include="Graphics\Shaders\Forward\ForwardPBR.cs" />
     <Compile Include="Graphics\Shaders\Forward\ForwardPBRBase.cs" />
     <Compile Include="Graphics\Shaders\Forward\ForwardPBRLava.cs" />

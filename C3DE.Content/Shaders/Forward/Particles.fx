@@ -5,12 +5,13 @@
 // Copyright (C) Microsoft Corporation. All rights reserved.
 //-----------------------------------------------------------------------------
 
-
 // Camera parameters.
+//float4x4 World;
 float4x4 View;
 float4x4 Projection;
 float2 ViewportScale;
 float CurrentTime;
+
 float Duration;
 float DurationRandomness;
 float3 Gravity;

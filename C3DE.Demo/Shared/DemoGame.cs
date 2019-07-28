@@ -81,7 +81,7 @@ namespace C3DE.Demo
         {
             Application.SceneManager.AddRange(new Scene[]
             {
-#if _DEBUG
+#if DEBUG
                 new TestDemo(),
 #else
                 new MenuDemo(),
