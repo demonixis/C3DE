@@ -72,7 +72,7 @@ namespace C3DE.Utils
                 Range(0.0f, 1.0f),
                 Range(0.0f, 1.0f),
                 Range(0.0f, 1.0f), 
-                alpha);
+                alpha < 0 ? Range(0.0f, 1.0f) : alpha;
         }
     }
 }

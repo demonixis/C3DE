@@ -43,7 +43,7 @@
     <Compile Include="Components\Behaviour.cs" />
     <Compile Include="Components\Rendering\InstancedMeshRenderer.cs" />
     <Compile Include="Components\Rendering\LensFlare.cs" />
-    <Compile Include="Components\Rendering\BoundingBoxRenderer.cs" />
+    <Compile Include="Components\Rendering\Diagnostic\BoundingBoxRenderer.cs" />
     <Compile Include="Components\Controllers\Controller.cs" />
     <Compile Include="Components\Controllers\OrbitController.cs" />
     <Compile Include="Components\Camera.cs" />
@@ -56,15 +56,19 @@
     <Compile Include="Components\Controllers\Mobile\VirtualGamepad.cs" />
     <Compile Include="Components\Lighting\Light.cs" />
     <Compile Include="Components\Rendering\MeshRenderer.cs" />
+    <Compile Include="Components\Rendering\Particles\ParticleSettings.cs" />
+    <Compile Include="Components\Rendering\Particles\ParticleSystem.cs" />
+    <Compile Include="Components\Rendering\Particles\ParticleVertex.cs" />
     <Compile Include="Components\Rendering\ReflectionProbe.cs" />
-    <Compile Include="Components\Rendering\RigidbodyRenderer.cs" />
-    <Compile Include="Components\Rendering\StockEffectRenderer.cs" />
+    <Compile Include="Components\Rendering\Diagnostic\RigidbodyRenderer.cs" />
+    <Compile Include="Components\Rendering\Diagnostic\StockEffectRenderer.cs" />
     <Compile Include="Components\Rendering\Terrain.cs" />
     <Compile Include="Components\Physics\Rigidbody.cs" />
     <Compile Include="Components\VR\MotionController.cs" />
     <Compile Include="Extensions\MatrixExtensions.cs" />
     <Compile Include="Extensions\ModelExtensions.cs" />
     <Compile Include="Components\GameObjectFactory.cs" />
+    <Compile Include="Graphics\Materials\ParticleMaterial.cs" />
     <Compile Include="Graphics\Materials\PBRTerrainMaterial.cs" />
     <Compile Include="Graphics\Materials\PBRLavaMaterial.cs" />
     <Compile Include="Graphics\Materials\PBRMaterial.cs" />
@@ -167,7 +171,7 @@
     <Compile Include="Time.cs" />
     <Compile Include="Utils\NoiseGenerator.cs" />
     <Compile Include="Utils\RandomHelper.cs" />
-    <Compile Include="Components\Rendering\DepthRenderer.cs" />
+    <Compile Include="Components\Rendering\Diagnostic\DepthRenderer.cs" />
     <Compile Include="VR\Oculus\MonogameExtensions.cs" />
     <Compile Include="VR\Oculus\OculusRift.cs" />
     <Compile Include="VR\Oculus\OculusService.cs" />
@@ -234,6 +238,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\MonoGame.Framework.WindowsDX.3.7.1.189\build\MonoGame.Framework.WindowsDX.targets" Condition="Exists('..\packages\MonoGame.Framework.WindowsDX.3.7.1.189\build\MonoGame.Framework.WindowsDX.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

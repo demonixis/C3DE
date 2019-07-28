@@ -9,15 +9,15 @@ C3DE aims to become a 3D game engine powered by the [MonoGame Framework](https:/
 This project is in early stage. **Use** the `master` branch for testing and the `develop` branch for latest and **instable** changes. Keep in mind that all branches other than `master` **are probably broken** on non Windows targets.
 
 ## Features
-- Scenegraph
 - Component based
 - 3D Model support + Custom Mesh geometry
 - Terrain: Flat, Random, Heightmap
 - Materials: PBR (in progress), Standard (Phong + Extras), Terrain (multi-textured) and few extras
 - Lighting: Directional, Point, Spot
-- Forward Renderer: Unlimlited number of light with the multipass lighting
-- Light PrePass Renderer
-- Deferred Renderer
+- Forward Renderer: Single Pass multi-lighting, up to 128 realtime lights with Direct3D and 16 with OpenGL
+- Hardware Instancing: Draw thousand of mesh in a single draw call!
+- Reflection Probe: Generate on demand a cube map that can be used for local reflections
+- Deferred Renderer (wip)
 - Shadow mapping (Hard shadow only)
 - Input management: Keyboard, Mouse, Gamepad, Touch
 - Procedural texture generation
@@ -34,6 +34,9 @@ This project is in early stage. **Use** the `master` branch for testing and the 
 | Android   | OpenGL  | Same as DesktopGL + Limited support of the platform |
 | UWP       | DirectX | On Hold (Good) |
 
+### Help needed
+I need help to port the Oculus Mobile SDK to Xamarin
+
 ### About OpenGL and MonoGame
 The OpenGL shader compiler is limited to the shader model 3, some effects are not supported on this platform. 
 Physically Based Rendering and Post Processing are very limited.
@@ -49,3 +52,5 @@ You're **free** to submit pull requests, however thank you to follow the [coding
 
 ## License
 C3DE is released under the MIT License, please take your time to read the LICENSE file for more informations.
+
+The GPU particle system code is based on code released by Microsoft under the MSPL License.
