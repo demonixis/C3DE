@@ -293,13 +293,6 @@ namespace C3DE.Graphics.Rendering
 
                 renderer.Draw(_graphicsDevice);
             }
-
-            // Draw particles at the end
-            using (_graphicsDevice.GeometryUnlitState())
-            {
-                foreach (var particle in scene._particleSystems)
-                    particle.Draw(_graphicsDevice, ref cameraViewMatrix, ref cameraProjectionMatrix);
-            }
         }
 
         private void ComputeLightData(Scene scene)
@@ -307,7 +300,7 @@ namespace C3DE.Graphics.Rendering
             // TODO: Put it in a cache.
             var lights = scene._lights;
 
-            if (lights.Count > 1 && _lightData.Count == 0)
+            if (lights.Count != _lightData.Count)
             {
                 lights.Sort();
             }

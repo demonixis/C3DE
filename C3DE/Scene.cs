@@ -9,7 +9,6 @@ using System;
 using System.Collections.Generic;
 using Jitter.Collision;
 using Jitter;
-using C3DE.Components.Rendering.Particles;
 
 namespace C3DE
 {
@@ -42,7 +41,6 @@ namespace C3DE
         internal protected List<Collider> _colliders;
         internal protected List<Camera> _cameras;
         internal protected List<Light> _lights;
-        internal protected List<ParticleSystem> _particleSystems;
         internal protected List<Behaviour> _scripts;
 
         internal protected CollisionSystem _physicsCollisionSystem;
@@ -75,7 +73,6 @@ namespace C3DE
             _postProcessPasses = new List<PostProcessPass>();
             _componentsToDestroy = new List<Component>();
             _reflectionProbes = new List<ReflectionProbe>();
-            _particleSystems = new List<ParticleSystem>();
 
             // Physics
             _physicsCollisionSystem = new CollisionSystemSAP();
@@ -176,7 +173,6 @@ namespace C3DE
             _postProcessPasses.Clear();
             _componentsToDestroy.Clear();
             _reflectionProbes.Clear();
-            _particleSystems.Clear();
             _needRemoveCheck = false;
         }
 
@@ -244,8 +240,6 @@ namespace C3DE
                 SetComponent((Camera)component, _cameras, added);
             else if (component is ReflectionProbe)
                 SetComponent((ReflectionProbe)component, _reflectionProbes, added);
-            else if (component is ParticleSystem)
-                SetComponent((ParticleSystem)component, _particleSystems, added);
             else if (component is Behaviour)
                 SetComponent((Behaviour)component, _scripts, added);
         }

@@ -52,5 +52,3 @@ You're **free** to submit pull requests, however thank you to follow the [coding
 
 ## License
 C3DE is released under the MIT License, please take your time to read the LICENSE file for more informations.
-
-The GPU particle system code is based on code released by Microsoft under the MSPL License.

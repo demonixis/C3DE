@@ -80,13 +80,11 @@
     <Compile Include="Scripts\Demo\PostProcessSwitcher.cs" />
     <Compile Include="Scripts\Diagnostic\RayPickingTester.cs" />
     <Compile Include="Scripts\Demo\RendererSwitcher.cs" />
-    <Compile Include="Scripts\Viewers\ReflectionProbeDebugger.cs" />
     <Compile Include="Scripts\Viewers\ShadowMapViewer.cs" />
     <Compile Include="Scripts\Demo\SideMenu.cs" />
     <Compile Include="Scripts\Utils\SimplePath.cs" />
     <Compile Include="Scripts\Utils\SinIntensity.cs" />
     <Compile Include="Scripts\Utils\SinMovement.cs" />
-    <Compile Include="Scripts\Viewers\SSAOViewer.cs" />
     <Compile Include="Scripts\Demo\UIWidgetDemo.cs" />
     <Compile Include="Scripts\VR\VRMovement.cs" />
     <Compile Include="Scripts\VR\VRPlayerEnabler.cs" />

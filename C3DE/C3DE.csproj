@@ -56,9 +56,6 @@
     <Compile Include="Components\Controllers\Mobile\VirtualGamepad.cs" />
     <Compile Include="Components\Lighting\Light.cs" />
     <Compile Include="Components\Rendering\MeshRenderer.cs" />
-    <Compile Include="Components\Rendering\Particles\ParticleSettings.cs" />
-    <Compile Include="Components\Rendering\Particles\ParticleSystem.cs" />
-    <Compile Include="Components\Rendering\Particles\ParticleVertex.cs" />
     <Compile Include="Components\Rendering\ReflectionProbe.cs" />
     <Compile Include="Components\Rendering\Diagnostic\RigidbodyRenderer.cs" />
     <Compile Include="Components\Rendering\Diagnostic\StockEffectRenderer.cs" />
