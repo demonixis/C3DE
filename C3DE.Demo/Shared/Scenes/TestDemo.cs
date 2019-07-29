@@ -50,12 +50,7 @@ namespace C3DE.Demo.Scenes
 
             var particleSystem = new GameObject("ParticleSystem");
             _particleSystem = particleSystem.AddComponent<ParticleSystem>();
-
-            var material = new ParticleMaterial();
-            material.MainTexture = content.Load<Texture2D>("Textures/Particles/fire");
-
-            _particleSystem.Material = material;
-            _particleSystem.Setup(Application.GraphicsDevice, FireSettings);
+            _particleSystem.Setup(Application.GraphicsDevice, content, SmokePlumeSettings);
         }
 
         private ParticleSystem _particleSystem;

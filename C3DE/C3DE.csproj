@@ -68,7 +68,6 @@
     <Compile Include="Extensions\MatrixExtensions.cs" />
     <Compile Include="Extensions\ModelExtensions.cs" />
     <Compile Include="Components\GameObjectFactory.cs" />
-    <Compile Include="Graphics\Materials\ParticleMaterial.cs" />
     <Compile Include="Graphics\Materials\PBRTerrainMaterial.cs" />
     <Compile Include="Graphics\Materials\PBRLavaMaterial.cs" />
     <Compile Include="Graphics\Materials\PBRMaterial.cs" />
@@ -82,7 +81,6 @@
     <Compile Include="Graphics\Shaders\Deferred\DeferredStandardTerrain.cs" />
     <Compile Include="Graphics\Shaders\Deferred\DeferredStandardWater.cs" />
     <Compile Include="Graphics\Shaders\Deferred\DeferredUnlit.cs" />
-    <Compile Include="Graphics\Shaders\Forward\ForwardParticles.cs" />
     <Compile Include="Graphics\Shaders\Forward\ForwardPBR.cs" />
     <Compile Include="Graphics\Shaders\Forward\ForwardPBRBase.cs" />
     <Compile Include="Graphics\Shaders\Forward\ForwardPBRLava.cs" />

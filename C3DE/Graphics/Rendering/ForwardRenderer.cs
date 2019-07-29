@@ -295,13 +295,10 @@ namespace C3DE.Graphics.Rendering
             }
 
             // Draw particles at the end
-            foreach (var particle in scene._particleSystems)
+            using (_graphicsDevice.GeometryUnlitState())
             {
-                material = particle.Material;
-                shader = material._shaderMaterial;
-                shader.PrePass(ref cameraPosition, ref cameraViewMatrix, ref cameraProjectionMatrix);
-                shader.Pass(ref particle._transform._worldMatrix, false, false); // FIXME
-                particle.Draw(_graphicsDevice);
+                foreach (var particle in scene._particleSystems)
+                    particle.Draw(_graphicsDevice, ref cameraViewMatrix, ref cameraProjectionMatrix);
             }
         }
 

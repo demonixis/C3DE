@@ -1,6 +1,8 @@
 ﻿using C3DE.Graphics.Materials;
+using C3DE.Graphics.Shaders.Forward;
 using C3DE.Utils;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 
@@ -9,6 +11,7 @@ namespace C3DE.Components.Rendering.Particles
     public class ParticleSystem : Component
     {
         private ParticleSettings _settings;
+        private Effect _effect;
         private ParticleVertex[] _particles;
         private DynamicVertexBuffer _vertexBuffer;
         private IndexBuffer _indexBuffer;
@@ -20,10 +23,23 @@ namespace C3DE.Components.Rendering.Particles
         private int _drawCounter;
         private bool _ready;
 
-        public ParticleMaterial Material { get; set; }
-
-        public void Setup(GraphicsDevice graphics, ParticleSettings settings)
+        public void Setup(GraphicsDevice graphics, ContentManager content, ParticleSettings settings)
         {
+            var effect = content.Load<Effect>("Shaders/Forward/Particles");
+            _effect = effect.Clone();
+
+            _effect.Parameters["Duration"].SetValue((float)settings.Duration.TotalSeconds);
+            _effect.Parameters["DurationRandomness"].SetValue(settings.DurationRandomness);
+            _effect.Parameters["Gravity"].SetValue(settings.Gravity);
+            _effect.Parameters["EndVelocity"].SetValue(settings.EndVelocity);
+            _effect.Parameters["MinColor"].SetValue(settings.MinColor.ToVector4());
+            _effect.Parameters["MaxColor"].SetValue(settings.MaxColor.ToVector4());
+            _effect.Parameters["RotateSpeed"].SetValue(new Vector2(settings.MinRotateSpeed, settings.MaxRotateSpeed));
+            _effect.Parameters["StartSize"].SetValue(new Vector2(settings.MinStartSize, settings.MaxStartSize));
+            _effect.Parameters["EndSize"].SetValue(new Vector2(settings.MinEndSize, settings.MaxEndSize));
+            _effect.Parameters["Texture"].SetValue(content.Load<Texture2D>(settings.TextureName));
+            _effect.Parameters["ViewportScale"].SetValue(new Vector2(0.5f / Application.GraphicsDevice.Viewport.AspectRatio, -0.5f));
+
             _settings = settings;
             _particles = new ParticleVertex[settings.MaxParticles * 4];
 
@@ -55,10 +71,14 @@ namespace C3DE.Components.Rendering.Particles
             _ready = true;
         }
 
-        public void Draw(GraphicsDevice device)
+        public void Draw(GraphicsDevice device, ref Matrix view, ref Matrix proj)
         {
-            if (!_ready || Material == null)
+            if (!_ready)
                 return;
+
+            _effect.Parameters["CurrentTime"].SetValue(_currentTime);
+            _effect.Parameters["View"].SetValue(view);
+            _effect.Parameters["Projection"].SetValue(proj);
 
             if (_vertexBuffer.IsContentLost)
                 _vertexBuffer.SetData(_particles);
@@ -98,6 +118,9 @@ namespace C3DE.Components.Rendering.Particles
 
         public override void Update()
         {
+            if (!_ready)
+                return;
+
             _currentTime += Time.TotalTime;
 
             RetireActiveFreeRetiredParticles();
@@ -107,8 +130,6 @@ namespace C3DE.Components.Rendering.Particles
 
             if (_firstRetiredParticle == _firstActiveParticle)
                 _drawCounter = 0;
-
-            Material?._shaderMaterial._effect.Parameters["CurrentTime"].SetValue(_currentTime);
         }
 
         private void RetireActiveFreeRetiredParticles()
