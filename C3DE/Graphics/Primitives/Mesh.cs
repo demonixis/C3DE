@@ -206,12 +206,6 @@ namespace C3DE.Graphics.Primitives
             return vertices;
         }
 
-        public void SetUVs(Vector2[] uvs)
-        {
-            for (int i = 0, l = uvs.Length; i < l; i++)
-                Vertices[i].TextureCoordinate = uvs[i];
-        }
-
         public Vector2[] GetUVs()
         {
             if (Vertices == null)
@@ -252,6 +246,9 @@ namespace C3DE.Graphics.Primitives
         {
             Vertices = new VertexPositionNormalTexture[VertexBuffer.VertexCount];
             VertexBuffer.GetData<VertexPositionNormalTexture>(Vertices);
+
+            Indices = new ushort[IndexBuffer.IndexCount];
+            IndexBuffer.GetData<ushort>(Indices);
         }
 
         public void Dispose()

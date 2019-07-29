@@ -62,13 +62,19 @@ namespace Microsoft.Xna.Framework.Graphics
                     var child = new GameObject($"{mesh.Name}_{meshPartIndex}");
                     scene.Add(child);
                     var renderer = child.AddComponent<MeshRenderer>();
-                    renderer.material = material;
+                    renderer.Material = material;
                     renderer.CastShadow = true;
                     renderer.ReceiveShadow = true;
 
+                    var vertexData = new VertexPositionNormalTexture[part.VertexBuffer.VertexCount];
+                    part.VertexBuffer.GetData(vertexData);
+                    var indexData = new ushort[part.IndexBuffer.IndexCount];
+                    part.IndexBuffer.GetData(indexData);
+
                     var geometry = new Mesh();
-                    geometry.VertexBuffer = part.VertexBuffer;
-                    geometry.IndexBuffer = part.IndexBuffer;
+                    geometry.Vertices = vertexData;
+                    geometry.Indices = indexData;
+                    geometry.Build();
 
                     renderer.Mesh = geometry;
 

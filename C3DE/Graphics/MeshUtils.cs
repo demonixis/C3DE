@@ -43,10 +43,10 @@ namespace C3DE.Graphics
             // 1. One merge per material
             foreach (var renderer in renderers)
             {
-                if (!materialRenderers.ContainsKey(renderer.material))
-                    materialRenderers.Add(renderer.material, new List<MeshRenderer>());
+                if (!materialRenderers.ContainsKey(renderer.Material))
+                    materialRenderers.Add(renderer.Material, new List<MeshRenderer>());
 
-                materialRenderers[renderer.material].Add(renderer);
+                materialRenderers[renderer.Material].Add(renderer);
             }
 
             var clone = new GameObject($"{gameObject.Name}_Merged");
@@ -93,7 +93,7 @@ namespace C3DE.Graphics
 
                 meshRenderer = subMesh.AddComponent<MeshRenderer>();
                 meshRenderer._mesh = meshFilder;
-                meshRenderer.material = keyValue.Key;
+                meshRenderer.Material = keyValue.Key;
             }
 
             return clone;

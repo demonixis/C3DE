@@ -12,8 +12,6 @@ namespace C3DE.Components.Rendering
     {
         internal protected BoundingSphere boundingSphere;
         internal protected BoundingBox boundingBox;
-        internal protected int materialIndex = 0;
-        internal protected Material material;
 
         /// <summary>
         /// Indicates whether the object can cast shadow. 
@@ -29,18 +27,14 @@ namespace C3DE.Components.Rendering
 
         public BoundingSphere BoundingSphere => boundingSphere;
 
-        public BoundingBox BoundingBox =>  boundingBox;
+        public BoundingBox BoundingBox => boundingBox;
 
         public int RenderQueue { get; protected set; } = 1;
 
         /// <summary>
         /// Gets the main material.
         /// </summary>
-        public Material Material
-        {
-            get { return material; }
-            set { material = value; }
-        }
+        public Material Material { get; set; }
 
         /// <summary>
         /// Create a renderable component which can cast and receive shadow. No material is assigned.

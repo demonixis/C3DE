@@ -83,6 +83,15 @@ namespace C3DE.Components.Rendering
 
         public override void Draw(GraphicsDevice graphics)
         {
+            if (_mesh == null)
+                return;
+
+            if (_mesh.VertexBuffer.IsDisposed || _mesh.IndexBuffer.IsDisposed)
+            {
+                Debug.Log($"The Renderer: {GameObject.Name} is disposed but want to be drawn.");
+                return;
+            }
+
             var size = _instances?.Length ?? 0;
 
             if (size > 1)
@@ -104,23 +113,6 @@ namespace C3DE.Components.Rendering
             }
             else
             {
-                var draw = true;
-
-                if (_mesh.VertexBuffer.IsDisposed)
-                {
-                    Debug.Log($"{_gameObject.Name}'s VertexBuffer is disposed");
-                    draw = false;
-                }
-
-                if (_mesh.IndexBuffer.IsDisposed)
-                {
-                    Debug.Log($"{_gameObject.Name}'s IndexBuffer is disposed");
-                    draw = false;
-                }
-
-                if (!draw)
-                    return;
-
                 graphics.SetVertexBuffer(_mesh.VertexBuffer);
                 graphics.Indices = _mesh.IndexBuffer;
                 graphics.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, _mesh.IndexBuffer.IndexCount / 3);
@@ -151,6 +143,7 @@ namespace C3DE.Components.Rendering
             }
 
             _transforms[index] = renderer._transform;
+
             renderer.Enabled = false;
         }
 
@@ -172,7 +165,7 @@ namespace C3DE.Components.Rendering
             if (_mesh != null)
             {
                 clone._mesh = _mesh;
-                clone.material = material;
+                clone.Material = Material;
 
                 if (_mesh.Built)
                     clone._mesh.Build();

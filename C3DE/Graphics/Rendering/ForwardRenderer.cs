@@ -278,6 +278,10 @@ namespace C3DE.Graphics.Rendering
             for (var i = 0; i < renderCount; i++)
             {
                 renderer = scene._renderList[i];
+
+                if (!renderer.Enabled || !renderer._gameObject.Enabled)
+                    continue;
+
                 material = scene._renderList[i].Material;
 
                 // A specific renderer that uses its own draw logic.
