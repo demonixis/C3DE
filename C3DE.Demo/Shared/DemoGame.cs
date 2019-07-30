@@ -84,6 +84,7 @@ namespace C3DE.Demo
 #if _DEBUG
                 new TestDemo(),
 #else
+                new UnityImportDemo(),
                 new MenuDemo(),
 #if WINDOWS
                 new SimplePBRDemo(),

@@ -42,6 +42,16 @@ namespace C3DE.Components
 
         public List<Transform> Transforms => _transforms;
 
+        public bool Dirty
+        {
+            get => _dirty;
+            set
+            {
+                if (!_dirty)
+                    _dirty = value;
+            }
+        }
+
         public Vector3 Position
         {
             get

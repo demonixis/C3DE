@@ -54,7 +54,7 @@ namespace C3DE
             probe.NearClip = nearClip;
             probe.FarClip = farClip;
             probe.FieldOfView = fov;
-            probe.Size = size;
+            probe.Resolution = size;
             probe.Mode = ReflectionProbe.RenderingMode.Backed;
 
             return probe;

@@ -7,10 +7,10 @@ namespace C3DE.Components.Physics
     /// </summary>
     public abstract class Collider : Component
     {
-        protected bool autoCompute;
-        protected Vector3 minimum;
-        protected Vector3 maximum;
-        protected Vector3 center;
+        protected bool _autoCompute;
+        protected Vector3 _minimum;
+        protected Vector3 _maximum;
+        protected Vector3 _center;
 
         /// <summary>
         /// Allow or not the collider to be picked by a ray cast.
@@ -24,38 +24,38 @@ namespace C3DE.Components.Physics
 
         public Vector3 Center
         {
-            get { return center; }
+            get { return _center; }
             set
             {
-                center = value;
-                minimum = maximum - value;
-                autoCompute = false;
+                _center = value;
+                _minimum = _maximum - value;
+                _autoCompute = false;
             }
         }
 
         public Vector3 Size
         {
-            get { return maximum; }
+            get { return _maximum; }
             set
             {
-                maximum = value;
-                autoCompute = false;
+                _maximum = value;
+                _autoCompute = false;
             }
         }
 
         public Vector3 Minimum
         {
-            get { return minimum; }
+            get { return _minimum; }
         }
 
         public Vector3 Maximum
         {
-            get { return maximum; }
+            get { return _maximum; }
         }
 
         public Rectangle Rectangle
         {
-            get => new Rectangle((int)(center.X - minimum.X), (int)(center.Z - minimum.Z), (int)(center.X + minimum.X), (int)(center.Z + minimum.Z));
+            get => new Rectangle((int)(_center.X - _minimum.X), (int)(_center.Z - _minimum.Z), (int)(_center.X + _minimum.X), (int)(_center.Z + _minimum.Z));
         }
 
         /// <summary>
@@ -66,10 +66,10 @@ namespace C3DE.Components.Physics
         {
             IsPickable = true;
             IsTrigger = false;
-            center = Vector3.Zero;
-            minimum = Vector3.Zero;
-            maximum = Vector3.Zero;
-            autoCompute = true;
+            _center = Vector3.Zero;
+            _minimum = Vector3.Zero;
+            _maximum = Vector3.Zero;
+            _autoCompute = true;
         }
 
         public override void Start()
@@ -79,7 +79,7 @@ namespace C3DE.Components.Physics
 
         public override void Reset()
         {
-            autoCompute = true;
+            _autoCompute = true;
             Update();
         }
 
@@ -103,36 +103,43 @@ namespace C3DE.Components.Physics
         /// <returns>Returns true if it collides, otherwise it returns false.</returns>
         public abstract float? IntersectedBy(ref Ray ray);
 
+        public void SetSize(Vector3 center, Vector3 min, Vector3 max)
+        {
+            _center = center;
+            _minimum = min;
+            _maximum = max;
+        }
+
         public void SetSize(float? x, float? y, float? z)
         {
             if (x.HasValue)
             {
-                maximum.X = x.Value;
-                minimum.X = -x.Value;
+                _maximum.X = x.Value;
+                _minimum.X = -x.Value;
             }
             if (y.HasValue)
             {
-                maximum.Y = y.Value;
-                minimum.Y = -y.Value;
+                _maximum.Y = y.Value;
+                _minimum.Y = -y.Value;
             }
 
             if (z.HasValue)
             {
-                maximum.Z = z.Value;
-                minimum.Z = -z.Value;
+                _maximum.Z = z.Value;
+                _minimum.Z = -z.Value;
             }
         }
 
         public void SetCenter(float? x, float? y, float? z)
         {
             if (x.HasValue)
-                center.X = x.Value;
+                _center.X = x.Value;
 
             if (y.HasValue)
-                center.Y = y.Value;
+                _center.Y = y.Value;
 
             if (z.HasValue)
-                center.Z = z.Value;
+                _center.Z = z.Value;
         }
     }
 }

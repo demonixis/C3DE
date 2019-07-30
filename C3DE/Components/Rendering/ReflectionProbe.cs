@@ -63,7 +63,7 @@ namespace C3DE.Components.Rendering
             }
         }
 
-        public int Size
+        public int Resolution
         {
             get => _size;
             set

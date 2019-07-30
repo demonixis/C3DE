@@ -193,8 +193,8 @@ namespace C3DE.Graphics.Rendering
                     var probeCamProj = Matrix.Identity;
                     Camera probeCam = null;
 
-                    if (colorBuffer == null || colorBuffer.Length != probe.Size)
-                        colorBuffer = new Color[probe.Size * probe.Size];
+                    if (colorBuffer == null || colorBuffer.Length != probe.Resolution)
+                        colorBuffer = new Color[probe.Resolution * probe.Resolution];
 
                     if (probe.Mode == ReflectionProbe.RenderingMode.Realtime || probe.Dirty)
                     {

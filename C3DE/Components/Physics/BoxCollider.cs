@@ -26,24 +26,24 @@ namespace C3DE.Components.Physics
             : base()
         {
             _boundingBox = new BoundingBox();
-            center = Vector3.Zero;
+            _center = Vector3.Zero;
         }
 
         public override void Update()
         {
             base.Update();
-            _boundingBox.Min = (minimum - (center + _transform.LocalPosition)) * _transform.LocalScale;
-            _boundingBox.Max = (maximum + (center + _transform.LocalPosition)) * _transform.LocalScale;
+            _boundingBox.Min = (_minimum - (_center + _transform.LocalPosition)) * _transform.LocalScale;
+            _boundingBox.Max = (_maximum + (_center + _transform.LocalPosition)) * _transform.LocalScale;
         }
 
         public override void Compute()
         {
             var renderer = GetComponent<Renderer>();
-            if (renderer != null && autoCompute)
+            if (renderer != null && _autoCompute)
             {
-                minimum = renderer.boundingBox.Min;
-                maximum = renderer.boundingBox.Max;
-                center = maximum + minimum;
+                _minimum = renderer.boundingBox.Min;
+                _maximum = renderer.boundingBox.Max;
+                _center = _maximum + _minimum;
                 Update();
             }
         }
