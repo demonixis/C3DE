@@ -235,6 +235,11 @@ namespace C3DE.Graphics
             return texture2D;
         }
 
+        public static Texture2D CreateColor(float color, int width = 16, int height = 16)
+        {
+            return CreateColor(new Color(color, color, color), width, height);
+        }
+
         public static Texture2D CreateNoise(int width, int height = 0)
         {
             if (height == 0)

@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using C3DE.Graphics.Materials;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace C3DE.Components.Rendering
@@ -17,6 +18,8 @@ namespace C3DE.Components.Rendering
         private float _farClip = 500.0f;
         private int _size = 64;
         private RenderingMode _renderingMode = RenderingMode.Backed;
+
+        public float Radius { get; set; } = 10;
 
         public RenderingMode Mode
         {
@@ -133,6 +136,29 @@ namespace C3DE.Components.Rendering
                 return new Vector3(0.0f, MathHelper.ToRadians(0.0f), 0.0f);
 
             return Vector3.Zero;
+        }
+
+        public void AutoAssign(Renderer[] renderers, bool forceRendererCompute)
+        {
+            var sphere = new BoundingSphere(Transform.Position, Radius);
+
+            foreach (var renderer in renderers)
+            {
+                if (forceRendererCompute)
+                    renderer.ComputeBoundingInfos();
+
+                if (renderer.boundingSphere.Intersects(sphere))
+                {
+                    var std = renderer.Material as StandardMaterial;
+                    if (std == null)
+                        continue;
+
+                    std.ReflectionMap = _reflectionTexture;
+
+                    if (std.ReflectionIntensity == 0)
+                        std.ReflectionIntensity = 0.25f;
+                }
+            }
         }
     }
 }

@@ -8,30 +8,35 @@ namespace Demonixis.UnityJSONSceneExporter
     }
 
     [Serializable]
-    public struct UMeshRenderer
+    public class UTransform
+    {
+        public string Parent;
+        public float[] LocalPosition;
+        public float[] LocalRotation;
+        public float[] LocalScale;
+    }
+
+    [Serializable]
+    public class UMeshRenderer
     {
         public bool Enabled;
         public string Name;
-        public UMeshFilter MeshFilter;
+        public UMeshFilter[] MeshFilters;
         public UMaterial[] Materials;
     }
 
     [Serializable]
-    public struct UMeshFilter
+    public class UMeshFilter
     {
         public float[] Positions;
         public float[] Normals;
         public float[] UVs;
-        public int[][] Indices;
-        public int[][] Triangles;
-        public uint[] VertexStart;
-        public uint[] IndexStart;
-        public int SubMeshCount;
+        public int[] Indices;
         public int MeshFormat;
     }
 
     [Serializable]
-    public struct UMaterial
+    public class UMaterial
     {
         public float[] Scale;
         public float[] Offset;
@@ -40,7 +45,7 @@ namespace Demonixis.UnityJSONSceneExporter
     }
 
     [Serializable]
-    public struct UCollider
+    public class UCollider
     {
         public bool Enabled;
         public float[] Min;
@@ -50,7 +55,7 @@ namespace Demonixis.UnityJSONSceneExporter
     }
 
     [Serializable]
-    public struct ULight
+    public class ULight
     {
         public bool Enabled;
         public float Radius;
@@ -62,7 +67,7 @@ namespace Demonixis.UnityJSONSceneExporter
     }
 
     [Serializable]
-    public struct UReflectionProbe
+    public class UReflectionProbe
     {
         public bool Enabled;
         public bool IsBacked;
@@ -75,16 +80,13 @@ namespace Demonixis.UnityJSONSceneExporter
     }
 
     [Serializable]
-    public struct UGameObject
+    public class UGameObject
     {
-        public int ID;
+        public string Id;
         public string Name;
-        public int Parent;
         public bool IsStatic;
         public bool IsActive;
-        public float[] LocalPosition;
-        public float[] LocalRotation;
-        public float[] LocalScale;
+        public UTransform Transform;
         public UMeshRenderer Renderer;
         public UCollider Collider;
         public ULight Light;

@@ -2,6 +2,7 @@
 using C3DE.Components.Lighting;
 using C3DE.Components.Physics;
 using C3DE.Components.Rendering;
+using C3DE.Graphics;
 using C3DE.Graphics.Materials;
 using C3DE.Graphics.Primitives;
 using Demonixis.UnityJSONSceneExporter;
@@ -28,16 +29,20 @@ namespace C3DE.Demo.Scenes
         {
             base.Initialize();
 
+            _directionalLight.Enabled = false;
+
+            SetControlMode(Scripts.ControllerSwitcher.ControllerType.FPS, Vector3.Zero, Vector3.Zero, true);
+
             var watch = new Stopwatch();
             watch.Start();
 
             var content = Application.Content;
 
             var materials = new Dictionary<string, Material>();
-            materials.Add("Sci-fi_Walll_001_basecolor", CreateMaterial(content, 
-                "Textures/pbr/Wall/Sci-fi_Walll_001_basecolor", 
+            materials.Add("Sci-fi_Walll_001_basecolor", CreateMaterial(content,
+                "Textures/pbr/Wall/Sci-fi_Walll_001_basecolor",
                 "Textures/pbr/Wall/Sci-fi_Walll_001_normal",
-                "Textures/pbr/Wall/Sci-fi_Walll_001_roughness", 
+                "Textures/pbr/Wall/Sci-fi_Walll_001_roughness",
                 "Textures/pbr/Wall/Sci-fi_Walll_001_metallic",
                 "Textures/pbr/Wall/Sci-fi_Walll_001_ambientOcclusion",
                 null));
@@ -54,106 +59,102 @@ namespace C3DE.Demo.Scenes
                 "Textures/pbr/Metal/Metal01_col",
                 "Textures/pbr/Metal/Metal01_nrm",
                 "Textures/pbr/Metal/Metal01_rgh",
-                "Textures/pbr/Metal/Metal01_met", 
-                null, 
+                "Textures/pbr/Metal/Metal01_met",
+                null,
                 null));
+
+            materials.Add("Default", materials["Metal01_col"]);
 
 
             var json = File.ReadAllText(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "map.json"));
             var data = JsonConvert.DeserializeObject<UGameObject[]>(json);
 
+            var reflectionProbes = new List<ReflectionProbe>();
             var objects = new Dictionary<string, Transform>();
+            var renderers = new List<Renderer>();
 
             foreach (var item in data)
             {
                 var go = new GameObject(item.Name);
-                go.Id = item.ID.ToString();
+                go.Id = item.Id.ToString();
                 go.Name = item.Name;
                 go.IsStatic = item.IsStatic;
 
+                var rotation = ToVector3(item.Transform.LocalRotation);
+                rotation.X = MathHelper.ToRadians(rotation.X);
+                rotation.Y = MathHelper.ToRadians(rotation.Y);
+                rotation.Z = MathHelper.ToRadians(rotation.Z);
+
                 var tr = go.Transform;
-                tr.LocalPosition = ToVector3(item.LocalPosition);
-                tr.LocalRotation = ToVector3(item.LocalRotation);
-                tr.LocalScale = ToVector3(item.LocalScale);
+                tr.LocalPosition = ToVector3(item.Transform.LocalPosition);
+                tr.LocalRotation = rotation;
+                tr.LocalScale = ToVector3(item.Transform.LocalScale);
 
                 objects.Add(go.Id, tr);
 
                 // Mesh
-                if (item.Renderer.Name != null && item.Renderer.MeshFilter.IndexStart != null)
+                if (item.Renderer != null && item.Renderer.MeshFilters != null)
                 {
                     var uRenderer = item.Renderer;
-                    var uMesh = uRenderer.MeshFilter;
-                    var subMeshCount = uMesh.SubMeshCount;
+                    var uMeshes = uRenderer.MeshFilters;
+                    var subMeshIndex = 0;
 
-                    var vertices = new VertexPositionNormalTexture[uMesh.Positions.Length / 3];
-                    var offset = 0;
-
-                    for (var i = 0; i < uMesh.Positions.Length; i += 3)
+                    foreach (var uMesh in uMeshes)
                     {
-                        vertices[offset] = new VertexPositionNormalTexture
+                        var vertices = new VertexPositionNormalTexture[uMesh.Positions.Length / 3];
+                        var offset = 0;
+                        var uvOffset = 0;
+
+                        for (var i = 0; i < uMesh.Positions.Length; i += 3)
                         {
-                            Position = new Vector3
+                            vertices[offset] = new VertexPositionNormalTexture
                             {
-                                X = uMesh.Positions[i],
-                                Y = uMesh.Positions[i + 1],
-                                Z = uMesh.Positions[i + 2],
-                            },
-                            Normal = new Vector3
-                            {
-                                X = uMesh.Normals[i],
-                                Y = uMesh.Normals[i + 1],
-                                Z = uMesh.Normals[i + 2],
-                            },
-                            TextureCoordinate = new Vector2
-                            {
-                                X = uMesh.UVs[i],
-                                Y = uMesh.UVs[i + 1],
-                            }
-                        };
+                                Position = new Vector3
+                                {
+                                    X = uMesh.Positions[i],
+                                    Y = uMesh.Positions[i + 1],
+                                    Z = uMesh.Positions[i + 2],
+                                },
+                                Normal = new Vector3
+                                {
+                                    X = uMesh.Normals[i],
+                                    Y = uMesh.Normals[i + 1],
+                                    Z = uMesh.Normals[i + 2],
+                                },
+                                TextureCoordinate = new Vector2
+                                {
+                                    X = uMesh.UVs[uvOffset++],
+                                    Y = uMesh.UVs[uvOffset++],
+                                }
+                            };
 
-                        offset++;
-                    }
+                            offset++;
+                        }
 
-                    if (subMeshCount == 0)
-                    {
+                        var sub = new GameObject($"{go.Name}_Part_{subMeshIndex}");
+                        sub.Transform.Parent = go.Transform;
+
                         var mesh = new Mesh();
                         mesh.Vertices = vertices;
-                        mesh.Indices = ToUShort(uMesh.Indices[0]);
+                        mesh.Indices = ToUShort(uMesh.Indices);
                         mesh.Build();
+
+                        var materialIndex = subMeshIndex;
+                        if (uRenderer.Materials.Length != uRenderer.MeshFilters.Length)
+                            materialIndex = 0;
 
                         var renderer = go.AddComponent<MeshRenderer>();
                         renderer.Mesh = mesh;
-                        renderer.Material = GetMaterial(uRenderer.Materials[0]);
-                    }
-                    else
-                    {
-                        for (var i = 0; i < subMeshCount; i++)
-                        {
-                            var part = new GameObject($"{item.Name}_Part_{i}");
-                            part.Transform.Parent = go.Transform;
-                            part.Transform.Dirty = true;
+                        renderer.Material = GetMaterial(uRenderer.Materials[materialIndex]);
 
-                            var partMesh = new Mesh();
-                            partMesh.Vertices = vertices;
-                            partMesh.Indices = ToUShort(uMesh.Indices[i]);
-                            partMesh.Build();
+                        subMeshIndex++;
 
-                            var partRenderer = part.AddComponent<MeshRenderer>();
-                            partRenderer.Mesh = partMesh;
-
-                            Material material = null;
-                            if (uRenderer.Materials.Length != subMeshCount)
-                                material = GetMaterial(uRenderer.Materials[0]);
-                            else
-                                material = GetMaterial(uRenderer.Materials[i]);
-
-                            partRenderer.Material = material;
-                        }
+                        renderers.Add(renderer);
                     }
                 }
 
                 // Reflection Probe
-                if (item.ReflectionProbe.Resolution > 0)
+                if (item.ReflectionProbe != null)
                 {
                     var probe = go.AddComponent<ReflectionProbe>();
                     probe.Mode = item.ReflectionProbe.IsBacked ? ReflectionProbe.RenderingMode.Backed : ReflectionProbe.RenderingMode.Realtime;
@@ -161,10 +162,30 @@ namespace C3DE.Demo.Scenes
                     probe.FarClip = item.ReflectionProbe.ClipPlanes[1];
                     probe.Resolution = item.ReflectionProbe.Resolution;
                     probe.Enabled = item.ReflectionProbe.Enabled;
+
+                    var radius = 0.0f;
+
+                    for(var i = 0; i < item.ReflectionProbe.BoxMin.Length; i++)
+                    {
+                        var abs = Math.Abs(item.ReflectionProbe.BoxMin[i]);
+
+                        if (abs > radius)
+                            radius = abs;
+                    }
+
+                    for (var i = 0; i < item.ReflectionProbe.BoxMax.Length; i++)
+                    {
+                        var abs = Math.Abs(item.ReflectionProbe.BoxMax[i]);
+
+                        if (abs > radius)
+                            radius = abs;
+                    }
+
+                    reflectionProbes.Add(probe);
                 }
 
                 // Light
-                if (item.Light.Color != null)
+                if (item.Light != null)
                 {
                     var light = go.AddComponent<Light>();
                     light.Enabled = item.Light.Enabled;
@@ -174,23 +195,34 @@ namespace C3DE.Demo.Scenes
                     light.Radius = item.Light.Radius;
                     light.ShadowEnabled = item.Light.ShadowsEnabled;
 
-                    if (item.Light.Type == 1)
+                    if (PBR)
+                        light.Intensity *= 0.1f;
+
+                    if (item.Light.Type == 0)
+                        light.Type = LightType.Directional;
+                    else if (item.Light.Type == 1)
                         light.Type = LightType.Point;
                     else if (item.Light.Type == 2)
                         light.Type = LightType.Spot;
+                    else
+                        light.Enabled = false;
                 }
             }
 
             // Assign Parent
             foreach (var item in data)
             {
-                if (item.Parent != 0)
+                if (item.Transform.Parent != null && objects.ContainsKey(item.Transform.Parent))
                 {
-                    var obj = objects[item.ID.ToString()];
-                    obj.Parent = objects[item.Parent.ToString()];
+                    var obj = objects[item.Id];
+                    obj.Parent = objects[item.Transform.Parent];
                     obj.Dirty = true;
                 }
             }
+
+            // Reflection Probes
+            foreach (var probe in reflectionProbes)
+                probe.AutoAssign(renderers.ToArray(), true);    
 
             watch.Stop();
 
@@ -218,6 +250,11 @@ namespace C3DE.Demo.Scenes
                     NormalMap = content.Load<Texture2D>(normal),
                     EmissiveMap = emissive != null ? content.Load<Texture2D>(emissive) : null
                 };
+
+                mat.CreateRoughnessMetallicAO(
+                    roughness != null ? content.Load<Texture2D>(roughness) : TextureFactory.CreateColor(0.2f),
+                    metallic != null ? content.Load<Texture2D>(metallic) : TextureFactory.CreateColor(0.7f),
+                    ao != null ? content.Load<Texture2D>(ao) : TextureFactory.CreateColor(1.0f));
 
                 return mat;
             }
