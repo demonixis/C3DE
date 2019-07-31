@@ -1690,3 +1690,6 @@
 /processorParam:TextureFormat=Color
 /build:Textures/UI/grey_panel.png
 
+#begin Unity/map.json
+/copy:Unity/map.json
+

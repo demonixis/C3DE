@@ -65,8 +65,7 @@ namespace C3DE.Demo.Scenes
 
             materials.Add("Default", materials["Metal01_col"]);
 
-
-            var json = File.ReadAllText(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "map.json"));
+            var json = File.ReadAllText(Path.Combine("Content/Unity", "map.json"));
             var data = JsonConvert.DeserializeObject<UGameObject[]>(json);
 
             var reflectionProbes = new List<ReflectionProbe>();
