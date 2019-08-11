@@ -84,23 +84,18 @@ namespace C3DE.Demo
 #if _DEBUG
                 new TestDemo(),
 #else
-                new UnityImportDemo(),
                 new MenuDemo(),
-#if WINDOWS
-                new SimplePBRDemo(),
-                new HeightmapPBRDemo(),
-                new HeightmapPBRAtlasedDemo(),
-                new TerrainLavaPBRDemo(),
-                new LightingPBRDemo(),
-#endif
+                new GUIDemo(),
                 new LandscapeDemo(),
                 new HeightmapDemo(),
-                new ProceduralTerrainWater(),
-                new ProceduralTerrainLava(),
+                new HeightmapPBRAtlasedDemo(),
+                new ProceduralTerrain("Procedural Terrain (Water)", false),
+                new ProceduralTerrain("Procedural Terrain (Lava)", true),
                 new LightingDemo(),
+                new SimplePBRDemo(),
                 new FPSDemo(),
                 new SponzaDemo(),
-                new GUIDemo()
+                new UnityImportDemo(),  
 #endif
             }, 0);
 

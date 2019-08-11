@@ -1,14 +1,10 @@
 ﻿using C3DE.Components.Rendering;
-using C3DE.Demo.Scripts;
 using C3DE.Demo.Scripts.Viewers;
-using C3DE.Demo.Scripts.VR;
-using C3DE.Graphics.Materials;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace C3DE.Demo.Scenes
 {
-    public class HeightmapDemo : SimpleDemo
+    public class HeightmapDemo : BaseDemo
     {
         public HeightmapDemo() : base("Heightmap Terrain") { }
 
@@ -23,7 +19,7 @@ namespace C3DE.Demo.Scenes
             terrain.LoadHeightmap("Textures/heightmap");
 
             var weightMap = terrain.GenerateWeightMap();
-            terrain.Renderer.Material = GetTerrainMaterial(content, weightMap, false);
+            terrain.Renderer.Material = GetTerrainMaterial(content, weightMap);
             terrainGo.AddComponent<WeightMapViewer>();
 
             // Water
@@ -37,15 +33,7 @@ namespace C3DE.Demo.Scenes
             var probe = GameObjectFactory.CreateReflectionProbe(new Vector3(0, 35, 0));
 
             var renderer = waterGo.GetComponent<MeshRenderer>();
-            renderer.Material = new StandardWaterMaterial()
-            {
-                MainTexture = content.Load<Texture2D>("Textures/Fluids/water"),
-                NormalMap = content.Load<Texture2D>("Textures/Fluids/Water_Normal"),
-                SpecularColor = new Color(0.7f, 0.7f, 0.7f),
-                SpecularPower = 50,
-                ReflectionMap = probe.ReflectionMap,
-                ReflectionIntensity = 0.75f
-            };
+            renderer.Material = GetWaterMaterial(content, probe.ReflectionMap);
 
             // And fog
             RenderSettings.FogDensity = 0.0085f;
@@ -53,8 +41,7 @@ namespace C3DE.Demo.Scenes
             //RenderSettings.Skybox.FogSupported = true;
             //RenderSettings.Skybox.OverrideSkyboxFog(FogMode.Exp2, 0.05f, 0, 0);
 
-            var vrPlayerEnabler = _camera.AddComponent<VRPlayerEnabler>();
-            vrPlayerEnabler.Position = new Vector3(0, waterGo.Transform.Position.Y + 0.5f, 0);
+            _vrPlayerEnabler.Position = new Vector3(0, waterGo.Transform.Position.Y + 0.5f, 0);
         }
     }
 }

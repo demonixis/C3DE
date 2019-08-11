@@ -9,12 +9,11 @@ namespace Microsoft.Xna.Framework.Graphics
 {
     public static class ModelExtensions
     {
-        private static Dictionary<string, StandardMaterial> MaterialsCache = new Dictionary<string, StandardMaterial>();
+        private static Dictionary<string, Material> MaterialsCache = new Dictionary<string, Material>();
 
-        public static GameObject ToMeshRenderers(this Model model, Scene scene = null)
+        public static GameObject ToMeshRenderers(this Model model, bool pbrMaterial = false)
         {
-            if (scene == null)
-                scene = Scene.current;
+            var scene = Scene.current;
 
             var boneTransforms = new Matrix[model.Bones.Count];
             model.CopyAbsoluteBoneTransformsTo(boneTransforms);
@@ -31,11 +30,7 @@ namespace Microsoft.Xna.Framework.Graphics
                 parent.Transform.Parent = gameObject.Transform;
 
                 var matrix = boneTransforms[mesh.ParentBone.Index];
-                Vector3 position;
-                Quaternion rotation;
-                Vector3 scale;
-
-                matrix.Decompose(out scale, out rotation, out position);
+                matrix.Decompose(out Vector3 scale, out Quaternion rotation, out Vector3 position);
 
                 parent.Transform.LocalPosition = position;
                 parent.Transform.LocalRotation = rotation.ToEuler();
@@ -47,17 +42,7 @@ namespace Microsoft.Xna.Framework.Graphics
                     var material = TryGetMaterial(effect);
 
                     if (material == null)
-                    {
-                        material = new StandardMaterial();
-                        material.MainTexture = effect.Texture;
-                        material.DiffuseColor = new Color(effect.DiffuseColor.X, effect.DiffuseColor.Y, effect.DiffuseColor.Z);
-                        material.SpecularMap = TextureFactory.CreateColor(new Color(effect.SpecularColor.X, effect.SpecularColor.Y, effect.SpecularColor.Z), 1, 1);
-                        material.SpecularPower = (int)effect.SpecularPower;
-                        material.EmissiveColor = new Color(effect.EmissiveColor.X, effect.EmissiveColor.Y, effect.EmissiveColor.Z);
-
-                        if (!string.IsNullOrEmpty(effect?.Texture?.Name))
-                            MaterialsCache.Add(effect.Texture.Name, material);
-                    }
+                        material = CreateMaterial(effect, pbrMaterial);
 
                     var child = new GameObject($"{mesh.Name}_{meshPartIndex}");
                     scene.Add(child);
@@ -85,7 +70,39 @@ namespace Microsoft.Xna.Framework.Graphics
             return gameObject;
         }
 
-        private static StandardMaterial TryGetMaterial(BasicEffect effect)
+        private static Material CreateMaterial(BasicEffect effect, bool pbr)
+        {
+            Material material = null;
+
+            if (pbr)
+            {
+                material = new PBRMaterial
+                {
+                    MainTexture = effect.Texture,
+                    DiffuseColor = new Color(effect.DiffuseColor.X, effect.DiffuseColor.Y, effect.DiffuseColor.Z),
+                };
+
+                ((PBRMaterial)(material)).CreateRoughnessMetallicAO();
+            }
+            else
+            {
+                material = new StandardMaterial
+                {
+                    MainTexture = effect.Texture,
+                    DiffuseColor = new Color(effect.DiffuseColor.X, effect.DiffuseColor.Y, effect.DiffuseColor.Z),
+                    SpecularMap = TextureFactory.CreateColor(new Color(effect.SpecularColor.X, effect.SpecularColor.Y, effect.SpecularColor.Z), 1, 1),
+                    SpecularPower = (int)effect.SpecularPower,
+                    EmissiveColor = new Color(effect.EmissiveColor.X, effect.EmissiveColor.Y, effect.EmissiveColor.Z)
+                };
+            }
+
+            if (!string.IsNullOrEmpty(effect?.Texture?.Name))
+                MaterialsCache.Add(effect.Texture.Name, material);
+
+            return material;
+        }
+
+        private static Material TryGetMaterial(BasicEffect effect)
         {
             var name = effect?.Texture?.Name;
             var hasValidName = !string.IsNullOrEmpty(name);

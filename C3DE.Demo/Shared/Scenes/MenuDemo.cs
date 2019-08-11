@@ -3,7 +3,7 @@ using C3DE.UI;
 
 namespace C3DE.Demo.Scenes
 {
-    public class MenuDemo : SimpleDemo
+    public class MenuDemo : BaseDemo
     {
         public MenuDemo() : base("Menu") { }
 

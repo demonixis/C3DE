@@ -8,10 +8,15 @@ using C3DE.Graphics;
 
 namespace C3DE.Demo.Scenes
 {
-    public class TestDemo : SimpleDemo
+    public class TestDemo : BaseDemo
     {
         public TestDemo() : base("Test")
         {
+        }
+
+        protected override void SceneSetup()
+        {
+            // Keep that empty to not setup the default scene.
         }
 
         public override void Initialize()

@@ -10,7 +10,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace C3DE.Demo.Scenes.PBR
 {
-    public class HeightmapPBRAtlasedDemo : SimpleDemo
+    public class HeightmapPBRAtlasedDemo : BaseDemo
     {
         public HeightmapPBRAtlasedDemo() : base("Heightmap Atlased PBR Terrain") { }
 
@@ -96,8 +96,7 @@ namespace C3DE.Demo.Scenes.PBR
             RenderSettings.Skybox.Generate(Application.GraphicsDevice, DemoGame.NatureSkybox, 256);
             RenderSettings.FogMode = FogMode.None;
 
-            var vrPlayerEnabler = _camera.AddComponent<VRPlayerEnabler>();
-            vrPlayerEnabler.Position = new Vector3(0, water.Transform.Position.Y + 0.5f, 0);
+            _vrPlayerEnabler.Position = new Vector3(0, water.Transform.Position.Y + 0.5f, 0);
         }
     }
 }

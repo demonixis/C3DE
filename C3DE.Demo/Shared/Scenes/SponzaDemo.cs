@@ -10,7 +10,7 @@ using System.Collections.Generic;
 
 namespace C3DE.Demo.Scenes
 {
-    public class SponzaDemo : SimpleDemo
+    public class SponzaDemo : BaseDemo
     {
         public SponzaDemo() : base("Sponza Demo") { }
 
@@ -21,15 +21,14 @@ namespace C3DE.Demo.Scenes
             base.Initialize();
 
             _camera.AddComponent<LightSpawner>();
-            var vrPlayerEnabler = _camera.AddComponent<VRPlayerEnabler>();
-            vrPlayerEnabler.Position = new Vector3(0, 1.0f, 0);
+            _vrPlayerEnabler.Position = new Vector3(0, 1.0f, 0);
 
             SetControlMode(ControllerSwitcher.ControllerType.FPS, new Vector3(-10.0f, 2.0f, 0.45f), new Vector3(0.0f, -1.4f, 0.0f), true);
 
             // Sponza Model
             var content = Application.Content;
             var sponzaModel = content.Load<Model>("Models/Sponza/sponza");
-            var sponzaGo = sponzaModel.ToMeshRenderers(this);
+            var sponzaGo = sponzaModel.ToMeshRenderers(PreferePBRMaterials);
             sponzaGo.Transform.Translate(0.0f, 1.0f, 0.0f);
             PatchMaterials(sponzaGo, content);
 
@@ -70,12 +69,12 @@ namespace C3DE.Demo.Scenes
 
             foreach (var renderer in renderers)
             {
-                material = (StandardMaterial)renderer.Material;
+                material = renderer.Material as  StandardMaterial;
+                if (material == null) // We need to do the same with PBRMaterial.
+                    return;
 
                 if (material.MainTexture == null)
                     continue;
-
-                //material.ReflectionTexture = RenderSettings.Skybox.Texture;
 
                 name = System.IO.Path.GetFileNameWithoutExtension(material.MainTexture.Name);
                 name = name.Replace("_0", "");

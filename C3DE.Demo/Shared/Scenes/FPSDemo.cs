@@ -11,7 +11,6 @@ using C3DE.Graphics.Materials;
 using C3DE.Graphics.PostProcessing;
 using C3DE.Graphics.Primitives;
 using C3DE.Utils;
-using C3DE.VR;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -20,10 +19,9 @@ using System.Collections.Generic;
 
 namespace C3DE.Demo.Scenes
 {
-    public class FPSDemo : SimpleDemo
+    public class FPSDemo : BaseDemo
     {
         public static bool Instancing = true;
-        public static bool PreferePBR = false;
         public static bool DebugPhysics = false;
 
         public static readonly int[,] LevelGrid = new int[,]
@@ -254,7 +252,7 @@ namespace C3DE.Demo.Scenes
 
         private Material CreateWallMaterial(ContentManager content)
         {
-            if (PreferePBR)
+            if (PreferePBRMaterials)
             {
                 var wallMatPBR = new PBRMaterial()
                 {
@@ -284,7 +282,7 @@ namespace C3DE.Demo.Scenes
 
         private Material CreateGroundMaterial(ContentManager content)
         {
-            if (PreferePBR)
+            if (PreferePBRMaterials)
             {
                 var mat = new PBRMaterial()
                 {

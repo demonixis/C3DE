@@ -48,6 +48,8 @@ namespace C3DE
 
         public RenderSettings RenderSettings { get; private set; }
 
+        public int LightCount => _lights.Count;
+
         /// <summary>
         /// The root scene object which contains all scene objects.
         /// </summary>

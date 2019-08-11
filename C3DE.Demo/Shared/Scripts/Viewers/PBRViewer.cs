@@ -29,9 +29,9 @@ namespace C3DE.Demo.Scripts.Viewers
         {
             if (_terrainMaterial != null)
             {
-                gui.DrawTexture(new Rectangle(0, 0, 200, 200), _terrainMaterial.CombinedAlbedos);
-                gui.DrawTexture(new Rectangle(0, 200, 200, 200), _terrainMaterial.CombinedNormals);
-                gui.DrawTexture(new Rectangle(0, 400, 200, 200), _terrainMaterial.CombinedRMAO);
+                gui.DrawTexture(new Rectangle(Screen.VirtualWidth - 200, 0, 200, 200), _terrainMaterial.CombinedAlbedos);
+                gui.DrawTexture(new Rectangle(Screen.VirtualWidth - 200, 200, 200, 200), _terrainMaterial.CombinedNormals);
+                gui.DrawTexture(new Rectangle(Screen.VirtualWidth - 200, 400, 200, 200), _terrainMaterial.CombinedRMAO);
             }
             else if (_material != null)
                 gui.DrawTexture(_rect, _material.RoughnessMetalicAOMap);

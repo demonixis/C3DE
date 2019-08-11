@@ -122,7 +122,7 @@ namespace C3DE.Demo.Scripts.FPS
 
         private Material GetMobMaterial(ContentManager content, ReflectionProbe probe)
         {
-            if (FPSDemo.PreferePBR)
+            if (FPSDemo.PreferePBRMaterials)
             {
                 var pbr = new PBRMaterial()
                 {

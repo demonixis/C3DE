@@ -192,7 +192,7 @@ namespace C3DE.Demo.Scripts.FPS
 
         private Material CreateGunMaterial(ContentManager content)
         {
-            if (FPSDemo.PreferePBR)
+            if (FPSDemo.PreferePBRMaterials)
             {
                 var mat = new PBRMaterial()
                 {

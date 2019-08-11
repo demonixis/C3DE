@@ -9,7 +9,7 @@ namespace C3DE.Demo.Scripts.Diagnostic
         {
             var metrics = Application.GraphicsDevice.Metrics;
 
-            gui.Box(new Rectangle(10, 10, 200, 210), "Stats");
+            gui.Box(new Rectangle(10, 10, 220, 230), "Stats");
 
             gui.Label(new Vector2(15, 35), $"Clear");
             gui.Label(new Vector2(150, 35), $"{metrics.ClearCount}");
@@ -31,12 +31,15 @@ namespace C3DE.Demo.Scripts.Diagnostic
            
             gui.Label(new Vector2(15, 155), $"PixelShader");
             gui.Label(new Vector2(150, 155), $"{metrics.PixelShaderCount}");
-          
-            gui.Label(new Vector2(15, 175), $"Sprite");
-            gui.Label(new Vector2(150, 175), $"{metrics.SpriteCount}");
 
-            gui.Label(new Vector2(15, 195), $"FPS");
-            gui.Label(new Vector2(150, 195), $"{Application.Engine.FPS}");
+            gui.Label(new Vector2(15, 175), $"Lights");
+            gui.Label(new Vector2(150, 175), $"{Scene.current?.LightCount ?? 0}");
+
+            gui.Label(new Vector2(15, 195), $"Sprite");
+            gui.Label(new Vector2(150, 195), $"{metrics.SpriteCount}");
+
+            gui.Label(new Vector2(15, 215), $"FPS");
+            gui.Label(new Vector2(150, 215), $"{Application.Engine.FPS}");
 
         }
     }

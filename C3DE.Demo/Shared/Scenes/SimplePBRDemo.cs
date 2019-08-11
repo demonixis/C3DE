@@ -1,17 +1,14 @@
-﻿using C3DE.Components.Lighting;
-using C3DE.Components.Rendering;
+﻿using C3DE.Components.Rendering;
 using C3DE.Demo.Scripts;
 using C3DE.Demo.Scripts.VR;
 using C3DE.Graphics;
 using C3DE.Graphics.Materials;
-using C3DE.Graphics.Primitives;
-using C3DE.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace C3DE.Demo.Scenes.PBR
 {
-    public class SimplePBRDemo : SimpleDemo
+    public class SimplePBRDemo : BaseDemo
     {
         public SimplePBRDemo() : base("Simple PBR") { }
 
@@ -42,8 +39,6 @@ namespace C3DE.Demo.Scenes.PBR
         public override void Initialize()
         {
             base.Initialize();
-
-            _camera.AddComponent<VRPlayerEnabler>();
           
             Destroy(_directionalLight.GetComponent<LensFlare>());
 

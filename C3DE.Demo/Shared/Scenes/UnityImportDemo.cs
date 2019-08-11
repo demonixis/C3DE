@@ -1,6 +1,5 @@
 ﻿using C3DE.Components;
 using C3DE.Components.Lighting;
-using C3DE.Components.Physics;
 using C3DE.Components.Rendering;
 using C3DE.Graphics;
 using C3DE.Graphics.Materials;
@@ -17,10 +16,8 @@ using System.IO;
 
 namespace C3DE.Demo.Scenes
 {
-    public class UnityImportDemo : SimpleDemo
+    public class UnityImportDemo : BaseDemo
     {
-        public bool PBR = false;
-
         public UnityImportDemo() : base("Unity Import")
         {
         }
@@ -194,7 +191,7 @@ namespace C3DE.Demo.Scenes
                     light.Radius = item.Light.Radius;
                     light.ShadowEnabled = item.Light.ShadowsEnabled;
 
-                    if (PBR)
+                    if (PreferePBRMaterials)
                         light.Intensity *= 0.1f;
 
                     if (item.Light.Type == 0)
@@ -241,7 +238,7 @@ namespace C3DE.Demo.Scenes
 
         public Material CreateMaterial(ContentManager content, string albedo, string normal, string roughness, string metallic, string ao, string emissive)
         {
-            if (PBR)
+            if (PreferePBRMaterials)
             {
                 var mat = new PBRMaterial
                 {

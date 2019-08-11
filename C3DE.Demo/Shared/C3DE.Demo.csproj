@@ -49,15 +49,11 @@
     <Compile Include="Scenes\HeightmapDemo.cs" />
     <Compile Include="Scenes\LandscapeDemo.cs" />
     <Compile Include="Scenes\LightingDemo.cs" />
-    <Compile Include="Scenes\PBR\HeightmapPBRDemo.cs" />
-    <Compile Include="Scenes\PBR\TerrainLavaPBRDemo.cs" />
-    <Compile Include="Scenes\PBR\SimplePBRDemo.cs" />
-    <Compile Include="Scenes\SimpleDemo.cs" />
+    <Compile Include="Scenes\SimplePBRDemo.cs" />
+    <Compile Include="Scenes\BaseDemo.cs" />
     <Compile Include="Scenes\GUIDemo.cs" />
     <Compile Include="Scenes\FPSDemo.cs" />
-    <Compile Include="Scenes\PBR\LightingPBRDemo.cs" />
-    <Compile Include="Scenes\ProceduralTerrainBase.cs" />
-    <Compile Include="Scenes\ProceduralTerrainLava.cs" />
+    <Compile Include="Scenes\ProceduralTerrain.cs" />
     <Compile Include="Scenes\MenuDemo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Scenes\SponzaDemo.cs" />
@@ -95,8 +91,7 @@
     <Compile Include="Scripts\VR\VRPlayerEnabler.cs" />
     <Compile Include="Scripts\VR\VRSwitcher.cs" />
     <Compile Include="Scripts\Viewers\WeightMapViewer.cs" />
-    <Compile Include="Scenes\ProceduralTerrainWater.cs" />
-    <Compile Include="Scenes\PBR\HeightmapPBRAtlasedDemo.cs" />
+    <Compile Include="Scenes\HeightmapPBRAtlasedDemo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

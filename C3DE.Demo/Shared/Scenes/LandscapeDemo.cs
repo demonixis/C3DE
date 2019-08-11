@@ -1,6 +1,7 @@
 ﻿using C3DE.Components.Controllers;
 using C3DE.Components.Lighting;
 using C3DE.Components.Rendering;
+using C3DE.Demo.Scripts;
 using C3DE.Demo.Scripts.Diagnostic;
 using C3DE.Graphics;
 using C3DE.Graphics.Materials;
@@ -8,15 +9,10 @@ using C3DE.Graphics.Primitives;
 using C3DE.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace C3DE.Demo.Scenes
 {
-    public class LandscapeDemo : SimpleDemo
+    public class LandscapeDemo : BaseDemo
     {
         public LandscapeDemo() : base("Landscape")
         {
@@ -24,6 +20,7 @@ namespace C3DE.Demo.Scenes
 
         protected override void SceneSetup()
         {
+            // We don't want the default behaviour so we leave this override empty.
         }
 
         public override void Initialize()
@@ -36,6 +33,7 @@ namespace C3DE.Demo.Scenes
             var lightGo = GameObjectFactory.CreateLight(LightType.Directional, Color.White, 0.75f, 2048);
             lightGo.Transform.LocalPosition = new Vector3(500, 500, 0);
             lightGo.Transform.LocalRotation = new Vector3(MathHelper.PiOver2, -MathHelper.PiOver4, 0);
+            lightGo.AddComponent<DemoBehaviour>();
 
             var player = GameObjectFactory.CreatePlayer();
             player.AddComponent<FirstPersonController>();
@@ -49,7 +47,7 @@ namespace C3DE.Demo.Scenes
 
             terrain.SetWeightData(0.1f, 0.2f, 5f, 18f);
             terrain.Randomize(1, 2);
-            terrain.Renderer.Material = GetTerrainMaterial(content, terrain.GenerateWeightMap(), false);
+            terrain.Renderer.Material = GetTerrainMaterial(content, terrain.GenerateWeightMap());
             terrain.Renderer.ReceiveShadow = true;
             terrain.AddComponent<StatsDisplay>();
 
@@ -63,7 +61,7 @@ namespace C3DE.Demo.Scenes
 
             for (var i = 0; i < 50; i++)
             {
-                tree = treeModel.ToMeshRenderers();
+                tree = treeModel.ToMeshRenderers(PreferePBRMaterials);
                 tree.Transform.LocalScale = new Vector3(scale);
 
                 position.X = RandomHelper.Range(-range, range);
@@ -77,13 +75,17 @@ namespace C3DE.Demo.Scenes
 
             var renderers = tree.GetComponentsInChildren<MeshRenderer>();
             foreach (var renderer in renderers)
-                PatchMaterial((StandardMaterial)renderer.Material, renderer.Material.MainTexture.Name.ToLower().Contains("branch"));
+                PatchMaterial(renderer.Material, renderer.Material.MainTexture.Name.ToLower().Contains("branch"));
 
             AddLightGroundTest(100);
         }
 
-        private void PatchMaterial(StandardMaterial std, bool cutout)
+        private void PatchMaterial(Material material, bool cutout)
         {
+            var std = material as StandardMaterial;
+            if (std == null) // PBR Shader doesn't support cutout for now.
+                return;
+
             std.DiffuseColor = Color.White;
             std.NormalMap = null;
             std.SpecularColor = Color.White;

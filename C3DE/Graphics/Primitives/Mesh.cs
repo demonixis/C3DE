@@ -285,5 +285,10 @@ namespace C3DE.Graphics.Primitives
 
             return base.Equals(obj);
         }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
     }
 }

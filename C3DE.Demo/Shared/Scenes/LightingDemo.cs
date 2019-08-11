@@ -1,16 +1,14 @@
 ﻿using C3DE.Components.Lighting;
-using C3DE.Components.Rendering;
-using C3DE.Demo.Scripts;
-using C3DE.Graphics.Primitives;
 using C3DE.Graphics.Materials;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using C3DE.Graphics;
-using C3DE.Demo.Scripts.VR;
+using Microsoft.Xna.Framework.Content;
+using C3DE.Components.Rendering;
 
 namespace C3DE.Demo.Scenes
 {
-    public class LightingDemo : SimpleDemo
+    public class LightingDemo : BaseDemo
     {
         public LightingDemo() : base("Realtime Lighting") { }
 
@@ -26,26 +24,20 @@ namespace C3DE.Demo.Scenes
             // Reflection Probe
             var probe = GameObjectFactory.CreateReflectionProbe(new Vector3(0, 35, 0), 32, 60, 900, 1000);
 
-            // Terrain
-            var terrainMaterial = new StandardMaterial();
-            terrainMaterial.MainTexture = TextureFactory.CreateCheckboard(Color.White, Color.Black);
-            terrainMaterial.SpecularPower = 2;
-            terrainMaterial.Tiling = new Vector2(32);
-            terrainMaterial.ReflectionIntensity = 0.45f;
-            terrainMaterial.ReflectionMap = probe.ReflectionMap;
-
             var terrainGo = GameObjectFactory.CreateTerrain();
             var terrain = terrainGo.GetComponent<Terrain>();
             terrain.Geometry.Size = new Vector3(4);
             terrain.Geometry.Build();
             terrain.Flatten();
-            terrain.Renderer.Material = terrainMaterial;
+            terrain.Renderer.Material = GetGroundMaterial(probe.ReflectionMap);
             terrain.Renderer.ReceiveShadow = false;
             terrain.Renderer.CastShadow = false;
 
+            var content = Application.Content;
+
             // Model
-            var model = Application.Content.Load<Model>("Models/Quandtum/Quandtum");
-            var mesh = model.ToMeshRenderers(this);
+            var model = content.Load<Model>("Models/Quandtum/Quandtum");
+            var mesh = model.ToMeshRenderers(PreferePBRMaterials);
             mesh.Transform.LocalScale = new Vector3(0.25f);
             mesh.Transform.Rotate(0, 0, -MathHelper.PiOver2);
 
@@ -55,23 +47,66 @@ namespace C3DE.Demo.Scenes
             renderer.Transform.LocalScale = new Vector3(0.035f);
             renderer.Transform.Rotate(0, -MathHelper.PiOver2, 0);
             renderer.Transform.Translate(-0.1f, 0, 0);
-
-            var modelMaterial = renderer.Material as StandardMaterial;
-            modelMaterial.MainTexture = Application.Content.Load<Texture2D>("Models/Quandtum/textures/Turret-Diffuse");
-            modelMaterial.NormalMap = Application.Content.Load<Texture2D>("Models/Quandtum/textures/Turret-Normal");
-            modelMaterial.EmissiveMap = Application.Content.Load<Texture2D>("Models/Quandtum/textures/Turret-Emission");
-            modelMaterial.SpecularMap = Application.Content.Load<Texture2D>("Models/Quandtum/textures/Turret-Specular");
-            modelMaterial.SpecularPower = 8;
-            modelMaterial.SpecularColor = Color.White;
-            modelMaterial.EmissiveColor = Color.White;
-            modelMaterial.EmissiveIntensity = 1;
-            modelMaterial.ReflectionMap = probe.ReflectionMap;
-            modelMaterial.ReflectionIntensity = 0.65f;
-
-            _camera.AddComponent<VRPlayerEnabler>();
+            renderer.Material = GetModelMaterial(content, probe.ReflectionMap);
 
             // Light
             AddLightGroundTest();
+        }
+
+        private Material GetGroundMaterial(TextureCube reflectionMap)
+        {
+            if (PreferePBRMaterials)
+            {
+                var groundMaterial = new PBRMaterial
+                {
+                    MainTexture = TextureFactory.CreateCheckboard(Color.White, Color.Black),
+                    Tiling = new Vector2(16)
+                };
+
+                groundMaterial.CreateRoughnessMetallicAO();
+
+                return groundMaterial;
+            }
+
+            return new StandardMaterial
+            {
+                MainTexture = TextureFactory.CreateCheckboard(Color.White, Color.Black),
+                SpecularPower = 2,
+                Tiling = new Vector2(32),
+                ReflectionIntensity = 0.45f,
+                ReflectionMap = reflectionMap,
+            };
+        }
+
+        private Material GetModelMaterial(ContentManager content, TextureCube reflectionMap)
+        {
+            if (PreferePBRMaterials)
+            {
+                var modelMaterial = new PBRMaterial()
+                {
+                    MainTexture = content.Load<Texture2D>("Models/Quandtum/textures/Turret-Diffuse"),
+                    NormalMap = content.Load<Texture2D>("Models/Quandtum/textures/Turret-Normal"),
+                    EmissiveMap = content.Load<Texture2D>("Models/Quandtum/textures/Turret-Emission"),
+                };
+
+                modelMaterial.CreateRoughnessMetallicAO(1.0f, 0.85f);
+
+                return modelMaterial;
+            }
+
+            return new StandardMaterial
+            {
+                MainTexture = content.Load<Texture2D>("Models/Quandtum/textures/Turret-Diffuse"),
+                NormalMap = content.Load<Texture2D>("Models/Quandtum/textures/Turret-Normal"),
+                EmissiveMap = content.Load<Texture2D>("Models/Quandtum/textures/Turret-Emission"),
+                SpecularMap = content.Load<Texture2D>("Models/Quandtum/textures/Turret-Specular"),
+                SpecularPower = 8,
+                SpecularColor = Color.White,
+                EmissiveColor = Color.White,
+                EmissiveIntensity = 1,
+                ReflectionMap = reflectionMap,
+                ReflectionIntensity = 0.65f
+            };
         }
     }
 }

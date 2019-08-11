@@ -4,6 +4,7 @@ using C3DE.Components.Rendering;
 using C3DE.Demo.Scripts;
 using C3DE.Demo.Scripts.Diagnostic;
 using C3DE.Demo.Scripts.Utils;
+using C3DE.Demo.Scripts.VR;
 using C3DE.Graphics.Materials;
 using C3DE.Graphics.Primitives;
 using C3DE.UI;
@@ -15,8 +16,10 @@ using System;
 
 namespace C3DE.Demo.Scenes
 {
-    public class SimpleDemo : Scene
+    public class BaseDemo : Scene
     {
+        public static bool PreferePBRMaterials = false;
+
         protected static Color[] ValidColors = new[]
         {
             Color.Red, Color.Green, Color.Blue,
@@ -27,8 +30,9 @@ namespace C3DE.Demo.Scenes
         protected Light _directionalLight;
         protected ControllerSwitcher _controllerSwitcher;
         protected DemoSceneMenu _demoSceneMenu;
+        protected VRPlayerEnabler _vrPlayerEnabler;
 
-        public SimpleDemo(string name) : base(name) { }
+        public BaseDemo(string name) : base(name) { }
 
         public override void Initialize()
         {
@@ -46,11 +50,14 @@ namespace C3DE.Demo.Scenes
 
             _camera = camera.GetComponent<Camera>();
             _camera.AddComponent<DemoBehaviour>();
-            _controllerSwitcher = _camera.AddComponent<ControllerSwitcher>();
-            _demoSceneMenu = _camera.AddComponent<DemoSceneMenu>();
             _camera.AddComponent<StatsDisplay>();
 
-            // And a light
+            // Scripts
+            _controllerSwitcher = _camera.AddComponent<ControllerSwitcher>();
+            _demoSceneMenu = _camera.AddComponent<DemoSceneMenu>();
+            _vrPlayerEnabler = _camera.AddComponent<VRPlayerEnabler>();
+
+            // Main light
             var lightGo = GameObjectFactory.CreateLight(LightType.Directional, Color.White, 1f, 2048);
             lightGo.Transform.LocalPosition = new Vector3(500, 500, 0);
             lightGo.Transform.LocalRotation = new Vector3(MathHelper.PiOver2, -MathHelper.PiOver4, 0);
@@ -84,6 +91,7 @@ namespace C3DE.Demo.Scenes
         {
             Destroy(_directionalLight);
             Destroy(_demoSceneMenu);
+            Destroy(_vrPlayerEnabler);
             RenderSettings.Skybox.Enabled = false;
         }
 
@@ -95,9 +103,63 @@ namespace C3DE.Demo.Scenes
             _controllerSwitcher.SetControllerActive(type);
         }
 
-        public Material GetTerrainMaterial(ContentManager content, Texture2D weightMap, bool pbr, float tiling = 8)
+        #region Materials Creation
+
+        public Material GetLavaMaterial(ContentManager content)
         {
-            if (pbr)
+            if (PreferePBRMaterials)
+            {
+                return new PBRLavaMaterial
+                {
+                    MainTexture = content.Load<Texture2D>("Textures/Fluids/lava_texture"),
+                    NormalMap = content.Load<Texture2D>("Textures/Fluids/wavesbump"),
+                    Metallic = 0,
+                    Roughness = 0
+                };
+            }
+
+            return new StandardLavaMaterial
+            {
+                MainTexture = content.Load<Texture2D>("Textures/Fluids/lava_texture"),
+                NormalMap = content.Load<Texture2D>("Textures/Fluids/wavesbump"),
+                SpecularColor = new Color(0.7f, 0.7f, 0.7f),
+                SpecularPower = 50
+            };
+        }
+
+        public Material GetWaterMaterial(ContentManager content, TextureCube reflectionMap)
+        {
+            var alpha = 0.6f;
+
+            if (PreferePBRMaterials)
+            {
+                var waterMaterial = new PBRWaterMaterial
+                {
+                    MainTexture = content.Load<Texture2D>("Textures/Fluids/water"),
+                    NormalMap = content.Load<Texture2D>("Textures/Fluids/wavesbump"),
+                    Alpha = alpha
+                };
+
+                waterMaterial.CreateRoughnessMetallicAO(0.0f, 0.0f, 1.0f);
+
+                return waterMaterial;
+            }
+
+            return new StandardWaterMaterial()
+            {
+                MainTexture = content.Load<Texture2D>("Textures/Fluids/water"),
+                NormalMap = content.Load<Texture2D>("Textures/Fluids/Water_Normal"),
+                SpecularColor = new Color(0.7f, 0.7f, 0.7f),
+                SpecularPower = 4,
+                ReflectionMap = reflectionMap,
+                ReflectionIntensity = 0.85f,
+                Alpha = alpha
+            };
+        }
+
+        public Material GetTerrainMaterial(ContentManager content, Texture2D weightMap, float tiling = 8)
+        {
+            if (PreferePBRMaterials)
             {
                 var terrainMaterial = new PBRTerrainMaterial
                 {
@@ -126,13 +188,17 @@ namespace C3DE.Demo.Scenes
                 SnowNormalMap = content.Load<Texture2D>("Textures/Terrain/Snow/Snow05_nrm"),
                 RockMap = content.Load<Texture2D>("Textures/Terrain/Rock/Rock12_col"),
                 RockNormalMap = content.Load<Texture2D>("Textures/Terrain/Rock/Rock12_nrm"),
-                WeightMap=  weightMap,
+                WeightMap = weightMap,
                 SpecularColor = Color.Gray,
                 SpecularIntensity = 1,
                 SpecularPower = 32,
                 Tiling = new Vector2(tiling)
             };
         }
+
+        #endregion
+
+        #region Add Test Lights
 
         public void AddLightGroundTest(float range = 50, int lightsCircle = 6, bool showLights = true)
         {
@@ -202,5 +268,7 @@ namespace C3DE.Demo.Scenes
 
             return light;
         }
+
+        #endregion
     }
 }
