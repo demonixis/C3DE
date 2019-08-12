@@ -26,6 +26,7 @@ namespace C3DE.Graphics.Primitives
         protected Vector3 size = Vector3.One;
         protected Vector2 repeatTexture = Vector2.One;
         protected bool invertFaces = false;
+        internal bool _sharedData = false;
 
         public VertexPositionNormalTexture[] Vertices
         {
@@ -253,6 +254,9 @@ namespace C3DE.Graphics.Primitives
 
         public void Dispose()
         {
+            if (_sharedData)
+                return;
+
             _vertexBuffer?.Dispose();
             _indexBuffer?.Dispose();
         }

@@ -11,7 +11,7 @@ namespace Microsoft.Xna.Framework.Graphics
     {
         private static Dictionary<string, Material> MaterialsCache = new Dictionary<string, Material>();
 
-        public static GameObject ToMeshRenderers(this Model model, bool pbrMaterial = false)
+        public static GameObject ToMeshRenderers(this Model model, bool pbrMaterial = false, bool sharedMesh = true)
         {
             var scene = Scene.current;
 
@@ -51,17 +51,28 @@ namespace Microsoft.Xna.Framework.Graphics
                     renderer.CastShadow = true;
                     renderer.ReceiveShadow = true;
 
-                    var vertexData = new VertexPositionNormalTexture[part.VertexBuffer.VertexCount];
-                    part.VertexBuffer.GetData(vertexData);
-                    var indexData = new ushort[part.IndexBuffer.IndexCount];
-                    part.IndexBuffer.GetData(indexData);
+                    var modelMesh = new Mesh();
 
-                    var geometry = new Mesh();
-                    geometry.Vertices = vertexData;
-                    geometry.Indices = indexData;
-                    geometry.Build();
+                    if (sharedMesh)
+                    {
+                        modelMesh.VertexBuffer = part.VertexBuffer;
+                        modelMesh.IndexBuffer = part.IndexBuffer;
+                        modelMesh._sharedData = true;
+                    }
+                    else
+                    {
+                        var vertexData = new VertexPositionNormalTexture[part.VertexBuffer.VertexCount];
+                        part.VertexBuffer.GetData(vertexData);
 
-                    renderer.Mesh = geometry;
+                        var indexData = new ushort[part.IndexBuffer.IndexCount];
+                        part.IndexBuffer.GetData(indexData);
+
+                        modelMesh.Vertices = vertexData;
+                        modelMesh.Indices = indexData;
+                        modelMesh.Build();
+                    }
+             
+                    renderer.Mesh = modelMesh;
 
                     child.Transform.Parent = parent.Transform;
                 }
