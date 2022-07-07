@@ -41,7 +41,7 @@ namespace C3DE.Editor.Core.Components
                 s_Materials.Add(icon, iconMaterial);
             }
 
-            material = iconMaterial;
+            Material = iconMaterial;
         }
 
         private UnlitMaterial CreateMaterial(string icon)

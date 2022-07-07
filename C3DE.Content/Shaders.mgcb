@@ -43,6 +43,12 @@
 /processorParam:DebugMode=Auto
 /build:Shaders/Deferred/DirectionalLight.fx
 
+#begin Shaders/Deferred/Lava.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Shaders/Deferred/Lava.fx
+
 #begin Shaders/Deferred/PointLight.fx
 /importer:EffectImporter
 /processor:EffectProcessor

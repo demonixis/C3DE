@@ -101,7 +101,7 @@ PixelShaderOutput PixelShaderFunction(VertexShaderOutput input) : COLOR0
 
     float3 emission = EmissiveColor * EmissiveIntensity;
 
-    output.Color.rgb = (DiffuseColor * temp) + emission;
+    output.Color.rgb = (temp) + emission;
 
     // Normal
     output.Normal.rgb = input.WorldNormal;
