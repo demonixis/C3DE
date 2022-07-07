@@ -8,6 +8,28 @@ C3DE aims to become a 3D game engine powered by the [MonoGame Framework](https:/
 ## Status & branch strategy
 This project is in early stage. **Use** the `master` branch for testing and the `develop` branch for latest and **instable** changes. Keep in mind that all branches other than `master` **are probably broken** on non Windows targets.
 
+## Setup & Requirement
+The first step is to install some MonoGame tools using the command line
+```
+dotnet tool install -g dotnet-mgfxc
+dotnet tool install -g dotnet-mgcb
+dotnet tool install -g dotnet-mgcb-editor
+mgcb-editor --register
+```
+
+You need an internet connection the first time to download nuget packages.
+
+## Build
+```
+# Win64 + DirectX
+dotnet publish -c Release -r win-x64 /p:PublishReadyToRun=false /p:TieredCompilation=false --self-contained .\C3DE.Demo\Windows\C3DE.DemoGame.csproj
+
+# Crossplatform + OpenGL
+dotnet publish -c Release -r win-x64 /p:PublishReadyToRun=false /p:TieredCompilation=false --self-contained .\C3DE.Demo\Windows\C3DE.DemoGame.Desktop.csproj
+dotnet publish -c Release -r linux-x64 /p:PublishReadyToRun=false /p:TieredCompilation=false --self-contained .\C3DE.Demo\Windows\C3DE.DemoGame.Desktop.csproj
+dotnet publish -c Release -r osx-x64 /p:PublishReadyToRun=false /p:TieredCompilation=false --self-contained .\C3DE.Demo\Windows\C3DE.DemoGame.Desktop.csproj
+```
+
 ## Features
 - Component based
 - 3D Model support + Custom Mesh geometry
@@ -15,8 +37,8 @@ This project is in early stage. **Use** the `master` branch for testing and the 
 - Materials: PBR (in progress), Standard (Phong + Extras), Terrain (multi-textured) and few extras
 - Lighting: Directional, Point, Spot
 - Forward Renderer: Single Pass multi-lighting, up to 128 realtime lights with Direct3D and 16 with OpenGL
-- Hardware Instancing: Draw thousand of mesh in a single draw call!
-- Reflection Probe: Generate on demand a cube map that can be used for local reflections
+- Hardware Instancing
+- Reflection Probe
 - Deferred Renderer (wip)
 - Shadow mapping (Hard shadow only)
 - Input management: Keyboard, Mouse, Gamepad, Touch
@@ -32,7 +54,7 @@ This project is in early stage. **Use** the `master` branch for testing and the 
 | Windows   | DirectX | Best Version |
 | DesktopGL | OpenGL  | Limited Shader Support, Limited Post Processing |
 | Android   | OpenGL  | Same as DesktopGL + Limited support of the platform |
-| UWP       | DirectX | On Hold (Good) |
+| UWP       | DirectX | On Hold |
 
 ### Help needed
 I need help to port the Oculus Mobile SDK to Xamarin
@@ -43,9 +65,6 @@ Physically Based Rendering and Post Processing are very limited.
 
 ### Virtual Reality
 C3DE supports OpenVR (headset + controllers) and Oculus (headset only), please [take a look at the wiki](https://github.com/demonixis/C3DE/wiki/Virtual-Reality).
-
-## Requirement
-You **must** install the [MonoGame Framework](http://www.monogame.net/downloads/) from the installer. **You'll not be able to build the solution without it**.
 
 ## Contributions
 You're **free** to submit pull requests, however thank you to follow the [coding convention](https://msdn.microsoft.com/en-US/library/ff926074.aspx). 
