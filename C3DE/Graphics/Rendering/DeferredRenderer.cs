@@ -80,9 +80,9 @@ namespace C3DE.Graphics.Rendering
 
         private void RenderObjects(Scene scene, ref Vector3 cameraPosition, ref Matrix cameraViewMatrix, ref Matrix cameraProjectionMatrix)
         {
-            using (_graphicsDevice.GeometryUnlitState())
+            if (scene.RenderSettings.Skybox.Enabled)
             {
-                if (scene.RenderSettings.Skybox.Enabled)
+                using (_graphicsDevice.GeometryUnlitState())
                     scene.RenderSettings.Skybox.Draw(_graphicsDevice, ref cameraPosition, ref cameraViewMatrix, ref cameraProjectionMatrix);
             }
 
@@ -141,7 +141,7 @@ namespace C3DE.Graphics.Rendering
 
             using (_graphicsDevice.LightState())
                 RenderLights(scene, camera, eye);
-
+            
             _graphicsDevice.SetRenderTarget(_sceneRenderTargets[eye]);
             _graphicsDevice.Clear(Color.Black);
 

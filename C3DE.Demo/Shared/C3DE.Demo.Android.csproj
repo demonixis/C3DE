@@ -3,10 +3,10 @@
 		<TargetFramework>netcoreapp3.1</TargetFramework>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-		<DefineConstants>$(DefineConstants)TRACE;WINDOWS</DefineConstants>
+		<DefineConstants>$(DefineConstants)TRACE;ANDROID</DefineConstants>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-		<DefineConstants>$(DefineConstants)TRACE;WINDOWS</DefineConstants>
+		<DefineConstants>$(DefineConstants)TRACE;ANDROID</DefineConstants>
 	</PropertyGroup>
 	<ItemGroup>
 	  <Compile Remove="Content\**" />
@@ -14,11 +14,11 @@
 	  <None Remove="Content\**" />
 	</ItemGroup>
 	<ItemGroup>
-		<PackageReference Include="MonoGame.Framework.WindowsDX" Version="3.8.0.1641" />
+		<PackageReference Include="MonoGame.Framework.Android" Version="3.8.0.1641" />
 		<PackageReference Include="JitterPhysics" Version="0.2.0.20" />
 		<PackageReference Include="NewtonSoft.Json" Version="13.0.1" />
 	</ItemGroup>
 	<ItemGroup>
-	  <ProjectReference Include="..\..\C3DE\C3DE.csproj" />
+	  <ProjectReference Include="..\..\C3DE\C3DE.Android.csproj" />
 	</ItemGroup>
 </Project>

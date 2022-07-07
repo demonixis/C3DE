@@ -133,6 +133,12 @@ namespace C3DE
             _graphicsDeviceManager.SupportedOrientations = DisplayOrientation.LandscapeLeft;
 #endif
 
+#if DESKTOP
+            _graphicsDeviceManager.PreferredBackBufferWidth = Screen.Width;
+            _graphicsDeviceManager.PreferredBackBufferHeight = Screen.Height;
+            _graphicsDeviceManager.ApplyChanges();
+#endif
+
             GraphicsDevice.PresentationParameters.MultiSampleCount = 4;
 
             if (_autoDetectResolution)

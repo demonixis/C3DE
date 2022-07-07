@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFramework>netcoreapp3.1</TargetFramework>
+	</PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DefineConstants>$(DefineConstants)TRACE;ANDROID</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DefineConstants>$(DefineConstants)TRACE;ANDROID</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+	  <PackageReference Include="JitterPhysics" Version="0.2.0.20" />
+	  <PackageReference Include="MonoGame.Framework.Android" Version="3.8.0.1641" />
+  </ItemGroup>
+</Project>
