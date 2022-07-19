@@ -1,5 +1,4 @@
-﻿using C3DE.VR;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -7,8 +6,6 @@ namespace C3DE.Graphics.PostProcessing
 {
     public class FastBloom : PostProcessPass
     {
-        private Effect _effect;
-        private RenderTarget2D _sceneRenderTarget;
         private QuadRenderer _quadRenderer;
 
         public enum Resolution
@@ -23,12 +20,12 @@ namespace C3DE.Graphics.PostProcessing
             Sgx = 1,
         }
 
-        public float threshold = 0.25f;
-        public float intensity = 2f;
+        public float threshold = 0.5f;
+        public float intensity = 2.5f;
         public float blurSize = 2.0f;
-        public Resolution resolution = Resolution.Low;
-        public int blurIterations = 1;
-        public BlurType blurType = BlurType.Standard;
+        public Resolution resolution = Resolution.High;
+        public int blurIterations = 8;
+        public BlurType blurType = BlurType.Sgx;
 
         public FastBloom(GraphicsDevice graphics) : base(graphics)
         {
@@ -36,21 +33,15 @@ namespace C3DE.Graphics.PostProcessing
 
         public override void Initialize(ContentManager content)
         {
-            _effect = content.Load<Effect>("Shaders/PostProcessing/FastBloom");
-            _sceneRenderTarget = GetRenderTarget();
-            _quadRenderer = new QuadRenderer(_graphics);
-        }
+            base.Initialize(content);
 
-        protected override void OnVRChanged(VRService service)
-        {
-            base.OnVRChanged(service);
-            _sceneRenderTarget.Dispose();
-            _sceneRenderTarget = GetRenderTarget();
+            _effect = content.Load<Effect>("Shaders/PostProcessing/FastBloom");
+            _quadRenderer = new QuadRenderer(_graphics);
         }
 
         public override void Draw(SpriteBatch spriteBatch, RenderTarget2D source)
         {
-            _graphics.SetRenderTarget(_sceneRenderTarget);
+            _graphics.SetRenderTarget(_mainRenderTarget);
             _graphics.SamplerStates[1] = SamplerState.LinearClamp;
 
             int divider = resolution == Resolution.Low ? 4 : 2;
@@ -90,18 +81,18 @@ namespace C3DE.Graphics.PostProcessing
 
             _effect.Parameters["BloomTexture"].SetValue(rt);
 
-            Blit(source, _sceneRenderTarget, 0);
+            Blit(source, _mainRenderTarget, 0);
 
             RenderTexture.ReleaseTemporary(rt);
             RenderTexture.ReleaseAll();
 
-            DrawFullscreenQuad(spriteBatch, source, _sceneRenderTarget, _effect);
+            DrawFullscreenQuad(spriteBatch, source, _mainRenderTarget, _effect);
 
             _graphics.SetRenderTarget(null);
-            _graphics.Textures[1] = _sceneRenderTarget;
+            _graphics.Textures[1] = _mainRenderTarget;
 
             _graphics.SetRenderTarget(source);
-            DrawFullscreenQuad(spriteBatch, _sceneRenderTarget, _sceneRenderTarget.Width, _sceneRenderTarget.Height, null);
+            DrawFullscreenQuad(spriteBatch, _mainRenderTarget, _mainRenderTarget.Width, _mainRenderTarget.Height, null);
         }
 
         private void Blit(RenderTarget2D source, RenderTarget2D dest, int pass)

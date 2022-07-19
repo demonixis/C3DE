@@ -1,4 +1,6 @@
-﻿using C3DE.VR;
+﻿using C3DE.Components;
+using C3DE.Graphics.Rendering;
+using C3DE.VR;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -9,10 +11,26 @@ namespace C3DE.Graphics.PostProcessing
     public abstract class PostProcessPass : IComparable, IDisposable
     {
         protected GraphicsDevice _graphics;
-        protected int m_Order;
-        protected bool m_VREnabled;
+        protected int _order;
+        protected bool _VREnabled;
+        protected Effect _effect;
+        protected RenderTarget2D _mainRenderTarget;
+        protected Vector4 _textureSamplerTexelSize;
 
         public bool Enabled { get; set; } = true;
+        public Matrix InverseProjectionMatrix => Matrix.Invert(Camera.Main.ProjectionMatrix);
+
+        public RenderTarget2D GetDepthBuffer()
+        {
+            var renderer = Application.Engine.Renderer;
+            return renderer.GetDepthBuffer();
+        }
+
+        public RenderTarget2D GetNormalBuffer()
+        {
+            var renderer = Application.Engine.Renderer;
+            return renderer.GetNormalBuffer();
+        }
 
         public PostProcessPass(GraphicsDevice graphics)
         {
@@ -22,11 +40,37 @@ namespace C3DE.Graphics.PostProcessing
 
         protected virtual void OnVRChanged(VRService service)
         {
-            m_VREnabled = service != null;
+            _VREnabled = service != null;
+            _mainRenderTarget.Dispose();
+            _mainRenderTarget = GetRenderTarget();
+            _textureSamplerTexelSize = new Vector4(1.0f / (float)_mainRenderTarget.Width, 1.0f / (float)_mainRenderTarget.Height, _mainRenderTarget.Width, _mainRenderTarget.Height);
         }
 
-        public abstract void Initialize(ContentManager content);
-        public abstract void Draw(SpriteBatch spriteBatch, RenderTarget2D renderTarget);
+        public virtual void Initialize(ContentManager content)
+        {
+            _mainRenderTarget = GetRenderTarget();
+            _textureSamplerTexelSize = new Vector4(1.0f / (float)_mainRenderTarget.Width, 1.0f / (float)_mainRenderTarget.Height, _mainRenderTarget.Width, _mainRenderTarget.Height);
+        }
+
+        public virtual void SetupEffect()
+        {
+        }
+
+        public virtual void Draw(SpriteBatch spriteBatch, RenderTarget2D sceneRenderTarget)
+        {
+            _graphics.SetRenderTarget(_mainRenderTarget);
+            _graphics.SamplerStates[1] = SamplerState.LinearClamp;
+
+            SetupEffect();
+
+            DrawFullscreenQuad(spriteBatch, sceneRenderTarget, _mainRenderTarget, _effect);
+
+            _graphics.SetRenderTarget(null);
+            _graphics.Textures[1] = _mainRenderTarget;
+            _graphics.SetRenderTarget(sceneRenderTarget);
+
+            DrawFullscreenQuad(spriteBatch, _mainRenderTarget, _mainRenderTarget.Width, _mainRenderTarget.Height, null);
+        }
 
         public virtual void Apply(SpriteBatch spriteBatch, RenderTarget2D source, RenderTarget2D destination)
         {
@@ -39,7 +83,7 @@ namespace C3DE.Graphics.PostProcessing
             var height = pp.BackBufferHeight;
             var format = pp.BackBufferFormat;
 
-            if (m_VREnabled)
+            if (_VREnabled)
             {
                 var size = VRManager.ActiveService.GetRenderTargetSize();
                 width = (int)size[0];
@@ -69,9 +113,9 @@ namespace C3DE.Graphics.PostProcessing
             if (pass == null)
                 return 1;
 
-            if (m_Order == pass.m_Order)
+            if (_order == pass._order)
                 return 0;
-            else if (m_Order > pass.m_Order)
+            else if (_order > pass._order)
                 return 1;
             else
                 return -1;

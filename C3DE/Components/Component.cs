@@ -67,12 +67,11 @@ namespace C3DE.Components
 
         #region Events
 
-        public event EventHandler<PropertyChangedEventArgs> PropertyChanged = null;
+        public event Action<Component, string> PropertyChanged = null;
 
-        protected void NotifyPropertyChanged(string property)
+        private void NotifyPropertyChanged(string property)
         {
-            if (PropertyChanged != null)
-                PropertyChanged(this, new PropertyChangedEventArgs(property));
+            PropertyChanged?.Invoke(this, property);
         }
 
         #endregion

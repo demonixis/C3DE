@@ -1,5 +1,4 @@
-﻿using C3DE.VR;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -14,9 +13,7 @@ namespace C3DE.Graphics.PostProcessing
         public static float[] Emboss = new float[9] { -2, -1, 0, -1, 1, 1, 0, 1, 2 };
         public static float[] Gaussian = new float[9] { 0, 1, 0, 1, 1, 1, 0, 1, 0 };
 
-        private Effect m_Effect;
-        private Vector2 m_ScreenSize;
-        private RenderTarget2D m_SceneRenderTarget;
+        private Vector2 _screenSize;
 
         public float[] Kernel { get; set; } = EdgeDetect0;
 
@@ -24,35 +21,18 @@ namespace C3DE.Graphics.PostProcessing
         {
         }
 
-        protected override void OnVRChanged(VRService service)
-        {
-            base.OnVRChanged(service);
-            m_SceneRenderTarget.Dispose();
-            m_SceneRenderTarget = GetRenderTarget();
-        }
-
         public override void Initialize(ContentManager content)
         {
-            m_Effect = content.Load<Effect>("Shaders/PostProcessing/Convolution");
-            m_ScreenSize = new Vector2(Screen.Width, Screen.Height);
-            m_SceneRenderTarget = GetRenderTarget();
+            base.Initialize(content);
+
+            _effect = content.Load<Effect>("Shaders/PostProcessing/Convolution");
+            _screenSize = new Vector2(Screen.Width, Screen.Height);
         }
 
-        public override void Draw(SpriteBatch spriteBatch, RenderTarget2D sceneRT)
+        public override void SetupEffect()
         {
-            _graphics.SetRenderTarget(m_SceneRenderTarget);
-            _graphics.SamplerStates[1] = SamplerState.LinearClamp;
-
-            m_Effect.Parameters["ScreenSize"].SetValue(m_ScreenSize);
-            m_Effect.Parameters["Kernel"].SetValue(Kernel);
-
-            DrawFullscreenQuad(spriteBatch, sceneRT, m_SceneRenderTarget, m_Effect);
-
-            _graphics.SetRenderTarget(null);
-            _graphics.Textures[1] = m_SceneRenderTarget;
-            _graphics.SetRenderTarget(sceneRT);
-
-            DrawFullscreenQuad(spriteBatch, m_SceneRenderTarget, m_SceneRenderTarget.Width, m_SceneRenderTarget.Height, null);
+            _effect.Parameters["ScreenSize"].SetValue(_screenSize);
+            _effect.Parameters["Kernel"].SetValue(Kernel);
         }
     }
 }

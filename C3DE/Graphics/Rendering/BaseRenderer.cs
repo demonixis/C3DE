@@ -64,6 +64,7 @@ namespace C3DE.Graphics.Rendering
         }
 
         public abstract RenderTarget2D GetDepthBuffer();
+        public abstract RenderTarget2D GetNormalBuffer();
 
         protected RenderTarget2D CreateRenderTarget(SurfaceFormat surfaceFormat = SurfaceFormat.Color, DepthFormat depthFormat = DepthFormat.Depth24, bool mipMap = false, int preferredMultiSampleCount = -1, RenderTargetUsage usage = RenderTargetUsage.DiscardContents)
         {

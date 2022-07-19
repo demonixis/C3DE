@@ -127,10 +127,10 @@ namespace C3DE.Demo.Scripts.FPS
                 _fov = _camera.FieldOfView;
             }
 
-            if (Input.Keys.Escape)
+            if (Input.Keys.JustPressed(Keys.P))
                 _fpsController.LockCursor = false;
 
-            if (!_fpsController.LockCursor && Mouse.GetState().LeftButton == ButtonState.Pressed)
+            if (!_fpsController.LockCursor && Mouse.GetState().RightButton == ButtonState.Pressed)
                 _fpsController.LockCursor = true;
         }
 

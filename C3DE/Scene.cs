@@ -19,6 +19,11 @@ namespace C3DE
         public Collider Collider;
         public float Distance;
     }
+    
+    public enum ComponentChangeType
+    {
+        Add = 0, Update, Remove
+    }
 
     /// <summary>
     /// The scene is responsible to store scene objects, components.
@@ -30,21 +35,21 @@ namespace C3DE
         private List<Component> _componentsToDestroy;
         private bool _needRemoveCheck;
 
-        internal protected Material _defaultMaterial;
-        internal protected List<Material> _materials;
-        internal protected List<GameObject> _gameObjects;
+        protected internal Material _defaultMaterial;
+        private List<Material> _materials;
+        protected internal List<GameObject> _gameObjects;
 
-        internal protected Dictionary<Renderer, List<Transform>> _instances;
-        internal protected List<Renderer> _renderList;
-        internal protected List<PostProcessPass> _postProcessPasses;
-        internal protected List<ReflectionProbe> _reflectionProbes;
-        internal protected List<Collider> _colliders;
-        internal protected List<Camera> _cameras;
-        internal protected List<Light> _lights;
-        internal protected List<Behaviour> _scripts;
+        protected internal Dictionary<Renderer, List<Transform>> _instances;
+        protected internal List<Renderer> _renderList;
+        protected internal List<PostProcessPass> _postProcessPasses;
+        protected internal List<ReflectionProbe> _reflectionProbes;
+        private List<Collider> _colliders;
+        protected internal List<Camera> _cameras;
+        protected internal List<Light> _lights;
+        protected internal List<Behaviour> _scripts;
 
-        internal protected CollisionSystem _physicsCollisionSystem;
-        internal protected World _physicsWorld;
+        private CollisionSystem _physicsCollisionSystem;
+        protected internal World _physicsWorld;
 
         public RenderSettings RenderSettings { get; private set; }
 
@@ -232,35 +237,42 @@ namespace C3DE
 
             var added = type == ComponentChangeType.Add;
 
-            if (component is Renderer)
-                SetComponent((Renderer)component, _renderList, added);
-            else if (component is Collider)
-                SetComponent((Collider)component, _colliders, added);
-            else if (component is Light)
-                SetComponent((Light)component, _lights, added);
-            else if (component is Camera)
-                SetComponent((Camera)component, _cameras, added);
-            else if (component is ReflectionProbe)
-                SetComponent((ReflectionProbe)component, _reflectionProbes, added);
-            else if (component is Behaviour)
-                SetComponent((Behaviour)component, _scripts, added);
+            switch (component)
+            {
+                case Renderer renderer:
+                    SetComponent(renderer, _renderList, added);
+                    break;
+                case Collider collider:
+                    SetComponent(collider, _colliders, added);
+                    break;
+                case Light light:
+                    SetComponent(light, _lights, added);
+                    break;
+                case Camera camera:
+                    SetComponent(camera, _cameras, added);
+                    break;
+                case ReflectionProbe probe:
+                    SetComponent(probe, _reflectionProbes, added);
+                    break;
+                case Behaviour behaviour:
+                    SetComponent(behaviour, _scripts, added);
+                    break;
+            }
         }
 
-        private void OnGameObjectPropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void OnGameObjectPropertyChanged(GameObject gameObject, string name)
         {
-            if (e.Name == "Enabled")
+            if (name != "Enabled") return;
+            
+            if (gameObject.Enabled)
             {
-                var gameObject = (GameObject)sender;
-                if (gameObject.Enabled)
-                {
-                    CheckComponents(gameObject, ComponentChangeType.Add);
-                    gameObject.ComponentChanged += OnGameObjectComponentChanged;
-                }
-                else
-                {
-                    CheckComponents(gameObject, ComponentChangeType.Remove);
-                    gameObject.ComponentChanged -= OnGameObjectComponentChanged;
-                }
+                CheckComponents(gameObject, ComponentChangeType.Add);
+                gameObject.ComponentChanged += OnGameObjectComponentChanged;
+            }
+            else
+            {
+                CheckComponents(gameObject, ComponentChangeType.Remove);
+                gameObject.ComponentChanged -= OnGameObjectComponentChanged;
             }
         }
 
@@ -270,15 +282,15 @@ namespace C3DE
         /// </summary>
         /// <param name="sender">The scene object which as added or removed a component.</param>
         /// <param name="e">An object which contains the component and a flag to know if it's added or removed.</param>
-        private void OnGameObjectComponentChanged(object sender, ComponentChangedEventArgs e)
+        private void OnGameObjectComponentChanged(Component component, string propertyName, ComponentChangeType changeType)
         {
-            if (e.ChangeType == ComponentChangeType.Update)
+            if (changeType == ComponentChangeType.Update)
             {
-                if (e.PropertyName == "Enabled")
-                    CheckComponent(e.Component, e.Component.Enabled ? ComponentChangeType.Add : ComponentChangeType.Remove);
+                if (propertyName == "Enabled")
+                    CheckComponent(component, component.Enabled ? ComponentChangeType.Add : ComponentChangeType.Remove);
             }
             else
-                CheckComponent(e.Component, e.ChangeType);
+                CheckComponent(component, changeType);
         }
 
         #endregion

@@ -1,5 +1,4 @@
-﻿using C3DE.VR;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -28,19 +27,10 @@ namespace C3DE.Graphics.PostProcessing
 	        new float[3] { 255.0f, 255.0f, 255.0f }
         };
 
-        private Effect m_Effect;
-        private RenderTarget2D m_SceneRenderTarget;
         private Vector3[] m_Palette;
 
         public C64Filter(GraphicsDevice graphics) : base(graphics)
         {
-        }
-
-        protected override void OnVRChanged(VRService service)
-        {
-            base.OnVRChanged(service);
-            m_SceneRenderTarget.Dispose();
-            m_SceneRenderTarget = GetRenderTarget();
         }
 
         public void SetPalette(float[][] palette)
@@ -53,36 +43,22 @@ namespace C3DE.Graphics.PostProcessing
             for (int i = 0; i < 16; i++)
                 m_Palette[i] = new Vector3(palette[i][0], palette[i][1], palette[i][2]);
 
-            if (m_Effect != null)
-                m_Effect.Parameters["Palette"].SetValue(m_Palette);
+            if (_effect != null)
+                _effect.Parameters["Palette"].SetValue(m_Palette);
         }
 
         public override void Initialize(ContentManager content)
         {
-            m_Effect = content.Load<Effect>("Shaders/PostProcessing/C64Filter");
+            base.Initialize(content);
+
+            _effect = content.Load<Effect>("Shaders/PostProcessing/C64Filter");
 
             if (m_Palette == null)
                 SetPalette(C64Palette);
             else
-                m_Effect.Parameters["Palette"].SetValue(m_Palette);
+                _effect.Parameters["Palette"].SetValue(m_Palette);
 
-            m_SceneRenderTarget = GetRenderTarget();
-        }
-
-        public override void Draw(SpriteBatch spriteBatch, RenderTarget2D sceneRT)
-        {
-            _graphics.SetRenderTarget(m_SceneRenderTarget);
-            _graphics.SamplerStates[1] = SamplerState.LinearClamp;
-
-            DrawFullscreenQuad(spriteBatch, sceneRT, m_SceneRenderTarget, m_Effect);
-
-            _graphics.SetRenderTarget(null);
-            _graphics.Textures[1] = m_SceneRenderTarget;
-
-            var viewport = _graphics.Viewport;
-            _graphics.SetRenderTarget(sceneRT);
-
-            DrawFullscreenQuad(spriteBatch, m_SceneRenderTarget, m_SceneRenderTarget.Width, m_SceneRenderTarget.Height, null);
+            _mainRenderTarget = GetRenderTarget();
         }
     }
 }

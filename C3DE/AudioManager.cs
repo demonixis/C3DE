@@ -13,19 +13,19 @@ namespace C3DE
 
         public static bool SoundEnabled
         {
-            get { return _soundEnabled; }
+            get => _soundEnabled;
             set { _soundEnabled = value; }
         }
 
         public static float SoundVolume
         {
-            get { return _maxSoundVolume; }
+            get => _maxSoundVolume;
             set { _maxSoundVolume = value; }
         }
 
         public static bool MusicEnabled
         {
-            get { return _musicEnabled; }
+            get => _musicEnabled;
             set
             {
                 _musicEnabled = value;
@@ -37,8 +37,8 @@ namespace C3DE
 
         public static float MusicVolume
         {
-            get { return _maxMusicVolume; }
-            set 
+            get => _maxMusicVolume;
+            set
             {
                 _maxMusicVolume = value;
                 MediaPlayer.Volume = Math.Min(_maxMusicVolume, MediaPlayer.Volume);
@@ -53,18 +53,17 @@ namespace C3DE
 
         public static void Play(Song music, float volume = 1.0f, bool repeat = true)
         {
-            if (_musicEnabled)
-            {
-                Stop();
-                MediaPlayer.Volume = Math.Min(volume, _maxMusicVolume);
-                MediaPlayer.IsRepeating = repeat;
-                MediaPlayer.Play(music);
-            }
+            if (!_musicEnabled) return;
+
+            Stop();
+            MediaPlayer.Volume = Math.Min(volume, _maxMusicVolume);
+            MediaPlayer.IsRepeating = repeat;
+            MediaPlayer.Play(music);
         }
 
         public static void Stop()
         {
-             if (MediaPlayer.State != MediaState.Stopped)
+            if (MediaPlayer.State != MediaState.Stopped)
                 MediaPlayer.Stop();
         }
 

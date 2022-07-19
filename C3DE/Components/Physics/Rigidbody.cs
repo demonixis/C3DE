@@ -19,7 +19,7 @@ namespace C3DE.Components.Physics
             set => _rigidBody.IsStatic = value;
         }
 
-        public bool AffectedByGravity
+        public bool Gravity
         {
             get => _rigidBody?.AffectedByGravity ?? false;
             set => _rigidBody.AffectedByGravity = value;
@@ -141,10 +141,7 @@ namespace C3DE.Components.Physics
                 return;
 
             if (!IsKinematic)
-            {
-                _transform.SetLocalPosition(ToVector3(_rigidBody.Position));
-                _transform.SetLocalRotation(ToMatrix(_rigidBody.Orientation));
-            }
+                _transform.SetLocalPositionAndRotation(ToVector3(_rigidBody.Position), ToMatrix(_rigidBody.Orientation));
             else
                 SyncTransform();
         }

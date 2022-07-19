@@ -10,10 +10,7 @@ namespace C3DE.Graphics.PostProcessing
 {
     public class GlobalFog : PostProcessPass
     {
-        private Effect m_Effect;
-        private RenderTarget2D m_SceneRenderTarget;
-        private RenderTarget2D m_DepthBuffer;
-        private QuadRenderer m_QuadRenderer;
+        private QuadRenderer _quadRenderer;
 
         public FogMode Mode { get; set; } = FogMode.Linear;
         public float Density { get; set; } = 0.0085f;
@@ -34,7 +31,7 @@ namespace C3DE.Graphics.PostProcessing
                 var renderer = Application.Engine.Renderer;
                 var forward = renderer as ForwardRenderer;
                 //if (forward != null)
-                    //return forward.DepthRenderer.ExcludeSkybox;
+                //return forward.DepthRenderer.ExcludeSkybox;
 
                 return true;
             }
@@ -43,7 +40,7 @@ namespace C3DE.Graphics.PostProcessing
                 var renderer = Application.Engine.Renderer;
                 var forward = renderer as ForwardRenderer;
                 //if (forward != null)
-                    //forward.DepthRenderer.ExcludeSkybox = value;
+                //forward.DepthRenderer.ExcludeSkybox = value;
             }
         }
 
@@ -53,30 +50,22 @@ namespace C3DE.Graphics.PostProcessing
             ExcludeSkybox = excludeSkybox;
         }
 
-        protected override void OnVRChanged(VRService service)
-        {
-            base.OnVRChanged(service);
-            m_SceneRenderTarget.Dispose();
-            m_SceneRenderTarget = GetRenderTarget();
-        }
-
         public override void Initialize(ContentManager content)
         {
-            m_Effect = content.Load<Effect>("Shaders/PostProcessing/GlobalFog");
-            m_SceneRenderTarget = GetRenderTarget();
+            base.Initialize(content);
+            _effect = content.Load<Effect>("Shaders/PostProcessing/GlobalFog");
+            _quadRenderer = new QuadRenderer(_graphics);
+        }
 
-            var renderer = Application.Engine.Renderer;
-            m_DepthBuffer = renderer.GetDepthBuffer(); 
-            m_QuadRenderer = new QuadRenderer(_graphics);
+        public override void SetupEffect()
+        {
+            base.SetupEffect();
         }
 
         public override void Draw(SpriteBatch spriteBatch, RenderTarget2D renderTarget)
         {
             if (Mode == FogMode.None)
                 return;
-
-            _graphics.SetRenderTarget(m_SceneRenderTarget);
-            _graphics.SamplerStates[1] = SamplerState.LinearClamp;
 
             var camera = Camera.Main;
             var cameraTransform = camera._transform;
@@ -99,39 +88,37 @@ namespace C3DE.Graphics.PostProcessing
             var invDiff = Math.Abs(diff) > 0.0001f ? 1.0f / diff : 0.0f;
             var sceneParams = new Vector4(sceneDensity * 1.2011224087f, sceneDensity * 1.4426950408f, linear ? -invDiff : 0.0f, linear ? End * invDiff : 0.0f);
             var fogMode = new Vector4((int)sceneMode, UseRadialDistance ? 1 : 0, 0, 0);
-            var textureSamplerTexelSize = new Vector4(1.0f / (float)renderTarget.Width, 1.0f / (float)renderTarget.Height, renderTarget.Width, renderTarget.Height);
             var projectionParams = new Vector4(1.0f, Camera.Main.Near, Camera.Main.Far, 1.0f / Camera.Main.Far);
 
-            m_Effect.Parameters["FrustumCornersWS"].SetValue(frustumCornersArray);
-            m_Effect.Parameters["CameraWS"].SetValue(camPos);
-            m_Effect.Parameters["HeightParams"].SetValue(heightParams);
-            m_Effect.Parameters["DistanceParams"].SetValue(distanceParams);
-            m_Effect.Parameters["FogParams"].SetValue(sceneParams);
-            m_Effect.Parameters["FogMode"].SetValue(fogMode);
-            m_Effect.Parameters["FogColor"].SetValue(Scene.current.RenderSettings.FogColor.ToVector4());
-            m_Effect.Parameters["TextureSamplerTexelSize"].SetValue(textureSamplerTexelSize);
-            m_Effect.Parameters["ProjectionParams"].SetValue(projectionParams);
-            m_Effect.Parameters["TargetTexture"].SetValue(renderTarget);
-            m_Effect.Parameters["DepthTexture"].SetValue(m_DepthBuffer);
+            _graphics.SetRenderTarget(_mainRenderTarget);
+            _graphics.SamplerStates[1] = SamplerState.LinearClamp;
 
-            var passIndex = 0;
+            _effect.Parameters["FrustumCornersWS"].SetValue(frustumCornersArray);
+            _effect.Parameters["CameraWS"].SetValue(camPos);
+            _effect.Parameters["HeightParams"].SetValue(heightParams);
+            _effect.Parameters["DistanceParams"].SetValue(distanceParams);
+            _effect.Parameters["FogParams"].SetValue(sceneParams);
+            _effect.Parameters["FogMode"].SetValue(fogMode);
+            _effect.Parameters["FogColor"].SetValue(Scene.current.RenderSettings.FogColor.ToVector4());
+            _effect.Parameters["TextureSamplerTexelSize"].SetValue(_textureSamplerTexelSize);
+            _effect.Parameters["ProjectionParams"].SetValue(projectionParams);
+            _effect.Parameters["TargetTexture"].SetValue(renderTarget);
+            _effect.Parameters["DepthTexture"].SetValue(GetDepthBuffer());
+
+            var passIndex = 2;
             if (DistanceFog && HeightFog)
                 passIndex = 0;
             else if (DistanceFog)
                 passIndex = 1;
-            else
-                passIndex = 2;
 
-            m_Effect.CurrentTechnique.Passes[passIndex].Apply();
-            m_QuadRenderer.RenderFullscreenQuad();
+            _effect.CurrentTechnique.Passes[passIndex].Apply();
+            _quadRenderer.RenderFullscreenQuad();
 
             _graphics.SetRenderTarget(null);
-            _graphics.Textures[1] = m_SceneRenderTarget;
-
-            var viewport = _graphics.Viewport;
+            _graphics.Textures[1] = _mainRenderTarget;
             _graphics.SetRenderTarget(renderTarget);
 
-            DrawFullscreenQuad(spriteBatch, m_SceneRenderTarget, m_SceneRenderTarget.Width, m_SceneRenderTarget.Height, null);
+            DrawFullscreenQuad(spriteBatch, _mainRenderTarget, _mainRenderTarget.Width, _mainRenderTarget.Height, null);
         }
     }
 }

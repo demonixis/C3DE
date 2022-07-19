@@ -201,6 +201,16 @@ namespace C3DE.Components
             _dirty = true;
         }
 
+        public void SetLocalPositionAndRotation(Vector3 position, Matrix matrix)
+        {
+            var quaternion = Quaternion.CreateFromRotationMatrix(matrix);
+            var rotation = quaternion.ToEuler();
+            
+            _localPosition = position;
+            _localRotation = rotation;
+            _dirty = true;
+        }
+
         public void SetLocalRotation(Matrix matrix)
         {
             var quaternion = Quaternion.CreateFromRotationMatrix(matrix);

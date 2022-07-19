@@ -161,7 +161,6 @@ namespace C3DE
         public static void SetBestResolution(bool fullscreen)
         {
             var graphics = Application.GraphicsDevice;
-            var gdm = Application.GraphicsDeviceManager;
             var modes = graphics.Adapter.SupportedDisplayModes;
             var width = 800;
             var height = 480;
@@ -172,6 +171,12 @@ namespace C3DE
                 height = (mode.Height > height) ? mode.Height : height;
             }
 
+            SetResolution(width, height, fullscreen);
+        }
+
+        public static void SetResolution(int width, int height, bool fullscreen)
+        {
+            var gdm = Application.GraphicsDeviceManager;
             gdm.PreferredBackBufferWidth = width;
             gdm.PreferredBackBufferHeight = height;
             gdm.ApplyChanges();

@@ -20,6 +20,7 @@ struct PixelShaderInput
 #else
     float4 Position : POSITION0;
 #endif
+    float4 Color : COLOR0;
     float2 UV : TEXCOORD;
 };
 

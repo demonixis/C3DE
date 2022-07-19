@@ -47,6 +47,7 @@ namespace C3DE.Demo.Scripts
             AddPostProcess(new MotionBlur(graphics));
             AddPostProcess(new Vignette(graphics));
             AddPostProcess(new GlobalFog(graphics));
+            AddPostProcess(new SSGI(graphics));
 
             // Setup UI
             var titles = new List<string>(new []
@@ -55,7 +56,7 @@ namespace C3DE.Demo.Scripts
                 "Fast PP", "Bloom", "Tonemapping", "C64 Filter",
                 "CGA Filter", "Convolution", "Film",
                 "GrayScale", "Average Color", "Motion Blur",
-                "Vignette", "Global Fog"
+                "Vignette", "Global Fog", "SSGI"
             });
 
             var count = titles.Count;

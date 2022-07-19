@@ -279,6 +279,12 @@
 /processorParam:DebugMode=Auto
 /build:Shaders/PostProcessing/SSAO.fx
 
+#begin Shaders/PostProcessing/SSGI.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Shaders/PostProcessing/SSGI.fx
+
 #begin Shaders/PostProcessing/Tonemapping.fx
 /importer:EffectImporter
 /processor:EffectProcessor

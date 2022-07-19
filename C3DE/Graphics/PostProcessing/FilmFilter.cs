@@ -1,19 +1,14 @@
-﻿using C3DE.VR;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using System;
 
 namespace C3DE.Graphics.PostProcessing
 {
     public class FilmFilter : PostProcessPass
     {
-        private Effect m_Effect;
         private float _noiseIntensity = 1.0f;
         private float _scanlineIntensity = 0.5f;
         private float _scanlineCount = 1024.0f;
-        private RenderTarget2D m_SceneRenderTarget;
-
         public bool GrayScaleEnabled { get; set; } = false;
 
         public float NoiseIntensity
@@ -38,37 +33,19 @@ namespace C3DE.Graphics.PostProcessing
         {
         }
 
-        protected override void OnVRChanged(VRService service)
-        {
-            base.OnVRChanged(service);
-            m_SceneRenderTarget.Dispose();
-            m_SceneRenderTarget = GetRenderTarget();
-        }
-
         public override void Initialize(ContentManager content)
         {
-            m_Effect = content.Load<Effect>("Shaders/PostProcessing/Film");
-            m_SceneRenderTarget = GetRenderTarget();
+            base.Initialize(content);
+            _effect = content.Load<Effect>("Shaders/PostProcessing/Film");
         }
 
-        public override void Draw(SpriteBatch spriteBatch, RenderTarget2D sceneRT)
+        public override void SetupEffect()
         {
-            _graphics.SetRenderTarget(m_SceneRenderTarget);
-            _graphics.SamplerStates[1] = SamplerState.LinearClamp;
-
-            m_Effect.Parameters["Time"].SetValue(Time.TotalTime);
-            m_Effect.Parameters["GrayScaleEnabled"].SetValue(GrayScaleEnabled);
-            m_Effect.Parameters["NoiseIntensity"].SetValue(_noiseIntensity);
-            m_Effect.Parameters["ScanlineIntensity"].SetValue(_scanlineIntensity);
-            m_Effect.Parameters["ScanlineCount"].SetValue(_scanlineCount);
-
-            DrawFullscreenQuad(spriteBatch, sceneRT, m_SceneRenderTarget, m_Effect);
-
-            _graphics.SetRenderTarget(null);
-            _graphics.Textures[1] = m_SceneRenderTarget;
-
-            _graphics.SetRenderTarget(sceneRT);
-            DrawFullscreenQuad(spriteBatch, m_SceneRenderTarget, m_SceneRenderTarget.Width, m_SceneRenderTarget.Height, null);
+            _effect.Parameters["Time"].SetValue(Time.TotalTime);
+            _effect.Parameters["GrayScaleEnabled"].SetValue(GrayScaleEnabled);
+            _effect.Parameters["NoiseIntensity"].SetValue(_noiseIntensity);
+            _effect.Parameters["ScanlineIntensity"].SetValue(_scanlineIntensity);
+            _effect.Parameters["ScanlineCount"].SetValue(_scanlineCount);
         }
     }
 }

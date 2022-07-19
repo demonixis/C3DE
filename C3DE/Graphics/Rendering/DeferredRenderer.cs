@@ -42,6 +42,7 @@ namespace C3DE.Graphics.Rendering
         }
 
         public override RenderTarget2D GetDepthBuffer() => m_DepthTarget;
+        public override RenderTarget2D GetNormalBuffer() => m_NormalTarget;
 
         /// <summary>
         /// Rebuilds render targets if Dirty is true.

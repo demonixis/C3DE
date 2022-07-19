@@ -25,13 +25,17 @@ namespace C3DE.Graphics.Rendering
         private static int _maxLightCount = MaxLightLimit;
 
         private RenderTarget2D _depthRT;
+        private RenderTarget2D _normalRT;
         private Effect _depthEffect;
+        private Effect _normalEffect;
         private List<int> _culledLights;
         private LightData _lightData;
         private ShadowData _shadowData;
 
-        public bool DirectRendering { get; set; } = false;
-        public bool DepthPass { get; set; } = false;
+        public bool DirectRendering { get; set; }
+        public bool DepthPass { get; set; }
+        public bool NormalPass { get; set; }
+        public bool UseMRT { get; set; } = false;
 
         public static int MaxLightCount
         {
@@ -59,6 +63,7 @@ namespace C3DE.Graphics.Rendering
             var pp = _graphicsDevice.PresentationParameters;
             _depthRT = new RenderTarget2D(_graphicsDevice, pp.BackBufferWidth, pp.BackBufferHeight, false, SurfaceFormat.Color, DepthFormat.Depth24);
             _depthEffect = content.Load<Effect>("Shaders/Depth");
+            _normalEffect = content.Load<Effect>("Shaders/Normal");
         }
 
         public override void Dispose(bool disposing)
@@ -72,7 +77,17 @@ namespace C3DE.Graphics.Rendering
             }
         }
 
-        public override RenderTarget2D GetDepthBuffer() => _depthRT;
+        public override RenderTarget2D GetDepthBuffer()
+        {
+            DepthPass = true;
+            return _depthRT;
+        }
+
+        public override RenderTarget2D GetNormalBuffer()
+        {
+            NormalPass = true;
+            return _normalRT;
+        }
 
         /// <summary>
         /// Renders the scene with the specified camera.
@@ -146,35 +161,76 @@ namespace C3DE.Graphics.Rendering
             }
         }
 
+        private void RenderDepthPass(List<Renderer> renderList, ref Matrix cameraViewMatrix, ref Matrix cameraProjectionMatrix)
+        {
+            var previousRTs = _graphicsDevice.GetRenderTargets();
+
+            _graphicsDevice.SetRenderTarget(_depthRT);
+            _graphicsDevice.Clear(Color.Transparent);
+
+            _depthEffect.Parameters["View"].SetValue(cameraViewMatrix);
+            _depthEffect.Parameters["Projection"].SetValue(cameraProjectionMatrix);
+
+            for (int i = 0, l = renderList.Count; i < l; i++)
+            {
+                if (renderList[i] is LensFlare)
+                    continue;
+
+                _depthEffect.Parameters["World"].SetValue(renderList[i].Transform._worldMatrix);
+                _depthEffect.CurrentTechnique.Passes[0].Apply();
+                renderList[i].Draw(_graphicsDevice);
+            }
+
+            _graphicsDevice.SetRenderTargets(previousRTs);
+        }
+
+        private void RenderNormalPass(List<Renderer> renderList, ref Matrix cameraViewMatrix, ref Matrix cameraProjectionMatrix)
+        {
+            var previousRTs = _graphicsDevice.GetRenderTargets();
+
+            _graphicsDevice.SetRenderTarget(_normalRT);
+            _graphicsDevice.Clear(Color.Transparent);
+
+            _normalEffect.Parameters["View"].SetValue(cameraViewMatrix);
+            _normalEffect.Parameters["Projection"].SetValue(cameraProjectionMatrix);
+
+            for (int i = 0, l = renderList.Count; i < l; i++)
+            {
+                if (renderList[i] is LensFlare)
+                    continue;
+
+                _normalEffect.Parameters["World"].SetValue(renderList[i].Transform._worldMatrix);
+                _normalEffect.CurrentTechnique.Passes[0].Apply();
+                renderList[i].Draw(_graphicsDevice);
+            }
+
+            _graphicsDevice.SetRenderTargets(previousRTs);
+        }
+
+        private void RenderDepthNormalPass(List<Renderer> renderList, ref Matrix cameraViewMatrix, ref Matrix cameraProjectionMatrix)
+        {
+
+        }
+
         protected virtual void RenderSceneForCamera(Scene scene, Camera camera, RenderTarget2D renderTarget)
         {
             var cameraPosition = camera._transform.Position;
             var cameraViewMatrix = camera._viewMatrix;
             var cameraProjectionMatrix = camera._projectionMatrix;
+            var renderList = scene._renderList;
 
-            if (DepthPass)
+            // Use MRT
+            if (DepthPass && NormalPass && UseMRT)
             {
-                var previousRTs = _graphicsDevice.GetRenderTargets();
+                RenderDepthNormalPass(renderList, ref cameraViewMatrix, ref cameraProjectionMatrix);
+            }
+            else
+            {
+                if (DepthPass)
+                    RenderDepthPass(renderList, ref cameraViewMatrix, ref cameraProjectionMatrix);
 
-                _graphicsDevice.SetRenderTarget(_depthRT);
-                _graphicsDevice.Clear(Color.Transparent);
-
-                _depthEffect.Parameters["View"].SetValue(cameraViewMatrix);
-                _depthEffect.Parameters["Projection"].SetValue(cameraProjectionMatrix);
-
-                var renderList = scene._renderList;
-
-                for (int i = 0, l = renderList.Count; i < l; i++)
-                {
-                    if (renderList[i] is LensFlare)
-                        continue;
-
-                    _depthEffect.Parameters["World"].SetValue(renderList[i].Transform._worldMatrix);
-                    _depthEffect.CurrentTechnique.Passes[0].Apply();
-                    renderList[i].Draw(_graphicsDevice);
-                }
-
-                _graphicsDevice.SetRenderTargets(previousRTs);
+                if (NormalPass)
+                    RenderNormalPass(renderList, ref cameraViewMatrix, ref cameraProjectionMatrix);
             }
 
             // Render Reflection Probes.

@@ -86,21 +86,21 @@ namespace C3DE
         /// <summary>
         /// Called when a component is added or removed.
         /// </summary>
-        public event EventHandler<ComponentChangedEventArgs> ComponentChanged = null;
+        public event Action<Component, string, ComponentChangeType> ComponentChanged = null;
 
         /// <summary>
         /// Called when a registered property has changed.
         /// </summary>
-        public event EventHandler<PropertyChangedEventArgs> PropertyChanged = null;
+        public event Action<GameObject, string> PropertyChanged = null;
 
         private void NotifyPropertyChanged(string property)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(property));
+            PropertyChanged?.Invoke(this, property);
         }
 
         private void NotifyComponentChanged(Component component, string propertyName, ComponentChangeType type)
         {
-            ComponentChanged?.Invoke(this, new ComponentChangedEventArgs(component, propertyName, type));
+            ComponentChanged?.Invoke(component, propertyName, type);
         }
 
         #endregion
@@ -382,9 +382,9 @@ namespace C3DE
             return result;
         }
 
-        protected virtual void OnComponentChanged(object sender, PropertyChangedEventArgs e)
+        protected virtual void OnComponentChanged(Component component, string name)
         {
-            NotifyComponentChanged((Component)sender, e.Name, ComponentChangeType.Update);
+            NotifyComponentChanged(component, name, ComponentChangeType.Update);
         }
 
         #endregion

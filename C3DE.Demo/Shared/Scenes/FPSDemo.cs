@@ -50,7 +50,7 @@ namespace C3DE.Demo.Scenes
 
             // And a light
             var lightContainer = new GameObject("LightContainer");
-            var lightGo = GameObjectFactory.CreateLight(LightType.Directional, Color.White, 0.75f, 2048);
+            var lightGo = GameObjectFactory.CreateLight(LightType.Directional, Color.White, 1.75f, 2048);
             lightGo.Transform.LocalPosition = new Vector3(500, 500, 0);
             lightGo.Transform.LocalRotation = new Vector3(MathHelper.PiOver2, -MathHelper.PiOver4, 0);
             lightGo.Transform.Parent = lightContainer.Transform;
@@ -59,6 +59,7 @@ namespace C3DE.Demo.Scenes
             autoRotation.Rotation = new Vector3(0, 0.25f, 0);
 
             _directionalLight = lightGo.GetComponent<Light>();
+            _directionalLight.AddComponent<AutoRotation>();
 
             // Skybox
             RenderSettings.Skybox.Generate(Application.GraphicsDevice, DemoGame.StarsSkybox, 2000);
@@ -117,12 +118,14 @@ namespace C3DE.Demo.Scenes
             autoRotation = planet.AddComponent<AutoRotation>();
             autoRotation.Rotation = new Vector3(0, -0.1f, 0);
 
+            planet.AddComponent<PostProcessSwitcher>();
+
             // Bloom
-            var bloom = new FastBloom(Application.GraphicsDevice);
+          /*  var bloom = new FastBloom(Application.GraphicsDevice);
             bloom.blurIterations = 8;
             bloom.blurType = FastBloom.BlurType.Sgx;
             bloom.resolution = FastBloom.Resolution.High;
-            SetPostProcess(bloom, true);
+            SetPostProcess(bloom, true);*/
         }
 
         public override void Update()
@@ -175,11 +178,14 @@ namespace C3DE.Demo.Scenes
                         if (counter++ % lightModulo == 0)
                         {
                             material = materials[RandomHelper.Range(0, materials.Length)];
-                            var light = SpawnLight(new Vector3(posX, 3, posY), material.DiffuseColor, 5, 0.5f, false, mesh, material);
+                            var light = SpawnLight(new Vector3(posX, 3, posY), material.DiffuseColor, 2, 0.5f, false, mesh, material);
                             //light.AddComponent<SinIntensity>();
-                            light.AddComponent<SinMovement>();
-                            var mover = light.AddComponent<LightMover>();
-                            mover.DisableMovement = true;
+                            //var sin = light.AddComponent<SinMovement>();
+                            //sin.Min = 2;
+                            //sin.Max = 2;
+
+                            //var mover = light.AddComponent<LightMover>();
+                            //mover.DisableMovement = true;
 
                             renderer = light.GetComponent<MeshRenderer>();
 
@@ -230,7 +236,7 @@ namespace C3DE.Demo.Scenes
                     }
                 }
             }
-   
+
             if (Instancing)
             {
                 foreach (var keyValue in lightMats)
@@ -305,7 +311,7 @@ namespace C3DE.Demo.Scenes
                 NormalMap = content.Load<Texture2D>("Textures/pbr/Metal Plate/Metal_Plate_015_normal"),
                 SpecularColor = Color.LightGray,
                 SpecularPower = 2,
-                ReflectionIntensity = 0.45f,
+                ReflectionIntensity = 0.85f,
                 ReflectionMap = _reflectionProbe.ReflectionMap,
                 Tiling = new Vector2(16)
             };

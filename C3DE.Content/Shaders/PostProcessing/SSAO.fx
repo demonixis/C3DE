@@ -19,7 +19,8 @@ struct PixelShaderInput
 #else
 	float4 Position : POSITION0;
 #endif
-	float2 UV : TEXCOORD;
+	float4 Color : COLOR0;
+	float2 UV : TEXCOORD0;
 };
 
 float Luminance(float3 rgb)

@@ -1,5 +1,4 @@
-﻿using C3DE.VR;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -7,11 +6,9 @@ namespace C3DE.Graphics.PostProcessing
 {
     public sealed class Vignette : PostProcessPass
     {
-        private Effect m_Effect;
-        private RenderTarget2D m_SceneRenderTarget;
-        private Vector2 m_ViewportSize;
+        private Vector2 _viewportSize;
 
-        public Vector2 Scale { get; set; } = Vector2.One;
+        public Vector2 Scale { get; set; } = new Vector2(1.5f);
         public float Power { get; set; } = 0.5f;
 
         public Vignette(GraphicsDevice graphics) : base(graphics)
@@ -20,38 +17,22 @@ namespace C3DE.Graphics.PostProcessing
 
         public override void Initialize(ContentManager content)
         {
-            m_Effect = content.Load<Effect>("Shaders/PostProcessing/Vignette");
-            m_SceneRenderTarget = GetRenderTarget();
+            base.Initialize(content);
+            _effect = content.Load<Effect>("Shaders/PostProcessing/Vignette");
         }
 
-        protected override void OnVRChanged(VRService service)
+        public override void SetupEffect()
         {
-            base.OnVRChanged(service);
-            m_SceneRenderTarget.Dispose();
-            m_SceneRenderTarget = GetRenderTarget();
+            _effect.Parameters["ViewportSize"].SetValue(_viewportSize);
+            _effect.Parameters["Scale"].SetValue(Scale);
+            _effect.Parameters["Power"].SetValue(Power);
         }
 
-        public override void Draw(SpriteBatch spriteBatch, RenderTarget2D renderTarget)
+        public override void Draw(SpriteBatch spriteBatch, RenderTarget2D sceneRT)
         {
-            _graphics.SetRenderTarget(m_SceneRenderTarget);
-            _graphics.SamplerStates[1] = SamplerState.LinearClamp;
-
-            m_ViewportSize.X = renderTarget.Width;
-            m_ViewportSize.Y = renderTarget.Height;
-
-            m_Effect.Parameters["ViewportSize"].SetValue(m_ViewportSize);
-            m_Effect.Parameters["Scale"].SetValue(Scale);
-            m_Effect.Parameters["Power"].SetValue(Power);
-
-            DrawFullscreenQuad(spriteBatch, renderTarget, m_SceneRenderTarget, m_Effect);
-
-            _graphics.SetRenderTarget(null);
-            _graphics.Textures[1] = m_SceneRenderTarget;
-
-            var viewport = _graphics.Viewport;
-            _graphics.SetRenderTarget(renderTarget);
-
-            DrawFullscreenQuad(spriteBatch, m_SceneRenderTarget, m_SceneRenderTarget.Width, m_SceneRenderTarget.Height, null);
+            _viewportSize.X = sceneRT.Width;
+            _viewportSize.Y = sceneRT.Height;
+            base.Draw(spriteBatch, sceneRT);
         }
     }
 }

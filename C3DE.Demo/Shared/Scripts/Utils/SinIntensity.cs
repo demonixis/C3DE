@@ -12,7 +12,7 @@ namespace C3DE.Demo.Scripts.Utils
         private float _Y = 0;
 
         public float Min { get; set; } = 0.5f;
-        public float Max { get; set; } = 0.5f;
+        public float Max { get; set; } = 5.5f;
         public float Frequency { get; set; } = 0.25f;
         public float Phase { get; set; } = 0.0f;
 
