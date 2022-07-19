@@ -51,9 +51,9 @@ dotnet publish -c Release -r osx-x64 /p:PublishReadyToRun=false /p:TieredCompila
 ## Platforms
 | Platform  | Backend | Status |
 |-----------|---------|--------|
-| Windows   | DirectX | Best Version |
-| DesktopGL | OpenGL  | Limited Shader Support, Limited Post Processing |
-| Android   | OpenGL  | Same as DesktopGL + Limited support of the platform |
+| Windows   | DirectX | Supported |
+| DesktopGL | OpenGL  | Limited support (bad shader support) |
+| Android   | OpenGL  | On Hold |
 | UWP       | DirectX | On Hold |
 
 ### Help needed

@@ -91,6 +91,18 @@
 /processorParam:DebugMode=Auto
 /build:Shaders/Depth.fx
 
+#begin Shaders/Depth.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Shaders/Depth.fx
+
+#begin Shaders/DepthNormal.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Shaders/DepthNormal.fx
+
 #begin Shaders/DepthNormal.fx
 /importer:EffectImporter
 /processor:EffectProcessor
@@ -194,6 +206,12 @@
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
 /build:Shaders/IrradianceConvolution.fx
+
+#begin Shaders/Normal.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Shaders/Normal.fx
 
 #begin Shaders/Normal.fx
 /importer:EffectImporter

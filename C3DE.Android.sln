@@ -2,11 +2,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.2.32616.157
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "C3DE", "C3DE\C3DE.Desktop.csproj", "{53EF3B1E-3997-4475-84A4-C4B465125057}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "C3DE", "C3DE\C3DE.Android.csproj", "{53EF3B1E-3997-4475-84A4-C4B465125057}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "C3DE.DemoGame", "C3DE.Demo\Windows\C3DE.DemoGame.Desktop.csproj", "{CE83A3C3-A1DC-4641-AE78-3B9754FA7E6E}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "C3DE.Demo", "C3DE.Demo\Shared\C3DE.Demo.Desktop.csproj", "{83076DE5-4D33-4C6E-97B1-3AD6D7B798C7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "C3DE.Demo", "C3DE.Demo\Shared\C3DE.Demo.Android.csproj", "{83076DE5-4D33-4C6E-97B1-3AD6D7B798C7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
