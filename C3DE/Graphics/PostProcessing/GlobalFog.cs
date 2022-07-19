@@ -57,11 +57,6 @@ namespace C3DE.Graphics.PostProcessing
             _quadRenderer = new QuadRenderer(_graphics);
         }
 
-        public override void SetupEffect()
-        {
-            base.SetupEffect();
-        }
-
         public override void Draw(SpriteBatch spriteBatch, RenderTarget2D renderTarget)
         {
             if (Mode == FogMode.None)

@@ -10,6 +10,9 @@ namespace C3DE.Graphics.Rendering.Passes
     {
         private RenderTarget2D _normalRenderTarget;
 
+        public RenderTarget2D DepthBuffer => _renderTarget;
+        public RenderTarget2D NormalBuffer => _normalRenderTarget;
+
         public DepthNormalPass(GraphicsDevice graphicsDevice) : base(graphicsDevice)
         {
         }
@@ -24,7 +27,7 @@ namespace C3DE.Graphics.Rendering.Passes
             _normalRenderTarget = new RenderTarget2D(_graphicsDevice, pp.BackBufferWidth, pp.BackBufferHeight, false, SurfaceFormat.Color, DepthFormat.Depth24);
         }
 
-        public override void Apply(Scene scene, Camera camera)
+        public override void Render(Scene scene, Camera camera)
         {
             var previousRTs = _graphicsDevice.GetRenderTargets();
             var cameraViewMatrix = camera._viewMatrix;

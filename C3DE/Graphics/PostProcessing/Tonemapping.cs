@@ -13,6 +13,7 @@ namespace C3DE.Graphics.PostProcessing
 
         public override void Initialize(ContentManager content)
         {
+            base.Initialize(content);
             _effect = content.Load<Effect>("Shaders/PostProcessing/Tonemapping");
         }
 

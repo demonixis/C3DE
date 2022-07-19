@@ -10,6 +10,7 @@ struct VertexShaderInput
 #else
 	float4 Position : POSITION0;
 #endif
+	float3 Normal : NORMAL0;
 	float2 UV : TEXCOORD0;
 };
 

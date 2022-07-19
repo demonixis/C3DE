@@ -88,7 +88,7 @@ namespace C3DE.Demo.Scripts
                 if (_widgets[i].Selected)
                     ui.DrawTexture(_widgets[i].RectExt, _backgroundTexture);
 
-                if (ui.Button(_widgets[i].Rect, _widgets[i].Name))
+                if (ui.Button(_widgets[i].Rect, _widgets[i].Name, null))
                     SetSelected(_widgets[i].Selected ? - 1 : i);
             }
         }

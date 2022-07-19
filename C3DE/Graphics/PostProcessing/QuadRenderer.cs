@@ -15,17 +15,17 @@ namespace C3DE.Graphics.PostProcessing
     public sealed class QuadRenderer
     {
         private GraphicsDevice m_GraphicsDevice;
-        private readonly VertexPositionTexture[] m_VertexBuffer;
+        private readonly VertexPositionNormalTexture[] m_VertexBuffer;
         private readonly short[] m_IndexBuffer;
 
         public QuadRenderer(GraphicsDevice graphicsDevice)
         {
             m_GraphicsDevice = graphicsDevice;
-            m_VertexBuffer = new VertexPositionTexture[4];
-            m_VertexBuffer[0] = new VertexPositionTexture(new Vector3(-1, 1, 1), new Vector2(0, 0));
-            m_VertexBuffer[1] = new VertexPositionTexture(new Vector3(1, 1, 1), new Vector2(1, 0));
-            m_VertexBuffer[2] = new VertexPositionTexture(new Vector3(-1, -1, 1), new Vector2(0, 1));
-            m_VertexBuffer[3] = new VertexPositionTexture(new Vector3(1, -1, 1), new Vector2(1, 1));
+            m_VertexBuffer = new VertexPositionNormalTexture[4];
+            m_VertexBuffer[0] = new VertexPositionNormalTexture(new Vector3(-1, 1, 1), Vector3.Zero, new Vector2(0, 0));
+            m_VertexBuffer[1] = new VertexPositionNormalTexture(new Vector3(1, 1, 1), Vector3.Zero, new Vector2(1, 0));
+            m_VertexBuffer[2] = new VertexPositionNormalTexture(new Vector3(-1, -1, 1), Vector3.Zero, new Vector2(0, 1));
+            m_VertexBuffer[3] = new VertexPositionNormalTexture(new Vector3(1, -1, 1), Vector3.Zero, new Vector2(1, 1));
             m_IndexBuffer = new short[] { 0, 3, 2, 0, 1, 3 };
         }
 

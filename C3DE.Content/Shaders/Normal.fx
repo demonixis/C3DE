@@ -11,6 +11,7 @@ struct VertexShaderInput
 	float4 Position : POSITION0;
 #endif
 	float3 Normal : NORMAL0;
+	float2 UV : TEXCOORD0;
 };
 
 struct VertexShaderOutput

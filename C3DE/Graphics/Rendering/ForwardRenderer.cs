@@ -2,6 +2,7 @@
 using C3DE.Components.Lighting;
 using C3DE.Components.Rendering;
 using C3DE.Graphics.Materials;
+using C3DE.Graphics.Rendering.Passes;
 using C3DE.Graphics.Shaders;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
@@ -21,20 +22,19 @@ namespace C3DE.Graphics.Rendering
 #else
         internal const int MaxLightLimit = 16;
 #endif
-
         private static int _maxLightCount = MaxLightLimit;
 
-        private RenderTarget2D _depthRT;
-        private RenderTarget2D _normalRT;
-        private Effect _depthEffect;
-        private Effect _normalEffect;
+        // Render Passes
+        private DepthPass _depthPass;
+        private NormalPass _normalPass;
+        private DepthNormalPass _depthNormalPass;
+
+        // Lighting
         private List<int> _culledLights;
         private LightData _lightData;
         private ShadowData _shadowData;
 
         public bool DirectRendering { get; set; }
-        public bool DepthPass { get; set; }
-        public bool NormalPass { get; set; }
         public bool UseMRT { get; set; } = false;
 
         public static int MaxLightCount
@@ -60,10 +60,14 @@ namespace C3DE.Graphics.Rendering
             base.Initialize(content);
             RebuildRenderTargets();
 
-            var pp = _graphicsDevice.PresentationParameters;
-            _depthRT = new RenderTarget2D(_graphicsDevice, pp.BackBufferWidth, pp.BackBufferHeight, false, SurfaceFormat.Color, DepthFormat.Depth24);
-            _depthEffect = content.Load<Effect>("Shaders/Depth");
-            _normalEffect = content.Load<Effect>("Shaders/Normal");
+            _depthPass = new DepthPass(_graphicsDevice);
+            _depthPass.LoadContent(content);
+
+            _normalPass = new NormalPass(_graphicsDevice);
+            _normalPass.LoadContent(content);
+
+            _depthNormalPass = new DepthNormalPass(_graphicsDevice);
+            _depthNormalPass.LoadContent(content);
         }
 
         public override void Dispose(bool disposing)
@@ -79,14 +83,30 @@ namespace C3DE.Graphics.Rendering
 
         public override RenderTarget2D GetDepthBuffer()
         {
-            DepthPass = true;
-            return _depthRT;
+            _depthPass.Enabled = true;
+
+            if (UseMRT && _normalPass.Enabled)
+            {
+                _depthNormalPass.Enabled = true;
+                return _depthNormalPass.DepthBuffer;
+            }
+
+            _depthPass.Enabled = true;
+            return _depthPass.RenderTarget;
         }
 
         public override RenderTarget2D GetNormalBuffer()
         {
-            NormalPass = true;
-            return _normalRT;
+            _normalPass.Enabled = true;
+
+            if (UseMRT && _depthPass.Enabled)
+            {
+                _depthNormalPass.Enabled = true;
+                return _depthNormalPass.NormalBuffer;
+            }
+
+            _normalPass.Enabled = true;
+            return _normalPass.RenderTarget;
         }
 
         /// <summary>
@@ -161,77 +181,22 @@ namespace C3DE.Graphics.Rendering
             }
         }
 
-        private void RenderDepthPass(List<Renderer> renderList, ref Matrix cameraViewMatrix, ref Matrix cameraProjectionMatrix)
-        {
-            var previousRTs = _graphicsDevice.GetRenderTargets();
-
-            _graphicsDevice.SetRenderTarget(_depthRT);
-            _graphicsDevice.Clear(Color.Transparent);
-
-            _depthEffect.Parameters["View"].SetValue(cameraViewMatrix);
-            _depthEffect.Parameters["Projection"].SetValue(cameraProjectionMatrix);
-
-            for (int i = 0, l = renderList.Count; i < l; i++)
-            {
-                if (renderList[i] is LensFlare)
-                    continue;
-
-                _depthEffect.Parameters["World"].SetValue(renderList[i].Transform._worldMatrix);
-                _depthEffect.CurrentTechnique.Passes[0].Apply();
-                renderList[i].Draw(_graphicsDevice);
-            }
-
-            _graphicsDevice.SetRenderTargets(previousRTs);
-        }
-
-        private void RenderNormalPass(List<Renderer> renderList, ref Matrix cameraViewMatrix, ref Matrix cameraProjectionMatrix)
-        {
-            var previousRTs = _graphicsDevice.GetRenderTargets();
-
-            _graphicsDevice.SetRenderTarget(_normalRT);
-            _graphicsDevice.Clear(Color.Transparent);
-
-            _normalEffect.Parameters["View"].SetValue(cameraViewMatrix);
-            _normalEffect.Parameters["Projection"].SetValue(cameraProjectionMatrix);
-
-            for (int i = 0, l = renderList.Count; i < l; i++)
-            {
-                if (renderList[i] is LensFlare)
-                    continue;
-
-                _normalEffect.Parameters["World"].SetValue(renderList[i].Transform._worldMatrix);
-                _normalEffect.CurrentTechnique.Passes[0].Apply();
-                renderList[i].Draw(_graphicsDevice);
-            }
-
-            _graphicsDevice.SetRenderTargets(previousRTs);
-        }
-
-        private void RenderDepthNormalPass(List<Renderer> renderList, ref Matrix cameraViewMatrix, ref Matrix cameraProjectionMatrix)
-        {
-
-        }
-
         protected virtual void RenderSceneForCamera(Scene scene, Camera camera, RenderTarget2D renderTarget)
         {
             var cameraPosition = camera._transform.Position;
             var cameraViewMatrix = camera._viewMatrix;
             var cameraProjectionMatrix = camera._projectionMatrix;
-            var renderList = scene._renderList;
 
             // Use MRT
-            if (DepthPass && NormalPass && UseMRT)
+            if (!_depthNormalPass.Enabled)
             {
-                RenderDepthNormalPass(renderList, ref cameraViewMatrix, ref cameraProjectionMatrix);
+                if (_depthPass.Enabled)
+                    _depthPass.Render(scene, camera);
+                if (_normalPass.Enabled)
+                    _normalPass.Render(scene, camera);
             }
-            else
-            {
-                if (DepthPass)
-                    RenderDepthPass(renderList, ref cameraViewMatrix, ref cameraProjectionMatrix);
-
-                if (NormalPass)
-                    RenderNormalPass(renderList, ref cameraViewMatrix, ref cameraProjectionMatrix);
-            }
+           else
+                _depthNormalPass.Render(scene, camera);
 
             // Render Reflection Probes.
             var reflectionProbes = scene._reflectionProbes;

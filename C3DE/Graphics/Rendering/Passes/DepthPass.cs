@@ -19,7 +19,7 @@ namespace C3DE.Graphics.Rendering.Passes
             _effect = content.Load<Effect>("Shaders/Depth");
         }
 
-        public override void Apply(Scene scene, Camera camera)
+        public override void Render(Scene scene, Camera camera)
         {
             var previousRTs = _graphicsDevice.GetRenderTargets();
             var cameraViewMatrix = camera._viewMatrix;

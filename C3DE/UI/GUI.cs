@@ -106,9 +106,9 @@ namespace C3DE.UI
 
         #region Button Widget
 
-        public bool Button(Rectangle rect, string text, Color? textColor = null)
+        public bool Button(Rectangle rect, string text, Color? textColor = null, float labelScale = 1.0f)
         {
-            return Button(ref rect, text);
+            return Button(ref rect, text, textColor, labelScale);
         }
 
         public bool Button(ref Rectangle rect, string text, Color? textColor = null, float labelScale = 1.0f)

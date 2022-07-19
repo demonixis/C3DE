@@ -36,8 +36,6 @@ namespace C3DE.Demo.Scripts
         {
             base.OnGUI(ui);
             _sideMenu.Draw(ui);
-
-            ui.Label(_FPSPosition, Application.Engine.FPS.ToString());
         }
 
         private void OnSelectionChanged(int item)

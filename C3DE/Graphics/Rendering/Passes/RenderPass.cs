@@ -19,6 +19,6 @@ namespace C3DE.Graphics.Rendering.Passes
         }
 
         public abstract void LoadContent(ContentManager content);
-        public abstract void Apply(Scene scene, Camera camera);
+        public abstract void Render(Scene scene, Camera camera);
     }
 }
