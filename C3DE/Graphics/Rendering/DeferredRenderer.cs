@@ -1,7 +1,6 @@
 ﻿using C3DE.Components;
 using C3DE.Components.Rendering;
 using C3DE.Graphics.Materials;
-using C3DE.Graphics.Materials.Shaders;
 using C3DE.Graphics.PostProcessing;
 using C3DE.Graphics.Shaders;
 using Microsoft.Xna.Framework;
@@ -142,7 +141,7 @@ namespace C3DE.Graphics.Rendering
 
             using (_graphicsDevice.LightState())
                 RenderLights(scene, camera, eye);
-            
+
             _graphicsDevice.SetRenderTarget(_sceneRenderTargets[eye]);
             _graphicsDevice.Clear(Color.Black);
 

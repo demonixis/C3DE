@@ -27,6 +27,7 @@ namespace C3DE.Graphics.Materials.Shaders
             _effect.Parameters["Projection"].SetValue(projectionMatrix);
             _effect.Parameters["World"].SetValue(_skybox._worldMatrix);
             _effect.Parameters["Texture"].SetValue(_skybox.Texture);
+            _effect.CurrentTechnique.Passes[0].Apply();
         }
 
         public override void PrePassForward(ref Vector3 cameraPosition, ref Matrix viewMatrix, ref Matrix projectionMatrix, ref LightData lightData, ref ShadowData shadowData, ref Vector4 fogData)

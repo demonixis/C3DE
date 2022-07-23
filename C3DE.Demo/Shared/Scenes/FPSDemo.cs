@@ -10,6 +10,7 @@ using C3DE.Demo.Scripts.Utils;
 using C3DE.Graphics.Materials;
 using C3DE.Graphics.PostProcessing;
 using C3DE.Graphics.Primitives;
+using C3DE.Graphics.Rendering;
 using C3DE.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
@@ -21,7 +22,7 @@ namespace C3DE.Demo.Scenes
 {
     public class FPSDemo : BaseDemo
     {
-        public static bool Instancing = true;
+        public static bool Instancing = false;
         public static bool DebugPhysics = false;
 
         public static readonly int[,] LevelGrid = new int[,]
@@ -50,8 +51,8 @@ namespace C3DE.Demo.Scenes
 
             // And a light
             var lightContainer = new GameObject("LightContainer");
-            var lightGo = GameObjectFactory.CreateLight(LightType.Directional, Color.White, 1.75f, 2048);
-            lightGo.Transform.LocalPosition = new Vector3(500, 500, 0);
+            var lightGo = GameObjectFactory.CreateLight(LightType.Directional, Color.White, .5f, 2048);
+            lightGo.Transform.LocalPosition = new Vector3(0, 0, 0);
             lightGo.Transform.LocalRotation = new Vector3(MathHelper.PiOver2, -MathHelper.PiOver4, 0);
             lightGo.Transform.Parent = lightContainer.Transform;
 
@@ -65,7 +66,7 @@ namespace C3DE.Demo.Scenes
             RenderSettings.Skybox.Generate(Application.GraphicsDevice, DemoGame.StarsSkybox, 2000);
 
             // Reflection Probe
-            _reflectionProbe = GameObjectFactory.CreateReflectionProbe(new Vector3(0, 25, 0));
+            // _reflectionProbe = GameObjectFactory.CreateReflectionProbe(new Vector3(0, 25, 0));
 
             var player = new PlayerShooter();
             player.Start();
@@ -113,19 +114,23 @@ namespace C3DE.Demo.Scenes
             planet.GetComponent<Renderer>().Material = material;
             planet.Transform.LocalPosition = new Vector3(150, 60, 100);
             planet.Transform.LocalScale = new Vector3(60);
-            planet.Transform.Parent = planetContainer.Transform;
+            planet.Transform.Parent = planetContainer.Transform; 
 
-            autoRotation = planet.AddComponent<AutoRotation>();
+           autoRotation = planet.AddComponent<AutoRotation>();
             autoRotation.Rotation = new Vector3(0, -0.1f, 0);
 
-            planet.AddComponent<PostProcessSwitcher>();
+            // planet.AddComponent<PostProcessSwitcher>();
+            //planet.AddComponent<RendererSwitcher>();
+            planet.AddComponent<DeferredDebuger>();
 
             // Bloom
-          /*  var bloom = new FastBloom(Application.GraphicsDevice);
+            var bloom = new FastBloom(Application.GraphicsDevice);
             bloom.blurIterations = 8;
             bloom.blurType = FastBloom.BlurType.Sgx;
             bloom.resolution = FastBloom.Resolution.High;
-            SetPostProcess(bloom, true);*/
+            SetPostProcess(bloom, true);
+
+            Application.Engine.Renderer = new DeferredRenderer(Application.GraphicsDevice);
         }
 
         public override void Update()
@@ -180,12 +185,9 @@ namespace C3DE.Demo.Scenes
                             material = materials[RandomHelper.Range(0, materials.Length)];
                             var light = SpawnLight(new Vector3(posX, 3, posY), material.DiffuseColor, 2, 0.5f, false, mesh, material);
                             //light.AddComponent<SinIntensity>();
-                            //var sin = light.AddComponent<SinMovement>();
-                            //sin.Min = 2;
-                            //sin.Max = 2;
-
-                            //var mover = light.AddComponent<LightMover>();
-                            //mover.DisableMovement = true;
+                            var sin = light.AddComponent<SinMovement>();
+                            sin.Min = 2;
+                            sin.Max = 2;
 
                             renderer = light.GetComponent<MeshRenderer>();
 
@@ -219,37 +221,37 @@ namespace C3DE.Demo.Scenes
                     rb.IsStatic = true;
                     rb.AddComponent<BoxCollider>();
 
-                    if (DebugPhysics)
-                        rb.AddComponent<BoundingBoxRenderer>();
+                    /*   if (DebugPhysics)
+                           rb.AddComponent<BoundingBoxRenderer>();*/
 
-                    if (Instancing)
-                    {
-                        if (instancedWall == null)
-                        {
-                            instancedWall = renderer;
-                        }
-                        else
-                        {
-                            instancedWall.AddInstance(renderer);
-                            renderer.Enabled = false;
-                        }
-                    }
+                    /* if (Instancing)
+                     {
+                         if (instancedWall == null)
+                         {
+                             instancedWall = renderer;
+                         }
+                         else
+                         {
+                             instancedWall.AddInstance(renderer);
+                             renderer.Enabled = false;
+                         }
+                     }*/
                 }
             }
 
-            if (Instancing)
-            {
-                foreach (var keyValue in lightMats)
-                {
-                    var renderers = keyValue.Value;
+            /*     if (Instancing)
+                 {
+                     foreach (var keyValue in lightMats)
+                     {
+                         var renderers = keyValue.Value;
 
-                    if (renderers.Count > 1)
-                    {
-                        for (var i = 1; i < renderers.Count; i++)
-                            renderers[0].AddInstance(renderers[i]);
-                    }
-                }
-            }
+                         if (renderers.Count > 1)
+                         {
+                             for (var i = 1; i < renderers.Count; i++)
+                                 renderers[0].AddInstance(renderers[i]);
+                         }
+                     }
+                 }*/
         }
 
         protected override void SceneSetup()
@@ -258,21 +260,21 @@ namespace C3DE.Demo.Scenes
 
         private Material CreateWallMaterial(ContentManager content)
         {
-            if (PreferePBRMaterials)
-            {
-                var wallMatPBR = new PBRMaterial()
-                {
-                    MainTexture = content.Load<Texture2D>("Textures/pbr/Wall/Sci-fi_Walll_001_basecolor"),
-                    NormalMap = content.Load<Texture2D>("Textures/pbr/Wall/Sci-fi_Walll_001_normal"),
-                };
+            /*  if (PreferePBRMaterials)
+              {
+                  var wallMatPBR = new PBRMaterial()
+                  {
+                      MainTexture = content.Load<Texture2D>("Textures/pbr/Wall/Sci-fi_Walll_001_basecolor"),
+                      NormalMap = content.Load<Texture2D>("Textures/pbr/Wall/Sci-fi_Walll_001_normal"),
+                  };
 
-                wallMatPBR.CreateRoughnessMetallicAO(
-                    content.Load<Texture2D>("Textures/pbr/Wall/Sci-fi_Walll_001_metallic"),
-                    content.Load<Texture2D>("Textures/pbr/Wall/Sci-fi_Walll_001_roughness"),
-                    content.Load<Texture2D>("Textures/pbr/Wall/Sci-fi_Walll_001_ambientOcclusion"));
+                  wallMatPBR.CreateRoughnessMetallicAO(
+                      content.Load<Texture2D>("Textures/pbr/Wall/Sci-fi_Walll_001_metallic"),
+                      content.Load<Texture2D>("Textures/pbr/Wall/Sci-fi_Walll_001_roughness"),
+                      content.Load<Texture2D>("Textures/pbr/Wall/Sci-fi_Walll_001_ambientOcclusion"));
 
-                return wallMatPBR;
-            }
+                  return wallMatPBR;
+              }*/
 
             return new StandardMaterial()
             {
@@ -281,29 +283,29 @@ namespace C3DE.Demo.Scenes
                 SpecularColor = Color.LightGray,
                 SpecularPower = 5,
                 SpecularIntensity = 1,
-                ReflectionIntensity = 0.45f,
-                ReflectionMap = _reflectionProbe.ReflectionMap
+                //ReflectionIntensity = 0.45f,
+                //ReflectionMap = _reflectionProbe.ReflectionMap
             };
         }
 
         private Material CreateGroundMaterial(ContentManager content)
         {
-            if (PreferePBRMaterials)
-            {
-                var mat = new PBRMaterial()
-                {
-                    MainTexture = content.Load<Texture2D>("Textures/pbr/Metal Plate/Metal_Plate_015_basecolor"),
-                    NormalMap = content.Load<Texture2D>("Textures/pbr/Metal Plate/Metal_Plate_015_normal"),
-                    Tiling = new Vector2(16)
-                };
+            /*   if (PreferePBRMaterials)
+               {
+                   var mat = new PBRMaterial()
+                   {
+                       MainTexture = content.Load<Texture2D>("Textures/pbr/Metal Plate/Metal_Plate_015_basecolor"),
+                       NormalMap = content.Load<Texture2D>("Textures/pbr/Metal Plate/Metal_Plate_015_normal"),
+                       Tiling = new Vector2(16)
+                   };
 
-                mat.CreateRoughnessMetallicAO(
-                    content.Load<Texture2D>("Textures/pbr/Metal Plate/Metal_Plate_015_roughness"),
-                    content.Load<Texture2D>("Textures/pbr/Metal Plate/Metal_Plate_015_metallic"),
-                    content.Load<Texture2D>("Textures/pbr/Metal Plate/Metal_Plate_015_ambientOcclusion"));
+                   mat.CreateRoughnessMetallicAO(
+                       content.Load<Texture2D>("Textures/pbr/Metal Plate/Metal_Plate_015_roughness"),
+                       content.Load<Texture2D>("Textures/pbr/Metal Plate/Metal_Plate_015_metallic"),
+                       content.Load<Texture2D>("Textures/pbr/Metal Plate/Metal_Plate_015_ambientOcclusion"));
 
-                return mat;
-            }
+                   return mat;
+               }*/
 
             return new StandardMaterial()
             {
@@ -311,8 +313,8 @@ namespace C3DE.Demo.Scenes
                 NormalMap = content.Load<Texture2D>("Textures/pbr/Metal Plate/Metal_Plate_015_normal"),
                 SpecularColor = Color.LightGray,
                 SpecularPower = 2,
-                ReflectionIntensity = 0.85f,
-                ReflectionMap = _reflectionProbe.ReflectionMap,
+                //ReflectionIntensity = 0.85f,
+                //ReflectionMap = _reflectionProbe.ReflectionMap,
                 Tiling = new Vector2(16)
             };
         }

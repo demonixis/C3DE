@@ -74,8 +74,8 @@ namespace C3DE.Demo.Scenes
                 content.Load<Texture2D>("Textures/Flares/circle_soft_1")
             };
 
-            var sunflares = _directionalLight.AddComponent<LensFlare>();
-            sunflares.Setup(glowTexture, flareTextures);
+           /* var sunflares = _directionalLight.AddComponent<LensFlare>();
+            sunflares.Setup(glowTexture, flareTextures);*/
 #endif
 
             // Skybox

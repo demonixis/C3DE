@@ -33,8 +33,6 @@ namespace C3DE.Demo.Scenes
             PatchMaterials(sponzaGo, content);
 
             AddLightGroundTest();
-
-            sponzaGo.AddComponent<ForwardPassViewer>();
         }
 
         private void PatchMaterials(GameObject sponzaGo, ContentManager content)

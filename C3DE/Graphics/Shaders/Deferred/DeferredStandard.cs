@@ -39,6 +39,7 @@ namespace C3DE.Graphics.Materials.Shaders
             _features.Y = _material.SpecularColor != null ? 1 : 0;
             _features.Z = _material.ReflectionMap != null ? 1 : 0;
             _features.W = _material.EmissiveMap != null ? 1 : 0;
+
             // Material
             _effect.Parameters["TextureTiling"].SetValue(_material.Tiling);
             _effect.Parameters["World"].SetValue(worldMatrix);

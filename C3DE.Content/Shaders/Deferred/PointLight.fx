@@ -87,7 +87,7 @@ float4 PixelShaderAmbient(VertexShaderOutput input) : COLOR0
     float depthVal = depth.r;
 
     // Unlit case: If all depth values are 9 we just draw the color on the lightmap.
-    if (depth.r == 0 && depth.g == 0 && depth.b == 0)
+    if (depth.r == 0)
         return float4(color.rgb, 0);
 
     //compute screen-space position
@@ -120,8 +120,8 @@ technique PointLightTechnique
     pass Pass0
     {
 #if SM4
-		VertexShader = compile vs_4_0_level_9_1 VertexShaderFunction();
-		PixelShader = compile ps_4_0_level_9_1 PixelShaderAmbient();
+		VertexShader = compile vs_4_0 VertexShaderFunction();
+		PixelShader = compile ps_4_0 PixelShaderAmbient();
 #else
         VertexShader = compile vs_3_0 VertexShaderFunction();
         PixelShader = compile ps_3_0 PixelShaderAmbient();

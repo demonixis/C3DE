@@ -1,6 +1,7 @@
 ﻿using C3DE.Components;
 using C3DE.Components.Lighting;
 using C3DE.Components.Rendering;
+using C3DE.Demo.Scripts.Utils;
 using C3DE.Graphics;
 using C3DE.Graphics.Materials;
 using C3DE.Graphics.Primitives;
@@ -161,7 +162,7 @@ namespace C3DE.Demo.Scenes
 
                     var radius = 0.0f;
 
-                    for(var i = 0; i < item.ReflectionProbe.BoxMin.Length; i++)
+                    for (var i = 0; i < item.ReflectionProbe.BoxMin.Length; i++)
                     {
                         var abs = Math.Abs(item.ReflectionProbe.BoxMin[i]);
 
@@ -183,7 +184,7 @@ namespace C3DE.Demo.Scenes
                 // Light
                 if (item.Light != null)
                 {
-                    var light = go.AddComponent<Light>();
+                /*    var light = go.AddComponent<Light>();
                     light.Enabled = item.Light.Enabled;
                     light.Color = ToColor(item.Light.Color);
                     light.Angle = item.Light.Angle;
@@ -201,7 +202,7 @@ namespace C3DE.Demo.Scenes
                     else if (item.Light.Type == 2)
                         light.Type = LightType.Spot;
                     else
-                        light.Enabled = false;
+                        light.Enabled = false;*/
                 }
             }
 
@@ -218,7 +219,7 @@ namespace C3DE.Demo.Scenes
 
             // Reflection Probes
             foreach (var probe in reflectionProbes)
-                probe.AutoAssign(renderers.ToArray(), true);    
+                probe.AutoAssign(renderers.ToArray(), true);
 
             watch.Stop();
 
@@ -233,6 +234,19 @@ namespace C3DE.Demo.Scenes
                 }
 
                 return materials["Default"];
+            }
+
+            AddLightGroundTest(48, 10);
+
+            var lights = FindObjectsOfType<Light>();
+            foreach (var l in lights)
+            {
+                if (l.Type == LightType.Point)
+                {
+                    var sin = l.GetComponent<SinMovement>();
+                    sin.Min = 1.5f;
+                    sin.Max = 1.5f;
+                }
             }
         }
 

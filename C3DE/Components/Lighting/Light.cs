@@ -1,6 +1,7 @@
 ﻿using C3DE.Graphics;
 using C3DE.Graphics.PostProcessing;
 using C3DE.Graphics.Primitives;
+using C3DE.Graphics.Rendering;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -151,6 +152,9 @@ namespace C3DE.Components.Lighting
             if (Type == LightType.Ambient)
             {
                 _deferredAmbientEffect.Parameters["Color"].SetValue(_color);
+                _deferredDirLightEffect.Parameters["ColorMap"].SetValue(colorMap);
+                _deferredAmbientEffect.Parameters["DepthMap"].SetValue(depthMap);
+                _deferredPointLightEffect.Parameters["World"].SetValue(Matrix.Identity);
                 _deferredAmbientEffect.CurrentTechnique.Passes[0].Apply();
                 _quadRenderer.RenderFullscreenQuad();
             }

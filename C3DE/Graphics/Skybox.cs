@@ -165,7 +165,6 @@ namespace C3DE.Graphics
             device.RasterizerState = _skyboxRasterizerState;
 
             _worldMatrix = _scaleMatrix * Matrix.CreateTranslation(cameraPosition);
-
             _shaderMaterial.PrePass(ref cameraPosition, ref viewMatrix, ref projectionMatrix);
 
             device.SetVertexBuffer(_cubeMesh.VertexBuffer);

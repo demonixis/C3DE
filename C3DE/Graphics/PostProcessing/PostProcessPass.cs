@@ -18,7 +18,7 @@ namespace C3DE.Graphics.PostProcessing
         protected Vector4 _textureSamplerTexelSize;
 
         public bool Enabled { get; set; } = true;
-        public Matrix InverseProjectionMatrix => Matrix.Invert(Camera.Main.ProjectionMatrix);
+        public Matrix InverseProjectionMatrix => Matrix.Invert(Camera.Main.ViewMatrix * Camera.Main.ProjectionMatrix);// Matrix.Invert(Camera.Main.ProjectionMatrix);
 
         public RenderTarget2D GetDepthBuffer()
         {

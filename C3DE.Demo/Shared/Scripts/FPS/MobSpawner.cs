@@ -122,7 +122,7 @@ namespace C3DE.Demo.Scripts.FPS
 
         private Material GetMobMaterial(ContentManager content, ReflectionProbe probe)
         {
-            if (FPSDemo.PreferePBRMaterials)
+         /*   if (FPSDemo.PreferePBRMaterials)
             {
                 var pbr = new PBRMaterial()
                 {
@@ -137,7 +137,7 @@ namespace C3DE.Demo.Scripts.FPS
                     content.Load<Texture2D>("Models/Drone/drone_Occlusion"));
 
                 return pbr;
-            }
+            }*/
 
             return new StandardMaterial
             {
@@ -149,8 +149,8 @@ namespace C3DE.Demo.Scripts.FPS
                 SpecularIntensity = 2,
                 EmissiveColor = Color.White,
                 EmissiveIntensity = 2.5f,
-                ReflectionIntensity = 0.75f,
-                ReflectionMap = probe.ReflectionMap
+               // ReflectionIntensity = 0.75f,
+               // ReflectionMap = probe.ReflectionMap
             };
         }
     }
