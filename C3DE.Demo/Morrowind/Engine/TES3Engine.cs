@@ -21,10 +21,9 @@ namespace TES3Unity
         public static int CellRadiusOnLoad = 2;
         public static bool AutoLoadSavedGame = false;
         public static bool LogEnabled = false;
-        private static TES3Engine instance = null;
         public static TES3DataReader DataReader { get; set; }
 
-        private TemporalLoadBalancer m_TemporalLoadBalancer;
+        //private TemporalLoadBalancer m_TemporalLoadBalancer;
         private TES3Material m_MaterialManager;
         private NIFManager m_NIFManager;
 
@@ -72,15 +71,6 @@ namespace TES3Unity
         {
             base.Awake();
 
-            if (instance != null && instance != this)
-            {
-                //Destroy(this);
-            }
-            else
-            {
-                instance = this;
-            }
-
             // When loaded from the Menu, this variable is already preloaded.
             if (DataReader == null)
             {
@@ -111,8 +101,8 @@ namespace TES3Unity
             textureManager = new TextureManager(DataReader);
             m_MaterialManager = new TES3Material(textureManager, false);
             m_NIFManager = new NIFManager(DataReader, m_MaterialManager);
-            m_TemporalLoadBalancer = new TemporalLoadBalancer();
-            cellManager = new CellManager(DataReader, textureManager, m_NIFManager, m_TemporalLoadBalancer);
+            //m_TemporalLoadBalancer = new TemporalLoadBalancer();
+            cellManager = new CellManager(DataReader, textureManager, m_NIFManager);//, m_TemporalLoadBalancer);
 
 #if UNITY_STANDALONE
             if (!XRManager.IsXREnabled())
@@ -149,7 +139,7 @@ namespace TES3Unity
             CreatePlayer(position, rotation);
 
             var cellInfo = cellManager.StartCreatingInteriorCell(interiorCellName);
-            m_TemporalLoadBalancer.WaitForTask(cellInfo.objectsCreationCoroutine);
+            //m_TemporalLoadBalancer.WaitForTask(cellInfo.objectsCreationCoroutine);
         }
 
         public void SpawnPlayer(Vector2i gridCoords, bool outside, Vector3 position, Quaternion rotation)
@@ -169,7 +159,7 @@ namespace TES3Unity
 
             CreatePlayer(position, rotation);
 
-            m_TemporalLoadBalancer.WaitForTask(cellInfo.objectsCreationCoroutine);
+            //m_TemporalLoadBalancer.WaitForTask(cellInfo.objectsCreationCoroutine);
         }
 
         #endregion

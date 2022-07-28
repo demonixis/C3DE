@@ -14,48 +14,24 @@ using TES3Unity.ESM.Records;
 
 namespace TES3Unity
 {
-    public class InRangeCellInfo
-    {
-        public GameObject gameObject;
-        public GameObject objectsContainerGameObject;
-        public CELLRecord cellRecord;
-        public IEnumerator objectsCreationCoroutine;
-
-        public InRangeCellInfo(GameObject gameObject, GameObject objectsContainerGameObject, CELLRecord cellRecord, IEnumerator objectsCreationCoroutine)
-        {
-            this.gameObject = gameObject;
-            this.objectsContainerGameObject = objectsContainerGameObject;
-            this.cellRecord = cellRecord;
-            this.objectsCreationCoroutine = objectsCreationCoroutine;
-        }
-    }
-
-    public class RefCellObjInfo
-    {
-        public RefObjDataGroup refObjDataGroup;
-        public Record referencedRecord;
-        public string modelFilePath;
-    }
-
     public class CellManager
     {
         public static int cellRadius = 4;
         public static int detailRadius = 3;
         private const string defaultLandTextureFilePath = "textures/_land_default.dds";
-        private static Dictionary<Texture2D, TerrainLayer> TerrainLayers = new Dictionary<Texture2D, TerrainLayer>();
+        private static readonly Dictionary<Texture2D, TerrainLayer> TerrainLayers = new Dictionary<Texture2D, TerrainLayer>();
+        private static readonly Dictionary<string, InRangeCellInfo> _cellCache = new Dictionary<string, InRangeCellInfo>();
 
         private TES3DataReader dataReader;
         private TextureManager textureManager;
         private NIFManager nifManager;
-        private TemporalLoadBalancer temporalLoadBalancer;
         private Dictionary<Vector2i, InRangeCellInfo> cellObjects = new Dictionary<Vector2i, InRangeCellInfo>();
 
-        public CellManager(TES3DataReader dataReader, TextureManager textureManager, NIFManager nifManager, TemporalLoadBalancer temporalLoadBalancer)
+        public CellManager(TES3DataReader dataReader, TextureManager textureManager, NIFManager nifManager)
         {
             this.dataReader = dataReader;
             this.textureManager = textureManager;
             this.nifManager = nifManager;
-            this.temporalLoadBalancer = temporalLoadBalancer;
         }
 
         public Vector2i GetExteriorCellIndices(Vector3 point)
@@ -122,11 +98,6 @@ namespace TES3Unity
                         if ((cellDistance == r) && !cellObjects.ContainsKey(cellIndices))
                         {
                             var cellInfo = StartCreatingExteriorCell(cellIndices);
-
-                            if ((cellInfo != null) && immediate)
-                            {
-                                temporalLoadBalancer.WaitForTask(cellInfo.objectsCreationCoroutine);
-                            }
                         }
                     }
                 }
@@ -144,16 +115,16 @@ namespace TES3Unity
 
                 if (cellDistance <= detailRadius)
                 {
-                    if (!cellInfo.objectsContainerGameObject.activeSelf)
+                    if (!cellInfo.ObjectsContainerGameObject.activeSelf)
                     {
-                        cellInfo.objectsContainerGameObject.SetActive(true);
+                        cellInfo.ObjectsContainerGameObject.SetActive(true);
                     }
                 }
                 else
                 {
-                    if (cellInfo.objectsContainerGameObject.activeSelf)
+                    if (cellInfo.ObjectsContainerGameObject.activeSelf)
                     {
-                        cellInfo.objectsContainerGameObject.SetActive(false);
+                        cellInfo.ObjectsContainerGameObject.SetActive(false);
                     }
                 }
             }
@@ -198,6 +169,13 @@ namespace TES3Unity
                 cellObjName = CELL.NAME.value;
             }
 
+            if (_cellCache.ContainsKey(cellObjName))
+            {
+                var inRangeCellInfo = _cellCache[cellObjName];
+                inRangeCellInfo.GameObject.SetActive(true);
+                return inRangeCellInfo;
+            }
+
             var cellObj = new GameObject(cellObjName);
             cellObj.Tag = "Cell";
 
@@ -205,20 +183,16 @@ namespace TES3Unity
             cellObjectsContainer.transform.parent = cellObj.transform;
 
             InstantiateLand(LAND, cellObj);
-            //InstantiateObjects(CELL, cellObj, cellObjectsContainer);
+            InstantiateObjects(CELL, cellObj, cellObjectsContainer);
 
-            var cellObjectsCreationCoroutine = InstantiateCellObjectsCoroutine(CELL, null, cellObj, cellObjectsContainer);
-            temporalLoadBalancer.AddTask(cellObjectsCreationCoroutine);
-
-            return new InRangeCellInfo(cellObj, cellObjectsContainer, CELL, cellObjectsCreationCoroutine);
+            return new InRangeCellInfo(cellObj, cellObjectsContainer, CELL);
         }
 
         public void DestroyAllCells()
         {
             foreach (var keyValuePair in cellObjects)
             {
-                temporalLoadBalancer.CancelTask(keyValuePair.Value.objectsCreationCoroutine);
-                GameObject.Destroy(keyValuePair.Value.gameObject);
+                keyValuePair.Value.GameObject.SetActive(false);
             }
 
             cellObjects.Clear();
@@ -244,60 +218,6 @@ namespace TES3Unity
             {
                 InstantiateCellObject(CELL, cellObjectsContainer, refCellObjInfo);
             }
-        }
-
-        private IEnumerator InstantiateObjectsCoroutine(CELLRecord CELL, GameObject cellObj, GameObject cellObjectsContainer)
-        {
-            if (CELL == null)
-            {
-                yield break;
-            }
-
-            // Extract information about referenced objects.
-            var refCellObjInfos = GetRefCellObjInfos(CELL);
-
-            // Instantiate objects.
-            foreach (var refCellObjInfo in refCellObjInfos)
-            {
-                InstantiateCellObject(CELL, cellObjectsContainer, refCellObjInfo);
-                yield return null;
-            }
-        }
-
-        /// <summary>
-        /// A coroutine that instantiates the terrain for, and all objects in, a cell.
-        /// </summary>
-        private IEnumerator InstantiateCellObjectsCoroutine(CELLRecord CELL, LANDRecord LAND, GameObject cellObj, GameObject cellObjectsContainer)
-        {
-            if (CELL == null && LAND == null)
-            {
-                yield break;
-            }
-
-            // Start pre-loading all required textures for the terrain.
-            if (LAND != null)
-            {
-                GetLANDTextureFilePaths(LAND);
-            }
-
-            // Extract information about referenced objects.
-            var refCellObjInfos = GetRefCellObjInfos(CELL);
-
-            // Instantiate terrain.
-            if (LAND != null)
-            {
-                InstantiateLANDCoroutine(LAND, cellObj);
-            }
-
-            // Instantiate objects.
-            foreach (var refCellObjInfo in refCellObjInfos)
-            {
-                InstantiateCellObject(CELL, cellObjectsContainer, refCellObjInfo);
-            }
-
-            //InstantiateReflectionProbe(CELL, cellObj.transform);
-
-            yield return null;
         }
 
         private RefCellObjInfo[] GetRefCellObjInfos(CELLRecord CELL)
@@ -341,72 +261,68 @@ namespace TES3Unity
         /// </summary>
         private void InstantiateCellObject(CELLRecord CELL, GameObject parent, RefCellObjInfo refCellObjInfo)
         {
-            if (refCellObjInfo.referencedRecord != null)
+            if (refCellObjInfo.referencedRecord == null)
             {
-                GameObject modelObj = null;
-
-                // If the object has a model, instantiate it.
-                if (refCellObjInfo.modelFilePath != null)
-                {
-                    modelObj = nifManager.InstantiateNIF(refCellObjInfo.modelFilePath);
-                    PostProcessInstantiatedCellObject(modelObj, refCellObjInfo);
-
-                    modelObj.transform.parent = parent.transform;
-                }
-
-                if (refCellObjInfo.referencedRecord is NPC_Record)
-                {
-                    /*  var NPC_ = (NPC_Record)refCellObjInfo.referencedRecord;
-                      var npcGameObject = NPCFactory.InstanciateNPC(nifManager, NPC_);
-
-                      PostProcessInstantiatedCellObject(npcGameObject, refCellObjInfo);
-                      npcGameObject.transform.parent = parent.transform;*/
-                }
-
-                // If the object has a light, instantiate it.
-                if (refCellObjInfo.referencedRecord is LIGHRecord)
-                {
-                    var lightObj = InstantiateLight((LIGHRecord)refCellObjInfo.referencedRecord, CELL.isInterior);
-
-                    // If the object also has a model, parent the model to the light.
-                    if (modelObj != null)
-                    {
-                        // Some NIF files have nodes named "AttachLight". Parent it to the light if it exists.
-                        GameObject attachLightObj = GameObjectUtils.FindChildRecursively(modelObj, "AttachLight");
-
-                        if (attachLightObj == null)
-                        {
-                            //attachLightObj = GameObjectUtils.FindChildWithNameSubstringRecursively(modelObj, "Emitter");
-                            attachLightObj = modelObj;
-                        }
-
-                        if (attachLightObj != null)
-                        {
-                            lightObj.transform.position = attachLightObj.transform.position;
-                            lightObj.transform.rotation = attachLightObj.transform.rotation;
-
-                            lightObj.transform.parent = attachLightObj.transform;
-                        }
-                        else // If there is no "AttachLight", center the light in the model's bounds.
-                        {
-                            lightObj.transform.position = modelObj.transform.position; // FIXME GameObjectUtils.CalcVisualBoundsRecursive(modelObj).center;
-                            lightObj.transform.rotation = modelObj.transform.rotation;
-
-                            lightObj.transform.parent = modelObj.transform;
-                        }
-                    }
-                    else // If the light has no associated model, instantiate the light as a standalone object.
-                    {
-                        PostProcessInstantiatedCellObject(lightObj, refCellObjInfo);
-                        lightObj.transform.parent = parent.transform;
-                    }
-                }
+                Debug.Log("Unknown Object: " + refCellObjInfo.refObjDataGroup.NAME.value);
+                return;
             }
-            else
+
+            GameObject modelObj = null;
+
+            // If the object has a model, instantiate it.
+            if (refCellObjInfo.modelFilePath != null)
             {
-                //if (TES3Engine.LogEnabled)
+                modelObj = nifManager.InstantiateNIF(refCellObjInfo.modelFilePath);
+                PostProcessInstantiatedCellObject(modelObj, refCellObjInfo);
+
+                modelObj.transform.parent = parent.transform;
+            }
+
+            if (refCellObjInfo.referencedRecord is NPC_Record)
+            {
+                /*  var NPC_ = (NPC_Record)refCellObjInfo.referencedRecord;
+                  var npcGameObject = NPCFactory.InstanciateNPC(nifManager, NPC_);
+
+                  PostProcessInstantiatedCellObject(npcGameObject, refCellObjInfo);
+                  npcGameObject.transform.parent = parent.transform;*/
+            }
+
+            // If the object has a light, instantiate it.
+            if (refCellObjInfo.referencedRecord is LIGHRecord)
+            {
+                var lightObj = InstantiateLight((LIGHRecord)refCellObjInfo.referencedRecord, CELL.isInterior);
+
+                // If the object also has a model, parent the model to the light.
+                if (modelObj != null)
                 {
-                    Debug.Log("Unknown Object: " + refCellObjInfo.refObjDataGroup.NAME.value);
+                    // Some NIF files have nodes named "AttachLight". Parent it to the light if it exists.
+                    GameObject attachLightObj = GameObjectUtils.FindChildRecursively(modelObj, "AttachLight");
+
+                    if (attachLightObj == null)
+                    {
+                        //attachLightObj = GameObjectUtils.FindChildWithNameSubstringRecursively(modelObj, "Emitter");
+                        attachLightObj = modelObj;
+                    }
+
+                    if (attachLightObj != null)
+                    {
+                        lightObj.transform.position = attachLightObj.transform.position;
+                        lightObj.transform.rotation = attachLightObj.transform.rotation;
+
+                        lightObj.transform.parent = attachLightObj.transform;
+                    }
+                    else // If there is no "AttachLight", center the light in the model's bounds.
+                    {
+                        lightObj.transform.position = modelObj.transform.position; // FIXME GameObjectUtils.CalcVisualBoundsRecursive(modelObj).center;
+                        lightObj.transform.rotation = modelObj.transform.rotation;
+
+                        lightObj.transform.parent = modelObj.transform;
+                    }
+                }
+                else // If the light has no associated model, instantiate the light as a standalone object.
+                {
+                    PostProcessInstantiatedCellObject(lightObj, refCellObjInfo);
+                    lightObj.transform.parent = parent.transform;
                 }
             }
         }
@@ -706,8 +622,8 @@ namespace TES3Unity
 
             if (cellObjects.TryGetValue(indices, out cellInfo))
             {
-                temporalLoadBalancer.CancelTask(cellInfo.objectsCreationCoroutine);
-                GameObject.Destroy(cellInfo.gameObject);
+                //temporalLoadBalancer.CancelTask(cellInfo.objectsCreationCoroutine);
+                GameObject.Destroy(cellInfo.GameObject);
                 cellObjects.Remove(indices);
             }
             else
