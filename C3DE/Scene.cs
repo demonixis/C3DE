@@ -397,6 +397,15 @@ namespace C3DE
 
         #region Add/Remove PostProcess
 
+        public void AddPostProcess(PostProcessPass pass)
+        {
+            if (!_postProcessPasses.Contains(pass))
+            {
+                _postProcessPasses.Add(pass);
+                pass.Initialize(Application.Content);
+            }
+        }
+
         public void SetPostProcess(PostProcessPass pass, bool added)
         {
             if (added)

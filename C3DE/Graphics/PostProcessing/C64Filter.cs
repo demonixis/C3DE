@@ -58,7 +58,7 @@ namespace C3DE.Graphics.PostProcessing
             else
                 _effect.Parameters["Palette"].SetValue(m_Palette);
 
-            _mainRenderTarget = GetRenderTarget();
+            _mainRenderTarget = CreateRenderTarget();
         }
     }
 }

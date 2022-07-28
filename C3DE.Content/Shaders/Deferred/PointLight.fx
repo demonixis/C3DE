@@ -3,6 +3,7 @@ float4x4 View;
 float4x4 Projection;
 float4x4 InvertViewProjection;
 
+float3 AmbientColor;
 float3 Color;
 float3 LightPosition;
 float Radius;
@@ -112,7 +113,7 @@ float4 PixelShaderAmbient(VertexShaderOutput input) : COLOR0
     float3 directionToCamera = normalize(CameraPosition - position.xyz);
     float specularLight = specularIntensity * pow(saturate(dot(reflectionVector, directionToCamera)), specularPower);
 
-    return attenuation * Intensity * float4(diffuseLight.rgb, specularLight);
+    return (attenuation * Intensity * float4(diffuseLight.rgb, specularLight)) + float4(AmbientColor, 1);
 }
 
 technique PointLightTechnique

@@ -90,7 +90,7 @@ namespace C3DE.Demo.Scripts
                 {
                     rand = RandomHelper.Range(0, 10);
 
-                    cache = Scene.Instanciate(_gridPrefab.GameObject);
+                    cache = Scene.Instantiate(_gridPrefab.GameObject);
                     cache.Transform.LocalPosition = GetWorldCoordinate(x, z);
                     cache.Transform.Parent = _transform;
 

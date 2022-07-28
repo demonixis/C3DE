@@ -23,15 +23,15 @@ namespace C3DE.Components.Rendering
         public TerrainWeightData WeightData => _weightData;
         public TerrainMesh Geometry => _geometry;
 
-        public int Width => (int)(_geometry.Width * _geometry.Size.X);
-        public int Height => (int)(_geometry.Height * _geometry.Size.Y);
-        public int Depth => (int)(_geometry.Depth * _geometry.Size.Z);
+        public float Width => _geometry.HeightmapSize * _geometry.Size.X;
+        public float Height => _geometry.HeightmapSize * _geometry.Size.Y;
+        public float Depth => _geometry.HeightmapSize * _geometry.Size.Z;
 
         public override void Awake()
         {
             base.Awake();
 
-            _geometry = new TerrainMesh(100, 100, 1);
+            _geometry = new TerrainMesh();
             _renderer = GetComponent<MeshRenderer>();
 
             if (_renderer == null)
@@ -58,18 +58,16 @@ namespace C3DE.Components.Rendering
         public void LoadHeightmap(string heightmapName)
         {
             var heightmap = Application.Content.Load<Texture2D>(heightmapName);
+            _geometry.HeightmapSize = heightmap.Width;
 
-            _geometry.Width = heightmap.Width;
-            _geometry.Depth = heightmap.Height;
-
-            Color[] colors = new Color[_geometry.Width * _geometry.Depth];
+            Color[] colors = new Color[_geometry.HeightmapSize * _geometry.HeightmapSize];
             heightmap.GetData(colors);
 
-            _geometry.Data = new float[_geometry.Width, _geometry.Depth];
+            _geometry.Data = new float[_geometry.HeightmapSize, _geometry.HeightmapSize];
 
-            for (int x = 0; x < _geometry.Width; x++)
-                for (int y = 0; y < _geometry.Depth; y++)
-                    _geometry.Data[x, y] = colors[x + y * _geometry.Width].R / 10.0f; // Max height 25.5f
+            for (int x = 0; x < _geometry.HeightmapSize; x++)
+                for (int y = 0; y < _geometry.HeightmapSize; y++)
+                    _geometry.Data[x, y] = colors[x + y * _geometry.HeightmapSize].R / 10.0f; // Max height 25.5f
 
             Build();
         }
@@ -83,13 +81,13 @@ namespace C3DE.Components.Rendering
         /// <param name="persistence"></param>
         public void Randomize(int octaves = 2, int amplitude = 22, double frequency = 0.085, double persistence = 0.3, bool limit = false)
         {
-            _geometry.Data = new float[_geometry.Width, _geometry.Depth];
+            _geometry.Data = new float[_geometry.HeightmapSize, _geometry.HeightmapSize];
 
             NoiseGenerator.GenerateNoise(octaves, amplitude, frequency, persistence);
 
-            for (int x = 0; x < _geometry.Width; x++)
+            for (int x = 0; x < _geometry.HeightmapSize; x++)
             {
-                for (int z = 0; z < _geometry.Depth; z++)
+                for (int z = 0; z < _geometry.HeightmapSize; z++)
                     _geometry.Data[x, z] = (float)NoiseGenerator.Noise(x, z, limit);
             }
 
@@ -179,16 +177,16 @@ namespace C3DE.Components.Rendering
 
         public Texture2D GenerateWeightMap()
         {
-            var width = _geometry.Width;
-            var depth = _geometry.Depth;
+            var width = _geometry.HeightmapSize;
+            var depth = _geometry.HeightmapSize;
 
             var wMap = new Texture2D(Application.GraphicsDevice, width, depth, false, SurfaceFormat.Color);
             var colors = new Color[width * depth];
             float data = 0;
 
-            for (int x = 0; x < _geometry.Width; x++)
+            for (int x = 0; x < _geometry.HeightmapSize; x++)
             {
-                for (int z = 0; z < _geometry.Depth; z++)
+                for (int z = 0; z < _geometry.HeightmapSize; z++)
                 {
                     data = _geometry.Data[x, z];
 

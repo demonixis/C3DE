@@ -6,6 +6,9 @@ namespace C3DE
     /// </summary>
     public class Debug
     {
+        public static void LogError(params object[] args) => Log(args);
+        public static void LogWarning(params object[] args) => Log(args);
+
         /// <summary>
         /// Log one or more messages.
         /// </summary>

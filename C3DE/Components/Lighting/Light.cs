@@ -148,18 +148,20 @@ namespace C3DE.Components.Lighting
         {
             var graphics = Application.GraphicsDevice;
             var invertViewProjection = Matrix.Invert(camera._viewMatrix * camera._projectionMatrix);
+            var ambientColor = Scene.current.RenderSettings.AmbientColor.ToVector3();
 
             if (Type == LightType.Ambient)
             {
-                _deferredAmbientEffect.Parameters["Color"].SetValue(_color);
+              /*  _deferredAmbientEffect.Parameters["Color"].SetValue(_color);
                 _deferredDirLightEffect.Parameters["ColorMap"].SetValue(colorMap);
                 _deferredAmbientEffect.Parameters["DepthMap"].SetValue(depthMap);
                 _deferredPointLightEffect.Parameters["World"].SetValue(Matrix.Identity);
                 _deferredAmbientEffect.CurrentTechnique.Passes[0].Apply();
-                _quadRenderer.RenderFullscreenQuad();
+                _quadRenderer.RenderFullscreenQuad();*/
             }
             else if (Type == LightType.Directional)
             {
+                _deferredDirLightEffect.Parameters["AmbientColor"].SetValue(ambientColor);
                 _deferredDirLightEffect.Parameters["ColorMap"].SetValue(colorMap);
                 _deferredDirLightEffect.Parameters["NormalMap"].SetValue(normalMap);
                 _deferredDirLightEffect.Parameters["DepthMap"].SetValue(depthMap);
@@ -177,6 +179,7 @@ namespace C3DE.Components.Lighting
                 var previousRS = graphics.RasterizerState;
                 var sphereWorldMatrix = Matrix.CreateScale(Radius) * Matrix.CreateTranslation(_transform.Position);
 
+                _deferredPointLightEffect.Parameters["AmbientColor"].SetValue(ambientColor);
                 _deferredPointLightEffect.Parameters["ColorMap"].SetValue(colorMap);
                 _deferredPointLightEffect.Parameters["NormalMap"].SetValue(normalMap);
                 _deferredPointLightEffect.Parameters["DepthMap"].SetValue(depthMap);

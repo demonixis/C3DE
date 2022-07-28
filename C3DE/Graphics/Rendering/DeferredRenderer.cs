@@ -118,8 +118,8 @@ namespace C3DE.Graphics.Rendering
             _graphicsDevice.Clear(Color.Transparent);
 
             // TODO: Make a LightRenderer that renders lights with data only
-            _ambientLight.Color = Scene.current.RenderSettings.AmbientColor;
-            _ambientLight.RenderDeferred(m_ColorTarget, m_NormalTarget, m_DepthTarget, camera);
+           // _ambientLight.Color = Scene.current.RenderSettings.AmbientColor;
+          //  _ambientLight.RenderDeferred(m_ColorTarget, m_NormalTarget, m_DepthTarget, camera);
 
             foreach (var light in scene._lights)
                 light.RenderDeferred(m_ColorTarget, m_NormalTarget, m_DepthTarget, camera);

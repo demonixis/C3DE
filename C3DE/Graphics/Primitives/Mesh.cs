@@ -100,6 +100,18 @@ namespace C3DE.Graphics.Primitives
 
         public void Build()
         {
+            if (_vertices?.Length == 0) return;
+
+            Dispose();
+            CreateGeometry();
+            ApplyParameters();
+            CreateBuffers(Application.GraphicsDevice);
+            Built = true;
+        }
+
+        public void SoftBuild()
+        {
+            if (Built) return;
             Dispose();
             CreateGeometry();
             ApplyParameters();
@@ -175,6 +187,28 @@ namespace C3DE.Graphics.Primitives
 
             _indexBuffer?.Dispose();
             _indexBuffer = new IndexBuffer(graphics, IndexElementSize.SixteenBits, _indices.Length, BufferUsage.None);
+        }
+
+        public void Create(Vector3[] positions, Vector3[] normals, Vector2[] uv, ushort[] indices)
+        {
+            Vertices = new VertexPositionNormalTexture[positions.Length];
+
+            for(var i = 0; i < positions.Length; i++)
+            {
+                Vertices[i] = new VertexPositionNormalTexture()
+                {
+                    Position = positions[i],
+                    Normal = normals != null ? normals[i] : Vector3.Zero,
+                    TextureCoordinate = uv != null ? uv[i] : Vector2.Zero
+                };
+            }
+
+            _indices = indices;
+
+            Dispose();
+            ApplyParameters();
+            CreateBuffers(Application.GraphicsDevice);
+            Built = true;
         }
 
         public void SetVertices(VertexType type, Vector3[] vertices)

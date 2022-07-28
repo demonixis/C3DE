@@ -57,10 +57,13 @@ namespace C3DE
             }
         }
 
+        public Transform transform => _transform;
+        public bool activeSelf => Enabled;
+
         public Transform Transform
         {
             get { return _transform; }
-            protected set { _transform = value; }
+            internal protected set { _transform = value; }
         }
 
         public Scene Scene
@@ -146,6 +149,11 @@ namespace C3DE
         }
 
         #endregion
+
+        public void SetActive(bool active)
+        {
+            Enabled = active;
+        }
 
         /// <summary>
         /// Initialize and load specific content.
@@ -474,7 +482,7 @@ namespace C3DE
             return gameObject;
         }
 
-        public static GameObject Instanciate(GameObject sceneObject)
+        public static GameObject Instantiate(GameObject sceneObject)
         {
             return Instanciate(sceneObject, sceneObject._transform.LocalPosition, sceneObject._transform.LocalRotation);
         }

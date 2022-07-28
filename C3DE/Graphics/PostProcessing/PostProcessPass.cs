@@ -42,13 +42,13 @@ namespace C3DE.Graphics.PostProcessing
         {
             _VREnabled = service != null;
             _mainRenderTarget.Dispose();
-            _mainRenderTarget = GetRenderTarget();
+            _mainRenderTarget = CreateRenderTarget();
             _textureSamplerTexelSize = new Vector4(1.0f / (float)_mainRenderTarget.Width, 1.0f / (float)_mainRenderTarget.Height, _mainRenderTarget.Width, _mainRenderTarget.Height);
         }
 
         public virtual void Initialize(ContentManager content)
         {
-            _mainRenderTarget = GetRenderTarget();
+            _mainRenderTarget = CreateRenderTarget();
             _textureSamplerTexelSize = new Vector4(1.0f / (float)_mainRenderTarget.Width, 1.0f / (float)_mainRenderTarget.Height, _mainRenderTarget.Width, _mainRenderTarget.Height);
         }
 
@@ -76,7 +76,7 @@ namespace C3DE.Graphics.PostProcessing
         {
         }
 
-        protected RenderTarget2D GetRenderTarget(RenderTargetUsage targetUsage = RenderTargetUsage.DiscardContents)
+        protected RenderTarget2D CreateRenderTarget(RenderTargetUsage targetUsage = RenderTargetUsage.DiscardContents)
         {
             var pp = _graphics.PresentationParameters;
             var width = pp.BackBufferWidth;

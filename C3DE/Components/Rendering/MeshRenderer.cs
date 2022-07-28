@@ -83,7 +83,7 @@ namespace C3DE.Components.Rendering
 
         public override void Draw(GraphicsDevice graphics)
         {
-            if (_mesh == null)
+            if (_mesh == null || _mesh?.VertexBuffer == null)
                 return;
 
             if (_mesh.VertexBuffer.IsDisposed || _mesh.IndexBuffer.IsDisposed)
@@ -170,7 +170,7 @@ namespace C3DE.Components.Rendering
                 if (_mesh.Built)
                     clone._mesh.Build();
 
-                clone.ComputeBoundingInfos();
+                //clone.ComputeBoundingInfos();
             }
 
             return clone;

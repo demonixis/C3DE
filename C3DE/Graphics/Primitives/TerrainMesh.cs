@@ -5,89 +5,47 @@ namespace C3DE.Graphics.Primitives
 {
     public class TerrainMesh : Mesh
     {
-        private int _width;
-        private int _height;
-        private int _depth;
-        private float[,] _data;
-
-        public int Width
-        {
-            get { return _width; }
-            set { _width = value; }
-        }
-
-        public int Height
-        {
-            get { return _height; }
-            set { _height = value; }
-        }
-
-        public int Depth
-        {
-            get { return _depth; }
-            set { _depth = value; }
-        }
-
-        public float[,] Data
-        {
-            get { return _data; }
-            set { _data = value; }
-        }
+        public int HeightmapSize { get; set; } = 65;
+        public float[,] Data { get; set; }
+        public bool OriginAtCenter { get; set; } = true;
+        public bool ReverseHeightmap { get; set; } = false;
 
         public TerrainMesh()
             : base()
         {
-            _width = 25;
-            _height = 0;
-            _depth = 25;
-            size = new Vector3(10.0f);
+            Data = new float[HeightmapSize, HeightmapSize];
 
-            _data = new float[_width, Depth];
-
-            for (int x = 0; x < _width; x++)
+            for (int x = 0; x < HeightmapSize; x++)
             {
-                for (int z = 0; z < _depth; z++)
+                for (int z = 0; z < HeightmapSize; z++)
                     Data[x, z] = 0.0f;
             }
         }
 
-        public TerrainMesh(int width = 25, int depth = 25, float scale = 10.0f)
-            : base()
-        {
-            _width = width;
-            _height = 0;
-            _depth = depth;
-            size = new Vector3(scale);
-
-            _data = new float[_width, Depth];
-
-            for (int x = 0; x < _width; x++)
-            {
-                for (int z = 0; z < _depth; z++)
-                    Data[x, z] = 0.0f;
-            }
-        }
 
         protected override void CreateGeometry()
         {
-            Vertices = new VertexPositionNormalTexture[_width * _depth];
+            Vertices = new VertexPositionNormalTexture[HeightmapSize * HeightmapSize];
 
-            var xx = -_width / 2;
-            
+            var xx = 0;
+            if (OriginAtCenter)
+                xx = -HeightmapSize / 2;
 
-            for (int x = 0; x < _width; x++)
+            for (int x = 0; x < HeightmapSize; x++)
             {
-                var zz = -_depth / 2;
+                var zz = 0;
+                if (OriginAtCenter)
+                    zz = -HeightmapSize / 2;
 
-                for (int z = 0; z < _depth; z++)
+                for (int z = 0; z < HeightmapSize; z++)
                 {
-                    Vertices[x + z * _width].Position = new Vector3(xx, _data[x, z], zz);
+                    Vertices[x + z * HeightmapSize].Position = new Vector3(ReverseHeightmap ? zz : xx, Data[x, z], ReverseHeightmap ? xx : zz);
 
-                    Vertices[x + z * _width].TextureCoordinate = new Vector2(
-                        ((float)x / (float)_width),
-                        ((float)z / (float)_depth));
+                    Vertices[x + z * HeightmapSize].TextureCoordinate = new Vector2(
+                        ((float)x / (float)HeightmapSize),
+                        ((float)z / (float)HeightmapSize));
 
-                    Vertices[x + z * _width].Normal = Vector3.Up;
+                    Vertices[x + z * HeightmapSize].Normal = Vector3.Up;
 
                     zz++;
                 }
@@ -95,7 +53,7 @@ namespace C3DE.Graphics.Primitives
                 xx++;
             }
 
-            Indices = new ushort[(_width - 1) * (_depth - 1) * 6];
+            Indices = new ushort[(HeightmapSize - 1) * (HeightmapSize - 1) * 6];
 
             int counter = 0;
             ushort lowerLeft = 0;
@@ -103,14 +61,14 @@ namespace C3DE.Graphics.Primitives
             ushort topLeft = 0;
             ushort topRight = 0;
 
-            for (int x = 0; x < _width - 1; x++)
+            for (int x = 0; x < HeightmapSize - 1; x++)
             {
-                for (int y = 0; y < _depth - 1; y++)
+                for (int y = 0; y < HeightmapSize - 1; y++)
                 {
-                    lowerLeft = (ushort)(x + y * _width);
-                    lowerRight = (ushort)((x + 1) + y * _width);
-                    topLeft = (ushort)(x + (y + 1) * _width);
-                    topRight = (ushort)((x + 1) + (y + 1) * _width);
+                    lowerLeft = (ushort)(x + y * HeightmapSize);
+                    lowerRight = (ushort)((x + 1) + y * HeightmapSize);
+                    topLeft = (ushort)(x + (y + 1) * HeightmapSize);
+                    topRight = (ushort)((x + 1) + (y + 1) * HeightmapSize);
 
                     Indices[counter++] = topLeft;
                     Indices[counter++] = lowerLeft;

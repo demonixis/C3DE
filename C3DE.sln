@@ -12,6 +12,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "C3DE.Editor", "C3DE.Editor\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "C3DE.GwenUI", "C3DE.GwenUI\C3DE.GwenUI.csproj", "{3EFE1090-C355-44BA-A0D5-940A461C5C56}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "C3DE.Morrowind", "C3DE.Demo\Morrowind\C3DE.Morrowind.csproj", "{60DDAF59-379F-4ED5-B818-29DFCE4C6B42}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -38,6 +40,10 @@ Global
 		{3EFE1090-C355-44BA-A0D5-940A461C5C56}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3EFE1090-C355-44BA-A0D5-940A461C5C56}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3EFE1090-C355-44BA-A0D5-940A461C5C56}.Release|Any CPU.Build.0 = Release|Any CPU
+		{60DDAF59-379F-4ED5-B818-29DFCE4C6B42}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{60DDAF59-379F-4ED5-B818-29DFCE4C6B42}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{60DDAF59-379F-4ED5-B818-29DFCE4C6B42}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{60DDAF59-379F-4ED5-B818-29DFCE4C6B42}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

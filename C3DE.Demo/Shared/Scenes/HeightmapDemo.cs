@@ -27,6 +27,7 @@ namespace C3DE.Demo.Scenes
             waterGo.Transform.Translate(0, 10, 0);
             var terrainW = waterGo.AddComponent<Terrain>();
             terrainW.Randomize(5, 2);
+            terrainW.Geometry.Size = new Vector3(1.5f);
             terrainW.Geometry.Build();
 
             // Reflection Probe

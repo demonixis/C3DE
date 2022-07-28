@@ -1,6 +1,7 @@
 float4x4 World;
 float4x4 InvertViewProjection;
 float3 LightPosition;
+float3 AmbientColor;
 float3 Color;
 float3 CameraPosition;
 float Intensity;
@@ -98,7 +99,7 @@ float4 PixelShaderAmbient(VertexShaderOutput input) : COLOR0
     float specularLight = specularIntensity * pow(saturate(dot(reflectionVector, directionToCamera)), specularPower);
 
     //output the two lights
-    return float4(diffuseLight.rgb, specularLight);
+    return float4(diffuseLight.rgb, specularLight) * float4(AmbientColor, 1);
 }
 
 technique DirectionalLightTechnique

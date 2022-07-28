@@ -82,9 +82,27 @@ namespace C3DE.Components
             get
             {
                 UpdateWorldMatrix();
-                var rotation = Quaternion.Identity;
                 _worldMatrix.Decompose(out Vector3 scale, out Quaternion r, out Vector3 translation);
                 return r.ToEuler();
+            }
+            set
+            {
+                _localRotation = value;
+                _dirty = true; // FIXME
+            }
+        }
+
+        public Quaternion Quaternion
+        {
+            get
+            {
+                UpdateWorldMatrix();
+                _worldMatrix.Decompose(out Vector3 scale, out Quaternion r, out Vector3 translation);
+                return r;
+            }
+            set
+            {
+                value.ToEuler(ref _localRotation);
             }
         }
 
@@ -113,6 +131,63 @@ namespace C3DE.Components
             }
         }
 
+        #region Unity Interop
+
+        public Transform parent
+        {
+            get => Parent;
+            set => Parent = value;
+        }
+
+        /// <summary>
+        /// Unity Interop
+        /// </summary>
+        public Vector3 position
+        {
+            get => Position;
+            set => Position = value;
+        }
+
+        public Vector3 localPosition
+        {
+            get => LocalPosition;
+            set => LocalPosition = value;
+        }
+
+        public Quaternion rotation
+        {
+            get
+            {
+                UpdateWorldMatrix();
+                _worldMatrix.Decompose(out Vector3 scale, out Quaternion r, out Vector3 translation);
+                return r;
+            }
+            set
+            {
+                value.ToEuler(ref _localRotation);
+            }
+        }
+
+        public Quaternion localRotation
+        {
+            get
+            {
+                return Quaternion.CreateFromYawPitchRoll(_localRotation.Y, _localRotation.X, _localRotation.Z);
+            }
+            set
+            {
+                value.ToEuler(ref _localRotation);
+            }
+        }
+
+        public Vector3 localScale
+        {
+            get => LocalScale;
+            set => LocalScale = value;
+        }
+
+        #endregion
+
         public Matrix WorldMatrix => _worldMatrix;
         public Vector3 Forward => _worldMatrix.Forward;
         public Vector3 Backward => _worldMatrix.Backward;
@@ -131,6 +206,12 @@ namespace C3DE.Components
             _transforms = new List<Transform>();
             _dirty = false;
             _worldMatrix = Matrix.Identity;
+        }
+
+        public void SetParent(Transform parent, bool worldPos)
+        {
+            Parent = parent;
+            _dirty = true;
         }
 
         public Transform GetChild(int index)

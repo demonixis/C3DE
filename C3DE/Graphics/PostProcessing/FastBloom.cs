@@ -20,8 +20,8 @@ namespace C3DE.Graphics.PostProcessing
             Sgx = 1,
         }
 
-        public float threshold = 0.5f;
-        public float intensity = 2.5f;
+        public float threshold = 0.8f;
+        public float intensity = 1.5f;
         public float blurSize = 2.0f;
         public Resolution resolution = Resolution.High;
         public int blurIterations = 8;

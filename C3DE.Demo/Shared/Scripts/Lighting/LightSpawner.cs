@@ -18,9 +18,10 @@ namespace C3DE.Demo.Scripts.Lighting
         private VRService _VRService;
         private Transform _rightHand;
 
-        public bool ShowDebugMesh { get; set; } = false;
+        public bool ShowDebugMesh { get; set; } = true;
         public bool ShadowMapEnabled { get; set; } = false;
         public float Intensity { get; set; } = 1.0f;
+        public float Radius { get; set; } = 10;
         public Color? Color { get; set; } = null;
   
         public override void Start()
@@ -54,7 +55,7 @@ namespace C3DE.Demo.Scripts.Lighting
             Scene.current.Add(lightGo);
 
             var light = lightGo.GetComponent<Light>();
-            light.Radius = 10;
+            light.Radius = Radius;
             light.ShadowGenerator.ShadowStrength = 1;
             light.ShadowGenerator.Enabled = ShadowMapEnabled;
 
