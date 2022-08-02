@@ -17,19 +17,6 @@ public static class GameObjectUtils
         return go;
     }
 
-    public static Light CreateSunLight(Vector3 position, Vector3 orientation)
-    {
-        var light = new GameObject("Directional Light");
-
-        var lightComponent = light.AddComponent<Light>();
-        lightComponent.Type = LightType.Directional;
-
-        light.Transform.position = position;
-        light.Transform.LocalRotation = orientation;
-
-        return lightComponent;
-    }
-
 
     public static GameObject CreateTerrain(float[,] heightPercents, float maxHeight, float heightSampleDistance, TerrainLayer[] splatPrototypes, float[,,] alphaMap, Vector3 position)
     {
@@ -81,8 +68,8 @@ public static class GameObjectUtils
             material.SnowMap = terrainData.terrainLayers[3].diffuseTexture;*/
 
         var material = new StandardMaterial();
-        material.MainTexture = terrainData.terrainLayers[0].diffuseTexture;
-        material.Tiling = new Vector2(6);
+        material.MainTexture = Application.Content.Load<Texture2D>("Textures/Terrain/Ground/Ground03_col");
+        material.Tiling = new Vector2(16);
 
         terrain.Renderer.Material = material;
 

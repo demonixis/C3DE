@@ -35,10 +35,11 @@ namespace C3DE.Morrowind
                 content.Load<Texture2D>("Textures/Flares/circle_soft_1")
             };
 
-            var sunLight = GameObjectUtils.CreateSunLight(new Vector3(500, 250, 0), new Vector3(50, 330, 0));
-            var r = sunLight.AddComponent<LightMoverKeys>();
-            var sunflares = sunLight.AddComponent<LensFlare>();
-            sunflares.Setup(glowTexture, flareTextures);
+            var lightGo = GameObjectFactory.CreateLight(LightType.Directional, Color.White, 2, 2048);
+            lightGo.Transform.LocalPosition = new Vector3(500, 500, 0);
+            lightGo.Transform.LocalRotation = new Vector3(MathHelper.PiOver2, -MathHelper.PiOver4, 0);
+            //var sunflares = lightGo.AddComponent<LensFlare>();
+            //sunflares.Setup(glowTexture, flareTextures);
 
             var waterGo = new GameObject("Water");
             waterGo.Transform.Translate(0, -0, 0);
@@ -65,15 +66,8 @@ namespace C3DE.Morrowind
             var engine = new GameObject("Engine");
             engine.AddComponent<TES3Engine>();
 
-            var bloom = new FastBloom(Application.GraphicsDevice);
-            bloom.blurIterations = 8;
-            bloom.threshold = 0.3f;
-            bloom.intensity = 1;
-            bloom.blurType = FastBloom.BlurType.Sgx;
-            bloom.resolution = FastBloom.Resolution.High;
-            AddPostProcess(bloom);
-
-            ForwardRenderer.MaxLightCount = 4;
+            ForwardRenderer.MaxLightCount =1;
+            //Application.Engine.Renderer = new DeferredRenderer(Application.GraphicsDevice);
         }
     }
 }

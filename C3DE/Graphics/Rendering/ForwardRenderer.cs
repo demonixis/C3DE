@@ -335,7 +335,7 @@ namespace C3DE.Graphics.Rendering
 
             for (var i = 0; i < lights.Count; i++)
             {
-                if (lights[i].Enabled)
+                if (lights[i].Enabled && lights[i].GameObject.Enabled)
                     _culledLights.Add(i);
             }
 

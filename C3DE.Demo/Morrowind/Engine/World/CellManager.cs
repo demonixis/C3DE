@@ -158,6 +158,7 @@ namespace TES3Unity
         {
             string cellObjName = null;
             LANDRecord LAND = null;
+            InRangeCellInfo inRangeCellInfo = null;
 
             if (!CELL.isInterior)
             {
@@ -171,8 +172,8 @@ namespace TES3Unity
 
             if (_cellCache.ContainsKey(cellObjName))
             {
-                var inRangeCellInfo = _cellCache[cellObjName];
-                inRangeCellInfo.GameObject.SetActive(true);
+                inRangeCellInfo = _cellCache[cellObjName];
+                inRangeCellInfo.SetActive(true);
                 return inRangeCellInfo;
             }
 
@@ -185,14 +186,16 @@ namespace TES3Unity
             InstantiateLand(LAND, cellObj);
             InstantiateObjects(CELL, cellObj, cellObjectsContainer);
 
-            return new InRangeCellInfo(cellObj, cellObjectsContainer, CELL);
+            inRangeCellInfo = new InRangeCellInfo(cellObj, cellObjectsContainer, CELL);
+            _cellCache.Add(cellObjName, inRangeCellInfo);
+            return inRangeCellInfo;
         }
 
         public void DestroyAllCells()
         {
             foreach (var keyValuePair in cellObjects)
             {
-                keyValuePair.Value.GameObject.SetActive(false);
+                keyValuePair.Value.SetActive(false);
             }
 
             cellObjects.Clear();

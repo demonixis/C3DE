@@ -29,20 +29,21 @@ namespace C3DE
             return gameObject;
         }
 
-        public static GameObject CreateLight(LightType type) => CreateLight(type, Color.White);
+        public static Light CreateLight(LightType type) => CreateLight(type, Color.White);
 
-        public static GameObject CreateLight(LightType type, Color color, float intensity = 1.0f, int shadowMapSize = 1024)
+        public static Light CreateLight(LightType type, Color color, float intensity = 1.0f, int shadowMapSize = 1024, float radius = 25)
         {
             var gameObject = new GameObject($"Light_{type}");
             var light = gameObject.AddComponent<Light>();
             light.Type = type;
             light.Intensity = intensity;
+            light.Radius = radius;
             light._color = color.ToVector3();
 
             if (shadowMapSize > 0)
                 light._shadowGenerator.SetShadowMapSize(Application.GraphicsDevice, shadowMapSize);
 
-            return gameObject;
+            return light;
         }
 
         public static ReflectionProbe CreateReflectionProbe(Vector3 position, int size = 64, float fov = 60.0f, float nearClip = 400.0f, float farClip = 500.0f)

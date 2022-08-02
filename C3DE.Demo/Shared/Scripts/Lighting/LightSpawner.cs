@@ -52,7 +52,7 @@ namespace C3DE.Demo.Scripts.Lighting
             var color = Color.HasValue ? Color.Value : RandomHelper.GetColor();
             var lightGo = GameObjectFactory.CreateLight(LightType.Point, color, Intensity, 1024);
             lightGo.Transform.LocalPosition = position;
-            Scene.current.Add(lightGo);
+            Scene.current.Add(lightGo.GameObject);
 
             var light = lightGo.GetComponent<Light>();
             light.Radius = Radius;

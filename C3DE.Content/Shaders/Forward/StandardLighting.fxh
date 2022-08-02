@@ -31,7 +31,7 @@ float3 CalculateOneLight(int i, float3 worldPosition, float3 worldNormal, float3
 	if (diffuseIntensity <= 0)
 		return float3(0, 0, 0);
 	
-	float3 diffuse = diffuseIntensity * LightColor[i] * diffuseColor;
+	float3 diffuse = diffuseIntensity * LightColor[i];
 	float baseIntensity = 1; // Directional
 	
 	if (LightData[i].x == 1) // Point
@@ -51,6 +51,8 @@ float3 CalculateOneLight(int i, float3 worldPosition, float3 worldNormal, float3
 			baseIntensity = 0.0;
 	}
 #endif
+
+	baseIntensity *= LightData[i].y;
 	
 	// Self Shadow.
 	float selfShadow = saturate(4 * diffuseIntensity);

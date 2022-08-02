@@ -98,7 +98,7 @@ namespace C3DE.Graphics.Primitives
             _indexBuffer.SetData(_indices);
         }
 
-        public void Build()
+        public virtual void Build()
         {
             if (_vertices?.Length == 0) return;
 
@@ -112,11 +112,7 @@ namespace C3DE.Graphics.Primitives
         public void SoftBuild()
         {
             if (Built) return;
-            Dispose();
-            CreateGeometry();
-            ApplyParameters();
-            CreateBuffers(Application.GraphicsDevice);
-            Built = true;
+            Build();
         }
 
         public void ComputeNormals()

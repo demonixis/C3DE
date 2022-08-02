@@ -97,6 +97,8 @@ namespace C3DE.Graphics.Rendering
                 renderer = scene._renderList[i];
                 material = scene._renderList[i].Material;
 
+                if (!renderer.Enabled || !renderer.GameObject.Enabled) continue;
+
                 // A specific renderer that uses its own draw logic.
                 if (material == null)
                 {
@@ -118,11 +120,14 @@ namespace C3DE.Graphics.Rendering
             _graphicsDevice.Clear(Color.Transparent);
 
             // TODO: Make a LightRenderer that renders lights with data only
-           // _ambientLight.Color = Scene.current.RenderSettings.AmbientColor;
-          //  _ambientLight.RenderDeferred(m_ColorTarget, m_NormalTarget, m_DepthTarget, camera);
+            // _ambientLight.Color = Scene.current.RenderSettings.AmbientColor;
+            //  _ambientLight.RenderDeferred(m_ColorTarget, m_NormalTarget, m_DepthTarget, camera);
 
             foreach (var light in scene._lights)
-                light.RenderDeferred(m_ColorTarget, m_NormalTarget, m_DepthTarget, camera);
+            {
+                if (light.Enabled && light.GameObject.Enabled)
+                    light.RenderDeferred(m_ColorTarget, m_NormalTarget, m_DepthTarget, camera);
+            }
         }
 
         protected virtual void RenderSceneForCamera(Scene scene, Camera camera, int eye)

@@ -174,7 +174,7 @@ namespace C3DE.Graphics.Rendering
         {
             foreach (var light in scene._lights)
             {
-                if (light.ShadowEnabled)
+                if (light.ShadowEnabled && light.Enabled && light.GameObject.Enabled)
                     light._shadowGenerator.RenderShadows(_graphicsDevice, scene._renderList, light);
             }
         }

@@ -79,7 +79,18 @@ namespace C3DE.Graphics.Primitives
                 }
             }
 
+        }
+
+        public override void Build()
+        {
+            if (_vertices?.Length == 0) return;
+
+            Dispose();
+            CreateGeometry();
+            ApplyParameters();
             ComputeNormals();
+            CreateBuffers(Application.GraphicsDevice);
+            Built = true;
         }
     }
 }
