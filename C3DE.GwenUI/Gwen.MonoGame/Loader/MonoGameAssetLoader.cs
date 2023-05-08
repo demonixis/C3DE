@@ -4,6 +4,7 @@ using System.IO;
 using System.IO.Compression;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using CompressionMode = System.IO.Compression.CompressionMode;
 
 namespace Gwen.Loader.MonoGame
 {

@@ -20,6 +20,7 @@ namespace C3DE.Demo.Scripts.FPS
 {
     using XNAAudioListener = Microsoft.Xna.Framework.Audio.AudioListener;
     using AudioClip = Microsoft.Xna.Framework.Audio.SoundEffect;
+    using AudioListener = Components.AudioListener;
 
     public class PlayerShooter : GameObject
     {

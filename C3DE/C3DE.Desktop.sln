@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 25.0.1705.4
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "C3DE.Desktop", "C3DE.Desktop.csproj", "{27ECB1A1-7669-47DA-90BF-A739D1B63D95}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{27ECB1A1-7669-47DA-90BF-A739D1B63D95}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{27ECB1A1-7669-47DA-90BF-A739D1B63D95}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{27ECB1A1-7669-47DA-90BF-A739D1B63D95}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{27ECB1A1-7669-47DA-90BF-A739D1B63D95}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1DCBFEDB-80D6-44F5-8092-7C8AB387A33F}
+	EndGlobalSection
+EndGlobal

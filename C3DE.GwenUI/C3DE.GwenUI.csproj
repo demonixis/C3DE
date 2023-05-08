@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<TargetFramework>netcoreapp3.1</TargetFramework>
+		<TargetFramework>net6.0</TargetFramework>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
 		<DefineConstants>$(DefineConstants)TRACE;WINDOWS</DefineConstants>
@@ -9,6 +9,6 @@
 		<DefineConstants>$(DefineConstants)TRACE;WINDOWS</DefineConstants>
 	</PropertyGroup>
 	<ItemGroup>
-	  <PackageReference Include="MonoGame.Framework.WindowsDX" Version="3.8.0.1641" />
+	  <PackageReference Include="MonoGame.Framework.WindowsDX" Version="3.8.1" />
 	</ItemGroup>
 </Project>
