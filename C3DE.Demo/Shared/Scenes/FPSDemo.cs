@@ -51,22 +51,17 @@ namespace C3DE.Demo.Scenes
 
             // And a light
             var lightContainer = new GameObject("LightContainer");
-            var lightGo = GameObjectFactory.CreateLight(LightType.Directional, Color.White, .5f, 2048);
-            lightGo.Transform.LocalPosition = new Vector3(0, 0, 0);
-            lightGo.Transform.LocalRotation = new Vector3(MathHelper.PiOver2, -MathHelper.PiOver4, 0);
+            var lightGo = GameObjectFactory.CreateLight(LightType.Directional, Color.White, 2.5f, 4096);
+            lightGo.Transform.LocalPosition = new Vector3(10, 50, 0);
             lightGo.Transform.Parent = lightContainer.Transform;
 
-            var autoRotation = lightContainer.AddComponent<AutoRotation>();
-            autoRotation.Rotation = new Vector3(0, 0.25f, 0);
-
             _directionalLight = lightGo.GetComponent<Light>();
-            _directionalLight.AddComponent<AutoRotation>();
 
             // Skybox
             RenderSettings.Skybox.Generate(Application.GraphicsDevice, DemoGame.StarsSkybox, 2000);
 
             // Reflection Probe
-            // _reflectionProbe = GameObjectFactory.CreateReflectionProbe(new Vector3(0, 25, 0));
+            _reflectionProbe = GameObjectFactory.CreateReflectionProbe(new Vector3(0, 25, 0));
 
             var player = new PlayerShooter();
             player.Start();
@@ -78,9 +73,9 @@ namespace C3DE.Demo.Scenes
             terrain.Geometry.Build();
             terrain.Flatten();
             terrain.Renderer.Material = CreateGroundMaterial(content);
-            terrain.Renderer.ReceiveShadow = true;
+            terrain.Renderer.ReceiveShadow = false;
             terrain.Renderer.CastShadow = false;
-            terrain.Transform.LocalPosition = new Vector3(50, 0, 50);
+            terrain.Transform.LocalPosition = new Vector3(terrain.Width * 0.5f, 0, terrain.Depth * 0.5f);
             terrain.AddComponent<StatsDisplay>();
 
             terrain.AddComponent<BoxCollider>();
@@ -103,7 +98,7 @@ namespace C3DE.Demo.Scenes
 
             // Planets
             var planetContainer = new GameObject("PlanetContainer");
-            autoRotation = planetContainer.AddComponent<AutoRotation>();
+            var autoRotation = planetContainer.AddComponent<AutoRotation>();
             autoRotation.Rotation = new Vector3(0, 0.05f, 0);
 
             var material = new StandardMaterial();
@@ -114,9 +109,9 @@ namespace C3DE.Demo.Scenes
             planet.GetComponent<Renderer>().Material = material;
             planet.Transform.LocalPosition = new Vector3(150, 60, 100);
             planet.Transform.LocalScale = new Vector3(60);
-            planet.Transform.Parent = planetContainer.Transform; 
+            planet.Transform.Parent = planetContainer.Transform;
 
-           autoRotation = planet.AddComponent<AutoRotation>();
+            autoRotation = planet.AddComponent<AutoRotation>();
             autoRotation.Rotation = new Vector3(0, -0.1f, 0);
 
             // planet.AddComponent<PostProcessSwitcher>();
@@ -124,13 +119,11 @@ namespace C3DE.Demo.Scenes
             planet.AddComponent<DeferredDebuger>();
 
             // Bloom
-            var bloom = new FastBloom(Application.GraphicsDevice);
-            bloom.blurIterations = 8;
-            bloom.blurType = FastBloom.BlurType.Sgx;
-            bloom.resolution = FastBloom.Resolution.High;
-            SetPostProcess(bloom, true);
-
-            Application.Engine.Renderer = new DeferredRenderer(Application.GraphicsDevice);
+            /* var bloom = new FastBloom(Application.GraphicsDevice);
+             bloom.blurIterations = 8;
+             bloom.blurType = FastBloom.BlurType.Sgx;
+             bloom.resolution = FastBloom.Resolution.High;
+             SetPostProcess(bloom, true);*/
         }
 
         public override void Update()
@@ -283,8 +276,8 @@ namespace C3DE.Demo.Scenes
                 SpecularColor = Color.LightGray,
                 SpecularPower = 5,
                 SpecularIntensity = 1,
-                //ReflectionIntensity = 0.45f,
-                //ReflectionMap = _reflectionProbe.ReflectionMap
+                ReflectionIntensity = 0.45f,
+                ReflectionMap = _reflectionProbe.ReflectionMap
             };
         }
 
@@ -313,8 +306,8 @@ namespace C3DE.Demo.Scenes
                 NormalMap = content.Load<Texture2D>("Textures/pbr/Metal Plate/Metal_Plate_015_normal"),
                 SpecularColor = Color.LightGray,
                 SpecularPower = 2,
-                //ReflectionIntensity = 0.85f,
-                //ReflectionMap = _reflectionProbe.ReflectionMap,
+                ReflectionIntensity = 0.85f,
+                ReflectionMap = _reflectionProbe.ReflectionMap,
                 Tiling = new Vector2(16)
             };
         }

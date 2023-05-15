@@ -54,10 +54,10 @@ namespace C3DE.Graphics.Rendering
 
             base.RebuildRenderTargets();
 
-            m_ColorTarget = CreateRenderTarget(SurfaceFormat.Color);
-            m_NormalTarget = CreateRenderTarget(SurfaceFormat.Color);
-            m_DepthTarget = CreateRenderTarget(SurfaceFormat.Single);
-            m_LightTarget = CreateRenderTarget(SurfaceFormat.Color);
+            m_ColorTarget = CreateRenderTarget(SurfaceFormat.Color, DepthFormat.None);
+            m_NormalTarget = CreateRenderTarget(SurfaceFormat.Color, DepthFormat.None);
+            m_DepthTarget = CreateRenderTarget(SurfaceFormat.Single, DepthFormat.Depth16);
+            m_LightTarget = CreateRenderTarget(SurfaceFormat.Color, DepthFormat.None);
         }
 
         public override void Dispose(bool disposing)
@@ -156,14 +156,15 @@ namespace C3DE.Graphics.Rendering
                 _combineEffect.Parameters["LightMap"].SetValue(m_LightTarget);
                 _combineEffect.CurrentTechnique.Passes[0].Apply();
                 _quadRenderer.RenderFullscreenQuad();
+            }
 
+            using (_graphicsDevice.PostProcessState())
                 RenderPostProcess(scene._postProcessPasses, _sceneRenderTargets[eye]);
 
-                if (!m_VREnabled)
-                {
-                    RenderToBackBuffer();
-                    RenderUI(scene._scripts);
-                }
+            if (!m_VREnabled)
+            {
+                RenderToBackBuffer();
+                RenderUI(scene._scripts);
             }
         }
 
