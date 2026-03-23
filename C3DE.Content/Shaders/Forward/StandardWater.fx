@@ -3,7 +3,7 @@
 
 // Variables
 float3 DiffuseColor;
-float3 Features;
+float4 Features;
 float2 TextureTiling;
 float TotalTime;
 float Alpha;
@@ -48,9 +48,9 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 #endif
 
 	// Specular
-	float specular = SpecularColor * SpecularIntensity;
+	float3 specular = SpecularColor * SpecularIntensity;
 	if (Features.y > 0)
-		specular *= SAMPLE_TEXTURE(SpecularMap, scaledUV).r;
+		specular *= SAMPLE_TEXTURE(SpecularMap, scaledUV).rgb;
 
 	// Shadows
 	float shadowTerm = CalcShadow(input.WorldPosition);

@@ -9,7 +9,7 @@ namespace C3DE.Graphics.Shaders.Forward
     public class ForwardStandardWater : ForwardStandardBase
     {
         protected StandardWaterMaterial _material;
-        private Vector3 _features;
+        private Vector4 _features;
 
         public ForwardStandardWater(StandardWaterMaterial material)
         {
@@ -25,24 +25,24 @@ namespace C3DE.Graphics.Shaders.Forward
         {
             _features.X = _material.NormalMap != null ? 1 : 0;
             _features.Y = _material.SpecularMap != null ? 1 : 0; 
-            _features.Z = _material.ReflectionIntensity;
 
             _effect.Parameters["TotalTime"].SetValue(Time.TotalTime * _material.Speed);
-            _effect.Parameters["TextureTiling"].SetValue(_material.Tiling);
-            _effect.Parameters["World"].SetValue(worldMatrix);
-            _effect.Parameters["AlbedoMap"].SetValue(_material.MainTexture);
-            _effect.Parameters["DiffuseColor"].SetValue(_material._diffuseColor);
-            _effect.Parameters["SpecularPower"].SetValue(_material.SpecularPower);
-            _effect.Parameters["SpecularColor"].SetValue(_material.SpecularColor.ToVector3());
-            _effect.Parameters["SpecularIntensity"].SetValue(_material.SpecularIntensity);
-            _effect.Parameters["ReflectionIntensity"].SetValue(_material.ReflectionIntensity);
-            _effect.Parameters["ReflectionMap"].SetValue(_material.ReflectionMap);
+            BindCommonMaterialParameters(ref worldMatrix, receiveShadow, drawInstanced);
+            BindStandardSurfaceParameters(
+                _material.MainTexture,
+                _material._diffuseColor,
+                _material.SpecularColor.ToVector3(),
+                _material.SpecularPower,
+                _material.SpecularIntensity,
+                _material.Tiling);
+            BindStandardOptionalMaps(
+                _features,
+                _material.NormalMap,
+                _material.SpecularMap,
+                null,
+                _material.ReflectionMap);
+            BindEmissionAndReflection(Vector3.Zero, 0.0f, _material.ReflectionIntensity);
             _effect.Parameters["Alpha"].SetValue(_material.Alpha);
-
-            _effect.Parameters["ShadowEnabled"]?.SetValue(receiveShadow);
-            _effect.Parameters["SpecularMap"]?.SetValue(_material.SpecularMap);
-            _effect.Parameters["NormalMap"]?.SetValue(_material.NormalMap);
-            _effect.Parameters["Features"]?.SetValue(_features);
 
             _effect.CurrentTechnique.Passes[0].Apply();
         }

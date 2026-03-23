@@ -3,7 +3,7 @@
 
 // Misc
 float2 TextureTiling;
-float2 Features;
+float4 Features;
 float3 SpecularColor;
 float SpecularIntensity;
 
@@ -21,11 +21,11 @@ DECLARE_TEXTURE(SnowNormalMap, 9);
 float3 BlendTextures(sampler2D grass, sampler2D sand, sampler2D rock, sampler2D snow, float2 uv)
 {
 	float2 scaledUV = uv * TextureTiling;
-	float3 mainTex = SAMPLE_TEXTURE(grass, scaledUV);
-	float3 sandTex = SAMPLE_TEXTURE(sand, scaledUV);
-	float3 rockTex = SAMPLE_TEXTURE(rock, scaledUV);
-	float3 snowTex = SAMPLE_TEXTURE(snow, scaledUV);
-	float3 weightTex = SAMPLE_TEXTURE(WeightMap, uv);
+	float3 mainTex = SAMPLE_TEXTURE(grass, scaledUV).xyz;
+	float3 sandTex = SAMPLE_TEXTURE(sand, scaledUV).xyz;
+	float3 rockTex = SAMPLE_TEXTURE(rock, scaledUV).xyz;
+	float3 snowTex = SAMPLE_TEXTURE(snow, scaledUV).xyz;
+	float3 weightTex = SAMPLE_TEXTURE(WeightMap, uv).xyz;
 
 	float3 blend = clamp(1.0 - weightTex.r - weightTex.g - weightTex.b, 0, 1);
 	blend *= mainTex;

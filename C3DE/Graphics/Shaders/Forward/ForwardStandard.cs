@@ -22,32 +22,32 @@ namespace C3DE.Graphics.Shaders.Forward
 
         public override void Pass(ref Matrix worldMatrix, bool receiveShadow, bool drawInstanced)
         {
-            _effect.Parameters["TextureTiling"].SetValue(_material.Tiling);
-            _effect.Parameters["World"].SetValue(worldMatrix);
-            _effect.Parameters["AlbedoMap"].SetValue(_material.MainTexture);
-            _effect.Parameters["DiffuseColor"].SetValue(_material._diffuseColor);
-            _effect.Parameters["SpecularColor"].SetValue(_material.SpecularColor.ToVector3());
-            _effect.Parameters["SpecularPower"].SetValue(_material.SpecularPower);
-            _effect.Parameters["SpecularIntensity"].SetValue(_material.SpecularIntensity);
-            _effect.Parameters["EmissiveMap"].SetValue(_material.EmissiveMap);
-            _effect.Parameters["EmissiveColor"].SetValue(_material.EmissiveColor.ToVector3());
-            _effect.Parameters["EmissiveIntensity"].SetValue(_material.EmissiveIntensity);
-            
+            BindCommonMaterialParameters(ref worldMatrix, receiveShadow, drawInstanced);
+            BindStandardSurfaceParameters(
+                _material.MainTexture,
+                _material._diffuseColor,
+                _material.SpecularColor.ToVector3(),
+                _material.SpecularPower,
+                _material.SpecularIntensity,
+                _material.Tiling);
+
             _features.X = _material.NormalMap != null ? 1 : 0;
             _features.Y = _material.EmissiveMap != null ? 1 : 0;
             _features.Z = _material.CutoutEnabled ? 1 : 0;
             _features.W = _material.SpecularMap != null ? 1 : 0;
 
-            _effect.Parameters["Features"]?.SetValue(_features);
-            _effect.Parameters["NormalMap"]?.SetValue(_material.NormalMap);
-            _effect.Parameters["SpecularMap"]?.SetValue(_material.SpecularMap);
-            _effect.Parameters["ShadowEnabled"]?.SetValue(receiveShadow);
-            _effect.Parameters["Cutout"]?.SetValue(_material.Cutout);
-            _effect.Parameters["ReflectionMap"]?.SetValue(_material.ReflectionMap);
-            _effect.Parameters["ReflectionIntensity"]?.SetValue(_material.ReflectionIntensity);
+            BindStandardOptionalMaps(
+                _features,
+                _material.NormalMap,
+                _material.SpecularMap,
+                _material.EmissiveMap,
+                _material.ReflectionMap);
+            BindEmissionAndReflection(
+                _material.EmissiveColor.ToVector3(),
+                _material.EmissiveIntensity,
+                _material.ReflectionIntensity);
 
-            if (drawInstanced)
-                _effect.Parameters["World"].SetValue(Matrix.Identity);
+            _effect.Parameters["Cutout"]?.SetValue(_material.Cutout);
 
             _effect.Techniques[drawInstanced ? 1 : 0].Passes[0].Apply();
         }

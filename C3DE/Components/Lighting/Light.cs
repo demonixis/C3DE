@@ -1,6 +1,7 @@
 ﻿using C3DE.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 
 namespace C3DE.Components.Lighting
 {
@@ -32,10 +33,12 @@ namespace C3DE.Components.Lighting
         {
             get
             {
-                var position = _transform.Position;
                 var rotation = _transform.Rotation;
                 var matrix = Matrix.CreateFromYawPitchRoll(rotation.Y, rotation.X, rotation.Z);
-                return position + Vector3.Transform(Vector3.Forward, matrix);
+                // Unity-style convention: a light points along its local +Z axis.
+                // MonoGame's Vector3.Forward is -Z, so use Backward here to preserve
+                // Unity-like authoring semantics from Transform rotation.
+                return Vector3.Normalize(Vector3.Transform(Vector3.Backward, matrix));
             }
         }
 
@@ -117,14 +120,37 @@ namespace C3DE.Components.Lighting
         // Need to be changed quickly !
         public void Update(ref BoundingSphere sphere)
         {
-            Vector3 dir = sphere.Center - _gameObject.Transform.Position;
-            dir.Normalize();
+            var direction = Direction;
+            var up = Math.Abs(Vector3.Dot(direction, Vector3.Up)) > 0.999f ? Vector3.Right : Vector3.Up;
 
-            _viewMatrix = Matrix.CreateLookAt(_transform.Position, sphere.Center, Vector3.Up);
-            float size = sphere.Radius;
+            if (Type == LightType.Directional)
+            {
+                var size = Math.Max(sphere.Radius, 1.0f);
+                var distance = size * 2.0f;
+                var position = sphere.Center - direction * distance;
+                _viewMatrix = Matrix.CreateLookAt(position, sphere.Center, up);
+                _projectionMatrix = Matrix.CreateOrthographicOffCenter(-size, size, size, -size, 0.1f, distance + size * 2.0f);
+                return;
+            }
 
-            float dist = Vector3.Distance(_transform.LocalPosition, sphere.Center);
-            _projectionMatrix = Matrix.CreateOrthographicOffCenter(-size, size, size, -size, dist - sphere.Radius, dist + sphere.Radius * 2);
+            if (Type == LightType.Spot)
+            {
+                var position = _transform.Position;
+                _viewMatrix = Matrix.CreateLookAt(position, position + direction, up);
+                var fov = MathHelper.Clamp(Angle * 2.0f, 0.1f, MathHelper.Pi - 0.01f);
+                _projectionMatrix = Matrix.CreatePerspectiveFieldOfView(fov, 1.0f, 0.1f, Math.Max(Radius, 1.0f));
+                return;
+            }
+
+            var pointPosition = _transform.Position;
+            var target = sphere.Center;
+            if (Vector3.DistanceSquared(pointPosition, target) < 0.0001f)
+                target = pointPosition + Vector3.Forward;
+
+            _viewMatrix = Matrix.CreateLookAt(pointPosition, target, up);
+            float fallbackSize = Math.Max(sphere.Radius, 1.0f);
+            float fallbackDistance = Vector3.Distance(pointPosition, target);
+            _projectionMatrix = Matrix.CreateOrthographicOffCenter(-fallbackSize, fallbackSize, fallbackSize, -fallbackSize, Math.Max(0.1f, fallbackDistance - sphere.Radius), fallbackDistance + sphere.Radius * 2.0f);
         }
 
         public override void Dispose()

@@ -98,42 +98,59 @@ VertexShaderOutput MainVS_Instancing(VertexShaderInput input, float4x4 instanceT
 	return CommonVS(input, mul(World, transpose(instanceTransform)));
 }
 
+float3 PrepareViewDirection(float3 worldPosition)
+{
+    return normalize(EyePosition - worldPosition);
+}
+
+float3 ApplyReflectionToAlbedo(float3 albedo, float4 reflection)
+{
+    if (reflection.a > 0)
+        return lerp(albedo, reflection.xyz, reflection.a);
+
+    return albedo;
+}
+
+float3 AccumulateStandardLighting(float3 worldPosition, float3 normal, float3 specularTerm)
+{
+    float3 light = FLOAT3(0.0);
+    float3 viewDirection = PrepareViewDirection(worldPosition);
+
+#if SM4
+    int limit = min(MAX_LIGHT_COUNT, LightCount);
+    for (int i = 0; i < limit; i++)
+        light += CalculateOneLight(i, worldPosition, normal, viewDirection, specularTerm, SpecularPower);
+#else
+    // SM3/MojoShader: keep the loop statically bounded and branch-light.
+    [unroll]
+    for (int i = 0; i < MAX_LIGHT_COUNT; i++)
+    {
+        if (i < LightCount)
+            light += CalculateOneLight(i, worldPosition, normal, viewDirection, specularTerm, SpecularPower);
+    }
+#endif
+
+    return light;
+}
+
+float3 ComposeStandardColor(float3 albedo, float3 emissive, float shadowTerm, float3 light, float fogDistance, float4 reflection)
+{
+    albedo = ApplyReflectionToAlbedo(albedo, reflection);
+    float3 color = AmbientColor + (albedo * light * shadowTerm) + emissive;
+    color = ApplyFog(color, fogDistance);
+
+    return color;
+}
+
 // Standard Pixel Shader for Per Pixel Lighting
 float3 StandardPixelShader(float4 worldPosition, float3 normal, float3 specularTerm, float fogDistance, float3 albedo, float3 emissive, float shadowTerm, float4 reflection)
-{   
-	float3 light = float3(0, 0, 0);
-#if SM4
-	int limit = min(MAX_LIGHT_COUNT, LightCount);
-	for (int i = 0; i < limit; i++)
-		light += CalculateOneLight(i, worldPosition.xyz, normal, EyePosition, albedo, specularTerm, SpecularPower);
-#else
-	// SM3/MojoShader: dynamic loops break the GLSL transpiler — use a statically-bounded
-	// unrolled loop with a per-iteration guard instead.
-	[unroll]
-	for (int i = 0; i < MAX_LIGHT_COUNT; i++)
-	{
-		if (i < LightCount)
-			light += CalculateOneLight(i, worldPosition.xyz, normal, EyePosition, albedo, specularTerm, SpecularPower);
-	}
-#endif
-	
-	if (reflection.a > 0)
-		albedo = lerp(albedo, reflection.xyz, reflection.a);
-
-    float3 color = AmbientColor + (albedo * light * shadowTerm) + emissive;
-	color = ApplyFog(color, fogDistance);
-
-	return color;
+{
+    float3 light = AccumulateStandardLighting(worldPosition.xyz, normal, specularTerm);
+    return ComposeStandardColor(albedo, emissive, shadowTerm, light, fogDistance, reflection);
 }
 
 // Standard Pixel Shader for Vertex Lighting
 float3 StandardPixelShader_VL(float3 light, float fogDistance, float3 albedo, float3 emissive, float shadowTerm, float4 reflection)
 {   
-	if (reflection.a > 0)
-		albedo = lerp(albedo, reflection.xyz, reflection.a);
-
-    float3 color = AmbientColor + (albedo * light * shadowTerm) + emissive;
-	color = ApplyFog(color, fogDistance);
-
-	return color;
+	return ComposeStandardColor(albedo, emissive, shadowTerm, light, fogDistance, reflection);
 }

@@ -22,8 +22,8 @@ namespace C3DE.Graphics.Shaders.Forward
 
         public override void Pass(ref Matrix worldMatrix, bool receiveShadow, bool drawInstanced)
         {
+            BindCommonMaterialParameters(ref worldMatrix, receiveShadow, drawInstanced);
             _effect.Parameters["TextureTiling"].SetValue(_material.Tiling);
-            _effect.Parameters["World"].SetValue(worldMatrix);
             _effect.Parameters["WeightMap"].SetValue(_material.WeightMap);
             _effect.Parameters["GrassMap"].SetValue(_material.MainTexture);
             _effect.Parameters["SandMap"].SetValue(_material.SandMap);
@@ -42,8 +42,7 @@ namespace C3DE.Graphics.Shaders.Forward
             _features.X = hasNormalMap ? 1 : 0;
             _features.Y = 0;
 
-            _effect.Parameters["Features"]?.SetValue(_features);
-            _effect.Parameters["ShadowEnabled"]?.SetValue(receiveShadow);
+            _effect.Parameters["Features"]?.SetValue(new Vector4(_features.X, _features.Y, 0.0f, 0.0f));
 
             if (hasNormalMap)
             {

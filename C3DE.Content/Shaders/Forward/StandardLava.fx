@@ -1,7 +1,7 @@
 #include "StandardBase.fx"
 
 // Misc
-float2 Features;
+float4 Features;
 float2 TextureTiling;
 float TotalTime;
 float3 SpecularColor;
@@ -13,7 +13,7 @@ DECLARE_TEXTURE(SpecularMap, 3);
 
 float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 {
-	float3 noise = SAMPLE_TEXTURE(NormalMap, input.UV * TextureTiling);
+	float3 noise = SAMPLE_TEXTURE(NormalMap, input.UV * TextureTiling).xyz;
 	float2 T1 = (input.UV + float2(1.5, -1.5) * TotalTime * 0.02) * TextureTiling;
 	float2 T2 = (input.UV + float2(-0.5, 2.0) * TotalTime * 0.01) * TextureTiling;
 
@@ -41,15 +41,15 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 #if SM4
 	if (Features.x > 0)
 	{
-		normal = 2.0 * (SAMPLE_TEXTURE(NormalMap, (T2 * 4.0))) - 1.0;
+		normal = 2.0 * SAMPLE_TEXTURE(NormalMap, (T2 * 4.0)).xyz - 1.0;
 		normal = normalize(mul(normal, input.WorldToTangentSpace));
 	}
 #endif
 
 	// Specular
-	float specular = SpecularColor * SpecularIntensity;
+	float3 specular = SpecularColor * SpecularIntensity;
 	if (Features.y > 0)
-		specular *= SAMPLE_TEXTURE(SpecularMap, (T2 * 4.0));
+		specular *= SAMPLE_TEXTURE(SpecularMap, (T2 * 4.0)).rgb;
 
 	// Base Pixel Shader
 	return float4(StandardPixelShader(input.WorldPosition, normal, specular, input.FogDistance, albedo, FLOAT3(0), 1.0, FLOAT4(0)), 1.0);

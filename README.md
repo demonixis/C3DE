@@ -91,7 +91,7 @@ mgcb C3DE.Content/Shaders.Android.mgcb
 ## Features
 
 ### Rendering
-- **Forward Renderer** — single-pass multi-light, up to 128 lights on DirectX / 16 on OpenGL
+- **Forward Renderer** — single-pass multi-light, up to 128 lights on DirectX / 12 on OpenGL
 - **Deferred Renderer** — G-buffer based, work-in-progress
 - Unified shader codebase — single HLSL shader set for both DirectX (SM4) and OpenGL (SM3) via `#if SM4` macros
 - Hardware instancing
@@ -101,7 +101,7 @@ mgcb C3DE.Content/Shaders.Android.mgcb
 
 ### Materials
 - **PBR** (Physically Based Rendering) — standard, terrain, water, lava variants
-- **Standard** — Phong + normal maps + specular maps + reflection
+- **Standard** — Blinn-Phong + normal maps + specular maps + reflection
 - **Terrain** — multi-textured with up to 4 layers, atlas support
 - Unlit, Water, Lava, and custom materials
 
@@ -147,7 +147,7 @@ mgcb C3DE.Content/Shaders.Android.mgcb
 | macOS       | OpenGL     | Supported            |
 | Android     | OpenGL ES  | Work in progress     |
 
-> The DesktopGL backend uses a unified shader set shared with DirectX. Features that require SM4 (spot lights, extended light count) are automatically disabled on SM3 platforms via `#if SM4` macros in the shaders.
+> The DesktopGL backend uses a unified shader set shared with DirectX. The SM3/OpenGL path keeps a statically bounded light loop for MojoShader and currently targets 12 lights; SM4 keeps the richer spot-light and high-light-count path behind `#if SM4`.
 
 ## Project Structure
 

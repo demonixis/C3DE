@@ -2,9 +2,9 @@
 #if SM4
 #define MAX_LIGHT_COUNT 128
 #else
-// SM3 (OpenGL): cap at 8 to stay well within the ps_3_0 ~512 static instruction limit
-// when fxc may unroll the min(MAX_LIGHT_COUNT, LightCount) loop bound.
-#define MAX_LIGHT_COUNT 8
+// SM3 (OpenGL): keep the loop statically bounded for MojoShader while still allowing
+// a slightly higher light budget than before.
+#define MAX_LIGHT_COUNT 16
 #endif
 
 // Lighting
@@ -23,48 +23,66 @@ float4 SpotData[MAX_LIGHT_COUNT];
 #endif
 int LightCount = 0;
 
-// ---
-// --- Lighting Calculation for directional, point and spot.
-// ---
-float3 CalculateOneLight(int i, float3 worldPosition, float3 worldNormal, float3 eyePosition, float3 diffuseColor, float3 specularColor, int specularPower)
+float GetLightRangeAttenuation(int i, float distanceToLight)
 {
-	float3 lightVector = LightPosition[i] - worldPosition;
-	float3 directionToLight = normalize(lightVector);
-	float diffuseIntensity = saturate(dot(directionToLight, worldNormal));
-	
-	if (diffuseIntensity <= 0)
-		return float3(0, 0, 0);
-	
-	float3 diffuse = diffuseIntensity * LightColor[i];
-	float baseIntensity = 1; // Directional
-	
-	if (LightData[i].x == 1) // Point
-	{	
-		float d = length(lightVector);
-		baseIntensity = 1.0 - pow(saturate(d / LightData[i].z), LightData[i].w);
-	}
+    float normalizedDistance = saturate(distanceToLight / max(LightData[i].z, 0.0001));
 #if SM4
-	else if (LightData[i].x == 2) // Spot
-	{
-		float d = dot(directionToLight, normalize(SpotData[i].xyz));
-		float a = cos(SpotData[i].w);
-		
-		if (a < d)
-			baseIntensity = 1.0 - pow(clamp(a / d, 0.0, 1.0), LightData[i].w);
-		else
-			baseIntensity = 0.0;
-	}
+    return 1.0 - pow(normalizedDistance, LightData[i].w);
+#else
+    float squared = normalizedDistance * normalizedDistance;
+    float quartic = squared * squared;
+    return 1.0 - lerp(squared, quartic, saturate(LightData[i].w - 1.0));
+#endif
+}
+
+#if SM4
+float GetSpotAttenuation(int i, float3 directionToLight)
+{
+    float spotCos = dot(directionToLight, -normalize(SpotData[i].xyz));
+    float angleCos = cos(SpotData[i].w);
+
+    if (spotCos <= angleCos)
+        return 0.0;
+
+    return saturate((spotCos - angleCos) / max(1.0 - angleCos, 0.0001));
+}
 #endif
 
-	baseIntensity *= LightData[i].y;
-	
-	// Self Shadow.
-	float selfShadow = saturate(4 * diffuseIntensity);
-	
-	// Phong
-	float3 reflectionVector = normalize(reflect(-directionToLight, worldNormal));
-	float3 directionToCamera = normalize(eyePosition - worldPosition);
-	float3 specular = saturate(LightColor[i] * specularColor * pow(saturate(dot(reflectionVector, directionToCamera)), specularPower));
-			   
-	return  selfShadow * baseIntensity * (diffuse + specular);
+float3 CalculateOneLight(int i, float3 worldPosition, float3 worldNormal, float3 viewDirection, float3 specularColor, int specularPower)
+{
+    float lightType = LightData[i].x;
+    float3 lightVector = LightPosition[i] - worldPosition;
+    float distanceSquared = dot(lightVector, lightVector);
+    float inverseDistance = rsqrt(max(distanceSquared, 0.0001));
+    float distanceToLight = distanceSquared * inverseDistance;
+    float3 directionToLight = lightVector * inverseDistance;
+
+    if (lightType < 0.5)
+        directionToLight = normalize(-LightPosition[i]);
+
+    float diffuseIntensity = saturate(dot(directionToLight, worldNormal));
+
+    if (diffuseIntensity <= 0.0)
+        return FLOAT3(0.0);
+
+    float lightIntensity = LightData[i].y;
+
+    if (lightType > 0.5)
+        lightIntensity *= GetLightRangeAttenuation(i, distanceToLight);
+
+#if SM4
+    if (lightType > 1.5)
+        lightIntensity *= GetSpotAttenuation(i, directionToLight);
+#endif
+
+    if (lightIntensity <= 0.0)
+        return FLOAT3(0.0);
+
+    float3 halfVector = normalize(directionToLight + viewDirection);
+    float specularIntensity = pow(saturate(dot(worldNormal, halfVector)), specularPower);
+    float3 lightColor = LightColor[i] * lightIntensity;
+    float3 diffuse = lightColor * diffuseIntensity;
+    float3 specular = lightColor * specularColor * specularIntensity;
+
+    return diffuse + specular;
 }
