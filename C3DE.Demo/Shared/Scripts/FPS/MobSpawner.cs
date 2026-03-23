@@ -122,23 +122,6 @@ namespace C3DE.Demo.Scripts.FPS
 
         private Material GetMobMaterial(ContentManager content, ReflectionProbe probe)
         {
-         /*   if (FPSDemo.PreferePBRMaterials)
-            {
-                var pbr = new PBRMaterial()
-                {
-                    MainTexture = content.Load<Texture2D>("Models/Drone/drone_Albedo"),
-                    NormalMap = content.Load<Texture2D>("Models/Drone/drone_Normal"),
-                    EmissiveMap = content.Load<Texture2D>("Models/Drone/drone_Emission")
-                };
-
-                pbr.CreateRoughnessMetallicAO(
-                    content.Load<Texture2D>("Models/Drone/drone_Roughness"),
-                    content.Load<Texture2D>("Models/Drone/drone_Metallic"),
-                    content.Load<Texture2D>("Models/Drone/drone_Occlusion"));
-
-                return pbr;
-            }*/
-
             return new StandardMaterial
             {
                 MainTexture = content.Load<Texture2D>("Models/Drone/drone_Albedo"),

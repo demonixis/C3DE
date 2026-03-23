@@ -1,5 +1,4 @@
 using C3DE.Demo.Scenes;
-using C3DE.Demo.Scenes.PBR;
 using C3DE.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
@@ -88,11 +87,9 @@ namespace C3DE.Demo
                 new GUIDemo(),
                 new LandscapeDemo(),
                 new HeightmapDemo(),
-                new HeightmapPBRAtlasedDemo(),
                 new ProceduralTerrain("Procedural Terrain (Water)", false),
                 new ProceduralTerrain("Procedural Terrain (Lava)", true),
                 new LightingDemo(),
-                new SimplePBRDemo(),
                 new FPSDemo(),
                 new SponzaDemo(),
                 new UnityImportDemo(),  

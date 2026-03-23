@@ -66,8 +66,7 @@ namespace C3DE.Morrowind
             var engine = new GameObject("Engine");
             engine.AddComponent<TES3Engine>();
 
-            ForwardRenderer.MaxLightCount =1;
-            //Application.Engine.Renderer = new DeferredRenderer(Application.GraphicsDevice);
+            ForwardRenderer.MaxLightCount = 1;
         }
     }
 }

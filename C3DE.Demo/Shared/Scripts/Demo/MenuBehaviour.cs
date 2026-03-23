@@ -1,5 +1,4 @@
 ﻿using C3DE.Components;
-using C3DE.Demo.Scenes;
 using C3DE.Graphics;
 using C3DE.UI;
 using C3DE.Utils;
@@ -101,7 +100,6 @@ namespace C3DE.Demo.Scripts
                 _demos[i].Draw(gui);
 
             GUI.Skin.TextColor = Color.Black;
-           BaseDemo.PreferePBRMaterials = gui.Checkbox(new Rectangle(Screen.VirtualWidth - 200, Screen.VirtualHeight - 50, 100, 20), "PBR Materials", BaseDemo.PreferePBRMaterials);
         }
     }
 }

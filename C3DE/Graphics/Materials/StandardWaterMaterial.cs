@@ -1,5 +1,4 @@
-﻿using C3DE.Graphics.Materials.Shaders;
-using C3DE.Graphics.Rendering;
+﻿using C3DE.Graphics.Rendering;
 using C3DE.Graphics.Shaders.Forward;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -27,11 +26,7 @@ namespace C3DE.Graphics.Materials
 
         protected override void SetupShaderMaterial(BaseRenderer renderer)
         {
-            if (renderer is ForwardRenderer)
-                _shaderMaterial = new ForwardStandardWater(this);
-            else if (renderer is DeferredRenderer)
-                _shaderMaterial = new DeferredStandardWater(this);
-
+            _shaderMaterial = new ForwardStandardWater(this);
             _shaderMaterial.LoadEffect(Application.Content);
         }
     }

@@ -37,7 +37,7 @@ namespace C3DE.Demo.Scenes
 
             // Model
             var model = content.Load<Model>("Models/Quandtum/Quandtum");
-            var mesh = model.ToMeshRenderers(PreferePBRMaterials);
+            var mesh = model.ToMeshRenderers();
             mesh.Transform.LocalScale = new Vector3(0.25f);
             mesh.Transform.Rotate(0, 0, -MathHelper.PiOver2);
 
@@ -55,19 +55,6 @@ namespace C3DE.Demo.Scenes
 
         private Material GetGroundMaterial(TextureCube reflectionMap)
         {
-            if (PreferePBRMaterials)
-            {
-                var groundMaterial = new PBRMaterial
-                {
-                    MainTexture = TextureFactory.CreateCheckboard(Color.White, Color.Black),
-                    Tiling = new Vector2(16)
-                };
-
-                groundMaterial.CreateRoughnessMetallicAO();
-
-                return groundMaterial;
-            }
-
             return new StandardMaterial
             {
                 MainTexture = TextureFactory.CreateCheckboard(Color.White, Color.Black),
@@ -80,20 +67,6 @@ namespace C3DE.Demo.Scenes
 
         private Material GetModelMaterial(ContentManager content, TextureCube reflectionMap)
         {
-            if (PreferePBRMaterials)
-            {
-                var modelMaterial = new PBRMaterial()
-                {
-                    MainTexture = content.Load<Texture2D>("Models/Quandtum/textures/Turret-Diffuse"),
-                    NormalMap = content.Load<Texture2D>("Models/Quandtum/textures/Turret-Normal"),
-                    EmissiveMap = content.Load<Texture2D>("Models/Quandtum/textures/Turret-Emission"),
-                };
-
-                modelMaterial.CreateRoughnessMetallicAO(1.0f, 0.85f);
-
-                return modelMaterial;
-            }
-
             return new StandardMaterial
             {
                 MainTexture = content.Load<Texture2D>("Models/Quandtum/textures/Turret-Diffuse"),

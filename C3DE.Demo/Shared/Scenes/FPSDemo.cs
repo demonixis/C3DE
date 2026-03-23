@@ -116,7 +116,6 @@ namespace C3DE.Demo.Scenes
 
             // planet.AddComponent<PostProcessSwitcher>();
             //planet.AddComponent<RendererSwitcher>();
-            planet.AddComponent<DeferredDebuger>();
 
             // Bloom
             /* var bloom = new FastBloom(Application.GraphicsDevice);
@@ -253,22 +252,6 @@ namespace C3DE.Demo.Scenes
 
         private Material CreateWallMaterial(ContentManager content)
         {
-            /*  if (PreferePBRMaterials)
-              {
-                  var wallMatPBR = new PBRMaterial()
-                  {
-                      MainTexture = content.Load<Texture2D>("Textures/pbr/Wall/Sci-fi_Walll_001_basecolor"),
-                      NormalMap = content.Load<Texture2D>("Textures/pbr/Wall/Sci-fi_Walll_001_normal"),
-                  };
-
-                  wallMatPBR.CreateRoughnessMetallicAO(
-                      content.Load<Texture2D>("Textures/pbr/Wall/Sci-fi_Walll_001_metallic"),
-                      content.Load<Texture2D>("Textures/pbr/Wall/Sci-fi_Walll_001_roughness"),
-                      content.Load<Texture2D>("Textures/pbr/Wall/Sci-fi_Walll_001_ambientOcclusion"));
-
-                  return wallMatPBR;
-              }*/
-
             return new StandardMaterial()
             {
                 MainTexture = content.Load<Texture2D>("Textures/pbr/Wall/Sci-fi_Walll_001_basecolor"),
@@ -283,23 +266,6 @@ namespace C3DE.Demo.Scenes
 
         private Material CreateGroundMaterial(ContentManager content)
         {
-            /*   if (PreferePBRMaterials)
-               {
-                   var mat = new PBRMaterial()
-                   {
-                       MainTexture = content.Load<Texture2D>("Textures/pbr/Metal Plate/Metal_Plate_015_basecolor"),
-                       NormalMap = content.Load<Texture2D>("Textures/pbr/Metal Plate/Metal_Plate_015_normal"),
-                       Tiling = new Vector2(16)
-                   };
-
-                   mat.CreateRoughnessMetallicAO(
-                       content.Load<Texture2D>("Textures/pbr/Metal Plate/Metal_Plate_015_roughness"),
-                       content.Load<Texture2D>("Textures/pbr/Metal Plate/Metal_Plate_015_metallic"),
-                       content.Load<Texture2D>("Textures/pbr/Metal Plate/Metal_Plate_015_ambientOcclusion"));
-
-                   return mat;
-               }*/
-
             return new StandardMaterial()
             {
                 MainTexture = content.Load<Texture2D>("Textures/pbr/Metal Plate/Metal_Plate_015_basecolor"),

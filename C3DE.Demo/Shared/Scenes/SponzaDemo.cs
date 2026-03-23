@@ -28,7 +28,7 @@ namespace C3DE.Demo.Scenes
             // Sponza Model
             var content = Application.Content;
             var sponzaModel = content.Load<Model>("Models/Sponza/sponza");
-            var sponzaGo = sponzaModel.ToMeshRenderers(PreferePBRMaterials);
+            var sponzaGo = sponzaModel.ToMeshRenderers();
             sponzaGo.Transform.Translate(0.0f, 1.0f, 0.0f);
             PatchMaterials(sponzaGo, content);
 
@@ -69,8 +69,8 @@ namespace C3DE.Demo.Scenes
 
             foreach (var renderer in renderers)
             {
-                material = renderer.Material as  StandardMaterial;
-                if (material == null) // We need to do the same with PBRMaterial.
+                material = renderer.Material as StandardMaterial;
+                if (material == null)
                     return;
 
                 if (material.MainTexture == null)

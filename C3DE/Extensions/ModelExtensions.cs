@@ -11,7 +11,7 @@ namespace Microsoft.Xna.Framework.Graphics
     {
         private static Dictionary<string, Material> MaterialsCache = new Dictionary<string, Material>();
 
-        public static GameObject ToMeshRenderers(this Model model, bool pbrMaterial = false, bool sharedMesh = true)
+        public static GameObject ToMeshRenderers(this Model model, bool sharedMesh = true)
         {
             var scene = Scene.current;
 
@@ -42,7 +42,7 @@ namespace Microsoft.Xna.Framework.Graphics
                     var material = TryGetMaterial(effect);
 
                     if (material == null)
-                        material = CreateMaterial(effect, pbrMaterial);
+                        material = CreateMaterial(effect);
 
                     var child = new GameObject($"{mesh.Name}_{meshPartIndex}");
                     scene.Add(child);
@@ -81,31 +81,16 @@ namespace Microsoft.Xna.Framework.Graphics
             return gameObject;
         }
 
-        private static Material CreateMaterial(BasicEffect effect, bool pbr)
+        private static Material CreateMaterial(BasicEffect effect)
         {
-            Material material = null;
-
-            if (pbr)
+            var material = new StandardMaterial
             {
-                material = new PBRMaterial
-                {
-                    MainTexture = effect.Texture,
-                    DiffuseColor = new Color(effect.DiffuseColor.X, effect.DiffuseColor.Y, effect.DiffuseColor.Z),
-                };
-
-                ((PBRMaterial)(material)).CreateRoughnessMetallicAO();
-            }
-            else
-            {
-                material = new StandardMaterial
-                {
-                    MainTexture = effect.Texture,
-                    DiffuseColor = new Color(effect.DiffuseColor.X, effect.DiffuseColor.Y, effect.DiffuseColor.Z),
-                    SpecularMap = TextureFactory.CreateColor(new Color(effect.SpecularColor.X, effect.SpecularColor.Y, effect.SpecularColor.Z), 1, 1),
-                    SpecularPower = (int)effect.SpecularPower,
-                    EmissiveColor = new Color(effect.EmissiveColor.X, effect.EmissiveColor.Y, effect.EmissiveColor.Z)
-                };
-            }
+                MainTexture = effect.Texture,
+                DiffuseColor = new Color(effect.DiffuseColor.X, effect.DiffuseColor.Y, effect.DiffuseColor.Z),
+                SpecularMap = TextureFactory.CreateColor(new Color(effect.SpecularColor.X, effect.SpecularColor.Y, effect.SpecularColor.Z), 1, 1),
+                SpecularPower = (int)effect.SpecularPower,
+                EmissiveColor = new Color(effect.EmissiveColor.X, effect.EmissiveColor.Y, effect.EmissiveColor.Z)
+            };
 
             if (!string.IsNullOrEmpty(effect?.Texture?.Name))
                 MaterialsCache.Add(effect.Texture.Name, material);

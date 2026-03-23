@@ -31,102 +31,12 @@
 /processorParam:DebugMode=Auto
 /build:Shaders/Normal.fx
 
-#begin Shaders/Deferred/AmbientLight.fx
-/importer:EffectImporter
-/processor:EffectProcessor
-/processorParam:DebugMode=Auto
-/build:Shaders/Deferred/AmbientLight.fx
-
-#begin Shaders/Deferred/Clear.fx
-/importer:EffectImporter
-/processor:EffectProcessor
-/processorParam:DebugMode=Auto
-/build:Shaders/Deferred/Clear.fx
-
-#begin Shaders/Deferred/Combine.fx
-/importer:EffectImporter
-/processor:EffectProcessor
-/processorParam:DebugMode=Auto
-/build:Shaders/Deferred/Combine.fx
-
-#begin Shaders/Deferred/DirectionalLight.fx
-/importer:EffectImporter
-/processor:EffectProcessor
-/processorParam:DebugMode=Auto
-/build:Shaders/Deferred/DirectionalLight.fx
-
-#begin Shaders/Deferred/PointLight.fx
-/importer:EffectImporter
-/processor:EffectProcessor
-/processorParam:DebugMode=Auto
-/build:Shaders/Deferred/PointLight.fx
-
-#begin Shaders/Deferred/Skybox.fx
-/importer:EffectImporter
-/processor:EffectProcessor
-/processorParam:DebugMode=Auto
-/build:Shaders/Deferred/Skybox.fx
-
-#begin Shaders/Deferred/Standard.fx
-/importer:EffectImporter
-/processor:EffectProcessor
-/processorParam:DebugMode=Auto
-/build:Shaders/Deferred/Standard.fx
-
-#begin Shaders/Deferred/StandardTerrain.fx
-/importer:EffectImporter
-/processor:EffectProcessor
-/processorParam:DebugMode=Auto
-/build:Shaders/Deferred/StandardTerrain.fx
-
-#begin Shaders/Deferred/StandardWater.fx
-/importer:EffectImporter
-/processor:EffectProcessor
-/processorParam:DebugMode=Auto
-/build:Shaders/Deferred/StandardWater.fx
-
-#begin Shaders/Deferred/Unlit.fx
-/importer:EffectImporter
-/processor:EffectProcessor
-/processorParam:DebugMode=Auto
-/build:Shaders/Deferred/Unlit.fx
-
 #begin Shaders/Depth.fx
 /importer:EffectImporter
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
 /build:Shaders/Depth.fx
 
-
-#begin Shaders/Forward/PBRLava.fx
-/importer:EffectImporter
-/processor:EffectProcessor
-/processorParam:DebugMode=Auto
-/build:Shaders/Forward/PBRLava.fx
-
-#begin Shaders/Forward/PBRStandard.fx
-/importer:EffectImporter
-/processor:EffectProcessor
-/processorParam:DebugMode=Auto
-/build:Shaders/Forward/PBRStandard.fx
-
-#begin Shaders/Forward/PBRTerrain.fx
-/importer:EffectImporter
-/processor:EffectProcessor
-/processorParam:DebugMode=Auto
-/build:Shaders/Forward/PBRTerrain.fx
-
-#begin Shaders/Forward/PBRTerrainAtlased.fx
-/importer:EffectImporter
-/processor:EffectProcessor
-/processorParam:DebugMode=Auto
-/build:Shaders/Forward/PBRTerrainAtlased.fx
-
-#begin Shaders/Forward/PBRWater.fx
-/importer:EffectImporter
-/processor:EffectProcessor
-/processorParam:DebugMode=Auto
-/build:Shaders/Forward/PBRWater.fx
 
 #begin Shaders/Forward/Skybox.fx
 /importer:EffectImporter

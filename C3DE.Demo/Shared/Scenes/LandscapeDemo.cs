@@ -59,7 +59,7 @@ namespace C3DE.Demo.Scenes
 
             for (var i = 0; i < 50; i++)
             {
-                tree = treeModel.ToMeshRenderers(PreferePBRMaterials);
+                tree = treeModel.ToMeshRenderers();
                 tree.Transform.LocalScale = new Vector3(scale);
 
                 position.X = RandomHelper.Range(-range, range);
@@ -81,7 +81,7 @@ namespace C3DE.Demo.Scenes
         private void PatchMaterial(Material material, bool cutout)
         {
             var std = material as StandardMaterial;
-            if (std == null) // PBR Shader doesn't support cutout for now.
+            if (std == null)
                 return;
 
             std.DiffuseColor = Color.White;

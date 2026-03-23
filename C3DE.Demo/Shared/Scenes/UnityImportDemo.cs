@@ -184,25 +184,7 @@ namespace C3DE.Demo.Scenes
                 // Light
                 if (item.Light != null)
                 {
-                /*    var light = go.AddComponent<Light>();
-                    light.Enabled = item.Light.Enabled;
-                    light.Color = ToColor(item.Light.Color);
-                    light.Angle = item.Light.Angle;
-                    light.Intensity = item.Light.Intensity;
-                    light.Radius = item.Light.Radius;
-                    light.ShadowEnabled = item.Light.ShadowsEnabled;
-
-                    if (PreferePBRMaterials)
-                        light.Intensity *= 0.1f;
-
-                    if (item.Light.Type == 0)
-                        light.Type = LightType.Directional;
-                    else if (item.Light.Type == 1)
-                        light.Type = LightType.Point;
-                    else if (item.Light.Type == 2)
-                        light.Type = LightType.Spot;
-                    else
-                        light.Enabled = false;*/
+                // TODO: Import lights from Unity scene data
                 }
             }
 
@@ -252,23 +234,6 @@ namespace C3DE.Demo.Scenes
 
         public Material CreateMaterial(ContentManager content, string albedo, string normal, string roughness, string metallic, string ao, string emissive)
         {
-            if (PreferePBRMaterials)
-            {
-                var mat = new PBRMaterial
-                {
-                    MainTexture = content.Load<Texture2D>(albedo),
-                    NormalMap = content.Load<Texture2D>(normal),
-                    EmissiveMap = emissive != null ? content.Load<Texture2D>(emissive) : null
-                };
-
-                mat.CreateRoughnessMetallicAO(
-                    roughness != null ? content.Load<Texture2D>(roughness) : TextureFactory.CreateColor(0.2f),
-                    metallic != null ? content.Load<Texture2D>(metallic) : TextureFactory.CreateColor(0.7f),
-                    ao != null ? content.Load<Texture2D>(ao) : TextureFactory.CreateColor(1.0f));
-
-                return mat;
-            }
-
             return new StandardMaterial
             {
                 MainTexture = content.Load<Texture2D>(albedo),

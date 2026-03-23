@@ -193,23 +193,6 @@ namespace C3DE.Demo.Scripts.FPS
 
         private Material CreateGunMaterial(ContentManager content)
         {
-            if (FPSDemo.PreferePBRMaterials)
-            {
-                var mat = new PBRMaterial()
-                {
-                    MainTexture = content.Load<Texture2D>("Models/K9/textures/MAT_Scifi_Shotty_Base_Color"),
-                    NormalMap = content.Load<Texture2D>("Models/K9/textures/MAT_Scifi_Shotty_Normal_DirectX"),
-                    EmissiveMap = content.Load<Texture2D>("Models/K9/textures/MAT_Scifi_Shotty_Emissive"),
-                };
-
-                mat.CreateRoughnessMetallicAO(
-                    content.Load<Texture2D>("Models/K9/textures/MAT_Scifi_Shotty_Roughness"),
-                    content.Load<Texture2D>("Models/K9/textures/MAT_Scifi_Shotty_Metallic"),
-                    content.Load<Texture2D>("Models/K9/textures/MAT_Scifi_Shotty_Mixed_AO"));
-
-                return mat;
-            }
-
             var reflectionProbe = GameObject.Find("ReflectionProbe");
             var probe = reflectionProbe?.GetComponent<ReflectionProbe>() ?? null;
 

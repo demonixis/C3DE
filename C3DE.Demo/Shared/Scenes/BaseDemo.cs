@@ -18,8 +18,6 @@ namespace C3DE.Demo.Scenes
 {
     public class BaseDemo : Scene
     {
-        public static bool PreferePBRMaterials = false;
-
         protected static Color[] ValidColors = new[]
         {
             Color.Red, Color.Green, Color.Blue,
@@ -107,17 +105,6 @@ namespace C3DE.Demo.Scenes
 
         public Material GetLavaMaterial(ContentManager content)
         {
-            if (PreferePBRMaterials)
-            {
-                return new PBRLavaMaterial
-                {
-                    MainTexture = content.Load<Texture2D>("Textures/Fluids/lava_texture"),
-                    NormalMap = content.Load<Texture2D>("Textures/Fluids/wavesbump"),
-                    Metallic = 0,
-                    Roughness = 0
-                };
-            }
-
             return new StandardLavaMaterial
             {
                 MainTexture = content.Load<Texture2D>("Textures/Fluids/lava_texture"),
@@ -129,22 +116,6 @@ namespace C3DE.Demo.Scenes
 
         public Material GetWaterMaterial(ContentManager content, TextureCube reflectionMap)
         {
-            var alpha = 0.6f;
-
-            if (PreferePBRMaterials)
-            {
-                var waterMaterial = new PBRWaterMaterial
-                {
-                    MainTexture = content.Load<Texture2D>("Textures/Fluids/water"),
-                    NormalMap = content.Load<Texture2D>("Textures/Fluids/wavesbump"),
-                    Alpha = alpha
-                };
-
-                waterMaterial.CreateRoughnessMetallicAO(0.0f, 0.0f, 1.0f);
-
-                return waterMaterial;
-            }
-
             return new StandardWaterMaterial()
             {
                 MainTexture = content.Load<Texture2D>("Textures/Fluids/water"),
@@ -153,31 +124,12 @@ namespace C3DE.Demo.Scenes
                 SpecularPower = 4,
                 ReflectionMap = reflectionMap,
                 ReflectionIntensity = 0.85f,
-                Alpha = alpha
+                Alpha = 0.6f
             };
         }
 
         public Material GetTerrainMaterial(ContentManager content, Texture2D weightMap, float tiling = 8)
         {
-            if (PreferePBRMaterials)
-            {
-                var terrainMaterial = new PBRTerrainMaterial
-                {
-                    GrassMap = content.Load<Texture2D>("Textures/Terrain/Ground/Ground03_col"),
-                    GrassNormalMap = content.Load<Texture2D>("Textures/Terrain/Ground/Ground03_nrm"),
-                    SandMap = content.Load<Texture2D>("Textures/Terrain/Sand/Ground27_col"),
-                    SandNormalMap = content.Load<Texture2D>("Textures/Terrain/Sand/Ground27_nrm"),
-                    SnowMap = content.Load<Texture2D>("Textures/Terrain/Snow/Snow05_col"),
-                    SnowNormalMap = content.Load<Texture2D>("Textures/Terrain/Snow/Snow05_nrm"),
-                    RockMap = content.Load<Texture2D>("Textures/Terrain/Rock/Rock12_col"),
-                    RockNormalMap = content.Load<Texture2D>("Textures/Terrain/Rock/Rock12_nrm"),
-                    WeightMap = weightMap,
-                    Metallic = 0.2f,
-                    Roughness = 0.5f,
-                    Tiling = new Vector2(tiling)
-                };
-            }
-
             return new StandardTerrainMaterial
             {
                 MainTexture = content.Load<Texture2D>("Textures/Terrain/Ground/Ground03_col"),

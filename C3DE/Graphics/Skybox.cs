@@ -1,5 +1,4 @@
 ﻿using C3DE.Components;
-using C3DE.Graphics.Materials.Shaders;
 using C3DE.Graphics.PostProcessing;
 using C3DE.Graphics.Primitives;
 using C3DE.Graphics.Rendering;
@@ -64,11 +63,7 @@ namespace C3DE.Graphics
 
         protected void SetupShaderMaterial(BaseRenderer renderer)
         {
-            if (renderer is DeferredRenderer)
-                _shaderMaterial = new DeferredSkybox(this);
-            else
-                _shaderMaterial = new ForwardSkybox(this);
-
+            _shaderMaterial = new ForwardSkybox(this);
             _shaderMaterial.LoadEffect(Application.Content);
         }
 

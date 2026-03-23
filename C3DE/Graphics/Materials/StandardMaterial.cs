@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using C3DE.Graphics.Rendering;
-using C3DE.Graphics.Materials.Shaders;
 using C3DE.Graphics.Shaders.Forward;
 
 namespace C3DE.Graphics.Materials
@@ -17,7 +16,7 @@ namespace C3DE.Graphics.Materials
         public Texture2D SpecularMap { get; set; }
         public Color SpecularColor { get; set; } = Color.Black;
         public int SpecularPower { get; set; } = 16;
-        public float SpecularIntensity { get; set; } = 1.0f; 
+        public float SpecularIntensity { get; set; } = 1.0f;
         // Emissive
         public Texture2D EmissiveMap { get; set; }
         public float EmissiveIntensity { get; set; } = 0.0f;
@@ -30,11 +29,7 @@ namespace C3DE.Graphics.Materials
 
         protected override void SetupShaderMaterial(BaseRenderer renderer)
         {
-            if (renderer is DeferredRenderer)
-                _shaderMaterial = new DeferredStandard(this);
-            else
-                _shaderMaterial = new ForwardStandard(this);
-
+            _shaderMaterial = new ForwardStandard(this);
             _shaderMaterial.LoadEffect(Application.Content);
         }
     }

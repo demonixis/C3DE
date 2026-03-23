@@ -96,8 +96,7 @@ dotnet build C3DE/C3DE.Desktop.csproj
 Renderers live in `C3DE/Graphics/Rendering/`:
 
 - **`BaseRenderer`** — abstract, handles RenderTarget setup, UI, VR wrapping.
-- **`ForwardRenderer`** — primary renderer. Single-pass multi-light. Used in production.
-- **`DeferredRenderer`** — WIP G-buffer renderer.
+- **`ForwardRenderer`** — primary renderer. Single-pass multi-light. Will evolve to Forward+ later.
 
 The active renderer is set on `Application.Engine`.
 
@@ -112,10 +111,9 @@ Scene sorting:
 Shaders are in `C3DE.Content/Shaders/`. There is a **single unified shader set** for both DirectX (SM4) and OpenGL (SM3):
 
 - `Common/Macros.fxh` — defines `#if SM4` / `SM3` macros
-- `Forward/Standard.fx` — main opaque material shader
+- `Forward/Standard.fx` — main opaque material shader (Phong lighting)
 - `Forward/StandardBase.fx` — shared lighting code
 - `Forward/StandardLighting.fxh` — light loop, SM4 gates spot lights
-- `PBR*.fx` — physically-based material shaders
 
 Features behind `#if SM4` (DX-only): spot lights, `SpotData` array, extended light count (>16).
 Features available on both SM3 and SM4: normal maps, shadow maps, fog, PBR math, cutout.
