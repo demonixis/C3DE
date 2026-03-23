@@ -30,11 +30,13 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 	float4 rmsao = SAMPLE_TEXTURE(RMAOMap, uv * TextureTiling);
 	float3 normal = input.WorldNormal;
 
+#if SM4
 	if (Features.x > 0)
 	{
 		normal = (2.0 * (SAMPLE_TEXTURE(NormalMap, uv * TextureTiling).xyz)) - 1.0;
 		normal = normalize(mul(normal, input.WorldToTangentSpace));
 	}
+#endif
 
 	// Shadows
 	float shadowTerm = CalcShadow(input.WorldPosition);

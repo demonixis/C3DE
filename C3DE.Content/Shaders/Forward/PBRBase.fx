@@ -5,7 +5,8 @@
 #if SM4
 #define MAX_LIGHT_COUNT 128
 #else
-#define MAX_LIGHT_COUNT 16
+// SM3 (OpenGL): cap at 8 — consistent with StandardLighting.fxh; avoids over-unrolling heavy PBR math
+#define MAX_LIGHT_COUNT 8
 #endif
 
 const float3 TO_GAMMA = float3(0.45454545, 0.45454545, 0.45454545);
@@ -44,7 +45,9 @@ struct VertexShaderOutput
 	float2 UV : TEXCOORD0;
 	float4 WorldPosition : TEXCOORD1;
 	float3 WorldNormal : TEXCOORD2;
+#if SM4
 	float3x3 WorldToTangentSpace : TEXCOORD3;
+#endif
 };
 
 VertexShaderOutput CommonVS(VertexShaderInput input, float4x4 instanceTransform)
@@ -58,6 +61,7 @@ VertexShaderOutput CommonVS(VertexShaderInput input, float4x4 instanceTransform)
 	output.WorldPosition = worldPosition;
 	output.WorldNormal = mul(input.Normal, instanceTransform);
 
+#if SM4
 	float3 c1 = cross(input.Normal, float3(0.0, 0.0, 1.0));
 	float3 c2 = cross(input.Normal, float3(0.0, 1.0, 0.0));
 
@@ -65,6 +69,7 @@ VertexShaderOutput CommonVS(VertexShaderInput input, float4x4 instanceTransform)
 	output.WorldToTangentSpace[0] = length(c1) > length(c2) ? c1 : c2;
 	output.WorldToTangentSpace[1] = normalize(output.WorldToTangentSpace[0]);
 	output.WorldToTangentSpace[2] = input.Normal;
+#endif
 
 	return output;
 }
@@ -97,8 +102,17 @@ float3 PBRPixelShader(float4 worldPosition, float3 normal, float3 albedo, float3
 	// ------
 	// Lighting
 	//---------
+#if SM4
 	for (int i = 0; i < LightCount; i++)
 	{
+#else
+	// SM3/MojoShader: dynamic loops break the GLSL transpiler — use a statically-bounded
+	// unrolled loop with a per-iteration guard instead.
+	[unroll]
+	for (int i = 0; i < MAX_LIGHT_COUNT; i++)
+	{
+		if (i < LightCount) {
+#endif
 		float3 L = normalize(LightPosition[i] - worldPosition.xyz);
 		float3 H = normalize(V + L);
 		float3 radiance = float3(0, 0, 0);
@@ -133,7 +147,12 @@ float3 PBRPixelShader(float4 worldPosition, float3 normal, float3 albedo, float3
 		float NdotL = max(dot(N, L), 0.0);
 
 		Lo += (kD * albedo / PI + brdf) * radiance * NdotL;
+#if SM4
 	}
+#else
+	}  // closes: if (i < LightCount)
+	}  // closes: for loop
+#endif
 
 	// ------
 	// Shadows

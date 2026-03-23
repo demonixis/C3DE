@@ -33,11 +33,13 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 	
 	// Normal
 	float3 normal = input.WorldNormal;
+#if SM4
     if (Features.x > 0)
     {
-        float3 normalMap = (2.0 * (SAMPLE_TEXTURE(NormalMap, scaledUV))) - 1.0;
+        float3 normalMap = (2.0 * SAMPLE_TEXTURE(NormalMap, scaledUV).rgb) - 1.0;
 		normal = normalize(mul(normalMap, input.WorldToTangentSpace));
     }
+#endif
 
 	// Specular
 	float3 specular = SpecularColor * SpecularIntensity;

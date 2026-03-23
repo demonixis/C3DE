@@ -34,8 +34,12 @@ struct VertexShaderOutput
 #if REFLECTION_MAP
 	float3 Reflection : TEXCOORD3;
 #endif
+#if SM4
     float3x3 WorldToTangentSpace : TEXCOORD4;
-    float FogDistance : FOG;
+#endif
+    // FOG semantic maps to gl_FogFragCoord which is removed in OpenGL Core Profile 3.2+
+    // Use a regular TEXCOORD register instead (TEXCOORD7 is free even with TBN on SM4).
+    float FogDistance : TEXCOORD7;
 };
 
 struct VSOutput_VL
@@ -48,7 +52,7 @@ struct VSOutput_VL
 #if REFLECTION_MAP
 	float3 Reflection : TEXCOORD4;
 #endif
-	float FogDistance : FOG;
+	float FogDistance : TEXCOORD7;
 };
 
 // ---
@@ -62,10 +66,11 @@ VertexShaderOutput CommonVS(VertexShaderInput input, float4x4 instanceTransform)
     float4 viewPosition = mul(worldPosition, View);
     output.Position = mul(viewPosition, Projection);
     output.UV = input.UV;
-    output.WorldNormal = mul(input.Normal, instanceTransform);
+    output.WorldNormal = mul(input.Normal, (float3x3)instanceTransform);
     output.WorldPosition = worldPosition;
     output.FogDistance = distance(worldPosition.xyz, EyePosition);
 
+#if SM4
     float3 c1 = cross(input.Normal, float3(0.0, 0.0, 1.0));
     float3 c2 = cross(input.Normal, float3(0.0, 1.0, 0.0));
 
@@ -73,6 +78,7 @@ VertexShaderOutput CommonVS(VertexShaderInput input, float4x4 instanceTransform)
     output.WorldToTangentSpace[0] = length(c1) > length(c2) ? c1 : c2;
     output.WorldToTangentSpace[1] = normalize(output.WorldToTangentSpace[0]);
     output.WorldToTangentSpace[2] = input.Normal;
+#endif
 
 #if REFLECTION_MAP
 	float3 viewDirection = EyePosition - worldPosition.xyz;
@@ -96,10 +102,20 @@ VertexShaderOutput MainVS_Instancing(VertexShaderInput input, float4x4 instanceT
 float3 StandardPixelShader(float4 worldPosition, float3 normal, float3 specularTerm, float fogDistance, float3 albedo, float3 emissive, float shadowTerm, float4 reflection)
 {   
 	float3 light = float3(0, 0, 0);
+#if SM4
 	int limit = min(MAX_LIGHT_COUNT, LightCount);
-
 	for (int i = 0; i < limit; i++)
 		light += CalculateOneLight(i, worldPosition.xyz, normal, EyePosition, albedo, specularTerm, SpecularPower);
+#else
+	// SM3/MojoShader: dynamic loops break the GLSL transpiler — use a statically-bounded
+	// unrolled loop with a per-iteration guard instead.
+	[unroll]
+	for (int i = 0; i < MAX_LIGHT_COUNT; i++)
+	{
+		if (i < LightCount)
+			light += CalculateOneLight(i, worldPosition.xyz, normal, EyePosition, albedo, specularTerm, SpecularPower);
+	}
+#endif
 	
 	if (reflection.a > 0)
 		albedo = lerp(albedo, reflection.xyz, reflection.a);

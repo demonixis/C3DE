@@ -45,11 +45,13 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 		
 	float3 normal = input.WorldNormal;
 
+#if SM4
 	if (Features.x > 0)
 	{
 		normal = 2.0 * (SAMPLE_TEXTURE(NormalMap, (T2 * 4.0))) - 1.0;
 		normal = normalize(mul(normal, input.WorldToTangentSpace));
 	}
+#endif
 
 	// PBR Lighting
 	return float4(PBRPixelShader(input.WorldPosition, normal, albedo, float3(Roughness, Metallic, 1), FLOAT3(0), 1.0), 1.0);

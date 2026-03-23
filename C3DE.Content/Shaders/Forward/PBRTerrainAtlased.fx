@@ -52,12 +52,14 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 	float3 rmao = BlendTextures(CombinedRMAOs, input.UV);
 
 	float3 normal = input.WorldNormal;
+#if SM4
 	if (Features.x > 0)
 	{
 		float3 normalBlend = BlendTextures(CombinedNormals, input.UV);
 		float3 normalMap = (2.0 * (normalBlend)) - 1.0;
 		normal = normalize(mul(normalMap, input.WorldToTangentSpace));
 	}
+#endif
 
 	// Shadows
 	float shadowTerm = CalcShadow(input.WorldPosition);

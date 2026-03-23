@@ -24,11 +24,13 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 	if (Features.z > 0)
 		clip(albedo.a <= Cutout ? -1 : 1);
 
+#if SM4
 	if (Features.x > 0)
 	{
 		normal = (2.0 * (SAMPLE_TEXTURE(NormalMap, scaledUV).xyz)) - 1.0;
 		normal = normalize(mul(normal, input.WorldToTangentSpace));
 	}
+#endif
 
 	// Shadows
 	float shadowTerm = CalcShadow(input.WorldPosition);

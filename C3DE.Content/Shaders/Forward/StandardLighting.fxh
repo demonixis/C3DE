@@ -2,7 +2,9 @@
 #if SM4
 #define MAX_LIGHT_COUNT 128
 #else
-#define MAX_LIGHT_COUNT 16
+// SM3 (OpenGL): cap at 8 to stay well within the ps_3_0 ~512 static instruction limit
+// when fxc may unroll the min(MAX_LIGHT_COUNT, LightCount) loop bound.
+#define MAX_LIGHT_COUNT 8
 #endif
 
 // Lighting
@@ -10,13 +12,15 @@
 // LightData.y: Intensity
 // LightData.z: Range
 // LightData.w: FallOff
-// SpotData.xyz: Direction
-// SpotData.w: Angle
+// SpotData.xyz: Direction (SM4 only)
+// SpotData.w: Angle (SM4 only)
 
 float3 LightPosition[MAX_LIGHT_COUNT];
 float3 LightColor[MAX_LIGHT_COUNT];
 float4 LightData[MAX_LIGHT_COUNT];
+#if SM4
 float4 SpotData[MAX_LIGHT_COUNT];
+#endif
 int LightCount = 0;
 
 // ---
