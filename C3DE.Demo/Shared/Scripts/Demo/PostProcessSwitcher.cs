@@ -11,12 +11,15 @@ namespace C3DE.Demo.Scripts
     public class PostProcessSwitcher : Behaviour
     {
         private Rectangle _boxRect;
+        private Rectangle _contentRect;
         private Texture2D _backgroundTexture;
+        private float _scrollOffset;
 
         public override void Start()
         {
-            _boxRect = new Rectangle(Screen.VirtualWidth - 360, 10, 350, 720);
+            _boxRect = new Rectangle(Screen.VirtualWidth - 360, 10, 350, 420);
             _backgroundTexture = TextureFactory.CreateColor(Color.CornflowerBlue, 1, 1);
+            _scrollOffset = 0.0f;
         }
 
         public override void Update()
@@ -36,10 +39,12 @@ namespace C3DE.Demo.Scripts
             var antiAliasing = settings.AntiAliasing;
             var vignette = settings.Vignette;
             var sunFlare = settings.SunFlare;
+            var contentRect = new Rectangle(_boxRect.X + 4, _boxRect.Y + 30, _boxRect.Width - 8, _boxRect.Height - 36);
 
             ui.Box(ref _boxRect, "Post Processing");
+            _contentRect = ui.BeginScrollView(ref contentRect, ref _scrollOffset, MeasureContentHeight());
 
-            var row = _boxRect.Y + 36;
+            var row = _contentRect.Y;
             if (DrawToggle(ui, "Stack Active", ref row, settings.Enabled))
                 settings.Enabled = !settings.Enabled;
 
@@ -123,18 +128,38 @@ namespace C3DE.Demo.Scripts
             var flareGhostIntensity = sunFlare.GhostIntensity;
             DrawSlider(ui, "Flare Ghost", ref row, ref flareGhostIntensity, 0.0f, 1.0f);
             sunFlare.GhostIntensity = flareGhostIntensity;
+
+            ui.EndScrollView();
+        }
+
+        private float MeasureContentHeight()
+        {
+            var height = 0.0f;
+            height += 34.0f;
+            height += 24.0f;
+            height += 34.0f + (4.0f * 28.0f);
+            height += 34.0f + (4.0f * 28.0f);
+            height += 24.0f;
+            height += 34.0f + (4.0f * 28.0f);
+            height += 34.0f + (3.0f * 28.0f);
+            height += 24.0f;
+            height += 34.0f + 28.0f;
+            height += 34.0f + (2.0f * 28.0f);
+            height += 34.0f;
+            height += 34.0f + (3.0f * 28.0f);
+            return height + 8.0f;
         }
 
         private void DrawSection(GUI ui, string title, ref int y)
         {
-            var pos = new Vector2(_boxRect.X + 12, y);
+            var pos = new Vector2(_contentRect.X + 4, y);
             ui.Label(pos, title, Color.White);
             y += 24;
         }
 
         private bool DrawToggle(GUI ui, string label, ref int y, bool enabled)
         {
-            var rect = new Rectangle(_boxRect.X + 12, y, _boxRect.Width - 24, 28);
+            var rect = new Rectangle(_contentRect.X + 4, y, _contentRect.Width - 8, 28);
             if (enabled)
                 ui.DrawTexture(new Rectangle(rect.X - 1, rect.Y - 1, rect.Width + 2, rect.Height + 2), _backgroundTexture);
 
@@ -145,10 +170,10 @@ namespace C3DE.Demo.Scripts
 
         private void DrawSlider(GUI ui, string label, ref int y, ref float value, float min, float max)
         {
-            var labelPos = new Vector2(_boxRect.X + 16, y + 4);
+            var labelPos = new Vector2(_contentRect.X + 8, y + 4);
             ui.Label(labelPos, $"{label}: {value:0.00}", Color.White);
 
-            var sliderRect = new Rectangle(_boxRect.X + 160, y, _boxRect.Width - 176, 24);
+            var sliderRect = new Rectangle(_contentRect.X + 152, y, _contentRect.Width - 164, 24);
             value = MathHelper.Clamp(ui.HorizontalSlider(ref sliderRect, value, min, max), min, max);
             y += 28;
         }

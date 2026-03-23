@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using System.Collections.Generic;
 using System.Text;
 
 namespace C3DE.UI
@@ -13,6 +14,17 @@ namespace C3DE.UI
         private bool _loaded;
         private Vector2 _cacheVec2;
         private Rectangle _cacheRect;
+        private Vector2 _layoutOffset;
+        private Rectangle? _interactionClipRect;
+        private readonly Stack<ScrollViewContext> _scrollViews;
+        private RasterizerState _scissorRasterizerState;
+
+        private struct ScrollViewContext
+        {
+            public Vector2 LayoutOffset;
+            public Rectangle? InteractionClipRect;
+            public Rectangle ScissorRectangle;
+        }
 
         /// <summary>
         /// Enable or disable the UI rendering.
@@ -55,6 +67,14 @@ namespace C3DE.UI
             _loaded = false;
             _cacheRect = Rectangle.Empty;
             _cacheVec2 = Vector2.Zero;
+            _layoutOffset = Vector2.Zero;
+            _interactionClipRect = null;
+            _scrollViews = new Stack<ScrollViewContext>(2);
+            _scissorRasterizerState = new RasterizerState()
+            {
+                CullMode = CullMode.None,
+                ScissorTestEnable = true
+            };
 
             if (uiMatrix[0] == 1 && uiMatrix[5] == 1)
                 uiMatrix = Matrix.Identity;
@@ -81,6 +101,101 @@ namespace C3DE.UI
                 position = Input.Touch.GetPosition() / Scale;
         }
 
+        private Rectangle ApplyLayoutOffset(Rectangle rect)
+        {
+            rect.X += (int)_layoutOffset.X;
+            rect.Y += (int)_layoutOffset.Y;
+            return rect;
+        }
+
+        private Vector2 ApplyLayoutOffset(Vector2 position)
+        {
+            position += _layoutOffset;
+            return position;
+        }
+
+        private bool ContainsPointer(Rectangle rect)
+        {
+            GetPointerPosition(ref _cacheVec2);
+
+            if (!rect.Contains(_cacheVec2))
+                return false;
+
+            return !_interactionClipRect.HasValue || _interactionClipRect.Value.Contains(_cacheVec2);
+        }
+
+        private void RestartSpriteBatch(RasterizerState rasterizerState)
+        {
+            _spriteBatch.End();
+            _spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, rasterizerState, uiEffect, uiMatrix);
+        }
+
+        public Rectangle BeginScrollView(ref Rectangle rect, ref float scrollOffset, float contentHeight, int scrollbarWidth = 12, int padding = 8)
+        {
+            rect = ApplyLayoutOffset(rect);
+
+            var maxScroll = System.Math.Max(0.0f, contentHeight - rect.Height);
+
+            GetPointerPosition(ref _cacheVec2);
+            if (rect.Contains(_cacheVec2))
+                scrollOffset = MathHelper.Clamp(scrollOffset - Input.Mouse.Wheel * 0.25f, 0.0f, maxScroll);
+            else
+                scrollOffset = MathHelper.Clamp(scrollOffset, 0.0f, maxScroll);
+
+            var viewRect = new Rectangle(
+                rect.X + padding,
+                rect.Y + padding,
+                System.Math.Max(1, rect.Width - (padding * 2) - (maxScroll > 0.0f ? scrollbarWidth + 4 : 0)),
+                System.Math.Max(1, rect.Height - (padding * 2)));
+
+            if (maxScroll > 0.0f)
+            {
+                var trackRect = new Rectangle(rect.Right - padding - scrollbarWidth, rect.Y + padding, scrollbarWidth, rect.Height - (padding * 2));
+                var thumbHeight = System.Math.Max(24, (int)(trackRect.Height * (rect.Height / contentHeight)));
+                var thumbTravel = System.Math.Max(1, trackRect.Height - thumbHeight);
+                var thumbOffset = (int)(thumbTravel * (scrollOffset / maxScroll));
+                var thumbRect = new Rectangle(trackRect.X + 2, trackRect.Y + thumbOffset + 2, trackRect.Width - 4, thumbHeight - 4);
+
+                _spriteBatch.Draw(Skin.Sliders[0], trackRect, Color.White);
+                _spriteBatch.Draw(Skin.Sliders[1], thumbRect, Color.White);
+
+                if (ContainsPointer(trackRect) && (Input.Mouse.Drag() || Input.Touch.Pressed()))
+                {
+                    var pointer = _cacheVec2.Y - trackRect.Y - (thumbHeight * 0.5f);
+                    scrollOffset = MathHelper.Clamp((pointer / thumbTravel) * maxScroll, 0.0f, maxScroll);
+                }
+            }
+
+            var graphics = _spriteBatch.GraphicsDevice;
+            _scrollViews.Push(new ScrollViewContext()
+            {
+                LayoutOffset = _layoutOffset,
+                InteractionClipRect = _interactionClipRect,
+                ScissorRectangle = graphics.ScissorRectangle
+            });
+
+            _layoutOffset += new Vector2(0.0f, -scrollOffset);
+            _interactionClipRect = viewRect;
+            graphics.ScissorRectangle = viewRect;
+            RestartSpriteBatch(_scissorRasterizerState);
+
+            return viewRect;
+        }
+
+        public void EndScrollView()
+        {
+            if (_scrollViews.Count == 0)
+                return;
+
+            var graphics = _spriteBatch.GraphicsDevice;
+            var context = _scrollViews.Pop();
+
+            RestartSpriteBatch(_scrollViews.Count > 0 ? _scissorRasterizerState : RasterizerState.CullNone);
+            graphics.ScissorRectangle = context.ScissorRectangle;
+            _layoutOffset = context.LayoutOffset;
+            _interactionClipRect = context.InteractionClipRect;
+        }
+
         #region Box Widget
 
         public void Box(Rectangle rect, string text)
@@ -90,6 +205,7 @@ namespace C3DE.UI
 
         public void Box(ref Rectangle rect, string text)
         {
+            rect = ApplyLayoutOffset(rect);
             _spriteBatch.Draw(Skin.Box, rect, Color.White);
 
             if (string.IsNullOrEmpty(text))
@@ -99,7 +215,7 @@ namespace C3DE.UI
             _cacheVec2.X = (rect.X + rect.Width / 2) - (_cacheVec2.X / 2);
             _cacheVec2.Y = rect.Y + Skin.TextMargin;
 
-            Label(_cacheVec2, text);
+            DrawLabelInternal(_cacheVec2, text);
         }
 
         #endregion
@@ -114,10 +230,9 @@ namespace C3DE.UI
         public bool Button(ref Rectangle rect, string text, Color? textColor = null, float labelScale = 1.0f)
         {
             var index = 0;
+            rect = ApplyLayoutOffset(rect);
 
-            GetPointerPosition(ref _cacheVec2);
-
-            if (rect.Contains(_cacheVec2))
+            if (ContainsPointer(rect))
             {
                 index = 1;
                 if (Input.Mouse.JustClicked() || Input.Touch.JustPressed())
@@ -129,7 +244,7 @@ namespace C3DE.UI
             _cacheVec2 = Skin.Font.MeasureString(text) * labelScale;
             _cacheVec2.X = (rect.X + rect.Width / 2) - (_cacheVec2.X / 2);
             _cacheVec2.Y = (rect.Y + rect.Height / 2) - (_cacheVec2.Y / 2);
-            Label(_cacheVec2, text, textColor, labelScale, 0.0f);
+            DrawLabelInternal(_cacheVec2, text, textColor, labelScale, 0.0f);
 
             return index == 2;
         }
@@ -146,6 +261,7 @@ namespace C3DE.UI
         public bool Checkbox(ref Rectangle rect, string text, bool isChecked)
         {
             var index = isChecked ? 2 : 0;
+            rect = ApplyLayoutOffset(rect);
 
             // Draw the first square
             _cacheRect.X = rect.X;
@@ -161,7 +277,7 @@ namespace C3DE.UI
             _cacheVec2.X = rect.X + rect.Height + Skin.SliderMargin;
             _cacheVec2.Y = rect.Y + rect.Height / 2 - _cacheVec2.Y / 2;
 
-            Label(_cacheVec2, text);
+            DrawLabelInternal(_cacheVec2, text);
 
             // If checked, draw the check square
             if (isChecked)
@@ -174,9 +290,7 @@ namespace C3DE.UI
                 _spriteBatch.Draw(Skin.Checkbox[2], _cacheRect, Color.White);
             }
 
-            GetPointerPosition(ref _cacheVec2);
-
-            if (rect.Contains(_cacheVec2))
+            if (ContainsPointer(rect))
             {
                 index = 1;
 
@@ -219,6 +333,8 @@ namespace C3DE.UI
             if (range <= 0.0001f)
                 return leftValue;
 
+            rect = ApplyLayoutOffset(rect);
+
             var normalizedValue = MathHelper.Clamp((value - leftValue) / range, 0.0f, 1.0f);
 
             // Compute the movable slider position.
@@ -229,13 +345,11 @@ namespace C3DE.UI
             _cacheRect.Width = System.Math.Max(0, _cacheRect.Width);
             _cacheRect.Height = System.Math.Max(0, _cacheRect.Height);
 
-            GetPointerPosition(ref _cacheVec2);
-
             _spriteBatch.Draw(Skin.Sliders[0], rect, Color.White);
             _spriteBatch.Draw(Skin.Sliders[1], _cacheRect, Color.White);
 
             // Update the position.
-            if (rect.Contains(_cacheVec2))
+            if (ContainsPointer(rect))
             {
                 if (Input.Mouse.Drag() || Input.Touch.Pressed())
                 {
@@ -261,6 +375,14 @@ namespace C3DE.UI
 
         public void Label(ref Vector2 position, string text, Color? color = null, float scale = 1.0f, float rotation = 0.0f)
         {
+            position = ApplyLayoutOffset(position);
+            _cacheVec2.X = scale;
+            _cacheVec2.Y = scale;
+            _spriteBatch.DrawString(Skin.Font, text, position, color.HasValue ? color.Value : Skin.TextColor, rotation, Vector2.Zero, _cacheVec2, SpriteEffects.None, 1);
+        }
+
+        private void DrawLabelInternal(Vector2 position, string text, Color? color = null, float scale = 1.0f, float rotation = 0.0f)
+        {
             _cacheVec2.X = scale;
             _cacheVec2.Y = scale;
             _spriteBatch.DrawString(Skin.Font, text, position, color.HasValue ? color.Value : Skin.TextColor, rotation, Vector2.Zero, _cacheVec2, SpriteEffects.None, 1);
@@ -282,11 +404,13 @@ namespace C3DE.UI
 
         public void DrawTexture(ref Rectangle rect, Texture2D texture, Color color)
         {
+            rect = ApplyLayoutOffset(rect);
             _spriteBatch.Draw(texture, rect, color);
         }
 
         public void DrawTexture(ref Vector2 position, Texture2D texture, Color color)
         {
+            position = ApplyLayoutOffset(position);
             _spriteBatch.Draw(texture, position, null, color);
         }
 
@@ -297,6 +421,7 @@ namespace C3DE.UI
 
         public void DrawTexture(Texture2D texture, ref Vector2 position, Rectangle? sourceRectangle, Color color, float rotation, ref Vector2 origin, ref Vector2 scale, SpriteEffects effect, float depth)
         {
+            position = ApplyLayoutOffset(position);
             _spriteBatch.Draw(texture, position, sourceRectangle, color, rotation, origin, scale, effect, depth);
         }
 
