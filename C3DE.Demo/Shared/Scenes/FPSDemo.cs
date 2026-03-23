@@ -55,7 +55,11 @@ namespace C3DE.Demo.Scenes
             lightGo.Transform.LocalPosition = new Vector3(10, 50, 0);
             lightGo.Transform.Parent = lightContainer.Transform;
 
+            if (_directionalLight != null)
+                _directionalLight.IsSun = false;
+
             _directionalLight = lightGo.GetComponent<Light>();
+            _directionalLight.IsSun = true;
 
             // Skybox
             RenderSettings.Skybox.Generate(Application.GraphicsDevice, DemoGame.StarsSkybox, 2000);

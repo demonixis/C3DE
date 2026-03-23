@@ -138,6 +138,7 @@ namespace C3DE.Graphics.PostProcessing
                 sun.ScreenFade));
             _finalCompositeEffect.Parameters["SunFlareColor"].SetValue(sun.Tint.ToVector4());
             _finalCompositeEffect.Parameters["SunFlarePosition"].SetValue(sunPosition);
+            _finalCompositeEffect.Parameters["DebugParams"].SetValue(new Vector4((float)settings.DebugView, 0.0f, 0.0f, 0.0f));
             _finalCompositeEffect.Parameters["EffectToggles"].SetValue(new Vector4(
                 sharpen.Enabled ? sharpen.Intensity : 0.0f,
                 settings.AmbientOcclusion.Enabled ? 1.0f : 0.0f,

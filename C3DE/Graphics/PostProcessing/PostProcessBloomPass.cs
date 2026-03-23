@@ -29,41 +29,43 @@ namespace C3DE.Graphics.PostProcessing
             var divider = settings.Resolution == PostProcessBloomResolution.Quarter ? 4 : 2;
             var width = System.Math.Max(1, source.Width / divider);
             var height = System.Math.Max(1, source.Height / divider);
-            var bloom = pool.Rent(width, height, source.Format);
+            var prefiltered = pool.Rent(width, height, source.Format);
 
             var texelSize = new Vector4(1.0f / width, 1.0f / height, width, height);
-            _effect.Parameters["Parameter"].SetValue(new Vector4(settings.BlurSize, 0.0f, settings.Threshold, settings.Intensity));
+            _effect.Parameters["Parameter"].SetValue(new Vector4(
+                settings.BlurSize,
+                MathHelper.Clamp(settings.SoftKnee, 0.0001f, 1.0f),
+                settings.Threshold,
+                settings.Intensity));
 
-            Blit(source, bloom, 1, texelSize);
+            Blit(source, prefiltered, 1, texelSize);
 
-            var working = bloom;
+            var working = prefiltered;
             var iterations = System.Math.Max(1, settings.BlurIterations);
             for (var i = 0; i < iterations; i++)
             {
-                _effect.Parameters["Parameter"].SetValue(new Vector4(settings.BlurSize + i, 0.0f, settings.Threshold, settings.Intensity));
+                var blurSize = settings.BlurSize * (1.0f + i * 0.35f);
+                _effect.Parameters["Parameter"].SetValue(new Vector4(
+                    blurSize,
+                    MathHelper.Clamp(settings.SoftKnee, 0.0001f, 1.0f),
+                    settings.Threshold,
+                    settings.Intensity));
 
-                var vertical = pool.Rent(width, height, source.Format);
-                Blit(working, vertical, 4, texelSize);
-                if (working != bloom)
+                var horizontal = pool.Rent(width, height, source.Format);
+                Blit(working, horizontal, 5, texelSize);
+                if (working != prefiltered)
                     pool.Release(working);
 
-                working = pool.Rent(width, height, source.Format);
-                Blit(vertical, working, 5, texelSize);
-                pool.Release(vertical);
+                var vertical = pool.Rent(width, height, source.Format);
+                Blit(horizontal, vertical, 4, texelSize);
+                pool.Release(horizontal);
+                working = vertical;
             }
 
-            if (working != bloom)
-            {
-                _graphics.SetRenderTarget(bloom);
-                _graphics.Clear(Color.Transparent);
-                _effect.Parameters["MainTexture"].SetValue(working);
-                _effect.Parameters["MainTextureTexelSize"].SetValue(texelSize);
-                _effect.CurrentTechnique.Passes[0].Apply();
-                _quadRenderer.RenderFullscreenQuad();
-                pool.Release(working);
-            }
+            if (working != prefiltered)
+                pool.Release(prefiltered);
 
-            return bloom;
+            return working;
         }
 
         private void Blit(Texture2D source, RenderTarget2D destination, int passIndex, Vector4 texelSize)

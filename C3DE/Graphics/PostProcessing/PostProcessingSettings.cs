@@ -8,6 +8,14 @@ namespace C3DE.Graphics.PostProcessing
         Quarter = 1
     }
 
+    public enum PostProcessDebugView
+    {
+        Final = 0,
+        SceneColor = 1,
+        Bloom = 2,
+        AmbientOcclusion = 3
+    }
+
     public sealed class TonemappingSettings
     {
         public bool Enabled { get; set; }
@@ -30,6 +38,7 @@ namespace C3DE.Graphics.PostProcessing
     {
         public bool Enabled { get; set; }
         public float Threshold { get; set; } = 0.78f;
+        public float SoftKnee { get; set; } = 0.5f;
         public float Intensity { get; set; } = 0.65f;
         public float BlurSize { get; set; } = 1.75f;
         public int BlurIterations { get; set; } = 5;
@@ -42,6 +51,7 @@ namespace C3DE.Graphics.PostProcessing
         public float Intensity { get; set; } = 0.85f;
         public float Radius { get; set; } = 1.1f;
         public float Bias { get; set; } = 0.0035f;
+        public float BlurSharpness { get; set; } = 4.0f;
     }
 
     public sealed class SharpenSettings
@@ -84,6 +94,7 @@ namespace C3DE.Graphics.PostProcessing
     public sealed class PostProcessingSettings
     {
         public bool Enabled { get; set; }
+        public PostProcessDebugView DebugView { get; set; } = PostProcessDebugView.Final;
         public TonemappingSettings Tonemapping { get; } = new TonemappingSettings();
         public ColorAdjustmentsSettings ColorAdjustments { get; } = new ColorAdjustmentsSettings();
         public BloomSettings Bloom { get; } = new BloomSettings();

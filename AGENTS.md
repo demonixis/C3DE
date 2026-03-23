@@ -136,7 +136,9 @@ The legacy `Scene._postProcessPasses` list still exists for compatibility, but t
 
 - `PostProcessStack` — renderer-owned orchestrator
 - dedicated passes kept for `Bloom` and `Ambient Occlusion`
-- `PostComposite.fx` — final uber-style composite pass for tonemapping, color controls, white balance, lift/gamma/gain, sharpen, vignette, FXAA, and sun flare
+- `FastBloom.fx` — bloom prefilter / blur pipeline, with soft threshold support and clamped sampling
+- `AmbientOcclusion.fx` — raw AO + depth-aware blur passes
+- `PostComposite.fx` — final uber-style composite pass for tonemapping, color controls, white balance, lift/gamma/gain, sharpen, vignette, FXAA, sun flare, and debug views (`Final`, `Scene`, `Bloom`, `AO`)
 
 DesktopGL is the primary constraint for this stack:
 - prefer a single final full-screen composite pass when effects can be merged

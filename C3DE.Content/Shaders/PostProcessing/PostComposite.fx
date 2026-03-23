@@ -12,6 +12,7 @@ float4 SunFlareParams;
 float4 SunFlareColor;
 float4 SunFlarePosition;
 float4 EffectToggles;
+float4 DebugParams;
 
 texture MainTexture;
 sampler2D sceneSampler = sampler_state
@@ -183,37 +184,46 @@ float3 ComputeSunFlare(float2 uv)
     float2 sunUv = SunFlarePosition.xy;
     float2 screenDelta = uv - sunUv;
     float distanceToSun = length(screenDelta);
-    float sunMask = smoothstep(SunFlareParams.y, 0.0, distanceToSun);
+    float sunDisk = smoothstep(SunFlareParams.y * 0.35, 0.0, distanceToSun);
+    float sunHalo = smoothstep(SunFlareParams.y * 1.75, 0.0, distanceToSun);
     float edgeFade = saturate(1.0 - max(abs(sunUv.x - 0.5), abs(sunUv.y - 0.5)) / max(0.0001, 0.5 - SunFlareParams.w));
-    float depthMask = tex2D(depthSampler, saturate(sunUv)).r >= SunFlareParams.z ? 1.0 : 0.0;
+    float sceneDepthAtSun = tex2D(depthSampler, saturate(sunUv)).r;
+    float depthMask = sceneDepthAtSun <= 0.0001 ? 1.0 : smoothstep(SunFlareParams.z - 0.15, SunFlareParams.z, sceneDepthAtSun);
+    depthMask = max(depthMask, 0.2);
 
     float2 ghostUv = lerp(uv, 1.0 - uv, 0.35);
     float ghost = smoothstep(SunFlareParams.y * 0.85, 0.0, length(ghostUv - sunUv)) * SunFlareParams.x;
-    float streak = saturate(1.0 - abs(screenDelta.x + screenDelta.y) / max(SunFlareParams.y * 2.0, 0.0001));
+    float streakA = saturate(1.0 - abs(screenDelta.x + screenDelta.y) / max(SunFlareParams.y * 2.0, 0.0001));
+    float streakB = saturate(1.0 - abs(screenDelta.x - screenDelta.y) / max(SunFlareParams.y * 2.0, 0.0001));
 
-    float flare = (sunMask + ghost * SunFlareParams.x + streak * SunFlareParams.z * 0.1) * edgeFade * depthMask * EffectToggles.w;
+    float flare = (sunDisk * 2.4 + sunHalo * 0.9 + ghost * (SunFlareParams.x * 1.35) + (streakA + streakB) * 0.14) * edgeFade * depthMask * EffectToggles.w;
     return SunFlareColor.rgb * flare;
 }
 
 float4 PS_Main(PixelShaderInput input) : COLOR0
 {
-    float3 sceneColor = tex2D(sceneSampler, input.UV).rgb;
+    float3 rawSceneColor = tex2D(sceneSampler, input.UV).rgb;
+    float3 bloomColor = tex2D(bloomSampler, input.UV).rgb;
+    float ao = tex2D(aoSampler, input.UV).r;
+
+    float3 sceneColor = rawSceneColor;
+    sceneColor = ApplyFxaa(input.UV, sceneColor);
     sceneColor = ApplySharpen(input.UV, sceneColor);
 
     if (EffectToggles.y > 0.0)
-        sceneColor *= tex2D(aoSampler, input.UV).rrr;
+        sceneColor *= ao.xxx;
 
     if (TonemapParams.y > 0.0)
-        sceneColor += tex2D(bloomSampler, input.UV).rgb * TonemapParams.y;
-
-    if (TonemapParams.z > 0.0)
-        sceneColor += ComputeSunFlare(input.UV);
+        sceneColor += bloomColor * TonemapParams.y;
 
     if (TonemapParams.w > 0.0)
         sceneColor = ApplyTonemapping(sceneColor);
 
     if (ColorAdjustments.w > 0.0)
         sceneColor = ApplyColorAdjustments(sceneColor);
+
+    if (TonemapParams.z > 0.0)
+        sceneColor += ComputeSunFlare(input.UV);
 
     if (VignetteParams.x > 0.0)
     {
@@ -222,7 +232,18 @@ float4 PS_Main(PixelShaderInput input) : COLOR0
         sceneColor = lerp(VignetteColor.rgb, sceneColor, lerp(1.0, vignette, VignetteParams.x));
     }
 
-    sceneColor = ApplyFxaa(input.UV, sceneColor);
+    if (DebugParams.x > 0.5)
+    {
+        if (DebugParams.x < 1.5)
+            return float4(saturate(rawSceneColor), 1.0);
+
+        if (DebugParams.x < 2.5)
+            return float4(saturate(bloomColor), 1.0);
+
+        if (DebugParams.x < 3.5)
+            return float4(ao.xxx, 1.0);
+    }
+
     return float4(saturate(sceneColor), 1.0);
 }
 

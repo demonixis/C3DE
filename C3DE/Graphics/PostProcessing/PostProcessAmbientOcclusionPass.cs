@@ -30,19 +30,44 @@ namespace C3DE.Graphics.PostProcessing
             if (!settings.Enabled || depthTexture == null)
                 return null;
 
-            var target = pool.Rent(depthTexture.Width, depthTexture.Height, format);
-            _graphics.SetRenderTarget(target);
+            var rawTarget = pool.Rent(depthTexture.Width, depthTexture.Height, format);
+            _graphics.SetRenderTarget(rawTarget);
             _graphics.Clear(Color.White);
             _effect.Parameters["DepthTexture"].SetValue(depthTexture);
+            _effect.Parameters["AOTexture"].SetValue(depthTexture);
             _effect.Parameters["MainTextureTexelSize"].SetValue(new Vector4(
                 1.0f / depthTexture.Width,
                 1.0f / depthTexture.Height,
                 depthTexture.Width,
                 depthTexture.Height));
-            _effect.Parameters["AOParams"].SetValue(new Vector4(settings.Intensity, settings.Radius, settings.Bias, 0.0f));
+            _effect.Parameters["AOParams"].SetValue(new Vector4(
+                settings.Intensity,
+                settings.Radius,
+                settings.Bias,
+                settings.BlurSharpness));
+            _effect.Parameters["BlurDirection"].SetValue(Vector2.Zero);
             _effect.CurrentTechnique.Passes[0].Apply();
             _quadRenderer.RenderFullscreenQuad();
-            return target;
+
+            var blurHorizontal = pool.Rent(depthTexture.Width, depthTexture.Height, format);
+            _graphics.SetRenderTarget(blurHorizontal);
+            _graphics.Clear(Color.White);
+            _effect.Parameters["AOTexture"].SetValue(rawTarget);
+            _effect.Parameters["BlurDirection"].SetValue(Vector2.UnitX);
+            _effect.CurrentTechnique.Passes[1].Apply();
+            _quadRenderer.RenderFullscreenQuad();
+
+            var blurVertical = pool.Rent(depthTexture.Width, depthTexture.Height, format);
+            _graphics.SetRenderTarget(blurVertical);
+            _graphics.Clear(Color.White);
+            _effect.Parameters["AOTexture"].SetValue(blurHorizontal);
+            _effect.Parameters["BlurDirection"].SetValue(Vector2.UnitY);
+            _effect.CurrentTechnique.Passes[2].Apply();
+            _quadRenderer.RenderFullscreenQuad();
+
+            pool.Release(rawTarget);
+            pool.Release(blurHorizontal);
+            return blurVertical;
         }
     }
 }

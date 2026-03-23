@@ -112,6 +112,8 @@ mgcb C3DE.Content/Shaders.Android.mgcb
 ### Post-Processing
 - Centralized scene-driven post-process stack via `RenderSettings.PostProcessing`
 - MVP pipeline: Tonemapping, parametric color grading, white balance, lift/gamma/gain, sharpen, vignette, FXAA, bloom, SSAO, sun flare
+- Bloom now uses a softer threshold prefilter and clamped blur sampling; SSAO uses a depth-aware blur pass for cleaner contact shading
+- Built-in debug views are available in the demo post-process panel for `Final`, `Scene`, `Bloom`, and `AO`
 - Dedicated multi-pass effects are kept outside the final composite pass when needed (`Bloom`, `SSAO`)
 - Legacy effect classes still exist in the codebase, but the renderer no longer depends on the old `List<PostProcessPass>` model as the primary path
 

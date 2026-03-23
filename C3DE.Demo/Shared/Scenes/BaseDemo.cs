@@ -60,6 +60,7 @@ namespace C3DE.Demo.Scenes
             lightGo.Transform.LocalPosition = new Vector3(500, 500, 0);
             lightGo.Transform.LocalRotation = new Vector3(MathHelper.PiOver2, -MathHelper.PiOver4, 0);
             _directionalLight = lightGo.GetComponent<Light>();
+            _directionalLight.IsSun = true;
 
 #if WINDOWS
             // Sun Flares

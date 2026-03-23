@@ -32,6 +32,7 @@ namespace C3DE.Demo.Scenes
             lightGo.Transform.LocalPosition = new Vector3(500, 500, 0);
             lightGo.Transform.LocalRotation = new Vector3(MathHelper.PiOver2, -MathHelper.PiOver4, 0);
             lightGo.AddComponent<DemoBehaviour>();
+            lightGo.GetComponent<Light>().IsSun = true;
 
             var player = GameObjectFactory.CreatePlayer();
             player.AddComponent<FirstPersonController>();

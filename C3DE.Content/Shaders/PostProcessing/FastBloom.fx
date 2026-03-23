@@ -3,6 +3,7 @@ float4 MainTextureTexelSize;
 
 #define ONE_MINUS_THRESHHOLD_TIMES_INTENSITY Parameter.w
 #define THRESHHOLD Parameter.z
+#define SOFT_KNEE Parameter.y
 
 static const half curve[7] = { 0.0205, 0.0855, 0.232, 0.324, 0.232, 0.0855, 0.0205 }; // gauss'ish blur weights
 
@@ -19,8 +20,8 @@ sampler2D targetSampler = sampler_state
     MinFilter = Linear;
     MagFilter = Linear;
     MipFilter = Linear;
-    AddressU = Wrap;
-    AddressV = Wrap;
+    AddressU = Clamp;
+    AddressV = Clamp;
 };
 
 texture BloomTexture;
@@ -30,8 +31,8 @@ sampler2D bloomSampler = sampler_state
     MinFilter = Linear;
     MagFilter = Linear;
     MipFilter = Linear;
-    AddressU = Wrap;
-    AddressV = Wrap;
+    AddressU = Clamp;
+    AddressV = Clamp;
 };
 
 struct VertexShaderInput
@@ -134,7 +135,7 @@ PSInput_WithBlurCoordsSGX VS_BlurVerticalSGX(VertexShaderInput v)
 {
     PSInput_WithBlurCoordsSGX o;
     o.Position = v.Position;		
-    o.UV = float4(v.UV.xy, 1, 1);
+    o.UV = v.UV.xy;
 
     float offsetMagnitude = MainTextureTexelSize.y * Parameter.x;
     o.Offsets[0] = v.UV.xyxy + offsetMagnitude * float4(0.0h, -3.0h, 0.0h, 3.0h);
@@ -159,7 +160,15 @@ float4 PS_Downsample(PSInput_Tap i) : COLOR0
     color += tex2D(targetSampler, i.UV21);
     color += tex2D(targetSampler, i.UV22);
     color += tex2D(targetSampler, i.UV23);
-    return max(color / 4 - THRESHHOLD, 0) * ONE_MINUS_THRESHHOLD_TIMES_INTENSITY;
+    color *= 0.25;
+
+    float brightness = max(max(color.r, color.g), color.b);
+    float knee = max(THRESHHOLD * SOFT_KNEE, 0.0001);
+    float soft = saturate((brightness - THRESHHOLD + knee) / (2.0 * knee));
+    float contribution = max(brightness - THRESHHOLD, 0.0) + soft * soft * knee;
+    contribution /= max(brightness, 0.0001);
+
+    return color * contribution * ONE_MINUS_THRESHHOLD_TIMES_INTENSITY;
 }
 
 float4 PS_Blur8(PSInput_WithBlurCoord8 i) : COLOR0

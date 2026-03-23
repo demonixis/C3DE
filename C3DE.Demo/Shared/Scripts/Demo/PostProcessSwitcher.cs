@@ -69,6 +69,12 @@ namespace C3DE.Demo.Scripts
             var tint = colorAdjustments.Tint;
             DrawSlider(ui, "Tint", ref row, ref tint, -0.5f, 0.5f);
             colorAdjustments.Tint = tint;
+            DrawColorTriplet(ui, "Lift", ref row, colorAdjustments.Lift, -1.0f, 1.0f, out var lift);
+            colorAdjustments.Lift = lift;
+            DrawColorTriplet(ui, "Gamma", ref row, colorAdjustments.Gamma, 0.25f, 2.0f, out var gamma);
+            colorAdjustments.Gamma = gamma;
+            DrawColorTriplet(ui, "Gain", ref row, colorAdjustments.Gain, 0.25f, 2.0f, out var gain);
+            colorAdjustments.Gain = gain;
 
             DrawSection(ui, "Bloom / AO", ref row);
             if (DrawToggle(ui, "Bloom", ref row, bloom.Enabled))
@@ -79,6 +85,9 @@ namespace C3DE.Demo.Scripts
             var bloomThreshold = bloom.Threshold;
             DrawSlider(ui, "Bloom Threshold", ref row, ref bloomThreshold, 0.0f, 1.5f);
             bloom.Threshold = bloomThreshold;
+            var bloomSoftKnee = bloom.SoftKnee;
+            DrawSlider(ui, "Bloom Knee", ref row, ref bloomSoftKnee, 0.05f, 1.0f);
+            bloom.SoftKnee = bloomSoftKnee;
             var bloomBlur = bloom.BlurSize;
             DrawSlider(ui, "Bloom Blur", ref row, ref bloomBlur, 0.5f, 4.0f);
             bloom.BlurSize = bloomBlur;
@@ -97,6 +106,9 @@ namespace C3DE.Demo.Scripts
             var aoBias = ambientOcclusion.Bias;
             DrawSlider(ui, "AO Bias", ref row, ref aoBias, 0.0001f, 0.02f);
             ambientOcclusion.Bias = aoBias;
+            var aoBlurSharpness = ambientOcclusion.BlurSharpness;
+            DrawSlider(ui, "AO Blur", ref row, ref aoBlurSharpness, 0.5f, 8.0f);
+            ambientOcclusion.BlurSharpness = aoBlurSharpness;
 
             DrawSection(ui, "Finish", ref row);
             if (DrawToggle(ui, "Sharpen", ref row, sharpen.Enabled))
@@ -129,6 +141,9 @@ namespace C3DE.Demo.Scripts
             DrawSlider(ui, "Flare Ghost", ref row, ref flareGhostIntensity, 0.0f, 1.0f);
             sunFlare.GhostIntensity = flareGhostIntensity;
 
+            DrawSection(ui, "Debug", ref row);
+            DrawDebugButtons(ui, ref row, settings);
+
             ui.EndScrollView();
         }
 
@@ -137,16 +152,17 @@ namespace C3DE.Demo.Scripts
             var height = 0.0f;
             height += 34.0f;
             height += 24.0f;
-            height += 34.0f + (4.0f * 28.0f);
+            height += 34.0f + (13.0f * 28.0f);
             height += 34.0f + (4.0f * 28.0f);
             height += 24.0f;
+            height += 34.0f + (5.0f * 28.0f);
             height += 34.0f + (4.0f * 28.0f);
-            height += 34.0f + (3.0f * 28.0f);
             height += 24.0f;
             height += 34.0f + 28.0f;
             height += 34.0f + (2.0f * 28.0f);
             height += 34.0f;
             height += 34.0f + (3.0f * 28.0f);
+            height += 24.0f + 34.0f;
             return height + 8.0f;
         }
 
@@ -183,6 +199,36 @@ namespace C3DE.Demo.Scripts
             var floatValue = (float)value;
             DrawSlider(ui, label, ref y, ref floatValue, min, max);
             value = (int)MathHelper.Clamp(floatValue + 0.5f, min, max);
+        }
+
+        private void DrawColorTriplet(GUI ui, string label, ref int y, Vector3 value, float min, float max, out Vector3 output)
+        {
+            var x = value.X;
+            DrawSlider(ui, $"{label} R", ref y, ref x, min, max);
+            var yValue = value.Y;
+            DrawSlider(ui, $"{label} G", ref y, ref yValue, min, max);
+            var z = value.Z;
+            DrawSlider(ui, $"{label} B", ref y, ref z, min, max);
+            output = new Vector3(x, yValue, z);
+        }
+
+        private void DrawDebugButtons(GUI ui, ref int y, PostProcessingSettings settings)
+        {
+            var buttonWidth = (_contentRect.Width - 20) / 4;
+            DrawDebugButton(ui, new Rectangle(_contentRect.X + 4, y, buttonWidth, 28), "Final", PostProcessDebugView.Final, settings);
+            DrawDebugButton(ui, new Rectangle(_contentRect.X + 8 + buttonWidth, y, buttonWidth, 28), "Scene", PostProcessDebugView.SceneColor, settings);
+            DrawDebugButton(ui, new Rectangle(_contentRect.X + 12 + buttonWidth * 2, y, buttonWidth, 28), "Bloom", PostProcessDebugView.Bloom, settings);
+            DrawDebugButton(ui, new Rectangle(_contentRect.X + 16 + buttonWidth * 3, y, buttonWidth, 28), "AO", PostProcessDebugView.AmbientOcclusion, settings);
+            y += 34;
+        }
+
+        private void DrawDebugButton(GUI ui, Rectangle rect, string label, PostProcessDebugView mode, PostProcessingSettings settings)
+        {
+            if (settings.DebugView == mode)
+                ui.DrawTexture(new Rectangle(rect.X - 1, rect.Y - 1, rect.Width + 2, rect.Height + 2), _backgroundTexture);
+
+            if (ui.Button(ref rect, label))
+                settings.DebugView = mode;
         }
     }
 }

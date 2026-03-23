@@ -116,6 +116,7 @@ namespace C3DE
             PostProcessing.Tonemapping.Enabled = settings.PostProcessing.Tonemapping.Enabled;
             PostProcessing.Tonemapping.Exposure = settings.PostProcessing.Tonemapping.Exposure;
             PostProcessing.Enabled = settings.PostProcessing.Enabled;
+            PostProcessing.DebugView = settings.PostProcessing.DebugView;
             PostProcessing.ColorAdjustments.Enabled = settings.PostProcessing.ColorAdjustments.Enabled;
             PostProcessing.ColorAdjustments.Contrast = settings.PostProcessing.ColorAdjustments.Contrast;
             PostProcessing.ColorAdjustments.Saturation = settings.PostProcessing.ColorAdjustments.Saturation;
@@ -126,6 +127,7 @@ namespace C3DE
             PostProcessing.ColorAdjustments.Gain = settings.PostProcessing.ColorAdjustments.Gain;
             PostProcessing.Bloom.Enabled = settings.PostProcessing.Bloom.Enabled;
             PostProcessing.Bloom.Threshold = settings.PostProcessing.Bloom.Threshold;
+            PostProcessing.Bloom.SoftKnee = settings.PostProcessing.Bloom.SoftKnee;
             PostProcessing.Bloom.Intensity = settings.PostProcessing.Bloom.Intensity;
             PostProcessing.Bloom.BlurSize = settings.PostProcessing.Bloom.BlurSize;
             PostProcessing.Bloom.BlurIterations = settings.PostProcessing.Bloom.BlurIterations;
@@ -134,6 +136,7 @@ namespace C3DE
             PostProcessing.AmbientOcclusion.Intensity = settings.PostProcessing.AmbientOcclusion.Intensity;
             PostProcessing.AmbientOcclusion.Radius = settings.PostProcessing.AmbientOcclusion.Radius;
             PostProcessing.AmbientOcclusion.Bias = settings.PostProcessing.AmbientOcclusion.Bias;
+            PostProcessing.AmbientOcclusion.BlurSharpness = settings.PostProcessing.AmbientOcclusion.BlurSharpness;
             PostProcessing.Sharpen.Enabled = settings.PostProcessing.Sharpen.Enabled;
             PostProcessing.Sharpen.Intensity = settings.PostProcessing.Sharpen.Intensity;
             PostProcessing.AntiAliasing.Enabled = settings.PostProcessing.AntiAliasing.Enabled;
