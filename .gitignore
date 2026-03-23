@@ -1,18 +1,71 @@
+# ===== OS =====
 Thumbs.db
+.DS_Store
+*.directory
+desktop.ini
+
+# ===== Visual Studio =====
 *.suo
-*.cachefile
 *.user
+*.userosscache
+*.sln.docstates
+*.cachefile
 *.v11
 *.v12
-*.pidb
-*.userprefs
-*.DS_Store
-*.directory
-*.vs
+.vs/
 ipch/
+*.aps
+*.ncb
+*.opendb
+*.opensdf
+*.sdf
+*.psess
+*.vsp
+*.vspx
+
+# ===== JetBrains Rider =====
+.idea/
+*.sln.iml
+
+# ===== VS Code =====
+.vscode/
+
+# ===== .NET / C# =====
 obj/
-[Bb]in
+[Bb]in/
 [Dd]ebug*/
 [Rr]elease*/
+*.pidb
+*.userprefs
+*.mdb
+*.pdb
+*.nupkg
+*.snupkg
+
+# NuGet
 packages/
-.idea/.idea.C3DE
+*.nupkg
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# dotnet local tools manifest — should be committed so `dotnet tool restore` works for all devs
+# .config/dotnet-tools.json is intentionally tracked
+
+# ===== MonoGame =====
+# Compiled content pipeline output
+*.xnb
+*.mgstats
+C3DE.Content/obj/
+
+# ===== Android =====
+*.apk
+*.aab
+*.keystore
+
+# ===== macOS specific =====
+*.pidb
+*.userprefs
+
+# ===== Temp / session files =====
+to_fix.md
