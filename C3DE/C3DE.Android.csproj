@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<TargetFramework>net6.0</TargetFramework>
+		<TargetFramework>net9.0-android</TargetFramework>
 	</PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DefineConstants>$(DefineConstants)TRACE;ANDROID</DefineConstants>
@@ -9,7 +9,7 @@
     <DefineConstants>$(DefineConstants)TRACE;ANDROID</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
-	  <PackageReference Include="JitterPhysics" Version="0.2.0.20" />
-	  <PackageReference Include="MonoGame.Framework.Android" Version="3.8.1" />
+	  <PackageReference Include="Jitter2" Version="2.7.7" />
+	  <PackageReference Include="MonoGame.Framework.Android" Version="3.8.4.1" />
   </ItemGroup>
 </Project>

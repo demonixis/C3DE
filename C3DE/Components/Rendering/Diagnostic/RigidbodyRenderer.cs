@@ -1,4 +1,5 @@
 ﻿using C3DE.Components.Physics;
+using Jitter2.Collision.Shapes;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -59,9 +60,10 @@ namespace C3DE.Components.Rendering
         public override void Draw(GraphicsDevice device)
         {
             var shape = _rigidbody.Shape;
+            var jBox = shape.WorldBoundingBox;
             var box = new BoundingBox();
-            box.Min = Rigidbody.ToVector3(shape.BoundingBox.Min);
-            box.Max = Rigidbody.ToVector3(shape.BoundingBox.Max);
+            box.Min = Rigidbody.ToVector3(jBox.Min);
+            box.Max = Rigidbody.ToVector3(jBox.Max);
             var _corners = box.GetCorners();
 
             for (int i = 0; i < 8; i++)

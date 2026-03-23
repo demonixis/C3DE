@@ -1,0 +1,62 @@
+# Default: normalize line endings to LF in the repo, checkout as-is
+* text=auto eol=lf
+
+# Force CRLF for Windows-only files
+*.sln text eol=crlf
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# C# source
+*.cs text diff=csharp
+*.csproj text diff=xml
+*.sln text
+*.props text diff=xml
+*.targets text diff=xml
+*.config text diff=xml
+*.resx text diff=xml
+*.xml text diff=xml
+*.json text
+*.md text diff=markdown
+*.sh text eol=lf
+
+# MonoGame content pipeline
+*.mgcb text
+*.fx text
+*.fxh text
+*.hlsl text
+
+# Binary assets — do not diff or merge
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.bmp binary
+*.tga binary
+*.dds binary
+*.ico binary
+
+*.wav binary
+*.mp3 binary
+*.ogg binary
+*.xwb binary
+
+*.ttf binary
+*.otf binary
+*.spritefont binary
+
+*.xnb binary
+*.fbx binary
+*.obj binary
+*.x binary
+
+*.dll binary
+*.exe binary
+*.pdb binary
+*.so binary
+*.dylib binary
+*.a binary
+
+*.zip binary
+*.7z binary
+*.tar binary
+*.gz binary

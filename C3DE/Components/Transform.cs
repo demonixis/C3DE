@@ -88,7 +88,7 @@ namespace C3DE.Components
             set
             {
                 _localRotation = value;
-                _dirty = true; // FIXME
+                _dirty = true;
             }
         }
 

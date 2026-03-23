@@ -25,14 +25,14 @@ namespace C3DE.Graphics.Shaders.Forward
             _features.X = _material._combinedNormals != null ? 1 : 0;
             _features.Y = 0;
 
-            _effect.Parameters["TextureTiling"].SetValue(_material.Tiling);
-            _effect.Parameters["World"].SetValue(worldMatrix);
-            _effect.Parameters["CombinedAlbedos"].SetValue(_material._combinedAlbedos);
-            _effect.Parameters["CombinedNormals"].SetValue(_material._combinedNormals);
-            _effect.Parameters["CombinedRMAOs"].SetValue(_material._combinedRMAO);
-            _effect.Parameters["WeightMap"].SetValue(_material.WeightMap);
-            _effect.Parameters["Features"].SetValue(_features);
-            _effect.Parameters["ShadowEnabled"].SetValue(receiveShadow);
+            _effect.Parameters["TextureTiling"]?.SetValue(_material.Tiling);
+            _effect.Parameters["World"]?.SetValue(worldMatrix);
+            _effect.Parameters["CombinedAlbedos"]?.SetValue(_material._combinedAlbedos);
+            _effect.Parameters["CombinedNormals"]?.SetValue(_material._combinedNormals);
+            _effect.Parameters["CombinedRMAOs"]?.SetValue(_material._combinedRMAO);
+            _effect.Parameters["WeightMap"]?.SetValue(_material.WeightMap);
+            _effect.Parameters["Features"]?.SetValue(_features);
+            _effect.Parameters["ShadowEnabled"]?.SetValue(receiveShadow);
 
             _effect.CurrentTechnique.Passes[0].Apply();
         }

@@ -20,7 +20,7 @@ namespace C3DE.Graphics.Rendering
 #if WINDOWS
         internal const int MaxLightLimit = 128;
 #else
-        internal const int MaxLightLimit = 16;
+        internal const int MaxLightLimit = 8; // SM3 shader declares LightPosition[8]
 #endif
         private static int _maxLightCount = MaxLightLimit;
 
@@ -322,7 +322,6 @@ namespace C3DE.Graphics.Rendering
 
         private void ComputeLightData(Scene scene)
         {
-            // TODO: Put it in a cache.
             var lights = scene._lights;
 
             if (lights.Count != _lightData.Count)
@@ -341,9 +340,10 @@ namespace C3DE.Graphics.Rendering
 
             var lightCount = Math.Min(MaxLightCount, _culledLights.Count);
 
-            if (_lightData.Count != lightCount)
+            _lightData.Count = lightCount;
+
+            if (_lightData.Positions == null || _lightData.Positions.Length != lightCount)
             {
-                _lightData.Count = lightCount;
                 _lightData.Colors = new Vector3[lightCount];
                 _lightData.Positions = new Vector3[lightCount];
                 _lightData.Data = new Vector4[lightCount];

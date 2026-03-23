@@ -1,69 +1,54 @@
-﻿using C3DE.Components.Physics;
+using System;
 using C3DE.Components.Rendering;
-using Jitter.Collision.Shapes;
-using Jitter.Dynamics;
-using Jitter.LinearMath;
+using Jitter2.Collision.Shapes;
+using Jitter2.Dynamics;
+using Jitter2.LinearMath;
 using Microsoft.Xna.Framework;
-using JRigidBody = Jitter.Dynamics.RigidBody;
+using JRigidBody = Jitter2.Dynamics.RigidBody;
 
 namespace C3DE.Components.Physics
 {
     public class Rigidbody : Component
     {
         private JRigidBody _rigidBody;
-        private bool _addedToScene;
 
         public bool IsStatic
         {
-            get => _rigidBody.IsStatic;
-            set => _rigidBody.IsStatic = value;
+            get => _rigidBody?.MotionType == MotionType.Static;
+            set
+            {
+                if (_rigidBody != null)
+                    _rigidBody.MotionType = value ? MotionType.Static : (IsKinematic ? MotionType.Kinematic : MotionType.Dynamic);
+            }
         }
 
         public bool Gravity
         {
-            get => _rigidBody?.AffectedByGravity ?? false;
-            set => _rigidBody.AffectedByGravity = value;
+            get => _rigidBody?.AffectedByGravity ?? true;
+            set { if (_rigidBody != null) _rigidBody.AffectedByGravity = value; }
         }
 
         public Vector3 AngularVelocity
         {
-            get => ToVector3(_rigidBody.AngularVelocity);
-            set => _rigidBody.AngularVelocity = ToJVector(value);
+            get => _rigidBody != null ? ToVector3(_rigidBody.AngularVelocity) : Vector3.Zero;
+            set { if (_rigidBody != null) _rigidBody.AngularVelocity = ToJVector(value); }
         }
 
         public Vector3 Velocity
         {
-            get => ToVector3(_rigidBody.LinearVelocity);
-            set => _rigidBody.LinearVelocity = ToJVector(value);
+            get => _rigidBody != null ? ToVector3(_rigidBody.Velocity) : Vector3.Zero;
+            set { if (_rigidBody != null) _rigidBody.Velocity = ToJVector(value); }
         }
 
-        public Material PhysicsMaterial
-        {
-            get => _rigidBody.Material;
-            set => _rigidBody.Material = value;
-        }
-
-        public float Mass
-        {
-            get => _rigidBody.Mass;
-            set => _rigidBody.Mass = value;
-        }
+        public float Mass => _rigidBody?.Mass ?? 1.0f;
 
         public bool IsKinematic { get; set; } = false;
 
-        public JRigidBody JitterRigidbody
-        {
-            get => _rigidBody;
-        }
+        public JRigidBody JitterRigidbody => _rigidBody;
 
-        public Shape Shape => _rigidBody.Shape;
+        public RigidBodyShape Shape => _rigidBody?.Shapes.Count > 0 ? _rigidBody.Shapes[0] : null;
 
-        public Rigidbody()
-            : base()
-        {
-            var shape = new BoxShape(1.0f, 1.0f, 1.0f);
-            _rigidBody = new JRigidBody(shape);
-        }
+        public Rigidbody() : base() { }
 
         public override void Start()
         {
@@ -80,64 +65,74 @@ namespace C3DE.Components.Physics
 
         public void SyncTransform()
         {
+            if (_rigidBody == null) return;
+            var rot = _transform.LocalRotation;
+            var q = Quaternion.CreateFromYawPitchRoll(rot.Y, rot.X, rot.Z);
             _rigidBody.Position = ToJVector(_transform.LocalPosition);
-            _rigidBody.Orientation = ToJMatrix(Matrix.CreateFromYawPitchRoll(_transform.LocalRotation.Y, _transform.LocalRotation.Y, _transform.LocalRotation.Z));
+            _rigidBody.Orientation = new JQuaternion(q.X, q.Y, q.Z, q.W);
         }
 
-        public void SetShape(Shape shape)
+        public void SetShape(RigidBodyShape shape)
         {
-            _rigidBody.Shape = shape;
+            if (Scene.current == null) return;
 
-            SyncTransform();
-            shape.UpdateShape();
-
-            if (!_addedToScene && Scene.current != null)
+            if (_rigidBody == null)
             {
-                Scene.current._physicsWorld.AddBody(_rigidBody);
-                _addedToScene = true;
+                _rigidBody = Scene.current._physicsWorld.CreateRigidBody();
             }
+            else
+            {
+                while (_rigidBody.Shapes.Count > 0)
+                    _rigidBody.RemoveShape(_rigidBody.Shapes[0]);
+            }
+
+            _rigidBody.AddShape(shape);
+            SyncTransform();
         }
 
         public void SetShapeFromCollider(Collider collider)
         {
-            var shape = (Shape)null;
+            RigidBodyShape shape;
             var size = collider.Size;
             var sphere = collider as SphereCollider;
 
             if (sphere != null)
                 shape = new SphereShape(sphere.Sphere.Radius);
             else
-                shape = new BoxShape(size.X  * 2, size.Y * 2, size.Z * 2);
+            {
+                const float minDim = 0.001f;
+                shape = new BoxShape(Math.Max(size.X * 2, minDim), Math.Max(size.Y * 2, minDim), Math.Max(size.Z * 2, minDim));
+            }
 
             SetShape(shape);
         }
 
         public void SetShapeFromRenderer(Renderer renderer)
         {
-            var shape = new SphereShape(renderer.boundingSphere.Radius);
-            SetShape(shape);
+            SetShape(new SphereShape(renderer.boundingSphere.Radius));
         }
 
         public void AddForce(Vector3 force)
         {
-            _rigidBody.AddForce(ToJVector(force));
+            _rigidBody?.AddForce(ToJVector(force));
         }
 
         public void AddForceAtPosition(Vector3 force, Vector3 position)
         {
-            _rigidBody.AddForce(ToJVector(force), ToJVector(position));
+            _rigidBody?.AddForce(ToJVector(force), ToJVector(position));
         }
 
         public void AddTorque(Vector3 torque)
         {
-            _rigidBody.AddTorque(ToJVector(torque));
+            // Jitter2 does not expose AddTorque on RigidBody directly.
+            // Apply torque as a force pair if needed in the future.
         }
 
         public override void Update()
         {
             base.Update();
 
-            if (!_addedToScene)
+            if (_rigidBody == null)
                 return;
 
             if (!IsKinematic)
@@ -149,35 +144,24 @@ namespace C3DE.Components.Physics
         public override void Dispose()
         {
             if (_rigidBody != null)
-                Scene.current?._physicsWorld.RemoveBody(_rigidBody);
+            {
+                Scene.current?._physicsWorld.Remove(_rigidBody);
+                _rigidBody = null;
+            }
         }
 
         public static Vector3 ToVector3(JVector jVector) => new Vector3(jVector.X, jVector.Y, jVector.Z);
         public static JVector ToJVector(Vector3 vector) => new JVector(vector.X, vector.Y, vector.Z);
 
-        public static Matrix ToMatrix(JMatrix mat)
+        public static Matrix ToMatrix(JQuaternion q)
         {
-            return new Matrix(
-                mat.M11, mat.M12, mat.M13, 0.0f,
-                mat.M21, mat.M22, mat.M23, 0.0f,
-                mat.M31, mat.M32, mat.M33, 0.0f,
-                0.0f, 0.0f, 0.0f, 1.0f
-            );
+            return Matrix.CreateFromQuaternion(new Quaternion(q.X, q.Y, q.Z, q.W));
         }
 
-        public static JMatrix ToJMatrix(Matrix matrix)
+        public static JQuaternion ToJQuaternion(Matrix matrix)
         {
-            var jMatrix = new JMatrix();
-            jMatrix.M11 = matrix.M11;
-            jMatrix.M12 = matrix.M12;
-            jMatrix.M13 = matrix.M13;
-            jMatrix.M21 = matrix.M21;
-            jMatrix.M22 = matrix.M22;
-            jMatrix.M23 = matrix.M23;
-            jMatrix.M31 = matrix.M31;
-            jMatrix.M32 = matrix.M32;
-            jMatrix.M33 = matrix.M33;
-            return jMatrix;
+            var q = Quaternion.CreateFromRotationMatrix(matrix);
+            return new JQuaternion(q.X, q.Y, q.Z, q.W);
         }
     }
 }

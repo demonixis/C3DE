@@ -22,20 +22,15 @@ namespace C3DE.Graphics.Shaders.Forward
                 _effect.Parameters["LightPosition"].SetValue(lightData.Positions);
                 _effect.Parameters["LightColor"].SetValue(lightData.Colors);
                 _effect.Parameters["LightData"].SetValue(lightData.Data);
-
-                if (GraphicsAPI == GraphicsAPI.Direct3D)
-                    _effect.Parameters["SpotData"].SetValue(lightData.SpotData);
+                _effect.Parameters["SpotData"]?.SetValue(lightData.SpotData);
             }
 
-            if (GraphicsAPI == GraphicsAPI.Direct3D)
-            {
-                _effect.Parameters["ShadowStrength"].SetValue(shadowData.Data.Z);
-                _effect.Parameters["ShadowBias"].SetValue(shadowData.Data.Y);
-                _effect.Parameters["ShadowMap"].SetValue(shadowData.ShadowMap);
-                _effect.Parameters["LightView"].SetValue(shadowData.ViewMatrix);
-                _effect.Parameters["LightProjection"].SetValue(shadowData.ProjectionMatrix);
-                _effect.Parameters["FogData"].SetValue(fogData);
-            }
+            _effect.Parameters["ShadowStrength"]?.SetValue(shadowData.Data.Z);
+            _effect.Parameters["ShadowBias"]?.SetValue(shadowData.Data.Y);
+            _effect.Parameters["ShadowMap"]?.SetValue(shadowData.ShadowMap);
+            _effect.Parameters["LightView"]?.SetValue(shadowData.ViewMatrix);
+            _effect.Parameters["LightProjection"]?.SetValue(shadowData.ProjectionMatrix);
+            _effect.Parameters["FogData"]?.SetValue(fogData);
         }
     }
 }

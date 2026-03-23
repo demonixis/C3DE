@@ -44,7 +44,6 @@ namespace C3DE.Graphics
             set => _shadowData.Z = value;
         }
 
-        // FIXME
         public bool Enabled
         {
             get => _shadowData.X > 0;

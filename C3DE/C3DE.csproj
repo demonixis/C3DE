@@ -2,7 +2,7 @@
 	<PropertyGroup>
     <PublishReadyToRun>false</PublishReadyToRun>
     <TieredCompilation>false</TieredCompilation>
-		<TargetFramework>net6.0-windows</TargetFramework>
+		<TargetFramework>net8.0-windows</TargetFramework>
 	</PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DefineConstants>$(DefineConstants)TRACE;WINDOWS</DefineConstants>
@@ -11,11 +11,11 @@
     <DefineConstants>$(DefineConstants)TRACE;WINDOWS</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
-	  <PackageReference Include="JitterPhysics" Version="0.2.0.20" />
-    <PackageReference Include="MonoGame.Framework.WindowsDX" Version="3.8.1.303" />
+	  <PackageReference Include="Jitter2" Version="2.7.7" />
+    <PackageReference Include="MonoGame.Framework.WindowsDX" Version="3.8.4.1" />
+    <PackageReference Include="Silk.NET.OpenXR" Version="2.23.0" />
   </ItemGroup>
-  <Target Name="RestoreDotnetTools" BeforeTargets="Restore">
-    <Message Text="Restoring dotnet tools" Importance="High" />
-    <Exec Command="dotnet tool restore" />
-  </Target>
+  <PropertyGroup>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
 </Project>

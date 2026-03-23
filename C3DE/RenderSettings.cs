@@ -105,7 +105,7 @@ namespace C3DE
             fogData = settings.fogData;
             fogColor = settings.fogColor;
             FogEnabled = settings.FogEnabled;
-            skybox = new Skybox(); // FIXME
+            skybox = settings.skybox;
         }
     }
 }

@@ -1,5 +1,7 @@
-﻿using C3DE.Graphics.Rendering;
+﻿using System.Linq;
+using C3DE.Graphics.Rendering;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace C3DE.Graphics.Shaders
 {
@@ -18,7 +20,7 @@ namespace C3DE.Graphics.Shaders
             _effect.Parameters["ShadowBias"].SetValue(shadowData.Data.Y);
             _effect.Parameters["ShadowMap"].SetValue(shadowData.ShadowMap);
             _effect.Parameters["LightView"].SetValue(shadowData.ViewMatrix);
-            _effect.Parameters["LightProjection"].SetValue(shadowData.ProjectionMatrix);
+            _effect.Parameters["LightProjection"].SetValue(shadowData.ProjectionMatrix); 
             _effect.Parameters["LightCount"].SetValue(lightData.Count);
 
             if (lightData.Count > 0)

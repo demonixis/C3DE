@@ -18,12 +18,7 @@ namespace C3DE.Graphics.Shaders.Forward
 
         public override void LoadEffect(ContentManager content)
         {
-            var shaderPath = "Shaders/Forward/StandardWater";
-
-            if (GraphicsAPI == GraphicsAPI.OpenGL)
-                shaderPath = "Shaders/Forward/OpenGL/StandardWater";
-
-            _effect = content.Load<Effect>(shaderPath);
+            _effect = content.Load<Effect>("Shaders/Forward/StandardWater");
         }
 
         public override void Pass(ref Matrix worldMatrix, bool receiveShadow, bool drawInstanced)
@@ -44,13 +39,10 @@ namespace C3DE.Graphics.Shaders.Forward
             _effect.Parameters["ReflectionMap"].SetValue(_material.ReflectionMap);
             _effect.Parameters["Alpha"].SetValue(_material.Alpha);
 
-            if (GraphicsAPI == GraphicsAPI.Direct3D)
-            {
-                _effect.Parameters["ShadowEnabled"].SetValue(receiveShadow);
-                _effect.Parameters["SpecularMap"].SetValue(_material.SpecularMap);
-                _effect.Parameters["NormalMap"].SetValue(_material.NormalMap);
-                _effect.Parameters["Features"].SetValue(_features);
-            }
+            _effect.Parameters["ShadowEnabled"]?.SetValue(receiveShadow);
+            _effect.Parameters["SpecularMap"]?.SetValue(_material.SpecularMap);
+            _effect.Parameters["NormalMap"]?.SetValue(_material.NormalMap);
+            _effect.Parameters["Features"]?.SetValue(_features);
 
             _effect.CurrentTechnique.Passes[0].Apply();
         }

@@ -17,12 +17,7 @@ namespace C3DE.Graphics.Shaders.Forward
 
         public override void LoadEffect(ContentManager content)
         {
-            var shaderPath = "Shaders/Forward/Standard";
-
-            if (GraphicsAPI == GraphicsAPI.OpenGL)
-                shaderPath = "Shaders/Forward/OpenGL/Standard";
-
-            _effect = content.Load<Effect>(shaderPath);
+            _effect = content.Load<Effect>("Shaders/Forward/Standard");
         }
 
         public override void Pass(ref Matrix worldMatrix, bool receiveShadow, bool drawInstanced)
@@ -38,25 +33,18 @@ namespace C3DE.Graphics.Shaders.Forward
             _effect.Parameters["EmissiveColor"].SetValue(_material.EmissiveColor.ToVector3());
             _effect.Parameters["EmissiveIntensity"].SetValue(_material.EmissiveIntensity);
             
-            if (GraphicsAPI == GraphicsAPI.Direct3D)
-            {
-                _features.X = _material.NormalMap != null ? 1 : 0;
-                _features.Y = _material.EmissiveMap != null ? 1 : 0;
-                _features.Z = _material.CutoutEnabled ? 1 : 0;
-                _features.W = _material.SpecularMap != null ? 1 : 0;
+            _features.X = _material.NormalMap != null ? 1 : 0;
+            _features.Y = _material.EmissiveMap != null ? 1 : 0;
+            _features.Z = _material.CutoutEnabled ? 1 : 0;
+            _features.W = _material.SpecularMap != null ? 1 : 0;
 
-                _effect.Parameters["NormalMap"].SetValue(_material.NormalMap);
-                _effect.Parameters["SpecularMap"].SetValue(_material.SpecularMap);
-                _effect.Parameters["Features"].SetValue(_features);
-                _effect.Parameters["ShadowEnabled"].SetValue(receiveShadow);
-                _effect.Parameters["Cutout"].SetValue(_material.Cutout);
-                _effect.Parameters["ReflectionMap"].SetValue(_material.ReflectionMap);
-                _effect.Parameters["ReflectionIntensity"].SetValue(_material.ReflectionIntensity);
-            }
-            else
-            {
-                _effect.Parameters["EmissiveEnabled"].SetValue(_material.EmissiveMap != null ? 1 : 0);
-            }
+            _effect.Parameters["Features"]?.SetValue(_features);
+            _effect.Parameters["NormalMap"]?.SetValue(_material.NormalMap);
+            _effect.Parameters["SpecularMap"]?.SetValue(_material.SpecularMap);
+            _effect.Parameters["ShadowEnabled"]?.SetValue(receiveShadow);
+            _effect.Parameters["Cutout"]?.SetValue(_material.Cutout);
+            _effect.Parameters["ReflectionMap"]?.SetValue(_material.ReflectionMap);
+            _effect.Parameters["ReflectionIntensity"]?.SetValue(_material.ReflectionIntensity);
 
             if (drawInstanced)
                 _effect.Parameters["World"].SetValue(Matrix.Identity);

@@ -20,12 +20,7 @@ namespace C3DE.Graphics.Shaders.Forward
 
         public override void LoadEffect(ContentManager content)
         {
-            var shaderPath = "Shaders/Forward/StandardLava";
-
-            if (GraphicsAPI == GraphicsAPI.OpenGL)
-                shaderPath = "Shaders/Forward/OpenGL/StandardLava";
-
-            _effect = content.Load<Effect>(shaderPath);
+            _effect = content.Load<Effect>("Shaders/Forward/StandardLava");
         }
 
         public override void PrePassForward(ref Vector3 cameraPosition, ref Matrix viewMatrix, ref Matrix projectionMatrix, ref LightData lightData, ref ShadowData shadowData, ref Vector4 fogData)
@@ -40,15 +35,11 @@ namespace C3DE.Graphics.Shaders.Forward
                 _effect.Parameters["LightPosition"].SetValue(lightData.Positions);
                 _effect.Parameters["LightColor"].SetValue(lightData.Colors);
                 _effect.Parameters["LightData"].SetValue(lightData.Data);
-
-                if (GraphicsAPI == GraphicsAPI.Direct3D)
-                    _effect.Parameters["SpotData"].SetValue(lightData.SpotData);
+                _effect.Parameters["SpotData"]?.SetValue(lightData.SpotData);
             }
 
             _effect.Parameters["AmbientColor"].SetValue(lightData.Ambient);
-
-            if (GraphicsAPI == GraphicsAPI.Direct3D)
-                _effect.Parameters["FogData"].SetValue(fogData);
+            _effect.Parameters["FogData"]?.SetValue(fogData);
         }
 
         public override void Pass(ref Matrix worldMatrix, bool receiveShadow, bool drawInstanced)
@@ -61,14 +52,11 @@ namespace C3DE.Graphics.Shaders.Forward
             _effect.Parameters["TextureTiling"].SetValue(_material.Tiling);
             _effect.Parameters["TotalTime"].SetValue(Time.TotalTime * _material.Speed);
 
-            if (GraphicsAPI == GraphicsAPI.Direct3D)
-            {
-                _features.X = _material.NormalMap != null ? 1 : 0;
-                _features.Y = _material.SpecularMap != null ? 1 : 0;
-                _effect.Parameters["Features"].SetValue(_features);
-                _effect.Parameters["NormalMap"].SetValue(_material.NormalMap);
-                _effect.Parameters["SpecularMap"].SetValue(_material.SpecularMap);
-            }
+            _features.X = _material.NormalMap != null ? 1 : 0;
+            _features.Y = _material.SpecularMap != null ? 1 : 0;
+            _effect.Parameters["Features"]?.SetValue(_features);
+            _effect.Parameters["NormalMap"]?.SetValue(_material.NormalMap);
+            _effect.Parameters["SpecularMap"]?.SetValue(_material.SpecularMap);
 
             _effect.CurrentTechnique.Passes[0].Apply();
         }

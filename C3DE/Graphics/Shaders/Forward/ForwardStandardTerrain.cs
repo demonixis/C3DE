@@ -17,12 +17,7 @@ namespace C3DE.Graphics.Shaders.Forward
 
         public override void LoadEffect(ContentManager content)
         {
-            var shaderPath = "Shaders/Forward/StandardTerrain";
-
-            if (GraphicsAPI == GraphicsAPI.OpenGL)
-                shaderPath = "Shaders/Forward/OpenGL/StandardTerrain";
-
-            _effect = content.Load<Effect>(shaderPath);
+            _effect = content.Load<Effect>("Shaders/Forward/StandardTerrain");
         }
 
         public override void Pass(ref Matrix worldMatrix, bool receiveShadow, bool drawInstanced)
@@ -38,27 +33,24 @@ namespace C3DE.Graphics.Shaders.Forward
             _effect.Parameters["SpecularPower"].SetValue(_material.SpecularPower);
             _effect.Parameters["SpecularIntensity"].SetValue(_material.SpecularIntensity);
 
-            if (GraphicsAPI == GraphicsAPI.Direct3D)
+            var hasNormalMap =
+                _material.GrassNormalMap != null &&
+                _material.RockNormalMap != null &&
+                _material.SandNormalMap != null &&
+                _material.SnowNormalMap != null;
+
+            _features.X = hasNormalMap ? 1 : 0;
+            _features.Y = 0;
+
+            _effect.Parameters["Features"]?.SetValue(_features);
+            _effect.Parameters["ShadowEnabled"]?.SetValue(receiveShadow);
+
+            if (hasNormalMap)
             {
-                var hasNormalMap =
-                    _material.GrassNormalMap != null &&
-                    _material.RockNormalMap != null &&
-                    _material.SandNormalMap != null &&
-                    _material.SnowNormalMap != null;
-
-                _features.X = hasNormalMap ? 1 : 0;
-                _features.Y = 0;
-
-                _effect.Parameters["Features"].SetValue(_features);
-                _effect.Parameters["ShadowEnabled"].SetValue(receiveShadow);
-
-                if (hasNormalMap)
-                {
-                    _effect.Parameters["GrassNormalMap"].SetValue(_material.GrassNormalMap);
-                    _effect.Parameters["SandNormalMap"].SetValue(_material.SandNormalMap);
-                    _effect.Parameters["RockNormalMap"].SetValue(_material.RockNormalMap);
-                    _effect.Parameters["SnowNormalMap"].SetValue(_material.SnowNormalMap);
-                }
+                _effect.Parameters["GrassNormalMap"]?.SetValue(_material.GrassNormalMap);
+                _effect.Parameters["SandNormalMap"]?.SetValue(_material.SandNormalMap);
+                _effect.Parameters["RockNormalMap"]?.SetValue(_material.RockNormalMap);
+                _effect.Parameters["SnowNormalMap"]?.SetValue(_material.SnowNormalMap);
             }
 
             _effect.CurrentTechnique.Passes[0].Apply();

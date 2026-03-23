@@ -7,8 +7,7 @@ using C3DE.Graphics.PostProcessing;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
-using Jitter.Collision;
-using Jitter;
+using Jitter2;
 
 namespace C3DE
 {
@@ -48,7 +47,6 @@ namespace C3DE
         protected internal List<Light> _lights;
         protected internal List<Behaviour> _scripts;
 
-        private CollisionSystem _physicsCollisionSystem;
         protected internal World _physicsWorld;
 
         public RenderSettings RenderSettings { get; private set; }
@@ -82,8 +80,7 @@ namespace C3DE
             _reflectionProbes = new List<ReflectionProbe>();
 
             // Physics
-            _physicsCollisionSystem = new CollisionSystemSAP();
-            _physicsWorld = new World(_physicsCollisionSystem);
+            _physicsWorld = new World();
         }
 
         public Scene(string name)

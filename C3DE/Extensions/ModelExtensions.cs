@@ -121,7 +121,7 @@ namespace Microsoft.Xna.Framework.Graphics
             if (hasValidName && MaterialsCache.ContainsKey(name))
             {
 #if DEBUG
-                Debug.Log($"Reusing an existing material: {name}");
+                //Debug.Log($"Reusing an existing material: {name}");
 #endif
                 return MaterialsCache[name];
             }

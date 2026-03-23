@@ -10,7 +10,7 @@ namespace C3DE
 {
     public enum GamePlatform
     {
-        Unknown = 0, Windows, Desktop, UWP, Android
+        Unknown = 0, Windows, Desktop, Android
     }
 
     /// <summary>
@@ -37,8 +37,6 @@ namespace C3DE
                 return GamePlatform.Windows;
 #elif DESKTOP
                 return GamePlatform.Desktop;
-#elif NETFX_CORE
-                return GamePlatform.UWP;
 #elif ANDROID
                 return GamePlatform.Android;
 #else

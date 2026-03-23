@@ -218,12 +218,8 @@ namespace C3DE.Graphics.Rendering
 
                 for (int i = 0; i < size; i++)
                 {
-                    // FIXME: We can't access the script if it's disabled
-                    if (size != scripts.Count)
-                    {
-                        m_spriteBatch.End();
-                        return;
-                    }
+                    if (i >= scripts.Count)
+                        break;
 
                     if (scripts[i].Enabled)
                         scripts[i].OnGUI(m_uiManager);
