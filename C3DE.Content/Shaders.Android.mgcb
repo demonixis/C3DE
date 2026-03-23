@@ -67,6 +67,12 @@
 /processorParam:DebugMode=Auto
 /build:Shaders/Forward/Skybox.fx
 
+#begin Shaders/Forward/ProceduralSkybox.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Shaders/Forward/ProceduralSkybox.fx
+
 #begin Shaders/Forward/Standard.fx
 /importer:EffectImporter
 /processor:EffectProcessor

@@ -119,6 +119,12 @@ Shaders are in `C3DE.Content/Shaders/`. There is a **single unified shader set**
 Features behind `#if SM4` (DX-only): spot lights in the shader path and the high light-count ceiling.
 Features available on both SM3 and SM4: Blinn-Phong lighting, normal maps, shadow maps, fog, reflection, cutout.
 
+`Skybox` now supports two rendering modes:
+- `Cubemap` — legacy static cube-map sky
+- `Procedural` — semi-realistic procedural sky driven by `Skybox.ProceduralSettings`
+
+The procedural sky mode is driven by `ProceduralSkyController` and can drive the primary directional light (`IsSun` first, otherwise first active directional) for day/night behavior.
+
 Forward lighting data is packed in `LightData` as SoA buffers and preallocated by capacity in `ForwardRenderer`:
 - `Positions[i]` — point/spot position, or normalized directional light vector for directional lights
 - `Colors[i]` — RGB light color

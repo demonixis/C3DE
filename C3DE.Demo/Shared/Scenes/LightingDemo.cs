@@ -1,10 +1,11 @@
 ﻿using C3DE.Components.Lighting;
+using C3DE.Components.Rendering;
+using C3DE.Demo.Scripts;
 using C3DE.Graphics.Materials;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using C3DE.Graphics;
 using Microsoft.Xna.Framework.Content;
-using C3DE.Components.Rendering;
 
 namespace C3DE.Demo.Scenes
 {
@@ -18,8 +19,16 @@ namespace C3DE.Demo.Scenes
         {
             base.Initialize();
 
-            //Destroy(_directionalLight);
-            //_directionalLight.Intensity = 0.05f;
+            RenderSettings.Skybox.GenerateProcedural(1800.0f);
+            RenderSettings.Skybox.ProceduralSettings.AutoCycle = true;
+            RenderSettings.Skybox.ProceduralSettings.TimeOfDay = 0.28f;
+            RenderSettings.Skybox.ProceduralSettings.CycleSpeed = 0.015f;
+            RenderSettings.Skybox.ProceduralSettings.CloudCoverage = 0.5f;
+            RenderSettings.Skybox.ProceduralSettings.StarIntensity = 1.2f;
+
+            var skyController = new GameObject("ProceduralSkyController");
+            skyController.AddComponent<ProceduralSkyController>();
+            _camera.AddComponent<ProceduralSkySwitcher>();
 
             // Reflection Probe
             var probe = GameObjectFactory.CreateReflectionProbe(new Vector3(0, 35, 0), 32, 60, 900, 1000);

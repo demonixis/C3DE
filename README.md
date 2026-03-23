@@ -98,6 +98,7 @@ mgcb C3DE.Content/Shaders.Android.mgcb
 - Reflection probes
 - Shadow mapping (hard shadows)
 - Skybox
+- Procedural skybox mode with day/night cycle, clouds, stars, sun/moon discs, and directional-light driving
 
 ### Materials
 - **PBR** (Physically Based Rendering) — standard, terrain, water, lava variants

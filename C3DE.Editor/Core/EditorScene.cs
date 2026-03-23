@@ -51,6 +51,7 @@ namespace C3DE.Editor
             lightGo.Transform.LocalPosition = new Vector3(500, 500, 0);
             lightGo.Transform.LocalRotation = new Vector3(MathHelper.PiOver2, -MathHelper.PiOver4, 0);
             var directionalLight = lightGo.GetComponent<Light>();
+            directionalLight.IsSun = true;
 
             // Sun Flares
             var content = Application.Content;
