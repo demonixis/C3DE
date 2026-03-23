@@ -110,8 +110,10 @@ mgcb C3DE.Content/Shaders.Android.mgcb
 - Ambient lighting
 
 ### Post-Processing
-- Bloom, Motion Blur, Vignette, Global Fog, SSAO, SSGI, Tonemapping
-- Retro filters (C64, CGA), Film, Grayscale
+- Centralized scene-driven post-process stack via `RenderSettings.PostProcessing`
+- MVP pipeline: Tonemapping, parametric color grading, white balance, lift/gamma/gain, sharpen, vignette, FXAA, bloom, SSAO, sun flare
+- Dedicated multi-pass effects are kept outside the final composite pass when needed (`Bloom`, `SSAO`)
+- Legacy effect classes still exist in the codebase, but the renderer no longer depends on the old `List<PostProcessPass>` model as the primary path
 
 ### Scene & Entities
 - Component-based `GameObject` / `Component` system

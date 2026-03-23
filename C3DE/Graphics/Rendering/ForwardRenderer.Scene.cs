@@ -15,6 +15,10 @@ namespace C3DE.Graphics.Rendering
             var cameraViewMatrix = camera._viewMatrix;
             var cameraProjectionMatrix = camera._projectionMatrix;
 
+            _depthPass.Enabled = false;
+            _normalPass.Enabled = false;
+            _depthNormalPass.Enabled = false;
+            PreparePostProcess(scene);
             RenderPreSceneBuffers(scene, camera);
             RenderReflectionProbes(scene);
 
@@ -27,7 +31,7 @@ namespace C3DE.Graphics.Rendering
             _graphicsDevice.Clear(camera._clearColor);
 
             RenderObjects(scene, ref cameraPosition, ref cameraViewMatrix, ref cameraProjectionMatrix);
-            RenderPostProcess(scene._postProcessPasses, renderTarget);
+            RenderPostProcess(scene, camera, renderTarget);
 
             if (renderToRT)
                 return;
@@ -41,6 +45,7 @@ namespace C3DE.Graphics.Rendering
 
         protected void RenderObjects(Scene scene, ref Vector3 cameraPosition, ref Matrix cameraViewMatrix, ref Matrix cameraProjectionMatrix)
         {
+            ResetGraphicsStateForSceneRender();
             _graphicsDevice.DepthStencilState = DepthStencilState.Default;
             _graphicsDevice.BlendState = BlendState.Opaque;
 
@@ -75,6 +80,21 @@ namespace C3DE.Graphics.Rendering
                 shader.Pass(ref renderer._transform._worldMatrix, renderer.ReceiveShadow, renderer.InstancedEnabled);
                 renderer.Draw(_graphicsDevice);
             }
+        }
+
+        private void ResetGraphicsStateForSceneRender()
+        {
+            for (var i = 0; i < 16; i++)
+            {
+                _graphicsDevice.Textures[i] = null;
+                _graphicsDevice.SamplerStates[i] = SamplerState.LinearWrap;
+            }
+
+            _graphicsDevice.BlendState = BlendState.Opaque;
+            _graphicsDevice.DepthStencilState = DepthStencilState.Default;
+            _graphicsDevice.RasterizerState = RasterizerState.CullCounterClockwise;
+            _graphicsDevice.Indices = null;
+            _graphicsDevice.SetVertexBuffer(null);
         }
 
         private void RenderPreSceneBuffers(Scene scene, Camera camera)

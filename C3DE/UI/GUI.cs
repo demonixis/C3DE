@@ -215,14 +215,19 @@ namespace C3DE.UI
 
         private float Slider(ref Rectangle rect, float value, float leftValue, float rightValue, bool horizontal)
         {
-            // Transform into the correct coordinates.
-            value = value / (rightValue + leftValue);
+            var range = rightValue - leftValue;
+            if (range <= 0.0001f)
+                return leftValue;
+
+            var normalizedValue = MathHelper.Clamp((value - leftValue) / range, 0.0f, 1.0f);
 
             // Compute the movable slider position.
             _cacheRect.X = rect.X + 4;
             _cacheRect.Y = rect.Y + 4;
-            _cacheRect.Width = horizontal ? (int)(rect.Width * value) - 8 : rect.Width - 8;
-            _cacheRect.Height = !horizontal ? (int)(rect.Height * value) - 8 : rect.Height - 8;
+            _cacheRect.Width = horizontal ? (int)(rect.Width * normalizedValue) - 8 : rect.Width - 8;
+            _cacheRect.Height = !horizontal ? (int)(rect.Height * normalizedValue) - 8 : rect.Height - 8;
+            _cacheRect.Width = System.Math.Max(0, _cacheRect.Width);
+            _cacheRect.Height = System.Math.Max(0, _cacheRect.Height);
 
             GetPointerPosition(ref _cacheVec2);
 
@@ -235,13 +240,14 @@ namespace C3DE.UI
                 if (Input.Mouse.Drag() || Input.Touch.Pressed())
                 {
                     if (horizontal)
-                        value = 1 - (rect.Right - _cacheVec2.X) / rect.Width;
+                        normalizedValue = 1 - (rect.Right - _cacheVec2.X) / rect.Width;
                     else
-                        value = 1 - (rect.Bottom - _cacheVec2.Y) / rect.Height;
+                        normalizedValue = 1 - (rect.Bottom - _cacheVec2.Y) / rect.Height;
                 }
             }
 
-            return (value * rightValue) + (value * leftValue); // Not good
+            normalizedValue = MathHelper.Clamp(normalizedValue, 0.0f, 1.0f);
+            return leftValue + normalizedValue * range;
         }
 
         #endregion

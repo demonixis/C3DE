@@ -1,4 +1,5 @@
 ﻿using C3DE.Graphics;
+using C3DE.Graphics.PostProcessing;
 using Microsoft.Xna.Framework;
 
 namespace C3DE
@@ -17,6 +18,11 @@ namespace C3DE
         internal Vector3 ambientColor;
         internal Vector4 fogData;
         internal Skybox skybox;
+
+        /// <summary>
+        /// Gets the scene-wide post processing settings consumed by the renderer pipeline.
+        /// </summary>
+        public PostProcessingSettings PostProcessing { get; } = new PostProcessingSettings();
 
         /// <summary>
         /// Gets or sets the global ambient color.
@@ -106,6 +112,46 @@ namespace C3DE
             fogColor = settings.fogColor;
             FogEnabled = settings.FogEnabled;
             skybox = settings.skybox;
+
+            PostProcessing.Tonemapping.Enabled = settings.PostProcessing.Tonemapping.Enabled;
+            PostProcessing.Tonemapping.Exposure = settings.PostProcessing.Tonemapping.Exposure;
+            PostProcessing.Enabled = settings.PostProcessing.Enabled;
+            PostProcessing.ColorAdjustments.Enabled = settings.PostProcessing.ColorAdjustments.Enabled;
+            PostProcessing.ColorAdjustments.Contrast = settings.PostProcessing.ColorAdjustments.Contrast;
+            PostProcessing.ColorAdjustments.Saturation = settings.PostProcessing.ColorAdjustments.Saturation;
+            PostProcessing.ColorAdjustments.Temperature = settings.PostProcessing.ColorAdjustments.Temperature;
+            PostProcessing.ColorAdjustments.Tint = settings.PostProcessing.ColorAdjustments.Tint;
+            PostProcessing.ColorAdjustments.Lift = settings.PostProcessing.ColorAdjustments.Lift;
+            PostProcessing.ColorAdjustments.Gamma = settings.PostProcessing.ColorAdjustments.Gamma;
+            PostProcessing.ColorAdjustments.Gain = settings.PostProcessing.ColorAdjustments.Gain;
+            PostProcessing.Bloom.Enabled = settings.PostProcessing.Bloom.Enabled;
+            PostProcessing.Bloom.Threshold = settings.PostProcessing.Bloom.Threshold;
+            PostProcessing.Bloom.Intensity = settings.PostProcessing.Bloom.Intensity;
+            PostProcessing.Bloom.BlurSize = settings.PostProcessing.Bloom.BlurSize;
+            PostProcessing.Bloom.BlurIterations = settings.PostProcessing.Bloom.BlurIterations;
+            PostProcessing.Bloom.Resolution = settings.PostProcessing.Bloom.Resolution;
+            PostProcessing.AmbientOcclusion.Enabled = settings.PostProcessing.AmbientOcclusion.Enabled;
+            PostProcessing.AmbientOcclusion.Intensity = settings.PostProcessing.AmbientOcclusion.Intensity;
+            PostProcessing.AmbientOcclusion.Radius = settings.PostProcessing.AmbientOcclusion.Radius;
+            PostProcessing.AmbientOcclusion.Bias = settings.PostProcessing.AmbientOcclusion.Bias;
+            PostProcessing.Sharpen.Enabled = settings.PostProcessing.Sharpen.Enabled;
+            PostProcessing.Sharpen.Intensity = settings.PostProcessing.Sharpen.Intensity;
+            PostProcessing.AntiAliasing.Enabled = settings.PostProcessing.AntiAliasing.Enabled;
+            PostProcessing.AntiAliasing.FxaaSpanMax = settings.PostProcessing.AntiAliasing.FxaaSpanMax;
+            PostProcessing.AntiAliasing.FxaaReduceMin = settings.PostProcessing.AntiAliasing.FxaaReduceMin;
+            PostProcessing.AntiAliasing.FxaaReduceMul = settings.PostProcessing.AntiAliasing.FxaaReduceMul;
+            PostProcessing.Vignette.Enabled = settings.PostProcessing.Vignette.Enabled;
+            PostProcessing.Vignette.Intensity = settings.PostProcessing.Vignette.Intensity;
+            PostProcessing.Vignette.Smoothness = settings.PostProcessing.Vignette.Smoothness;
+            PostProcessing.Vignette.Roundness = settings.PostProcessing.Vignette.Roundness;
+            PostProcessing.Vignette.Color = settings.PostProcessing.Vignette.Color;
+            PostProcessing.SunFlare.Enabled = settings.PostProcessing.SunFlare.Enabled;
+            PostProcessing.SunFlare.Intensity = settings.PostProcessing.SunFlare.Intensity;
+            PostProcessing.SunFlare.Size = settings.PostProcessing.SunFlare.Size;
+            PostProcessing.SunFlare.GhostIntensity = settings.PostProcessing.SunFlare.GhostIntensity;
+            PostProcessing.SunFlare.ScreenFade = settings.PostProcessing.SunFlare.ScreenFade;
+            PostProcessing.SunFlare.OcclusionDepthThreshold = settings.PostProcessing.SunFlare.OcclusionDepthThreshold;
+            PostProcessing.SunFlare.Tint = settings.PostProcessing.SunFlare.Tint;
         }
     }
 }

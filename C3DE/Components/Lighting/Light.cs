@@ -29,6 +29,11 @@ namespace C3DE.Components.Lighting
 
         public LightPrority Priority { get; set; } = LightPrority.Auto;
 
+        /// <summary>
+        /// Marks this directional light as the preferred post-processing sun source.
+        /// </summary>
+        public bool IsSun { get; set; }
+
         public Vector3 Direction
         {
             get

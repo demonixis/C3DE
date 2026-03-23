@@ -88,6 +88,12 @@
 /processorParam:DebugMode=Auto
 /build:Shaders/PostProcessing/AverageColor.fx
 
+#begin Shaders/PostProcessing/AmbientOcclusion.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Shaders/PostProcessing/AmbientOcclusion.fx
+
 #begin Shaders/PostProcessing/Bloom.fx
 /importer:EffectImporter
 /processor:EffectProcessor
@@ -166,6 +172,12 @@
 /processorParam:DebugMode=Auto
 /build:Shaders/PostProcessing/OsvrDistortion.fx
 
+#begin Shaders/PostProcessing/PostComposite.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Shaders/PostProcessing/PostComposite.fx
+
 #begin Shaders/PostProcessing/SimpleBlur.fx
 /importer:EffectImporter
 /processor:EffectProcessor
@@ -201,4 +213,3 @@
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
 /build:Shaders/ShadowMap.fx
-

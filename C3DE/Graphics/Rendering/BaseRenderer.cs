@@ -19,6 +19,7 @@ namespace C3DE.Graphics.Rendering
         protected VRService _VRService;
         protected Light _ambientLight;
         protected internal GUI m_uiManager;
+        protected PostProcessStack _postProcessStack;
         protected bool _disposed;
         protected bool m_HDRSupport = false;
         protected bool m_VREnabled;
@@ -57,6 +58,8 @@ namespace C3DE.Graphics.Rendering
             m_spriteBatch = new SpriteBatch(_graphicsDevice);
             m_uiManager = new GUI(m_spriteBatch);
             m_uiManager.LoadContent(content);
+            _postProcessStack = new PostProcessStack(_graphicsDevice);
+            _postProcessStack.Initialize(content);
 
             _ambientLight = new Light();
             _ambientLight.Type = LightType.Ambient;
@@ -192,21 +195,23 @@ namespace C3DE.Graphics.Rendering
             m_spriteBatch.End();
         }
 
-        /// <summary>
-        /// Renders effects.
-        /// </summary>
-        /// <param name="passes"></param>
-        /// <param name="renderTarget"></param>
-        protected void RenderPostProcess(List<PostProcessPass> passes, RenderTarget2D renderTarget)
+        protected void PreparePostProcess(Scene scene)
         {
-            if (passes.Count == 0)
-                return;
+            var settings = scene.RenderSettings.PostProcessing;
 
-            _graphicsDevice.SetRenderTarget(renderTarget);
+            if (_postProcessStack.RequiresDepth(settings))
+                GetDepthBuffer();
 
-            for (int i = 0, l = passes.Count; i < l; i++)
-                if (passes[i].Enabled)
-                    passes[i].Draw(m_spriteBatch, renderTarget);
+            if (_postProcessStack.RequiresNormal(settings))
+                GetNormalBuffer();
+        }
+
+        protected void RenderPostProcess(Scene scene, Camera camera, RenderTarget2D renderTarget)
+        {
+            var settings = scene.RenderSettings.PostProcessing;
+            var depth = _postProcessStack.RequiresDepth(settings) ? GetDepthBuffer() : null;
+            var normal = _postProcessStack.RequiresNormal(settings) ? GetNormalBuffer() : null;
+            _postProcessStack.Execute(scene, camera, renderTarget, depth, normal);
         }
 
         protected virtual void RenderUI(List<Behaviour> scripts)

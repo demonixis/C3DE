@@ -105,6 +105,7 @@ Scene sorting:
 - `Scene._lights` — `List<Light>`
 - `Scene._cameras` — `List<Camera>`
 - `Scene._scripts` — `List<Behaviour>` (for `Update` and `OnGUI`)
+- `RenderSettings.PostProcessing` — scene-wide post-process stack configuration consumed by the renderer-owned pipeline
 
 ### Shader System
 
@@ -128,6 +129,19 @@ C# shader classes use null-conditional `?.` on `Effect.Parameters["name"]` to sa
 ```csharp
 _effect.Parameters["SpotData"]?.SetValue(lightData.SpotData);
 ```
+
+### Post-Processing
+
+The legacy `Scene._postProcessPasses` list still exists for compatibility, but the renderer pipeline now relies on a centralized stack owned by `RenderSettings.PostProcessing`:
+
+- `PostProcessStack` — renderer-owned orchestrator
+- dedicated passes kept for `Bloom` and `Ambient Occlusion`
+- `PostComposite.fx` — final uber-style composite pass for tonemapping, color controls, white balance, lift/gamma/gain, sharpen, vignette, FXAA, and sun flare
+
+DesktopGL is the primary constraint for this stack:
+- prefer a single final full-screen composite pass when effects can be merged
+- keep expensive effects (`Bloom`, `SSAO`, later `SSR` / `SSGI`) outside the uber pass
+- avoid depending on GPU occlusion queries for sun flare; use post-process visibility heuristics instead
 
 ### Physics (Jitter2)
 
