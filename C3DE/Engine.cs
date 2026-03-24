@@ -184,8 +184,13 @@ namespace C3DE
             GraphicsDevice.Clear(Color.Black);
 
             renderer.Render(_sceneManager.ActiveScene);
+            AfterSceneRender(gameTime);
 
             base.Draw(gameTime);
+        }
+
+        protected virtual void AfterSceneRender(GameTime gameTime)
+        {
         }
 
         protected override void EndDraw()

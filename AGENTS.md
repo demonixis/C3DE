@@ -80,6 +80,51 @@ dotnet build C3DE/C3DE.Desktop.csproj
 
 ## Architecture
 
+### Editor Architecture
+
+`C3DE.Editor` is no longer limited to a transient scene prototype. It now relies on an editor-side data and project layer:
+
+- **`EditorContext`** (`C3DE.Editor/Core/EditorContext.cs`) — central state holder for current project, current scene, selection, asset database, and dirty flags
+- **`ProjectService` / `ProjectData`** (`C3DE.Editor/ProjectSystem/`) — `.c3de` project creation/loading and `project.json` persistence
+- **`SceneSerializer` / `SceneData`** (`C3DE.Editor/Serialization/`) — JSON scene persistence (`*.scene.json`) through editor DTOs, not direct runtime object serialization
+- **`AssetDatabase` / `AssetMeta`** (`C3DE.Editor/Assets/`) — scans `Assets/`, generates GUID-based `.meta` files, and resolves asset references
+- **`UIManager`** (`C3DE.Editor/UI/UIManager.cs`) — ImGui-based editor shell using `MonoGame.ImGuiNet`, with docked hierarchy, inspector, scene settings, project, and asset windows rendered directly from `EditorContext`
+
+Editor UI notes:
+
+- Gwen is now considered legacy for the editor path; editor-facing UI work should target ImGui first
+- `MonoGame.ImGuiNet` `1.0.5` is currently consumed with an explicit assembly reference because the NuGet package does not expose its DLL through a standard `lib/` layout
+- Editor input routing must respect `UIManager.WantsMouseCapture` to avoid scene picking while interacting with ImGui widgets
+
+Project structure expected by the editor:
+
+- `MyGame.c3de/project.json`
+- `MyGame.c3de/Scenes/*.scene.json`
+- `MyGame.c3de/Assets/**`
+- `MyGame.c3de/Settings/**`
+- `MyGame.c3de/Library/**`
+
+Current project manifest notes:
+
+- `project.json` can store `startupProject`, a relative or absolute path to the playable `*.csproj`
+- the editor `Play` action currently shells out to `dotnet run --project <startupProject>`
+- the editor currently uses a single `Scene View`; a dedicated `Game View` is intentionally deferred
+
+Current editor serialization scope:
+
+- `Transform`
+- `Camera`
+- `Light`
+- `MeshRenderer`
+- `Terrain`
+- `BoxCollider`
+- `SphereCollider`
+- `Rigidbody`
+- `Scene.RenderSettings`
+- `RenderSettings.PostProcessing`
+
+Important constraint: the JSON scene format is now the canonical authoring format for the editor. C#-generated scenes and prefab workflows are still out of scope.
+
 ### Core Types
 
 - **`Engine`** (`C3DE/Engine.cs`) — extends `Microsoft.Xna.Framework.Game`. Entry point.

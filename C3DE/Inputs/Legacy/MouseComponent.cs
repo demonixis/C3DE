@@ -31,6 +31,26 @@ namespace C3DE.Inputs
             get { return _mouseState.ScrollWheelValue - _prevState.ScrollWheelValue; }
         }
 
+        public int WheelDelta
+        {
+            get { return Wheel; }
+        }
+
+        public int HorizontalWheel
+        {
+            get { return _mouseState.HorizontalScrollWheelValue - _prevState.HorizontalScrollWheelValue; }
+        }
+
+        public int HorizontalWheelDelta
+        {
+            get { return HorizontalWheel; }
+        }
+
+        public Vector2 ScrollDelta
+        {
+            get { return new Vector2(HorizontalWheel, Wheel); }
+        }
+
         public bool Moving
         {
             get { return (_mouseState.X != _prevState.X) || (_mouseState.Y != _prevState.Y); }

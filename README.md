@@ -163,8 +163,35 @@ C3DE.Demo/
   Windows/               Demo executable (DX and DesktopGL)
   Morrowind/             Morrowind recreation demo (WIP)
 C3DE.Editor/             Scene editor application
-C3DE.GwenUI/             Gwen UI library integration
+C3DE.GwenUI/             Legacy Gwen UI integration kept for older tooling
 C3DE.Content/            MGCB content projects + HLSL shaders
+```
+
+## Editor
+
+`C3DE.Editor` now works around a project-folder workflow instead of an ad-hoc in-memory scene only flow.
+
+- Project format: `*.c3de/`
+- Project manifest: `project.json`
+- Scene format: `Scenes/*.scene.json`
+- Asset references: GUID-based via sidecar `.meta` files in `Assets/`
+- Play target: `project.json -> startupProject`, launched with `dotnet run --project ...`
+
+Editor capabilities currently available:
+
+- Create and open a `.c3de` project folder
+- Browse project files and imported assets
+- Create, save, and load JSON scenes
+- Edit hierarchy parent/child relationships
+- Inspect and edit core components: `Transform`, `Camera`, `Light`, `MeshRenderer`, `Terrain`, `BoxCollider`, `SphereCollider`, `Rigidbody`
+- Inspect and edit scene-level render settings and post-processing
+- Render the editor UI with ImGui docking via `MonoGame.ImGuiNet` instead of Gwen
+- Use a single `Scene View` for editing; the `Play` button launches the configured startup project externally
+
+The editor DesktopGL target can be built with:
+
+```bash
+dotnet build C3DE.Editor/C3DE.Editor.Desktop.csproj
 ```
 
 ## Dependencies
@@ -177,6 +204,7 @@ C3DE.Content/            MGCB content projects + HLSL shaders
 | Jitter2                          | 2.7.7    | Physics simulation             |
 | Silk.NET.OpenXR                  | 2.23.0   | OpenXR VR support              |
 | Newtonsoft.Json                  | 13.0.1   | JSON serialization (demo)      |
+| MonoGame.ImGuiNet                | 1.0.5    | Editor ImGui integration       |
 
 ## Contributing
 

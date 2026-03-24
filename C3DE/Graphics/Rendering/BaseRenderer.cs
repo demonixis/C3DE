@@ -16,6 +16,7 @@ namespace C3DE.Graphics.Rendering
         protected internal GraphicsDevice _graphicsDevice;
         protected SpriteBatch m_spriteBatch;
         protected internal RenderTarget2D[] _sceneRenderTargets = new RenderTarget2D[2];
+        protected RenderTarget2D _editorPreviewRenderTarget;
         protected VRService _VRService;
         protected Light _ambientLight;
         protected internal GUI m_uiManager;
@@ -45,6 +46,8 @@ namespace C3DE.Graphics.Rendering
                 Dirty = true;
             }
         }
+
+        public RenderTarget2D EditorPreviewRenderTarget => _editorPreviewRenderTarget;
 
         #endregion
 
@@ -102,6 +105,9 @@ namespace C3DE.Graphics.Rendering
             for (var eye = 0; eye < 2; eye++)
                 _sceneRenderTargets[eye]?.Dispose();
 
+            _editorPreviewRenderTarget?.Dispose();
+            _editorPreviewRenderTarget = null;
+
             if (m_VREnabled)
             {
                 for (var eye = 0; eye < 2; eye++)
@@ -112,6 +118,7 @@ namespace C3DE.Graphics.Rendering
                 var pp = _graphicsDevice.PresentationParameters;
                 var surfaceFormat = m_HDRSupport ? SurfaceFormat.HdrBlendable : pp.BackBufferFormat;
                 _sceneRenderTargets[0] = new RenderTarget2D(_graphicsDevice, pp.BackBufferWidth, pp.BackBufferHeight, false, surfaceFormat, pp.DepthStencilFormat, pp.MultiSampleCount, RenderTargetUsage.DiscardContents);
+                _editorPreviewRenderTarget = new RenderTarget2D(_graphicsDevice, pp.BackBufferWidth, pp.BackBufferHeight, false, SurfaceFormat.Color, DepthFormat.None, 0, RenderTargetUsage.PreserveContents);
             }
 
             Dirty = false;
@@ -190,6 +197,18 @@ namespace C3DE.Graphics.Rendering
 #if !ANDROID
             _graphicsDevice.SetRenderTarget(null);
 #endif
+            m_spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Opaque, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone);
+            m_spriteBatch.Draw(_sceneRenderTargets[0], Vector2.Zero, Color.White);
+            m_spriteBatch.End();
+        }
+
+        protected void UpdateEditorPreview()
+        {
+            if (_editorPreviewRenderTarget == null || _sceneRenderTargets[0] == null)
+                return;
+
+            _graphicsDevice.SetRenderTarget(_editorPreviewRenderTarget);
+            _graphicsDevice.Clear(Color.Black);
             m_spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Opaque, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone);
             m_spriteBatch.Draw(_sceneRenderTargets[0], Vector2.Zero, Color.White);
             m_spriteBatch.End();

@@ -38,6 +38,7 @@ namespace C3DE.Graphics.Rendering
 
             if (!m_VREnabled)
             {
+                UpdateEditorPreview();
                 RenderToBackBuffer();
                 RenderUI(scene._scripts);
             }

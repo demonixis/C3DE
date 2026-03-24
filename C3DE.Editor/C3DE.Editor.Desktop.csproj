@@ -15,7 +15,18 @@
 	<ItemGroup>
 		<PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.4.1" />
 		<PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.4.1" />
+		<PackageReference Include="MonoGame.ImGuiNet" Version="1.0.5" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+	</ItemGroup>
+	<ItemGroup>
+		<Reference Include="Monogame.ImGuiNet">
+			<HintPath>$(NuGetPackageRoot)monogame.imguinet/1.0.5/Monogame.ImGuiNet.dll</HintPath>
+			<Private>true</Private>
+		</Reference>
+	</ItemGroup>
+	<ItemGroup>
+	  <Compile Remove="UI/Items/**/*.cs" />
+	  <Compile Remove="UI/Panels/**/*.cs" />
 	</ItemGroup>
 	<ItemGroup>
 		<MonoGameContentReference Include="Content\Content.mgcb">
@@ -29,7 +40,6 @@
 		</MonoGameContentReference>
 	</ItemGroup>
 	<ItemGroup>
-	  <ProjectReference Include="..\C3DE.GwenUI\C3DE.GwenUI.Desktop.csproj" />
 	  <ProjectReference Include="..\C3DE\C3DE.Desktop.csproj" />
 	</ItemGroup>
 </Project>
